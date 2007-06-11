@@ -157,13 +157,12 @@ include_once(WIDGETS_INCLUDE_DIR.'textselect.php');
 include_once(WIDGETS_INCLUDE_DIR.'node.php');
 include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
-/*
+
 if(empty($_POWL['uriBase'])) {
-	if(!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'],$_POWL['installPath']))
-		$_POWL['uriBase']=str_replace(rtrim($_SERVER['DOCUMENT_ROOT'],'/'), '', $_POWL['installPath']);
-	else $_POWL['uriBase']='/powl/';
+	if(!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE))
+		$_POWL['uriBase'] = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'],'/'), '', ERFURT_BASE);
+	else $_POWL['uriBase'] = '/powl/';
 }
-*/
 
 
 $datatypes = array(
@@ -196,15 +195,6 @@ $datatypes = array(
 Zend_Registry::set('datatypes', $datatypes);
 ### END powlapi/include.php ###
 
-
-// if not logged in redirect to login page
-/*
-if(!isset($config->deactivateLogin) || $config->deactivateLogin === false) {
-	if(!isset($_SESSION['PWL']['user']) && !strstr($_SERVER['PHP_SELF'],$_POWL['uriBase'].'index.php') && strstr($_SERVER['PHP_SELF'],$_POWL['uriBase']))
-		header('Location: '.$_POWL['uriBase'].'?target='.urlencode($_SERVER['REQUEST_URI']));
-} else
-	$_SESSION['PWL']['user']=$_SERVER['REMOTE_ADDR'];
-*/
 
 // include cms api
 include_once(MODULES_INCLUDE_DIR.'cms/api/include.php');

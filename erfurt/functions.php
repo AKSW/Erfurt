@@ -1,5 +1,27 @@
 <?php
 
+function pr($s, $more = false) {
+        print '<pre>';
+        $a = debug_backtrace();
+        if (!$more) 
+                print_r($a[0]);
+        else 
+                print_r($a);
+
+        #print_r($s);
+        print '</pre>';
+
+}
+
+function printr($s, $more = false) {
+
+        print '<pre>';
+
+        print_r($s);
+        print '</pre>';
+
+}
+
 ###################### TAKEN FROM powlapi/include.php ###########################################
 function errorHandler($errno, $errstr, $errfile, $errline) {
 	switch ($errno) {
