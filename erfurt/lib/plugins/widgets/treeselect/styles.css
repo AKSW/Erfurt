@@ -1,0 +1,25 @@
+/**
+ * CSS - Style collection.
+ * 
+ * @package POWL-Widgets
+ * @author Sören Auer <soeren@auer.cx>
+ * @copyright Copyright (c) 2004
+ * @version $Id: styles.css 26 2004-02-24 16:17:59Z soerenauer $
+ **/
+
+.treeselect {
+	position:absolute;
+	z-index:20;
+	background-color:white;
+	border: solid black 1px;
+	padding-right:4px;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+.treeselect .childnodes {
+	display:none;
+}
+
+.treeselect .subselected {
+	background-color:gray;
+}

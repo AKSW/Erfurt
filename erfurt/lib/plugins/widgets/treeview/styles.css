@@ -1,0 +1,16 @@
+/**
+ * CSS - Style collection.
+ * 
+ * @package POWL-Widgets
+ * @author Sören Auer <soeren@auer.cx>
+ * @copyright Copyright (c) 2004
+ * @version $Id: styles.css 105 2004-03-12 18:40:36Z soerenauer $
+ **/
+
+.treeview {
+	white-space:nowrap;
+}
+ 
+.treeview .selected {
+	background-color:#bbb;
+}
