@@ -63,7 +63,7 @@ ini_set('allow_call_time_pass_reference','1');
 define('POWLAPI_INCLUDE_DIR', 	ERFURT_BASE.'lib/powlapi/');
 define('OWLAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/owlapi/');
 define('RDFSAPI_INCLUDE_DIR', 	ERFURT_BASE.'Rdfs/');
-define('RDFAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/rdfapi-php/api/');
+define('RDFAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/rdfapi-php/');
 
 define('RDF_BACKEND_INCLUDE_DIR', RDFSAPI_INCLUDE_DIR . ($config->database->backend ? $config->database->backend : 'rap') . '/');
 
