@@ -128,7 +128,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
     			'indexes'=>array('description'),
     		)
 		);
-		$dict=NewDataDictionary($this->dbConn,$GLOBALS['_POWL']['db']['type']=='pdo'?'db2':NULL);
+		$dict=NewDataDictionary($this->dbConn, Zend_Registry::get('config')->database->params->type == 'pdo' ? 'db2' : NULL);
 #$this->dbConn->execute('connect to POWL;');
 		foreach($tables as $tablename=>$table) {
 #print_r($dict->CreateTableSQL($tablename,$table['fields'],$table['options']));

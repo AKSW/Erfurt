@@ -417,7 +417,7 @@ class DefaultRDFSClass extends RDFSResource {
 		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
 		            AND s2.object='".$this->getURI()."')
 				INNER JOIN statements s3 ON(s1.subject=s3.subject AND s1.modelID=s3.modelID
-					AND s3.predicate='".$GLOBALS['_POWL']['SysOnt']->baseURI.'labelText'."')
+					AND s3.predicate='".Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.'labelText'."')
 				LEFT JOIN statements s4 ON(s1.subject=s4.subject AND s1.modelID=s4.modelID
 		            AND s4.predicate='".$this->model->_dbId('RDFS_comment')."'
 		            AND s4.l_language='".$language."')

@@ -16,39 +16,13 @@ class RDFSModel extends DefaultRDFSModel {
 		parent::DefaultRDFSModel($store,$modelURI,$type);
 	}
 	
-	
-//	function listTopClasses($start=0,$count=100000,$erg=0) {
-//		$args=func_get_args();
-//		$c=cache('listTopClasses'.$this->modelURI,$args);
-//		if($c!==NULL)
-//			return $c;
-//		$clsql='';
-//		foreach($this->vocabulary['Class'] as $cl)
-//			$clsql.=" OR s1.object='".$cl->getURI()."'";
-//		$sql="SELECT s1.subject,s1.subject_is,MAX(s2.object_is) AS s2object_is,MAX(s2.object) AS s2object,
-//				".(!strcasecmp($GLOBALS['_POWL']['db']['type'],'SQLite')?'0':"count(distinct s2.object_is)")." AS cois
-//		      FROM statements s1 LEFT JOIN statements s2
-//		         ON(s1.subject=s2.subject AND s2.modelID IN (".$this->getModelIds().") AND s2.predicate='".$this->_dbId('RDFS_subClassOf')."')
-//		      WHERE
-//			     s1.subject_is<>'b' AND s1.predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)
-//		         AND s1.modelID IN (".$this->getModelIds().")
-//			  GROUP BY s1.subject,s1.subject_is
-//			  HAVING (cois=0 OR s2object_is IS NULL"./*$this->dbConn->IfNull('s2.object_is','1=0').*/") OR (cois=1 AND s2object_is='b') OR
-//			  	s2object='".$this->_dbId('RDFS_Resource')."' OR
-//				(1=0 AND s2object_is='r' AND s2object NOT LIKE '".$this->baseURI."%')
-//			  ORDER BY s1.subject";
-//		$topclasses=$this->_convertRecordSetToNodeList($sql,$this->vclass,$start,$count,&$erg);
-//		return cache('listTopClasses'.$this->modelURI,$args,$topclasses);
-// 	}
- 	
- 
 	function listTopClassesImplicit($start=0,$count=100000,$erg=0) {
 		$args=func_get_args();
 		$c=cache('listTopClassesImplicit'.$this->modelURI,$args);
 		if($c!==NULL)
 			return $c;
 		$sql="SELECT s1.object,s1.object_is,s2.object_is,s2.object,
-				".(!strcasecmp($GLOBALS['_POWL']['db']['type'],'SQLite')?'0':"count(distinct s2.object_is)")." cois
+				".(!strcasecmp(Zend_Registry::get('config')->database->params->type,'SQLite')?'0':"count(distinct s2.object_is)")." cois
 		      FROM statements s1 LEFT JOIN statements s2
 		         ON(s1.object=s2.subject AND s2.modelID IN (".$this->getModelIds().") AND s2.predicate='".$this->_dbId('RDFS_subClassOf')."')
 		      WHERE

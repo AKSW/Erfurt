@@ -61,7 +61,7 @@ function pwlEditNodeLink($s,$p,$o=NULL,$linktext=NULL) {
 }
 function pwlRenderNode($node,$URLBase=array()) {
 	if(empty($URLBase))
-		$URLBase['node']=$GLOBALS['_POWL']['uriBase'].'modules/rdf/index.php?spo[]=subject&spo[]=predicate&spo[]=object&search=';
+		$URLBase['node'] = $GLOBALS['_POWL']['uriBase'].'modules/rdf/index.php?spo[]=subject&spo[]=predicate&spo[]=object&search=';
 	if(empty($URLBase['literal']) && !empty($URLBase['node']))
 		$URLBase['literal']=$URLBase['node'];
 	if(empty($URLBase['resource']) && !empty($URLBase['node']))
@@ -71,7 +71,8 @@ function pwlRenderNode($node,$URLBase=array()) {
 		$ret.=' ( Language: ';
 		$ret.=$node->getLanguage()?'\''.$node->getLanguage().'\'':'-';
 		$ret.=', Datatype: ';
-		$ret.=$node->getDatatype()?(!empty($GLOBALS['_POWL']['datatypes'][$node->getDatatype()])?str_replace('&nbsp;','',$GLOBALS['_POWL']['datatypes'][$node->getDatatype()]):$node->getDatatype()):'-';
+		$datatypes = Zend_Registry::get('datatypes')->asArray();
+		$ret.=$node->getDatatype()?(!empty($datatypes[$node->getDatatype()])?str_replace('&nbsp;','', $datatypes[$node->getDatatype()]):$node->getDatatype()):'-';
 		$ret.=')';
 	} else {
 		$ret='';

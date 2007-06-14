@@ -210,7 +210,7 @@ class DefaultRDFSModel extends DbModel {
 	 * @return
 	 **/
 	function add($subj,$pred='',$obj='') {
-		unset($GLOBALS['_POWL']['cachedata']);
+		Zend_Registry::set('cache', array());
 		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
 		parent::add($statement);
 		$success=false;
@@ -232,7 +232,7 @@ class DefaultRDFSModel extends DbModel {
 	 * @return
 	 **/
 	function remove($subj,$pred='',$obj='') {
-		unset($GLOBALS['_POWL']['cachedata']);
+		Zend_Registry::set('cache', array());
 		$statement=$this->_createStatement($subj,$pred,$obj);
 		#if(isBnode($statement->obj)) {
 		#	$o=new $this->resource($statement->obj->getURI(),$this);
@@ -897,7 +897,7 @@ class DefaultRDFSModel extends DbModel {
 		$row=$this->dbConn->getRow($sql);
 		if($row)
 		for($i=0;$i<6;$i+=2) {
-			if($GLOBALS['_POWL']['db']['backend']=='powl' && $row[$i+1]=='r') {
+			if(Zend_Registry::get('config')->database->backend=='powl' && $row[$i+1]=='r') {
 				$n=$this->_getNodeById($row[$i]);
 				$row[$i]=$n->getURI();
 				$row[$i+1]=isBNode($n)?'b':$row[$i+1];
@@ -1331,41 +1331,6 @@ class DefaultRDFSModel extends DbModel {
 		return new Statement($sub,$pred,$obj);
 	}
 	
-	
-/*	function load($filename,$type=NULL,$stream=false,$loadImports=false) {
-		$this->dontCheckForDuplicatesOnAdd=true;
-		$this->logStart('Model created',$this->modelURI);
-		if($GLOBALS['_POWL']['SysOnt'] && @$fp=fopen($filename,'r')) {
-			$head=fread($fp,2000);
-			fclose($fp);
-			preg_match_all('/xmlns:([^=]+)=[\'"]([^"\']+)[\'"]/',$head,$matches);
-			$i=array_search($this->modelURI,$matches[2]);
-			$name=($i!==false)?$matches[1][$i]:$GLOBALS['_POWL']['SysOnt']->getUniqueResourceURI('Modelinstance');
-			$modelInst=$GLOBALS['_POWL']['SysOnt']->addInstance($name,'Model');
-			$modelInst->setPropertyValue('modelURI',$this->modelURI);
-			foreach($matches[1] as $key=>$val)
-				$modelInst->addPropertyValue('modelXMLNS',$val.':'.$matches[2][$key]);
-			if($type)
-				$modelInst->setPropertyValue('modelType',$type);
-		}
-		$this->logEnd();
-	 	$log=$this->logDisabled;
-		$this->logDisabled=true;
-	 	parent::load($filename,$type,$stream);
-		if(!$type && $modelInst) {
-			$type=$this->getType();
-			$modelInst->setPropertyValue('modelType',$type);
-		}
-		if($type=='OWL' && $loadImports) {
-			foreach($this->listImports() as $import) {
-				if(!$this->store->modelExists($import->getURI())) {
-					$imp=$this->store->getNewModel($import->getURI());
-					$imp->load($import->getURI(),NULL,false,true);
-				}
-			}
-		}
-		$this->logDisabled=$log;
-	}*/
 	/**
 	 * Starts a new logging action, all subsequent adds and removes of statements
 	 * to the model will be related to this action until the method "logEnd" is called.
@@ -1464,7 +1429,7 @@ class DefaultRDFSModel extends DbModel {
 	 * @return boolean True if logging is enabled for the model/store false otherwise.
 	 **/
 	function logEnabled() {
-		return (empty($GLOBALS['_POWL']['logging'])||$GLOBALS['_POWL']['logging']) && empty($this->logDisabled) && in_array((empty($GLOBALS['_POWL']['db']['tablePrefix'])?'':$GLOBALS['_POWL']['db']['tablePrefix']).'log_action_descr',$this->dbConn->MetaTables())?true:false;
+		return (empty(Zend_Registry::get('config')->logging) || Zend_Registry::get('config')->logging) && empty($this->logDisabled) && in_array((empty(Zend_Registry::get('config')->database->tablePrefix) ? '' : Zend_Registry::get('config')->database->tablePrefix).'log_action_descr',$this->dbConn->MetaTables())?true:false;
 	}
 	
 	

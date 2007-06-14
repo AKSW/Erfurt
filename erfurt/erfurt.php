@@ -226,10 +226,10 @@ if(!empty($_SESSION['_ETS']['model']))
 ob_end_clean();
 
 // load model specific sysont
-if(!empty($GLOBALS['_POWL']['SysOnt']) && $modelClass=$GLOBALS['_POWL']['SysOnt']->getClass('Model'))
-	if($inst=$modelClass->findInstance(array('modelURI'=>$_ET['rdfsmodel']->modelURI)))
-		if($sysont=$inst->getPropertyValuePlain('modelSysOntURI'))
-			$_POWL['SysOnt']=$erfurt->getStore()->getModel($sysont);
+if(!empty(Zend_Registry::get('erfurt')->getStore()->SysOnt) && $modelClass = Zend_Registry::get('erfurt')->getStore()->SysOnt->getClass('Model'))
+	if($inst = $modelClass->findInstance(array('modelURI' => $_ET['rdfsmodel']->modelURI)))
+		if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
+			$_POWL['SysOnt'] = Zend_Registry::get('erfurt')->getStore()->SysOnt;
 
 
 

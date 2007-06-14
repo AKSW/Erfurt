@@ -60,7 +60,7 @@ function errorRenderer($arr) {
 	foreach($arr as $key=>$val) {
 		#$val=is_object($val)?get_object_vars($val):$val;
 		if(is_array($val)) {
-			echo('<img onclick="powl.toggleVisibility(\'err'.++$c.'\')" id="optionalIMG'.$id.$cat.'" src="'.$GLOBALS['_POWL']['uriBase'].'images/plus.gif">&nbsp;'.$key.'<br /><div id="err'.$c.'" style="display:none;margin-left:20px;">');
+			echo('<img onclick="powl.toggleVisibility(\'err'.++$c.'\')" id="optionalIMG'.$id.$cat.'" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/plus.gif">&nbsp;'.$key.'<br /><div id="err'.$c.'" style="display:none;margin-left:20px;">');
 			#print_r($val);
 			errorRenderer($val);
 			echo('</div');
@@ -77,10 +77,10 @@ function pwlOutput($string) {
 	flush();
 }
 function pwlRewriteSQL($db, &$sql, $inputarray) {
-	if(empty($GLOBALS['_POWL']['db']['tablePrefix']))
+	if(empty(Zend_Registry::get('config')->tableprefix))
 		return;
 	foreach(array('statements','models','log_actions','log_action_descr','log_statements') as $table)
-		$sql=preg_replace('/((on|table|insert(\s+into)?|update|from|join|,)\s+)'.$table.'/im','\1'.$GLOBALS['_POWL']['db']['tablePrefix'].$table,$sql);
+		$sql=preg_replace('/((on|table|insert(\s+into)?|update|from|join|,)\s+)'.$table.'/im','\1'.Zend_Registry::get('config')->tableprefix.$table,$sql);
 }
 
 function timer($t='global') {
@@ -160,7 +160,7 @@ function pwlGetUser() {
 function pwlSessionVar() {
 	$args=func_get_args();
 	$sessVar=&$_SESSION['powlUserPref'];
-	$sysont=$GLOBALS['powl']->getModel($GLOBALS['_POWL']['SysOntModelURI']);
+	$sysont = Zend_Registry::get('erfurt')->getStore()->getModel(Zend_Registry::get('config')->SysOntModelURI);
 	foreach($args as $arg) {
 		if(empty($sessVar[$arg]))
 			$sessVar[$arg]=array();
@@ -257,7 +257,7 @@ function pwlResourceMetaShow($resource,$showIdentity=true,$editable=true) {
 	}
 	$tab=new tab();
 	$tabs=array('Comment'=>pwl_('Documentation'),'Labels'=>pwl_('Labels'),'Annotations'=>pwl_('Annotations'));
-	$ret.='<h2>'.pwlHTMLOptional('meta',$optionalCat).'<img src="'.$GLOBALS['_POWL']['uriBase'].'images/Annotation.gif">&nbsp;'.pwl_('Metainformation').'</h2><div id="meta">';
+	$ret.='<h2>'.pwlHTMLOptional('meta',$optionalCat).'<img src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/Annotation.gif">&nbsp;'.pwl_('Metainformation').'</h2><div id="meta">';
 	$ret.=$tab->show($tabs);
 	// Comment
 	$s=new select(array('cardinalityMax'=>1,'cardinalityMin'=>1));
@@ -278,7 +278,7 @@ function pwlResourceMetaShow($resource,$showIdentity=true,$editable=true) {
 	$labels[]=new Literal('');
 	foreach($labels as $label)
 		$ret.='<tr name="dupl1"><td align="center"><input type="text" name="lang[]" value="'.$label->getLanguage().'" size="3"'.($editable?'':' readonly="readonly"').'></td>
-			<td nowrap="nowrap"><input type="text" name="label[]" value="'.str_replace('"','&quot;',$label->getLabel()).'" style="width:230px;"'.(!$editable?' readonly="readonly">':'>&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl1\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.$GLOBALS['_POWL']['uriBase'].'images/delete.gif" title="'.pwl_('Remove').'" />').'</td></tr>';
+			<td nowrap="nowrap"><input type="text" name="label[]" value="'.str_replace('"','&quot;',$label->getLabel()).'" style="width:230px;"'.(!$editable?' readonly="readonly">':'>&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl1\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/delete.gif" title="'.pwl_('Remove').'" />').'</td></tr>';
 	// create new
 	$ret.="</tbody><tr><th colspan=\"2\" align=\"left\">".($editable?"<img src=\"../../images/item_ltr.png\" align=\"absmiddle\">&nbsp;<a href=\"javascript:powl.duplicate('dupl1')\">".pwl_('Add')."</a>":'&nbsp;')."</th></tr>";
 	$ret.="</table></div>";
@@ -301,14 +301,14 @@ function pwlResourceMetaShow($resource,$showIdentity=true,$editable=true) {
 					'<textarea name="annotationValue[]" style="width:185px;" rows="'.min($lf-1,5).'">'.$annotationValue->getLabel().'</textarea>':
 					'<input type="text" name="annotationValue[]" value="'.str_replace('"','&quot;',$annotationValue->getLabel()).'" style="width:185px;"'.($editable?'':' readonly="readonly"').'>');
 			if($editable)
-				$ret.='&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.$GLOBALS['_POWL']['uriBase'].'images/delete.gif" title="'.pwl_('Remove').'" />';
+				$ret.='&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/delete.gif" title="'.pwl_('Remove').'" />';
 			$ret.='</td></tr>';
 		}
 	// if no annotations are given
 	if(!$washere && $editable) {
 		$ret.='<tr name="dupl"><td>';
 		$ret.=$s->edit('annotationProperty[]','',$annotationProperties);
-		$ret.='</td><td nowrap="nowrap"><input type="text" name="annotationValue[]" value="" style="width:185px;">&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.$GLOBALS['_POWL']['uriBase'].'images/delete.gif" title="'.pwl_('Remove').'" /></td></tr>';
+		$ret.='</td><td nowrap="nowrap"><input type="text" name="annotationValue[]" value="" style="width:185px;">&nbsp;<input type="image" onclick="if(document.getElementsByName(\'dupl\').length>1) powl.remove(this.parentNode.parentNode); else this.parentNode.firstChild.value=\'\'; return false;" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/delete.gif" title="'.pwl_('Remove').'" /></td></tr>';
 	}
 	if($editable) {
 		$ret.='</tbody><tr><th colspan="2" align="left"><img src="../../images/item_ltr.png" align="absmiddle">&nbsp;<a href="javascript:powl.duplicate(\'dupl\')">'.pwl_('Add').'</a></th></tr>';
@@ -354,9 +354,9 @@ function pwlResourceVersioning($resource='') {
 	}
 }
 function pwlShowViewLinks($type) {
-	if(empty($GLOBALS['_POWL']['SysOnt']))
+	if(empty(Zend_Registry::get('erfurt')->getStore()->SysOnt))
 		return;
-	if(!$view=$GLOBALS['_POWL']['SysOnt']->getClass('View'))
+	if(!$view = Zend_Registry::get('erfurt')->getStore()->SysOnt->getClass('View'))
 		return;
 	if($views=$view->findInstances(array('viewResourceType'=>$type))) {
 		$ret='<br /><img src="../../images/item_ltr.png" align="absmiddle">&nbsp;'.pwl_("Other").':<br />';
@@ -377,12 +377,12 @@ class powlModuleTab extends powlModule {
 }
 
 function pwlGetSysOntClass($localName) {
-	if(!empty($GLOBALS['_POWL']['SysOnt']->modelURI) && $class=$GLOBALS['_POWL']['SysOnt']->getClass($GLOBALS['_POWL']['SysOnt']->baseURI.$localName))
+	if(!empty(Zend_Registry::get('erfurt')->getStore()->SysOnt->modelURI) && $class = Zend_Registry::get('erfurt')->getStore()->SysOnt->getClass(Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.$localName))
 		return $class;
 }
 
 function pwlGetSysOntInstance($instance) {
-	if($GLOBALS['_POWL']['SysOnt']->modelURI && $instance=$GLOBALS['_POWL']['SysOnt']->getInstance($instance))
+	if(Zend_Registry::get('erfurt')->getStore()->SysOnt->modelURI && $instance = Zend_Registry::get('erfurt')->getStore()->SysOnt->getInstance($instance))
 		return $instance;
 }
 
@@ -403,7 +403,7 @@ function pwl_($name,$lang='') {
 	static $texts;
 	static $labelclass;
 #print_r(timer().'Name:'.$name.'<br/>');
-	if($GLOBALS['_POWL']['db']['backend']=='powl')
+	if(Zend_Registry::get('config')->database->backend == 'powl')
 		return $name;
 	$ret=$name;
 	$lang=$lang?$lang:(!empty($_SESSION['PWL']['language'])?$_SESSION['PWL']['language']:'en');
@@ -414,7 +414,7 @@ function pwl_($name,$lang='') {
 		if($lang!='en')
 			$texts['en']=$labelclass->listInstanceLabels('en');
 	}
-	if(!empty($GLOBALS['_POWL']['SysOnt']->modelURI) && $name)
+	if(!empty(Zend_Registry::get('erfurt')->getStore()->SysOnt->modelURI) && $name)
 	if($labelclass) {
 		if(!empty($texts['en'][$name])) {
 			$ret=!empty($texts[$lang][$name][0])?$texts[$lang][$name][0]:$texts['en'][$name][0];
@@ -424,19 +424,19 @@ function pwl_($name,$lang='') {
 			if(strpos($helpurl,'owl-ref:')===0)
 				$helpurl=str_replace('owl-ref:','http://www.w3.org/TR/owl-ref/#',$helpurl).'-def';
 		} else {
-			$instance=$GLOBALS['_POWL']['SysOnt']->addInstance($GLOBALS['_POWL']['SysOnt']->getUniqueResourceURI('Label'),$labelclass);
+			$instance = Zend_Registry::get('erfurt')->getStore()->SysOnt->addInstance(Zend_Registry::get('erfurt')->getStore()->SysOnt->getUniqueResourceURI('Label'),$labelclass);
 			$instance->setPropertyValue('labelText',$name);
 			$instance->addLabel($name,'en');
 			$texts['en'][$name]=$name;
 			$ret=$name;
-			$file=str_replace($GLOBALS['_POWL']['installPath'],'',($_SERVER['PATH_TRANSLATED']?preg_replace('/\\\+/', '/', $_SERVER['PATH_TRANSLATED']):$_SERVER['SCRIPT_FILENAME']));
+			$file=str_replace(ERFURT_BASE,'',($_SERVER['PATH_TRANSLATED']?preg_replace('/\\\+/', '/', $_SERVER['PATH_TRANSLATED']):$_SERVER['SCRIPT_FILENAME']));
 			$instance->addPropertyValue('labelScript',$file);
 		}
 	}
 	return !empty($help)?"<".($helpurl?'a href="'.$helpurl.'" target="docu" style="color:inherit"':'span')." title=\"".htmlentities($help)."\" class=\"help\">$ret</".($helpurl?'a':'span').">":$ret;
 }
 function pwlHTMLOptional($id,$cat,$class='optional') {
-	return '<a class="'.$class.'" href="javascript:powl.optionalToggle(\''.$id.'\',\''.$cat.'\')"><img id="optionalIMG'.$id.$cat.'" src="'.$GLOBALS['_POWL']['uriBase'].'images/minus.gif"></a>'.
+	return '<a class="'.$class.'" href="javascript:powl.optionalToggle(\''.$id.'\',\''.$cat.'\')"><img id="optionalIMG'.$id.$cat.'" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/minus.gif"></a>'.
 		'<script language="javascript">powl.SafeAddOnload(function() { powl.optional(\''.$id.'\',\''.$cat.'\'); });</script>';
 }
 function pwlListHead($start,$erg,$end) {
@@ -513,14 +513,23 @@ function cacheGetUidFromArgs(&$args) {
 	return crc32($uid);
 }
 function cache($fn,$args=array(),$value=NULL) {
-	if(!$GLOBALS['_POWL']['cache'])
+	if(!Zend_Registry::get('config')->cache)
 		return $value;
-	$cache=&$GLOBALS['_POWL']['cachedata'];
-	$uid=cacheGetUidFromArgs($args);
+	if (Zend_Registry::isRegistered('cache')) {
+		$cache = Zend_Registry::get('cache');
+	} else { 
+		Zend_Registry::set('cache',array());
+		$cache = Zend_Registry::get('cache');
+	}
+
+	$uid = cacheGetUidFromArgs($args);
 	if(func_num_args()==3)
 		$cache[$fn][$uid]=$value;
 	else
 		$value=isset($cache[$fn][$uid])?$cache[$fn][$uid]:NULL;
+	
+	Zend_Registry::set('cache', $cache);
+	
 	return $value;
 }
 /**
@@ -547,28 +556,43 @@ Class stmCache {
 		$this->resource=$resource;
 		$this->get();
 	}
+	
+	/**
+	 * returns list of cached vars
+	 *
+	 * @return mixed value
+	 */
 	function get() {
-		if($GLOBALS['_POWL']['cache'] && !$this->value && $ret=$GLOBALS['_ET']['store']->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model='".$this->model->modelID."' AND resource='".$this->resource."'"))
+		if(Zend_Registry::get('config')->cache && !$this->value && $ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model='".$this->model->modelID."' AND resource='".$this->resource."'"))
 			$this->value=unserialize($ret);
 		return $this->value;
 	}
-	function set($value,$triggers=array()) {
+	
+	/**
+	 * set cache value
+	 *
+	 * @param mixed $value
+	 * @param array $triggers
+	 */
+	function set($value,$triggers = array()) {
 		if(!is_array($triggers))
-			$triggers=array($triggers);
+			$triggers = array($triggers);
 		$this->value=$value;
-		if($GLOBALS['_POWL']['cache']) {
+		if(Zend_Registry::get('config')->cache) {
 			if(count($triggers)<=3) {
 				foreach($triggers as $trigger)
-					$tr[]=is_a($trigger,'resource')?$trigger->getURI():$this->model->_dbId($trigger);
+					$tr[]=is_a($trigger, 'resource') ? $trigger->getURI() : $this->model->_dbId($trigger);
 			}
-			$GLOBALS['_ET']['store']->dbConn->execute("REPLACE cache SET value=".$GLOBALS['_ET']['store']->dbConn->qstr(serialize($value)).",function='{$this->fn}',args='{$this->args}',model='{$this->model->modelID}',resource='{$this->resource}',trigger1='{$tr[0]}',trigger2='{$tr[1]}',trigger3='{$tr[2]}'");
+			Zend_Registry::get('erfurt')->getStore()->dbConn->execute("REPLACE cache SET value=".Zend_Registry::get('erfurt')->getStore()->dbConn->qstr(serialize($value)).",function='{$this->fn}',args='{$this->args}',model='{$this->model->modelID}',resource='{$this->resource}',trigger1='{$tr[0]}',trigger2='{$tr[1]}',trigger3='{$tr[2]}'");
 		}
 	}
+	
+	
 	function expire($stm) {
-		if($GLOBALS['_POWL']['cache'])
+		if(Zend_Registry::get('config')->cache)
 			foreach(is_a($stm,'statement')?array($stm->subj,$stm->pred,$stm->obj):func_get_args() as $arg)
 				if(is_a($arg,'resource'))
-					$GLOBALS['_ET']['store']->dbConn->execute("DELETE FROM cache WHERE model='{$arg->model->modelID}' AND
+					Zend_Registry::get('erfurt')->getStore()->dbConn->execute("DELETE FROM cache WHERE model='{$arg->model->modelID}' AND
 						(trigger1='".$arg->getURI()."' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')");
 	}
 }

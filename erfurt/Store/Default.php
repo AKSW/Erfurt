@@ -63,7 +63,7 @@ class Erfurt_Store_Default extends DBStore {
 		if(!empty($tablePrefix))
 			$this->dbConn->fnExecute='pwlRewriteSQL';
 		
-			if($SysOntURI)
+		if($SysOntURI)
 			$this->SysOnt = $this->getModel($SysOntURI);
 	}
 	
@@ -148,8 +148,8 @@ class Erfurt_Store_Default extends DBStore {
 		unset($this->_models[$modelURI]);
 		if($type=='OWL')
 			$mt->add(new Statement(new resource($modelURI),$GLOBALS['RDF_type'],$GLOBALS['OWL_Ontology']));
-		unset($GLOBALS['_POWL']['cachedata']);
-		$m=$this->getModel($modelURI);
+		Zend_Registry::set('cache', array());
+		$m = $this->getModel($modelURI);
 		return $m;
 	}
 	/**
@@ -185,10 +185,10 @@ class Erfurt_Store_Default extends DBStore {
 		$model->logEnd();
 	 	$log=$this->logDisabled;
 		$model->logDisabled=true;
-		if(in_array(strtolower($GLOBALS['_POWL']['db']['type']),array('mysql','mysqli')))
+		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
 			$this->dbConn->execute('ALTER TABLE statements DISABLE KEYS');
 	 	$model->load($file,$filetype,$stream);
-		if(in_array(strtolower($GLOBALS['_POWL']['db']['type']),array('mysql','mysqli')))
+		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
 			$this->dbConn->execute('ALTER TABLE statements ENABLE KEYS');
 		$model=$this->getModel($modelURI);
 		if($modelInst) {
@@ -262,11 +262,11 @@ class Erfurt_Store_Default extends DBStore {
 				return false;
 			}  
 			
-		} elseif($_SESSION['PWL']['user']=='Admin' || $GLOBALS['_POWL']['deactivateLogin'])
+		} elseif($_SESSION['PWL']['user']=='Admin' || Zend_Registry::get('config')->deactivateLogin)
 		# powl-admin and mode without login can use all models
 			return true;
 		
-			if($_SESSION['PWL']['user']=='Admin' || $GLOBALS['_POWL']['deactivateLogin'])
+			if($_SESSION['PWL']['user']=='Admin' || Zend_Registry::get('config')->deactivateLogin)
 		# powl-admin and mode without login can use all models
 			return true;
 			
@@ -362,7 +362,7 @@ class Erfurt_Store_Default extends DBStore {
 		}
 	}
 	function isSetup() {
-		if($GLOBALS['_POWL']['db']['backend']=='powl')
+		if(Zend_Registry::get('config')->database->backend == 'powl')
 			return true;
 		else
 			return parent::isSetup();
