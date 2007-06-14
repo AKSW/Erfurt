@@ -8,8 +8,6 @@
  * @version $Id: node.php 965 2007-05-01 16:35:48Z nheino $
  * @access public
  **/
-
-
 class editliteral extends powlModuleWidget {
 	
 	/**
@@ -75,7 +73,7 @@ class editliteral extends powlModuleWidget {
 			}
 			$ret.='</script></td>';
 			
-			$ret.='<td style="visibility:hidden; vertical-align:middle"><img src="'.$GLOBALS['_POWL']['uriBase'].
+			$ret.='<td style="visibility:hidden; vertical-align:middle"><img src="'.Zend_Registry::get('config')->erfurtPublicUri.
 					'/images/delete.gif" valign="absbottom" onclick="if(document.getElementsByName(\''.
 					$formElemName.'\').length>'.max($config['minCardinality'],$config['cardinality'],1).
 					') powl.remove(powl.getAncestor(this,\'table\')); else document.getElementsByName(\''.
@@ -91,7 +89,7 @@ class editliteral extends powlModuleWidget {
 				$ret.='<input type="hidden" name="'.$name.'[dtype]" value="'.$config['datatype'].'" />';
 			else {
 				$ret.=select::edit($name.'[dtype]', $value->getDatatype(), 
-						array_merge(array(''=>pwl_('Datatype')), $GLOBALS['_POWL']['datatypes']), 
+						array_merge(array(''=>pwl_('Datatype')), Zend_Registry::get('datatypes')), 
 						array('cardinalityMax'=>1, 'AttributeStyle'=>'font-size:x-small;'));
 			}
 			$ret.='</td>';
@@ -111,7 +109,7 @@ class editliteral extends powlModuleWidget {
 			$ret.='</tr></tbody></table>';
 			
 			if ($config['cardinality'] != 1 && $config['cardinalityMax'] != 1)
-				$ret.='<img src="'.$GLOBALS['_POWL']['uriBase'].'/images/plus.gif" '.
+				$ret.='<img src="'.Zend_Registry::get('config')->erfurtPublicUri.'/images/plus.gif" '.
 					'valign="absbottom" onclick="'.($config['maxCardinality'] || 
 					$config['cardinality'] ? 'if(document.getElementsByName(\''.
 					$formElemName.'\').length>'.min($config['maxCardinality'], 
@@ -180,7 +178,7 @@ class editnode extends powlModuleWidget {
 		}
 		
 		if ($config['cardinality'] != 1 && $config['cardinalityMax'] != 1)
-			$ret.='<img src="'.$GLOBALS['_POWL']['uriBase'].'/images/plus.gif" valign="absbottom" onclick="'.
+			$ret.='<img src="'.Zend_Registry::get('config')->erfurtPublicUri.'/images/plus.gif" valign="absbottom" onclick="'.
 			($config['maxCardinality'] || $config['cardinality'] ? 'if(document.getElementsByName(\''.
 					$formElemName.'\').length>'.min($config['maxCardinality'], 
 					$config['cardinality']).') ' : '').'this.insertAdjacentHTML('.
@@ -217,7 +215,7 @@ class editResource extends powlModuleWidget {
 		if (!$value)
 			$value[]='';
 			
-		$r='<script type="text/javascript" src="'.$GLOBALS['_POWL']['uriBase'].
+		$r='<script type="text/javascript" src="'.Zend_Registry::get('config')->erfurtLibUri.
 				'plugins/widgets/selectInstance/scripts.js"></script><span>';
 		
 		foreach ($value as $val) {
@@ -228,9 +226,9 @@ class editResource extends powlModuleWidget {
 				'<input type="text" style="color:blue" onfocus="this.select();" onblur="powl.setVisibility(document.getElementById(\''.$name.'.liveSearchDiv\'),\'none\');" onchange="selectResource.liveSearch(this)" onkeyup="selectResource.liveSearch(this)" id="'.$name.'" name="'.$name.'" value="'.htmlspecialchars(is_object($val)?$val->getLocalName():$val).'"'.($config['readonly'] || $get_class!='selectresource'?' readonly="readonly"':'').$attributes.'>';
 				
 			if($config['showEdit'])
-				$r.='&nbsp;<input type="image" onclick="window.open(\''.$GLOBALS['_POWL']['uriBase'].'plugins/widgets/selectInstance/resource.php?uri=\'+this.parentNode.firstChild.value,\'Edit Instance\',\'resizable=1,scrollbars=1\'); return false;" src="'.$GLOBALS['_POWL']['uriBase'].'images/edit.gif" title="'.pwl_('Edit').'" />&nbsp;';
+				$r.='&nbsp;<input type="image" onclick="window.open(\''.Zend_Registry::get('config')->erfurtLibUri.'plugins/widgets/selectInstance/resource.php?uri=\'+this.parentNode.firstChild.value,\'Edit Instance\',\'resizable=1,scrollbars=1\'); return false;" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/edit.gif" title="'.pwl_('Edit').'" />&nbsp;';
 			if(!$config['readonly'])
-				$r.='<img style="visibility:hidden" onclick="if(document.getElementsByName(\''.$name.'\').length>1) powl.remove(this.parentNode); else document.getElementsByName(\''.$name.'\')[0].value=\'\'; return false;" src="'.$GLOBALS['_POWL']['uriBase'].'images/delete.gif" title="'.pwl_('Remove').'" />';
+				$r.='<img style="visibility:hidden" onclick="if(document.getElementsByName(\''.$name.'\').length>1) powl.remove(this.parentNode); else document.getElementsByName(\''.$name.'\')[0].value=\'\'; return false;" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/delete.gif" title="'.pwl_('Remove').'" />';
 			$r.='<br /><div id="'.$name.'.liveSearchDiv" style="position:absolute; display:none;"><select style="width:85%" size="5" id="'.$name.'.liveSearch" onclick="document.getElementById(\''.$name.'\').value=this.value; powl.setVisibility(this.parentNode,\'none\')"></select></div></div>';
 		}
 		
@@ -238,9 +236,9 @@ class editResource extends powlModuleWidget {
 		if(!$config['readonly']) {
 			if(empty($config['cardinalityMax']) || !$config['cardinalityMax']==1)
 #				$r.='<a id="dupl'.$name.'" href="javascript:powl.duplicate(\'add'.$name.'\')" title="'.pwl_('Add').'"><img src="'.$GLOBALS['_POWL']['uriBase'].'/images/plus.gif" valign="absbottom" /></a>&nbsp;';
-				$r.='<img onclick="this.previousSibling.insertAdjacentHTML(\'afterEnd\',powl.getOuterHTML(this.previousSibling.firstChild).replace(/'.preg_quote($formElemName).'\[[0-9]+]/g,\''.$formElemName.'[\'+Math.round(Math.random()*10000)+\']\').replace(/\bvalue=\x22[\S]*\x22/g, \'\'));" title="'.pwl_('Add').'" src="'.$GLOBALS['_POWL']['uriBase'].'/images/plus.gif" valign="absbottom" />&nbsp;';
+				$r.='<img onclick="this.previousSibling.insertAdjacentHTML(\'afterEnd\',powl.getOuterHTML(this.previousSibling.firstChild).replace(/'.preg_quote($formElemName).'\[[0-9]+]/g,\''.$formElemName.'[\'+Math.round(Math.random()*10000)+\']\').replace(/\bvalue=\x22[\S]*\x22/g, \'\'));" title="'.pwl_('Add').'" src="'.Zend_Registry::get('config')->erfurtPublicUri.'/images/plus.gif" valign="absbottom" />&nbsp;';
 			if($config['showSelector'])
-				$r.='<a href="javascript:powl.winopen(\''.$GLOBALS['_POWL']['uriBase'].'plugins/widgets/selectInstance/selectInstance.php?resource='.$get_class.(!empty($config['class'])?'&uri='.urlencode(urlencode(serialize(array_keys($config['class']->getURI())))):'').'&element='.urlencode(urlencode($name)).'\',\'selectInstance\',\'height=400,width='.($get_class=='selectinstance'||$get_class=='selectresource'?600:300).'\');" title="'.pwl_('Select').'">[s]</a>';
+				$r.='<a href="javascript:powl.winopen(\''.Zend_Registry::get('config')->erfurtLibUri.'plugins/widgets/selectInstance/selectInstance.php?resource='.$get_class.(!empty($config['class'])?'&uri='.urlencode(urlencode(serialize(array_keys($config['class']->getURI())))):'').'&element='.urlencode(urlencode($name)).'\',\'selectInstance\',\'height=400,width='.($get_class=='selectinstance'||$get_class=='selectresource'?600:300).'\');" title="'.pwl_('Select').'">[s]</a>';
 		}
 		return $r;
 	}

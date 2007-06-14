@@ -158,12 +158,15 @@ include_once(WIDGETS_INCLUDE_DIR.'node.php');
 include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
 
-if(empty($_POWL['uriBase'])) {
+if(empty($config->erfurtUriBase)) {
 	if(!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE))
-		$_POWL['uriBase'] = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'],'/'), '', ERFURT_BASE);
-	else $_POWL['uriBase'] = '/powl/';
+		$config->erfurtUriBase = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'],'/'), '', ERFURT_BASE);		
+	else $config->erfurtUriBase = '/powl/';
+	
+	$config->erfurtPublicUri =  $config->erfurtUriBase . 'public/';
 }
 
+$config->erfurtLibUri = $config->erfurtUriBase .'lib/';
 
 $datatypes = array(
 	'http://www.w3.org/2001/XMLSchema#string'=>'String',

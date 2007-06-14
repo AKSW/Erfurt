@@ -5,6 +5,7 @@
  *
  * Copyright (c) 2006 S�en Auer <soeren@auer.cx>
  *                    Philipp Frischmuth <philipp@frischmuth24.de>
+ * 									Stefan Berger <berger@intersolut.de>
  *
  * This file is part of pOWL - web based ontology editor.
  *
@@ -170,7 +171,7 @@ class Erfurt_Store_Default extends DBStore {
 				fclose($fp);
 				preg_match_all('/xmlns:([^=]+)=[\'"]([^"\']+)[\'"]/im',$head,$matches);
 				$i=array_search($modelURI,$matches[2]);
-				$name=($i!==false)?$matches[1][$i]:$GLOBALS['_POWL']['SysOnt']->getUniqueResourceURI('Modelinstance');
+				$name = ($i!==false) ? $matches[1][$i] : $this->SysOnt->getUniqueResourceURI('Modelinstance');
 				$modelInst=$this->SysOnt->addInstance($name,'Model');
 				$modelInst->setPropertyValue('modelURI',$modelURI);
 				foreach($matches[1] as $key=>$val)
@@ -270,7 +271,7 @@ class Erfurt_Store_Default extends DBStore {
 			return true;
 			
 		# check active user
-		if(!$user=$GLOBALS['_POWL']['SysOnt']->getInstance($_SESSION['PWL']['user']))
+		if(!$user = $this->SysOnt->getInstance($_SESSION['PWL']['user']))
 			return false;
 		if(!$model)
 			return in_array($accessType,$user->listPropertyValuesPlain('userPrivileges'))?true:false;

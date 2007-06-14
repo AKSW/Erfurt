@@ -103,9 +103,9 @@ class DefaultRDFSModel extends DbModel {
 			return $c;
 		$ret=array_flip($GLOBALS['default_prefixes']);
 		// get namespace prefixes from SysOnt-Class "Model"
-		if(0 && !empty($GLOBALS['_POWL']['SysOnt']) && $modelClass=$GLOBALS['_POWL']['SysOnt']->getClass('Model'))
+		if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
 			if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
-				foreach($inst->listPropertyValuesPlain($GLOBALS['_POWL']['SysOntSchemaURI'].'modelXMLNS') as $prefix) {
+				foreach($inst->listPropertyValuesPlain(Zend_Registry::get('SysOntSchemaURI').'modelXMLNS') as $prefix) {
 					$ns=explode(':',$prefix,2);
 					$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
 				}
@@ -256,9 +256,9 @@ class DefaultRDFSModel extends DbModel {
 	 * @return string RDF/RDFS/OWL
 	 **/
 	function getType() {
-		if(!empty($GLOBALS['_POWL']['SysOntModelURI']) && $this->modelURI==$GLOBALS['_POWL']['SysOntModelURI'])
+		if(!empty(Zend_Registry::get('config')->SysOntModelURI) && $this->modelURI == Zend_Registry::get('config')->SysOntModelURI)
 			$type='OWL';
-		else if(!empty($GLOBALS['_POWL']['SysOnt']) && $modelClass=$GLOBALS['_POWL']['SysOnt']->getClass('Model'))
+		else if(!empty($this->store->SysOnt) && $modelClass = $this->store->SysOnt->getClass('Model'))
 			if($modelInstance=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
 				$type=$modelInstance->getPropertyValuePlain('modelType');
 		if((!empty($type) && $type=='OWL') || (empty($type) && ($this->findNode(NULL,'rdf:type','owl:Ontology') || $this->findNode(NULL,'rdf:type','owl:Class')))) {
@@ -1299,6 +1299,8 @@ class DefaultRDFSModel extends DbModel {
 		$erg=$rs->_maxRecordCount?$rs->_maxRecordCount:$rs->_numOfRows;
 		return $rs;
 	}
+	
+	
 	/**
 	 * Return a statement from a ADORecordSet resulting from a
 	 * query to the statement table.
@@ -1328,6 +1330,8 @@ class DefaultRDFSModel extends DbModel {
 
 		return new Statement($sub,$pred,$obj);
 	}
+	
+	
 /*	function load($filename,$type=NULL,$stream=false,$loadImports=false) {
 		$this->dontCheckForDuplicatesOnAdd=true;
 		$this->logStart('Model created',$this->modelURI);
@@ -1384,6 +1388,8 @@ class DefaultRDFSModel extends DbModel {
 		$this->dbConn->StartTrans();
 		return $actionId;
 	}
+	
+	
 	/**
 	 * Finishes the last logging action.
 	 *
@@ -1395,6 +1401,8 @@ class DefaultRDFSModel extends DbModel {
 		array_shift($this->logActions);
 		$this->dbConn->CompleteTrans();
 	}
+	
+	
 	/**
 	 * Writes the adding of the given statement to the log.
 	 *
@@ -1404,6 +1412,8 @@ class DefaultRDFSModel extends DbModel {
 	function logAdd($statement) {
 		$this->log($statement,'a');
 	}
+	
+	
 	/**
 	 * Writes the removal of the given statement to the log.
 	 *
@@ -1445,9 +1455,9 @@ class DefaultRDFSModel extends DbModel {
 		$rs=&$this->dbConn->execute($sql);
 		if(!$rs)
 			$this->dbConn->errorMsg();
-
-
 	}
+	
+	
 	/**
 	 * Returns true if logging is enabled for the model/store false otherwise.
 	 *
@@ -1456,11 +1466,15 @@ class DefaultRDFSModel extends DbModel {
 	function logEnabled() {
 		return (empty($GLOBALS['_POWL']['logging'])||$GLOBALS['_POWL']['logging']) && empty($this->logDisabled) && in_array((empty($GLOBALS['_POWL']['db']['tablePrefix'])?'':$GLOBALS['_POWL']['db']['tablePrefix']).'log_action_descr',$this->dbConn->MetaTables())?true:false;
 	}
+	
+	
 	function renameNamespace($fromNS,$toNS) {
 		$this->dbConn->execute("UPDATE statements SET
 			subject=REPLACE(subject,'$fromNS','$toNS'),predicate=REPLACE(predicate,'$fromNS','$toNS'),object=REPLACE(object,'$fromNS','$toNS')
 			WHERE modelID='{$this->modelID}'");
 	}
+	
+	
 	function removeDuplicateStatements() {
 /*		$res=$this->dbConn->execute('SELECT s1.id,s2.id FROM statements s1 INNER JOIN statements s2 USING(modelID,subject,predicate,object,object_is) WHERE modelID="'.$this->modelID.'"');
 		while($row=$res->FetchRow()) {
@@ -1493,5 +1507,5 @@ class DefaultRDFSModel extends DbModel {
 
 		return $ret;
 	}
-}
+} 
 ?>
