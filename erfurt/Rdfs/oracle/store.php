@@ -3,10 +3,8 @@
  * RDFSStore
  *
  * @package RDFSAPI
- * @author Sren Auer <soeren@auer.cx>
- * @copyright Copyright (c) 2004
- * @version $Id: store.php 838 2007-03-12 14:53:32Z p_frischmuth $ a_alexandrov
- * @access public
+ * @author Atanas Alexandrov <sirakov@gmail.com> 
+ *
  **/
 
 class POWLStore extends DefaultPOWLStore {

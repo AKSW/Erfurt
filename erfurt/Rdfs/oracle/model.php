@@ -120,35 +120,59 @@ class RDFSModel extends DefaultRDFSModel {
 	function find(){
 
 	}
-	
+ 	
+	/**
+	 * find Subject
+	 */	
 	function findSubjects(){
 	
 	}
 	
+	/**
+         * find Redicates
+         */
 	function findPredicates(){
 	
 	}
 
+	/**
+         * find Objects
+         */
 	function findObjects(){
 	
 	}
 	
+	/**
+         * Create rulebase
+         */
 	function createRulebase(){
 	
 	}
 	
-	function dripRulebase(){
+	/**
+         * Drop rulebase
+         */
+	function dropRulebase(){
 	
 	}
 	
+	/**
+         * Create Ruleindex
+         */
 	function createRuleindex(){
 	
 	}
 	
+	/**
+         * Drop ruleindex
+         */
 	function dropRuleindex(){
 	
 	}
 	
+	/**
+         * Insert rule
+         */
 	function insertRule(){
 	
 	}
