@@ -159,15 +159,25 @@ include_once(WIDGETS_INCLUDE_DIR.'node.php');
 include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
 
-if(empty($config->erfurtUriBase)) {
-	if(!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE))
-		$config->erfurtUriBase = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'],'/'), '', ERFURT_BASE);		
-	else $config->erfurtUriBase = '/powl/';
-	
+if (empty($config->erfurtUriBase)) {
+	if (!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE)) {
+		$config->erfurtUriBase = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'], '/'), '', ERFURT_BASE);
+	} else  {
+		$config->erfurtUriBase = '/powl/';
+	}
 	$config->erfurtPublicUri =  $config->erfurtUriBase . 'public/';
 }
 
 $config->erfurtLibUri = $config->erfurtUriBase .'lib/';
+
+// set paths and rewrite base
+// TODO: test!!!
+$relDir = str_ireplace($_SERVER['DOCUMENT_ROOT'], '', ERFURT_BASE);
+$firstDir = substr($relDir, 0, strpos($relDir, '/'));
+$rewriteBase = substr($_SERVER['SCRIPT_URL'], 0, strpos($_SERVER['SCRIPT_URL'], $firstDir));
+$urlBase = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))) . 
+		   '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['SERVER_PORT'] != '80' ? ':' . $_SERVER['SERVER_PORT'] : '');
+$config->erfurtUrlBase = $urlBase . $rewriteBase . $relDir;
 
 $datatypes = array(
 	'http://www.w3.org/2001/XMLSchema#string'=>'String',
@@ -206,6 +216,12 @@ include_once(MODULES_INCLUDE_DIR.'cms/api/include.php');
 // for debugging purposes
 if($config ->debug === true)
 	require_once(RDFAPI_INCLUDE_DIR.'util/adodb/adodb-errorhandler.inc.php');
+	
+// instantiate plug-in manager
+$pluginManager = new Erfurt_Plugin_Manager();
+// $pluginManager->addPluginDir(ERFURT_BASE . $config->pluginDir);
+$pluginManager->addPluginDir(ERFURT_BASE . $config->widgetDir);
+Zend_Registry::set('pluginManager', $pluginManager);
 
 
 ## NEW APP
