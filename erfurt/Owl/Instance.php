@@ -3,7 +3,7 @@
  * Instance.php
  * Encoding: UTF-8
  *
- * Copyright (c) 2006 Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * Copyright (c) 2006 SÃ¶ren Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  *
  * This file is part of pOWL - web based ontology editor.
  *
@@ -26,7 +26,7 @@
  * OWLInstance represents a simple instance (individual) of an OWLClass.
  * 
  * @package owl
- * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * @author SÃ¶ren Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004-2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @version $Id: $

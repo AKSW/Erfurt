@@ -3,7 +3,7 @@
  * Model.php
  * Encoding: UTF-8
  *
- * Copyright (c) 2004-2007 S�ren Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * Copyright (c) 2004-2007 Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  *
  * This file is part of pOWL - web based ontology editor.
  *
@@ -23,90 +23,164 @@
  */
 
 /**
- * OWLModel represents a owl based knowledge base.
+ * OWLModel represents an owl based knowledge base.
  *
  * @package owl
- * @author S�ren Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004-2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @version $Id: $
  */
-class Erfurt_Owl_Model extends Erfurt_Rdfs_ModelAbstract {
+class Erfurt_Owl_Model extends RDFSModel {
 	
-	public function __construct($store, $modelURI) {
+	/**
+	 * 
+	 *
+	 * @param Erfurt_Store_Default $store
+	 * @param string $modelURI
+	 */
+	public function __construct(Erfurt_Store_Default $store, $modelURI) {
 		
-		parent::__construct($store,$modelURI);
-		$this->importsIds=array();
-	}
-	
-	public function addDatatypeProperty($uri) {
+		parent::__construct($store, $modelURI);
 		
-		$this->add($uri,'rdf:type','owl:DatatypeProperty');
-		return new $this->property($uri,$this);
-	}
-	
-	public function addObjectProperty($uri) {
-		
-		$this->add($uri,'rdf:type','owl:ObjectProperty');
-		return new $this->property($uri,$this);
+		// initialize the import ids for the owl:imports support
+		$this->importsIds = array();
 	}
 	
 	/**
-	 * Returns the OWL_ObjectProperties of the model
 	 *
-	 * @return array Array of RDFSProperty objects.
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function classF($uri, expandNS = true) {
+		
+		return new Erfurt_Owl_Class($uri, $this, $expandNS); 
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function propertyF($uri, expandNS = true) {
+		
+		return new Erfurt_Owl_Property($uri, $this, $expandNS); 
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function instanceF($uri, expandNS = true) {
+		
+		return new Erfurt_Owl_Instance($uri, $this, $expandNS); 
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @return Erfurt_Owl_Property
+	 */
+	public function addDatatypeProperty($uri) {
+		
+		$this->add($uri, 'rdf:type', 'owl:DatatypeProperty');
+		return this->propertyF($uri);
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @return Erfurt_Owl_Property
+	 */
+	public function addObjectProperty($uri) {
+		
+		$this->add($uri, 'rdf:type', 'owl:ObjectProperty');
+		return this->propertyF($uri);
+	}
+	
+	/**
+	 * Returns all owl:ObjectPropertiy instances of the model.
+	 *
+	 * @return Erfurt_Owl_Property[] Returns an array of Erfurt_Owl_Property objects.
 	 */
 	public function listObjectProperties() {
 		
-		return $this->listTypes($GLOBALS['OWL_ObjectProperty'],'RDFSProperty');
+		return $this->listRDFTypeInstancesAs('owl:ObjectProperty', 'property');
 	}
 	
 	/**
-	 * Returns the functional properties of the model
+	 * Returns all owl:FunctionalProperty instances of the model.
 	 *
-	 * @return array Array of RDFSProperty objects.
+	 * @return Erfurt_Owl_Property[] Returns an array of Erfurt_Owl_Property objects.
 	 */
 	public function listFunctionalProperties() {
 		
-		return $this->listTypes($GLOBALS['OWL_FunctionalProperty'],'OWLProperty');
+		return $this->listRDFTypeInstancesAs('owl:FunctionalProperty', 'property');
 	}
 	
 	/**
-	 * Returns the inverse functional properties of the model
+	 * Returns all owl:InverseFunctionalProperty instances of the model.
 	 *
-	 * @return array Array of RDFSProperty objects.
+	 * @return Erfurt_Owl_Property[] Returns an array of Erfurt_Owl_Property objects.
 	 */
 	public function listInverseFunctionalProperties() {
 		
-		return $this->listTypes($GLOBALS['OWL_InverseFunctionalProperty'],'OWLProperty');
+		return $this->listRDFTypeInstancesAs('owl:InverseFunctionalProperty', 'property');
 	}
 	
 	/**
-	 * Returns the OWL_DatatypeProperties of the model
+	 * Returns all owl:DatatypeProperty instances of the model.
 	 *
-	 * @return array Array of RDFSProperty objects.
+	 * @return Erfurt_Owl_Property[] Returns an array of Erfurt_Owl_Property objects.
 	 */
 	public function listDatatypeProperties() {
 		
-		return $this->listTypes($GLOBALS['OWL_DatatypeProperty'],'RDFSProperty');
+		return $this->listRDFTypeInstancesAs('owl:DatatypeProperty', 'property');
 	}
 	
+	/**
+	 *
+	 *
+	 * @return Erfurt_Owl_Class[]
+	 */
 	public function listRestrictions() {
-		
-		return $this->findSubjects('owl:onProperty','Class');
+	
+		return $this->findSubjectsForPredicateAs('owl:onProperty', 'class');
 	}
 	
+	/**
+	 *
+	 *
+	 * @return Erfurt_Rdfs_Class[]
+	 */
 	public function listTopClassesInfered() {
 		
-		if($topClasses=$this->listTopClasses())
-		foreach($topClasses as $key=>$topClass)
-			if(method_exists($topClass,'listIntersectionOf') && $inferedSuperClasses=$topClass->listIntersectionOf())
-				foreach($inferedSuperClasses as $inferedSuperClass)
-					if(!isBnode($inferedSuperClass))
-						unset($topClasses[$key]);
+		$topClasses = $this->listTopClasses();
+		
+		foreach ($topClasses as $uri=>$topClass) {
+			if(method_exists($topClass, 'listIntersectionOf') {
+				$inferedSuperClasses = $topClass->listIntersectionOf();
+				
+				foreach ($inferedSuperClasses as $inferedSuperClass) {
+					if(!isBnode($inferedSuperClass)) unset($topClasses[$uri]);
+				}
+			}
+		}
+						
 		return $topClasses;
 	}
 	
+// TODO put this method in Erfurt_Owl_Class
+// TODO revise this method
 	public function listSubClassesInfered($class) {
 		
 		static $subClassesInfered;
@@ -120,76 +194,143 @@ class Erfurt_Owl_Model extends Erfurt_Rdfs_ModelAbstract {
 		return !empty($subClassesInfered[$class->getLocalName()])?$subClassesInfered[$class->getLocalName()]:array();
 	}
 	
+	/**
+	 *
+	 *
+	 * @param string[] $imports
+	 */
 	public function setImports($imports) {
 		
-		$this->asResource->setPropertyValues($GLOBALS['OWL_imports'],$imports);
+		$this->asResource->setPropertyValues('owl:imports', $imports);
 	}
 	
+	/**
+	 *
+	 *
+	 * @return RDFSResource[]
+	 */
 	public function listPriorVersion() {
 		
-		return $this->asResource->listPropertyValues($GLOBALS['OWL_priorVersion']);
+		return $this->asResource->listPropertyValues('owl:priorVersion');
 	}
 	
+	/**
+	 *
+	 *
+	 * @param string[] $values
+	 */
 	public function setPriorVersion($values) {
 		
-		$this->asResource->setPropertyValues($GLOBALS['OWL_priorVersion'],$values);
+		$this->asResource->setPropertyValues('owl:priorVersion', $values);
 	}
 	
+	/**
+	 *
+	 *
+	 * @return RDFSResource[]
+	 */
 	public function listBackwardCompatibleWith() {
 		
-		return $this->asResource->listPropertyValues($GLOBALS['OWL_backwardCompatibleWith']);
+		return $this->asResource->listPropertyValues('owl:backwardCompatibleWith');
 	}
 	
+	/**
+	 *
+	 *
+	 * @param string[] $values
+	 */
 	public function setBackwardCompatibleWith($values) {
 		
-		$this->asResource->setPropertyValues($GLOBALS['OWL_backwardCompatibleWith'],$values);
+		$this->asResource->setPropertyValues('owl:backwardCompatibleWith', $values);
 	}
 	
+	/**
+	 *
+	 *
+	 * @return RDFSResource[]
+	 */
 	public function listIncompatibleWith() {
 		
-		return $this->asResource->listPropertyValues($GLOBALS['OWL_incompatibleWith']);
+		return $this->asResource->listPropertyValues('owl:incompatibleWith');
 	}
 	
+	/**
+	 *
+	 *
+	 * @param string[] $values
+	 */
 	public function setIncompatibleWith($values) {
 		
-		$this->asResource->setPropertyValues($GLOBALS['OWL_incompatibleWith'],$values);
+		$this->asResource->setPropertyValues('owl:incompatibleWith', $values);
 	}
 	
+	/**
+	 *
+	 *
+	 * @return RDFSResource[]
+	 */
 	public function listAllDifferentSets() {
-		
-		return $this->findNodes(NULL,$GLOBALS['RDF_type'],$GLOBALS['OWL_AllDifferent']);
+// TODO check method name		
+		return $this->findNodes(null, 'rdf:type', 'owl:AllDifferent');
 	}
 	
-	public function getAllDifferent($set,$class=NULL) {
+	/**
+	 *
+	 *
+	 * @param string/Resource $set
+	 * @param string/null $class
+	 * @return RDFSResource[]
+	 */
+	public function getAllDifferent($set, $class = null) {
 		
-		$distinctMembers=$this->findNode($set,$GLOBALS['OWL_distinctMembers'],NULL);
-		return $this->getList($distinctMembers,$class);
+		$distinctMembers = $this->findNode($set, 'owl:distinctMembers', null);
+		return $this->getList($distinctMembers, $class);
 	}
 	
-	public function setAllDifferent($set,$members) {
+	/**
+	 *
+	 *
+	 * @param string/Resource $set
+	 * @param RDFSResource[] $members
+	 */
+	public function setAllDifferent($set, $members) {
 		
 		$this->removeAllDifferent($set);
 		$this->addAllDifferent($members);
 	}
 	
+	/**
+	 *
+	 *
+	 * @param RDFSResource[] $members
+	 */
 	public function addAllDifferent($members) {
 		
-		$allDifferent=new BlankNode($this->getUniqueResourceURI(BNODE_PREFIX));
-		$this->add($allDifferent,$GLOBALS['RDF_type'],$GLOBALS['OWL_AllDifferent']);
-		$distinctMembers=$this->addList($members,false);
-		$this->add($allDifferent,$GLOBALS['OWL_distinctMembers'],$distinctMembers);
+		$allDifferent = new BlankNode($this->getUniqueResourceURI(EF_BNODE_PREFIX));
+		$this->add($allDifferent, 'rdf:type', 'owl:AllDifferent');
+		$distinctMembers = $this->addList($members, false);
+		$this->add($allDifferent, 'owl:distinctMembers', $distinctMembers);
 	}
 	
+	/**
+	 *
+	 *
+	 * @param string/Resource $set
+	 */
 	public function removeAllDifferent($set) {
 		
-		if(!is_a($set,'RDFSResource'))
-			$set=$this->resourceF($set);
+		if(!($set instanceof RDFSResource))	$set = $this->resourceF($set);
 		$set->remove();
 	}
 	
+	/**
+	 *
+	 *
+	 * @return Erfurt_Owl_Class
+	 */
 	public function listIntersectionClasses() {
 		
-		return $this->findNodes(NULL,'owl:intersectionOf',NULL,'OWLClass');
+		return $this->findNodes(null, 'owl:intersectionOf', null, 'class');
 	}
 }
 ?>
