@@ -394,6 +394,7 @@ class DefaultRDFSModel extends DbModel {
 	/**
 	 * Find helper function.
 	 *
+	 * @deprecated use listRDFTypeInstancesAs instead
 	 * @param RDFSResource $type
 	 * @param RDFSClass $class
 	 * @param int $start
@@ -404,6 +405,23 @@ class DefaultRDFSModel extends DbModel {
 	function listTypes($type=NULL,$class=NULL,$start=0,$count=0,$erg=0) {
 		return $this->findNodes(NULL,'rdf:type',$type,$class,$start,$count,&$erg);
 	}
+	
+	/**
+	 * This method searches for rdf:type instances of a specific type or of all types if no type is given.
+	 * You can set the optional parameter to 'class' or 'property' if you want such objects to be returned.
+	 *
+	 * @param RDFSResource/null $type Indicates whether to return only rdf:type instances of the given type.
+	 * @param string/null $class Indicates whether to return specific objects, e.g. 'class' or 'property'.
+	 * @param int/null $offset An optional offset.
+	 * @param int/null $limit An optional limit.
+	 * @return mixed[] Returns an array that holds RFDSResource/BlankNode/RDFSClass/RDFSProperty objects
+	 */
+	public function listRDFTypeInstancesAs($type = null, $class = null, $offset = null, $limit = null) {
+		
+		return $this->findNodes(null, 'rdf:type', $type, $class, $offset, $limit);
+	}
+	
+	
 	/**
 	 * Returns array of all named classes in this model.
 	 *
@@ -690,12 +708,38 @@ class DefaultRDFSModel extends DbModel {
 		$find=$this->find($s,$p,$o,$start,$count,&$erg);
 		return $find->triples;
 	}
+	
+	/**
+	 * @deprecated use findSubjectsForPredicateAs instead
+	 */
 	function findSubjects($predicate,$class='Resource',$start=0,$count=0,$erg=0) {
 		$sql='SELECT subject,subject_is FROM statements
 			WHERE modelID IN ('.$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
 			GROUP BY subject';
 		return $this->_convertRecordSetToNodeList($sql,$class,$start,$count,&$erg);
 	}
+	
+	/**
+	 *
+	 * 
+	 * @param string/RDFSResource $predicate
+	 * @param string/null $class
+	 * @param int/null $offset
+	 * @param int/null $limit
+	 */
+	public function findSubjectsForPredicateAs($predicate, $class = null, $offset = null, $limit = null) {
+// TODO handle offset and limit
+// TODO check whether to use a generic method for such cases instead of direct sparql
+// TODO add a class parameter to sparqlQuery method
+		if (!$predicate instanceof RDFSResource) $predicate = $this->resourceF($predicate);
+
+		$sparql = 'SELECT DISTINCT ?subject
+				   WHERE { ?subject <' . $predicate->getURI() . '> ?object } '
+				
+		return $this->sparqlQuery($sparql, $class);
+	}
+	
+	
 	function findObjects($predicate,$class='Resource',$start=0,$count=0,$erg=0) {
 		$sql="SELECT object,object_is FROM statements
 			WHERE modelID IN (".$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
