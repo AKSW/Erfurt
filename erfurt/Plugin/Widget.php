@@ -56,10 +56,13 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	/**
 	  * Protected constructor -- not instantiable.
 	  */
-	protected function __construct($elementName, $values, $config = null, $scripts = null, $styles = null) {
+	protected function __construct($elementName, $values, $widgetConfig = null, $scripts = null, $styles = null) {
+		$config = Zend_Registry::get('config');
+		
 		parent::__construct();
-		$this->_widgetBaseUrl = $this->_pluginBaseUrl . 'widgets/';
-		$this->_widgetBaseDir = $this->_pluginBaseDir . 'plugins/';
+		$this->_widgetBaseDir = ERFURT_BASE . $this->_config->widgetDir;
+		$this->_widgetBaseUrl = $config->erfurtUrlBase . $config->widgetDir;
+		
 		$this->_id = uniqid();
 		$this->_elementName = $elementName;
 		if (is_array($values)) {
@@ -67,15 +70,30 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		} else {
 			$this->_values = array($values);
 		}
-		if (is_array($config)) {
-			$this->_config = $config;
+		if (is_array($widgetConfig)) {
+			$this->_config = $widgetConfig;
 		}
 		if (is_array($scripts)) {
 			$this->_scripts = $scripts;
+		} elseif (is_string($scripts)) {
+			$this->_scripts[] = $scripts;
 		}
 		if (is_array($styles)) {
 			$this->_styles = $styles;
+		} elseif (is_string($styles)) {
+			$this->_styles[] = $styles;
 		}
+	}
+	
+	public function __toString() {
+		$count = 1;
+		$ret = '<div id="container-' . $this->_id . '" class="' . $this->_config['class'] . '">' . PHP_EOL;
+		foreach ($this->_values as $value) {
+			$ret .= $this->getSingleValueHtml($value, $count++);
+		}
+		$ret .= '</div>' . PHP_EOL;
+		
+		return $ret;
 	}
 	
 	/**
@@ -95,6 +113,16 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	
 	public function getStylesheets() {
 		return $this->_styles;
+	}
+	
+	// overwrite this, if your widget has preferred data types!
+	public static function getPreferredDatatypes() {
+		return null;
+	}
+	
+	// overwrite this, if your widget has preferred properties!
+	public static function getPreferredProperties() {
+		return null;
 	}
 	
 }

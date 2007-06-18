@@ -27,7 +27,6 @@ class Erfurt_Plugin_Manager {
 	  */
 	public function __contruct($pluginDirs = array()) {
 		$this->_activePlugins = array();
-		$this->_activeWidgets = array();
 		
 		if (is_array($pluginDirs)) {
 			$this->_pluginDirs = $pluginDirs();
@@ -44,6 +43,7 @@ class Erfurt_Plugin_Manager {
 	public function addPluginDir($path) {
 		if (file_exists($path)) {
 			$this->_pluginDirs[] = $path;
+			$this->_scanPluginDir($path);
 		}
 	}
 	
@@ -52,10 +52,14 @@ class Erfurt_Plugin_Manager {
 	  *
 	  * @return array
 	  */
-	public function getActivePlugins() {
-		if (empty($this->_activePlugins)) {
-			$this->_scanPluginDirs();
-		}
+	public function getActivePlugins($type = null) {
+		// if (empty($this->_activePlugins)) {
+		// 	$this->_scanPluginDirs();
+		// }
+		// if ($type && $type === 'widget') {
+		// 	// TODO: return widgets only
+		// 	return array();
+		// }
 		return $this->_activePlugins;
 	}
 	
@@ -66,9 +70,9 @@ class Erfurt_Plugin_Manager {
 	  * @param string $className The name of a plug-in class.
 	  */
 	public function isPluginActive($className) {
-		if (empty($this->_activePlugins)) {
-			$this->_scanPluginDirs();
-		}
+		// if (empty($this->_activePlugins)) {
+		// 	$this->_scanPluginDirs();
+		// }
 		return in_array($className, $this->_activePlugins);
 	}
 	
@@ -76,41 +80,39 @@ class Erfurt_Plugin_Manager {
 	  * Scans directories for plug-ins and stores their class names
 	  * in an array.
 	  */
-	private function _scanPluginDirs() {
-		foreach ($this->_pluginDirs as $directory) {
-			$contents = scandir($directory);
+	private function _scanPluginDir($directory) {
+		$contents = scandir($directory);
+		
+		// scan dir contens
+		foreach ($contents as $fileName) {
+			$searchPath = $directory . $fileName;
+			$pathInfo = pathinfo($searchPath);
 			
-			// scan dir contens
-			foreach ($contents as $fileName) {
-				$searchPath = $directory . $fileName;
-				$pathInfo = pathinfo($searchPath);
-				
-				if (is_dir($searchPath)) {
-					// if it's a directory, scan its contents for a file of the same name
-					// but with a .php extension
-					if (file_exists($searchPath . DIRECTORY_SEPARATOR . $fileName . '.php')) {
-						if (!class_exists($fileName)) {
-							include_once $searchPath . DIRECTORY_SEPARATOR . $fileName . '.php';
-							$className = $fileName;
-						} else {
-							throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
-						}
-					}
-				// scan for file-only plug-ins
-				} elseif ($pathInfo['extension'] === 'php') {
+			if (is_dir($searchPath)) {
+				// if it's a directory, scan its contents for a file of the same name
+				// but with a .php extension
+				if (file_exists($searchPath . DIRECTORY_SEPARATOR . $fileName . '.php')) {
 					if (!class_exists($fileName)) {
-						include_once $searchPath;
-						$className = substr($fileName, 0, strlen($fileName) - 4);
+						include_once $searchPath . DIRECTORY_SEPARATOR . $fileName . '.php';
+						$className = $fileName;
 					} else {
 						throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
 					}
 				}
-				
-				// add class found
-				if ($className && class_exists($className)) {
-					$this->_activePlugins[] = $className;
-					unset($className);
+			// scan for file-only plug-ins
+			} elseif ($pathInfo['extension'] === 'php') {
+				if (!class_exists($fileName)) {
+					include_once $searchPath;
+					$className = substr($fileName, 0, strlen($fileName) - 4);
+				} else {
+					throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
 				}
+			}
+			
+			// add class found
+			if ($className && class_exists($className)) {
+				$this->_activePlugins[$className] = $className;
+				unset($className);
 			}
 		}
 	}

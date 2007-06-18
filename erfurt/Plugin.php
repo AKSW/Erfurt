@@ -10,10 +10,16 @@
   */
 abstract class Erfurt_Plugin {
 	
-	var $_types;
+	protected $_types;
+	
+	protected $_pluginBaseUrl;
+	
+	protected $_pluginBaseDir;
 	
 	protected function __construct() {
+		$config = Zend_Registry::get('config');
 		$this->_types = Zend_Registry::get('datatypes');
+		$this->_pluginBaseUrl = $config->erfurtPublicUri . $config->pluginDir;
 	}
 	
 }
