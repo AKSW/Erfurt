@@ -179,7 +179,9 @@ class RDFSModel extends DefaultRDFSModel {
 
 	public function sparqlQuery($sparql, $class = null) {
 		
-		return $this->store->executeSparql($this, $sparql, $class);
+		list($engine, $dataset) = $this->_prepareSparql();
+		
+		return $this->store->executeSparql($this, $this->_parseSparqlQuery($sparql), $engine, $dataset, $class);
 	}
 }
 ?>

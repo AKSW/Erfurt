@@ -98,6 +98,7 @@ define('BNODE_PREFIX','node');
 require_once(RDFAPI_INCLUDE_DIR.'RdfAPI.php');
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
+require_once(RDFAPI_INCLUDE_DIR.PACKAGE_SPARQL);
 
 #require_once(STORE_INCLUDE_DIR.'Default.php');
 #require_once(RDF_BACKEND_INCLUDE_DIR.'store.php');
