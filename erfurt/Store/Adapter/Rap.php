@@ -67,16 +67,6 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 			    'options'=>'UNIQUE KEY "modelID" ("modelID", "user", "resource")',
 			    'indexes'=>array()
 			),
-			'users'=>array(
-			    'fields'=>'
-			        username        VARCHAR(50)     NOT NULL,
-			        email           VARCHAR(250)    NOT NULL,
-			        password        VARCHAR(250)    NOT NULL,
-			        activationCode  VARCHAR(250)    NOT NULL',
-			    'options'=>'PRIMARY KEY ("username"),
-			                UNIQUE ("email")',
-			    'indexes'=>array()
-			),
 			'cache'=>array(
 			    'fields'=>'
 			        id          int(11)             NOT NULL auto_increment,
