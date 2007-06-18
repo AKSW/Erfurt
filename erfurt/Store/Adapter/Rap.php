@@ -132,5 +132,14 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	function _createTables_MySQL() {
 		$this->_createTables_Generic();
 	}
+	
+	public function executeSparql($model, $sparql, $class = null) {
+		
+		$engine = SparqlEngine::factory($model);
+		$resultRenderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
+		
+		return $engine->queryModel($sparql);
+	}
+	
 }
 ?>

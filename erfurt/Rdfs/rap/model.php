@@ -176,5 +176,10 @@ class RDFSModel extends DefaultRDFSModel {
 
         return cache('_listDefinedTopClasses'.$this->modelURI, $args, $topClasses);
     }
+
+	public function sparqlQuery($sparql, $class = null) {
+		
+		return $this->store->executeSparql($this, $sparql, $class);
+	}
 }
 ?>

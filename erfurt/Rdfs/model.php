@@ -97,6 +97,20 @@ class DefaultRDFSModel extends DbModel {
 	function instanceF($uri,$expandNS=true) {
 		return new $this->instance(is_a($uri,'resource')?$uri->getURI():$uri,$this,$expandNS);
 	}
+	
+	/**
+	 *
+	 *
+	 * @param string $label
+	 * @param string/null $language
+	 * @param string/Resource/null $datatype
+	 * @return RDFSLiteral
+	 */
+	public function literalF($label, $language = null, $datatype = null) {
+		
+		return new RDFSLiteral($label, $language, $datatype);
+	}
+	
 	function getParsedNamespaces() {
 		$c=cache('getParsedNamespaces'.$this->modelURI,array());
 		if($c!==NULL)
