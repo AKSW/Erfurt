@@ -731,10 +731,12 @@ class DefaultRDFSModel extends DbModel {
 // TODO handle offset and limit
 // TODO check whether to use a generic method for such cases instead of direct sparql
 // TODO add a class parameter to sparqlQuery method
+return $this->findSubjects($predicate, $class);
+
 		if (!$predicate instanceof RDFSResource) $predicate = $this->resourceF($predicate);
 
 		$sparql = 'SELECT DISTINCT ?subject
-				   WHERE { ?subject <' . $predicate->getURI() . '> ?object } '
+				   WHERE { ?subject <' . $predicate->getURI() . '> ?object } ';
 				
 		return $this->sparqlQuery($sparql, $class);
 	}
