@@ -54,7 +54,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @param boolean/null expandNS
 	 * @return Erfurt_Owl_Property
 	 */
-	public function classF($uri, expandNS = true) {
+	public function classF($uri, $expandNS = true) {
 		
 		return new Erfurt_Owl_Class($uri, $this, $expandNS); 
 	}
@@ -66,7 +66,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @param boolean/null expandNS
 	 * @return Erfurt_Owl_Property
 	 */
-	public function propertyF($uri, expandNS = true) {
+	public function propertyF($uri, $expandNS = true) {
 		
 		return new Erfurt_Owl_Property($uri, $this, $expandNS); 
 	}
@@ -78,7 +78,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @param boolean/null expandNS
 	 * @return Erfurt_Owl_Property
 	 */
-	public function instanceF($uri, expandNS = true) {
+	public function instanceF($uri, $expandNS = true) {
 		
 		return new Erfurt_Owl_Instance($uri, $this, $expandNS); 
 	}

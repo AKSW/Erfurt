@@ -52,6 +52,45 @@ class OWLModel extends RDFSModel {
 		RDFSModel::RDFSmodel($store,$modelURI);
 		$this->importsIds=array();
 	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function classF($uri, $expandNS = true) {
+		
+		return new OWLClass($uri, $this, $expandNS); 
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function propertyF($uri, $expandNS = true) {
+		
+		return new OWLProperty($uri, $this, $expandNS); 
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Resource $uri
+	 * @param boolean/null expandNS
+	 * @return Erfurt_Owl_Property
+	 */
+	public function instanceF($uri, $expandNS = true) {
+		
+		return new OWLInstance($uri, $this, $expandNS); 
+	}
+	
+	
+	
 	function addDatatypeProperty($uri) {
 		$this->add($uri,'rdf:type','owl:DatatypeProperty');
 		return new $this->property($uri,$this);
