@@ -71,7 +71,7 @@ function pwlRenderNode($node,$URLBase=array()) {
 		$ret.=' ( Language: ';
 		$ret.=$node->getLanguage()?'\''.$node->getLanguage().'\'':'-';
 		$ret.=', Datatype: ';
-		$datatypes = Zend_Registry::get('datatypes')->asArray();
+		$datatypes = Zend_Registry::get('datatypes')->toArray();
 		$ret.=$node->getDatatype()?(!empty($datatypes[$node->getDatatype()])?str_replace('&nbsp;','', $datatypes[$node->getDatatype()]):$node->getDatatype()):'-';
 		$ret.=')';
 	} else {

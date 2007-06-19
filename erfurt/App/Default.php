@@ -44,7 +44,7 @@ class Erfurt_App_Default {
 	 * @param object configuration parameters
 	 */
 	public function __construct($config) {
-		Zend_Log::log('Erfurt_App_Default::__construct()', Zend_Log::LEVEL_DEBUG, 'erfurt');
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
 		
 		$defaultStore = $this->store[$this->defaultStore] = 
@@ -127,6 +127,30 @@ class Erfurt_App_Default {
 			return $this->store[$this->defaultStore];
 		else
 			return $this->store[$store];
+	}
+	
+	/**
+	 * returns ac instance
+	 */
+	public function getAc() {
+		return $this->ac;
+	}
+	
+	/**
+	 * returns ac instance
+	 */
+	public function getAcModel() {
+		return $this->acModel;
+	}
+	
+/**
+	 * returns the auth adapter instance
+	 */
+	public function getAuthAdapter() {
+		if (null === $this->authAdapter)
+			return $this->authAdapter = new Erfurt_Auth_Adapter_RDF($this->acModel, '', '');
+		else
+			return $this->authAdapter;
 	}
 	
 }

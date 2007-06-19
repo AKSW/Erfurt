@@ -78,7 +78,7 @@ class Erfurt_Store_Default extends DBStore {
 	 * returns a list of available and permitted models
 	 *   
 	 */
-	function listModels($returnAsArray=false) {
+	function listModels($returnAsArray = false) {
 		$models=array();
 		if($ms=parent::listModels()) {
 			if($returnAsArray) {
@@ -98,12 +98,12 @@ class Erfurt_Store_Default extends DBStore {
 			
 		return $models;
 	}
-#	function modelExists($modelURI) {
-#		if(!isset($this->_models[$modelURI]))
-#			$this->_models[$modelURI]=parent::modelExists($modelURI);
-#		return $this->_models[$modelURI];
-#	}
-	function getModel($modelURI,$importedURIs=array()) {
+	
+	
+	/**
+	 * returns instance of an model-object
+	 */
+	function getModel($modelURI, $importedURIs=array()) {
 		$modelURI=is_numeric($modelURI)?$this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI):$modelURI;
 		ob_start(); // prevent DB error message if tables don't exist
 		if(!$this->modelExists($modelURI)) {
@@ -133,6 +133,8 @@ class Erfurt_Store_Default extends DBStore {
 		} else
 			return false;
 	}
+	
+	
 	/**
 	 * POWLStore::getNewModel()
 	 *
@@ -252,7 +254,7 @@ class Erfurt_Store_Default extends DBStore {
 	function aclCheck($accessType,$model='',$property='',$class='',$instance='') {
 		
 		if(is_a($model,'Model'))
-			$model=$model->modelURI;
+			$model = $model->modelURI;
 		
 		# ow user
 		if (defined('ZENDED') and ZENDED == "YES") {

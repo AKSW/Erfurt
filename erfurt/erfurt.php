@@ -33,18 +33,21 @@ define('ERFURT_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
 # LOGGER
 $logDir = ERFURT_BASE . 'log/';
 if (is_writable($logDir)) {
-	Zend_Log::registerLogger(new Zend_Log_Adapter_File($logDir . 'erfurt.log'), 'erfurt');
+	$writer = new Zend_Log_Writer_Stream($logDir . 'erfurt.log');
+	$erfurtLog = new Zend_Log($writer);
 } else {
-	Zend_Log::registerLogger(new Zend_Log_Adapter_Null($logDir . 'erfurt.log'), 'erfurt');
+	$writer = new Zend_Log_Writer_Null();
+	$erfurtLog = new Zend_Log($writer);
 }
-Zend_Log::log('Start new Submit: ' . date('d.m.Y H:i:s'), Zend_Log::LEVEL_INFO, 'erfurt');
+Zend_Registry::set('erfurtLog', $erfurtLog);
+$erfurtLog->info('Erfurt-Start: ' . date('d.m.Y H:i:s'));
 
 
 # config
 $section = 'erfurt';
 $iniFiles = array(ERFURT_BASE.'erfurt.ini'); 
 if (isset(Zend_Registry::get('config')->iniFiles)) {
-	$iniFiles = array_merge($iniFiles, Zend_Registry::get('config')->iniFiles->asArray());
+	$iniFiles = array_merge($iniFiles, Zend_Registry::get('config')->iniFiles->toArray());
 	$section = Zend_Registry::get('config')->iniSection;
 }
 

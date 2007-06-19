@@ -11,6 +11,11 @@ class Erfurt_Ac_Default {
 	/**
 	 * instance of config-object
 	 */
+	protected $_log = null;
+	
+	/**
+	 * instance of config-object
+	 */
 	protected $_config = null;
 	
 	/**
@@ -66,6 +71,12 @@ class Erfurt_Ac_Default {
 	 * default system ontology uri
 	 */
 	private $_defaultSysOntUri = 'http://ns.ontowiki.net/SysOnt/';
+	
+	/**
+	 * default holder for ac information
+	 */
+	private $_defaultAcModelUri = 'http://ns.ontowiki.net/SysOnt/';
+	
 	
 	/**
 	 * default action property uri
@@ -129,7 +140,12 @@ class Erfurt_Ac_Default {
 	/**
 	 * constructor
 	 */
-	public function __construct() {
+	public function __construct(Zend_Log $log = null) {
+		if (Zend_Registry::isRegistered('erfurtLog')) {
+			$this->_log = Zend_Registry::get('erfurtLog');
+		} else {
+			$this->_log = $log;
+		}
 		$this->init();
 	}
 	
@@ -137,7 +153,7 @@ class Erfurt_Ac_Default {
 		$auth = Zend_Auth::getInstance();
 		$this->_config = $config = Zend_Registry::get('config');
 		$this->_acModel = Zend_Registry::get('owAc');
-		
+		$this->_acModelUri = '';
 		if ($auth->hasIdentity()) {
     	// Identity exists; get it
     	$this->_user = $auth->getIdentity();
@@ -147,6 +163,7 @@ class Erfurt_Ac_Default {
 		
 		$this->_getUserModelRights($this->_user['uri']);
 		#printr($this->_userRights);
+		
 	}
 	
 	/**
@@ -166,11 +183,11 @@ class Erfurt_Ac_Default {
 		try {
 			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, false);
 		} catch (SparqlParserException $e) {
-			#Zend_Log::log('Ac::_sparql() - query contains the following error: '.$e->getMessage(), Zend_Log::LEVEL_DEBUG, 'Controller');
+			$this->_log->info('Ac::_sparql() - query contains the following error: '.$e->getMessage());
 			die('Ac::_sparql() - query contains the following error: '.$e->getMessage());
 			return false;
 		} catch (Exception $e) {
-			#Zend_Log::log('Ac::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage(), Zend_Log::LEVEL_DEBUG, 'Controller');
+			$this->_log->info('Ac::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage());
 			die('Ac::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage());
 			return false;
 		}
@@ -181,7 +198,7 @@ class Erfurt_Ac_Default {
 	 * gets the user rights for the current user
 	 */
 	private function _getUserModelRights($userURI) {
-		#Zend_Log::log('OntoWiki_Ac::_getUserModelRights()', Zend_Log::LEVEL_DEBUG, 'Controller');
+		$this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
 		
 		## direct user rights
 		$sparqlQuery = 'select ?p ?o 
@@ -341,7 +358,8 @@ class Erfurt_Ac_Default {
 	/**
 	 * delivers action configuration
 	 */
-	public function getActionConfig($actionUri) {
+	public function getActionConfig($action) {
+		$actionUri = $this->_defaultSysOntUri.$action;
 		## standard config
 		
 		## direct action config
@@ -400,9 +418,12 @@ class Erfurt_Ac_Default {
 	 * @return bool allowed or denied
 	 * */
 	public function isActionAllowed($action) {
-		if (in_array($action, $this->_userRights['grantAccess']) and !in_array($action, $this->_userRights['denyAccess'])) 
+		$action = $this->_defaultSysOntUri.$action;
+		if (in_array($action, $this->_userRights['denyAccess']))
+			return false;
+		if (in_array($action, $this->_userRights['grantAccess'])) 
 			return true;
-		if ($this->isAnyActionAllowed() and !in_array($action, $this->_userRights['denyAccess']))
+		if ($this->isAnyActionAllowed())
 			return true;
 			
 		return false;

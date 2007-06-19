@@ -44,9 +44,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	*
 	* @return void
 	*/ 
-	public function __construct($acModel, $username, $password) 
-	{ 
-		Zend_Log::log('Erfurt_Auth_Adapter_RDF::_constuctor()', Zend_Log::LEVEL_DEBUG, 'erfurt');
+	public function __construct($acModel, $username, $password) { 
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::_constuctor()');
 		$this->_acModel = $acModel;
 		
 		$this->_username = $username;
@@ -117,7 +116,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
  	* fetch the user data from rdf-store
  	*/
 	function fetchUserData() {
-		Zend_Log::log('Erfurt_Auth_Adapter_RDF::fetchUserData()', Zend_Log::LEVEL_DEBUG, 'erfurt');
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::fetchUserData()');
    	$this->userFetched = true;
    	
 		# no system-ontology
@@ -126,7 +125,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		}
        
 		## direct user rights
-		$sparqlQuery = 'select ?p ?o 
+		$sparqlQuery = 'select ?s ?p ?o 
 														where { 
 														?s ?p ?o								
 														?s rdf:type <'.$this->_userClass.'>.
@@ -135,17 +134,17 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		if (!$result = $this->_sparql($sparqlQuery)) {
 			return false;
 		}
-      
+		
 		foreach($result as $e) {
 			if ($e['?p']->getUri() == $this->_userNamePredicate)
-				$this->_users[$e['?s']->getUri()]['userName'] = $e['?o']->getLocalName();
+				$this->_users[$e['?s']->getUri()]['userName'] = $e['?o']->getLabel();
 			else if ($e['?p']->getUri() == $this->_userPasswordPredicate)
 				$this->_users[$e['?s']->getUri()]['userPassword'] = $e['?o']->getLabel();
 			else if ($e['?p']->getUri() == $this->_userMailPredicate)
 				$this->_users[$e['?s']->getUri()]['userEmail'] = $e['?o']->getLocalName();
 			else if ($e['?p']->getUri() == $this->_userMailPredicate and $e['?o']->getUri() == $this->_userDenyLoginAction)
 				$this->_users[$e['?s']->getUri()]['loginForbidden'] = true;
-		}        
+		}    
 	}
     
 	/**
@@ -154,7 +153,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	* @access public
 	*/
 	public function fetchData($username, $password, $isChallengeResponse=false) {
-	  Zend_Log::log('Erfurt_Auth_Adapter_RDF::fetchData()', Zend_Log::LEVEL_DEBUG, 'erfurt');
+	  Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::fetchData()');
 		# no system-ontology
 		if (empty($this->_acModel->modelURI)) {
 			return false;
@@ -210,8 +209,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	 * @return array
 	 */
 	public function listUsers() {
-	    Zend_Log::log('Erfurt_Auth_Adapter_RDF::listUsers()', Zend_Log::LEVEL_DEBUG, 'erfurt');
-	    
+	  Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::listUsers()');
 		if (!$this->userFetched) {
 	    	$this->fetchUserData();
 	    }
@@ -276,10 +274,10 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, false);
 		
 		} catch (SparqlParserException $e) {
-			Zend_Log::log('Erfurt_Auth_Adapter_RDF::_sparql() - query contains the following error: '.$e->getMessage(), Zend_Log::LEVEL_DEBUG, 'Controller');
+			Zend_Registry::get('erfurtLog')->info('Erfurt_Auth_Adapter_RDF::_sparql() - query contains the following error: '.$e->getMessage());
 			return false;
 		} catch (Exception $e) {
-			Zend_Log::log('Erfurt_Auth_Adapter_RDF::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage(), Zend_Log::LEVEL_DEBUG, 'Controller');
+			Zend_Registry::get('erfurtLog')->info('Erfurt_Auth_Adapter_RDF::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage());
 			return false;
 		}
 		return $result;

@@ -13,6 +13,10 @@ function pr($s, $more = false) {
 
 }
 
+function pl($s) {
+	
+}
+
 function printr($s, $more = false) {
 
         print '<pre>';
