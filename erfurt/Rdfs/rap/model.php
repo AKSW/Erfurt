@@ -177,11 +177,36 @@ class RDFSModel extends DefaultRDFSModel {
         return cache('_listDefinedTopClasses'.$this->modelURI, $args, $topClasses);
     }
 
-	public function sparqlQuery($sparql, $class = null) {
+	/**
+	 *
+	 *
+	 * @param string/Query $query
+	 * @return RDFSResource[]
+	 */
+	public function sparqlQuery($query) {
 		
-		list($engine, $dataset) = $this->_prepareSparql();
+		return $this->store->executeSparql($this, $query);
+	}
+	
+	/**
+	 *
+	 *
+	 * @param string/Query $query
+	 * @param string $class
+	 * @return RDFSResource[]
+	 */
+	public function sparqlQueryAs($query, $class) {
 		
-		return $this->store->executeSparql($this, $this->_parseSparqlQuery($sparql), $engine, $dataset, $class);
+		return $this->store->executeSparql($this, $query, $class);
+	}
+	
+	public function getNamespaceForPrefix($prefix) {
+		
+		$sql = 'SELECT namespace FROM namespaces WHERE prefix = "' . $prefix .'" AND modelID IN (' . $this->getModelIds() . ')';
+		
+		$result = $this->_convertRecordSetToNodeList($sql);
+		
+		return $result[0];
 	}
 }
 ?>

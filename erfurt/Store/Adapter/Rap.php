@@ -133,7 +133,23 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		$this->_createTables_Generic();
 	}
 	
-	public function executeSparql($model, $query, $engine, $dataset, $class = null) {
+	/**
+	 *
+	 * @param RDFSModel $model
+	 * @param string/Query $query
+	 * @param string/null $class
+	 */
+	public function executeSparql($model, $query, $class = null) {
+		
+		$engine = SparqlEngine::factory($model);
+		
+		$dataset = new DatasetMem();
+		$dataset->setDefaultGraph($model);
+		
+		if (!($query instanceof Query)) {
+			$parser = new SparqlParser();
+			$query = $parser->parse($query);
+		}
 		
 		$resultRenderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
 		

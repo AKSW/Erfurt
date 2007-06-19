@@ -67,8 +67,9 @@ class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the resource to generate
 	 * @return RDFSResource
 	 **/
-	function resourceF($uri,$expandNS=true) {
-		return new $this->resource(is_a($uri,'resource')?$uri->getURI():$uri,$this,$expandNS);
+	function resourceF($uri, $expandNS = null) {
+		
+		return new RDFSResource($uri, $this, $expandNS);
 	}
 	/**
 	 * Class factory.
@@ -76,8 +77,9 @@ class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the class to generate
 	 * @return RDFSClass
 	 **/
-	function classF($uri,$expandNS=true) {
-		return new $this->vclass(is_a($uri,'resource')?$uri->getURI():$uri,$this,$expandNS);
+	function classF($uri, $expandNS = null) {
+		
+		return new RDFSClass($uri, $this, $expandNS);
 	}
 	/**
 	 * Property factory.
@@ -85,17 +87,20 @@ class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the property to generate
 	 * @return RDFSProperty
 	 **/
-	function propertyF($uri,$expandNS=true) {
-		return new $this->property(is_a($uri,'resource')?$uri->getURI():$uri,$this,$expandNS);
+	function propertyF($uri, $expandNS = null) {
+		
+		return new RDFSProperty($uri, $this, $expandNS);
 	}
+	
 	/**
 	 * Instance factory.
 	 *
 	 * @param string $uri URI or localname of the instance to generate
 	 * @return RDFSInstance
 	 **/
-	function instanceF($uri,$expandNS=true) {
-		return new $this->instance(is_a($uri,'resource')?$uri->getURI():$uri,$this,$expandNS);
+	function instanceF($uri, $expandNS = null) {
+		
+		return new RDFSInstance($uri, $this, $expandNS);
 	}
 	
 	/**

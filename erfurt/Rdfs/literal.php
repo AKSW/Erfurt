@@ -8,8 +8,8 @@
  * @version $Id: literal.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-
 class DefaultRDFSLiteral extends Literal {
+	
 	var $model;
 	/**
 	 * Constructor
@@ -19,14 +19,11 @@ class DefaultRDFSLiteral extends Literal {
 	 * @param $datatype
 	 * @return RDFSLiteral
 	 **/
-	function DefaultRDFSLiteral($label,$language='',$datatype='') {
+	function DefaultRDFSLiteral($label, $language = null, $datatype = null) {
+		
 		Literal::Literal($label,$language);
-		$this->setDatatype($datatype);		
+		
+		if ($datatype !== null) $this->setDatatype($datatype);		
 	}
-	
-	function getLabel() {
-
-    	return $this->label;
-  	}
 }
 ?>

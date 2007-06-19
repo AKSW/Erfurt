@@ -13,28 +13,48 @@ class DefaultRDFSResource extends Resource {
 	* A reference to the RDFSModel this resource belongs to.
 	**/
 	var $model;
-
+	
 	/**
-	 * Constructor
+	 * The constructor for this class, which is only called from sub-classes.
 	 *
-	 * @param string $uri
-	 * @param RDFSModel $model
-	 * @return
-	 **/
-	function DefaultRDFSResource($uri,&$model,$expandNS=true) {
-		if(is_a($uri,'Resource'))
-			$uri=$uri->getURI();
-		if($expandNS && !strstr($uri,'/')) {
-			if(!is_array($model->getParsedNamespaces()))
-				var_dump($model->getParsedNamespaces());
-			foreach($model->getParsedNamespaces() as $key=>$val)
-				$uri=str_replace($val.':',$key,$uri);
-			if(!strstr($uri,'#') && !strstr($uri,'/'))
-				$uri=$model->baseURI.$uri;
+	 * @param string/Resource $uri_or_resource The URI for the resource object or a {@link Resource} object.
+	 * @param RDFSModel $model A reference to the model this resource belongs to.
+	 * @param boolean/null $expandNs Indicates whether to expand prefixes with the right namespace (e.g. rdf:type would
+	 * turn into http://www.w3.org/1999/02/22-rdf-syntax-ns#type).
+	 */
+	public function __construct($uri_or_resource, $model, $expandNs = true) {
+			
+		$this->model = $model;
+		
+		if ($uri_or_resource instanceof Resource) {
+			$this->uri = $uri_or_resource->getURI();
+			return;
 		}
-		Resource::Resource($uri);
-		$this->model=&$model;
+		
+		if (($expandNs === true) $uri_or_resource = $this->_expandNamespace($uri_or_resource);
+		$this->uri = $uri_or_resource;
 	}
+	
+	/*
+	 * Internal method that expands the namespace in a uri... e.g.: rdf:type would become 
+	 * into http://www.w3.org/1999/02/22-rdf-syntax-ns#type. If no namespace for the given prefix is found,
+	 * then the baseURI of the model plus the the substring after ':' will be returned. If no ':' is found in the
+	 * given string, the baseURI of the model plus the given string is returned.
+	 *
+	 * @param string $uri A uri that contains a prefix that should be expanded.
+	 * @return string Returns a string that is a fully expanded uri.
+	 */
+	private function _expandNamespace($uri) {
+		
+		if ((!strpos($uri, '/')) && ($pos = strpos($uri, ':'))) {
+			$prefix 	= substr($uri, 0, $pos);
+			
+			$namespace 	= $this->model->getNamespaceForPrefix($prefix);
+			if ($namespace !== null) return str_replace($prefix.':', $namespace, $uri);
+			else return $this->model->getBaseURI() . substr($uri, $pos, strlen($uri));
+		} else return $this->model->getBaseURI() . $uri;
+	}
+
 	function isBlankNode() {
 		if(strstr($this->getURI(),BNODE_PREFIX)===$this->getURI())
 			return true;
