@@ -99,7 +99,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 * Returns an array containing all the classes that are
 	 * declared to be equivalent to this class and that are infered from this
 	 * class.
-	 * @return array 
+	 * @return Erfurt_Owl_Class[] 
 	 */
 	public function listEquivalentClassesInfered() {
 		
@@ -109,7 +109,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	/** 
 	 * Returns an array containing all the classes that are declared to
 	 * be disjoint with this class.
-	 * @return array
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function listDisjointWith() {
 		
@@ -117,7 +117,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return array
+	 * Returns a list of classes, that are declared  to be an 
+	 * intersection of this class with owl:intersectionOf
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function listIntersectionOf() {
 		
@@ -125,22 +127,26 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return array
+	 * Returns a list of classes, that are declared  to be a
+	 * union of this class with owl:unionOf
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function listUnionOf() {
 		
 		return $this->model->getList(parray_shift($this->listPropertyValues($GLOBALS['OWL_unionOf'])));
 	}
 	
-	/**
-	 * @return array
+	/** 
+	 * Returns a list of classes, that are declared  to be a
+	 * Complement of this class with owl:complementOf
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function listComplementOf() {
 		
 		return $this->listPropertyValues($GLOBALS['OWL_complementOf']);
 	}
 	
-	/**
+	/** //TODO
 	 * @param
 	 * @return
 	 */
@@ -149,7 +155,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		return $this->setPropertyValues($GLOBALS['OWL_equivalentClass'],$values);
 	}
 	
-	/**
+	/** //TODO
 	 * @param
 	 */
 	public function setDisjointWith($values) {
@@ -157,7 +163,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		return $this->setPropertyValues($GLOBALS['OWL_disjointWith'],$values);
 	}
 	
-	/**
+	/** //TODO
 	 * @param
 	 */
 	public function setIntersectionOf($values) {
@@ -166,7 +172,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		return $this->setPropertyValues($GLOBALS['OWL_intersectionOf'],$list);
 	}
 	
-	/**
+	/** //TODO
 	 * @param
 	 */
 	public function setUnionOf($values) {
@@ -177,7 +183,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		return $this->setPropertyValues($GLOBALS['OWL_unionOf'],$list);
 	}
 	
-	/**
+	/** //TODO
 	 * @param
 	 */
 	public function setComplementOf($values) {
@@ -186,9 +192,27 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 
 	/**
-	 * @param
-	 * @return
+	 * Changed see comments below
+	 * Returns a list of subclasses merged with the list 
+	 * of subclasses of the equivalent classes
+	 *  
+	 * @return Erfurt_Owl_Class[]
 	 */
+	public function listSubClassesInfered() {
+			
+		$ret=$this->listSubClasses();
+		foreach($this->listEquivalentClassesInfered() as $eqiv) {
+			$ret=array_merge($ret,$eqiv->listSubClasses());
+		}
+		$ret=array_merge($ret,$this->model->listSubClassesInfered($this));
+
+		return $ret;
+	}
+	
+	/* Do not yet delete, ask Sebastian
+	CHANGED listsubclasses already exists why input true/false??
+	Could be kept to make more inference in  line 4 listSubclassesInfered(true)
+	
 	public function listSubClassesInfered($includeEquivalentClasses=true) {
 		
 		$ret=$this->listSubClasses();
@@ -198,11 +222,13 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		$ret=array_merge($ret,$this->model->listSubClassesInfered($this));
 
 		return $ret;
-	}
+	}*/
 	
 	/**
-	 * @return
+	 * Returns a list of Superclasses
+	 * @return Erfurt_Owl_Class[]
 	 */
+	 
 	public function listSuperClassesInfered() {
 		
 		$ret=$this->listSuperClasses();
@@ -211,6 +237,8 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 				$ret[$inferedSuperClass->getLocalName()]=$inferedSuperClass;
 		return $ret;
 	}
+	
+	
 
 	/**
 	 * Returns the minimum cardinality of a property.
@@ -259,9 +287,10 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 
 	/**
-	 * @param
-	 * @param
-	 * @return array
+	 * //TODO add comment check functionality
+	 * @param Erfurt_Rdfs_Property $property
+	 * @param String[] with value restriction types
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function getRestriction($property,$type=array('allValuesFrom','someValuesFrom','hasValue')) {
 		
@@ -275,8 +304,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @param
-	 * @return
+	 * //TODO add comment check functionality
+	 * @param Erfurt_Rdfs_Property $property
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function getRestrictionAllValuesFrom($property) {
 		
@@ -284,8 +314,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @param
-	 * @return
+	 * //TODO add comment check functionality
+	 * @param Erfurt_Rdfs_Property $property
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function getRestrictionSomeValuesFrom($property) {
 		
@@ -293,8 +324,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @param
-	 * @return
+	 * //TODO add comment check functionality
+	 * @param Erfurt_Rdfs_Property $property
+	 * @return Erfurt_Owl_Class[]
 	 */
 	public function getRestrictionHasValue($property) {
 		
