@@ -35,8 +35,9 @@
 class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	
 	/**
-	 * @return boolean Returns true in case this restriction is a cardinality
+	 * Returns true in case this restriction is a cardinality
 	 * restriction.
+	 * @return boolean 
 	 */
 	public function isCardinalityRestriction() {
 		
@@ -46,8 +47,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return boolean Returns true in case this restriction is a has value
+	 * Returns true in case this restriction is a has value
 	 * restriction.
+	 * @return boolean 
 	 */
 	public function isHasValueRestriction() {
 		
@@ -55,8 +57,9 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return boolean Returns true in case this restriction is a some values
+	 * Returns true in case this restriction is a some values
 	 * from restriction.
+	 * @return boolean 
 	 */
 	public function isSomeValuesFromRestriction() {
 		
@@ -64,26 +67,28 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return boolean Returns true in case this restriction is an all values
+	 * Returns true in case this restriction is an all values
 	 * from restriction.
+	 * @return boolean 
 	 */
 	public function isAllValuesFromRestriction() {
 		
 		return $this->hasPropertyValue('owl:allValuesFrom');
 	}
 	
-	/**
-	 * @return boolean Returns true in case this class is an intersection of a
+	/** 
+	 * Returns true in case this class is an intersection of a
 	 * list of classes.
+	 * @return boolean
 	 */
 	public function isIntersection() {
 		
 		return $this->hasPropertyValue('owl:intersectionOf');
 	}
 	
-	/*
-	 * @return array Returns an array containing all the classes that are
+	/* Returns an array containing all the classes that are
 	 * declared to be equivalent to this class.
+	 * @return array 
 	 */
 	public function listEquivalentClasses() {
 		
@@ -91,18 +96,20 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	}
 	
 	/**
-	 * @return array Returns an array containing all the classes that are
+	 * Returns an array containing all the classes that are
 	 * declared to be equivalent to this class and that are infered from this
 	 * class.
+	 * @return array 
 	 */
 	public function listEquivalentClassesInfered() {
 		
 		return $this->listPropertyValuesSymmetric($GLOBALS['OWL_equivalentClass'],'Class');
 	}
 	
-	/**
-	 * @return array Returns an array containing all the classes that are declared to
+	/** 
+	 * Returns an array containing all the classes that are declared to
 	 * be disjoint with this class.
+	 * @return array
 	 */
 	public function listDisjointWith() {
 		
