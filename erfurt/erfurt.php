@@ -99,6 +99,7 @@ require_once(RDFAPI_INCLUDE_DIR.'RdfAPI.php');
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_SPARQL);
+require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DATASET);
 
 #require_once(STORE_INCLUDE_DIR.'Default.php');
 #require_once(RDF_BACKEND_INCLUDE_DIR.'store.php');
@@ -174,7 +175,7 @@ $config->erfurtLibUri = $config->erfurtUriBase .'lib/';
 // TODO: test!!!
 $relDir = str_ireplace($_SERVER['DOCUMENT_ROOT'], '', ERFURT_BASE);
 $firstDir = substr($relDir, 0, strpos($relDir, '/'));
-$rewriteBase = substr($_SERVER['SCRIPT_URL'], 0, strpos($_SERVER['SCRIPT_URL'], $firstDir));
+//$rewriteBase = substr($_SERVER['SCRIPT_URL'], 0, strpos($_SERVER['SCRIPT_URL'], $firstDir));
 $urlBase = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))) . 
 		   '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['SERVER_PORT'] != '80' ? ':' . $_SERVER['SERVER_PORT'] : '');
 $config->erfurtUrlBase = $urlBase . $rewriteBase . $relDir;

@@ -31,7 +31,7 @@ class DefaultRDFSResource extends Resource {
 			return;
 		}
 		
-		if (($expandNs === true) $uri_or_resource = $this->_expandNamespace($uri_or_resource);
+		if (($expandNs === true)) $uri_or_resource = $this->_expandNamespace($uri_or_resource);
 		$this->uri = $uri_or_resource;
 	}
 	
