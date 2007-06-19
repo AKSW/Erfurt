@@ -15,6 +15,28 @@ class DefaultRDFSResource extends Resource {
 	var $model;
 	
 	/**
+	 * Constructor
+	 *
+	 * @param string $uri
+	 * @param RDFSModel $model
+	 * @return
+	 **/
+	function DefaultRDFSResource($uri,&$model,$expandNS=true) {
+		if(is_a($uri,'Resource'))
+			$uri=$uri->getURI();
+		if($expandNS && !strstr($uri,'/')) {
+			if(!is_array($model->getParsedNamespaces()))
+				var_dump($model->getParsedNamespaces());
+			foreach($model->getParsedNamespaces() as $key=>$val)
+				$uri=str_replace($val.':',$key,$uri);
+			if(!strstr($uri,'#') && !strstr($uri,'/'))
+				$uri=$model->baseURI.$uri;
+		}
+		Resource::Resource($uri);
+		$this->model=&$model;
+	}
+	
+	/**
 	 * The constructor for this class, which is only called from sub-classes.
 	 *
 	 * @param string/Resource $uri_or_resource The URI for the resource object or a {@link Resource} object.
@@ -22,7 +44,7 @@ class DefaultRDFSResource extends Resource {
 	 * @param boolean/null $expandNs Indicates whether to expand prefixes with the right namespace (e.g. rdf:type would
 	 * turn into http://www.w3.org/1999/02/22-rdf-syntax-ns#type).
 	 */
-	public function __construct($uri_or_resource, $model, $expandNs = true) {
+	/*public function __construct($uri_or_resource, $model, $expandNs = true) {
 			
 		$this->model = $model;
 		
@@ -33,7 +55,7 @@ class DefaultRDFSResource extends Resource {
 		
 		if (($expandNs === true)) $uri_or_resource = $this->_expandNamespace($uri_or_resource);
 		$this->uri = $uri_or_resource;
-	}
+	}*/
 	
 	/*
 	 * Internal method that expands the namespace in a uri... e.g.: rdf:type would become 
@@ -46,13 +68,14 @@ class DefaultRDFSResource extends Resource {
 	 */
 	private function _expandNamespace($uri) {
 		
+		/*
 		if ((!strpos($uri, '/')) && ($pos = strpos($uri, ':'))) {
 			$prefix 	= substr($uri, 0, $pos);
 			
 			$namespace 	= $this->model->getNamespaceForPrefix($prefix);
 			if ($namespace !== null) return str_replace($prefix.':', $namespace, $uri);
 			else return $this->model->getBaseURI() . substr($uri, $pos, strlen($uri));
-		} else return $this->model->getBaseURI() . $uri;
+		} else return $this->model->getBaseURI() . $uri;*/
 	}
 
 	function isBlankNode() {
