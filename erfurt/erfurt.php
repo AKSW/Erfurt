@@ -176,12 +176,17 @@ $config->erfurtLibUri = $config->erfurtUriBase .'lib/';
 
 // set paths and rewrite base
 // TODO: test!!!
-$relDir = str_ireplace($_SERVER['DOCUMENT_ROOT'], '', ERFURT_BASE);
-$firstDir = substr($relDir, 0, strpos($relDir, '/'));
-//$rewriteBase = substr($_SERVER['SCRIPT_URL'], 0, strpos($_SERVER['SCRIPT_URL'], $firstDir));
 $urlBase = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))) . 
 		   '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['SERVER_PORT'] != '80' ? ':' . $_SERVER['SERVER_PORT'] : '');
-$config->erfurtUrlBase = $urlBase . $rewriteBase . $relDir;
+$rewriteBase = substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
+$fileSystemBase = substr($_SERVER['SCRIPT_FILENAME'], 0, strrpos($_SERVER['SCRIPT_FILENAME'], '/'));
+if (function_exists(str_ireplace)) {
+	$prefixDir = str_ireplace($fileSystemBase, '', ERFURT_BASE);
+} else {
+	$prefixDir = str_replace($fileSystemBase, '', ERFURT_BASE);
+}
+
+$config->erfurtUrlBase = $urlBase . $rewriteBase . $prefixDir;
 
 $datatypes = array(
 	'http://www.w3.org/2001/XMLSchema#string'=>'String',
