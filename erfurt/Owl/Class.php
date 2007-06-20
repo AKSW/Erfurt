@@ -92,18 +92,18 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function listEquivalentClasses() {
 		
-		return $this->listPropertyValues($GLOBALS['OWL_equivalentClass'],'Class');
+		return $this->listPropertyValues("owl:equivalentClass",'Class');
 	}
 	
 	/**
 	 * Returns an array containing all the classes that are
-	 * declared to be equivalent to this class and that are infered from this
-	 * class.
+	 * declared to be equivalent to this class and all classes that 
+	 * declare to be equivalent to this class
 	 * @return Erfurt_Owl_Class[] 
 	 */
 	public function listEquivalentClassesInfered() {
 		
-		return $this->listPropertyValuesSymmetric($GLOBALS['OWL_equivalentClass'],'Class');
+		return $this->listPropertyValuesSymmetric("owl:equivalentClass",'Class');
 	}
 	
 	/** 
@@ -113,7 +113,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function listDisjointWith() {
 		
-		return $this->listPropertyValues($GLOBALS['OWL_disjointWith']);
+		return $this->listPropertyValues("owl:disjointWith");
 	}
 	
 	/**
@@ -123,7 +123,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function listIntersectionOf() {
 		
-		return $this->model->getList(parray_shift($this->listPropertyValues($GLOBALS['OWL_intersectionOf'])),'Class');
+		return $this->model->getList(parray_shift($this->listPropertyValues("owl:intersectionOf")),'Class');
 	}
 	
 	/**
@@ -133,7 +133,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function listUnionOf() {
 		
-		return $this->model->getList(parray_shift($this->listPropertyValues($GLOBALS['OWL_unionOf'])));
+		return $this->model->getList(parray_shift($this->listPropertyValues("owl:unionOf")));
 	}
 	
 	/** 
@@ -143,7 +143,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function listComplementOf() {
 		
-		return $this->listPropertyValues($GLOBALS['OWL_complementOf']);
+		return $this->listPropertyValues("owl:complementOf");
 	}
 	
 	/** //TODO
@@ -152,7 +152,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function setEquivalentClasses($values) {
 		
-		return $this->setPropertyValues($GLOBALS['OWL_equivalentClass'],$values);
+		return $this->setPropertyValues("owl:equivalentClass",$values);
 	}
 	
 	/** //TODO
@@ -160,7 +160,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function setDisjointWith($values) {
 		
-		return $this->setPropertyValues($GLOBALS['OWL_disjointWith'],$values);
+		return $this->setPropertyValues("owl:disjointWith",$values);
 	}
 	
 	/** //TODO
@@ -169,7 +169,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	public function setIntersectionOf($values) {
 		
 		$list=$this->model->addList($values,false);
-		return $this->setPropertyValues($GLOBALS['OWL_intersectionOf'],$list);
+		return $this->setPropertyValues("owl:intersectionOf",$list);
 	}
 	
 	/** //TODO
@@ -180,7 +180,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		if($values==array_keys($this->listUnionOf()))
 			return;
 		$list=$this->model->addList($values,false);
-		return $this->setPropertyValues($GLOBALS['OWL_unionOf'],$list);
+		return $this->setPropertyValues("owl:unionOf",$list);
 	}
 	
 	/** //TODO
@@ -188,7 +188,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	public function setComplementOf($values) {
 		
-		return $this->setPropertyValues($GLOBALS['OWL_complementOf'],$values);
+		return $this->setPropertyValues("owl:complementOf",$values);
 	}
 
 	/**
@@ -477,11 +477,11 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		} else if($cardinality) { // create new restriction
 			if(!$restriction) {
 				$restriction=new Blanknode($this->model->getUniqueResourceURI(BNODE_PREFIX));
-				$this->model->add($restriction,$GLOBALS['RDF_type'],$GLOBALS['OWL_Restriction']);
-				$this->model->add($restriction,$GLOBALS['OWL_onProperty'],$property);
-				$this->model->add($this,$GLOBALS['RDFS_subClassOf'],$restriction);
+				$this->model->add($restriction,"rdf:type","owl:Restriction");
+				$this->model->add($restriction,"owl:onProperty",$property);
+				$this->model->add($this,"rdfs:subClassOf",$restriction);
 			}
-			$this->model->add($restriction,$GLOBALS['OWL_'.$minmax.'Cardinality'],$value);
+			$this->model->add($restriction,"owl:".$minmax."Cardinality",$value);
 		}
 	}
 	
