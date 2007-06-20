@@ -81,20 +81,16 @@ class Erfurt_App_Default {
 		/**
  		* load OntoWiki action access control configuration
  		*/
-		$owActionClass = $defaultStore->getModel($config->ac->action->class);
-		Zend_Registry::set('owActionClass', $owActionClass);
+		#$owActionClass = $defaultStore->getModel($config->ac->action->class);
+		#Zend_Registry::set('owActionClass', $owActionClass);
 		
-		$owAcUserModel = $defaultStore->getModel($config->ac->user->model);
+		#$owAcUserModel = $defaultStore->getModel($config->ac->user->model);
 		
-		# action conf
-		$defautlActionConf = include(ERFURT_BASE.'actions.ini.php');
 		
 		$this->ac = null;
 		
 		# set auth instance
 		$this->auth = Zend_Auth::getInstance();
-		
-		
 		
 		
 		$this->acModel = $defaultStore->getModel($config->ac->model);
@@ -107,7 +103,10 @@ class Erfurt_App_Default {
 		}
 		$identity = $this->auth->getIdentity();
 		
-		$this->ac = new Erfurt_Ac_Default();
+		# action conf
+		$defautlActionConf = include(ERFURT_BASE.'actions.ini.php');
+		
+		$this->ac = new Erfurt_Ac_Default($defautlActionConf);
 		Zend_Registry::set('ac', $this->ac);
 		
 		# set ac to store

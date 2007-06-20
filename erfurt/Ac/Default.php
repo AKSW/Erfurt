@@ -53,9 +53,18 @@ class Erfurt_Ac_Default {
 																							'denyModelView'	=>	array(),
 																							'grantModelEdit'	=>	array(),
 																							'denyModelEdit'	=>	array(),
-																							'grantAccess'	=>	array(),
-																							'denyAccess'	=>	array()
 																							);
+	
+	/**
+	 * default system ontology uri
+	 */
+	private $_defaultSysOntUri = 'http://ns.ontowiki.net/SysOnt/';
+	
+	/**
+	 * default holder for ac information
+	 */
+	private $_defaultAcModelUri = 'http://localhost/OntoWiki/Config/';
+	
 	
 	/**
 	 * anonymous user uri
@@ -66,81 +75,74 @@ class Erfurt_Ac_Default {
 	 * default user group uri
 	 */
 	private $_defaultUserGroupUri = 'http://localhost/OntoWiki/Config/DefaultUserGroup';
-	
+
 	/**
-	 * default system ontology uri
+	 * super admin user uri
 	 */
-	private $_defaultSysOntUri = 'http://ns.ontowiki.net/SysOnt/';
-	
-	/**
-	 * default holder for ac information
-	 */
-	private $_defaultAcModelUri = 'http://ns.ontowiki.net/SysOnt/';
+	private $_defaultSuperUserUri = 'http://ns.ontowiki.net/SysOnt/SuperAdmin';
 	
 	
 	/**
-	 * default action property uri
+	 * model class schma uri
 	 */
-	private $_defaultActionConfigUri = 'http://ns.ontowiki.net/SysOnt/rawConfig';
-	
+	private $_modelClassUri = 'http://ns.ontowiki.net/SysOnt/Model';
 	
 	/**
 	 * any model property 
 	 */
-	private $_propAnyModel = 'AnyModel';
+	private $_propAnyModel = 'http://ns.ontowiki.net/SysOnt/anyModel';
 	
 	/**
 	 * grant model view property 
 	 */
-	private $_propGrantModelView = 'grantModelView';
+	private $_propGrantModelView = 'http://ns.ontowiki.net/SysOnt/grantModelView';
 	
 	/**
 	 * deny model view property 
 	 */
-	private $_propDenyModelView = 'denyModelView';
+	private $_propDenyModelView = 'http://ns.ontowiki.net/SysOnt/denyModelView';
 	
 	/**
 	 * grant model edit property 
 	 */
-	private $_propGrantModelEdit = 'grantModelEdit';
+	private $_propGrantModelEdit = 'http://ns.ontowiki.net/SysOnt/grantModelEdit';
 	
 	/**
 	 * deny model edit property 
 	 */
-	private $_propDenyModelEdit = 'denyModelEdit';
+	private $_propDenyModelEdit = 'http://ns.ontowiki.net/SysOnt/denyModelEdit';
+	
+	/**
+	 * action class schma uri
+	 */
+	private $_actionClassUri = 'http://ns.ontowiki.net/SysOnt/Action';
 	
 	/**
 	 * any action property 
 	 */
-	private $_propAnyAction = 'AnyAction';
+	private $_propAnyAction = 'http://ns.ontowiki.net/SysOnt/anyAction';
 	
 	/**
 	 * grant action property 
 	 */
-	private $_propGrantAccess = 'grantAccess';
+	private $_propGrantAccess = 'http://ns.ontowiki.net/SysOnt/grantAccess';
 	
 	/**
 	 * deny action property 
 	 */
-	private $_propDenyAccess = 'denyAccess';
+	private $_propDenyAccess = 'http://ns.ontowiki.net/SysOnt/denyAccess';
 	
-	
-/**
-	 * NUR ABLAGE, SOLANGE AUTH NICH TIMMER ETWAS ZURÜC GIBT
-	 * delievers the anonymous user details 
+	/**
+	 * array with default action configuration 
 	 */
-	public function _getAnonymous() {	
-		$user['userName'] = 'Anonymous';
-		$user['uri'] = $this->_anonymousUserUri;
-		$user['dbuser'] = false;
-		$user['email'] = '';
-		return $user;
-	}
-	
+	private $_defaultActionConfigs = array();
+
 	/**
 	 * constructor
 	 */
-	public function __construct(Zend_Log $log = null) {
+	public function __construct(Array $defautlActionConf = array(), Zend_Log $log = null) {
+		$this->_defaultActionConfigs = $defautlActionConf;
+		
 		if (Zend_Registry::isRegistered('erfurtLog')) {
 			$this->_log = Zend_Registry::get('erfurtLog');
 		} else {
@@ -148,6 +150,8 @@ class Erfurt_Ac_Default {
 		}
 		$this->init();
 	}
+	
+	
 	
 	public function init() {
 		$auth = Zend_Auth::getInstance();
@@ -161,8 +165,21 @@ class Erfurt_Ac_Default {
 			$this->_user = $this->_getAnonymous();
 		}
 		
+		# setting up right-field
+		$this->_userRights = array(
+				$this->_propGrantAccess	=>	array(),
+				$this->_propDenyAccess	=>	array(),
+				$this->_propGrantModelView	=>	array(),
+				$this->_propDenyModelView	=>	array(),
+				$this->_propGrantModelEdit	=>	array(),
+				$this->_propDenyModelEdit	=>	array());
+		
 		$this->_getUserModelRights($this->_user['uri']);
-		#printr($this->_userRights);
+		$this->_log->debug('OntoWiki_Ac::_userRights'."\n".print_r($this->_userRights, true) .
+				"\nAnyModelView: " . print_r($this->_userAnyModelViewAllowed, true). 
+				"\nAnyModelEdit: " . print_r($this->_userAnyModelEditAllowed, true) . 
+				"\nAnyAction: ".print_r($this->_userAnyActionAllowed, true));
+		
 		
 	}
 	
@@ -200,6 +217,14 @@ class Erfurt_Ac_Default {
 	private function _getUserModelRights($userURI) {
 		$this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
 		
+		
+		# super admin
+		if ($userURI == $this->_defaultSuperUserUri) {
+			$this->_userAnyActionAllowed = true;
+			$this->_userAnyModelEditAllowed = true;
+			return;
+		}
+		
 		## direct user rights
 		$sparqlQuery = 'select ?p ?o 
 													where { 
@@ -225,36 +250,36 @@ class Erfurt_Ac_Default {
 	 * filter the sparql results 
 	 */
 	private function _filterAcess($resultList) {
-			foreach($resultList as $entry) {
-				if ($entry['?o'] instanceof Literal ) continue;
-				
-				# any action allowed
-				if ($entry['?o']->getUri() == $this->_defaultSysOntUri.$this->_propAnyAction and $entry['?p']->getUri() == $this->_defaultSysOntUri.$this->_propGrantAccess) {
-					$this->_userAnyActionAllowed = true;
-				}
-				# any model allowed
-				else if ($entry['?o']->getUri() == $this->_defaultSysOntUri.$this->_propAnyModel and $entry['?p']->getUri() == $this->_defaultSysOntUri.$this->_propGrantModelView) {
-					$this->_userAnyModelViewAllowed = true;
-				} else if ($entry['?o']->getUri() == $this->_defaultSysOntUri.$this->_propAnyModel and $entry['?p']->getUri() == $this->_defaultSysOntUri.$this->_propGrantModelEdit) {
-					$this->_userAnyModelEditAllowed = true;
-				}
-				# grant action
-				else if ($entry['?p']->getUri() == $this->_defaultSysOntUri.$this->_propGrantAccess) {
-					if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propGrantAccess]))
-						$this->_userRights[$this->_propGrantAccess][] = $entry['?o']->getLocalName();
-				}
-				# deny action
-				else if ($entry['?p']->getUri() == $this->_propDenyAccess) {
-					if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propDenyAccess]))
-						$this->_userRights[$this->_propDenyAccess][] = $entry['?o']->getLocalName();
-				}
-				# othter model
-				foreach($this->_userRights as $right => $val) {
-					if ($entry['?p']->getUri() == $this->_defaultSysOntUri.$right and !in_array($entry['?o']->getUri(), $this->_userRights[$right])) {
-						$this->_userRights[$right][] = $entry['?o']->getUri();
-					}
+		foreach($resultList as $entry) {
+			if ($entry['?o'] instanceof Literal ) continue;
+			
+			# any action allowed
+			if ($entry['?o']->getUri() == $this->_propAnyAction and $entry['?p']->getUri() == $this->_propGrantAccess) {
+				$this->_userAnyActionAllowed = true;
+			}
+			# any model allowed
+			else if ($entry['?o']->getUri() == $this->_propAnyModel and $entry['?p']->getUri() == $this->_propGrantModelView) {
+				$this->_userAnyModelViewAllowed = true;
+			} else if ($entry['?o']->getUri() == $this->_propAnyModel and $entry['?p']->getUri() == $this->_propGrantModelEdit) {
+				$this->_userAnyModelEditAllowed = true;
+			}
+			# grant action
+			else if ($entry['?p']->getUri() == $this->_propGrantAccess) {
+				if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propGrantAccess]))
+					$this->_userRights[$this->_propGrantAccess][] = $entry['?o']->getLocalName();
+			}
+			# deny action
+			else if ($entry['?p']->getUri() == $this->_propDenyAccess) {
+				if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propDenyAccess]))
+					$this->_userRights[$this->_propDenyAccess][] = $entry['?o']->getLocalName();
+			}
+			# othter model
+			foreach($this->_userRights as $rightUri => $val) {
+				if ($entry['?p']->getUri() == $rightUri and !in_array($entry['?o']->getUri(), $this->_userRights[$rightUri])) {
+					$this->_userRights[$rightUri][] = $entry['?o']->getUri();
 				}
 			}
+		}
 	}
 	
 		
@@ -274,13 +299,13 @@ class Erfurt_Ac_Default {
 		## return view
 		if ($type == 'view')
 			# explicit forbidden
- 			if (in_array($modelUri, $this->_userRights['denyModelView']))
+ 			if (in_array($modelUri, $this->_userRights[$this->_propDenyModelView]))
  				return false;
 			# view explicit allowed and not denied
-			else if (in_array($modelUri, $this->_userRights['grantModelView'])) 
+			else if (in_array($modelUri, $this->_userRights[$this->_propGrantModelView])) 
 				return true;
 			# view in edit allowed and not denied
-			else if (in_array($modelUri, $this->_userRights['grantModelEdit']))
+			else if (in_array($modelUri, $this->_userRights[$this->_propGrantModelEdit]))
 				return true;
 			# any model
 			else if ($this->isAnyModelAllowed('view'))
@@ -289,10 +314,10 @@ class Erfurt_Ac_Default {
 		## return edit
 		if ($type == 'edit')
 			# explicit forbidden
-			if (in_array($modelUri, $this->_userRights['denyModelEdit']))
+			if (in_array($modelUri, $this->_userRights[$this->_propDenyModelEdit]))
 				return false;
 			# edit allowed and not denied
-			else if (in_array($modelUri, $this->_userRights['grantModelEdit']))
+			else if (in_array($modelUri, $this->_userRights[$this->_propGrantModelEdit]))
 				return true;
 			# any model
 			else if ($this->isAnyModelAllowed('edit'))
@@ -316,11 +341,9 @@ class Erfurt_Ac_Default {
 		 # true, if view: any model editable or viewable, edit: editable
 		return ($type == 'view')  ? (($this->_userAnyModelViewAllowed or $this->_userAnyModelEditAllowed) ? true : false) : $this->_userAnyModelEditAllowed;
 	}
+		
 	
-	
-	
-	
-/**
+	/**
 	 * delievers list of allowed models
 	 *  
 	 * @param string name of the access type
@@ -332,9 +355,13 @@ class Erfurt_Ac_Default {
 		if (!in_array($type, array('view', 'edit')))
 			return array();
 		$ret = array();
-		# filter denied actions
-		foreach ($this->_userRights['grantModel'.ucfirst($type)] as $a) {
-			if (in_array($a, $this->_userRights['denyModel'.ucfirst($type)])) continue;
+		
+		$grantModelKey = ($type == 'view') ? $this->_propGrantModelView : $this->_propGrantModelEdit;
+		$denyModelKey = ($type == 'view') ? $this->_propDenyModelView : $this->_propDenyModelEdit;
+		
+		# filter denied models
+		foreach ($this->_userRights[$grantModelKey] as $a) {
+			if (in_array($a, $this->_userRights[$denyModelKey])) continue;
 			$ret[] = $a;
 		}
 		return $ret;
@@ -352,7 +379,8 @@ class Erfurt_Ac_Default {
 		if (!in_array($type, array('view', 'edit')))
 			return false;
 		
-		return $this->_userRights['denyAccess'.ucfirst($type)];
+		$denyModelKey = ($type == 'view') ? $this->_propDenyModelView : $this->_propDenyModelEdit;
+		return $this->_userRights[$denyModelKey];
 	}
 	
 	/**
@@ -361,8 +389,14 @@ class Erfurt_Ac_Default {
 	public function getActionConfig($action) {
 		$actionUri = $this->_defaultSysOntUri.$action;
 		## standard config
+		if (isset($this->_defaultActionConfigs[$actionUri])) {
+			return $this->_defaultActionConfigs[$actionUri];
+		}
+		return array();
 		
+		# TODO: OBSOLETE
 		## direct action config
+	/*
 		$sparqlQuery = 'select ?o 
 													where { 
 														<'.$actionUri.'> <'.$this->_defaultActionConfigUri.'> ?o.
@@ -376,6 +410,7 @@ class Erfurt_Ac_Default {
 			}
 		}
 		return $ret;
+	*/
 	}
 	
 	/**
@@ -386,8 +421,8 @@ class Erfurt_Ac_Default {
 	public function getAllowedActions() {
 		$ret = array();
 		# filter denied actions
-		foreach ($this->_userRights['grantAccess'] as $a) {
-			if (in_array($a, $this->_userRights['denyAccess'])) continue;
+		foreach ($this->_userRights[$this->_propGrantAccess] as $a) {
+			if (in_array($a, $this->_userRights[$this->_propDenyAccess])) continue;
 			$ret[] = $a;
 		}
 		return $ret;
@@ -399,7 +434,7 @@ class Erfurt_Ac_Default {
 	 * @return array list of actions
 	 */
 	public function getDeniedActions() {
-		return $this->_userRights['denyAccess'];
+		return $this->_userRights[$this->_propDenyAccess]; 
 	}
 	
 	/**
@@ -419,9 +454,9 @@ class Erfurt_Ac_Default {
 	 * */
 	public function isActionAllowed($action) {
 		$action = $this->_defaultSysOntUri.$action;
-		if (in_array($action, $this->_userRights['denyAccess']))
+		if (in_array($action, $this->_userRights[$this->_propDenyAccess]))
 			return false;
-		if (in_array($action, $this->_userRights['grantAccess'])) 
+		if (in_array($action, $this->_userRights[$this->_propGrantAccess])) 
 			return true;
 		if ($this->isAnyActionAllowed())
 			return true;

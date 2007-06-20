@@ -36,6 +36,11 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
     private $_userDenyActionPredicate = 'http://ns.ontowiki.net/SysOnt/denyAccess';
     private $_userDenyLoginAction = 'http://ns.ontowiki.net/SysOnt/denyAccess';
     
+    /**
+	 * super admin user uri
+	 */
+	private $_defaultSuperUserUri = 'http://ns.ontowiki.net/SysOnt/SuperAdmin';
+    
     private $_dbUsername = '';
     private $_dbPassword = '';
     
@@ -57,6 +62,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		$this->_userMailPredicate = Zend_Registry::get('config')->ac->user->mail;
 		
 		$this->_anonymousUserUri = Zend_Registry::get('config')->ac->user->anonymousUser;
+		$this->_defaultSuperUserUri = Zend_Registry::get('config')->ac->user->superAdmin;
 		
 		$this->_dbUsername = Zend_Registry::get('config')->database->params->username;
 		$this->_dbPassword = Zend_Registry::get('config')->database->params->password;
@@ -86,24 +92,23 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	  	$result['isValid'] = true;
 	  	$result['identity'] = $this->_getAnonymous();
 	  }
+		# database user
+		else if ($this->_username == $this->_dbUsername and $this->_password == $this->_dbPassword) {
+			$result['isValid'] = true;
+	  	$result['identity'] = $this->_getSuperAdmin();
+		}
 	  # normal user
 		else if (($userUri = $this->fetchData($this->_username, $this->_password)) === false) {
 			$result['messages'][] = Zend_Registry::get('strings')->auth->login->msg->incorrect;
 		} 
-		# database user
-		else if ($this->_username == $this->_dbUsername and $this->_password == $this->_dbPassword) {
-			$result['isValid'] = true;
-			$result['identity']['uri'] = $this->_dbUsername;
-			$result['identity']['email'] = '';
-			$result['identity']['dbuser'] = true;
-		} 
+		 
 		# valid user from sysont
 		else {
 			$result['isValid'] = true;
 			$result['identity']['uri'] = $userUri;
 			$result['identity']['email'] = $this->_users[$userUri]['userEmail'];
 			
-			# POWL HACK
+			# TODO: POWL HACK
 			$_SESSION['PWL']['user']= $this->_username;
 		}
 		
@@ -292,14 +297,26 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	/**
 	 * delievers the anonymous user details 
 	 */
-	public function _getAnonymous() {	
-		$user['userName'] = 'Anonymous';
+	private function _getAnonymous() {	
+		$user['username'] = 'Anonymous';
 		$user['uri'] = $this->_anonymousUserUri;
 		$user['dbuser'] = false;
 		$user['email'] = '';
 		$user['anonymous'] = true;
 		return $user;
 	}
-
+	
+/**
+	 * delievers the anonymous user details 
+	 */
+	private function _getSuperAdmin() {	
+		$user['username'] = 'SuperAdmin';
+		$user['uri'] = $this->_defaultSuperUserUri;
+		$user['dbuser'] = true;
+		$user['email'] = '';
+		$user['anonymous'] = false;
+		return $user;
+	}
+	
 } 
 ?>
