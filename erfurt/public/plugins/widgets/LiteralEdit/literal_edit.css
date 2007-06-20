@@ -2,16 +2,16 @@
 	display: block;
 	width: 90%;
 	margin-bottom: 0.5em;
-/*	border: 1px solid #bbb;*/
+/*	border: 1px dotted #bbb;*/
 }
 
 .LiteralEditOptionsContainer {
-	font-size: x-small;
+	font-size: 90%;
 }
 
 .LiteralEditLang, .LiteralEditDtype {
 	margin-right: 0.5em;
-	font-size: x-small;
+	font-size: 96%;
 }
 
 .LiteralEditLang {

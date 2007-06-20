@@ -8,18 +8,15 @@
   */
 class DateEdit extends Erfurt_Plugin_Widget {
 	
-	public function __construct($elementName, $values) {
+	public function __construct($elementName = null, $values = null) {
 		parent::__construct($elementName, 
 			                $values, 
 							// config
-							array(
-								'class' => 'date_edit'
-							)
-		);
+							array('class'          => 'date_edit', 
+								  'cardinalityMax' => 1));
 		
 		$this->_scripts[] = $this->_widgetBaseUrl . 'DateEdit/epoch_classes.js';
 		$this->_styles[] = $this->_widgetBaseUrl . 'DateEdit/epoch_styles.css';
-		$this->_styles[] = $this->_widgetBaseUrl . 'DateEdit/date_edit.css';
 	}
 	
 	public function getSingleValueHtml($date, $num = 1) {
@@ -28,6 +25,8 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		} else {
 			$value = $date;
 		}
+		
+		$name = $this->_elementName;
 		
 		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue" value="' . $value . '" id="value-' . $this->_id . $num . '" />' . PHP_EOL;
 		$ret .= '<script type="text/javascript">' . PHP_EOL . 

@@ -14,12 +14,11 @@ class SelectNew extends Erfurt_Plugin_Widget {
 	  */
 	var $_selected;
 	
-	public function __construct($elementName, $selected, $values, $config = array()) {
+	public function __construct($elementName = null, $selected = null, $values = null, $config = array()) {
 		$defaultConfig = array(
 			'cardinalityMax' => 1, 
 			'multi'          => false,
 			'multiSize'      => 5,
-			'onChange'       => 'powl.formOptions(this)',
 			'emptyLabel'     => 'None'
 		);
 		parent::__construct($elementName, 
@@ -32,9 +31,13 @@ class SelectNew extends Erfurt_Plugin_Widget {
 	}
 	
 	public function __toString() {
-		
-		$count = 1;
-		$ret = '<span id="container-' . $this->_id . '"';
+		if (isset($this->_config['start'])) {
+			$count = $this->_config['start'] - 1;
+			$this->_id = $this->_id . $this->_config['start'];
+		} else {
+			$count = 0;
+		}
+		$ret = '<span id="select-container-' . $this->_id . '"';
 		if (!empty($this->_config['class'])) {
 			$ret .= ' class="' . $this->_config['class'] . '">' . PHP_EOL;
 		} else {
@@ -63,7 +66,7 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		} else {
 			$ret .= ' class="SelectNew"';
 		}
-		$ret .= '>' . PHP_EOL;
+		$ret .= ' id="dtype-' . $this->_id . '">' . PHP_EOL;
 		
 		foreach ($this->_values as $key => $val) {
 			if (is_int($key)) {
