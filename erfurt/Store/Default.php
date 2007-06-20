@@ -39,6 +39,10 @@ class Erfurt_Store_Default extends DBStore {
 	
 	protected $store;
 	
+	protected $dbDriver;
+	
+	protected $SysOntURI = false;
+	
 	
 	/**
 	 * instance of ac-object
@@ -58,13 +62,28 @@ class Erfurt_Store_Default extends DBStore {
 	 */
 	function Erfurt_Store_Default($dbDriver, $host, $dbName, $user, $password, $SysOntURI = false, $tablePrefix = '') {
 		DBStore::DBStore($dbDriver, $host, $dbName, $user, $password);
-		
+			
 		// if 'tablePrefix' is set, attach SQL-rewrite function to store
 		if(!empty($tablePrefix))
 			$this->dbConn->fnExecute='pwlRewriteSQL';
 		
+		# register for init
+		$this->dbDriver = $dbDriver;
+		$this->SysOntURI = $SysOntURI;
+	}
+	
+	/**
+	 * init function
+	 * 
+	 * separate from constructor for exeption handling
+	 */
+	public function init() {
+		# TODO: ERRORCODE
+		if (!$this->isSetup($this->dbDriver)) 
+			throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
+			
 		if($SysOntURI)
-			$this->SysOnt = $this->getModel($SysOntURI);
+			$this->SysOnt = $this->getModel($this->SysOntURI);
 	}
 	
 	/**
@@ -103,15 +122,15 @@ class Erfurt_Store_Default extends DBStore {
 	/**
 	 * returns instance of an model-object
 	 */
-	function getModel($modelURI, $importedURIs=array()) {
+	function getModel($modelURI, $importedURIs=array(), $useACL = true) {
 		$modelURI=is_numeric($modelURI)?$this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI):$modelURI;
 		ob_start(); // prevent DB error message if tables don't exist
-		if(!$this->modelExists($modelURI)) {
-			if(rtrim($modelURI,'#/')!=$modelURI && $this->modelExists(rtrim($modelURI,'#/'))) {
+		if(!$this->modelExists($modelURI, $useACL)) {
+			if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
 				$modelURI=rtrim($modelURI,'#/');
-			} else if($this->modelExists($modelURI.'/'))
+			} else if($this->modelExists($modelURI.'/', $useACL))
 				$modelURI.='/';
-			else if($this->modelExists($modelURI.'#'))
+			else if($this->modelExists($modelURI.'#', $useACL))
 				$modelURI.='#';
 			else return false;
 		}
@@ -122,8 +141,8 @@ class Erfurt_Store_Default extends DBStore {
 				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
 				$m=new OWLModel($this,$modelURI);
 				foreach($m->listImports() as $import) if(is_a($import,'resource')) {
-					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs))
-						$m->importsIds=array_merge($m->importsIds,array($imp->modelID=>$imp->modelID),!empty($imp->importsIds)?$imp->importsIds:array());
+					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs, $useACL))
+						$m->importsIds = array_merge($m->importsIds, array($imp->modelID => $imp->modelID), !empty($imp->importsIds) ? $imp->importsIds : array());
 					$importedURIs[rtrim($import->getURI(),'#/')]=rtrim($import->getURI(),'#/');
 				}
 				if($m->importsIds)
@@ -143,8 +162,8 @@ class Erfurt_Store_Default extends DBStore {
 	 * @param string $type
 	 * @return
 	 **/
-	function getNewModel($modelURI,$baseURI='',$type='RDFS') {
-		if($this->modelExists($modelURI))
+	function getNewModel($modelURI,$baseURI='',$type='RDFS', $useACL = true) {
+		if($this->modelExists($modelURI, $useACL))
 			return false;
 		$mt=parent::getNewModel($modelURI,$baseURI);
 		unset($this->_models[$modelURI]);
@@ -230,16 +249,24 @@ class Erfurt_Store_Default extends DBStore {
 	 * Check if the DbModel with the given modelURI is already stored in the database
 	 *
 	 * @param   string   $modelURI
+	 * @param   boolean  useACL for installation check
 	 * @return  boolean
 	 * @throws	SqlError
 	 * @access	public
 	 */
-	function modelExists($modelURI) {
+	function modelExists($modelURI, $useACL = true) {
 		$args=func_get_args();
 		$c=cache('modelExists',$args);
 		if($c!==NULL)
 			return $c;
-		return cache('modelExists',$args,parent::modelExists($modelURI));
+		
+		$modelExists = false; 
+		if ($modelExists = parent::modelExists($modelURI)) {
+			if (is_object($this->ac) and method_exists($this->ac, 'isModelAllowed'))
+				if ($useACL and !$this->ac->isModelAllowed('view', $modelURI))
+					$modelExists = false;
+		}
+		return cache('modelExists', $args, $modelExists);
 	}
 	
 	/**
@@ -263,7 +290,8 @@ class Erfurt_Store_Default extends DBStore {
 			} else {
 				return false;
 			}  
-			
+		
+		# OLD POWL STUFF => TODO: remove old powl ac
 		} elseif($_SESSION['PWL']['user']=='Admin' || Zend_Registry::get('config')->deactivateLogin)
 		# powl-admin and mode without login can use all models
 			return true;

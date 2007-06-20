@@ -55,7 +55,29 @@ class Erfurt_App_Default {
 																								$config->database->params->password, 
 																								$config->SysOntModelURI,
 																								$config->database->tableprefix);
-					
+		
+		try {
+			# check for tables and possible sys-ont
+			# TODO: remove sysont
+			$defaultStore->init();
+		} catch (Erfurt_Exception $e) {
+			if ($e->getCode() == 1) {
+				print $e->getMessage().'<br/>';
+				$defaultStore->createTables($config->database->type);
+				print 'Database Setup: OntoWiki tables created<br />';
+				die ('<br /><b>Please reload now (the next step will last a few seconds)</b>');
+			} else {
+				die($e->display(true));
+			}
+		}
+	
+																								
+		# register object in registry
+		Zend_Registry::set('erfurt', $this);
+																								
+		# check for new installation
+		$this->_checkNewInstallation($config);
+		
 		/**
  		* load OntoWiki action access control configuration
  		*/
@@ -71,6 +93,9 @@ class Erfurt_App_Default {
 		
 		# set auth instance
 		$this->auth = Zend_Auth::getInstance();
+		
+		
+		
 		
 		$this->acModel = $defaultStore->getModel($config->ac->model);
 		Zend_Registry::set('owAc', $this->acModel);
@@ -88,6 +113,9 @@ class Erfurt_App_Default {
 		# set ac to store
 		$defaultStore->setAc($this->ac);
 		
+		# register object in registry
+		Zend_Registry::set('erfurt', $this);
+		
 		# call init
 		$this->init();
 	}
@@ -99,9 +127,58 @@ class Erfurt_App_Default {
 	 * init is called at the end of the initialisation process
 	 */
 	public function init() {
+		// connect to store
+		#ob_start();
 		
+		
+		#$_ET['store']->dbConn->LogSQL(); // incompatible with $_POWL['db']['tablePrefix'] !!!
+		#$_ET['store']->dbConn->debug=true;
+		
+		// initialise active model
+		if(!empty($_REQUEST['model']))
+			$_SESSION['_ETS']['model'] = $_REQUEST['model'];
+		if(!empty($_SESSION['_ETS']['model']))
+			$GLOBALS['_ET']['rdfsmodel'] = $this->getStore()->getModel($_SESSION['_ETS']['model']);
+		#ob_end_clean();
+		
+		// load model specific sysont
+		if(!empty($this->getStore()->SysOnt) && $modelClass = $this->getStore()->SysOnt->getClass('Model'))
+			if($inst = $modelClass->findInstance(array('modelURI' => $GLOBALS['_ET']['rdfsmodel']['rdfsmodel']->modelURI)))
+				if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
+					$GLOBALS['_POWL']['SysOnt'] = $this->getStore()->SysOnt;
+					
 		
 	}
+	
+	/**
+		 * check for new erfurt installation and sets the system ontologies
+		 */
+	private function _checkNewInstallation(Zend_Config $config) {
+		/**
+		 * check for ontowiki system ontologies
+		 */
+		if(!$this->store[$this->defaultStore]->modelExists($config->sysont->schema, false)) {
+			echo 'Database Setup: Checking for Ontowiki SysOnt Schema ... no schema found.<br />';
+			$m = $this->store[$this->defaultStore]->getNewModel($config->sysont->schema, '', 'RDFS', false);
+			$m->dontCheckForDuplicatesOnAdd = true;
+			$this->store[$this->defaultStore]->dbConn->StartTrans();
+			$m->load(ERFURT_BASE . 'SysOnt.rdf', NULL, true);
+			$this->store[$this->defaultStore]->dbConn->CompleteTrans();	
+			echo 'Database Setup: Ontowiki SysOnt schema created<br />';
+			die ('<br /><b>Please reload now.</b>');
+		}
+		if(!$this->store[$this->defaultStore]->modelExists($config->sysont->model, false)) {
+			echo 'Database Setup: Checking for Ontowiki SysOnt model ... no model found.<br />';
+			$m = $this->store[$this->defaultStore]->getNewModel($config->sysont->model, '', 'RDFS', false);
+			$m->dontCheckForDuplicatesOnAdd = true;
+			$this->store[$this->defaultStore]->dbConn->StartTrans();
+			$m->load(ERFURT_BASE . 'SysOntLocal.rdf', NULL, true);
+			$this->store[$this->defaultStore]->dbConn->CompleteTrans();
+			echo 'Database Setup: Ontowiki SysOnt model created<br />';
+			die ('<br /><b>Please reload now.</b>');
+		}
+	}
+	
 	
 	/**
 	 * authtenticate user

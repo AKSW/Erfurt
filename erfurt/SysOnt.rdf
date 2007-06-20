@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
+  <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&SysOnt;"
+         xmlns:SysOnt="&SysOnt;"
+         xmlns="&SysOnt;"
+         xmlns:foaf="&foaf;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about=""
+                rdfs:label="OntoWiki System Ontology">
+    <rdfs:comment>This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
+    <owl:versionInfo>$Id: SysOnt.rdf 999 2007-05-30 13:30:29Z seebi $</owl:versionInfo>
+  </owl:Ontology>
+
+<!-- Classes -->
+  <owl:Class rdf:about="Action"
+             rdfs:label="Action">
+    <rdfs:comment>Actions represent specific GUI or API actions which can be activated or used by an Agent.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="Model"
+             rdfs:label="Model">
+    <rdfs:comment>A model is a knowledge base in OntoWiki.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="&foaf;Agent"
+             rdfs:comment="Users are able to log into OntoWiki."
+             rdfs:label="User"/>
+  <owl:Class rdf:about="&foaf;Group"
+             rdfs:comment="A Group of User Accounts ..."
+             rdfs:label="Group"/>
+  <owl:Class rdf:nodeID="b0">
+    <owl:unionOf rdf:parseType="Collection">
+      <rdf:Description rdf:about="&foaf;Agent"/>
+      <rdf:Description rdf:about="&foaf;Group"/>
+    </owl:unionOf>
+  </owl:Class>
+
+<!-- Datatypes -->
+  <rdfs:Datatype rdf:about="&xsd;string"/>
+
+<!-- Annotation Properties -->
+  <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
+  <owl:AnnotationProperty rdf:about="&rdfs;label"/>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="userPassword"
+                        rdfs:comment="The password of an OntoWiki Account."
+                        rdfs:label="password">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="&foaf;Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="&foaf;nick"
+                        rdfs:label="uid">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:comment>This is the user identifier of an OntoWiki account which is used for login</rdfs:comment>
+    <rdfs:domain rdf:resource="&foaf;Agent"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="rawConfig"
+                        rdfs:label="config">
+    <rdfs:comment>This property holds action configuration values beyond the rdf schema.</rdfs:comment>
+    <rdfs:domain rdf:resource="Action"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="grantModelEdit"
+                      rdfs:label="editable model">
+    <rdfs:comment>Model Based Access Control: Which Models are allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Model"/>
+    <rdfs:subPropertyOf rdf:resource="grantModelView"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantModelView"
+                      rdfs:label="readable model">
+    <rdfs:comment>Model Based Access Control: Which Models are allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyModelEdit"
+                      rdfs:label="not editable model">
+    <rdfs:comment>Model Based Access Control: Which Models are NOT allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyModelView"
+                      rdfs:label="not readable model">
+    <rdfs:comment>Model Based Access Control: Which Models are NOT allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Model"/>
+    <rdfs:subPropertyOf rdf:resource="denyModelEdit"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantAccess"
+                      rdfs:label="grant access">
+    <rdfs:comment>Access Control: Which Actions are allowed to accessed?</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Action"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyAccess"
+                      rdfs:label="deny access">
+    <rdfs:comment>Action Based Access Control: Which Actions are NOT to be accessed?</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="Action"/>
+  </owl:ObjectProperty>
+
+
+  <owl:ObjectProperty rdf:about="subGroup"
+                      rdfs:label="has subgroup">
+    <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+    <rdfs:comment>A group can have subgroups to manage user accounts.</rdfs:comment>
+    <rdfs:domain rdf:resource="&foaf;Group"/>
+    <rdfs:range rdf:resource="&foaf;Group"/>
+  </owl:ObjectProperty>
+
+
+  <owl:InverseFunctionalProperty rdf:about="&foaf;mbox"
+                                 rdfs:label="mbox">
+    <rdf:type rdf:resource="&owl;ObjectProperty"/>
+    <rdfs:comment>A personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox.</rdfs:comment>
+    <rdfs:domain rdf:resource="&foaf;Agent"/>
+    <rdfs:range rdf:resource="&owl;Thing"/>
+  </owl:InverseFunctionalProperty>
+
+  <owl:ObjectProperty rdf:about="&foaf;member"
+                      rdfs:label="member">
+    <rdfs:comment>The foaf:member property relates a foaf:Group to a foaf:Agent that is a member of that group.</rdfs:comment>
+    <rdfs:domain rdf:resource="&foaf;Group"/>
+    <rdfs:range rdf:resource="&foaf;Agent"/>
+  </owl:ObjectProperty>
+
+<!-- Instances -->
+  <foaf:Agent rdf:about="Anonymous"
+              rdfs:label="Anonymous">
+    <rdfs:comment>This special account identifies the anonymous user.</rdfs:comment>
+  </foaf:Agent>
+
+  <foaf:Agent rdf:about="SuperAdmin"
+              rdfs:label="SuperAdmin">
+    <rdfs:comment>This special account is the SuperAdministrator. He has hard coded access to all models and actions and uses the user nick and pass from the database configuration. All access control statements of this user are ignored by the system.</rdfs:comment>
+  </foaf:Agent>
+
+  <Model rdf:about="AnyModel"
+                rdfs:label="AnyModel">
+    <rdfs:comment>This special model identifies any model.</rdfs:comment>
+  </Model>
+
+  <Action rdf:about="AnyAction"
+                rdfs:label="AnyAction">
+    <rdfs:comment>This special action identifies any action.</rdfs:comment>
+  </Action>
+
+  <Action rdf:about="RegisterNewUser"
+                rdfs:label="Register new User">
+  </Action>
+
+  <Action rdf:about="Login"
+                rdfs:label="Login">
+    <rdfs:comment>Login to the OntoWiki application.</rdfs:comment>
+  </Action>
+
+</rdf:RDF>
+

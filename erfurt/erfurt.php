@@ -228,32 +228,6 @@ $pluginManager->addPluginDir(ERFURT_BASE . $config->widgetDir);
 Zend_Registry::set('pluginManager', $pluginManager);
 
 
-## NEW APP
-$erfurt = new Erfurt_App_Default($config); 
-Zend_Registry::set('erfurt', $erfurt);
-
-// connect to store
-#ob_start();
-
-
-#$_ET['store']->dbConn->LogSQL(); // incompatible with $_POWL['db']['tablePrefix'] !!!
-#$_ET['store']->dbConn->debug=true;
-
-// initialise active model
-if(!empty($_REQUEST['model']))
-	$_SESSION['_ETS']['model'] = $_REQUEST['model'];
-if(!empty($_SESSION['_ETS']['model']))
-	$_ET['rdfsmodel'] = $erfurt->getStore()->getModel($_SESSION['_ETS']['model']);
-ob_end_clean();
-
-// load model specific sysont
-if(!empty(Zend_Registry::get('erfurt')->getStore()->SysOnt) && $modelClass = Zend_Registry::get('erfurt')->getStore()->SysOnt->getClass('Model'))
-	if($inst = $modelClass->findInstance(array('modelURI' => $_ET['rdfsmodel']->modelURI)))
-		if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
-			$_POWL['SysOnt'] = Zend_Registry::get('erfurt')->getStore()->SysOnt;
-
-
-
 
 /******************************************************************************
 * CONSTANTS                                                                   *

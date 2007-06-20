@@ -171,24 +171,27 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			return false;
 		}
 		
-		
 		$uri = '';
+		$checkedPassword = false;
 		foreach($result as $e) {
 			## user check
 			# wront username => not possible :)
-			if ($e['?p']->getUri() == $this->_userNamePredicate and $e['?s']->getLocalName() != $username)
-				return false;
+			#if ($e['?p']->getUri() == $this->_userNamePredicate and $e['?s']->getLocalName() != $username)
+			#	return false;
 			# wrong password
-			if ($e['?p']->getUri() == $this->_userPasswordPredicate 
-					and (!$this->verifyPassword($password, $e['?o']->getLabel(), 'sha1') 
-	        		and !$this->verifyPassword($password, $e['?o']->getLabel(), '')))
-				return false;
-	        		
+			if ($e['?p']->getUri() == $this->_userPasswordPredicate ) {
+				$checkedPassword = true; 
+				if (!$this->verifyPassword($password, $e['?o']->getLabel(), 'sha1') 
+	       		and !$this->verifyPassword($password, $e['?o']->getLabel(), ''))
+					return false;
+	    }
+	      
 			# set params
 			if ($uri == '')
 				$uri = $e['?s']->getUri();
-			if ($e['?p']->getUri() == $this->_userNamePredicate)
-				$this->_users[$e['?s']->getUri()]['userName'] = $e['?s']->getLocalName();
+			if ($e['?p']->getUri() == $this->_userNamePredicate) {
+				$this->_users[$e['?s']->getUri()]['userName'] = $e['?o']->getLabel();
+			}
 			else if ($e['?p']->getUri() == $this->_userPasswordPredicate)
 				$this->_users[$e['?s']->getUri()]['userPassword'] = $e['?o']->getLabel();
 			else if ($e['?p']->getUri() == $this->_userMailPredicate)
@@ -197,7 +200,9 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			else if ($e['?p']->getUri() == $this->_userMailPredicate and $e['?o']->getUri() == $this->_userDenyLoginAction)
 				return false;
 		}
-		
+		# no password 
+		if (!$checkedPassword and $password != '')
+			return false;
 	  return  $uri;
 	}
     
