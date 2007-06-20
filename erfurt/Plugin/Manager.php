@@ -4,6 +4,7 @@
   * Erfurt plug-in manager
   *
   * @package Plugin
+  * @subpackage Widget
   * @author Norman Heino <norman@feedface.de>
   * @version $Id$
   */
@@ -77,8 +78,17 @@ class Erfurt_Plugin_Manager {
 	}
 	
 	/**
-	  * Scans directories for plug-ins and stores their class names
-	  * in an array.
+	  * Scans $directory for valid Erfurt plug-ins and stores their class names
+	  * in the $_activePlugins member.
+	  * A plug-in is considered valid if the following conditions hold.
+	  * <ul>
+	  *   <li>Either a php file or a subfolder of one of the plug-in dirs.</li>
+	  *   <li>In case of a subfolder, this folder contains a php file of exactly the same name.</li>
+	  *   <li>The php file declares a class of the same name (without the .php extension).</li>
+	  *   <li>The class (or another class of the same name) has not already been loaded</li>
+	  * </ul>
+	  *
+	  * @param string $directory The path to a directory to be scanned.
 	  */
 	private function _scanPluginDir($directory) {
 		$contents = scandir($directory);

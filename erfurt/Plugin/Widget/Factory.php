@@ -15,19 +15,55 @@ class Erfurt_Plugin_Widget_Factory {
 	  */
 	protected $_datatypePreferences;
 	
+	/**
+	  * @var An array () TODO
+	  */
 	protected $_propertyPreferences;
 	
+	/**
+	  * @var An array of required scripts.
+	  */
 	protected $_requiredScripts;
 	
+	/**
+	  * @var An array of required stylesheets.
+	  */
 	protected $_requiredStylesheets;
 	
+	/**
+	  * @var The Erfurt_Plugin_Manager instance used.
+	  */
 	protected $_pluginManager;
 	
-	public function __construct() {
+	/**
+	  * @var The singleton instance.
+	  */
+	protected static $_instance = null;
+	
+	/**
+	  * 
+	  *
+	  * @return An instance of Erfurt_Plugin_Widget_Factory
+	  */
+	public static function getInstance() {
+        if (null === self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
+	}
+	
+	/**
+	  * Private constructor, singleton instance.
+	  * Use Erfurt_Plugin_Widget_Factory::getInstance() to retrieve an instance.
+	  */
+	private function __construct() {
 		$this->_datatypePreferences = array();
 		$this->_propertyPreferences = array();
 		$this->_requiredScripts = array();
 		$this->_requiredStylesheets = array();
+		
+		$config = Zend_Registry::get('config');
 		
 		$this->_pluginManager = Zend_Registry::get('pluginManager');
 		
@@ -59,9 +95,36 @@ class Erfurt_Plugin_Widget_Factory {
 			// 		$this->_propertyPreferences[$proprty] = $widget;
 			// 	}
 			// }
+			
+			$widgetObject = new $widget();
+			// collect required scripts
+			if ($scripts = $widgetObject->getScripts()) {
+				foreach ($scripts as $script) {
+					if (!in_array($script, $this->_requiredScripts)) {
+						$this->_requiredScripts[] = $script;
+					}
+				}
+			}
+			// collect required stylesheets
+			if ($stylesheets = $widgetObject->getStylesheets()) {
+				foreach ($stylesheets as $stylesheet) {
+					if (!in_array($stylesheet, $this->_requiredStylesheets)) {
+						$this->_requiredStylesheets[] = $stylesheet;
+					}
+				}
+			}
 		}
 	}
 	
+	/**
+	  * Selects a suitable widget and returns its HTML code with values, datatypes etc. set.
+	  *
+	  * @param RDFSClass $class 
+	  * @param RDFSProperty $property 
+	  * @param mixed $value An array of values or a single value
+	  * @param $config An array of config values this widget interprets. $config gets merged
+	  *        with the widget's default condiguration (if any).
+	  */
 	public function getWidgetHtml($class, $property, $value, $config) {
 		if (isset($config['name'])) {
 			$elementName = $config['name'];
@@ -70,32 +133,27 @@ class Erfurt_Plugin_Widget_Factory {
 		}
 		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, $config)) {
 			$widget = new $widgetClass($elementName, $value);
-			if ($scripts = $widget->getScripts()) {
-				foreach ($scripts as $script) {
-					if (!in_array($script, $this->_requiredScripts)) {
-						$this->_requiredScripts[] = $script;
-					}
-				}
-			}
-			if ($stylesheets = $widget->getStylesheets()) {
-				foreach ($stylesheets as $stylesheet) {
-					if (!in_array($stylesheet, $this->_requiredStylesheets)) {
-						$this->_requiredStylesheets[] = $stylesheet;
-					}
-				}
-			}
 			return $widget;
 		}
 	}
 	
+	/**
+	  * Returns an array of required scripts of all active widgets.
+	  */
 	public function getRequiredScripts() {
 		return $this->_requiredScripts;
 	}
 	
+	/**
+	  * Returns an array of required stylesheets of all active widgets.
+	  */
 	public function getRequiredStylesheets() {
 		return $this->_requiredStylesheets;
 	}
 	
+	/**
+	  * Returns a widget class name for a given combination of class, property and value.
+	  */
 	private function _getWidgetClass($class, $property, $elementName, $value, $config) {
 		// get datatype of literal value (if any)
 		if (is_array($value) && $first = array_shift($value)) {
@@ -131,11 +189,15 @@ class Erfurt_Plugin_Widget_Factory {
 		}
 		
 		// fallback
-		return null;
+		return 'NodeEdit';
 	}
 	
+	/**
+	  * Sets the widget's configuration array according to values
+	  * inferred from class, property and value.
+	  */
 	private function _configureWidget($widgetClass) {
-		// TODO:
+		// TODO
 	}
 }
 
