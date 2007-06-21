@@ -15,47 +15,50 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 							array('class' => 'NodeEditContainer')
 		);
 		
-		$this->_scripts[] = $this->_widgetBaseUrl . 'NodeEdit/node_edit.js';
+		$this->scripts[] = $this->widgetBaseUrl . 'NodeEdit/node_edit.js';
 		
 		$cb = new CheckboxEdit();
 		$le = new LiteralEdit();
 		$re = new LiteralEdit();
-		$this->_styles = array_merge(array($this->_widgetBaseUrl . 'NodeEdit/node_edit.css'), 
+		$this->styles = array_merge(array($this->widgetBaseUrl . 'NodeEdit/node_edit.css'), 
 		                               $cb->getStylesheets(), 
 		                               $le->getStylesheets(), 
 		                               $re->getStylesheets());
 	}
 	
 	public function getSingleValueHtml($value, $num = 1) {
-		$name = $this->_elementName;
+		$name = $this->elementName;
 		
 		$options = array('resource' => 'Resource', 'literal' => 'Literal');
 		
-		if ($value instanceof Literal) {
-			$selected = 'literal';
-		} elseif ($value instanceof Resource) {
+		if ($value instanceof Resource) {
 			$selected = 'resource';
-		} else {
+			$literalPrefix = 'porp';
+			$resPrefix = 'prop';
+		} else { // Literal + default
 			$selected = 'literal';
+			$literalPrefix = 'prop';
+			$resPrefix = 'porp';
 		}
 		
-		$checkbox = new CheckboxEdit($name . '[' . $num . '][type]', $selected, $options, array(
+		$checkbox = new CheckboxEdit($name . '[' . $num . '][type]', $selected, array(
 																				'cardinality' => 1, 
 																				'prefix' => $name, 
 																				'class' => 'NodeEditSelector', 
 																				'separator' => '&nbsp;', 
-																				'onchange' => 'toggleSubWidget(\'' . $this->_id . '\',this.value,' . $num . ')'
+																				'onchange' => 'toggleSubWidget(\'' . $this->id . '\',this.value,' . $num . ')', 
+																				'options' => $options
 																				)
 		);
 		$resource = new ResourceEdit($name, $value, array('cardinality' => 1, 
 																	'display' => ($selected == 'literal' ? 'none' : ''), 
-																	'cssId' => 'resource' . $this->_id,
+																	'cssId' => 'resource' . $this->id,
 																	'start' => $num
 																	)
 		);
 		$literal = new LiteralEdit($name, $value, array('cardinality' => 1, 
 														'display' => ($selected == 'resource' ? 'none' : ''), 
-														'cssId' => 'literal' . $this->_id,
+														'cssId' => 'literal' . $this->id,
 														'start' => $num
 														)
 		);

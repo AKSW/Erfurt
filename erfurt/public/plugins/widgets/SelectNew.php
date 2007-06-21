@@ -12,7 +12,7 @@ class SelectNew extends Erfurt_Plugin_Widget {
 	/**
 	  * @var currently selected item
 	  */
-	var $_selected;
+	var $selected;
 	
 	public function __construct($elementName = null, $selected = null, $values = null, $config = array()) {
 		$defaultConfig = array(
@@ -27,19 +27,19 @@ class SelectNew extends Erfurt_Plugin_Widget {
 							array_merge($defaultConfig, $config)
 		);
 		
-		$this->_selected = $selected;
+		$this->selected = $selected;
 	}
 	
 	public function __toString() {
-		if (isset($this->_config['start'])) {
-			$count = $this->_config['start'] - 1;
-			$this->_id = $this->_id . $this->_config['start'];
+		if (isset($this->config['start'])) {
+			$count = $this->config['start'] - 1;
+			$this->id = $this->id . $this->config['start'];
 		} else {
 			$count = 0;
 		}
-		$ret = '<span id="select-container-' . $this->_id . '"';
-		if (!empty($this->_config['class'])) {
-			$ret .= ' class="' . $this->_config['class'] . '">' . PHP_EOL;
+		$ret = '<span id="select-container-' . $this->id . '"';
+		if (!empty($this->config['class'])) {
+			$ret .= ' class="' . $this->config['class'] . '">' . PHP_EOL;
 		} else {
 			$ret .= ' class="SelectNew">' . PHP_EOL;
 		}
@@ -51,24 +51,24 @@ class SelectNew extends Erfurt_Plugin_Widget {
 	
 	private function getSingleValueHtml() {
 		
-		$ret = '<select name="' . $this->_elementName . '"';
-		if (empty($this->_config['cardinalityMax']) || $this->_config['cardinalityMax'] > 1) {
-			$ret .= ' multiple="multiple" size="' . $this->_config['multiSize'] . '"';
+		$ret = '<select name="' . $this->elementName . '"';
+		if (empty($this->config['cardinalityMax']) || $this->config['cardinalityMax'] > 1) {
+			$ret .= ' multiple="multiple" size="' . $this->config['multiSize'] . '"';
 		}
-		if (!empty($this->_config['onChange'])) {
-			$ret .= ' onchange="' . $this->_config['onChange'] . '"';
+		if (!empty($this->config['onChange'])) {
+			$ret .= ' onchange="' . $this->config['onChange'] . '"';
 		}
-		if (!empty($this->_config['readOnly'])) {
+		if (!empty($this->config['readOnly'])) {
 			$ret .= ' disabled="disabled"';
 		}
-		if (!empty($this->_config['class'])) {
-			$ret .= ' class="' . $this->_config['class'] . '"';
+		if (!empty($this->config['class'])) {
+			$ret .= ' class="' . $this->config['class'] . '"';
 		} else {
 			$ret .= ' class="SelectNew"';
 		}
-		$ret .= ' id="dtype-' . $this->_id . '">' . PHP_EOL;
+		$ret .= ' id="dtype-' . $this->id . '">' . PHP_EOL;
 		
-		foreach ($this->_values as $key => $val) {
+		foreach ($this->values as $key => $val) {
 			if (is_int($key)) {
 				$option = $val;
 			} else {
@@ -76,7 +76,7 @@ class SelectNew extends Erfurt_Plugin_Widget {
 			}
 			$ret .= '<option value="' . $option . '"';
 			if (
-			    ($key === $this->_selected)) {
+			    ($key === $this->selected)) {
 				$ret .= ' selected="selected"';
 			}
 			$ret .= '>' . $val . '</option>' . PHP_EOL;

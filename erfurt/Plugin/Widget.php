@@ -12,7 +12,7 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	/**
 	  * @var URL reference to the widget base directory
 	  */
-	protected $_widgetBaseUrl;
+	protected $widgetBaseUrl;
 	
 	/**
 	  * @var File system reference to the widget base directory
@@ -22,22 +22,22 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	/**
 	  * @var A unique id for this widget
 	  */
-	protected $_id;
+	protected $id;
 	
 	/**
 	  * @var The form element's name attribute
 	  */
-	protected $_elementName;
+	protected $elementName;
 	
 	/**
 	  * @var Array of values
 	  */
-	protected $_values;
+	protected $values;
 	
 	/**
 	  * @var Array of configuration values
 	  */
-	protected $_config = array(
+	protected $config = array(
 		// TODO: default configuration values
 		'cardinality' => 1, 
 		);
@@ -45,12 +45,12 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	/**
 	  * @var Array of script URLs this widget requires
 	  */
-	protected $_scripts;
+	protected $scripts;
 	
 	/**
 	  * @var Array of style sheet URLs this widget requires
 	  */
-	protected $_styles;
+	protected $styles;
 	
 	/**
 	  * Protected constructor. You cannot instantiate this class.
@@ -60,51 +60,51 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		
 		// call plug-in constructor
 		parent::__construct();
-		$this->_widgetBaseDir = ERFURT_BASE . $config->widgetDir;
-		$this->_widgetBaseUrl = $config->erfurtUrlBase . $config->widgetDir;
+		$this->widgetBaseDir = ERFURT_BASE . $config->widgetDir;
+		$this->widgetBaseUrl = $config->erfurtUrlBase . $config->widgetDir;
 		
 		if ($elementName) {
-			$this->_elementName = $elementName;
+			$this->elementName = $elementName;
 		} else {
-			$this->_elementName = '';
+			$this->elementName = '';
 		}
 		if (!$values) {
 			$values = '';
 		}
 		
-		// values are generally handles as an array
+		// values are generally handled as an array
 		// even single values should be arrays
 		if (is_array($values)) {
-			$this->_values = $values;
+			$this->values = $values;
 		} else {
-			$this->_values = array($values);
+			$this->values = array($values);
 		}
 		// set passed config
 		if (is_array($widgetConfig)) {
-			$this->_config = $widgetConfig;
+			$this->config = $widgetConfig;
 		}
 		// set passed scripts
 		if (is_array($scripts)) {
-			$this->_scripts = $scripts;
+			$this->scripts = $scripts;
 		} elseif (is_string($scripts)) {
-			$this->_scripts[] = $scripts;
+			$this->scripts[] = $scripts;
 		}
 		// set passed stylesheets
 		if (is_array($styles)) {
-			$this->_styles = $styles;
+			$this->styles = $styles;
 		} elseif (is_string($styles)) {
-			$this->_styles[] = $styles;
+			$this->styles[] = $styles;
 		}
-		if ($this->_config['cardinality'] == 1) {
-			$this->_config['cardinalityMin'] = 1;
-			$this->_config['cardinalityMax'] = 1;
+		if ($this->config['cardinality'] == 1) {
+			$this->config['cardinalityMin'] = 1;
+			$this->config['cardinalityMax'] = 1;
 		}
 		// set passed id attribute (used to propagate
 		// an id to subwidgets)
-		if (isset($this->_config['cssId'])) {
-			$this->_id = $this->_config['cssId'];
+		if (isset($this->config['cssId'])) {
+			$this->id = $this->config['cssId'];
 		} else {
-			$this->_id = uniqid();
+			$this->id = uniqid();
 		}
 	}
 	
@@ -114,33 +114,33 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	  * @return string
 	  */
 	public function __toString() {
-		if (isset($this->_config['start'])) {
-			$count = $this->_config['start'] - 1;
-			$id = $this->_id . $this->_config['start'];
+		if (isset($this->config['start'])) {
+			$count = $this->config['start'] - 1;
+			$id = $this->id . $this->config['start'];
 			$withContainer = true;
 		} else {
 			$count = 0;
-			$id = $this->_id;
+			$id = $this->id;
 			$withContainer = true;
 		}
-		if (isset($this->_config['display'])) {
-			$displayOption = ' style="display:' . $this->_config['display'] . '"';
+		if (isset($this->config['display'])) {
+			$displayOption = ' style="display:' . $this->config['display'] . '"';
 		} else {
 			$displayOption = '';
 		}
-		if (isset($this->_config['container'])) {
-			$container = $this->_config['container'];
+		if (isset($this->config['container'])) {
+			$container = $this->config['container'];
 		} else {
 			$container = 'container';
 		}
 		if ($withContainer) {
-			$ret = '<div id="' . $container . '-' . $id . '" class="' . $this->_config['class'] . '"' . $displayOption . '>' . PHP_EOL;
+			$ret = '<div id="' . $container . '-' . $id . '" class="' . $this->config['class'] . '"' . $displayOption . '>' . PHP_EOL;
 		}
-		foreach ($this->_values as $value) {
+		foreach ($this->values as $value) {
 			$ret .= $this->getSingleValueHtml($value, ++$count);
 		}
-		if (empty($this->_config['cardinalityMax']) || $this->_config['cardinalityMax'] > $count) {
-			// $ret .= '<a href="javascript:ow.getEmptyHtml(\'' . $this->_id . '\',\'' . get_class($this) . '\')" title="Add a value">
+		if (empty($this->config['cardinalityMax']) || $this->config['cardinalityMax'] > $count) {
+			// $ret .= '<a href="javascript:ow.getEmptyHtml(\'' . $this->id . '\',\'' . get_class($this) . '\')" title="Add a value">
 			// 	<img src="" alt="+"/></a>' . PHP_EOL;
 			$ret .= '<input type="hidden" id="count-' . $id . '" value="' . $count . '" />' . PHP_EOL;
 		}
@@ -155,8 +155,8 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	  * Default getter method for config values
 	  */
 	public function __get($var) {
-		if (in_array($var, $this->_config)) {
-			return $this->_config[$var];
+		if (in_array($var, $this->config)) {
+			return $this->config[$var];
 		} else {
 			return null;
 		}
@@ -164,26 +164,26 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	
 	/**
 	  * Returns an array of scripts needed by this widget. You don't
-	  * need to overwrite this method. Just set the $_scripts member
+	  * need to overwrite this method. Just set the $scripts member
 	  * in your widget class's constructor accordingly. 
-	  * To get the basis URL you can use the $_widgetBaseUrl member.
+	  * To get the basis URL you can use the $widgetBaseUrl member.
 	  *
 	  * @return array An array of js script URLs.
 	  */
 	public function getScripts() {
-		return $this->_scripts;
+		return $this->scripts;
 	}
 	
 	/**
 	  * Returns an array of stylesheets used by this widget. You don't
-	  * need to overwrite this method. Just set the $_styles member
+	  * need to overwrite this method. Just set the $styles member
 	  * in your widget class's constructor accordingly. 
-	  * To get the basis URL you can use the $_widgetBaseUrl member.
+	  * To get the basis URL you can use the $widgetBaseUrl member.
 	  *
 	  * @return array An array of cs sheet URLs
 	  */
 	public function getStylesheets() {
-		return $this->_styles;
+		return $this->styles;
 	}
 	
 	/**

@@ -15,9 +15,9 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 							$config
 		);
 		
-		$this->_config['class'] = 'ResourceEditContainer';
-		// $this->_scripts[] = $this->_widgetBaseUrl . 'ResourceEdit/resource_edit.js';
-		$this->_styles[] = $this->_widgetBaseUrl . 'ResourceEdit/resource_edit.css';
+		$this->config['class'] = 'ResourceEditContainer';
+		// $this->scripts[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.js';
+		$this->styles[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.css';
 	}
 	
 	public function getSingleValueHtml($resource, $num = 1) {
@@ -30,17 +30,17 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 			$value = $resource;
 		}
 
-		$name = $this->_elementName . '[' . $num . ']';
+		$name = $this->elementName . '[' . $num . ']';
 		
-		if (isset($this->_config['nameMod'])) {
-			$nameMod .= '[' . $this->_config['nameMod'] . ']';
+		if (isset($this->config['nameMod'])) {
+			$nameMod .= '[' . $this->config['nameMod'] . ']';
 		} else {
 			$nameMod = '';
 		}
 		
-		// $ret  = '<div id="' . $this->_id . $num . '-container" class="ResourceEditContainer">' . PHP_EOL;
+		// $ret  = '<div id="' . $this->id . $num . '-container" class="ResourceEditContainer">' . PHP_EOL;
 		$ret .= '<input type="text" name="' . $name . $nameMod . '" class="ResourceEditValue" value="' . 
-				$value . '" id="value-' . $this->_id . $num . '" />' . PHP_EOL;
+				$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		// $ret .= '</div>' . PHP_EOL;
 		
 		return $ret;

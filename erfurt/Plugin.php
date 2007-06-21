@@ -12,26 +12,26 @@ abstract class Erfurt_Plugin {
 	/**
 	  * @var Array of datatypes available in plug-ins
 	  */
-	protected $_types;
+	protected $types;
 	
 	/**
 	  * @var The Erfurt plug-in base as a URL reference
 	  */
-	protected $_pluginBaseUrl;
+	protected $pluginBaseUrl;
 	
 	/**
 	  * @var The Erfurt plug-in base as a file system reference
 	  */
-	protected $_pluginBaseDir;
+	protected $pluginBaseDir;
 	
 	/**
 	  * Protected constructor. You cannot instantiate this class.
 	  */
 	protected function __construct() {
 		$config = Zend_Registry::get('config');
-		$this->_types = Zend_Registry::get('datatypes');
-		$this->_pluginBaseUrl = $config->erfurtPublicUri . $config->pluginDir;
-		$this->_pluginBaseDir = ERFURT_BASE . $config->pluginDir;
+		$this->types = Zend_Registry::get('datatypes');
+		$this->pluginBaseUrl = $config->erfurtPublicUri . $config->pluginDir;
+		$this->pluginBaseDir = ERFURT_BASE . $config->pluginDir;
 	}
 }
 

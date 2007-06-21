@@ -15,10 +15,10 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 							$config
 		);
 		
-		$this->_config['class'] = 'literal_edit';
+		$this->config['class'] = 'literal_edit';
 		
-		$this->_scripts[] = $this->_widgetBaseUrl . 'LiteralEdit/literal_edit.js';
-		$this->_styles[] = $this->_widgetBaseUrl . 'LiteralEdit/literal_edit.css';
+		$this->scripts[] = $this->widgetBaseUrl . 'LiteralEdit/literal_edit.js';
+		$this->styles[] = $this->widgetBaseUrl . 'LiteralEdit/literal_edit.css';
 	}
 	
 	public function getSingleValueHtml($literal, $num = 1) {
@@ -35,39 +35,39 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			// $dtype = 'http://www.w3.org/2001/XMLSchema#string';
 		}
 		
-		$name = $this->_elementName . '[' . $num . ']';
+		$name = $this->elementName . '[' . $num . ']';
 		
-		if (isset($this->_config['nameMod'])) {
-			$nameMod .= '[' . $this->_config['nameMod'] . ']';
+		if (isset($this->config['nameMod'])) {
+			$nameMod .= '[' . $this->config['nameMod'] . ']';
 		} else {
 			$nameMod = '';
 		}
 		$ret = '';
-		// $ret  = '<div id="container-' . $this->_id . $num . '" class="LiteralEditContainer">' . PHP_EOL;
-		//  onmouseover="toggleOptions($(\'opt-cont' . $this->_id . $num . '\'), \'mouseover\')"
-		//  onmouseout="toggleOptions($(\'opt-cont' . $this->_id . $num . '\'), \'mouseout\')"
+		// $ret  = '<div id="container-' . $this->id . $num . '" class="LiteralEditContainer">' . PHP_EOL;
+		//  onmouseover="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseover\')"
+		//  onmouseout="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseout\')"
 		if (!strstr($value, PHP_EOL) && strlen($value) < 80) {
 			$ret .= '<input type="text" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" value="' . 
-					$value . '" id="value-' . $this->_id . $num . '" />' . PHP_EOL;
+					$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
 			$ret .= '<textarea rows="4" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
-					$this->_id . $num . '">' . $value . '</textarea>' . PHP_EOL;
+					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
-		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->_id . $num . '">' . PHP_EOL;
+		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL;
 		$ret .= '<input type="text" name="' . $name . '[lang]" class="LiteralEditLang" value="' . $lang . '" id="lang-' . 
-				$this->_id . $num . '" />' . PHP_EOL;
+				$this->id . $num . '" />' . PHP_EOL;
 		
-		if (!empty($this->_config['dtype'])) {
+		if (!empty($this->config['dtype'])) {
 			$ret .= '<input type="hidden" name="' . $name . '[dtype]" class="LiteralEditDtype" value="' . 
-					$this->_config['datatype'] . '" id="dtype-' . $this->_id . $num . '" />' . PHP_EOL;
+					$this->config['datatype'] . '" id="dtype-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
-			if (!empty($this->_config['cssId'])) {
-				$ret .= new SelectNew($name . '[dtype]', $dtype, $this->_types, array('cardinalityMax' => 1, 
+			if (!empty($this->config['cssId'])) {
+				$ret .= new SelectNew($name . '[dtype]', $dtype, $this->types, array('cardinalityMax' => 1, 
 				                                                                      'class' => 'LiteralEditDtype', 
-				                                                                      'cssId' => $this->_config['cssId'], 
-				                                                                      'start' => $this->_config['start']));
+				                                                                      'cssId' => $this->config['cssId'], 
+				                                                                      'start' => $this->config['start']));
 			} else {
-				$ret .= new SelectNew($name . '[dtype]', $dtype, $this->_types, array('cardinalityMax' => 1, 
+				$ret .= new SelectNew($name . '[dtype]', $dtype, $this->types, array('cardinalityMax' => 1, 
 				                                                                      'class' => 'LiteralEditDtype'));
 			}
 		}

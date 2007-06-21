@@ -13,12 +13,12 @@ class Erfurt_Plugin_Manager {
 	/**
 	  * @var An array of plug-ins found and loaded.
 	  */
-	protected $_activePlugins;
+	protected $activePlugins;
 	
 	/**
 	  * @var An array of plug-in dirs to be scanned.
 	  */
-	protected $_pluginDirs;
+	protected $pluginDirs;
 	
 	/**
 	  * Constructs an erfurt plug-in manager object.
@@ -27,12 +27,12 @@ class Erfurt_Plugin_Manager {
 	  * scanned for plug-ins.
 	  */
 	public function __contruct($pluginDirs = array()) {
-		$this->_activePlugins = array();
+		$this->activePlugins = array();
 		
 		if (is_array($pluginDirs)) {
-			$this->_pluginDirs = $pluginDirs();
+			$this->pluginDirs = $pluginDirs();
 		} elseif (is_string($pluginDirs)) {
-			$this->_pluginDirs[] = $pluginDirs;
+			$this->pluginDirs[] = $pluginDirs;
 		}
 	}
 	
@@ -43,7 +43,7 @@ class Erfurt_Plugin_Manager {
 	  */
 	public function addPluginDir($path) {
 		if (file_exists($path)) {
-			$this->_pluginDirs[] = $path;
+			$this->pluginDirs[] = $path;
 			$this->_scanPluginDir($path);
 		}
 	}
@@ -54,14 +54,14 @@ class Erfurt_Plugin_Manager {
 	  * @return array
 	  */
 	public function getActivePlugins($type = null) {
-		// if (empty($this->_activePlugins)) {
+		// if (empty($this->activePlugins)) {
 		// 	$this->_scanPluginDirs();
 		// }
 		// if ($type && $type === 'widget') {
 		// 	// TODO: return widgets only
 		// 	return array();
 		// }
-		return $this->_activePlugins;
+		return $this->activePlugins;
 	}
 	
 	/**
@@ -71,15 +71,15 @@ class Erfurt_Plugin_Manager {
 	  * @param string $className The name of a plug-in class.
 	  */
 	public function isPluginActive($className) {
-		// if (empty($this->_activePlugins)) {
+		// if (empty($this->activePlugins)) {
 		// 	$this->_scanPluginDirs();
 		// }
-		return in_array($className, $this->_activePlugins);
+		return in_array($className, $this->activePlugins);
 	}
 	
 	/**
 	  * Scans $directory for valid Erfurt plug-ins and stores their class names
-	  * in the $_activePlugins member.
+	  * in the $activePlugins member.
 	  * A plug-in is considered valid if the following conditions hold.
 	  * <ul>
 	  *   <li>Either a php file or a subfolder of one of the plug-in dirs.</li>
@@ -91,6 +91,7 @@ class Erfurt_Plugin_Manager {
 	  * @param string $directory The path to a directory to be scanned.
 	  */
 	private function _scanPluginDir($directory) {
+		$log = Zend_Registry::get('erfurtLog');
 		$contents = scandir($directory);
 		
 		// scan dir contens
@@ -106,7 +107,8 @@ class Erfurt_Plugin_Manager {
 						include_once $searchPath . DIRECTORY_SEPARATOR . $fileName . '.php';
 						$className = $fileName;
 					} else {
-						throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
+						// throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
+						$log->info(__CLASS__ . ': class ' . $fileName . ' was already loaded.');
 					}
 				}
 			// scan for file-only plug-ins
@@ -115,13 +117,14 @@ class Erfurt_Plugin_Manager {
 					include_once $searchPath;
 					$className = substr($fileName, 0, strlen($fileName) - 4);
 				} else {
-					throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
+					// throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
+					$log->info(__CLASS__ . ': class ' . $fileName . ' was already loaded.');
 				}
 			}
 			
 			// add class found
 			if ($className && class_exists($className)) {
-				$this->_activePlugins[$className] = $className;
+				$this->activePlugins[$className] = $className;
 				unset($className);
 			}
 		}
