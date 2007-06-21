@@ -161,9 +161,8 @@ class Erfurt_Ac_Default {
 		if ($auth->hasIdentity()) {
     	// Identity exists; get it
     	$this->_user = $auth->getIdentity();
-		} else {
-			$this->_user = $this->_getAnonymous();
-		}
+		} else 
+			throw new Erfurt_Exception('no valid user given', 103);
 		
 		# setting up right-field
 		$this->_userRights = array(
@@ -462,6 +461,18 @@ class Erfurt_Ac_Default {
 			return true;
 			
 		return false;
+	}
+	
+	public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') {
+		if (!in_array($type, array('view', 'edit')))
+			throw new Erfurt_Exception('wrong type submitted', 101);
+		if (!in_array($perm, array('grant', 'deny')))
+			throw new Erfurt_Exception('wrong perm type submitted', 102);
+			
+		$prop = ($view == 'edit') ? (($perm == 'grant') ? $this->_propGrantModelEdit : $this->_propDenyModelEdit) : (($perm == 'grant') ? $this->_propGrantModelView : $this->_propDenyModelView);
+		$this->_userRights[$prop][] = $modelUri;
+		$erg = $this->_acModel->add($this->_user['uri'], $prop, $modelUri);
+		return $erg;
 	}
 }
 ?>
