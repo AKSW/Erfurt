@@ -82,8 +82,8 @@ class Erfurt_Store_Default extends DBStore {
 		if (!$this->isSetup($this->dbDriver)) 
 			throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
 			
-		if($SysOntURI)
-			$this->SysOnt = $this->getModel($this->SysOntURI);
+		#if($SysOntURI)
+		#	$this->SysOnt = $this->getModel($this->SysOntURI);
 	}
 	
 	/**

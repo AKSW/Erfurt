@@ -141,6 +141,7 @@ class Erfurt_App_Default {
 		#ob_end_clean();
 		
 		// load model specific sysont
+		
 		if(!empty($this->getStore()->SysOnt) && $modelClass = $this->getStore()->SysOnt->getClass('Model'))
 			if($inst = $modelClass->findInstance(array('modelURI' => $GLOBALS['_ET']['rdfsmodel']['rdfsmodel']->modelURI)))
 				if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
