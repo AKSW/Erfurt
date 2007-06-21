@@ -19,7 +19,12 @@ class DefaultRDFSModel extends DbModel {
 	var	$resource='RDFSResource';
 	var $vocabulary;
 	var $instance;
-
+	
+	/**
+	 * if is set, model can be written
+	 */
+	private $_isEditable = false;
+	
 	/**
 	 * Class constructor.
 	 *
@@ -1471,7 +1476,6 @@ return $this->findSubjects($predicate, $class);
 			$this->logEnd();
 		}
 		if(!method_exists($statement,'subject'))
-			print_r($statement);
 		$subject_is=$this->_getNodeFlag($statement->subject());
 		$sql="INSERT INTO log_statements VALUES (NULL,'".$statement->getLabelSubject()."','".$statement->getLabelPredicate()."',";
 		if(is_a($statement->object(), 'Literal')) {
@@ -1536,6 +1540,20 @@ return $this->findSubjects($predicate, $class);
 
 
 		return $ret;
+	}
+	
+	/**
+	 * get the edit permission
+	 */
+	public function isEditable() {
+		return $this->_isEditable;
+	}
+	
+	/**
+	 * set the edit permission
+	 */
+	public function setEdititable($e) {
+		$this->_isEditable = $e;
 	}
 } 
 ?>

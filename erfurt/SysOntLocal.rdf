@@ -33,9 +33,9 @@
   <foaf:Group rdf:about="AdminGroup"
               rdfs:label="AdminGroup">
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;AnyAction"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantAccess rdf:resource="&SysOnt;anyAction"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
     <rdfs:comment>The group of all admins. If not changed, they can trigger all actions and can edit all models but the system ontology.</rdfs:comment>
     <foaf:member rdf:resource="Admin"/>
   </foaf:Group>
@@ -46,8 +46,8 @@
     <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
     <SysOnt:denyModelEdit rdf:resource="&LocalConfig;"/>
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
   </foaf:Group>
 

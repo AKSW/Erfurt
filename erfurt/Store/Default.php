@@ -101,7 +101,6 @@ class Erfurt_Store_Default extends DBStore {
 		$models=array();
 		if($ms=parent::listModels()) {
 			if($returnAsArray) {
-				
 				foreach($ms as $model) {
 					if($this->aclCheck('View',$model['modelURI'])) {
 						$models[] = $model;
@@ -123,7 +122,10 @@ class Erfurt_Store_Default extends DBStore {
 	 * returns instance of an model-object
 	 */
 	function getModel($modelURI, $importedURIs=array(), $useACL = true) {
-		$modelURI=is_numeric($modelURI)?$this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI):$modelURI;
+		# get model uri
+		$modelURI = is_numeric($modelURI) ? $this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI) : $modelURI;
+		
+		# look for model in every uri variation
 		ob_start(); // prevent DB error message if tables don't exist
 		if(!$this->modelExists($modelURI, $useACL)) {
 			if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
@@ -136,6 +138,8 @@ class Erfurt_Store_Default extends DBStore {
 		}
 		$m=new RDFSModel($this,$modelURI);
 		ob_end_clean();
+		
+		
 		if($m) {
 			if($m->getType()=='OWL') {
 				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
@@ -148,6 +152,12 @@ class Erfurt_Store_Default extends DBStore {
 				if($m->importsIds)
 					$m->importsSQL=' OR modelID='.join(' OR modelID=',$m->importsIds);
 			}
+			
+			# look for edit possibility
+			if ($useACL and $this->checkAc()) {
+					$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
+			}
+			
 			return $m;
 		} else
 			return false;
@@ -284,7 +294,7 @@ class Erfurt_Store_Default extends DBStore {
 			$model = $model->modelURI;
 		
 		# ow user
-		if (defined('ZENDED') and ZENDED == "YES") {
+		if ($this->checkAc()) {
 			if ($this->ac->isModelAllowed('view', $model)) {
 				return true;
 			} else {
@@ -405,6 +415,15 @@ class Erfurt_Store_Default extends DBStore {
 	 */
 	public function setAc($acObj = null) {
 		$this->ac = $acObj;
+	}
+	
+/**
+	 * check the ac-object instance
+	 * 
+	 * @return boolean object is set
+	 */
+	public function checkAc() {
+		return $this->ac;
 	}
 }
 ?>
