@@ -479,7 +479,7 @@ class DefaultRDFSResource extends Resource {
 			else if(is_a($v,'Literal'))
 				$val[]=$this->model->getLiteralId($v);
 			else if(is_array($v)) { // && $v['type'] || isset($v['value']) || isset($v['uri']) || isset($v['lang']) || isset($v['dtype'])) {
-				if($v['type']!='resource' && $v['value']) {
+				if($v['type']!='resource' && isset($v['value'])) {
 					$vt=new RDFSLiteral($v['value'],$v['lang']!='Lang'?$v['lang']:NULL,$v['dtype']);
 					$obj=$val[]=$this->model->getLiteralId($vt);
 #if($property->getLocalName()=='rdfs:comment') {
