@@ -10,16 +10,6 @@
  */
 
 
-// overwrite the __autoload-function iff it does not exists; this is needed in order to autodiscover missing classes
-if (!function_exists('__autoload')) {
-	
-	function __autoload($class) {
-		// TODO handle some special cases in this function (see Zend_Loader)		
-		$path = str_replace('_', DIRECTORY_SEPARATOR, $class);
-		require_once($path.'.php');
-	}
-}
-
 /*************************************************************************************************************/
 
 
@@ -29,6 +19,29 @@ if (!function_exists('__autoload')) {
 ******************************************************************************/
 # basepath
 define('ERFURT_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
+
+// set include path to lib/
+$include_path  = get_include_path() . PATH_SEPARATOR;
+$include_path .= ERFURT_BASE . PATH_SEPARATOR;
+$include_path .= ERFURT_BASE . 'lib/' . PATH_SEPARATOR;
+set_include_path($include_path);
+
+// overwrite if it does not exists; needed for autodiscovering missing classes
+if (!function_exists('__autoload')) {
+	function __autoload($class) {
+		// try Erfurt dir
+		$file = ERFURT_BASE . str_replace('_', DIRECTORY_SEPARATOR, substr($class, 7)) . '.php';
+		if (file_exists($file)) {
+			require_once($file);
+		} else {
+			// try lib
+			$file = ERFURT_BASE . 'lib/' . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+			if (file_exists($file)) {
+				require_once($file);
+			}
+		}
+	}
+}
 
 # LOGGER
 $logDir = ERFURT_BASE . 'log/';
@@ -45,12 +58,13 @@ $erfurtLog->info('Erfurt-Start: ' . date('d.m.Y H:i:s'));
 
 # config
 $section = 'erfurt';
-$iniFiles = array(ERFURT_BASE.'erfurt.ini'); 
-if (isset(Zend_Registry::get('config')->iniFiles)) {
-	$iniFiles = array_merge($iniFiles, Zend_Registry::get('config')->iniFiles->toArray());
-	$section = Zend_Registry::get('config')->iniSection;
+$iniFiles = array(ERFURT_BASE . 'erfurt.ini');
+if (Zend_Registry::isRegistered('config')) {
+	if (isset(Zend_Registry::get('config')->iniFiles)) {
+		$iniFiles = array_merge($iniFiles, Zend_Registry::get('config')->iniFiles->toArray());
+		$section = Zend_Registry::get('config')->iniSection;
+	}
 }
-
 $config = new Erfurt_Config($iniFiles, $section, true);
 Zend_Registry::set('config', $config);
 
