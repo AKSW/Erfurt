@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2006
  * @version $Id: model.php 982 2007-05-14 14:09:12Z cweiske $
  */
-abstract class DefaultRDFSModel extends DbModel {
+class DefaultRDFSModel extends DbModel {
 	/**
 	 * Provides a view of the model as a resource, e.g. to retrieve
 	 * or set owl:OntologyProperties.
@@ -72,7 +72,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the resource to generate
 	 * @return RDFSResource
 	 **/
-	function resourceF($uri, $expandNS = true) {
+	function resourceF($uri, $expandNS = null) {
 		
 		return new RDFSResource($uri, $this, $expandNS);
 	}
@@ -82,7 +82,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the class to generate
 	 * @return RDFSClass
 	 **/
-	function classF($uri, $expandNS = true) {
+	function classF($uri, $expandNS = null) {
 		
 		return new RDFSClass($uri, $this, $expandNS);
 	}
@@ -92,7 +92,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the property to generate
 	 * @return RDFSProperty
 	 **/
-	function propertyF($uri, $expandNS = true) {
+	function propertyF($uri, $expandNS = null) {
 		
 		return new RDFSProperty($uri, $this, $expandNS);
 	}
@@ -103,7 +103,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param string $uri URI or localname of the instance to generate
 	 * @return RDFSInstance
 	 **/
-	function instanceF($uri, $expandNS = true) {
+	function instanceF($uri, $expandNS = null) {
 		
 		return new RDFSInstance($uri, $this, $expandNS);
 	}
@@ -121,58 +121,60 @@ abstract class DefaultRDFSModel extends DbModel {
 		return new RDFSLiteral($label, $language, $datatype);
 	}
 	
-	/**
-	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
-	 * specific backend.
-	 * @return string[] Returns an associative array where the key is a namespace and the value a prefix.
-	 */
-	public function getParsedNamespaces() { /* abstract */ }
-
+	function getParsedNamespaces() {
+		$c=cache('getParsedNamespaces'.$this->modelURI,array());
+		if($c!==NULL)
+			return $c;
+		$ret=array_flip($GLOBALS['default_prefixes']);
+		// get namespace prefixes from SysOnt-Class "Model"
+		if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
+			if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
+				foreach($inst->listPropertyValuesPlain(Zend_Registry::get('SysOntSchemaURI').'modelXMLNS') as $prefix) {
+					$ns=explode(':',$prefix,2);
+					$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
+				}
+		$pns=parent::getParsedNamespaces();
+		$ret=array_filter($pns?array_merge($ret,$pns):$ret);
+		return cache('getParsedNamespaces'.$this->modelURI,array(),$ret);
+	}
 	/**
 	 * Returns a list of models imported by owl:imports.
 	 *
 	 * @return array Array of RDFResources
-	 */
-	public function listImports() {
-		
+	 **/
+	function listImports() {
 		return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
 	}
-	
-	public function listModelIds() {
-		
+	function listModelIds() {
 		return array_merge($this->importsIds,array($this->modelID));
 	}
-	
-	public function getModelIds() {
-		
-		return join(',', $this->listModelIds());
+	function getModelIds() {
+		return join(',',$this->listModelIds());
 	}
-	
-	/**
- 	 * Internal method, that returns a resource URI that is unique for the DbModel.
- 	 * URIs are generated using the base_uri of the DbModel, the prefix and a unique number.
- 	 *
- 	 * @param	string	$prefix
- 	 * @return	string
- 	 * @access	private
- 	 */
- 	function getUniqueResourceURI($prefix) {
-		
-		static $counter;
-   		$counter = !empty($counter)?$counter:1;
-   		while (true) {
-     		$uri= ($prefix!=BNODE_PREFIX?$this->getBaseURI():'').$prefix.$counter;
-	 		$tempbNode= new BlankNode($uri);
-     		$res1 = $this->find($tempbNode, NULL, NULL);
-  	 		$res2 = $this->find(NULL, NULL, $tempbNode);
-	 		$Node= new $this->resource($uri,$this);
-     		$res3 = $this->find($Node, NULL, NULL);
-  	 		$res4 = $this->find(NULL, NULL, $Node);
-	 		if ($res1->size()==0 && $res2->size()==0 && $res3->size()==0 && $res4->size()==0)
-        		return $uri;
-     		$counter++;
-   		}
-	}
+/**
+ * Internal method, that returns a resource URI that is unique for the DbModel.
+ * URIs are generated using the base_uri of the DbModel, the prefix and a unique number.
+ *
+ * @param	string	$prefix
+ * @return	string
+ * @access	private
+ */
+ function getUniqueResourceURI($prefix) {
+	static $counter;
+   $counter = !empty($counter)?$counter:1;
+   while (true) {
+     $uri= ($prefix!=BNODE_PREFIX?$this->getBaseURI():'').$prefix.$counter;
+	 $tempbNode= new BlankNode($uri);
+     $res1 = $this->find($tempbNode, NULL, NULL);
+  	 $res2 = $this->find(NULL, NULL, $tempbNode);
+	 $Node= new $this->resource($uri,$this);
+     $res3 = $this->find($Node, NULL, NULL);
+  	 $res4 = $this->find(NULL, NULL, $Node);
+	 if ($res1->size()==0 && $res2->size()==0 && $res3->size()==0 && $res4->size()==0)
+        return $uri;
+     $counter++;
+   }
+}
 
 	/**
 	 * Returns a string representation of the literal.
@@ -180,66 +182,104 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param Literal $literal
 	 * @return string
 	 **/
-	public function getLiteralId($literal) {
-		
+	function getLiteralId($literal) {
 		return '"'.$literal->getLabel().'"@'.$literal->getLanguage().'^^'.$literal->getDatatype();
 	}
-	
 	/**
 	 * Returns a uniq string for a node, which can be used for indexing arrays of nodes.
 	 *
 	 * @param node $node
 	 * @return string
 	 **/
-	public function getNodeId($node) {
-		
+	function getNodeId($node) {
 		return is_a($node,'resource')?$node->getLocalName():$this->getLiteralId($node);
 	}
-	
 	/**
 	 * Creates a new Statement with the given parameters
 	 *
-	 * @param RDFSResource/string/Statement/int $subj Subject of the Statement
-	 * @param RDFSResource/string/null $pred Predicate of the Statement
-	 * @param RDFSNode/string/null $obj Object of the Statement
-	 * @param string/null $objLang Optional a language
-	 * @param string/null $objDType  Optional a datatype
-	 * @return Statement
-	 */
-	abstract protected function _createStatement($subj, $pred = false, $obj = false, $objLang = '', $objDType = '');
-	
-	
-	/**
-	 * Adds a statement to the model.
-	 *
-	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
-	 * specific backend.
 	 * @param RDFSResource $subj Subject of the Statement
 	 * @param RDFSResource $pred Predicate of the Statement
 	 * @param RDFSNode $obj Object of the Statement
-	 * @return boolean Returns true iff the statement was added successfully.
-	 */
-	public function add($subj, $pred = '', $obj = '') { /* abstract */ }
-	
+	 * @param string $objLang Optional a language
+	 * @param string $objDType  Optional a datatype
+	 * @return Statement
+	 * @access	private
+	 **/
+	function _createStatement($subj,$pred=false,$obj=false,$objLang='',$objDType='') {
+		if(is_a($subj,'Statement'))
+			return $subj;
+		else if(is_numeric($subj) && !$pred)
+			return $this->fetchStatementFromRecordSet($this->dbConn->execute("SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is FROM statements WHERE id='$subj'"));
+		if(!is_a($subj,'Resource'))
+			$subj=$this->resourceF($subj);
+		if(!is_a($pred,'Resource'))
+			$pred=$this->resourceF($pred);
+		if(!is_a($obj,'Node')) {
+			if($objLang || $objDType)
+				$obj=new RDFSLiteral($obj,$objLang,is_a($objDType,'Resource')?$objDType->getURI():$objDType);
+			else if(preg_match('/"(.*)"@(.*)\^\^(.*)/ms',$obj,$matches))
+				$obj=new RDFSLiteral($matches[1],$matches[2],$matches[3]);
+			else
+				$obj=$this->resourceF($obj);
+		}
+		return new Statement($subj,$pred,$obj);
+	}
+	/**
+	 * Adds a statement to the model
+	 *
+	 * @param RDFSResource $subj Subject of the Statement
+	 * @param RDFSResource $pred Predicate of the Statement
+	 * @param RDFSNode $obj Object of the Statement
+	 * @param int $actionId Id of log entry this statement belongs to
+	 * @return
+	 **/
+	function add($subj,$pred='',$obj='') {
+		Zend_Registry::set('cache', array());
+		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
+		parent::add($statement);
+		$success=false;
+		if($this->dbConn->Affected_Rows()===false || $this->dbConn->Affected_Rows()===1) {
+			$success=true;
+			stmCache::expire($statement);
+			$this->logAdd($statement);
+		} else
+			trigger_error('Addition of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
+		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
+		return $success;
+	}
 	/**
 	 * Removes a statement from the model
 	 *
-	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
-	 * specific backend.
 	 * @param RDFSResource $subj Subject of the Statement
 	 * @param RDFSResource $pred Predicate of the Statement
 	 * @param RDFSResource_or_Literal $obj Object of the Statement
-	 * @return boolean Returns true iff the statement was removed successfully.
-	 */
-	public function remove($subj,$pred='',$obj='') { /* abstract */ }
-	
+	 * @return
+	 **/
+	function remove($subj,$pred='',$obj='') {
+		Zend_Registry::set('cache', array());
+		$statement=$this->_createStatement($subj,$pred,$obj);
+		#if(isBnode($statement->obj)) {
+		#	$o=new $this->resource($statement->obj->getURI(),$this);
+		#	$o->remove();
+		#}
+#print_r($statement->subj->toString().$statement->pred->toString().$statement->obj->toString());
+		parent::remove($statement);
+		$success=false;
+		if($this->dbConn->Affected_Rows()===0 || $this->dbConn->Affected_Rows()===1) {
+			$success=true;
+			stmCache::expire($statement);
+			$this->logRemove($statement);
+		} else
+			trigger_error('Deletion of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
+		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
+		return $success;
+	}
 	/**
-	 * Returns the type of the model.
+	 * Returns the model type
 	 *
-	 * @return string Returns one of RDF, RDFS or OWL.
-	 */
-	public function getType() {
-		 
+	 * @return string RDF/RDFS/OWL
+	 **/
+	function getType() {
 		if(!empty(Zend_Registry::get('config')->SysOntModelURI) && $this->modelURI == Zend_Registry::get('config')->SysOntModelURI)
 			$type='OWL';
 		else if(!empty($this->store->SysOnt) && $modelClass = $this->store->SysOnt->getClass('Model'))
@@ -258,106 +298,127 @@ abstract class DefaultRDFSModel extends DbModel {
 				return 'RDF';
 		}
 	}
-	
-	/**
-	 * Sets the type of the model.
-	 * 
-	 * @param string $type The new type for the model. (Currently only 'OWL' is supported.)
-	 */ 
-	public function setType($type) {
-		
-		if ($type != $this->getType()) {
-			if ($type == 'OWL')
-				$this->add($this->modelURI, 'rdf:type', 'owl:Ontology');
+	function setType($type) {
+		if($type!=$this->getType()) {
+			if($type=='OWL')
+				$this->add($this->modelURI,'rdf:type','owl:Ontology');
 		}
 	}
-	
 	/**
-	 * Returns an array of all XML namespaces (unique) used in the model (not the namespaces from the namespace table; 
-	 * just namespaces that are used in statements).
+	 * Returns an array of all XML namespaces used in the model.
 	 *
-	 * @return string[] Array of XML namespaces.
-	 */
-	abstract public function listNamespaces();
-	
+	 * @return array Array of XML namespaces.
+	 **/
+	function listNamespaces() {
+
+		$ret = array();
+
+		foreach (array('subject', 'predicate', 'object') as $col) {
+			$temp = $this->dbConn->getCol('SELECT SUBSTRING('.$col.',1,LOCATE("#",'.$col.')) ns FROM statements WHERE modelID IN ('.$this->getModelIds().')'.
+			($col != 'predicate' ? ' AND '.$col.'_is="r"' : '').' GROUP BY ns');
+
+			$ret = array_merge($ret, $temp);
+		}
+		$ret=array_unique($ret);
+		sort($ret);
+		return $ret;
+
+		// --> there was something wrong with the syntax of the original sql statement
+		/*
+		$ret=array();
+		foreach(array('subject','predicate','object') as $col) {
+			$ret = array_merge($ret, $this->dbConn->getCol("SELECT SUBSTRING(".
+			$col.",1,LOCATE('#',".$col.")) ns FROM statements WHERE modelID IN(".
+			$this->getModelIds().")".($col!='predicate' ? " AND {".$col."}_is='r'"
+			: "")." GROUP BY ns"));
+		}
+		$ret=array_unique($ret);
+		sort($ret);
+		return $ret;
+		*/
+	}
 	/**
-	 * Returns an array of all XML datatypes (unique) used in the model.
+	 * Returns an array of all XML datatypes used in the model.
 	 *
-	 * @return string[] Array of XML datatypes.
+	 * @return array Array of XML datatypes.
 	 */
-	abstract public function listDatatypes();
-	
+	function listDatatypes() {
+		$ret=$this->dbConn->getCol("SELECT l_datatype
+				FROM statements WHERE modelID IN (".$this->getModelIds().") AND object_is='l' GROUP BY l_datatype");
+		sort($ret);
+		return $ret;
+	}
 	/**
-	 * Returns an array of all languages (unique) used in conjunction with literals in the model.
+	 * Returns an array of all languages used in conjunction with literals in the model.
 	 *
-	 * @return string[] Array of language strings.
-	 */
-	abstract public function listLanguages();
-	
+	 * @return array Array of language strings.
+	 **/
+	function listLanguages() {
+		$ret=$this->dbConn->getCol("SELECT l_language FROM statements
+				WHERE modelID IN (".$this->getModelIds().") AND object_is='l' GROUP BY l_language");
+		sort($ret);
+		return array_filter($ret);
+	}
 	/**
 	 * Returns an array of all resource URIs in the model.
 	 *
 	 * @return array Array of resource URIs.
-	 */
-	public function listResources() {
-		
-		return array_merge($this->listResourcesSubject(), $this->listResourcesPredicate(), $this->listResourcesObject());
+	 **/
+	function listResources() {
+		return array_merge($this->listResourcesSubject(),$this->listResourcesPredicate(),$this->listResourcesObject());
 	}
-	
 	/**
-	 * Returns a all (or if $count is given max. $count) matching (if search string is given) resources of a given column.
-	 * An optional offset can be set by passing the $start parameter.
+	 * RDFSModel::_listResourcesCol()
 	 *
-	 * @param string $col One of 'subject', 'predicate' or 'object.
-	 * @param string/null $search An optional search string
-	 * @param int/null $start
-	 * @param int/null $count
-	 * @param int/null $erg
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
-	 */
-	abstract protected function _listResourcesCol($col, $search = '', $start = 0, $count = 0, $erg = 0);
-	
-	/**
-	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
-	 * which occur as subjects of statements in the model. An optional offset can be set by passing the $start parameter.
-	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
-	 */
-	public function listResourcesSubject($search = '', $start = 0, $count = 0, $erg = 0) {
-		
-		return $this->_listResourcesCol('subject', $search, $start, $count, &$erg);
+	 * @param $col
+	 * @param string $search
+	 * @param integer $start
+	 * @param integer $count
+	 * @param integer $erg
+	 * @return
+	 * @access	private
+	 **/
+	function _listResourcesCol($col,$search='',$start=0,$count=0,$erg=0) {
+		$sql="SELECT $col res FROM statements
+				WHERE modelID IN (".$this->getModelIds().')'.($col!='predicate'?" AND {$col}_is='r'":'').($search?" AND $col LIKE '%$search%'":'')."
+				GROUP BY res";
+		$res=$count?$this->dbConn->pageExecute($sql,$count,$start/$count+1):$this->dbConn->execute($sql);
+		$erg=$res->_maxRecordCount?$res->_maxRecordCount:$res->_numOfRows;
+		$ret=array();
+		foreach($res->getArray() as $a)
+			foreach($a as $r)
+				$ret[$r]=$this->resourceF($r);
+
+		return $ret;
 	}
-	
 	/**
-	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
-	 * which occur as predicate of statements in the model. An optional offset can be set by passing the $start parameter.
+	 * Returns an array of all resource URIs, which occur as subjects of statements in the model.
 	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
-	 */
-	public function listResourcesPredicate($search = '', $start = 0, $count = 0, $erg = 0) {
-		
-		return $this->_listResourcesCol('predicate', $search, $start, $count, &$erg);
+	 * @return array Array of resource URIs.
+	 **/
+	function listResourcesSubject($search='',$start=0,$count=0,$erg=0) {
+		return $this->_listResourcesCol('subject',$search,$start,$count,&$erg);
 	}
-	
 	/**
-	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
-	 * which occur as objects of statements in the model. An optional offset can be set by passing the $start parameter.
+	 * Returns an array of all resource URIs, which occur as predicates of statements in the model.
 	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
-	 */
-	public function listResourcesObject($search = '', $start = 0, $count = 0, $erg = 0) {
-		
-		return $this->_listResourcesCol('object', $search, $start, $count, &$erg);
+	 * @return array Array of resource URIs.
+	 **/
+	function listResourcesPredicate($search='',$start=0,$count=0,$erg=0) {
+		return $this->_listResourcesCol('predicate',$search,$start,$count,&$erg);
 	}
-	
+	/**
+	 * Returns an array of all resource URIs, which occur as objects of statements in the model.
+	 *
+	 * @return array Array of resource URIs.
+	 **/
+	function listResourcesObject($search='',$start=0,$count=0,$erg=0) {
+		return $this->_listResourcesCol('object',$search,$start,$count,&$erg);
+	}
 	/**
 	 * Find helper function.
 	 *
-	 * @deprecated use listRDFTypeInstances or listRDFTypeInstancesAs instead
+	 * @deprecated use listRDFTypeInstancesAs instead
 	 * @param RDFSResource $type
 	 * @param RDFSClass $class
 	 * @param int $start
@@ -365,7 +426,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param int $erg
 	 * @return
 	 **/
-	public function listTypes($type=NULL,$class=NULL,$start=0,$count=0,$erg=0) {
+	function listTypes($type=NULL,$class=NULL,$start=0,$count=0,$erg=0) {
 		return $this->findNodes(NULL,'rdf:type',$type,$class,$start,$count,&$erg);
 	}
 	
@@ -374,116 +435,91 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * You can set the optional parameter to 'class' or 'property' if you want such objects to be returned.
 	 *
 	 * @param RDFSResource/null $type Indicates whether to return only rdf:type instances of the given type.
+	 * @param string/null $class Indicates whether to return specific objects, e.g. 'class' or 'property'.
 	 * @param int/null $offset An optional offset.
 	 * @param int/null $limit An optional limit.
 	 * @return mixed[] Returns an array that holds RFDSResource/BlankNode/RDFSClass/RDFSProperty objects
 	 */
-	public function listRDFTypeInstances($type = null, $offset = null, $limit = null) {
-		
-		return $this->findNodes(null, 'rdf:type', $type, null, $offset, $limit);
-	}
-	
-	/**
-	 * This method searches for rdf:type instances of a specific type or of all types if no type is given.
-	 * You can set the optional parameter to 'class' or 'property' if you want such objects to be returned.
-	 *
-	 * @param RDFSResource/null $type Indicates whether to return only rdf:type instances of the given type.
-	 * @param string $class Indicates whether to return specific objects, e.g. 'class' or 'property'.
-	 * @param int/null $offset An optional offset.
-	 * @param int/null $limit An optional limit.
-	 * @return mixed[] Returns an array that holds RFDSResource/BlankNode/RDFSClass/RDFSProperty objects
-	 */
-	public function listRDFTypeInstancesAs($type = null, $class, $offset = null, $limit = null) {
+	public function listRDFTypeInstancesAs($type = null, $class = null, $offset = null, $limit = null) {
 		
 		return $this->findNodes(null, 'rdf:type', $type, $class, $offset, $limit);
 	}
 	
+	
 	/**
 	 * Returns array of all named classes in this model.
 	 *
-	 * @return RDFSClass[] Returns an array of RDFSClass objects.
-	 */
-	public function listClasses() {
-		
+	 * @return array Array of RDFSCLass Objects
+	 **/
+	function listClasses() {
 		$ret=array();
 		foreach($this->vocabulary['Class'] as $class)
 			$ret=array_merge($ret,$this->findNodes(NULL,'rdf:type',$class,'Class'));
 		return $ret;
 	}
-	
 	/**
-     * Returns a list with classes that are not part of a rdfs:subClassOf relation (top-classes).
-     *
-     * @param boolean $systemClasses Indicates whether system-classes (classes with rdf, rdfs or owl namespace)
-     * should be returned or not. (default: false)
-     * @param boolean $emptyClasses Indicates whether empty classes (classes that do not have any instances 
-     * and which subclasses do not have instances, too) should be returned or not. (default: false)
-     * @param boolean $implicitClasses Indicates whether classes that are inferred (classes, which have no explicit
-     * definition, but which are the domain of at least one instance) should be returned or not. (default: false)
-     * @return RDFSClass[]/OWLClass[] Returns an array of either RDFSClass objects or OWLClass objects.
-     */
-	abstract public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false); 
-	
-	/**
-	 * Returns an array containing the label-languages of all classes in the model that have a label (distinct).
+	 * Returns array of all named classes not being sub-class of any other class in this model.
 	 *
-	 * @return string[] Returns an array containing label-languages.
-	 */
-	abstract public function listClassLabelLanguages();
-	
+	 * @return array Array of RDFSCLass Objects
+	 **/
+	function listTopClasses() {
+		$args=func_get_args();
+		$c=cache('listTopClasses'.$this->modelURI,$args);
+		if($c!==NULL)
+			return $c;
+		$clsql='';
+		$topclasses=array();
+		#foreach($this->vocabulary['Class'] as $cl)
+			foreach($this->findNodes(NULL,'rdfs:subClassOf','owl:Thing') as $class)
+				$topclasses[$class->getLocalName()]=$class;
+		return cache('listTopClasses'.$this->modelURI,$args,$topclasses);
+ 	}
 	/**
-	 * Adds a named class description node with the given URI to the model and returns an instance of RDFSClass or OWLClass
-	 * that represents this named class.
+	 * Returns an array of all distinct label languages for all classes in the model.
 	 *
-	 * @deprecated Use addNamedClass instead.
+	 * @return array Array of all distinct label languages.
+	 **/
+	function listClassLabelLanguages() {
+		foreach($this->vocabulary['Class'] as $cl)
+			$clsql.=" OR s2.object='".$cl->getURI()."'";
+		$sql="SELECT s1.l_language
+		      FROM statements s1 INNER JOIN statements s2
+		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+		            AND s1.predicate='".$this->_dbId($GLOBALS['RDFS_label'])."'
+		            AND s2.predicate='".$this->_dbId($GLOBALS['RDF_type'])."'
+		            AND (1=0 ".$clsql."))
+				WHERE s1.modelID IN (".$this->getModelIds().")
+		      GROUP BY s1.l_language";
+		return $this->dbConn->getCol($sql);
+	}
+	/**
+	 * Returns a resource that represents a class description node in this model.
+	 *
 	 * @param string $uri
-	 * @return RDFSClass/OWLClass Returns an instance of either RDFSClass or OWLClass.
-	 */
-	public function addClass($uri) {
-		
-		return $this->addNamedClass($uri);
-		
+	 * @return RDFSClass The class created.
+	 **/
+	function addClass($uri) {
 		$cl=$this->vocabulary['Class'];
 		$this->add($uri,'rdf:type',current($cl));
 		return new $this->vclass($uri,$this);
 	}
-	
 	/**
-	 * Adds a named class description node with the given URI to the model and returns an instance of RDFSClass or OWLClass
-	 * that represents this named class.
+	 * Returns a resource that represents a anonymous class description node in this model.
 	 *
-	 * @param string $uri
-	 * @return RDFSClass/OWLClass Returns an instance of either RDFSClass or OWLClass.
-	 */
-	public function addNamedClass($uri) {
-		
-		$cl = $this->vocabulary['Class'];
-		$this->add($uri, 'rdf:type', current($cl));
-		
-		return new $this->classF($uri);
-	}
-	
-	/**
-	 * Adds an anonymous class description to the model an returns an instance of RDFSClass or OWLClass that represents
-	 * this anonymous class.
-	 *
-	 * @return RDFSClass/OWLClass Returns an instance of either RDFSClass or OWLClass.
-	 */
-	public function addAnonymousClass() {
-		
+	 * @return RDFSClass The class created.
+	 **/
+	function addAnonymousClass() {
 		$bNode=new BlankNode($this->getUniqueResourceURI(BNODE_PREFIX));
 		$this->add($bNode,'rdf:type',current($this->vocabulary['Class']));
 		return new $this->vclass($bNode->getURI(),$this);
 	}
-	
 	/**
 	 * Return a RDFSClass object corresponding to the URI or false if such one does not exist.
 	 *
-	 * @param string/Resource $uri
-	 * @return RDFSClass/false The class or false if the class does not exist.
-	 */
-	public function getClass($uri) {
-		
+	 * @param string $uri
+	 * @return RDFSClass_or_false The class or false if the class does not exist.
+	 **/
+	function getClass($uri) {
 		$uri=is_a($uri,'Resource')?$uri->getURI():$uri;
 		if($uri)
 		foreach($this->vocabulary['Class'] as $class) {
@@ -493,28 +529,24 @@ abstract class DefaultRDFSModel extends DbModel {
 		}
 		return false;
 	}
-	
 	/**
-	 * Adds a new property to the model and returns an instance of RDFSProperty or OWLProperty.
+	 * Creates a new RDFSProperty
 	 *
 	 * @param string $uri
-	 * @return RDFSProperty/OWLProperty Returns an instance of either RDFSProperty or OWLProperty.
-	 */
-	public function addProperty($uri) {
-		
+	 * @return RDFSProperty The property created.
+	 **/
+	function addProperty($uri) {
 		reset($this->vocabulary['Property']);
 		$this->add($uri,'rdf:type',current($this->vocabulary['Property']));
 		return new $this->property($uri,$this);
 	}
-	
 	/**
 	 * Returns a RDFSProperty object corresponding to the URI or false if such one does not exist.
 	 *
 	 * @param string $uri
-	 * @return RDFSProperty/false The property or false if the class does not exist.
-	 */
-	public function getProperty($uri) {
-		
+	 * @return RDFSProperty_or_false The property or false if the class does not exist.
+	 **/
+	function getProperty($uri) {
 		$uri=is_a($uri,'Resource')?$uri->getURI():$uri;
 		if($uri)
 		foreach($this->vocabulary['Property'] as $property) {
@@ -524,105 +556,96 @@ abstract class DefaultRDFSModel extends DbModel {
 		}
 		return false;
 	}
-	
 	/**
-	 * Adds a new instance to the model and returns an instance of RDFSInstance or OWLInstance.
+	 * Creates a new RDFSInstance
 	 *
 	 * @param string $uri
 	 * @param string $class
 	 * @return RDFSInstance The instance created.
-	 */
-	public function addInstance($uri, $class) {
-		
+	 **/
+	function addInstance($uri,$class) {
 		$this->add($uri,'rdf:type',$class);
 		return $this->instanceF($uri);
 	}
-	
 	/**
-	 * Returns a RDFSInstance object corresponding to the URI or false if such one does not exist.
+	 * Return a RDFSInstance object corresponding to the URI or false if such one doesn't exist.
 	 *
-	 * @param string $uri
-	 * @return RDFSInstance/false The property or false if the class does not exist.
-	 */
-	public function getInstance($uri) {
-		
+	 * @param $uri
+	 * @return RDFSInstance_or_false The instance or false if the class does not exist.
+	 **/
+	function getResource($uri) {
+		if(!$ret=$this->getClass($uri))
+			if(!$ret=$this->getProperty($uri))
+				$ret=$this->getInstance($uri);
+		return $ret;
+	}
+	function getInstance($uri) {
 		foreach(array_keys($this->findNodes($uri,'rdf:type',NULL)) as $class) {
 			if(array_intersect(array_keys($this->findNodes($class,'rdf:type',NULL)),array_keys($this->vocabulary['Class'])))
 				return new $this->instance($uri,$this);
 		}
 		return false;
 	}
-	
 	/**
-	 * Returns a RDFSClass, RDFSProperty or RDFSInstance object corresponding to the URI or 
-	 * if there is not matching statement (in the given order...).
+	 * Lists all instances of classes in the model.
 	 *
-	 * @param string $uri
-	 * @return RDFSClass/RDFSProperty/RDFDSInstance/false The class, property, instance or 
-	 * false if the class does not exist.
-	 */
-	public function getResource($uri) {
-		
-		if(!$ret=$this->getClass($uri))
-			if(!$ret=$this->getProperty($uri))
-				$ret=$this->getInstance($uri);
-		return $ret;
+	 * @return array Array of RDFSInstance instances of the model.
+	 **/
+	function listInstances($start=0,$erg=0,$end=0) {
+		$ret=array();
+		foreach($this->vocabulary['Class'] as $class) {
+			$q="SELECT ?x WHERE (?x,<rdf:type>,?y) (?y,<rdf:type>,<".$class->getURI().">)";
+			foreach($this->rdqlQuery($q) as $res)
+				if($res['?x']) {
+					if(method_exists($res['?x'],'getLocalName')) {
+						$ret[$res['?x']->getLocalName()]=new $this->instance($res['?x']->getURI(),$this);
+					}
+				}
+		}
+		$end=count($ret);
+		return array_slice($ret,$start,$start+$erg);
 	}
-	
 	/**
-	 * Lists all instances of any class in the model.
+	 * Returns all properties (OWL_ObjectProperties and OWL_DatatypeProperties) of the model
 	 *
-	 * @return RDFSInstance[] Returns an array of RDFSInstance instances in the model.
-	 */
-	abstract public function listInstances($start = 0, $erg = 0, $end = 0);
-	
-	/**
-	 * Returns all properties (RDFSProperty, OWL_ObjectProperties, OWL_DatatypeProperties and OWL_AnnotationProperties) 
-	 * of the model.
-	 *
-	 * @return RDFSProperty[] Returns an array of RDFSProperty objects.
-	 */
-	public function listProperties() {
-		
-		if(method_exists($this, 'listObjectProperties')) {
+	 * @return array Array of RDFSProperty objects.
+	 **/
+	function listProperties() {
+		if(method_exists($this,'listObjectProperties'))
 			return array_merge(
-				$this->listRDFTypeInstancesAs('rdfs:Property', 'property'),
+				$this->listTypes($GLOBALS['RDF_Property'],'RDFSProperty'),
 				$this->listObjectProperties(),
 				$this->listDatatypeProperties(),
 				$this->listAnnotationProperties()
 			);
-		} else return $this->listRDFTypeInstancesAs('rdfs:Property', 'property');
+		else
+			return $this->listTypes($GLOBALS['RDF_Property'],'RDFSProperty');
 	}
-	
 	/**
-	 * Returns an array of all properties not being sub-properties of any other property in this model.
+	 * Returns array of all properties not being sub-properties of any other property in this model.
 	 *
-	 * @return RDFSProperty[] Returns an array of RDFSProperty objects.
-	 */
-	public function listTopProperties() {
-		
-		$properties = $this->listProperties();
-		$topprop = array();
-		
-		foreach ($properties as $prop) {
+	 * @return array Array of RDFSProperty objects.
+	 **/
+	function listTopProperties() {
+		$properties=$this->listProperties();
+		$topprop=array();
+		foreach($properties as $prop) {
 			$toAdd=true;
 			foreach($prop->listSuperProperties() as $superprop)
-				if($this->findStatement($superprop, null, null)) $toAdd=false;
-			if ($toAdd)
-				$topprop[$prop->getLocalName()] = $this->propertyF($prop);
+				if($this->findStatement($superprop,NULL,NULL))
+					$toAdd=false;
+			if($toAdd)
+				$topprop[$prop->getLocalName()]=$this->propertyF($prop);
 		}
-		
 		return $topprop;
 	}
-	
 	/**
-	 * Returns an array of all annotation properties in this model.
+	 * Returns array of all annotation properties in this model.
 	 *
 	 * @param boolean $includePredefined Indicates whether predefined annotation properties should be included.
-	 * @return RDFSProperty[] Returns an array of all annotation properties in this model.
-	 */
-	public function listAnnotationProperties($includePredefined = false) {
-		
+	 * @return array Array of all annotation properties in this model.
+	 **/
+	function listAnnotationProperties($includePredefined=false) {
 		$ret=$this->listTypes($GLOBALS['OWL_AnnotationProperty'],'RDFSProperty');
 		if($includePredefined)
 			$ret=array_merge($ret,array(
@@ -631,36 +654,55 @@ abstract class DefaultRDFSModel extends DbModel {
 				$GLOBALS['OWL_versionInfo']->getURI()=>$GLOBALS['OWL_versionInfo']));
 		return $ret;
 	}
-	
 	/**
-	 * Returns an array of all annotation properties in this model belonging to rdfs:Class or owl:Class.
+	 * Returns an array of all distinct label languages for all classes in the model.
 	 *
-	 * @return RDFSProperty[] Returns an array of annotation properties in this model.
-	 */
-	abstract public function listClassAnnotationProperties();
-	
+	 * @return array All distinct label languages.
+	 **/
+	function listClassAnnotationProperties() {
+		foreach($this->vocabulary['Class'] as $cl)
+			$clsql.=" OR s2.object='".$cl->getURI()."'";
+		$sql="SELECT s3.subject
+		      FROM statements s1 INNER JOIN statements s2
+		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+		            AND s2.predicate='".$GLOBALS['RDF_type']->getURI()."'
+		            AND (1=0 ".$clsql."))
+				INNER JOIN statements s3 ON(s2.modelID=s3.modelID AND s1.predicate=s3.subject
+					AND s3.predicate='".$GLOBALS['RDF_type']->getURI()."' AND s3.object='".$GLOBALS['OWL_AnnotationProperty']->getURI()."')
+				WHERE (s1.modelID=".$this->modelID.str_replace('modelID','s1.modelID',$this->model->importsSQL).")
+		      GROUP BY s3.subject";
+#print_r($sql);
+		return $this->dbConn->getCol($sql);
+	}
 	/**
-	 * Method to search for triples in the RDFSModel.
-	 * null input for any parameter will match anything.
-	 * Example: $result = $m->find(null, null, $node); -> Finds all triples with $node as object.
+	 * Method to search for triples in the DbModel.
+	 * NULL input for any parameter will match anything.
+	 * Example: $result = $m->find( NULL, NULL, $node );
+	 *          Finds all triples with $node as object.
 	 *
-	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
-	 * specific backend.
-	 * @param RDFSResource/null $s Subject
-	 * @param RDFSResource/null $p Predicate
-	 * @param RDFSResource/null $o Object
+	 * @param RDFSResource_or_NULL $s Subject
+	 * @param RDFSResource_or_NULL $p Predicate
+	 * @param RDFSResource_or_NULL $o Object
 	 * @param int $start Return results starting with this row number.
 	 * @param int $count Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
 	 *
 	 * @return MemModel.
-	 */
-	public function find($s, $p, $o, $start = 0, $count = 0, $erg = 0) { /* abstract */ }
-	
-/* ------------------------------------------------------------------------------- */
-// TODO findAsMemModel, findAsStatement, findAs...
-	
-		
+	 **/
+	function find($s,$p,$o,$start=0,$count=0,$erg=0) {
+		$args=func_get_args();
+		$c=cache('find'.$this->modelURI,$args);
+		if($c!==NULL)
+			return $c;
+
+		$rs=$this->query($s,$p,$o,$start,$count);
+		$erg=$rs->_maxRecordCount?$rs->_maxRecordCount:$rs->_numOfRows;
+		$c=&$this->_convertRecordSetToMemModel($rs);
+
+
+		cache('find'.$this->modelURI,$args,$c);
+		return $c;
+	}
 	/**
 	 * Returns the first statements of this model matching the parameters.
 	 *
@@ -669,7 +711,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param RDFSResource_or_NULL $o Object
 	 *
 	 * @return Array of RDFSInstance objects.
-	 */
+	 **/
 	function findStatement($s,$p,$o) {
 		$stms=$this->findStatements($s,$p,$o,0,1);
 		return array_shift($stms);
@@ -764,48 +806,6 @@ return $this->findSubjects($predicate, $class);
 	 * @return array Array of nodes (RDFSResources or Literals).
 	 **/
 	function findNodes($subject,$predicate,$object,$class=NULL,$start=0,$count=0,$erg=0) {
-		/*
-		$sparql = 'SELECT ?x WHERE { ';
-		
-		if ($subject == null) {
-			$sparql .= ' ?x ';
-			if ($predicate == null) $sparql .= '?y ';
-			else {
-				if (!($predicate instanceof Node)) $predicate = $this->resourceF($predicate);
-				$sparql .= '<' . $predicate->getURI() . '> ';
-			}
-			if ($object == null) $sparql .= '?z }';
-			else {
-				if (!($object instanceof Node)) $object = $this->resourceF($object);
-				if ($object->isBlankNode()) $object = new BlankNode($object->getURI());
-				$sparql .= '<' . $object->getURI() . '> }';
-			}	
-		} else if ($predicate == null) {
-			if (!($subject instanceof Node)) $subject = $this->resourceF($subject);
-			if ($subject->isBlankNode()) $subject = new BlankNode($subject->getURI());
-			$sparql .= ' <' . $subject->getURI() . '> ?x ';
-			
-			if ($object == null) $sparql .= '?z }';
-			else {
-				if (!($object instanceof Node)) $object = $this->resourceF($object);
-				if ($object->isBlankNode()) $object = new BlankNode($object->getURI());
-				$sparql .= '<' . $object->getURI() . '> }';
-			}	 
-		} else if ($object == null) {
-			
-			if (!($subject instanceof Node)) $subject = $this->resourceF($subject);
-			if ($subject->isBlankNode()) $subject = new BlankNode($subject->getURI());
-			if (!($predicate instanceof Node)) $predicate = $this->resourceF($predicate);
-			
-			$sparql .= ' <' . $subject->getURI() . '> <'. $predicate->getURI() . '> ?x }';
-			
-		} else return false;
-		
-		$renderer = new Erfurt_Sparql_ResultRenderer_Array($this, $class);
-		$result = $this->sparqlQuery($sparql, $renderer);
-		return $result;
-		*/
-		
 		if($class=='Class')
 			$class=$this->vclass;
 		else if($class=='Property')
@@ -828,9 +828,6 @@ return $this->findSubjects($predicate, $class);
 		}
 		return $ret;
 	}
-	
-	
-	
 	/**
 	 * Return an array of individuals in the model. If an array properties of
 	 * PropertyURI=>Value mappings is given, only individuals with the specified
@@ -1071,7 +1068,7 @@ return $this->findSubjects($predicate, $class);
 		$sql="SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is,id
 			FROM statements WHERE modelID IN (".$this->getModelIds().')';
 		// dynamic part of the sql statement
-		foreach(array('subject','predicate','object') as $o)
+		foreach(array('subject','predicat','object') as $o)
 			if($$o && method_exists($$o,'isBlankNode') && $$o->isBlankNode())
 				$$o=new Blanknode($$o->uri);
 		$sql.=$this->_createDynSqlPart_SPO($subject, $predicate, $object).(!$count?" ORDER BY subject, predicate, object":'');
