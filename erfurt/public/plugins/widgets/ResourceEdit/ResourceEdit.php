@@ -16,13 +16,14 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		);
 		
 		$this->config['class'] = 'ResourceEditContainer';
-		// $this->scripts[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.js';
+		$this->scripts[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.js';
 		$this->styles[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.css';
 	}
 	
 	public function getSingleValueHtml($resource, $num = 1) {
 		if ($resource instanceof Resource) {
 			$value = $resource->getLocalName();
+			$uri = $resource->getURI();
 		// TODO: why check for Literal here???
 		} elseif ($resource instanceof Literal) {
 			$value = $resource->getLabel();
@@ -39,8 +40,16 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		}
 		
 		// $ret  = '<div id="' . $this->id . $num . '-container" class="ResourceEditContainer">' . PHP_EOL;
-		$ret .= '<input type="text" name="' . $name . $nameMod . '" class="ResourceEditValue" value="' . 
-				$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
+		// local name input
+		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue" value="' . $value . 
+				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
+		// autocompleter script
+		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
+		// autocompleter div
+		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autocomplete" />' . PHP_EOL;
+		// uri input (filled by autocompleter hook) 
+		$ret .= '<input type="hidden" name="' . $name . $nameMod . '" class="ResourceEditUri" value="' . $uri . 
+				'" id="-' . $this->id . $num . '" />' . PHP_EOL;
 		// $ret .= '</div>' . PHP_EOL;
 		
 		return $ret;

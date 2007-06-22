@@ -36,9 +36,9 @@ class Erfurt_Util {
 	  *
 	  * @return string
 	  */
-	public static function replaceUrlParam($param_replace, $value_replace = false) {		
+	public static function replaceUrlParam($param_replace, $value_replace = false, $other_params = array()) {	
 		// split query string
-		$queries = explode('&', $_SERVER['QUERY_STRING']);
+		$queries = explode('&', urldecode($_SERVER['QUERY_STRING']));
 		
 		// split queries in param and value
 		$replaced = false;
@@ -46,8 +46,10 @@ class Erfurt_Util {
 			$qry = explode('=', $query);
 			
 			// replace value if given
-			if ($value_replace && ($qry[0] === $param_replace || (is_array($param_replace) && in_array($qry[0], $param_replace)))) {
-				$url_params[$qry[0]] = $value_replace;
+			if (($qry[0] == $param_replace) || (is_array($param_replace) && in_array($qry[0], $param_replace))) {
+				if ($value_replace) {
+					$url_params[$qry[0]] = $value_replace;
+				}
 				$replaced = true;
 			} else {
 				$url_params[$qry[0]] = $qry[1];
@@ -68,7 +70,11 @@ class Erfurt_Util {
 			$url_head = $_SERVER['PHP_SELF'];
 		}
 		
-		return ($url_head . '?' . http_build_query($url_params));
+		if ($query_str = http_build_query(array_merge($url_params, $other_params))) {
+			return $url_head . '?' . $query_str;
+		} else {
+			return $url_head;
+		}
 	}
 	
 	/**

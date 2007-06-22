@@ -50,7 +50,7 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			$ret .= '<input type="text" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" value="' . 
 					$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
-			$ret .= '<textarea rows="4" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
+			$ret .= '<textarea rows="' . ceil(strlen($value) / 56) . '" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
 					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
 		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL;

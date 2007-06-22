@@ -182,13 +182,13 @@ class Erfurt_Plugin_Widget_Factory {
 		}
 		
 		// check value types
-		// if ($first instanceof Resource) {
-		// 	return 'ResourceEdit';
-		// } elseif ($first instanceof Literal) {
-		// 	return 'LiteralEdit';
-		// } elseif (is_string($value)) {
-		// 	return 'LiteralEdit';
-		// }
+		if ($first instanceof Resource) {
+			return 'ResourceEdit';
+		} elseif ($first instanceof Literal) {
+			return 'LiteralEdit';
+		} elseif (is_string($value)) {
+			return 'LiteralEdit';
+		}
 		
 		// fallback
 		$log->info(__CLASS__ . ': no suitable widget found. Falling back to NodeEdit.');
