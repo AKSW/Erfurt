@@ -59,8 +59,8 @@
   <rdf:Description rdf:about="&SysOnt;RegisterNewUser">
     <SysOnt:rawConfig>defaultGroup=http://localhost/OntoWiki/Config/DefaultUserGroup</SysOnt:rawConfig>
     <SysOnt:rawConfig>mailvalidation=yes</SysOnt:rawConfig>
-    <SysOnt:rawConfig>uidregexp="/[^[:alnum:]]/"</SysOnt:rawConfig>
-    <SysOnt:rawConfig>passregexp="/[^.../"</SysOnt:rawConfig>
+    <SysOnt:rawConfig>uidregexp="/^[[:alnum:]]+$/"</SysOnt:rawConfig>
+    <SysOnt:rawConfig>passregexp=""</SysOnt:rawConfig>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;Login">

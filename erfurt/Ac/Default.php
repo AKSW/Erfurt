@@ -24,6 +24,11 @@ class Erfurt_Ac_Default {
 	protected $_acModel = null;
 	
 	/**
+	 * instance of the sysont-Model
+	 */
+	protected $_sysontModel = null;
+	
+	/**
 	 * instance of user-object
 	 */
 	protected $_user = null;
@@ -58,7 +63,7 @@ class Erfurt_Ac_Default {
 	/**
 	 * default system ontology uri
 	 */
-	private $_defaultSysOntUri = 'http://ns.ontowiki.net/SysOnt/';
+	private $_defaultSysOntUri = 'http://localhost/OntoWiki/Config/';
 	
 	/**
 	 * default holder for ac information
@@ -71,10 +76,6 @@ class Erfurt_Ac_Default {
 	 */
 	private $_anonymousUserUri = 'http://ns.ontowiki.net/SysOnt/Anonymous';
 	
-	/**
-	 * default user group uri
-	 */
-	private $_defaultUserGroupUri = 'http://localhost/OntoWiki/Config/DefaultUserGroup';
 
 	/**
 	 * super admin user uri
@@ -98,7 +99,7 @@ class Erfurt_Ac_Default {
 	private $_propGrantModelView = 'http://ns.ontowiki.net/SysOnt/grantModelView';
 	
 	/**
-	 * deny model view property 
+	 * deny model view propertacy 
 	 */
 	private $_propDenyModelView = 'http://ns.ontowiki.net/SysOnt/denyModelView';
 	
@@ -113,7 +114,7 @@ class Erfurt_Ac_Default {
 	private $_propDenyModelEdit = 'http://ns.ontowiki.net/SysOnt/denyModelEdit';
 	
 	/**
-	 * action class schma uri
+	 * action class schema uri
 	 */
 	private $_actionClassUri = 'http://ns.ontowiki.net/SysOnt/Action';
 	
@@ -128,9 +129,16 @@ class Erfurt_Ac_Default {
 	private $_propGrantAccess = 'http://ns.ontowiki.net/SysOnt/grantAccess';
 	
 	/**
-	 * deny action property 
+	 * deny action properregexty 
 	 */
 	private $_propDenyAccess = 'http://ns.ontowiki.net/SysOnt/denyAccess';
+	
+	
+	/**
+	 * deny action properregexty 
+	 */
+	private $_defaultActionConfigUri = 'http://ns.ontowiki.net/SysOnt/rawConfig';
+	
 	
 	/**
 	 * array with default action configuration 
@@ -139,6 +147,10 @@ class Erfurt_Ac_Default {
 
 	/**
 	 * constructor
+	 * 
+	 * @param array default action configuration
+	 * @param Zend_Log logging instance
+	 * @return void
 	 */
 	public function __construct(Array $defautlActionConf = array(), Zend_Log $log = null) {
 		$this->_defaultActionConfigs = $defautlActionConf;
@@ -152,17 +164,33 @@ class Erfurt_Ac_Default {
 	}
 	
 	
-	
+	/**
+	 * initialisation of models and uris
+	 * 
+	 * @return void
+	 */
 	public function init() {
 		$auth = Zend_Auth::getInstance();
 		$this->_config = $config = Zend_Registry::get('config');
+		
+		# get uri configuration
+		$this->_setUris();
+		
+		# system configuration
+		$this->_sysontModel = Zend_Registry::get('sysontModel');
+		# $this->_defaultSysOntUri = $this->_config->sysont->model;
+		## TODO: CHANGE IT, IF SPARQL CAN ASK IMPORTED MODELS
+		$this->_defaultSysOntUri = 'http://ns.ontowiki.net/SysOnt/';
+
+
+		# access control information
 		$this->_acModel = Zend_Registry::get('owAc');
 		$this->_acModelUri = '';
 		if ($auth->hasIdentity()) {
     	// Identity exists; get it
     	$this->_user = $auth->getIdentity();
 		} else 
-			throw new Erfurt_Exception('no valid user given', 103);
+			throw new Erfurt_Exception('no valid user given', 1103);
 		
 		# setting up right-field
 		$this->_userRights = array(
@@ -183,21 +211,45 @@ class Erfurt_Ac_Default {
 	}
 	
 	/**
-	 * parse sparql query 
+	 * set the schema uris from config
+	 * 
+	 * @return void 
 	 */
-	private function _sparql($sparqlQuery) {
-		static $prefixed_query;
-		
-		# get all 
-		if ($prefixed_query == '') { 
+	private function _setUris() {
+	
+		$this->_anonymousUserUri 			= $this->_config->ac->user->anonymousUser;
+		$this->_defaultSuperUserUri 		= $this->_config->ac->user->superAdmin;
+		$this->_modelClassUri 						= $this->_config->ac->models->class;
+		$this->_propAnyModel 						= $this->_config->ac->models->anyModel;
+		$this->_propGrantModelView 		= $this->_config->ac->models->grantView;
+		$this->_propDenyModelView 		= $this->_config->ac->models->denyView;
+		$this->_propGrantModelEdit 		= $this->_config->ac->models->grantEdit;
+		$this->_propDenyModelEdit 			= $this->_config->ac->models->denyEdit;
+		$this->_actionClassUri 						= $this->_config->ac->action->class;
+		$this->_propAnyAction 						= $this->_config->ac->action->anyAction;
+		$this->_propGrantAccess 				= $this->_config->ac->action->grant;
+		$this->_propDenyAccess 					= $this->_config->ac->action->deny;
+		$this->_defaultActionConfigUri	= $this->_config->ac->action->config;
+	}
+	
+	/**
+	 * parse sparql query 
+	 * 
+	 * @param object active model instance to query sparql
+	 * @param string sparql query string
+	 * @return array results
+	 * @throws Erfurt_Exception if query does not work
+	 */
+	private function _sparql($model, $sparqlQuery) {
+		# get all ns
 		$prefixed_query = '';
-			foreach ($this->_acModel->getParsedNamespaces() as $uri => $prefix) {
-				$prefixed_query .= 'PREFIX ' . $prefix . ': <' . $uri . '>' . PHP_EOL;
-			}
+		foreach ($model->getParsedNamespaces() as $uri => $prefix) {
+			$prefixed_query .= 'PREFIX ' . $prefix . ': <' . $uri . '>' . PHP_EOL;
 		}
+		
 		# query model
 		try {
-			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, false);
+			$result = $model->sparqlQuery($prefixed_query.$sparqlQuery, false);
 		} catch (SparqlParserException $e) {
 			$this->_log->info('Ac::_sparql() - query contains the following error: '.$e->getMessage());
 			die('Ac::_sparql() - query contains the following error: '.$e->getMessage());
@@ -212,6 +264,8 @@ class Erfurt_Ac_Default {
 	
 	/**
 	 * gets the user rights for the current user
+	 * 
+	 * @param string user uri
 	 */
 	private function _getUserModelRights($userURI) {
 		$this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
@@ -230,7 +284,7 @@ class Erfurt_Ac_Default {
 														<'.$this->_user['uri'].'> ?p ?o.
 													}';
 		
-		if ($result = $this->_sparql($sparqlQuery)) {
+		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result);
 		}
 		
@@ -240,13 +294,18 @@ class Erfurt_Ac_Default {
 														?group ?p ?o.
 														?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
 													}';
-		if ($result = $this->_sparql($sparqlQuery)) {
+		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result);
 		}
 	}
 	
 	/**
-	 * filter the sparql results 
+	 * filter the sparql results
+	 * 
+	 * saves the results in class var  
+	 * 
+	 * @param array list of sparql results
+	 * @return void
 	 */
 	private function _filterAcess($resultList) {
 		foreach($resultList as $entry) {
@@ -387,29 +446,34 @@ class Erfurt_Ac_Default {
 	 */
 	public function getActionConfig($action) {
 		$actionUri = $this->_defaultSysOntUri.$action;
-		## standard config
-		if (isset($this->_defaultActionConfigs[$actionUri])) {
-			return $this->_defaultActionConfigs[$actionUri];
-		}
-		return array();
 		
-		# TODO: OBSOLETE
 		## direct action config
-	/*
 		$sparqlQuery = 'select ?o 
 													where { 
 														<'.$actionUri.'> <'.$this->_defaultActionConfigUri.'> ?o.
 													}';
 		
 		$ret = array();
-		if ($result = $this->_sparql($sparqlQuery)) {
+		if ($result = $this->_sparql($this->_sysontModel, $sparqlQuery)) {
 			foreach($result as $r) {
 				$s = explode('=', $r['?o']->getLabel());
+				# remove quotas
+				if (substr($s[1], 0, 1) == '"') $s[1] = substr($s[1], 1);
+				if (substr($s[1], -1) == '"') $s[1] = substr($s[1], 0,  -1);
 				$ret[$s[0]] = $s[1];
 			}
+			if (isset($this->_defaultActionConfigs[$actionUri])) {
+				$this->_defaultActionConfigs[$actionUri] = array_merge($this->_defaultActionConfigs[$actionUri], $ret);
+			} else {
+				$this->_defaultActionConfigs[$actionUri] = $ret;
+			}
 		}
-		return $ret;
-	*/
+		
+		## standard config
+		if (isset($this->_defaultActionConfigs[$actionUri])) {
+			return $this->_defaultActionConfigs[$actionUri];
+		}
+		return array();
 	}
 	
 	/**
@@ -463,11 +527,20 @@ class Erfurt_Ac_Default {
 		return false;
 	}
 	
+	/**
+	 * adds an right for the current user
+	 * 
+	 * @param string model uri
+	 * @param string type of access: view or edit
+	 * @param string permission: grant or deny
+	 * @return boolean result of the add process
+	 * @throws Erfurt_Exception if wrong type or permission was submitted 
+	 */
 	public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') {
 		if (!in_array($type, array('view', 'edit')))
-			throw new Erfurt_Exception('wrong type submitted', 101);
+			throw new Erfurt_Exception('wrong type submitted', 1101);
 		if (!in_array($perm, array('grant', 'deny')))
-			throw new Erfurt_Exception('wrong perm type submitted', 102);
+			throw new Erfurt_Exception('wrong perm type submitted', 1102);
 			
 		$prop = ($view == 'edit') ? (($perm == 'grant') ? $this->_propGrantModelEdit : $this->_propDenyModelEdit) : (($perm == 'grant') ? $this->_propGrantModelView : $this->_propDenyModelView);
 		$this->_userRights[$prop][] = $modelUri;

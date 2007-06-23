@@ -234,6 +234,9 @@ class DefaultRDFSModel extends DbModel {
 	 * @return
 	 **/
 	function add($subj,$pred='',$obj='') {
+		if (!$this->isEditable()) 
+			throw new Erfurt_Exception('no rights to extend this model', 1502);
+			
 		Zend_Registry::set('cache', array());
 		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
 		parent::add($statement);
@@ -256,6 +259,9 @@ class DefaultRDFSModel extends DbModel {
 	 * @return
 	 **/
 	function remove($subj,$pred='',$obj='') {
+		if (!$this->isEditable()) 
+			throw new Erfurt_Exception('no rights for editing this model', 1501);
+		
 		Zend_Registry::set('cache', array());
 		$statement=$this->_createStatement($subj,$pred,$obj);
 		#if(isBnode($statement->obj)) {

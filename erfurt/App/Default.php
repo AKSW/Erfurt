@@ -24,6 +24,10 @@ class Erfurt_App_Default {
 	 */
 	protected $acModel = null;
 	
+	/**
+	 * @var object instance of model-object
+	 */
+	protected $sysOnt = null;
 	
 	/**
 	 * @var array array of store instances
@@ -43,7 +47,7 @@ class Erfurt_App_Default {
 	 *
 	 * @param object configuration parameters
 	 */
-	public function __construct($config) {
+	public function __construct($config, $username = '', $password = '') {
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
 		
@@ -92,9 +96,22 @@ class Erfurt_App_Default {
 		# set auth instance
 		$this->auth = Zend_Auth::getInstance();
 		
+		# auth a special user
+		if ($username != '') {
+			$result = $this->authenticate($username, $password);
+			if (!$result->isValid()) {
+				throw new Erfurt_Exception('no valid user data given', 1205);
+			}
+		}
 		
+		# system configuration informations
+		$this->sysontModel = $defaultStore->getModel($config->sysont->model);
+		Zend_Registry::set('sysontModel', $this->sysontModel);
+		
+		# access control informations
 		$this->acModel = $defaultStore->getModel($config->ac->model);
 		Zend_Registry::set('owAc', $this->acModel);
+		
 		
 		# no current auth data? => set default user
 		if (!$this->auth->hasIdentity()) {
@@ -192,6 +209,21 @@ class Erfurt_App_Default {
 		
 		// Attempt authentication, saving the result
 		$result = $this->auth->authenticate($this->authAdapter);
+		
+		# set ac for new user
+		if ($result->isValid() and $this->ac ) {
+		  $this->ac->init(); 
+			if (!$this->ac->isActionAllowed('Login')) {
+				$this->auth->clearIdentity();
+				$identity = array(
+	               'username' => '',
+	               'uri'	=>	'',
+	               'dbuser'	=>	false,
+	               'anonymous' => false
+	               );
+				$result = new Zend_Auth_Result(false, $identity, array('login for user not permitted'));
+			}
+		}
 		
 		return $result;
 	}
