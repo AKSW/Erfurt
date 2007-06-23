@@ -30,15 +30,13 @@ set_include_path($include_path);
 if (!function_exists('__autoload')) {
 	function __autoload($class) {
 		// try Erfurt dir
-		$file = ERFURT_BASE . str_replace('_', DIRECTORY_SEPARATOR, substr($class, 7)) . '.php';
-		if (file_exists($file)) {
+		if (file_exists($file = ERFURT_BASE . str_replace('_', DIRECTORY_SEPARATOR, substr($class, 7)) . '.php')) {
+			require_once($file);
+		// try lib
+		} elseif (file_exists($file = ERFURT_BASE . 'lib/' . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php')) {
 			require_once($file);
 		} else {
-			// try lib
-			$file = ERFURT_BASE . 'lib/' . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-			if (file_exists($file)) {
-				require_once($file);
-			}
+			throw new Erfurt_Exception('Class ' . $class . ' not found.');
 		}
 	}
 }
