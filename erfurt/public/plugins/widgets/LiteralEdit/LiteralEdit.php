@@ -42,10 +42,12 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 		} else {
 			$nameMod = '';
 		}
-		$ret = '';
-		// $ret  = '<div id="container-' . $this->id . $num . '" class="LiteralEditContainer">' . PHP_EOL;
-		//  onmouseover="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseover\')"
-		//  onmouseout="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseout\')"
+		
+		if (!isset($this->config['embedded'])) {
+			$ret = '<div id="container-' . $this->id . $num . '" class="LiteralEditContainer" onmouseover="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseover\')" onmouseout="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseout\')">' . PHP_EOL;
+		} else {
+			$ret = '';
+		}
 		if (!strstr($value, PHP_EOL) && strlen($value) < 80) {
 			$ret .= '<input type="text" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" value="' . 
 					$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
@@ -53,7 +55,7 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			$ret .= '<textarea rows="' . ceil(strlen($value) / 56) . '" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
 					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
-		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL;
+		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '" style="opacity:0">' . PHP_EOL;
 		$ret .= '<input type="text" name="' . $name . '[lang]" class="LiteralEditLang" value="' . $lang . '" id="lang-' . 
 				$this->id . $num . '" />' . PHP_EOL;
 		
@@ -72,7 +74,11 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			}
 		}
 		
-		$ret .= '</div>' . PHP_EOL;// . '</div>' . PHP_EOL;
+		$ret .= '</div>' . PHP_EOL;
+		
+		if (!isset($this->config['embedded'])) {
+			$ret .= '</div>' . PHP_EOL;
+		}
 		
 		return $ret;
 	}

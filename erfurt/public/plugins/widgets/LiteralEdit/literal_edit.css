@@ -1,12 +1,13 @@
 .LiteralEditValue {
 	display: block;
-	width: 90%;
-	margin-bottom: 0.5em;
+	width: 99%;
+	margin-bottom: 0.3em;
 /*	border: 1px dotted #bbb;*/
 }
 
 .LiteralEditOptionsContainer {
 	font-size: 90%;
+	margin-bottom: 0.6em;
 }
 
 .LiteralEditLang, .LiteralEditDtype {

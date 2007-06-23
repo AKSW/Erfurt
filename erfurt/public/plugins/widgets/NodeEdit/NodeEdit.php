@@ -47,7 +47,8 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 																				'class' => 'NodeEditSelector', 
 																				'separator' => '&nbsp;', 
 																				'onchange' => 'toggleSubWidget(\'' . $this->id . '\',this.value,' . $num . ')', 
-																				'options' => $options
+																				'options' => $options,
+																				'embedded' => true
 																				)
 		);
 		$resource = new ResourceEdit($name, $value, array('cardinality' => 1, 

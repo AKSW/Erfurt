@@ -37,6 +37,9 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		} else {
 			$count = 0;
 		}
+		if (empty($this->values[''])) {
+			$this->values = array_merge(array('' => 'Datatype'), $this->values);
+		}
 		$ret = '<span id="select-container-' . $this->id . '"';
 		if (!empty($this->config['class'])) {
 			$ret .= ' class="' . $this->config['class'] . '">' . PHP_EOL;

@@ -17,6 +17,7 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		
 		$this->scripts[] = $this->widgetBaseUrl . 'DateEdit/epoch_classes.js';
 		$this->styles[] = $this->widgetBaseUrl . 'DateEdit/epoch_styles.css';
+		$this->styles[] = $this->widgetBaseUrl . 'DateEdit/date_edit.css';
 	}
 	
 	public function getSingleValueHtml($date, $num = 1) {
@@ -29,9 +30,9 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		$name = $this->elementName;
 		
 		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue" value="' . $value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
-		$ret .= '<script type="text/javascript">' . PHP_EOL . 
-                'cal' . $this->id . ' = new Epoch(\'value-' . $this->id . $num . '\', \'popup\', $(\'value-' . $this->id . $num . '\'));' . PHP_EOL . 
-                '</script>' . PHP_EOL;
+		$ret .= '<script type="text/javascript">' . 
+		                'cal' . $this->id . ' = new Epoch(\'value-' . $this->id . $num . '\', \'popup\', $(\'value-' . $this->id . $num . '\'));' . 
+		                '</script>' . PHP_EOL;
 		$ret .= '<input type="hidden" name="' . $name . '[dtype]" value="http://www.w3.org/2001/XMLSchema#date" />' . PHP_EOL;
 		
 		return $ret;

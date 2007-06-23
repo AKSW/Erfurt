@@ -43,13 +43,14 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		// local name input
 		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue" value="' . $value . 
 				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
+				// onkeyup="$(\'uri-' . $this->id . $num . '\').value = this.value" 
 		// autocompleter script
 		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
 		// autocompleter div
-		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autocomplete" />' . PHP_EOL;
+		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autocomplete"></div>' . PHP_EOL;
 		// uri input (filled by autocompleter hook) 
-		$ret .= '<input type="hidden" name="' . $name . $nameMod . '" class="ResourceEditUri" value="' . $uri . 
-				'" id="-' . $this->id . $num . '" />' . PHP_EOL;
+		// $ret .= '<input type="hidden" name="' . $name . $nameMod . '[value]" class="ResourceEditUri" value="' . $uri . 
+		// 		'" id="uri-' . $this->id . $num . '" />' . PHP_EOL;
 		// $ret .= '</div>' . PHP_EOL;
 		
 		return $ret;

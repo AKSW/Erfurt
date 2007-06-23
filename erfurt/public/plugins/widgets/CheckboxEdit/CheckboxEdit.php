@@ -69,8 +69,8 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 			$dtype = $literal->getDatatype();
 		} else {
 			$value = $literal;
-			$lang = 'Lang';
-			$dtype = isset($this->config['dtype']) ? $this->config['dtype'] : '';
+			// $lang = 'Lang';
+			// $dtype = isset($this->config['dtype']) ? $this->config['dtype'] : '';
 		}
 		
 		if (empty($this->config['cardinalityMax']) || $this->config['cardinalityMax'] > 1 || count($this->options) === 1) {
@@ -79,7 +79,11 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 			$type = 'radio';
 		}
 		
-		$ret = '<input type="' . $type . '" name="' . $this->elementName . '[value]" value="' . $key . '" id="option-' . $this->id . $num . '"';
+		if (empty($this->config['embedded'])) {
+			$postfix = '[value]';
+		}
+		
+		$ret = '<input type="' . $type . '" name="' . $this->elementName . $postfix . '" value="' . $key . '" id="option-' . $this->id . $num . '"';
 		if (is_array($this->selected) && in_array($key, $this->selected)) {
 			$ret .= ' checked="checked"';
 		}
