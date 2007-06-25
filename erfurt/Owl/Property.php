@@ -55,7 +55,7 @@ class Erfurt_Owl_Property  extends RDFSProperty {
 	 */
 	public function addDomainToUnionClass($class) {
 		
-		if (!(domain = $this->domainIsUnionClass())) $this->setDomainToUnionClass($class);
+		if (!($domain = $this->domainIsUnionClass())) $this->setDomainToUnionClass($class);
 		else $domain->setUnionOf(array_push($domain->getUnionOf(), $class));
 	}
 	

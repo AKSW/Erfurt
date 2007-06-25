@@ -92,7 +92,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	public function addDatatypeProperty($uri) {
 		
 		$this->add($uri, 'rdf:type', 'owl:DatatypeProperty');
-		return this->propertyF($uri);
+		return $this->propertyF($uri);
 	}
 	
 	/**
@@ -104,7 +104,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	public function addObjectProperty($uri) {
 		
 		$this->add($uri, 'rdf:type', 'owl:ObjectProperty');
-		return this->propertyF($uri);
+		return $this->propertyF($uri);
 	}
 	
 	/**
@@ -167,7 +167,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 		$topClasses = $this->listTopClasses();
 		
 		foreach ($topClasses as $uri=>$topClass) {
-			if(method_exists($topClass, 'listIntersectionOf') {
+			if(method_exists($topClass, 'listIntersectionOf')) {
 				$inferedSuperClasses = $topClass->listIntersectionOf();
 				
 				foreach ($inferedSuperClasses as $inferedSuperClass) {
