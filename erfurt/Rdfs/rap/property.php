@@ -110,5 +110,3 @@ class RDFSProperty extends DefaultRDFSProperty {
 		return $this->model->dbConn->getOne($sql);
 	}
 }
-?>
-
