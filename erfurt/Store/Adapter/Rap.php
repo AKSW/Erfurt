@@ -139,9 +139,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	 * @param string/Query $query
 	 * @param string/null $class
 	 */
-	public function executeSparql($model, $query, $class = null) {
+	public function executeSparql($model, $query, $class = null, $renderer = null) {
 		
-		$engine = SparqlEngine::factory($model);
+		$engine = new SparqlEngineDb($this, $model->listModelIds());
 		
 		$dataset = new DatasetMem();
 		$dataset->setDefaultGraph($model);
@@ -151,9 +151,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 			$query = $parser->parse($query);
 		}
 		
-		$resultRenderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
+		if ($renderer === null)	$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
 		
-		return $engine->queryModel($dataset, $query, $resultRenderer);
+		return $engine->queryModel($dataset, $query, $renderer);
 	}
 	
 }

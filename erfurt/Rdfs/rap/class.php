@@ -9,7 +9,153 @@
  * @access public
  **/
 class RDFSClass extends DefaultRDFSClass {
-	function findInstances($properties=array(),$compare='exact',$start=0,$count=0,$erg=0) {
+	
+#######################################################################################################################
+#######################################################################################################################
+## 
+## methods that have to be overwritten for a specific backend
+##	
+#######################################################################################################################
+#######################################################################################################################
+
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listDirectSubClasses($emptyClasses = false) {
+	    
+	    $sql = 'SELECT DISTINCT s.subject, s.subject_is
+	            FROM statements s
+	            WHERE modelID IN (' . $this->model->getModelIds() . ') AND
+	            s.predicate = "' . $this->model->_dbId('RDFS_subClassOf') . '" AND 
+	            s.object = "' . $this->model->_dbId($this) . '"
+	            GROUP BY s.subject
+	            ORDER BY s.subject';
+	            
+	    $subClasses = $this->model->_convertRecordSetToNodeList($sql, $this->model->vclass);
+	    
+	    if (!$emptyClasses) {
+	        $temp = $subClasses;
+            $subClasses = array();
+            
+            foreach ($temp as $t) {
+                if (!$t->isEmpty(true)) $subClasses[] = $t;
+            }
+	    }
+	      
+	    return $subClasses;
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listInstancePropertyValues($property,$resourcesOnly=true) {
+		
+		$sql="SELECT DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype
+			FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+				AND s1.predicate='".$this->model->_dbId($property)."'
+				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+			WHERE s1.modelID IN (".$this->model->getModelIds().")".($resourcesOnly?" AND s1.object_is='r'":'');
+#print_r($sql);
+		return $this->model->_convertRecordSetToNodeList($sql);
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function countInstancePropertyValues($property,$resourcesOnly=true,$minDistinctValues=0) {
+		
+		if($minDistinctValues>1)
+			$sql="SELECT SUM(b) FROM (SELECT 1 as b
+					FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+						AND s1.predicate='".$this->model->_dbId($property)."'
+						AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+					WHERE s1.modelID IN (".$this->model->getModelIds().")".
+						($resourcesOnly?" AND s1.object_is='r'":'').
+					'GROUP BY s1.object,s1.object_is,s1.l_language,s1.l_datatype HAVING COUNT(*)>='.$minDistinctValues.') c';
+		else
+			$sql="SELECT COUNT(DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype)
+				FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+					AND s1.predicate='".$this->model->_dbId($property)."'
+					AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+				WHERE s1.modelID IN (".$this->model->getModelIds().")".
+					($resourcesOnly?" AND s1.object_is='r'":'');
+#print_r($sql);
+		$ret=$this->model->dbConn->getOne($sql);
+#		foreach($this->listSubClasses() as $cl)
+#			$ret+=$cl->countInstancePropertyValues($property,$resourcesOnly);
+		return $ret;
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function countInstancesOfSubclasses() {
+		
+		$count=0;
+		$subclasses=array();
+		foreach($this->listSubClasses() as $subclass) {
+			$subclasses[]=$subclass->getURI();
+			$count+=$subclass->countInstancesOfSubclasses();
+		}
+		if($subclasses) {
+			$subclassSQL=join('\',\'',$subclasses);
+			$sql="SELECT COUNT(s1.modelID) FROM statements s1 INNER JOIN statements s2
+					ON(s2.modelID IN (".$this->model->getModelIds().") AND s1.subject=s2.object AND s1.object_is=s2.object_is)
+				WHERE
+					s1.modelID IN (".$this->model->getModelIds().")
+					AND s1.predicate='".$this->model->_dbId('RDFS_subClassOf')."' AND s1.object='".$this->model->_dbId($this)."'
+					AND s2.predicate='".$this->model->_dbId('RDF_type')."'";
+			$count+=$this->model->dbConn->getOne($sql);
+		}
+		return $count;
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listInstanceLabelLanguages() {
+		
+		$sql="SELECT s1.l_language
+		      FROM statements s1 INNER JOIN statements s2
+		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
+		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
+		            AND s2.object='".$this->model->_dbId($this)."')
+				WHERE s1.modelID IN (".$this->model->getModelIds().")
+		      GROUP BY s1.l_language";
+		return $this->model->dbConn->getCol($sql);
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listInstanceLabels($language) {
+		
+		$sql="SELECT s1.object,s3.object,s4.object,s5.object
+		      FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
+		            AND s1.l_language='".$language."'
+		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
+		            AND s2.object='".$this->getURI()."')
+				INNER JOIN statements s3 ON(s1.subject=s3.subject AND s1.modelID=s3.modelID
+					AND s3.predicate='".Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.'labelText'."')
+				LEFT JOIN statements s4 ON(s1.subject=s4.subject AND s1.modelID=s4.modelID
+		            AND s4.predicate='".$this->model->_dbId('RDFS_comment')."'
+		            AND s4.l_language='".$language."')
+				LEFT JOIN statements s5 ON(s1.subject=s5.subject AND s1.modelID=s5.modelID
+		            AND s5.predicate='".$this->model->_dbId('RDFS_seeAlso')."')
+				WHERE s1.modelID IN (".$this->model->getModelIds().")";
+		$ret=array();
+		foreach($this->model->dbConn->getAll($sql) as $row)
+			$ret[$row[1]]=array($row[0],$row[2],$row[3]);
+		return $ret;
+	}
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function findInstances($properties=array(),$compare='exact',$start=0,$count=0,$erg=0) {
+		
 		$args=func_get_args();
 		$c=cache('findInstances'.$this->model->modelURI.$this->getURI(),$args);
 		if($c!==NULL)
@@ -60,7 +206,100 @@ class RDFSClass extends DefaultRDFSClass {
 		cache('findInstances'.$this->model->modelURI.$this->getURI(),$args,$ret);
 		return $ret;
 	}
-	function listDirectProperties() {
+	
+	
+	
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0,$erg = 0) {
+		
+		$args = func_get_args();
+		$cache = new stmCache('_findInstances', $args, $this);
+		if ($cache->value !== null) {
+			$erg = $cache->value[0];
+			return $this->model->_convertRecordSetToNodeList($cache->value[1], 'instance');
+		}
+
+		$ret = array();
+
+		$sql = 'SELECT s.subject, s.subject_is FROM statements s';
+		$where = '';
+		$n = 0;
+		
+		if (isset($properties['localName'])) {
+			$where .= ' AND s.subject LIKE "' . $properties['localName'] . '%"';
+			unset($properties['localName']);
+		}
+		
+		foreach($properties as $property=>$value) {
+			$prop = $this->model->resourceF($property);
+			$sql .= ($value ? ' INNER ' : ' LEFT ');
+			$n++;
+			
+			if (!$value) {
+				$cond = '1';
+			} else if ($compare === 'exact') {
+				$cond = '(s' . $n . '.object = "' . $this->model->_dbId($value) . '" OR s' . $n . '.object = "' . $value . '")';
+			} else if ($compare === 'starts') {
+				$cond = 's' . $n . '.object LIKE "' . $value . '%"';
+			} else if ($compare === 'contains') {
+				$cond = 's' . $n . '.object LIKE "%' . $value . '%"';
+			} else if ($compare === 'regex') {
+				$cond = 's' . $n . '.object REGEXP "' . $value . '"';
+			} else if ($compare === 'empty') {
+				$cond = 'ISNULL(s' . $n . '.object)';
+			}
+				
+			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n - '.subject ' .
+						'AND s' . $n . '.predicate = "' . $this->model->_dbId($prop) . '" AND ' . $cond . ')';
+						
+			if (!$value) {
+				$where .= ' AND ISNULL(s' . $n . '.object)';
+			}		
+		}
+		
+		$subClasses = $this->listSubClassesRecursive();
+		$subClassesIds = $this->model->_dbIds($subClasses);
+		$subClassesSql = join(", ", $subClassesIds);
+
+		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND	s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
+		 			'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
+		
+		$sql .= (!empty($where)) ? $where : '';
+		$sql .= ' GROUP BY s.subject';
+		
+
+		if ($limit) {
+			$res = &$this->model->dbConn->PageExecute($sql, $limit, ($offset/$limit+1));
+		} else {
+			$res = &$this->model->dbConn->execute($sql);
+		}
+			
+		$erg = ($res->_maxRecordCount) ? $res->_maxRecordCount : $res->_numOfRows;
+		$resArr = $res->getArray();
+
+		$c = array($erg, $resArr);
+		$cache->set($c, array_merge(array('rdf:type'), array_keys($properties)));
+		$ret = $this->model->_convertRecordSetToNodeList($resArr, $this->instance);
+
+		return $ret;
+	}
+	
+#######################################################################################################################
+#######################################################################################################################
+## 
+## METHODS THAT ARE OVERWRITTEN FOR PERFORMANCE REASONS
+##	
+#######################################################################################################################
+#######################################################################################################################
+
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listDirectProperties() {
+		
 		static $unionCache;
 		$ret=$this->model->findNodes(NULL,$GLOBALS['RDFS_domain'],$this,'Property');
 		foreach($ret as $property)
@@ -76,7 +315,12 @@ class RDFSClass extends DefaultRDFSClass {
 			$ret=array_merge($ret,$unionCache[$this->getLocalName()]);
 		return array($this->getLocalName()=>$ret);
 	}
-	function _listInheritedProperties($propertyURIs) {
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	protected function _listInheritedProperties($propertyURIs) {
+		
 		$c=cache('listInheritedProperties'.$this->model->modelURI.$this->getURI());
 		if($c!==NULL)
 			return $c;
@@ -106,13 +350,23 @@ class RDFSClass extends DefaultRDFSClass {
 		cache('listInheritedProperties'.$this->model->modelURI.$this->getURI(),array(),$ret);
 		return $ret;
 	}
-	function listSuperClasses() {
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listSuperClasses() {
+
 #		return $this->listPropertyValues($GLOBALS['RDFS_subClassOf'],'Class'); # <- returns bNodes
 		$sql="SELECT object,object_is FROM statements WHERE subject='".$this->getURI()."'
 			AND predicate='".$this->model->_dbId('RDFS_subClassOf')."' AND object_is='r' AND modelID IN (".$this->model->getModelIds().')';
 		return $this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),$this->model->vclass);
 	}
-	function listPropertiesUsed() {
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function listPropertiesUsed() {
+		
 		$sql="SELECT s1.predicate
 			FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 				AND s1.predicate!='".$this->model->_dbId('RDF_type')."'
@@ -121,30 +375,16 @@ class RDFSClass extends DefaultRDFSClass {
 			GROUP BY s1.predicate";
 		return $this->model->_convertRecordSetToNodeList($sql,'RDFSProperty');
 	}
-	function countInstances() {
+	
+	/**
+	 * @see DefaultRDFSClass
+	 */
+	public function countInstances() {
+		
 		$sql="SELECT COUNT(modelID) FROM statements WHERE modelID IN (".$this->model->getModelIds().")
 			AND predicate='".$this->model->_dbId('RDF_type')."' AND object='".$this->model->_dbId($this)."'";
 		$count=$this->model->dbConn->getOne($sql);
 		return $count?$count:0;
 	}
-	
-	/**
-	 * Counts all direct instances and all instances of all subclasses.
-	 * 
-	 * @return int Returns the number of instances of this class and its subclasses.
-	 */
-	public function countInstancesRecursive() {
-		
-		$count = $this->countInstances();
-		$subclasses = $this->listSubClasses();
-		
-		if (count($subclasses) === 0) return $count;
-		else {
-			foreach ($subclasses as $s) $count += $s->countInstancesRecursive();
-		}
-		
-		return $count;
-	}
-	
 }
 ?>

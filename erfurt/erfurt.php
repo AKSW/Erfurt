@@ -133,6 +133,7 @@ require_once(RDFSAPI_INCLUDE_DIR.'instance.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'instance.php');
 
 require_once(RDFSAPI_INCLUDE_DIR.'search.php');
+require_once(RDF_BACKEND_INCLUDE_DIR.'search.php');
 
 $default_prefixes['owl']='http://www.w3.org/2002/07/owl#';
 ### END rdfsapi/rdfsapi.php ###
@@ -272,9 +273,17 @@ define('EF_OWL_INTERSECTIONOF', EF_OWL_NS.'intersectionOf');
 define('EF_OWL_EQUIVALENTCLASS', EF_OWL_NS.'equivalentClass');
 define('EF_OWL_DISJOINTWITH', EF_OWL_NS.'disjointWith');
 define('EF_OWL_CLASS', EF_OWL_NS.'Class');
+define('EF_OWL_DEPRECATED_CLASS', EF_OWL_NS.'DeprecatedClass');
 define('EF_OWL_ANNOTATION_PROPERTY', EF_OWL_NS.'AnnotationProperty');
 define('EF_OWL_DATATYPE_PROPERTY', EF_OWL_NS.'DatatypeProperty');
 define('EF_OWL_OBJECT_PROPERTY', EF_OWL_NS.'ObjectProperty');
+define('EF_OWL_FUNCTIONAL_PROPERTY', EF_OWL_NS.'FunctionalProperty');
+define('EF_OWL_INVERSEFUNCTIONAL_PROPERTY', EF_OWL_NS.'InverseFunctionalProperty');
+define('EF_OWL_SYMMETRIC_PROPERTY', EF_OWL_NS.'SymmetricProperty');
+define('EF_OWL_TRANSITIVE_PROPERTY', EF_OWL_NS.'TransitiveProperty');
+define('EF_OWL_DEPRECATED_PROPERTY', EF_OWL_NS.'DeprecatedProperty');
+define('EF_OWL_RESTRICTION', EF_OWL_NS.'Restriction');
+define('EF_OWL_ONEOF', EF_OWL_NS.'oneOf');
 	
 define('EF_RDF_TYPE', EF_RDF_NS.'type');
 define('EF_RDF_DESCRIPTION', EF_RDF_NS.'Description');
@@ -282,11 +291,13 @@ define('EF_RDF_ABOUT', EF_RDF_NS.'about');
 define('EF_RDF_NIL', EF_RDF_NS.'nil');
 define('EF_RDF_FIRST', EF_RDF_NS.'first');
 define('EF_RDF_REST', EF_RDF_NS.'rest');
+define('EF_RDF_PROPERTY', EF_RDF_NS.'Property');
 	
 define('EF_RDFS_COMMENT', EF_RDFS_NS.'comment');
 define('EF_RDFS_LABEL', EF_RDFS_NS.'label');
 define('EF_RDFS_SUBCLASSOF', EF_RDFS_NS.'subClassOf');
 define('EF_RDFS_DATATYPE', EF_RDFS_NS.'Datatype');
+define('EF_RDFS_CLASS', EF_RDFS_NS.'Class');
 	
 define('EF_XSD_STRING', EF_XSD_NS.'string');
 	

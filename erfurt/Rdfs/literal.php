@@ -3,27 +3,39 @@
  * RDFSLiteral
  * 
  * @package RDFSAPI
- * @author S�ren Auer <soeren@auer.cx>
+ * @author Sören Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
  * @version $Id: literal.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
 class DefaultRDFSLiteral extends Literal {
 	
-	var $model;
+	protected $model;
+	
 	/**
 	 * Constructor
 	 * 
-	 * @param $label
+	 * @param Literal/string $label
 	 * @param $language
 	 * @param $datatype
 	 * @return RDFSLiteral
 	 **/
-	function DefaultRDFSLiteral($label, $language = null, $datatype = null) {
+	public function DefaultRDFSLiteral($label, $model, $language = '', $datatype = '') {
 		
-		Literal::Literal($label,$language);
+		if ($label instanceof Literal) {
+			Literal::Literal($label->getLabel(), $label->getLanguage());
+			$this->setDatatype($label->getDatatype());
+		} else {
+			Literal::Literal($label, $language);
+			$this->setDatatype($datatype);
+		}
 		
-		if ($datatype !== null) $this->setDatatype($datatype);		
+		//$this->model = $model;
+	}
+	
+	public function __toString() {
+		
+		return 'RDFSLiteral("' . $this->label . '")<br />';
 	}
 }
 ?>

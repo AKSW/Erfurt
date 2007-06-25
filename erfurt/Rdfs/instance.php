@@ -9,18 +9,21 @@
  * @access public
  **/
 class DefaultRDFSInstance extends RDFSResource {
+	
 	/**
 	 * Returns an array of all properties defined for classes which this instance is instance of.
 	 *
 	 * @return array Array of all properties.
 	 **/
-	function listProperties() {
+	public function listProperties() {
+		
 		$prop=array();
 		foreach($this->listClasses() as $class) {
 			$prop=array_merge($prop,$class->listProperties());
 		}
 		return array_reverse($prop);
 	}
+	
 	/**
 	 * Returns the value (label) of a property.
 	 *
@@ -28,7 +31,8 @@ class DefaultRDFSInstance extends RDFSResource {
 	 *
 	 * @return value of the property. the data type depends on the given widget
 	 **/
-	function getPropertyValuePlain($prop) {
+	public function getPropertyValuePlain($prop) {
+		
 		static $cache;
 		if(!is_a($prop,'Resource'))
 			$prop=$this->model->resourceF($prop);
@@ -46,24 +50,28 @@ class DefaultRDFSInstance extends RDFSResource {
 	 *
 	 * @return array Values of the property.
 	 **/
-	function listPropertyValuesPlain($prop='') {
+	public function listPropertyValuesPlain($prop='') {
+		
 		$ret=array();
 		foreach($this->model->findNodes($this,$prop,NULL) as $val)
 			$ret[]=is_a($val,'Resource')?$val->getLocalName():$val->getLabel();
 		return $ret;
 	}
+	
 	/**
 	 * Returns an array of the values (labels) of all properties of the instance.
 	 *
 	 * @return array Values of the all properties of the instance.
 	 **/
-	function listAllPropertyValuesPlain() {
+	public function listAllPropertyValuesPlain() {
+		
 		$ret=array();
 		foreach($this->listProperties() as $class)
 			foreach($class as $property)
 				$ret[$property->getLocalName()]=$this->listPropertyValuesPlain($property);
 		return $ret;
 	}
+	
 	/**
 	 * Sets a value for a property.
 	 *
@@ -71,7 +79,8 @@ class DefaultRDFSInstance extends RDFSResource {
 	 * @param $value Value for the property.
 	 * @return
 	 **/
-	function setPropertyValue($prop,$value) {
+	public function setPropertyValue($prop,$value) {
+		
 		if(!is_a($prop,'RDFSProperty'))
 			$prop=$this->model->propertyF($prop);
 #print_r($prop);
@@ -84,6 +93,7 @@ class DefaultRDFSInstance extends RDFSResource {
 				new RDFSLiteral($value,'',isBnode($range) || !$range?'':$range->getURI());
 		$this->model->add($this,$prop,$value);
 	}
+	
 	/**
 	 * Adds a value for a property. RDFSProperties might have
 	 * more than one value.
@@ -92,7 +102,8 @@ class DefaultRDFSInstance extends RDFSResource {
 	 * @param $value Value for the property
 	 * @return
 	 **/
-	function addPropertyValue($prop,$value) {
+	public function addPropertyValue($prop,$value) {
+		
 		if(!is_a($prop,'RDFSProperty'))
 			$prop=$this->model->propertyF($prop);
 		$range=$prop->getRange();
@@ -100,6 +111,7 @@ class DefaultRDFSInstance extends RDFSResource {
 			$this->model->add($this,$prop,is_a($value,'Node')?$value:
 				($prop->isObjectProperty()?$this->model->resourceF($value):new RDFSLiteral($value,'',$range?$range->getURI():NULL)));
 	}
+	
 	/**
 	 * Removes all property values of the given property.
 	 *
@@ -107,7 +119,8 @@ class DefaultRDFSInstance extends RDFSResource {
 	 * @param mixed $value
 	 * @return
 	 **/
-	function removePropertyValues($prop,$value='') {
+	public function removePropertyValues($prop,$value='') {
+		
 		if(!is_a($prop,'RDFSProperty'))
 			$prop=new $this->model->property($prop,$this->model);
 		if($value && !is_a($value,'Node'))

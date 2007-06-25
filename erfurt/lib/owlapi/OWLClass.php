@@ -32,6 +32,12 @@
  * @version $Id: OWLClass.php 629 2006-11-06 18:47:55Z p_frischmuth $
  */
 class OWLClass extends RDFSClass {
+	
+	public function __toString() {
+		
+		return 'OWLClass("' . $this->getURI() .'")';
+	}
+	
 	/**
 	 * @return boolean Returns true in case this restriction is a cardinality
 	 * restriction.
