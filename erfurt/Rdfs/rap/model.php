@@ -690,13 +690,13 @@ class RDFSModel extends DefaultRDFSModel {
 			else if($fields[1]=='b' && !$class)
 				$res=new BlankNode($fields[0]);
 			else if($class) {
-				if($class=='Resource')
+				if(strtolower($class)=='resource')
 					$res=$this->resourceF($fields[0]);
-				else if($class=='Class')
+				else if(strtolower($class)=='class')
 					$res=$this->classF($fields[0]);
-				else if($class=='Property')
+				else if(strtolower($class)=='property')
 					$res=$this->propertyF($fields[0]);
-				else if($class=='Instance')
+				else if(strtolower($class)=='instance')
 					$res=$this->instanceF($fields[0]);
 				else
 					$res=new $class($fields[0],$this);

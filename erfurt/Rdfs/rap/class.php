@@ -213,10 +213,10 @@ class RDFSClass extends DefaultRDFSClass {
 	/**
 	 * @see DefaultRDFSClass
 	 */
-	public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0,$erg = 0) {
+	public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0, $erg = 0) {
 		
 		$args = func_get_args();
-		$cache = new stmCache('_findInstances', $args, $this);
+		$cache = new stmCache('_findInstances', $args, $this->model);
 		if ($cache->value !== null) {
 			$erg = $cache->value[0];
 			return $this->model->_convertRecordSetToNodeList($cache->value[1], 'instance');
@@ -263,6 +263,7 @@ class RDFSClass extends DefaultRDFSClass {
 		$subClasses = $this->listSubClassesRecursive();
 		$subClassesIds = $this->model->_dbIds($subClasses);
 		$subClassesSql = join(", ", $subClassesIds);
+		
 
 		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND	s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
 		 			'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
@@ -270,9 +271,10 @@ class RDFSClass extends DefaultRDFSClass {
 		$sql .= (!empty($where)) ? $where : '';
 		$sql .= ' GROUP BY s.subject';
 		
+		
 
 		if ($limit) {
-			$res = &$this->model->dbConn->PageExecute($sql, $limit, ($offset/$limit+1));
+			$res = &$this->model->dbConn->PageExecute($sql, $limit, $offset/$limit+1);
 		} else {
 			$res = &$this->model->dbConn->execute($sql);
 		}
@@ -281,8 +283,9 @@ class RDFSClass extends DefaultRDFSClass {
 		$resArr = $res->getArray();
 
 		$c = array($erg, $resArr);
+
 		$cache->set($c, array_merge(array('rdf:type'), array_keys($properties)));
-		$ret = $this->model->_convertRecordSetToNodeList($resArr, $this->instance);
+		$ret = $this->model->_convertRecordSetToNodeList($resArr, $this->model->instance);
 
 		return $ret;
 	}
