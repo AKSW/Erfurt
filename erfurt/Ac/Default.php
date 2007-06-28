@@ -278,6 +278,16 @@ class Erfurt_Ac_Default {
 			return;
 		}
 		
+		# user groups
+		$sparqlQuery = 'select ?p ?o 
+													where { 
+														?group ?p ?o.
+														?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
+													}';
+		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
+			$this->_filterAcess($result);
+		}
+		
 		## direct user rights
 		$sparqlQuery = 'select ?p ?o 
 													where { 
@@ -288,15 +298,21 @@ class Erfurt_Ac_Default {
 			$this->_filterAcess($result);
 		}
 		
-		# user groups
-		$sparqlQuery = 'select ?p ?o 
-													where { 
-														?group ?p ?o.
-														?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
-													}';
-		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
-			$this->_filterAcess($result);
+		##  now look for forbidden any model
+		# view
+		if (in_array($this->_propAnyModel, $this->_userRights[$this->_propDenyModelView])) {
+			$this->_userAnyModelViewAllowed = false;
+			$this->_userAnyModelEditAllowed = false;
+			$this->_userRights[$this->_propGrantModelView]  = array();
+			$this->_userRights[$this->_propGrantModelEdit]  = array();
 		}
+		
+		# edit
+		if (in_array($this->_propAnyModel, $this->_userRights[$this->_propDenyModelEdit])) {
+			$this->_userAnyModelEditAllowed = false;
+			$this->_userRights[$this->_propGrantModelEdit]  = array();
+		}
+		
 	}
 	
 	/**
