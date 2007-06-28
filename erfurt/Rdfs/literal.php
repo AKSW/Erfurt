@@ -20,7 +20,7 @@ class DefaultRDFSLiteral extends Literal {
 	 * @param $datatype
 	 * @return RDFSLiteral
 	 **/
-	public function DefaultRDFSLiteral($label, $model, $language = '', $datatype = '') {
+	public function DefaultRDFSLiteral($label, $language = '', $datatype = '') {
 		
 		if ($label instanceof Literal) {
 			Literal::Literal($label->getLabel(), $label->getLanguage());
