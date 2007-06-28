@@ -7,7 +7,15 @@
  * @copyright 2003
  **/
 
+global $store;
+if (Zend_Registry::isRegistered('erfurt')) {
+	$store = Zend_Registry::get('erfurt')->getStore();
+} else {
+	die('Erfurt_App object not instantiated!');
+}
+
 function pwlLogTablesCreate() {
+	global $store;
 	$tables=array(
 		'log_statements'=>array(
 			'fields'=>'
@@ -45,7 +53,7 @@ function pwlLogTablesCreate() {
 			'indexes'=>array('description'),
 		)
 	);
-	$dict=NewDataDictionary($GLOBALS['_ET']['store']->dbConn);
+	$dict=NewDataDictionary($store->dbConn);
 	foreach($tables as $tablename=>$table) {
 		$dict->ExecuteSQLArray($dict->CreateTableSQL($tablename,$table['fields'],$table['options']));
 		foreach($table['indexes'] as $indexname=>$index)
@@ -53,7 +61,8 @@ function pwlLogTablesCreate() {
 	}
 }
 function pwlLogTablesDrop() {
-	$dict=NewDataDictionary($GLOBALS['_ET']['store']->dbConn);
+	global $store;
+	$dict=NewDataDictionary($store->dbConn);
 	$dict->ExecuteSQLArray($dict->DropTableSQL('log_actions'));
 	$dict->ExecuteSQLArray($dict->DropTableSQL('log_statements'));
 	$dict->ExecuteSQLArray($dict->DropTableSQL('log_action_descr'));
@@ -102,12 +111,13 @@ function pwlLogRollback($actionId, &$m) {
 	$m->dbConn->CompleteTrans();
 }
 function pwlLogRollbackMultiple($actionIds) {
-	foreach($GLOBALS['_ET']['store']->dbConn->GetAll("SELECT modelURI,id FROM log_actions
+	global $store;
+	foreach($store->dbConn->GetAll("SELECT modelURI,id FROM log_actions
 			INNER JOIN models ON(model_id=modelID) WHERE id IN (".join(',',$actionIds).")
 			ORDER BY modelURI,date DESC") as $row)
 		$models[$row[0]][]=$row[1];
 	foreach($models as $modelURI=>$actions) {
-		$m=$GLOBALS['_ET']['store']->getModel($modelURI);
+		$m=$store->getModel($modelURI);
 		if(count($actions)>1)
 			$m->logStart('Rollback actions',join(',',$actions));
 			
@@ -134,27 +144,33 @@ function pwlNodeShow($node, $baseURI) {
 }
 
 function pwlLogRenderAction($id,$description,$subject,$details,$modelId,$baseURI,&$mayRolledBack) {
-	$ret='<img src="'.$GLOBALS['_POWL']['uriBase'].'images/tree/cornerplus.gif" valign="absmiddle" onclick="this.src=this.src.replace(\'plus\',\'minus\').replace(\'minus\',\'plus\'); powl.toggleVisibility(\'ver'.++$GLOBALS['i'].'\')"><b>'.$description.':</b>&nbsp;<i>'.$subject.'</i><br />'.
+	global $store;
+	$ret='<img src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/tree/cornerplus.gif" valign="absmiddle" onclick="this.src=this.src.replace(\'plus\',\'minus\').replace(\'minus\',\'plus\'); powl.toggleVisibility(\'ver'.++$GLOBALS['i'].'\')"><b>'.$description.':</b>&nbsp;<i>'.$subject.'</i><br />'.
 	$details.'<div id="ver'.$GLOBALS['i'].'" style="display:none; margin-left:19px;">
 	<table style="border:solid black 1px; border-spacing:0px; width:100%;">';
 	$sql="SELECT ls.*,s.modelID FROM log_statements ls
 			LEFT JOIN statements s ON(s.modelID='$modelId' AND ls.subject=s.subject AND ls.predicate=s.predicate AND ls.object=s.object AND ls.l_language=s.l_language AND ls.l_datatype=s.l_datatype AND ls.subject_is=s.subject_is AND ls.object_is=s.object_is)
 		WHERE action_id='$id' GROUP BY ls.id ORDER BY ar";
-	foreach($GLOBALS['_ET']['store']->dbConn->getAll($sql) as $stm) {
+		// echo $sql;
+	foreach($store->dbConn->getAll($sql) as $stm) {
+		// print_r($stm);
 		$ret.='<tr><td>'.($stm[8]=='a'?'+':'-').'</td>'.
 				($_REQUEST['filter']['resource']?'':'<td style="background-color:#eaeaea"><a href="'.pwlURLParamReplace('filter[resource]',str_replace('#','%23',$stm[1])).'">'.pwlNodeShow($stm[1],$baseURI).'</a></td>').'
 				<td style="background-color:#eaeaea"><a href="'.pwlURLParamReplace('filter[resource]',str_replace('#','%23',$stm[2])).'">'.pwlNodeShow($stm[2],$baseURI).'</a></td>
 				<td style="background-color:#eaeaea"><a href="'.pwlURLParamReplace('filter[resource]',str_replace('#','%23',$stm[3])).'">'.pwlNodeShow($stm[3],$baseURI).'</a></td></tr>';
+		// ar = 'r' + modelID || ar = 'a' + !modelID
 		if(($stm[8]=='r' && $stm[10]) || ($stm[8]=='a' && !$stm[10]))
 			$mayRolledBack=false;
 	}
 	$ret.='</table>';
-	foreach($GLOBALS['_ET']['store']->dbConn->getAll("SELECT la.id,description,subject,details FROM log_actions la INNER JOIN log_action_descr lad ON(lad.id=descr_id) WHERE parent_id='$id'") as $row)
+	foreach($store->dbConn->getAll("SELECT la.id,description,subject,details FROM log_actions la INNER JOIN log_action_descr lad ON(lad.id=descr_id) WHERE parent_id='$id'") as $row)
 		$ret.=pwlLogRenderAction($row[0],$row[1],$row[2],$row[3],$modelId,$baseURI,$mayRolledBack);
 	$ret.='</div>';
 	return $ret;
 }
+
 function pwlLogListEntries($filter=array(),$start=0,$count=0,$erg=0) {
+	global $store;
 	if($filter) foreach($filter as $key=>$val) if($val) {
 		switch($key) {
 			case 'date':
@@ -177,8 +193,8 @@ function pwlLogListEntries($filter=array(),$start=0,$count=0,$erg=0) {
 			INNER JOIN models ON(model_id=modelID)
 			INNER JOIN log_action_descr lad ON (lad.id=descr_id)
 		WHERE ISNULL(parent_id)'.$search.$group.' ORDER BY date DESC';
-#$GLOBALS['_ET']['store']->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
-	$res=$GLOBALS['_ET']['store']->dbConn->pageExecute($sql,$count,$start/$count+1);
+#$store->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
+	$res=$store->dbConn->pageExecute($sql,$count,$start/$count+1);
 	$erg=$res->_maxRecordCount?$res->_maxRecordCount:$res->_numOfRows;
 	return $res;
 }
