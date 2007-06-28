@@ -631,7 +631,9 @@ class RDFSModel extends DefaultRDFSModel {
 			$actionId=$this->logStart('Statement '.($ar=='a'?'added':'removed'));
 			$this->logEnd();
 		}
-		if(!method_exists($statement,'subject'))
+		if(!method_exists($statement,'subject')) {
+			// print_r($statement);
+		}
 		$subject_is=$this->_getNodeFlag($statement->subject());
 		$sql="INSERT INTO log_statements VALUES (NULL,'".$statement->getLabelSubject()."','".$statement->getLabelPredicate()."',";
 		if(is_a($statement->object(), 'Literal')) {
@@ -765,9 +767,15 @@ class RDFSModel extends DefaultRDFSModel {
 	 * @param $object
 	 * @return
 	 * @access	private
-	 **/
+	 */
 	function _getNodeFlag($object)  {
-		return (is_a($object,'BlankNode')||(method_exists($object,'isBlankNode') && $object->isBlankNode()))?'b':(is_a($object,'Resource')?'r':'l');
+		if ($object instanceof Blanknode || (method_exists($object, 'isBlankNode') && $object->isBlankNode())) {
+			return 'b';
+		} elseif ($object instanceof Resource) {
+			return 'r';
+		} else {
+			return 'l';
+		}
 	}
 	/**
 	 * RDFSModel::_dbId()
@@ -775,7 +783,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 * @param $resource
 	 * @return
 	 * @access	private
-	 **/
+	 */
 	function _dbId($resource) {
 		if(is_string($resource))
 			$resource=is_a($GLOBALS[$resource],'resource')?$GLOBALS[$resource]:new $this->resource($resource,$this);
