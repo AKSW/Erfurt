@@ -44,8 +44,8 @@
               rdfs:label="DefaultUserGroup">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
-    <SysOnt:denyModelEdit rdf:resource="&LocalConfig;"/>
-    <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
+    <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
+    <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
@@ -54,6 +54,10 @@
   <rdf:Description rdf:about="&SysOnt;Anonymous">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <SysOnt:denyAccess rdf:resource="&SysOnt;Login"/>
+    <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
+    <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;RegisterNewUser">
