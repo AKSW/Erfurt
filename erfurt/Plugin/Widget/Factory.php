@@ -171,15 +171,8 @@ class Erfurt_Plugin_Widget_Factory {
 				return $this->datatypePreferences[$literalDatatype];
 			}
 		}
-		// TODO: check preferred properties
-		// check owl properties
-		if ($property instanceof OWLProperty) {
-			if ($property->isObjectProperty()) {
-				return 'ResourceEdit';
-			} elseif ($property->isDatatypeProperty()) {
-				return 'LiteralEdit';
-			}
-		}
+		
+		// TODO: check preferred class/property combinations or properties only
 		
 		// check value types
 		if ($first instanceof Resource) {
@@ -188,6 +181,15 @@ class Erfurt_Plugin_Widget_Factory {
 			return 'LiteralEdit';
 		} elseif (is_string($value)) {
 			return 'LiteralEdit';
+		}
+		
+		// check owl properties
+		if ($property instanceof OWLProperty) {
+			if ($property->isObjectProperty()) {
+				return 'ResourceEdit';
+			} elseif ($property->isDatatypeProperty()) {
+				return 'LiteralEdit';
+			}
 		}
 		
 		// fallback
