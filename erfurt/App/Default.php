@@ -90,6 +90,10 @@ class Erfurt_App_Default {
 		
 		#$owAcUserModel = $defaultStore->getModel($config->ac->user->model);
 		
+		// hack until we have a new versioning module
+		// TODO: rewrite versioning module and remove this
+		include_once MODULES_INCLUDE_DIR . 'version/include.php';
+		
 		
 		$this->ac = null;
 		
