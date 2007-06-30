@@ -57,7 +57,7 @@ class Erfurt_Syntax_RDFSerializer implements Erfurt_Syntax_RDFSerializerInterfac
 		$this->base = $model->getBaseURI();
 		
 		// check whether a MemModel or a DbModel is given; Erfurt_Syntax_RDFStringWriterImpl always needs a MemModel
-		if ($model instance of DbModel) {
+		if ($model instanceof DbModel) {
 			$this->rdfWriter = new Erfurt_Syntax_RDFStringWriterImpl($stringWriter, $model->getMemModel());
 		} else {
 			$this->rdfWriter = new Erfurt_Syntax_RDFStringWriterImpl($stringWriter, $model);
@@ -70,7 +70,7 @@ class Erfurt_Syntax_RDFSerializer implements Erfurt_Syntax_RDFSerializerInterfac
 
 		$this->rdfWriter->startDocument();
 		$this->rdfWriter->setMaxLevel(10);
-		$this->serializeType('ontology specific informations', EF_OWL_ONTOLOGY);
+		$this->serializeType('ontology specific information', EF_OWL_ONTOLOGY);
 		$this->rdfWriter->setMaxLevel(1);
 		$this->serializeType('classes', EF_OWL_CLASS);
 		$this->serializeType('datatypes', EF_RDFS_DATATYPE);
