@@ -11,6 +11,7 @@
 abstract class DefaultInstanceSearch {
 	
 	var $model;
+	var $store;
 	var $searchString;
 	var $classes;
 	var $properties;
@@ -18,6 +19,7 @@ abstract class DefaultInstanceSearch {
 	public function DefaultInstanceSearch(&$model,$searchString,$classes=array(),$properties=array()) {
 		
 		$this->model=&$model;
+		$this->store = $model->getStore();
 		$this->allModels=$model?false:true;
 		$this->searchString=$searchString;
 		$this->classes=$classes;
