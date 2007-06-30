@@ -108,12 +108,12 @@ abstract class DefaultRDFSResource extends Resource {
 	 *
 	 * @return string comment of the resource
 	 **/
-	public function listComments($language=NULL) {
+	public function listComments($language=null) {
 		
 		return $this->listLiteralPropertyValues($GLOBALS['RDFS_comment'],$language);
 	}
 	
-	public function getComment($language=NULL) {
+	public function getComment($language=null) {
 		
 		return parray_shift($this->listComments($language));
 	}
@@ -146,9 +146,9 @@ abstract class DefaultRDFSResource extends Resource {
 	 * @param $label
 	 * @param $language
 	 **/
-	public function setLabel($label,$language=NULL) {
+	public function setLabel($label,$language=null) {
 
-		return $this->setPropertyValues($GLOBALS['RDFS_label'],$label,$language,NULL,$language,'http://www.w3.org/2001/XMLSchema#string');
+		return $this->setPropertyValues($GLOBALS['RDFS_label'],$label,$language,null,$language,'http://www.w3.org/2001/XMLSchema#string');
 	}
 	
 	/**
@@ -156,7 +156,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 *
 	 * @return array of labels attached to this resource
 	 **/
-	public function listLabels($language=NULL) {
+	public function listLabels($language=null) {
 		
 		return $this->listLiteralPropertyValues($GLOBALS['RDFS_label'],$language);
 	}
@@ -178,15 +178,15 @@ abstract class DefaultRDFSResource extends Resource {
 	
 	/**
 	 * Returns the label for a language. If no label is available
-	 * for the language in this resource return NULL.
+	 * for the language in this resource return null.
 	 *
 	 * @param string $language
-	 * @return string The label attached to this resource or NULL.
+	 * @return string The label attached to this resource or null.
 	 **/
 	public function getLabelForLanguage($language='') {
 		
 		$label=parray_shift($this->listLabels($language));
-		return $label?$label->getLabel():NULL;
+		return $label?$label->getLabel():null;
 	}
 	
 	/**
@@ -244,28 +244,28 @@ abstract class DefaultRDFSResource extends Resource {
 	public function remove() {
 		
 		// Remove the resource from RDF lists
-		if($ls=$this->model->findNode(NULL,$GLOBALS['RDF_first'],$this)) {
-			$le=$this->model->findNode($ls,$GLOBALS['RDF_rest'],NULL);
+		if($ls=$this->model->findNode(null,$GLOBALS['RDF_first'],$this)) {
+			$le=$this->model->findNode($ls,$GLOBALS['RDF_rest'],null);
 			$this->model->remove($ls,$GLOBALS['RDF_first'],$this);
 			$this->model->remove($ls,$GLOBALS['RDF_rest'],$le);
 			if($le->getURI()!=$GLOBALS['RDF_nil']->getURI()) {
-				$this->model->replace(NULL,NULL,$ls,$le);
-				$this->model->replace($ls,NULL,NULL,$le);
+				$this->model->replace(null,null,$ls,$le);
+				$this->model->replace($ls,null,null,$le);
 			} else {
-				if(!$this->model->findNode(NULL,$GLOBALS['RDF_rest'],$ls)) {
+				if(!$this->model->findNode(null,$GLOBALS['RDF_rest'],$ls)) {
 					$bNode=$this->model->resourceF($ls->getLabel());
 #$bNode->uri=$ls->getLabel();
 #print_r($bNode);
 #					$bNode->remove();
 				} else
-					$this->model->replace(NULL,NULL,$ls,$GLOBALS['RDF_nil']);
+					$this->model->replace(null,null,$ls,$GLOBALS['RDF_nil']);
 			}
 		}
 
 		$res=$this->isBlankNode()?new Blanknode($this->getURI()):$this;
-		$stm1=$this->model->find($res,NULL,NULL);
-		$stm2=$this->model->find(NULL,$res,NULL);
-		$stm3=$this->model->find(NULL,NULL,$res);
+		$stm1=$this->model->find($res,null,null);
+		$stm2=$this->model->find(null,$res,null);
+		$stm3=$this->model->find(null,null,$res);
 		$stms=array_merge($stm1->triples,$stm2->triples,$stm3->triples);
 		foreach($stms as $stm) {
 			$this->model->remove($stm);
@@ -301,11 +301,11 @@ abstract class DefaultRDFSResource extends Resource {
 	 * @param boolean $bool If bool isset to true the type will be set, else it will be unset.
 	 * @return boolean
 	 **/
-	public function type($type=NULL,$bool=NULL) {
+	public function type($type=null,$bool=null) {
 		
 		if(!$type)
-			return $this->model->findNodes($this,$GLOBALS['RDF_type'],NULL);
-		if($bool===NULL)
+			return $this->model->findNodes($this,$GLOBALS['RDF_type'],null);
+		if($bool===null)
 			return $this->isOfType($type);
 		else if($bool)
 			$this->setType($type);
@@ -315,7 +315,7 @@ abstract class DefaultRDFSResource extends Resource {
 	
 	public function getType() {
 		
-		return $this->model->findNode($this,$GLOBALS['RDF_type'],NULL);
+		return $this->model->findNode($this,$GLOBALS['RDF_type'],null);
 	}
 	
 	/**
@@ -350,12 +350,12 @@ abstract class DefaultRDFSResource extends Resource {
 		
 		if(!is_a($newuri,'Resource'))
 			$newuri=$this->model->resourceF($newuri);
-		if($checkNewuriExists && ($this->model->findNode($newuri,NULL,NULL) || $this->model->findNode(NULL,$newuri,NULL) || $this->model->findNode(NULL,NULL,$newuri)))
+		if($checkNewuriExists && ($this->model->findNode($newuri,null,null) || $this->model->findNode(null,$newuri,null) || $this->model->findNode(null,null,$newuri)))
 			return false;
 		else {
-			$this->model->replace(NULL,NULL,$this,$newuri);
-			$this->model->replace(NULL,$this,NULL,$newuri);
-			$this->model->replace($this,NULL,NULL,$newuri);
+			$this->model->replace(null,null,$this,$newuri);
+			$this->model->replace(null,$this,null,$newuri);
+			$this->model->replace($this,null,null,$newuri);
 			$this->uri=$newuri->getURI();
 			return true;
 		}
@@ -384,7 +384,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 * @param string $class The class which the values should be instances of.
 	 * @return array An array of nodes which occur as property values.
 	 **/
-	public function listPropertyValues($property=NULL,$class=NULL) {
+	public function listPropertyValues($property=null,$class=null) {
 		
 		return $this->model->findNodes($this,$property,null,$class);
 		//return $this->model->findRegex($this->getURI(), $property->getURI(), null);
@@ -397,12 +397,12 @@ abstract class DefaultRDFSResource extends Resource {
 		return $this->model->findRegEx($this->getURI(), $property, null);
 	}
 	
-	public function getPropertyValue($property,$class=NULL) {
+	public function getPropertyValue($property,$class=null) {
 		
 		return parray_shift($this->listPropertyValues($property,$class));
 	}
 	
-	public function hasPropertyValue($property,$value=NULL) {
+	public function hasPropertyValue($property,$value=null) {
 		
 		if($this->model->findNode($this,$property,$value))
 			return true;
@@ -410,12 +410,12 @@ abstract class DefaultRDFSResource extends Resource {
 			return false;
 	}
 	
-	public function listPropertyValuesObject($property,$class=NULL) {
+	public function listPropertyValuesObject($property,$class=null) {
 		
-		return $this->model->findNodes(NULL,$property,$this,$class);
+		return $this->model->findNodes(null,$property,$this,$class);
 	}
 	
-	public function listPropertyValuesSymmetric(&$property,$class=NULL) {
+	public function listPropertyValuesSymmetric(&$property,$class=null) {
 		
 		return array_merge(
 			$this->listPropertyValues($property,$class),
@@ -423,7 +423,7 @@ abstract class DefaultRDFSResource extends Resource {
 		);
 	}
 	
-	public function listPropertyValuesTransitive($property,$class=NULL,$done=array()) {
+	public function listPropertyValuesTransitive($property,$class=null,$done=array()) {
 		
 		$ret=$values=$this->listPropertyValues($property);
 		foreach($values as $val)
@@ -442,31 +442,31 @@ abstract class DefaultRDFSResource extends Resource {
 	/**
 	 * Returns literal property values of this resource and
 	 * property $property which macht the given language and
-	 * datatype (NULL matches arbitrary ones).
+	 * datatype (null matches arbitrary ones).
 	 *
 	 * @param RDFSResource $property
 	 * @param string $language
 	 * @param string $datatype
 	 * @return
 	 **/
-	public function listLiteralPropertyValues($property,$language=NULL,$datatype=NULL) {
+	public function listLiteralPropertyValues($property,$language=null,$datatype=null) {
 		
 		$ret=array();
 		foreach($this->listPropertyValues($property) as $value)
 			if(is_a($value,'Literal') &&
-				($language===NULL || $value->getLanguage()==$language) &&
-				($datatype===NULL || $value->getDatatype()==$datatype))
+				($language===null || $value->getLanguage()==$language) &&
+				($datatype===null || $value->getDatatype()==$datatype))
 				$ret[$this->model->getLiteralId($value)]=$value;
 		return $ret;
 	}
 	
-	public function getLiteralPropertyValue($property,$language=NULL,$datatype=NULL) {
+	public function getLiteralPropertyValue($property,$language=null,$datatype=null) {
 		
 		echo parray_shift($this->listLiteralPropertyValues($property,$language,$datatype));
 		return parray_shift($this->listLiteralPropertyValues($property,$language,$datatype));
 	}
 	
-	public function listLiteralPropertyValuesPlain($property,$language=NULL,$datatype=NULL) {
+	public function listLiteralPropertyValuesPlain($property,$language=null,$datatype=null) {
 		
 		$ret=array();
 		foreach($this->listLiteralPropertyValues($property,$language,$datatype) as $value)
@@ -493,7 +493,7 @@ abstract class DefaultRDFSResource extends Resource {
 		$this->setPropertyValues($property);
 	}
 	
-#	public function removePropertyValues($property,$language=false,$datatype=NULL) {
+#	public function removePropertyValues($property,$language=false,$datatype=null) {
 #		
 #	$this->setPropertyValues($property,array(),$language,$datatype);
 #	}
@@ -507,61 +507,76 @@ abstract class DefaultRDFSResource extends Resource {
 	 * @param Node $value The value of the property.
 	 * @param boolean $valuesAreLiterals
 	 * @return
-	 **/
-	public function setPropertyValues($property,$values=array(),$language=NULL,$datatype=NULL,$newLang=NULL,$newDtype=NULL) {
-		
-		if(!is_array($values) || $values['type'] || isset($values['value']) || isset($values['uri']) || isset($values['lang']) || isset($values['dtype']))
-			$values=array($values);
-		$values=array_filter($values);
-		if(!is_a($property,'RDFSProperty'))
-			$property=new $this->model->property($property,$this->model);
-		$range=$property->getRange();
-		$val=array();
-		$valuesAreLiterals=($language!==NULL||$datatype!==NULL||$newLang!==NULL||$newDtype!==NULL||(method_exists($property,'isDatatypeProperty')&&$property->isDatatypeProperty()))?true:false;
-		foreach($values as $v)
-			if(is_a($v,'Resource'))
-				$val[]=$v->getLocalName();
-			else if(is_a($v,'Literal'))
-				$val[]=$this->model->getLiteralId($v);
-			else if(is_array($v)) { // && $v['type'] || isset($v['value']) || isset($v['uri']) || isset($v['lang']) || isset($v['dtype'])) {
-				if($v['type']!='resource' && isset($v['value'])) {
-					$vt=new RDFSLiteral($v['value'],$v['lang']!='Lang'?$v['lang']:NULL,$v['dtype']);
-					$obj=$val[]=$this->model->getLiteralId($vt);
-#if($property->getLocalName()=='rdfs:comment') {
-#print_r($v);
-#preg_match('/"(.*)"@(.*)\^\^(.*)/ms',$obj,$matches);
-#print_r($matches);
-#exit;
-#}
-				} else if($v['type']!='literal' && $v['uri'])
-					$val[]=$this->model->resourceF($v['uri']);
-			} else if($valuesAreLiterals) {
-				$vt=new RDFSLiteral($v,$newLang!==NULL?$newLang:$language,$newDtype!==NULL?$newDtype:$datatype);
-				$val[]=$this->model->getLiteralId($vt);
-			} else {
-				$vt=$this->model->resourceF($v);
-#if($property->getURI()==$GLOBALS['OWL_imports']->getURI())
-#	print_r($vt->model->baseURI);
-				$val[]=$vt->getLocalName()?$vt->getLocalName():$vt->getURI();
-			}
-		if($valuesAreLiterals)
-			$valuesOld=$this->listLiteralPropertyValues($property,$language,$datatype);
-		else
-			$valuesOld=$this->listPropertyValues($property);
-		$valuesOldPlain=array_keys($valuesOld);
-		$values=array_filter($val);
-		if(array_diff($valuesOldPlain,$values) && array_diff($values,$valuesOldPlain))
-			$this->model->logStart('Property values changed',$property->getLocalName());
-		foreach(array_diff($valuesOldPlain,$values) as $removed) {
-			if(isBnode($valuesOld[$removed])) {
-				if(!method_exists($valuesOld[$removed],'remove'))
-					$valuesOld[$removed]=new RDFSResource($valuesOld[$removed]->getURI(),$this->model);
-				$valuesOld[$removed]->remove();
-			} else
-				$this->model->remove($this,$property,$removed);
+	 */
+	public function setPropertyValues($property, $values = array(), $language = null, $datatype = null, $newLang = null, $newDtype = null) {
+			
+		if (!is_array($values) || $values['type'] || isset($values['value']) || isset($values['uri']) || isset($values['lang']) || isset($values['dtype'])) {
+			$values = array($values);
 		}
-		foreach(array_diff($values,$valuesOldPlain) as $added)
-			$this->model->add($this,$property,$added);
+		$values = array_filter($values);
+		
+		if (!($property instanceof RDFSProperty)) {
+			$property = new $this->model->property($property, $this->model);
+		}
+		
+		$range = $property->getRange();
+		$val = array();
+		
+		if ($language || $newLang || $datatype || $newDtype || ($property instanceof OWLProperty && $property->isDatatypeProperty())) {
+			$valuesAreLiterals = true;
+		} else {
+			$valuesAreLiterals = false;
+		}
+		
+		foreach ($values as $v) {
+			if ($v instanceof Resource) {
+				$val[] = $v->getLocalName();
+			} elseif ($v instanceof Literal) {
+				$val[] = $this->model->getLiteralId($v);
+			} elseif (is_array($v)) {
+				if ($v['type'] != 'resource' && isset($v['value'])) {
+					$vt = new RDFSLiteral($v['value'], $v['lang'] != 'Lang' ? $v['lang'] : null, $v['dtype']);
+					$obj = $val[] = $this->model->getLiteralId($vt);
+				} elseif ($v['type'] != 'literal' && $v['uri']) {
+					$val[] = $this->model->resourceF($v['uri']);
+				}
+			} elseif ($valuesAreLiterals) {
+				$vt = new RDFSLiteral($v, $newLang ? $newLang : $language, $newDtype ? $newDtype : $datatype);
+				$val[] = $this->model->getLiteralId($vt);
+			} else {
+				$vt = $this->model->resourceF($v);
+				$val[] = $vt->getLocalName() ? $vt->getLocalName() : $vt->getURI();
+			}
+		}
+		
+		if ($valuesAreLiterals) {
+			$valuesOld = $this->listLiteralPropertyValues($property, $language, $datatype);
+		} else {
+			$valuesOld = $this->listPropertyValues($property);
+		}
+		
+		$valuesOldPlain = array_keys($valuesOld);
+		$values = array_filter($val);
+		
+		if (array_diff($valuesOldPlain, $values) && array_diff($values, $valuesOldPlain)) {
+			$this->model->logStart('Property values changed.', $property->getLocalName());
+		}
+		
+		foreach (array_diff($valuesOldPlain, $values) as $removed) {
+			if (isBnode($valuesOld[$removed])) {
+				if(!method_exists($valuesOld[$removed], 'remove')) {
+					$valuesOld[$removed] = new RDFSResource($valuesOld[$removed]->getURI(), $this->model);
+				}
+				$valuesOld[$removed]->remove();
+			} else {
+				$this->model->remove($this, $property, $removed);
+			}
+		}
+		
+		foreach (array_diff($values, $valuesOldPlain) as $added) {
+			$this->model->add($this, $property, $added);
+		}
+		
 		$this->model->logEnd();
 	}
 	
@@ -607,7 +622,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 */
 	public function equals ($that) {
 		
-		if($that==NULL || !is_a($that,'Resource') || is_a($that, 'BlankNode'))
+		if($that==null || !is_a($that,'Resource') || is_a($that, 'BlankNode'))
 			return false;
 		if($this->getURI()==$that->getURI())
 			return true;
@@ -616,10 +631,10 @@ abstract class DefaultRDFSResource extends Resource {
 	
 	public function getDefiningModel($includeSubClasses=false,$includeProperties=false,$includeInstances=false) {
 		
-		$m=$this->model->find($this,NULL,NULL);
+		$m=$this->model->find($this,null,null);
 		foreach($m->triples as $key=>$t)
 			if(isBnode($t->obj))
-				$m=$m->unite($this->model->find($t->obj,NULL,NULL));
+				$m=$m->unite($this->model->find($t->obj,null,null));
 
 		if($class=$this->model->getClass($this)) {
 			if($includeSubClasses)
@@ -684,8 +699,8 @@ abstract class DefaultRDFSResource extends Resource {
 		
 		$ret=array();
 		$n=$this->isBlankNode()?new BlankNode($this->getURI()):$this;
-		foreach($this->model->findNodes(NULL,'rdf:first',$n) as $l) {
-			while($p=$this->model->findNode(NULL,'rdf:rest',$l))
+		foreach($this->model->findNodes(null,'rdf:first',$n) as $l) {
+			while($p=$this->model->findNode(null,'rdf:rest',$l))
 				$l=$p;
 			$ret[]=$l;
 		}
