@@ -57,6 +57,11 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 		foreach ($this->options as $key => $value) {
 			$ret .= $this->getSingleValueHtml($value, $key, ++$count);
 		}
+		
+		if (isset($this->config['dtype'])) {
+			$ret .= '<input type="hidden" name="' . $this->elementName . '[dtype]" value="' . $this->config['dtype'] . '" />' . PHP_EOL;
+		}
+		
 		$ret .= '</div>' . PHP_EOL;
 		
 		return $ret;
@@ -91,16 +96,12 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 		if ($this->config['onchange']) {
 			$ret .= ' onchange="' . $this->config['onchange'] . '"';
 		}
-		$ret .= '>';
+		$ret .= ' />';
 		if (($value != '1') && ($value != 'true')) {
-			$ret .= '<label for="option-' . $this->id . $num . '" class="CheckboxEditLabel">' . $value . '</label>' . PHP_EOL;
+			$ret .= '<label for="option-' . $this->id . $num . '" class="CheckboxEditLabel">' . $value . '</label>&nbsp;' . PHP_EOL;
 		}
-		$ret .= '</input>' . PHP_EOL;
 		if ($lang) {
 			$ret .= '<input type="hidden" name="' . $this->elementName . '[lang]" value="' . $lang . '" />' . PHP_EOL;
-		}
-		if ($dtype) {
-			$ret .= '<input type="hidden" name="' . $this->elementName . '[dtype]" value="' . $dtype . '" />&nbsp;' . PHP_EOL;
 		}
 		
 		return $ret;

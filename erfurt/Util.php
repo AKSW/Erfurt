@@ -70,7 +70,7 @@ class Erfurt_Util {
 			$url_head = $_SERVER['PHP_SELF'];
 		}
 		
-		if ($query_str = http_build_query(array_merge($url_params, $other_params))) {
+		if ($query_str = http_build_query(array_merge($url_params, $other_params), '', '&amp;')) {
 			return $url_head . '?' . $query_str;
 		} else {
 			return $url_head;

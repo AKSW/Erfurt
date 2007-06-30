@@ -143,8 +143,8 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 			$ret .= '</div>' . PHP_EOL;
 		}
 		if (empty($this->config['cardinalityMax']) || $this->config['cardinalityMax'] > $count) {
-			$ret .= '<a href="javascript:getEmptyHtml(this,\'' . $this->id . '\',\''.$container . '-' . $id.'\',\'' . get_class($this) . '\')" title="Add a value">
-				<img src="' . $this->publicUri . 'images/plus_big.png" alt="+"/></a>' . PHP_EOL;
+			$ret .= '<a href="javascript:getEmptyHtml(this,\'' . $this->id . '\',\''.$container . '-' . $id.'\',\'' . get_class($this) . '\')"' . 
+					  ' title="Add a value"><img src="' . $this->publicUri . 'images/plus_big.png" alt="+"/></a>' . PHP_EOL;
 			$ret .= '<input type="hidden" id="count-' . $id . '" value="' . $count . '" />' . PHP_EOL;
 			$ret .= '<input type="hidden" id="name-' . $id . '" value="' . $this->elementName . '" />' . PHP_EOL;
 		}
