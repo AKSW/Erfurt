@@ -20,7 +20,19 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		$this->styles[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.css';
 	}
 	
-	public function getSingleValueHtml($resource, $num = 1) {
+	public function __toString() {
+		$ret = parent::__toString();
+		$first = array_shift($this->values);
+		if ($first instanceof Resource) {
+			$modelUri = $first->getModel()->modelURI;
+		}
+		
+		$ret .= '<input type="hidden" id="model-' . $this->id . '" value="' . $modelUri . '" />' . PHP_EOL;
+		
+		return $ret;
+	}
+	
+	public function getSingleValueHtml($resource = '', $num = 1) {
 		if ($resource instanceof Resource) {
 			$value = $resource->getLocalName();
 			$uri = $resource->getURI();
@@ -47,7 +59,7 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		// autocompleter script
 		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
 		// autocompleter div
-		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autocomplete"></div>' . PHP_EOL;
+		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autosuggest"></div>' . PHP_EOL;
 		// uri input (filled by autocompleter hook) 
 		// $ret .= '<input type="hidden" name="' . $name . $nameMod . '[value]" class="ResourceEditUri" value="' . $uri . 
 		// 		'" id="uri-' . $this->id . $num . '" />' . PHP_EOL;

@@ -94,6 +94,10 @@ class Erfurt_App_Default {
 		// TODO: rewrite versioning module and remove this
 		include_once MODULES_INCLUDE_DIR . 'version/include.php';
 		
+		// store config in session so that asynchronous requests
+		// have access to modified config data (by e.g. OntoWiki)
+		$session = new Zend_Session_Namespace('ERFURT');
+		$session->config = $config;
 		
 		$this->ac = null;
 		

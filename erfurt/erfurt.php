@@ -36,7 +36,7 @@ if (!function_exists('__autoload')) {
 		} elseif (file_exists($file = ERFURT_BASE . 'lib/' . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php')) {
 			require_once($file);
 		} else {
-			throw new Erfurt_Exception('Class ' . $class . ' not found.');
+			// throw new Erfurt_Exception('Class ' . $class . ' not found.');
 		}
 	}
 }

@@ -25,6 +25,11 @@ abstract class Erfurt_Plugin {
 	protected $pluginBaseDir;
 	
 	/**
+	  * @var Erfurt public folder as URL reference
+	  */
+	protected $publicUri;
+	
+	/**
 	  * Protected constructor. You cannot instantiate this class.
 	  */
 	protected function __construct() {
@@ -32,6 +37,7 @@ abstract class Erfurt_Plugin {
 		$this->types = Zend_Registry::get('datatypes');
 		$this->pluginBaseUrl = $config->erfurtPublicUri . $config->pluginDir;
 		$this->pluginBaseDir = ERFURT_BASE . $config->pluginDir;
+		$this->publicUri = $config->erfurtPublicUri;
 	}
 }
 

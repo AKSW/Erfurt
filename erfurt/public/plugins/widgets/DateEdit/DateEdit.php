@@ -20,7 +20,7 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		$this->styles[] = $this->widgetBaseUrl . 'DateEdit/date_edit.css';
 	}
 	
-	public function getSingleValueHtml($date, $num = 1) {
+	public function getSingleValueHtml($date = '', $num = 1) {
 		if ($date instanceof Literal) {
 			$value = $date->getLabel();
 		} else {

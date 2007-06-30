@@ -62,7 +62,7 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 		return $ret;
 	}
 	
-	public function getSingleValueHtml($literal, $key, $num = 1) {
+	public function getSingleValueHtml($literal = '', $key = '', $num = 1) {
 		if ($literal instanceof Literal) {
 			$value = $literal->getLabel();
 			$lang = $literal->getLanguage() ? $literal->getLanguage() : 'Lang';

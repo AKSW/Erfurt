@@ -58,12 +58,12 @@ class Erfurt_Plugin_Widget_Factory {
 	  * Use Erfurt_Plugin_Widget_Factory::getInstance() to retrieve an instance.
 	  */
 	private function __construct() {
+		$config = Zend_Registry::get('config');
+		
 		$this->datatypePreferences = array();
 		$this->propertyPreferences = array();
-		$this->requiredScripts = array();
+		$this->requiredScripts = array($config->erfurtPublicUri . 'js/widget.js');
 		$this->requiredStylesheets = array();
-		
-		$config = Zend_Registry::get('config');
 		
 		$this->pluginManager = Zend_Registry::get('pluginManager');
 		

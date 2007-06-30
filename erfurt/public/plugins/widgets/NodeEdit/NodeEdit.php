@@ -26,7 +26,7 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 		                               $re->getStylesheets());
 	}
 	
-	public function getSingleValueHtml($value, $num = 1) {
+	public function getSingleValueHtml($value = '', $num = 1) {
 		$name = $this->elementName;
 		
 		$options = array('resource' => 'Resource', 'literal' => 'Literal');

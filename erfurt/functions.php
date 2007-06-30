@@ -54,8 +54,8 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 			}
 			break;
 		default:
-#			echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
-#			echo "in line $errline of file $errfile<br />";
+			// echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
+			// echo "in line $errline of file $errfile<br />";
 			break;
 	}
 }

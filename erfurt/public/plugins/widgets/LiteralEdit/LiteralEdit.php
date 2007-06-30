@@ -21,7 +21,7 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 		$this->styles[] = $this->widgetBaseUrl . 'LiteralEdit/literal_edit.css';
 	}
 	
-	public function getSingleValueHtml($literal, $num = 1) {
+	public function getSingleValueHtml($literal = '', $num = 1) {
 		if ($literal instanceof Literal) {
 			$value = $literal->getLabel();
 			$lang = $literal->getLanguage() ? $literal->getLanguage() : 'Lang';
@@ -44,7 +44,10 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 		}
 		
 		if (!isset($this->config['embedded'])) {
-			$ret = '<div id="container-' . $this->id . $num . '" class="LiteralEditContainer" onmouseover="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseover\')" onmouseout="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseout\')">' . PHP_EOL;
+			$ret = '<div id="container-' . $this->id . $num . '" class="LiteralEditContainer"' . 
+			// ' onmouseover="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseover\')"' . 
+			// ' onmouseout="toggleOptions($(\'opt-cont' . $this->id . $num . '\'), \'mouseout\')"' . 
+			'>' . PHP_EOL;
 		} else {
 			$ret = '';
 		}
@@ -55,7 +58,7 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			$ret .= '<textarea rows="' . ceil(strlen($value) / 56) . '" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
 					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
-		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '" style="opacity:0">' . PHP_EOL;
+		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL; // style="opacity:0"
 		$ret .= '<input type="text" name="' . $name . '[lang]" class="LiteralEditLang" value="' . $lang . '" id="lang-' . 
 				$this->id . $num . '" />' . PHP_EOL;
 		
