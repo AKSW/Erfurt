@@ -45,7 +45,7 @@ class RDFSModel extends DefaultRDFSModel {
 			//Insert triple	
 			$insert_query = "INSERT INTO ".$this->tableName." ";
 			$insert_query .= "VALUES (".$newId.", SDO_RDF_TRIPLE_S('".$this->modelName."','".$subj."','".$pred."','".$obj."'))";	
-			$oracle_database->Execute($insert_query);
+			$this->dbConn->Execute($insert_query);
 		}
 		
 		// Check, if the triple was added successfully
@@ -82,7 +82,7 @@ class RDFSModel extends DefaultRDFSModel {
 		}
 		
 		// Check, if the triple was added successfully
-		if ($getLastTripleId > $oracle_database->GetOne("SELECT MAX(ID) FROM ".$_newTable)){
+		if ($getLastTripleId > $this->dbConn->GetOne("SELECT MAX(ID) FROM ".$_newTable)){
 			print ("Triple deleted successfully!");
 			$success=true;
 		} else {
@@ -104,7 +104,7 @@ class RDFSModel extends DefaultRDFSModel {
 				echo "Namespace already exist";
 				$success;
 			}	else { 
-				$oracle_database->Execute("BEGIN SDO_RDF.ADD_NAMESPACES('".$namespace."'); END;");
+				$this->dbConn->Execute("BEGIN SDO_RDF.ADD_NAMESPACES('".$namespace."'); END;");
 				print "Namespace was added successfull!";
 				$success=true;
 			}
