@@ -1262,5 +1262,9 @@ abstract class DefaultRDFSModel extends DbModel {
 		
 		$this->_isEditable = $e;
 	}
+	
+	public function getStore() {
+		return $this->store;
+	}
 } 
 ?>
