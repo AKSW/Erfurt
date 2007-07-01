@@ -127,14 +127,14 @@ class RDFSModel extends DefaultRDFSModel {
 		$rs = $this->dbConn->Execute($query);
 		if ($rs){
 			$i = 0; //counter for the new array keys
-			 while ($arr = $rs->FetchRow()) {
-				 if (strpos($arr[0],"#") == FALSE) {
-					  // substring from position first character to last "/"
+			while ($arr = $rs->FetchRow()) {
+				if (strpos($arr[0],"#") == FALSE) {
+				// substring from position first character to last "/"
 					$newValue = substr($arr[0],0,strrpos($arr[0],'/'));
 					$tmpArray[$i] = $newValue;
-				 }
-				 else{
-					 // substring from fist character to "#" 
+				}
+				else {
+				// substring from fist character to "#" 
 					$newValue = substr($arr[0],0,strrpos($arr[0],'#'));
 					$tmpArray[$i] = $newValue;
 				 }
@@ -147,4 +147,38 @@ class RDFSModel extends DefaultRDFSModel {
 		sort($arrNamespaces);
 		return $arrNamespaces;
 	}
+
+	/**
+     * Returns an array of all XML datatypes (unique) used in the model.
+     *
+     * @return string[] Array of XML datatypes.
+     */
+	public function listDatatypes() {
+		$query = "SELECT DISTINCT a.VALUE_TYPE FROM MDSYS.RDF_VALUE$ a, MDSYS.RDFM_".$this->modelName." b WHERE a.VALUE_ID = b.START_NODE_ID OR a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
+		$ret=$this->dbConn->getCol($query);
+		sort($ret);
+ 		return $ret;
+	}
+
+	/**
+	 * Returns an array of all languages (unique) used in conjunction with literals in the model.
+	 *
+	 * @return string[] Array of language strings.
+	 */
+	public function listLanguages() {
+		$query = "SELECT DISTINCT a.LANGUAGE_TYPE FROM MDSYS.RDF_VALUE$ a, MDSYS.RDFM_".$this->modelName." b WHERE a.VALUE_ID = b.START_NODE_ID OR 
+a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
+        $ret=$this->dbConn->getCol($query);
+        sort($ret);
+        return $ret;
+	}
+
+	/**
+	 * @see DefaultRDFSModel
+	 */
+	public function findPredicates($subject = null, $object = null) {
+		$query = "SELECT a.triple.get_property() as Predicate FROM ONTOWIKI.FAMILY_RDF_DATA a WHERE a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%' ORDER BY VALUE_ID";
+        return $rs = $this->dbConn->Execute($query);
+	}
+}
 ?>
