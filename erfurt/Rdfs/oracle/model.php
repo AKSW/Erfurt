@@ -186,5 +186,59 @@ a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
 		$query = "SELECT a.triple.get_property() as Predicate FROM ".$this->modelOwner.".".$this->tableName." a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%' ORDER BY VALUE_ID";
         return $rs = $this->dbConn->Execute($query);
 	}
+	
+	/**
+	 * Removes all statements in this model, that are duplicated.
+	 */
+	public function removeDuplicateStatements() {
+		$res=$this->dbConn->Execute("SELECT a.ID, a.triple.get_subject(), a.triple.get_property(), to_char(a.triple.get_object()) FROM ".$this->modelOwner.".".$this->tableName." a");
+		while($row=$res->FetchRow()) {
+			$hash=md5(serialize($row));
+			if($exists[$hash]){
+				$oracle_database->Execute("DELETE FROM ".$this->modelOwner.".".$this->tableName." a WHERE a.triple.get_subject()='".$row[1]."' AND a.triple.get_property()='".$row[2]."' AND to_char(a.triple.get_object())='".$row[3]."' and ROWNUM BETWEEN 0 and 1");
+			}
+			else {
+				$exists[$hash]=true;
+			}
+		}	
+	}
+	
+	/**
+	 * !!! INCOMPLETE !!!
+	 * 
+	 * This method returns a list of matching subjects for a given predicate.
+	 * 
+	 * @param string/RDFSResource $predicate
+	 * @param string/null $class
+	 * @param int/null $offset
+	 * @param int/null $limit
+	 * @param int/null $erg Variable passed by reference which will be set to the overall number of records.
+	 * @return RDFSResource[] Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter
+	 * is given).
+	 */
+	public function findSubjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {	
+		$query = "SELECT DISTINCT a.TRIPLE.GET_SUBJECT() from ".$this->modelOwner.".".$this->tableName." a WHERE a.TRIPLE.GET_PROPERTY()='".$predicate."'";
+		$arr = $oracle_database->GetCol($query);
+		return $arr;
+	}
+	
+	/**
+	 * !!! INCOMPLETE !!!
+	 *  
+	 * This method returns a list of matching objects for a given predicate.
+	 * 
+	 * @param string/RDFSResource $predicate
+	 * @param string/null $class
+	 * @param int/null $offset
+	 * @param int/null $limit
+	 * @param int/null $erg Variable passed by reference which will be set to the overall number of records.
+	 * @return RDFSResource[] Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter
+	 * is given).
+	 */
+	public function findObjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {	
+		$query = "SELECT DISTINCT to_char(a.TRIPLE.GET_OBJECT()) from ".$this->modelOwner.".".$this->tableName." a WHERE a.TRIPLE.GET_PROPERTY()='".$predicate."'";
+		$arr = $oracle_database->GetCol($query);
+		return $arr;
+	}
 }
 ?>
