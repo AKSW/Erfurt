@@ -462,7 +462,6 @@ abstract class DefaultRDFSResource extends Resource {
 	
 	public function getLiteralPropertyValue($property,$language=null,$datatype=null) {
 		
-		echo parray_shift($this->listLiteralPropertyValues($property,$language,$datatype));
 		return parray_shift($this->listLiteralPropertyValues($property,$language,$datatype));
 	}
 	
