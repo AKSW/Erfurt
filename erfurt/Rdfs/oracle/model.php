@@ -174,10 +174,16 @@ a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
 	}
 
 	/**
-	 * @see DefaultRDFSModel
+	 * Returns a list containing resources that act as a predicate in at least one statement belonging to this model.
+	 * The result is restricted by the optional parameters $subject and/or $object. In case none of them is given, all
+	 * resources that act as predicate in the model are returned. The result is a unique list.
+	 *
+	 * @param RDFSResource/string/null $subject
+	 * @param RDFSResource/Literal/string/null $object
+	 * @return RDFSResource[]
 	 */
 	public function findPredicates($subject = null, $object = null) {
-		$query = "SELECT a.triple.get_property() as Predicate FROM ONTOWIKI.FAMILY_RDF_DATA a WHERE a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%' ORDER BY VALUE_ID";
+		$query = "SELECT a.triple.get_property() as Predicate FROM ".$this->modelOwner.".".$this->tableName." a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%' ORDER BY VALUE_ID";
         return $rs = $this->dbConn->Execute($query);
 	}
 }
