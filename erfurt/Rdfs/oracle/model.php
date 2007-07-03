@@ -240,5 +240,26 @@ a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
 		$arr = $oracle_database->GetCol($query);
 		return $arr;
 	}
-}
+	
+	/**
+	 * Renames the namespace of every matching statement (has $fromNS as namespace) in this model with the new namespace ($toNs).
+	 * This method only operated on the triples of the model. 
+	 *
+	 * @param string $fromNS The old namespace.
+	 * @param string $toNS The new namespace.
+	 */
+	public function renameNamespace($fromNS, $toNS) {
+		$query = "SELECT a.TRIPLE.GET_SUBJECT(), a.TRIPLE.GET_PROPERTY(), to_char(a.TRIPLE.GET_OBJECT()) FROM ".$this->modelOwner.".".$this->tableName." a";
+		$rs = $this->dbConn->Execute($query);
+		if ($rs){
+	 		while (!$rs->EOF) {
+				$newsubject = str_replace($fromNS,$toNS,$rs->fields[0]);
+				$newpredicate = str_replace($fromNS,$toNS,$rs->fields[1]);
+				$newobject = str_replace($fromNS,$toNS,$rs->fields[2]);
+				$update = "UPDATE  ".$this->modelOwner.".".$this->tableName."  a set TRIPLE = sdo_rdf_triple_s('".$this->modelName."','".$newsubject."','".$newpredicate."','".$newobject."') WHERE a.TRIPLE.GET_SUBJECT()='".$rs->fields[0]."' AND a.TRIPLE.GET_PROPERTY()='".$rs->fields[1]."' AND to_char(a.TRIPLE.GET_OBJECT())='".$rs->fields[2]."'";
+				$this->dbConn->Execute($update);
+				$rs->MoveNext();
+		 	}
+	 	}
+	}
 ?>
