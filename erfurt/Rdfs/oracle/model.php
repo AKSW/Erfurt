@@ -4,8 +4,10 @@
  *
  * @package RDFSAPI
  * @author Atanas Alexandrov <sirakov@gmail.com>
- *
+ * @copyright Copyright (c) 2007
+ * @access public
  **/
+
 class RDFSModel extends DefaultRDFSModel {
 	
 	function RDFSModel($store,$modelname,$type=NULL) {

@@ -1,11 +1,10 @@
 <?
 /**
  * RDFSResource
- * 
+ *
  * @package RDFSAPI
- * @author Sören Auer <soeren@auer.cx>
- * @copyright Copyright (c) 2004
- * @version $Id: resource.php 491 2004-11-16 16:27:40Z soerenauer $
+ * @author Atanas Alexandrov <sirakov@gmail.com>
+ * @copyright Copyright (c) 2007
  * @access public
  **/
 class RDFSResource extends DefaultRDFSResource {
