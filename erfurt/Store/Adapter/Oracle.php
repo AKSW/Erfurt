@@ -49,10 +49,9 @@ class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
 	 */
 	public function getModel($modelname) {	
 		
-		$guery= "SELECT * FROM MDSYS.RDF_MODEL$ WHERE MODEL_NAME='".$modelname."'";
+		$query= "SELECT * FROM MDSYS.RDF_MODEL$ WHERE MODEL_NAME='".$modelname."'";
 		
-		$this->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
-		$rs = &$this->dbConn->Execute($guery); //$rs: recordset for the choosed model
+		$rs = &$this->dbConn->Execute($query); //$rs: recordset for the choosed model
 	
 		$_owner = $rs->Fields(OWNER);
 		$_modelname = $rs->Fields(MODEL_NAME);
@@ -61,7 +60,7 @@ class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
 		
 		$arr = array($_owner, $_id, $_modelname, $_tablename);
 		return $arr;
-		// print_r($rs->fields);	# optional	
+		// print_r ($rs->fields);	# optional	
 	}
 	
 	/**
@@ -70,9 +69,9 @@ class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
 	 */
 	public function listModels() {
 		
-		$guery = "SELECT MODEL_NAME FROM MDSYS.RDF_MODEL$";
+		$query = "SELECT MODEL_NAME FROM MDSYS.RDF_MODEL$";
 		
-		$recordSet = $this->dbConn->Execute($guery);
+		$recordSet = $this->dbConn->Execute($query);
 		if (!$recordSet) print $this->dbConn->ErrorMsg();
 		else {
 			$i=1;
