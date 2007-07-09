@@ -156,9 +156,16 @@ class RDFSModel extends DefaultRDFSModel {
      * @return string[] Array of XML datatypes.
      */
 	public function listDatatypes() {
+		$ret = array();
 		$query = "SELECT DISTINCT a.VALUE_TYPE FROM MDSYS.RDF_VALUE$ a, MDSYS.RDFM_".$this->modelName." b WHERE a.VALUE_ID = b.START_NODE_ID OR a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
 		$ret=$this->dbConn->getCol($query);
-		sort($ret);
+		
+		if (empty($ret)){
+        	echo "There is no etries!";
+        }
+        else {
+			sort($ret);        	
+        }
  		return $ret;
 	}
 
@@ -171,7 +178,13 @@ class RDFSModel extends DefaultRDFSModel {
 		$query = "SELECT DISTINCT a.LANGUAGE_TYPE FROM MDSYS.RDF_VALUE$ a, MDSYS.RDFM_".$this->modelName." b WHERE a.VALUE_ID = b.START_NODE_ID OR 
 a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
         $ret=$this->dbConn->getCol($query);
-        sort($ret);
+        if ($rs[0] == NULL){
+        	echo "There is no etries!";
+        }
+        else {
+			sort($ret);        	
+        }
+
         return $ret;
 	}
 
@@ -185,23 +198,36 @@ a.VALUE_ID = b.END_NODE_ID OR a.VALUE_ID = b.P_VALUE_ID";
 	 * @return RDFSResource[]
 	 */
 	public function findPredicates($subject = null, $object = null) {
-		$query = "SELECT a.triple.get_property() as Predicate FROM ".$this->modelOwner.".".$this->tableName." a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%' ORDER BY VALUE_ID";
-        return $rs = $this->dbConn->Execute($query);
+		$query = "SELECT DISTINCT a.triple.get_property() as Predicate FROM ".$this->modelOwner.".".$this->tableName." a WHERE a.triple.get_subject() like '%".$subject."%' and to_char(a.triple.get_object()) like '%".$object."%'";
+        $rs = $this->dbConn->GetCol($query);
+		if ($rs[0] == NULL)
+		{
+			echo "No triples found!";
+		}
+		else {		
+			print_r ($rs);
+		}
+		return $rs;
 	}
 	
 	/**
 	 * Removes all statements in this model, that are duplicated.
 	 */
 	public function removeDuplicateStatements() {
-		$res=$this->dbConn->Execute("SELECT a.ID, a.triple.get_subject(), a.triple.get_property(), to_char(a.triple.get_object()) FROM ".$this->modelOwner.".".$this->tableName." a");
+		$res=$this->dbConn->Execute("SELECT a.triple.get_subject(), a.triple.get_property(), to_char(a.triple.get_object()) FROM ".$this->modelOwner.".".$this->tableName." a ORDER BY 1 ASC");
+		$subj = $res->fields[0];
+		$pred = $res->fields[1];
+		$obj = $res->fields[2];
 		while($row=$res->FetchRow()) {
-			$hash=md5(serialize($row));
+			$hash=md5(serialize($subj.$pred.$obj));
 			if($exists[$hash]){
-				$oracle_database->Execute("DELETE FROM ".$this->modelOwner.".".$this->tableName." a WHERE a.triple.get_subject()='".$row[1]."' AND a.triple.get_property()='".$row[2]."' AND to_char(a.triple.get_object())='".$row[3]."' and ROWNUM BETWEEN 0 and 1");
+				$dbConn->Execute("DELETE FROM ONTOWIKI.".$this->tableName." a WHERE a.triple.get_subject()='".$subj."' AND a.triple.get_property()='".$pred."' AND to_char(a.triple.get_object())='".$obj."' AND ROWNUM = 1");
+				$dbConn->Execute("commit");
 			}
 			else {
 				$exists[$hash]=true;
 			}
+
 		}	
 	}
 	
