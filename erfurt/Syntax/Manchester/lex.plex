@@ -1,0 +1,105 @@
+<?php
+require_once './manchester.php';
+class TestLexer
+{
+	
+	const TEXT = OWLParser::NOT_OPERATOR;
+	const OPERATOR = OWLParser::AND_OPERATOR;
+	const OPERATOR1 = OWLParser::OR_OPERATOR;
+	const OPENPAREN = OWLParser::LPAREN;
+	const ALPHA = OWLParser::ALPHANUMERIC;
+    private $data;
+    private $N;
+    public $token;
+    public $value;
+    private $line;
+    private $state = 1;
+
+    function __construct($data)
+    {
+        $this->data = $data;
+        $this->N = 0;
+        $this->line = 1;
+    }
+
+/*!lex2php
+%input $this->data
+%counter $this->N
+%token $this->token
+%value $this->value
+%line $this->line
+ALPHANUMERIC = /[a-zA-Z]+[0-9]*/
+NUMERIC = /[0-9]+/
+WHITESPACE = /[ \t\n]+/
+LEFTBRACE="("
+RIGHTBRACE=")"
+OPERATOR=/and|or|some|not|only|min|max|exactly|has/
+*/
+/*!lex2php
+%statename START
+OPERATOR{
+	echo "operator found\n";
+    var_dump($this->value);
+//    echo "    rule operator subpatterns: \n";
+//    var_dump($yy_subpatterns);
+}
+LEFTBRACE {
+	$this->token=self::OPENPAREN;
+	echo "leftbrace found\n";
+//    var_dump($this->value);
+//    echo "    rule leftbrace subpatterns: \n";
+//    var_dump($yy_subpatterns);
+//	$this->yybegin(self::THREE);
+}
+RIGHTBRACE {
+	echo "rightbrace found\n";
+    var_dump($this->value);
+  //  echo "    rule rightbrace subpatterns: \n";
+  //  var_dump($yy_subpatterns);
+//	$this->yybegin(self::TWO);
+}
+ALPHANUMERIC {
+    echo "rule alphanumeric\n";
+    var_dump($this->value);
+    //echo "    rule alphanumeric subpatterns: \n";
+    //var_dump($yy_subpatterns);
+   // $this->yybegin(self::THREE);
+}
+WHITESPACE {
+    echo "whitespace\n";
+    //echo "    whitespace subpatterns: \n";
+    //var_dump($yy_subpatterns);
+    return false; // skip this token (do not return it)
+}
+*/
+/*!lex2php
+%statename TWO
+RIGHTBRACE{
+    echo "alphanumeric (state TWO)\n";
+    var_dump($this->value);
+	$this->yypopstate();
+}
+ALPHANUMERIC {
+    echo "alphanumeric (state TWO)\n";
+    var_dump($this->value);
+    $this->yypopstate();
+}
+*/
+/*!lex2php
+%statename THREE
+LEFTBRACE{
+	echo "leftbrace found in state 3\n";
+	$this->yypushstate(self::START);
+}
+ALPHANUMERIC {
+    echo "number (state THREE)\n";
+	$this->yypushstate(self::START);
+//    $this->yybegin(self::START);
+}
+*/
+}
+
+$a = new TestLexer('not (abc and hello )');
+while ($a->yylex()) {
+	var_dump('advance:' . $a->value);
+}
