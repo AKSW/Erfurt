@@ -82,7 +82,7 @@
 	</SysOnt:ResourceExpression>
 
 	<SysOnt:StatementPattern rdf:about="SelectAllUserInfo" rdfs:label="all user information">
-		<SysOnt:selectorExpression rdf:datatype="sparqlWhereClause">{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:selectorExpression>
+		<SysOnt:selectorPattern rdf:datatype="sparqlWhereClause">{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:selectorPattern>
 	</SysOnt:StatementPattern>
 
   <foaf:Group rdf:about="AdvancedACLGroup"
