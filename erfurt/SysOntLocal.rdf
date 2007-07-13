@@ -71,5 +71,27 @@
     <SysOnt:rawConfig>type=RDF</SysOnt:rawConfig>
   </rdf:Description>
 
+
+	<!-- Statement Selector TestCase -->
+	<SysOnt:ResourceExpression rdf:about="SelectAllFoafStatements" rdfs:label="All Foaf Statements">
+		<SysOnt:selectorExpression rdf:datatype="&SysOnt;mysqlLike">http://xmlns.com/foaf/0.1/%</SysOnt:selectorExpression>
+	</SysOnt:ResourceExpression>
+
+	<SysOnt:ResourceExpression rdf:about="SelectAllPasswords" rdfs:label="all password statements">
+		<SysOnt:selectorExpression rdf:datatype="&xsd;anyURI">http://ns.ontowiki.net/SysOnt/userPassword</SysOnt:selectorExpression>
+	</SysOnt:ResourceExpression>
+
+	<SysOnt:StatementPattern rdf:about="SelectAllUserInfo" rdfs:label="all user information">
+		<SysOnt:selectorExpression rdf:datatype="sparqlWhereClause">{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:selectorExpression>
+	</SysOnt:StatementPattern>
+
+  <foaf:Group rdf:about="AdvancedACLGroup"
+              rdfs:label="AdvancedACLGroup">
+    <SysOnt:grantStatementsView rdf:resource="SelectAllUserInfo"/>
+    <SysOnt:denyStatementsView rdf:resource="SelectAllPasswords"/>
+    <rdfs:comment>This pre-configured user group can read all user info in the system config but not the passwords.</rdfs:comment>
+  </foaf:Group>
+
+
 </rdf:RDF>
 

@@ -46,12 +46,36 @@
     </owl:unionOf>
   </owl:Class>
 
+  <owl:Class rdf:about="StatementSelector" rdfs:label="Statement Selector">
+    <rdfs:comment>Statement selectors are used for statement based access control.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ResourceExpression"
+             rdfs:label="Resource Expression">
+    <rdfs:comment>Statements Based Access Control: Resource expressions select all statements where the described URI(s) appear in subject, predicate or object.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="StatementSelector" />
+  </owl:Class>
+  <owl:Class rdf:about="StatementPattern"
+             rdfs:label="Statement Pattern">
+    <rdfs:comment>Statements Based Access Control: Statement patterns select statements according to specific graph pattern.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="StatementSelector" />
+  </owl:Class>
+
+
 <!-- Datatypes -->
-  <rdfs:Datatype rdf:about="&xsd;string"/>
+  <rdfs:Datatype rdf:about="&xsd;string" rdfs:label="String"/>
+  <rdfs:Datatype rdf:about="&xsd;anyURI" rdfs:label="Any URI"/>
+  <rdfs:Datatype rdf:about="regularExpression" rdfs:label="Regular Expression"/>
+  <rdfs:Datatype rdf:about="mysqlLike" rdfs:label="MySQL like Expression"/>
+  <rdfs:Datatype rdf:about="sparqlWhereClause" rdfs:label="SPARQL Where Clause"/>
 
 <!-- Annotation Properties -->
-  <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
-  <owl:AnnotationProperty rdf:about="&rdfs;label"/>
+  <owl:AnnotationProperty rdf:about="&rdfs;comment" rdfs:label="comment">
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:AnnotationProperty>
+  <owl:AnnotationProperty rdf:about="&rdfs;label"  rdfs:label="label">
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:AnnotationProperty>
 
 <!-- Datatype Properties -->
   <owl:DatatypeProperty rdf:about="userPassword"
@@ -77,8 +101,70 @@
     <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
 
+  <owl:DatatypeProperty rdf:about="selectorExpression"
+                        rdfs:label="Resource(s)">
+    <rdfs:comment>Statements Based Access Control: This property represents a set of resources with a specific expression.</rdfs:comment>
+    <rdfs:domain rdf:resource="ResourceExpression"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+    <SysOnt:possibleDatatype rdf:resource="&xsd;anyURI" />
+    <SysOnt:possibleDatatype rdf:resource="regularExpression" />
+    <SysOnt:possibleDatatype rdf:resource="mysqlLike" />
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="selectorPattern"
+                        rdfs:label="Statement(s)">
+    <rdfs:comment>Statements Based Access Control: This property represents a set of statements with a specific pattern.</rdfs:comment>
+    <rdfs:domain rdf:resource="StatementPattern"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+    <SysOnt:possibleDatatype rdf:resource="sparqlWhereClause" />
+  </owl:DatatypeProperty>
+
 
 <!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="possibleDatatype"
+                      rdfs:label="possible datatype">
+    <rdfs:comment>Since it is not allowed to state more than one possible datatypes of a datatype property in OWL, you can use this relation. (not implemented yet)</rdfs:comment>
+    <rdfs:domain rdf:resource="&owl;DatatypeProperty"/>
+    <rdfs:range rdf:resource="&rdfs;Datatype"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="model"
+                      rdfs:label="Model">
+    <rdfs:comment>Statements Based Access Control: Restricts a Statement Selector to specific model(s). Selectors without restriction match to every to model.</rdfs:comment>
+    <rdfs:domain rdf:resource="StatementSelector"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantStatementsEdit"
+                      rdfs:label="editable statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+    <rdfs:subPropertyOf rdf:resource="grantStatementsView"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantStatementsView"
+                      rdfs:label="readable statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyStatementsEdit"
+                      rdfs:label="not editable Statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are NOT allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyStatementsView"
+                      rdfs:label="not readable Statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are NOT allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b0"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+    <rdfs:subPropertyOf rdf:resource="denyStatementsEdit"/>
+  </owl:ObjectProperty>
+
+
   <owl:ObjectProperty rdf:about="grantModelEdit"
                       rdfs:label="editable model">
     <rdfs:comment>Model Based Access Control: Which Models are allowed to edit (and read)</rdfs:comment>
@@ -127,7 +213,7 @@
   <owl:ObjectProperty rdf:about="subGroup"
                       rdfs:label="has subgroup">
     <rdf:type rdf:resource="&owl;TransitiveProperty"/>
-    <rdfs:comment>A group can have subgroups to manage user accounts.</rdfs:comment>
+    <rdfs:comment>A group can have subgroups to manage user accounts (not implemented yet).</rdfs:comment>
     <rdfs:domain rdf:resource="&foaf;Group"/>
     <rdfs:range rdf:resource="&foaf;Group"/>
   </owl:ObjectProperty>
@@ -168,6 +254,11 @@
                 rdfs:label="AnyAction">
     <rdfs:comment>This special action identifies any action.</rdfs:comment>
   </Action>
+
+	<StatementSelector rdf:about="AnyStatement" rdfs:label="Any Statement">
+		<model rdf:resource="AnyModel" />
+    <rdfs:comment>This special selector selects any statement in any model.</rdfs:comment>
+  </StatementSelector>
 
   <Action rdf:about="RegisterNewUser"
                 rdfs:label="Register new User">
