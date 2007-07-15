@@ -314,7 +314,7 @@ class RDFSModel extends DefaultRDFSModel {
 	public function findInstances($properties = array(), $compare = 'exact', $offset = 0, $limit = 0, $erg = 0) {
 		
 		$args = func_get_args();
-		$cache = new stmCache('_findInstances', $args, $this);
+		$cache = new stmCache('findInstances', $args, $this);
 		if ($cache->value !== null) {
 			$erg = $cache->value[0];
 			return $this->_convertRecordSetToNodeList($cache->value[1], 'instance');
@@ -350,7 +350,7 @@ class RDFSModel extends DefaultRDFSModel {
 				$cond = 'ISNULL(s' . $n . '.object)';
 			}
 				
-			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n - '.subject ' .
+			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
 						'AND s' . $n . '.predicate = "' . $this->_dbId($prop) . '" AND ' . $cond . ')';
 						
 			if (!$value) {

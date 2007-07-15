@@ -216,7 +216,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0, $erg = 0) {
 		
 		$args = func_get_args();
-		$cache = new stmCache('_findInstances', $args, $this->model);
+		$cache = new stmCache('findInstancesRecursive', $args, $this);
 		if ($cache->value !== null) {
 			$erg = $cache->value[0];
 			return $this->model->_convertRecordSetToNodeList($cache->value[1], 'instance');
@@ -252,8 +252,11 @@ class RDFSClass extends DefaultRDFSClass {
 				$cond = 'ISNULL(s' . $n . '.object)';
 			}
 				
-			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n - '.subject ' .
+			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
 						'AND s' . $n . '.predicate = "' . $this->model->_dbId($prop) . '" AND ' . $cond . ')';
+			
+			
+			
 						
 			if (!$value) {
 				$where .= ' AND ISNULL(s' . $n . '.object)';
@@ -266,7 +269,7 @@ class RDFSClass extends DefaultRDFSClass {
 		
 
 		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND	s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
-		 			'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
+					'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
 		
 		$sql .= (!empty($where)) ? $where : '';
 		$sql .= ' GROUP BY s.subject';
