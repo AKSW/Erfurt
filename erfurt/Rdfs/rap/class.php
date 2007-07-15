@@ -216,7 +216,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0, $erg = 0) {
 		
 		$args = func_get_args();
-		$cache = new stmCache('findInstancesRecursive', $args, $this);
+		$cache = new stmCache('findInstancesRecursive', $args, $this->model, $this);
 		if ($cache->value !== null) {
 			$erg = $cache->value[0];
 			return $this->model->_convertRecordSetToNodeList($cache->value[1], 'instance');
