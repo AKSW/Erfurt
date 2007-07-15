@@ -119,7 +119,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function literalF($label, $language = '', $datatype = '') {
 		
-		return new RDFSLiteral($label, $this, $language, $datatype);
+		return new RDFSLiteral($label, $language, $datatype);
 	}
 	
 	/**
