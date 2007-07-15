@@ -265,17 +265,15 @@ class RDFSClass extends DefaultRDFSClass {
 		
 		$subClasses = $this->listSubClassesRecursive();
 		$subClassesIds = $this->model->_dbIds($subClasses);
-		$subClassesSql = join(", ", $subClassesIds);
+		$subClassesSql = join('", "', $subClassesIds);
 		
 
-		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND	s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
+		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
 					'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
 		
 		$sql .= (!empty($where)) ? $where : '';
 		$sql .= ' GROUP BY s.subject';
 		
-		
-
 		if ($limit) {
 			$res = &$this->model->dbConn->PageExecute($sql, $limit, $offset/$limit+1);
 		} else {
