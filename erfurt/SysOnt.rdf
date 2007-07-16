@@ -47,27 +47,12 @@
   </owl:Class>
 
   <owl:Class rdf:about="StatementSelector" rdfs:label="Statement Selector">
-    <rdfs:comment>Statement selectors are used for statement based access control.</rdfs:comment>
+    <rdfs:comment>Statements Based Access Control: Statement Selector select statements according to a specific SPARQL WHERE clause.</rdfs:comment>
   </owl:Class>
-
-  <owl:Class rdf:about="ResourceExpression"
-             rdfs:label="Resource Expression">
-    <rdfs:comment>Statements Based Access Control: Resource expressions select all statements where the described URI(s) appear in subject, predicate or object.</rdfs:comment>
-    <rdfs:subClassOf rdf:resource="StatementSelector" />
-  </owl:Class>
-  <owl:Class rdf:about="StatementPattern"
-             rdfs:label="Statement Pattern">
-    <rdfs:comment>Statements Based Access Control: Statement patterns select statements according to specific graph pattern.</rdfs:comment>
-    <rdfs:subClassOf rdf:resource="StatementSelector" />
-  </owl:Class>
-
 
 <!-- Datatypes -->
   <rdfs:Datatype rdf:about="&xsd;string" rdfs:label="String"/>
   <rdfs:Datatype rdf:about="&xsd;anyURI" rdfs:label="Any URI"/>
-  <rdfs:Datatype rdf:about="regularExpression" rdfs:label="Regular Expression"/>
-  <rdfs:Datatype rdf:about="mysqlLike" rdfs:label="MySQL like Expression"/>
-  <rdfs:Datatype rdf:about="sparqlWhereClause" rdfs:label="SPARQL Where Clause"/>
 
 <!-- Annotation Properties -->
   <owl:AnnotationProperty rdf:about="&rdfs;comment" rdfs:label="comment">
@@ -101,21 +86,11 @@
     <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
 
-  <owl:DatatypeProperty rdf:about="selectorExpression"
-                        rdfs:label="Resource(s)">
-    <rdfs:comment>Statements Based Access Control: This property represents a set of resources with a specific expression.</rdfs:comment>
-    <rdfs:domain rdf:resource="ResourceExpression"/>
-    <rdfs:range rdf:resource="&xsd;string"/>
-    <SysOnt:possibleDatatype rdf:resource="&xsd;anyURI" />
-    <SysOnt:possibleDatatype rdf:resource="regularExpression" />
-    <SysOnt:possibleDatatype rdf:resource="mysqlLike" />
-  </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:about="selectorPattern"
+  <owl:DatatypeProperty rdf:about="sparqlWhereClause"
                         rdfs:label="Statement(s)">
-    <rdfs:comment>Statements Based Access Control: This property represents a set of statements with a specific pattern.</rdfs:comment>
-    <rdfs:domain rdf:resource="StatementPattern"/>
+    <rdfs:comment>Statements Based Access Control: This property represents a set of statements with a specific SPARQL WHERE clause.</rdfs:comment>
+    <rdfs:domain rdf:resource="StatementSelector"/>
     <rdfs:range rdf:resource="&xsd;string"/>
-    <SysOnt:possibleDatatype rdf:resource="sparqlWhereClause" />
   </owl:DatatypeProperty>
 
 
@@ -129,7 +104,7 @@
 
   <owl:ObjectProperty rdf:about="model"
                       rdfs:label="Model">
-    <rdfs:comment>Statements Based Access Control: Restricts a Statement Selector to specific model(s). Selectors without restriction match to every to model.</rdfs:comment>
+    <rdfs:comment>Statements Based Access Control: Restricts a Statement Selector to specific model(s). Selectors without restriction match to any model.</rdfs:comment>
     <rdfs:domain rdf:resource="StatementSelector"/>
     <rdfs:range rdf:resource="Model"/>
   </owl:ObjectProperty>

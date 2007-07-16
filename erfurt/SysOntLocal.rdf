@@ -33,9 +33,9 @@
   <foaf:Group rdf:about="AdminGroup"
               rdfs:label="AdminGroup">
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;anyAction"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantAccess rdf:resource="&SysOnt;AnyAction"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>The group of all admins. If not changed, they can trigger all actions and can edit all models but the system ontology.</rdfs:comment>
     <foaf:member rdf:resource="Admin"/>
   </foaf:Group>
@@ -46,8 +46,8 @@
     <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
     <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
     <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
   </foaf:Group>
 
@@ -56,8 +56,8 @@
     <SysOnt:denyAccess rdf:resource="&SysOnt;Login"/>
     <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
     <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;anyModel"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;anyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;RegisterNewUser">
@@ -73,23 +73,27 @@
 
 
 	<!-- Statement Selector TestCase -->
-	<SysOnt:ResourceExpression rdf:about="SelectAllFoafStatements" rdfs:label="All Foaf Statements">
-		<SysOnt:selectorExpression rdf:datatype="&SysOnt;mysqlLike">http://xmlns.com/foaf/0.1/%</SysOnt:selectorExpression>
-	</SysOnt:ResourceExpression>
+	<SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
+		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:sparqlWhereClause>
+		<SysOnt:model rdf:resource="&LocalConfig;" />
+	</SysOnt:StatementSelector>
 
-	<SysOnt:ResourceExpression rdf:about="SelectAllPasswords" rdfs:label="all password statements">
-		<SysOnt:selectorExpression rdf:datatype="&xsd;anyURI">http://ns.ontowiki.net/SysOnt/userPassword</SysOnt:selectorExpression>
-	</SysOnt:ResourceExpression>
-
-	<SysOnt:StatementPattern rdf:about="SelectAllUserInfo" rdfs:label="all user information">
-		<SysOnt:selectorPattern rdf:datatype="sparqlWhereClause">{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:selectorPattern>
-	</SysOnt:StatementPattern>
+	<SysOnt:StatementSelector rdf:about="SelectAllPasswords" rdfs:label="all password statements">
+		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s SysOnt:userPassword ?o.}</SysOnt:sparqlWhereClause>
+		<SysOnt:model rdf:resource="&LocalConfig;" />
+	</SysOnt:StatementSelector>
 
   <foaf:Group rdf:about="AdvancedACLGroup"
               rdfs:label="AdvancedACLGroup">
     <SysOnt:grantStatementsView rdf:resource="SelectAllUserInfo"/>
     <SysOnt:denyStatementsView rdf:resource="SelectAllPasswords"/>
-    <rdfs:comment>This pre-configured user group can read all user info in the system config but not the passwords.</rdfs:comment>
+    <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models. In the local config, they can read all user info but not the passwords.</rdfs:comment>
+    <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
+    <SysOnt:denyModelEdit rdf:resource="&LocalConfig;"/>
+    <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
+    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
   </foaf:Group>
 
 
