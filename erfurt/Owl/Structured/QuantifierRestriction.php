@@ -4,7 +4,7 @@ class Erfurt_Owl_Structured_QuantifierRestriction
 extends Erfurt_Owl_Structured_Restriction 
 {
 
-	var $fillerClass;
+	private $fillerClass;
 	
 	public function __construct($uri, $onProperty,$fillerClass){
 	

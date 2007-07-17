@@ -3,7 +3,7 @@
 class Erfurt_Owl_Structured_CardinalityBase 
 extends Erfurt_Owl_Structured_Restriction 
 {
-	var $cardinality;
+	private $cardinality;
 	
 	public function __construct($uri, $onProperty,$cardinality){
 	

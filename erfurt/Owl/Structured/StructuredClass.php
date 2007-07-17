@@ -3,8 +3,8 @@
 class Erfurt_Owl_Structured_StructuredClass 
 {
 
-	var $childClasses;
-	var $URI
+	private $childClasses;
+	private $URI
 	
 	public function __construct($uri){
 	
