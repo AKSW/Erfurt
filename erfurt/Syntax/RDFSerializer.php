@@ -53,6 +53,8 @@ class Erfurt_Syntax_RDFSerializer implements Erfurt_Syntax_RDFSerializerInterfac
 	 */
 	public function serializeToString(Erfurt_Syntax_StringWriterInterface $stringWriter, Model $model) {
 		
+		
+		
 		$this->model = $model;
 		$this->base = $model->getBaseURI();
 		
@@ -66,8 +68,13 @@ class Erfurt_Syntax_RDFSerializer implements Erfurt_Syntax_RDFSerializerInterfac
 		if ($this->base !== null) $this->rdfWriter->setBase($this->base);
 		
 		$prefixes = $this->model->getParsedNamespaces();
-		foreach ($prefixes as $ns=>$p) $this->rdfWriter->addNamespacePrefix($p, $ns);
-
+		
+		if ($prefixes) {
+			foreach ($prefixes as $ns=>$p) {
+				$this->rdfWriter->addNamespacePrefix($p, $ns);
+			}
+		}
+		
 		$this->rdfWriter->startDocument();
 		$this->rdfWriter->setMaxLevel(10);
 		$this->serializeType('ontology specific information', EF_OWL_ONTOLOGY);
