@@ -103,7 +103,7 @@ class Erfurt_Plugin_Manager {
 				// if it's a directory, scan its contents for a file of the same name
 				// but with a .php extension
 				if (file_exists($searchPath . DIRECTORY_SEPARATOR . $fileName . '.php')) {
-					if (!class_exists($fileName)) {
+					if (!class_exists($fileName, false)) {
 						include_once $searchPath . DIRECTORY_SEPARATOR . $fileName . '.php';
 						$className = $fileName;
 					} else {
@@ -114,7 +114,7 @@ class Erfurt_Plugin_Manager {
 			// scan for file-only plug-ins
 			} elseif ($pathInfo['extension'] === 'php') {
 				$className = substr($fileName, 0, strlen($fileName) - 4);
-				if (!class_exists($className)) {
+				if (!class_exists($className, false)) {
 					include_once $searchPath;
 				} else {
 					// throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');

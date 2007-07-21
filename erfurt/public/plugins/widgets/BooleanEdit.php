@@ -1,7 +1,7 @@
 <?php
 
 // require CheckboxEdit
-if (!class_exists('CheckboxEdit')) {
+if (!class_exists('CheckboxEdit', false)) {
 	require_once ERFURT_BASE . Zend_Registry::get('config')->widgetDir . 'CheckboxEdit/CheckboxEdit.php';
 }
 

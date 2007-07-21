@@ -164,6 +164,8 @@ class Erfurt_Plugin_Widget_Factory {
 			}
 		} elseif ($value instanceof Literal) {
 			$literalDatatype = $value->getDatatype();
+		} else {
+			$first = $value;
 		}
 		// return widget for datatype
 		if (in_array($literalDatatype, array_keys($this->datatypePreferences))) {
@@ -175,13 +177,13 @@ class Erfurt_Plugin_Widget_Factory {
 		// TODO: check preferred class/property combinations or properties only
 		
 		// check value types
-		if ($first instanceof Resource) {
+		if (($first instanceof Resource) || Erfurt_Util::isUri($first)) {
 			return 'ResourceEdit';
 		} elseif ($first instanceof Literal) {
 			return 'LiteralEdit';
-		} elseif (is_string($value)) {
-			return 'LiteralEdit';
-		}
+		} // elseif (is_string($value)) {
+		// 			return 'LiteralEdit';
+		// 		}
 		
 		// check owl properties
 		if ($property instanceof OWLProperty) {
@@ -189,6 +191,17 @@ class Erfurt_Plugin_Widget_Factory {
 				return 'ResourceEdit';
 			} elseif ($property->isDatatypeProperty()) {
 				return 'LiteralEdit';
+			}
+		}
+		
+		// check for rdfs properties
+		if ($property instanceof RDFSProperty) {
+			if ($range = $property->getRange() instanceof RDFSResource) {
+				return 'ResourceEdit';
+			} elseif ($range instanceof RDFSLiteral) {
+				return 'LiteralEdit';
+			} else {
+				return 'NodeEdit';
 			}
 		}
 		

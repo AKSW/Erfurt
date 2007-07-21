@@ -90,6 +90,23 @@ class Erfurt_Util {
 		
 	}
 	
+	/**
+	  * Checks whether the given string is a resource URI (either namespaced or complete).
+	  *
+	  * @param string $uriString the URI to be checked
+	  * @return string 
+	  */
+	public static function isUri($uriString, $allowNameSpaced = true) {
+		// TODO: check for URIs
+		$isUri = Zend_Uri::check($uriString);
+		
+		if ($allowNameSpaced) {
+			return ($isUri || preg_match('/[a-zA-Z_]:[a-zA-Z0-9_-]+/', $uriString));
+		} else {
+			return $isUri;
+		}
+	}
+	
 }
 
 ?>

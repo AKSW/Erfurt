@@ -109,6 +109,12 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	}
 	
 	/**
+	  *
+	  * @return string
+	  */
+	public abstract function getSingleValueHtml();
+	
+	/**
 	  * Returns a string with the widget's rendered HTML code.
 	  *
 	  * @return string

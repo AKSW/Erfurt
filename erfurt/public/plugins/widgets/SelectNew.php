@@ -52,7 +52,7 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		return $ret;
 	}
 	
-	private function getSingleValueHtml() {
+	public function getSingleValueHtml() {
 		
 		$ret = '<select name="' . $this->elementName . '"';
 		if (empty($this->config['cardinalityMax']) || $this->config['cardinalityMax'] > 1) {
