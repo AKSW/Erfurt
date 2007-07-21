@@ -113,9 +113,9 @@ class Erfurt_Plugin_Manager {
 				}
 			// scan for file-only plug-ins
 			} elseif ($pathInfo['extension'] === 'php') {
-				if (!class_exists($fileName)) {
+				$className = substr($fileName, 0, strlen($fileName) - 4);
+				if (!class_exists($className)) {
 					include_once $searchPath;
-					$className = substr($fileName, 0, strlen($fileName) - 4);
 				} else {
 					// throw new Erfurt_Exception('Class ' . $fileName . ' already exists!');
 					$log->info(__CLASS__ . ': class ' . $fileName . ' was already loaded.');
