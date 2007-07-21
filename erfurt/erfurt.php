@@ -159,23 +159,6 @@ require_once(POWLAPI_INCLUDE_DIR.'html.php');
 require_once(POWLAPI_INCLUDE_DIR.'widget.php');
 
 
-// load crucial widget classes to render user interface
-include_once(WIDGETS_INCLUDE_DIR.'treeselect/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'treeview/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'treeviewJS/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'tab/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'select.php');
-include_once(WIDGETS_INCLUDE_DIR.'checkbox.php');
-include_once(WIDGETS_INCLUDE_DIR.'text.php');
-include_once(WIDGETS_INCLUDE_DIR.'textarea.php');
-include_once(WIDGETS_INCLUDE_DIR.'date/date.php');
-include_once(WIDGETS_INCLUDE_DIR.'htmlarea/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'selectInstance/include.php');
-include_once(WIDGETS_INCLUDE_DIR.'textselect.php');
-include_once(WIDGETS_INCLUDE_DIR.'node.php');
-include_once(WIDGETS_INCLUDE_DIR.'file.php');
-
-
 if (empty($config->erfurtUriBase)) {
 	if (!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE)) {
 		$config->erfurtUriBase = str_replace(rtrim($_SERVER['DOCUMENT_ROOT'], '/'), '', ERFURT_BASE);
@@ -230,10 +213,6 @@ $datatypes = array(
 );
 Zend_Registry::set('datatypes', $datatypes);
 ### END powlapi/include.php ###
-
-
-// include cms api
-include_once(MODULES_INCLUDE_DIR.'cms/api/include.php');
 
 // for debugging purposes
 if($config ->debug === true)
