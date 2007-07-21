@@ -224,6 +224,13 @@ $pluginManager = new Erfurt_Plugin_Manager();
 $pluginManager->addPluginDir(ERFURT_BASE . $config->widgetDir);
 Zend_Registry::set('pluginManager', $pluginManager);
 
+// load crucial widget classes to render user interface	 	 
+include_once(WIDGETS_INCLUDE_DIR.'select.php');
+include_once(WIDGETS_INCLUDE_DIR.'checkbox.php');
+include_once(WIDGETS_INCLUDE_DIR.'text.php');
+include_once(WIDGETS_INCLUDE_DIR.'textselect.php');
+include_once(WIDGETS_INCLUDE_DIR.'node.php');
+include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
 
 /******************************************************************************
