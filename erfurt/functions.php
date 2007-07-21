@@ -597,10 +597,8 @@ Class stmCache {
 		if (Zend_Registry::get('config')->cache->enable) {
 			foreach (is_a($stm,'statement')?array($stm->subj,$stm->pred,$stm->obj):func_get_args() as $arg) {
 				if (is_a($arg,'resource')) {
-					//Zend_Registry::get('erfurt')->getStore()->dbConn->execute("DELETE FROM cache WHERE model={$arg->model->modelID} AND
-						//(trigger1='".$arg->getURI()."' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')");
-						echo "DELETE FROM cache WHERE model='{$arg->model->modelID}' AND
-							(trigger1='".$arg->getURI()."' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')";
+					Zend_Registry::get('erfurt')->getStore()->dbConn->execute("DELETE FROM cache WHERE model={$arg->model->modelID} AND
+						(trigger1='".$arg->getURI()."' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')");
 				}
 			}
 		}			
