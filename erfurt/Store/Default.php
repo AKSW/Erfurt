@@ -155,7 +155,10 @@ class Erfurt_Store_Default extends DBStore {
 			
 			# look for edit possibility
 			if ($useACL and $this->checkAc()) {
-					$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
+				if (!$this->ac->isModelAllowed('view', $modelURI)) {
+					return false;	
+				}
+				$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
 			} else {
 				$m->setEdititable(true);
 			}
