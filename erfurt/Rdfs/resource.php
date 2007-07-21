@@ -631,6 +631,7 @@ abstract class DefaultRDFSResource extends Resource {
 	public function getDefiningModel($includeSubClasses=false,$includeProperties=false,$includeInstances=false) {
 		
 		$m=$this->model->find($this,null,null);
+		
 		foreach($m->triples as $key=>$t)
 			if(isBnode($t->obj))
 				$m=$m->unite($this->model->find($t->obj,null,null));
@@ -647,6 +648,9 @@ abstract class DefaultRDFSResource extends Resource {
 				foreach($class->listInstances() as $inst)
 					$m=$m->unite($inst->getDefiningModel($includeSubClasses,$includeProperties,$includeInstances));
 		}
+		
+		$m->addParsedNamespaces($this->model->getParsedNamespaces());
+		
 		return $m;
 	}
 	
