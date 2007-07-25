@@ -62,15 +62,9 @@ class Erfurt_Util {
 		}
 		
 		// remove double params
-		$url_params = array_unique($url_params);
+		$url_params = array_filter($url_params);
 		
-		// if (isset($_SERVER['REDIRECT_URL'])) {
-		// 	$url_head = $_SERVER['REDIRECT_URL'];
-		// } else {
-		// 	$url_head = $_SERVER['PHP_SELF'];
-		// }
-		
-		$url_head = $_SERVER['REQUEST_URI'];
+		$url_head = ereg_replace('\?.*', '', $_SERVER['REQUEST_URI']);
 		
 		if ($query_str = http_build_query(array_merge($url_params, $other_params), '', '&amp;')) {
 			return $url_head . '?' . $query_str;
