@@ -995,7 +995,7 @@ class RDFSModel extends DefaultRDFSModel {
                 LEFT JOIN statements s3
                 ON (s1.object=s3.subject AND s3.modelID IN (' . $this->getModelIds() . ') AND
                 s3.predicate="' . $this->_dbId('RDF_type') . '")
-                WHERE s2.subject IS NULL AND s3.subject IS NULL AND s1.object_is <> "b" AND 
+                WHERE s2.subject IS NULL AND s3.subject IS NULL AND s1.object_is = "r" AND 
                 s1.predicate = "' . $this->_dbId('RDF_type') . '"
                 AND s1.modelID IN (' . $this->getModelIds() . ') ';
         
@@ -1005,7 +1005,7 @@ class RDFSModel extends DefaultRDFSModel {
                 
         $sql .= 'GROUP BY s1.object
                  ORDER BY s1.object';
-         
+ 
         $topClasses = $this->_convertRecordSetToNodeList($sql, $this->vclass);
         
         return cache('_listImplicitTopClasses'.$this->modelURI, $args, $topClasses);        
@@ -1036,7 +1036,7 @@ class RDFSModel extends DefaultRDFSModel {
                 (s1.object = "' . $this->_dbId('RDFS_Class') . '"
                  OR s1.object = "' . $this->_dbId('OWL_Class') . '"
                  OR s1.object = "' . $this->_dbId('OWL_DeprecatedClass') . '")
-                AND s1.subject_is <> "b" ';
+                AND s1.subject_is = "r" ';
 
          if (!$systemClasses) {
              $sql .= 'AND s1.subject NOT LIKE "' . RDF_NAMESPACE_URI . '%"
@@ -1050,9 +1050,10 @@ class RDFSModel extends DefaultRDFSModel {
                   (s2object = "' . $this->_dbId('RDFS_Resource') .'" 
                   OR s2object = "' . $this->_dbId('OWL_Thing') . '"))
                   ORDER BY s1.subject';
-        
+			
         $topClasses = $this->_convertRecordSetToNodeList($sql, $this->vclass);
         
+		
         if (!$emptyClasses) {
             $temp = $topClasses;
             $topClasses = array();
