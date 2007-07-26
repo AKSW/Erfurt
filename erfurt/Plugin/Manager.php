@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
   * Erfurt plug-in manager
@@ -26,11 +26,11 @@ class Erfurt_Plugin_Manager {
 	  * @param array|string $pluginDirs One ore more directories to be
 	  * scanned for plug-ins.
 	  */
-	public function __contruct($pluginDirs = array()) {
+	public function __construct($pluginDirs = array()) {
 		$this->activePlugins = array();
 		
 		if (is_array($pluginDirs)) {
-			$this->pluginDirs = $pluginDirs();
+			$this->pluginDirs = $pluginDirs;
 		} elseif (is_string($pluginDirs)) {
 			$this->pluginDirs[] = $pluginDirs;
 		}
