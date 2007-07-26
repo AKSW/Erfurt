@@ -130,7 +130,126 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 			echo $this->dbConn->errorMsg();
 	}
 	function _createTables_MySQL() {
-		$this->_createTables_Generic();
+		#$this->_createTables_Generic();
+		
+		$this->dbConn->startTrans();
+
+		// table: models
+		$this->dbConn->execute("CREATE TABLE models (
+									modelID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									modelURI VARCHAR(255) COLLATE ascii_bin NOT NULL, 
+									baseURI VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '')");
+								
+		// index: (unique) modelURI has to be unique
+		$this->dbConn->execute('CREATE UNIQUE INDEX m_modelURI_idx ON models (modelURI)');
+
+		// table: statements
+		$this->dbConn->execute("CREATE TABLE statements (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									modelID INT UNSIGNED NOT NULL,
+									subject VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									predicate VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									object LONGTEXT COLLATE utf8_bin,
+									l_language CHAR(2) COLLATE ascii_general_ci DEFAULT '',
+									l_datatype VARCHAR(255) COLLATE ascii_bin DEFAULT '',
+									subject_is ENUM('r','b') COLLATE ascii_general_ci NOT NULL,
+									object_is  ENUM('r','b','l') COLLATE ascii_general_ci NOT NULL)");
+
+		// table: namespaces
+		$this->dbConn->execute("CREATE TABLE namespaces (
+									modelID bigint NOT NULL,
+		                            namespace varchar(255) NOT NULL,
+		                            prefix varchar(255) NOT NULL,
+		   							primary key (modelID,namespace))");
+		
+		// indices for statements table
+		$this->dbConn->execute('CREATE INDEX s_modelID_idx ON statements (modelID)');
+		$this->dbConn->execute('CREATE INDEX s_subject_idx ON statements (subject(200))');
+		$this->dbConn->execute('CREATE INDEX s_predicate_idx ON statements (predicate(200))');
+		$this->dbConn->execute('CREATE INDEX s_object_idx ON statements (object(250))');
+		$this->dbConn->execute('CREATE INDEX s_sub_pred_idx ON statements (subject(200),predicate(200))');
+		$this->dbConn->execute('CREATE FULLTEXT INDEX s_object_ft_idx ON statements (object)');
+		
+		// index: namespaces table
+		// are multiple indices ok???
+		//$this->dbConn->execute('CREATE INDEX n_modelID_idx ON namespaces (modelID)');
+
+		// table: popularity
+		$this->dbConn->execute("CREATE TABLE popularity (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			 						date TIMESTAMP NOT NULL,
+									modelID INT UNSIGNED NOT NULL,
+									uri VARCHAR(255) COLLATE ascii_bin NOT NULL)");
+								
+		// table: ratings
+		$this->dbConn->execute("CREATE TABLE ratings (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									modelID INT UNSIGNED NOT NULL,
+									user VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									resource VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									rating DECIMAL(1,0) NOT NULL)");
+		
+		// index: (unique) modelID, user, resource -> a user can only rate one resource in a specific model
+		$this->dbConn->execute('CREATE UNIQUE INDEX r_model_user_res_idx ON ratings (modelID,user,resource)');
+		
+		// table: cache
+		$this->dbConn->execute("CREATE TABLE cache (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									trigger1 VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									trigger2 VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									trigger3 VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									function VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									args VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									model INT UNSIGNED NOT NULL DEFAULT 0,
+									resource VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									value LONGTEXT COLLATE utf8_bin NOT NULL)");
+
+		// index: (unique) function, args, model, resource -> must be unique
+		$this->dbConn->execute('CREATE UNIQUE INDEX c_func_args_model_res_idx ON cache (function, args, model, resource)');
+		
+		// table: log_statements
+		$this->dbConn->execute("CREATE TABLE log_statements (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									subject VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									predicate VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									object LONGTEXT COLLATE utf8_bin,
+									l_language CHAR(2) COLLATE ascii_general_ci DEFAULT '',
+									l_datatype VARCHAR(255) COLLATE ascii_bin DEFAULT '',
+									subject_is ENUM('r','b') COLLATE ascii_general_ci NOT NULL,
+									object_is  ENUM('r','b','l') COLLATE ascii_general_ci NOT NULL,
+									ar CHAR(1) COLLATE ascii_general_ci NOT NULL,
+									action_id INT UNSIGNED NOT NULL)");
+		
+		// index: action_id
+		$this->dbConn->execute('CREATE INDEX logs_action_idx ON log_statements (actionID)');
+		
+		// table: log_actions
+		$this->dbConn->execute("CREATE TABLE log_actions (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									parent_id INT UNSIGNED,
+									model_id INT UNSIGNED NOT NULL,
+									user VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									date DATETIME NOT NULL,
+									descr_id INT UNSIGNED NOT NULL,
+									subject VARCHAR(255) COLLATE ascii_bin,
+									details LONGTEXT COLLATE utf8_bin)");
+		
+		// index: model_id, parent_id, user
+		$this->dbConn->execute('CREATE INDEX loga_modelid_idx ON log_actions (model_id)');
+		$this->dbConn->execute('CREATE INDEX loga_parentid_idx ON log_actions (parent_id)');
+		$this->dbConn->execute('CREATE INDEX loga_user_idx ON log_actions (user)');
+		
+		// table: log_action_descr
+		$this->dbConn->execute("CREATE TABLE log_action_descr (
+									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+									description VARCHAR(255) COLLATE ascii_general_ci NOT NULL)");
+									
+		// index: description
+		$this->dbConn->execute('CREATE INDEX logad_descr_idx ON log_action_descr (description(250))');
+							
+		if (!$this->dbConn->completeTrans()) {
+			echo $this->dbConn->errorMsg();
+		}
 	}
 	
 	/**
