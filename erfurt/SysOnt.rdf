@@ -239,8 +239,8 @@
                 rdfs:label="Register new User">
   </Action>
 
-  <Action rdf:about="ModelManagement"
-                rdfs:label="User can create and remove Models">
+  <Action rdf:about="ModelManagement" rdfs:label="Model Management">
+    <rdfs:comment>User/Group can create and remove models</rdfs:comment>
   </Action>
 
   <Action rdf:about="Login"
