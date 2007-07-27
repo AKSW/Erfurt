@@ -164,10 +164,17 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		
 		// indices for statements table
 		$this->dbConn->execute('CREATE INDEX s_modelID_idx ON statements (modelID)');
-		$this->dbConn->execute('CREATE INDEX s_subject_idx ON statements (subject(200))');
-		$this->dbConn->execute('CREATE INDEX s_predicate_idx ON statements (predicate(200))');
-		$this->dbConn->execute('CREATE INDEX s_object_idx ON statements (object(250))');
-		$this->dbConn->execute('CREATE INDEX s_sub_pred_idx ON statements (subject(200),predicate(200))');
+		$this->dbConn->execute('CREATE INDEX s_subject_idx ON statements (subject)');
+		$this->dbConn->execute('CREATE INDEX s_predicate_idx ON statements (predicate)');
+		$this->dbConn->execute('CREATE INDEX s_object_idx ON statements (object(50))');
+		$this->dbConn->execute('CREATE INDEX s_sub_pred_idx ON statements (subject,predicate)');
+		$this->dbConn->execute('CREATE INDEX s_pred_obj_idx ON statements (predicate,object(50))');
+		$this->dbConn->execute('CREATE INDEX s_sub_obj_idx ON statements (subject,object(50))');
+		$this->dbConn->execute('CREATE INDEX s_subjectis_idx ON statements (subject_is)');
+		$this->dbConn->execute('CREATE INDEX s_objectis_idx ON statements (object_is)');
+		$this->dbConn->execute('CREATE INDEX s_llang_idx ON statements (l_language)');
+		$this->dbConn->execute('CREATE INDEX s_ldtype_idx ON statements (l_datatype)');
+		
 		$this->dbConn->execute('CREATE FULLTEXT INDEX s_object_ft_idx ON statements (object)');
 		
 		// index: namespaces table
