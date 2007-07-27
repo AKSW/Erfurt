@@ -138,7 +138,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		$this->dbConn->execute("CREATE TABLE models (
 									modelID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 									modelURI VARCHAR(255) COLLATE ascii_bin NOT NULL, 
-									baseURI VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '')");
+									baseURI VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '') ENGINE MyISAM");
 								
 		// index: (unique) modelURI has to be unique
 		$this->dbConn->execute('CREATE UNIQUE INDEX m_modelURI_idx ON models (modelURI)');
@@ -153,14 +153,14 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									l_language CHAR(2) COLLATE ascii_general_ci DEFAULT '',
 									l_datatype VARCHAR(255) COLLATE ascii_bin DEFAULT '',
 									subject_is ENUM('r','b') COLLATE ascii_general_ci NOT NULL,
-									object_is  ENUM('r','b','l') COLLATE ascii_general_ci NOT NULL)");
+									object_is  ENUM('r','b','l') COLLATE ascii_general_ci NOT NULL) ENGINE MyISAM");
 
 		// table: namespaces
 		$this->dbConn->execute("CREATE TABLE namespaces (
 									modelID bigint NOT NULL,
 		                            namespace varchar(255) NOT NULL,
 		                            prefix varchar(255) NOT NULL,
-		   							primary key (modelID,namespace))");
+		   							primary key (modelID,namespace)) ENGINE MyISAM");
 		
 		// indices for statements table
 		$this->dbConn->execute('CREATE INDEX s_modelID_idx ON statements (modelID)');
@@ -186,7 +186,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			 						date TIMESTAMP NOT NULL,
 									modelID INT UNSIGNED NOT NULL,
-									uri VARCHAR(255) COLLATE ascii_bin NOT NULL)");
+									uri VARCHAR(255) COLLATE ascii_bin NOT NULL) ENGINE MyISAM");
 								
 		// table: ratings
 		$this->dbConn->execute("CREATE TABLE ratings (
@@ -194,7 +194,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									modelID INT UNSIGNED NOT NULL,
 									user VARCHAR(255) COLLATE ascii_bin NOT NULL,
 									resource VARCHAR(255) COLLATE ascii_bin NOT NULL,
-									rating DECIMAL(1,0) NOT NULL)");
+									rating DECIMAL(1,0) NOT NULL) ENGINE MyISAM");
 		
 		// index: (unique) modelID, user, resource -> a user can only rate one resource in a specific model
 		$this->dbConn->execute('CREATE UNIQUE INDEX r_model_user_res_idx ON ratings (modelID,user,resource)');
@@ -209,7 +209,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									args VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
 									model INT UNSIGNED NOT NULL DEFAULT 0,
 									resource VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
-									value LONGTEXT COLLATE utf8_bin NOT NULL)");
+									value LONGTEXT COLLATE utf8_bin NOT NULL) ENGINE MyISAM");
 
 		// index: (unique) function, args, model, resource -> must be unique
 		$this->dbConn->execute('CREATE UNIQUE INDEX c_func_args_model_res_idx ON cache (function, args, model, resource)');
@@ -225,7 +225,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									subject_is ENUM('r','b') COLLATE ascii_general_ci NOT NULL,
 									object_is  ENUM('r','b','l') COLLATE ascii_general_ci NOT NULL,
 									ar CHAR(1) COLLATE ascii_general_ci NOT NULL,
-									action_id INT UNSIGNED NOT NULL)");
+									action_id INT UNSIGNED NOT NULL) ENGINE MyISAM");
 		
 		// index: action_id
 		$this->dbConn->execute('CREATE INDEX logs_action_idx ON log_statements (actionID)');
@@ -239,7 +239,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 									date DATETIME NOT NULL,
 									descr_id INT UNSIGNED NOT NULL,
 									subject VARCHAR(255) COLLATE ascii_bin,
-									details LONGTEXT COLLATE utf8_bin)");
+									details LONGTEXT COLLATE utf8_bin) ENGINE MyISAM");
 		
 		// index: model_id, parent_id, user
 		$this->dbConn->execute('CREATE INDEX loga_modelid_idx ON log_actions (model_id)');
@@ -249,7 +249,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		// table: log_action_descr
 		$this->dbConn->execute("CREATE TABLE log_action_descr (
 									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-									description VARCHAR(255) COLLATE ascii_general_ci NOT NULL)");
+									description VARCHAR(255) COLLATE ascii_general_ci NOT NULL) ENGINE MyISAM");
 									
 		// index: description
 		$this->dbConn->execute('CREATE INDEX logad_descr_idx ON log_action_descr (description(250))');
