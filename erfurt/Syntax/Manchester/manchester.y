@@ -7,8 +7,10 @@
 	    {
 	        $this->lex = $lexer;
 			self::doParse(12,0);
-			//self::doParse(1,0);
+			self::doParse(1,0);
 			self::doParse(2,"xxx");
+			self::doParse(3,0);
+			self::doParse(2,"zzz");
 			self::doParse(13,0);
 			//self::doParse(11,0);
 			//self::doParse(2,"yyy");
@@ -71,12 +73,12 @@
 	expr(A)::= LPAREN expr(B) RPAREN.{echo B; }
 	expr(A)::= LBRACE list(B) RBRACE.{echo A; A= "{".B."}"; }
 	expr(A)::= expr(B) ONLYSOME_OPERATOR LSQUAREBRACKET enum(C) RSQUAREBRACKET.{echo A; A= B. " onlysome [".C."]"; }
-    expr(A) ::= expr(B) AND_OPERATOR  expr(C).   { return A;
-														A = new Erfurt_Owl_IntersectionClass(null);
-	 													B = new Erfurt_Owl_IntersectionClass(null);
-														C = new Erfurt_Owl_IntersectionClass(null);
-														A->addStructuredClass(B);
-														A->addStructuredClass(C);}
+    expr(A) ::= expr(B) AND_OPERATOR  expr(C).   {
+														A = new Erfurt_Owl_Structured_IntersectionClass(null);
+	 													B = new Erfurt_Owl_Structured_IntersectionClass(null);
+														C = new Erfurt_Owl_Structured_IntersectionClass(null);
+														A->addChildClass(B);
+														A->addChildClass(C);}
     expr(A) ::= expr(B) OR_OPERATOR  expr(C).   {A = B ." or ". C; }
     expr(A) ::= expr(B) SOME_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_QuantifierRestriction(null,B,C);}
     expr(A) ::= NOT_OPERATOR  expr(B).   { echo A; A=" not " . B;}
