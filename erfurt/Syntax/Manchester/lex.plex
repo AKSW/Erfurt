@@ -1,20 +1,18 @@
 <?php
-require_once './manchester.php';
+//require_once './manchester.php';
+//%declare_class {class OWLParser}
 class TestLexer
 {
 	
-	const TEXT = OWLParser::NOT_OPERATOR;
-	const OPERATOR = OWLParser::AND_OPERATOR;
-	const OPERATOR1 = OWLParser::OR_OPERATOR;
-	const OPENPAREN = OWLParser::LPAREN;
-	const ALPHA = OWLParser::ALPHANUMERIC;
+//	const TEXT = OWLParser::NOT_OPERATOR;
+//	const OPERATOR = OWLParser::AND_OPERATOR;
+//	const OPERATOR1 = OWLParser::
     private $data;
     private $N;
     public $token;
     public $value;
     private $line;
     private $state = 1;
-
     function __construct($data)
     {
         $this->data = $data;
@@ -44,9 +42,9 @@ OPERATOR{
 //    var_dump($yy_subpatterns);
 }
 LEFTBRACE {
-	$this->token=self::OPENPAREN;
+//	$this->token=self::OPENPAREN;
 	echo "leftbrace found\n";
-//    var_dump($this->value);
+    var_dump($this->value);
 //    echo "    rule leftbrace subpatterns: \n";
 //    var_dump($yy_subpatterns);
 //	$this->yybegin(self::THREE);
