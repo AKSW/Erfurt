@@ -785,21 +785,14 @@ class RDFSModel extends DefaultRDFSModel {
 	 * @access	private
 	 */
 	function _dbId($resource) {
-		
-		if (is_string($resource)) {
-			$resource = $this->resourceF($resource);
-		}
-		
+		if(is_string($resource))
+			$resource=is_a($GLOBALS[$resource],'resource')?$GLOBALS[$resource]:new $this->resource($resource,$this);
 		return $resource->getURI();
 	}
-	
 	function _dbIds($resources) {
-		
-		$ret = array();
-		foreach ($resources as $resource) {
-			$ret[] = $this->_dbId($resource);
-		}
-			
+		$ret=array();
+		foreach($resources as $resource)
+			$ret[]=$this->_dbId($resource);
 		return $ret;
 	}
 	
