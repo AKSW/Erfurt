@@ -391,7 +391,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	private function _getCardinalityStm($property,$minmax) {
 		
-		if(!is_a($property,'Resource'))
+		if(!($property instanceof Resource))
 			$property=new Resource($property);
 			
 		$sql="SELECT s4.subject,s4.predicate,s4.object,s4.l_language,s4.l_datatype,s4.subject_is,s4.object_is,s4.object_is,s4.object
@@ -423,7 +423,7 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	private function _getCardinality($property,$minmax) {
 		
 		$stm=$this->_getCardinalityStm($property,$minmax);
-		if(!empty($stm) && is_a($stm->obj,'Literal'))
+		if(!empty($stm) && ($stm->obj instanceof Literal))
 			return $stm->obj->label;
 	}
 	
@@ -453,16 +453,16 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 	 */
 	private function _setCardinality($property,$minmax,$cardinality) {
 		
-		if(!is_a($property,'Resource'))
+		if(!($property instanceof Resource))
 			$property=new Resource($property);
 		$cardinalitystmmin=$this->_getCardinalityStm($property,'min');
 		$cardinalitystmmax=$this->_getCardinalityStm($property,'max');
 		$cardinalitystm=${'cardinalitystm'.$minmax};
-		$restriction=is_a($cardinalitystmmin,'Statement')?$cardinalitystmmin->subj:
-			(is_a($cardinalitystmmax,'Statement')?$cardinalitystmmax->subj:false);
+		$restriction=($cardinalitystmmin instanceof Statement)?$cardinalitystmmin->subj:
+			(($cardinalitystmmax instanceof Statement)?$cardinalitystmmax->subj:false);
 		$value=new Literal($cardinality);
 		$value->setDatatype('http://www.w3.org/2001/XMLSchema#nonNegativeInteger');
-		if(is_a($cardinalitystm,'Statement')) { // restriction exists
+		if(($cardinalitystm instanceof Statement)) { // restriction exists
 			if($cardinalitystm->obj->label==$cardinality)
 				return;
 			else { // update restriction

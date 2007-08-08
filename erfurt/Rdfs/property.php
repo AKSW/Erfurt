@@ -40,7 +40,7 @@ abstract class DefaultRDFSProperty  extends RDFSResource {
 		if(!is_array($classes))
 			$classes=array($classes);
 		foreach($classes as $class) {
-			if(!is_a($class,'RDFSClass'))
+			if(!($class instanceof RDFSClass))
 				$class=$this->model->getClass($class);
 			$class->addProperty($this);
 		}
@@ -126,7 +126,7 @@ abstract class DefaultRDFSProperty  extends RDFSResource {
 	 **/
 	public function removeRange($range='') {
 		
-		if($range && !is_a($range,'RDFSResource'))
+		if($range && !($range instanceof RDFSResource))
 			$range=new $this->model->resource($range,$this);
 		$ranges=$this->model->find($this,$GLOBALS['RDFS_range'],$range?$range:NULL);
 		foreach($ranges->triples as $range)
@@ -172,7 +172,7 @@ abstract class DefaultRDFSProperty  extends RDFSResource {
 	 **/
 	public function addSubProperty($property) {
 		
-		if(!is_a($property,'RDFSProperty'))
+		if(!($property instanceof RDFSProperty))
 			$property=$this->model->addProperty($property);
 		$this->model->add($property,$GLOBALS['RDFS_subPropertyOf'],$this);
 		return $property;

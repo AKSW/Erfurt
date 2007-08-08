@@ -194,7 +194,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 **/
 	public function getNodeId($node) {
 		
-		return is_a($node,'resource')?$node->getLocalName():$this->getLiteralId($node);
+		return ($node instanceof Resource)?$node->getLocalName():$this->getLiteralId($node);
 	}
 	
 	/**
@@ -485,7 +485,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function getClass($uri) {
 		
-		$uri=is_a($uri,'Resource')?$uri->getURI():$uri;
+		$uri=($uri instanceof Resource)?$uri->getURI():$uri;
 		if($uri)
 		foreach($this->vocabulary['Class'] as $class) {
 			$cl=$this->find($uri,'rdf:type',$class);
@@ -516,7 +516,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function getProperty($uri) {
 		
-		$uri=is_a($uri,'Resource')?$uri->getURI():$uri;
+		$uri=($uri instanceof Resource)?$uri->getURI():$uri;
 		if($uri)
 		foreach($this->vocabulary['Property'] as $property) {
 			$cl=$this->find($uri, 'rdf:type', $property);

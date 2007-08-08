@@ -34,7 +34,7 @@ class DefaultRDFSInstance extends RDFSResource {
 	public function getPropertyValuePlain($prop) {
 		
 		static $cache;
-		if(!is_a($prop,'Resource'))
+		if(!($prop instanceof Resource))
 			$prop=$this->model->resourceF($prop);
 
 		if(empty($cache[$this->model->modelURI][$this->getURI()][$prop->getURI()]))
@@ -54,7 +54,7 @@ class DefaultRDFSInstance extends RDFSResource {
 		
 		$ret=array();
 		foreach($this->model->findNodes($this,$prop,NULL) as $val)
-			$ret[]=is_a($val,'Resource')?$val->getLocalName():$val->getLabel();
+			$ret[]=($val instanceof Resource)?$val->getLocalName():$val->getLabel();
 		return $ret;
 	}
 	
@@ -81,13 +81,13 @@ class DefaultRDFSInstance extends RDFSResource {
 	 **/
 	public function setPropertyValue($prop,$value) {
 		
-		if(!is_a($prop,'RDFSProperty'))
+		if(!($prop instanceof RDFSProperty))
 			$prop=$this->model->propertyF($prop);
 #print_r($prop);
 		$range=$prop->getRange();
 		if($this->model->findNode($this,$prop,NULL))
 			$this->removePropertyValues($prop);
-		if(!is_a($value,'Node'))
+		if(!($value instanceof Node))
 			$value=method_exists($prop,'isObjectProperty') && $prop->isObjectProperty()?
 				$this->model->resourceF($value):
 				new RDFSLiteral($value,'',isBnode($range) || !$range?'':$range->getURI());
@@ -104,11 +104,11 @@ class DefaultRDFSInstance extends RDFSResource {
 	 **/
 	public function addPropertyValue($prop,$value) {
 		
-		if(!is_a($prop,'RDFSProperty'))
+		if(!($prop instanceof RDFSProperty))
 			$prop=$this->model->propertyF($prop);
 		$range=$prop->getRange();
 		if(!in_array($value,$this->listPropertyValuesPlain($prop)))
-			$this->model->add($this,$prop,is_a($value,'Node')?$value:
+			$this->model->add($this,$prop,($value instanceof Node)?$value:
 				($prop->isObjectProperty()?$this->model->resourceF($value):new RDFSLiteral($value,'',$range?$range->getURI():NULL)));
 	}
 	
@@ -121,9 +121,9 @@ class DefaultRDFSInstance extends RDFSResource {
 	 **/
 	public function removePropertyValues($prop,$value='') {
 		
-		if(!is_a($prop,'RDFSProperty'))
+		if(!($prop instanceof RDFSProperty))
 			$prop=new $this->model->property($prop,$this->model);
-		if($value && !is_a($value,'Node'))
+		if($value && !($value instanceof Node))
 			$value=$prop->isObjectProperty()?$this->model->resourceF($value):new RDFSLiteral($value);
 		foreach($this->model->findNodes($this,$prop,NULL) as $val)
 			if(!$value || $value->getLabel()==$val->getLabel()) {

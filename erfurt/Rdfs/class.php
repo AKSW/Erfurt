@@ -134,7 +134,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	
 	public function isSuperClassRecursive($class) {
 		
-		if(is_a($class,'resource'))
+		if($class instanceof Resource)
 			$class=$class->getLocalName();
 		return in_array($class,array_keys($this->listSuperClassesRecursive()));
 	}
@@ -328,7 +328,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 **/
 	public function addProperty($property) {
 		
-		if(!is_a($property,'RDFSProperty'))
+		if(!($property instanceof RDFSProperty))
 			if(!$property=$this->model->getProperty($property))
 				return false;
 		if(!in_array($this,$property->listDomain()))
@@ -343,7 +343,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 **/
 	public function removeProperty($property) {
 		
-		if(!is_a($property,'RDFSProperty'))
+		if(!($property instanceof RDFSProperty))
 			$property=$this->model->getProperty($property);
 		$stms=$this->model->find($property,$GLOBALS['RDFS_domain'],$this);
 		foreach($stms->triples as $stm)
@@ -512,8 +512,8 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 * @return RDFSClass The class created.
 	 **/
 	public function addSubClass($subclass) {
-		
-		if(!is_a($subclass,$this->model->vclass))
+
+		if(!($subclass instanceof RDFSClass))
 			$subclass=$this->model->addClass($subclass);
 		$this->model->add($subclass,'rdfs:subClassOf',$this);
 		return $subclass;
@@ -527,7 +527,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 **/
 	public function addInstance($instance) {
 		
-		if(!is_a($instance,'Resource'))
+		if(!($instance instanceof Resource))
 			$instance=$this->model->instanceF($instance);
 		// check if name is allowed
 		$stms=$this->model->find($instance,'rdf:type',NULL);
@@ -545,7 +545,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 **/
 	public function removeInstance($instance) {
 		
-		if(!is_a($instance,'Resource'))
+		if(!($instance instanceof Resource))
 			$instance=$this->model->getInstance($instance);
 		$instance->remove();
 	}

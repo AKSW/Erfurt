@@ -144,7 +144,7 @@ class Erfurt_Store_Default extends DBStore {
 			if($m->getType()=='OWL') {
 				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
 				$m=new OWLModel($this,$modelURI);
-				foreach($m->listImports() as $import) if(is_a($import,'resource')) {
+				foreach($m->listImports() as $import) if($import instanceof Resource) {
 					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs, $useACL))
 						$m->importsIds = array_merge($m->importsIds, array($imp->modelID => $imp->modelID), !empty($imp->importsIds) ? $imp->importsIds : array());
 					$importedURIs[rtrim($import->getURI(),'#/')]=rtrim($import->getURI(),'#/');
@@ -295,7 +295,7 @@ class Erfurt_Store_Default extends DBStore {
 	 */
 	function aclCheck($accessType,$model='',$property='',$class='',$instance='') {
 		
-		if(is_a($model,'Model'))
+		if($model instanceof Model)
 			$model = $model->modelURI;
 		
 		# ow user
@@ -328,15 +328,15 @@ class Erfurt_Store_Default extends DBStore {
 			return $this->aclCompute($_SESSION['PWL']['user'],$accessType,$model,$property,$class,$instance);
 	}
 	function aclCompute($user,$accessType,$model,$property='',$class='',$instance='') {
-		if(is_a($model,'Model'))
+		if($model instanceof Model)
 			$model=$model->modelURI;
-		else if(is_a($model,'RDFSProperty')) {
+		else if($model instanceof RDFSProperty) {
 			$property=$model;
 			$model=$property->model->modelURI;
-		} else if(is_a($model,'RDFSClass')) {
+		} else if($model instanceof RDFSClass) {
 			$class=$model;
 			$model=$class->model->modelURI;
-		} else if(is_a($model,'RDFSInstance')) {
+		} else if($model instanceof RDFSInstance) {
 			$instance=$model;
 			$model=$instance->model->modelURI;
 		}

@@ -309,7 +309,7 @@ class OWLClass extends RDFSClass {
 	 * @return Statement
 	 */
 	private function _getCardinalityStm($property,$minmax) {
-		if(!is_a($property,'Resource'))
+		if(!($property instanceof Resource))
 			$property=new Resource($property);
 
 # AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$property->getDBId()."'
@@ -341,7 +341,7 @@ class OWLClass extends RDFSClass {
 	 */
 	private function _getCardinality($property,$minmax) {
 		$stm=$this->_getCardinalityStm($property,$minmax);
-		if(!empty($stm) && is_a($stm->obj,'Literal'))
+		if(!empty($stm) && ($stm->obj instanceof Literal))
 			return $stm->obj->label;
 	}
 	/*
@@ -367,16 +367,16 @@ class OWLClass extends RDFSClass {
 	 * @return
 	 */
 	private function _setCardinality($property,$minmax,$cardinality) {
-		if(!is_a($property,'Resource'))
+		if(!($property instanceof Resource))
 			$property=new Resource($property);
 		$cardinalitystmmin=$this->_getCardinalityStm($property,'min');
 		$cardinalitystmmax=$this->_getCardinalityStm($property,'max');
 		$cardinalitystm=${'cardinalitystm'.$minmax};
-		$restriction=is_a($cardinalitystmmin,'Statement')?$cardinalitystmmin->subj:
-			(is_a($cardinalitystmmax,'Statement')?$cardinalitystmmax->subj:false);
+		$restriction=($cardinalitystmmin instanceof Statement)?$cardinalitystmmin->subj:
+			(($cardinalitystmmax instanceof Statement)?$cardinalitystmmax->subj:false);
 		$value=new Literal($cardinality);
 		$value->setDatatype('http://www.w3.org/2001/XMLSchema#nonNegativeInteger');
-		if(is_a($cardinalitystm,'Statement')) { // restriction exists
+		if(($cardinalitystm instanceof Statement)) { // restriction exists
 			if($cardinalitystm->obj->label==$cardinality)
 				return;
 			else { // update restriction

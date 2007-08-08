@@ -224,7 +224,7 @@ class OWLModel extends RDFSModel {
 		$this->add($allDifferent,$GLOBALS['OWL_distinctMembers'],$distinctMembers);
 	}
 	function removeAllDifferent($set) {
-		if(!is_a($set,'RDFSResource'))
+		if(!($set instanceof RDFSResource))
 			$set=$this->resourceF($set);
 		$set->remove();
 	}

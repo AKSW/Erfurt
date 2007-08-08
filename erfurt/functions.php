@@ -53,9 +53,12 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 				$GLOBALS['_POWL']['errors'][$errno][$errfile][$errline]=true;
 			}
 			break;
+		case E_STRICT:
+			#echo "<b>STRICT:</b> [$errno] $errstr<br />\n";
+			#echo "in line $errline of file $errfile<br />";
 		default:
-			// echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
-			// echo "in line $errline of file $errfile<br />";
+			#echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
+			#echo "in line $errline of file $errline<br />";
 			break;
 	}
 }

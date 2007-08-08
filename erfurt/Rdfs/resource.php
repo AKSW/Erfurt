@@ -24,8 +24,10 @@ abstract class DefaultRDFSResource extends Resource {
 	 **/
 	public function DefaultRDFSResource($uri,&$model,$expandNS=true) {
 		
-		if(is_a($uri,'Resource'))
-			$uri=$uri->getURI();
+		if ($uri instanceof Resource) {
+			$uri = $uri->getURI();
+		}
+			
 		if($expandNS && !strstr($uri,'/')) {
 			$nsArr = $model->getParsedNamespaces();
 			if(!is_array($nsArr))
@@ -348,7 +350,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 **/
 	public function rename($newuri,$checkIfNewuriExists=true) {
 		
-		if(!is_a($newuri,'Resource'))
+		if(!($newuri instanceof Resource))
 			$newuri=$this->model->resourceF($newuri);
 		if($checkNewuriExists && ($this->model->findNode($newuri,null,null) || $this->model->findNode(null,$newuri,null) || $this->model->findNode(null,null,$newuri)))
 			return false;
@@ -427,14 +429,14 @@ abstract class DefaultRDFSResource extends Resource {
 		
 		$ret=$values=$this->listPropertyValues($property);
 		foreach($values as $val)
-			if(is_a($val,'Resource') && !in_array($val->getURI(),$done))
+			if(($val instanceof Resource) && !in_array($val->getURI(),$done))
 				$ret=array_merge($ret,$val->listPropertyValuesTransitive($property,$class,array_keys($ret)));
 		return $ret;
 	}
 	
 	public function hasPropertyValueTransitive($property,$value) {
 		
-		if(is_a($value,'Resource'))
+		if(($value instanceof Resource))
 			$value=$value->getLocalName();
 		return in_array($value,array_keys($this->listPropertyValuesTransitive($property)))?true:false;
 	}
@@ -453,7 +455,7 @@ abstract class DefaultRDFSResource extends Resource {
 		
 		$ret=array();
 		foreach($this->listPropertyValues($property) as $value)
-			if(is_a($value,'Literal') &&
+			if(($value instanceof Literal) &&
 				($language===null || $value->getLanguage()==$language) &&
 				($datatype===null || $value->getDatatype()==$datatype))
 				$ret[$this->model->getLiteralId($value)]=$value;
@@ -621,7 +623,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 */
 	public function equals ($that) {
 		
-		if($that==null || !is_a($that,'Resource') || is_a($that, 'BlankNode'))
+		if($that==null || !($that instanceof Resource) || ($that instanceof BlankNode))
 			return false;
 		if($this->getURI()==$that->getURI())
 			return true;

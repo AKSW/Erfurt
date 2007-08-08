@@ -50,17 +50,17 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	protected function _createStatement($subj,$pred=false,$obj=false,$objLang='',$objDType='') {
 		
-		if(is_a($subj,'Statement'))
+		if(($subj instanceof Statement))
 			return $subj;
 		else if(is_numeric($subj) && !$pred)
 			return $this->fetchStatementFromRecordSet($this->dbConn->execute("SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is FROM statements WHERE id='$subj'"));
-		if(!is_a($subj,'Resource'))
+		if(!($subj instanceof Resource))
 			$subj=$this->resourceF($subj);
-		if(!is_a($pred,'Resource'))
+		if(!($pred instanceof Resource))
 			$pred=$this->resourceF($pred);
-		if(!is_a($obj,'Node')) {
+		if(!($obj instanceof Node)) {
 			if($objLang || $objDType)
-				$obj=new RDFSLiteral($obj,$objLang,is_a($objDType,'Resource')?$objDType->getURI():$objDType);
+				$obj=new RDFSLiteral($obj,$objLang,($objDType instanceof Resource)?$objDType->getURI():$objDType);
 			else if(preg_match('/"(.*)"@(.*)\^\^(.*)/ms',$obj,$matches))
 				$obj=new RDFSLiteral($matches[1],$matches[2],$matches[3]);
 			else
@@ -254,7 +254,7 @@ class RDFSModel extends DefaultRDFSModel {
 
 		$rs=$this->query($s,$p,$o,$offset,$limit);
 		$erg=$rs->_maxRecordCount?$rs->_maxRecordCount:$rs->_numOfRows;
-		$c=&$this->_convertRecordSetToMemModel($rs);
+		$c=$this->_convertRecordSetToMemModel($rs);
 
 
 		cache('find'.$this->modelURI,$args,$c);
@@ -390,7 +390,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function getListAs($rest, $class = null) {
 		
-		if(!is_a($rest,'Resource') || $rest->getURI()==$GLOBALS['RDF_nil']->getURI())
+		if(!($rest instanceof Resource) || $rest->getURI()==$GLOBALS['RDF_nil']->getURI())
 			return array();
 		if($class=='Class')
 			$class=$this->vclass;
@@ -586,11 +586,11 @@ class RDFSModel extends DefaultRDFSModel {
 	 * @access	protected
 	 */
 	protected function query($subject,$predicate,$object,$start=0,$count='') {
-		if(!is_a($subject,'Node') && $subject!=NULL)
+		if(!($subject instanceof Node) && $subject!=NULL)
 			$subject=new $this->resource($subject,$this);
-		if(!is_a($predicate,'Node') && $predicate!=NULL)
+		if(!($predicate instanceof Node) && $predicate!=NULL)
 			$predicate=new $this->resource($predicate,$this);
-		if(!is_a($object,'Node') && $object != NULL)
+		if(!($object instanceof Node) && $object != NULL)
 			$object=new $this->resource($object,$this);
 		// static part of the sql statement
 		$sql="SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is,id
@@ -636,7 +636,7 @@ class RDFSModel extends DefaultRDFSModel {
 		}
 		$subject_is=$this->_getNodeFlag($statement->subject());
 		$sql="INSERT INTO log_statements VALUES (NULL,'".$statement->getLabelSubject()."','".$statement->getLabelPredicate()."',";
-		if(is_a($statement->object(), 'Literal')) {
+		if(($statement->object() instanceof Literal)) {
 			$quotedLiteral = $this->dbConn->qstr($statement->obj->getLabel());
 			$sql.=$quotedLiteral.",'".$statement->obj->getLanguage()."','".$statement->obj->getDatatype()."',"
 				."'".$subject_is ."','l','$ar','$actionId')";
@@ -683,7 +683,7 @@ class RDFSModel extends DefaultRDFSModel {
 				$recordSet=$this->dbConn->execute($recordSet);
 			$erg=$recordSet->_maxRecordCount?$recordSet->_maxRecordCount:$recordSet->_numOfRows;
 		}
-		if(is_a($recordSet,'ADORecordSet'))
+		if(($recordSet instanceof ADORecordSet))
 			$recordSet=$recordSet->getArray();
 		$ret=array();
 		foreach($recordSet as $fields) {
@@ -785,14 +785,21 @@ class RDFSModel extends DefaultRDFSModel {
 	 * @access	private
 	 */
 	function _dbId($resource) {
-		if(is_string($resource))
-			$resource=is_a($GLOBALS[$resource],'resource')?$GLOBALS[$resource]:new $this->resource($resource,$this);
+		
+		if (is_string($resource)) {
+			$resource = $this->resourceF($resource);
+		}
+		
 		return $resource->getURI();
 	}
+	
 	function _dbIds($resources) {
-		$ret=array();
-		foreach($resources as $resource)
-			$ret[]=$this->_dbId($resource);
+		
+		$ret = array();
+		foreach ($resources as $resource) {
+			$ret[] = $this->_dbId($resource);
+		}
+			
 		return $ret;
 	}
 	
@@ -951,7 +958,7 @@ class RDFSModel extends DefaultRDFSModel {
 				AND subject_is!='b'	AND predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)");
 	}
 	function getInstance($uri) {
-		$res=is_a($uri,'Resource')?$uri:new $this->resource($uri,$this);
+		$res=($uri instanceof Resource)?$uri:new $this->resource($uri,$this);
 		$uri=$res->getURI();
 		foreach($this->vocabulary['Class'] as $class) {
 			$q="SELECT ?x WHERE (<".$uri.">,<rdf:type>,?x) (?x,<rdf:type>,<".$class->getURI().">)";

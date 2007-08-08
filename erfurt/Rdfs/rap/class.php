@@ -178,7 +178,7 @@ class RDFSClass extends DefaultRDFSClass {
 			if(!$value)
 				$cond='1';
 			else if($compare=='exact')
-				$cond="s$n.object='".(is_a($value,'Resource')?$this->model->_dbId($value):$value)."'";
+				$cond="s$n.object='".(($value instanceof Resource)?$this->model->_dbId($value):$value)."'";
 			else if($compare=='starts')
 				$cond="s$n.object LIKE '$value%'";
 			else if($compare=='contains')
