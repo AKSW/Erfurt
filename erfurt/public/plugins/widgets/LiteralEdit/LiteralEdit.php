@@ -63,8 +63,8 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 				$this->id . $num . '" />' . PHP_EOL;
 		
 		if (!empty($this->config['dtype'])) {
-			$ret .= '<input type="hidden" name="' . $name . '[dtype]" class="LiteralEditDtype" value="' . 
-					$this->config['datatype'] . '" id="dtype-' . $this->id . $num . '" />' . PHP_EOL;
+			$ret .= '<input type="text" readonly="readonly" name="' . $name . '[dtype]" class="LiteralEditDtype" value="' . 
+					$this->config['dtype'] . '" id="dtype-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
 			if (!empty($this->config['cssId'])) {
 				$ret .= new SelectNew($name . '[dtype]', $dtype, $this->types, array('cardinalityMax' => 1, 

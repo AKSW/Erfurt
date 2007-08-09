@@ -131,7 +131,7 @@ class Erfurt_Plugin_Widget_Factory {
 		} else {
 			$elementName = 'prop[' . $property->getURI() . ']';
 		}
-		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, $config)) {
+		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, &$config)) {
 			$widget = new $widgetClass($elementName, $value, $config);
 			return $widget;
 		}
@@ -154,7 +154,7 @@ class Erfurt_Plugin_Widget_Factory {
 	/**
 	  * Returns a widget class name for a given combination of class, property and value.
 	  */
-	private function _getWidgetClass($class, $property, $elementName, $value, $config) {
+	private function _getWidgetClass($class, $property, $elementName, $value, &$config) {
 		$log = Zend_Registry::get('erfurtLog');
 		
 		// get datatype of literal value (if any)
@@ -181,9 +181,24 @@ class Erfurt_Plugin_Widget_Factory {
 			return 'ResourceEdit';
 		} elseif ($first instanceof Literal) {
 			return 'LiteralEdit';
-		} // elseif (is_string($value)) {
-		// 			return 'LiteralEdit';
-		// 		}
+		}
+		
+		// check range
+		if ($range = $property->getRange()) {
+			$rangeUri = $range->getURI();
+			if (in_array($rangeUri, array_keys($GLOBALS['datatypes']))) {
+				if ($this->pluginManager->isPluginActive($this->datatypePreferences[$rangeUri])) {
+					return $this->datatypePreferences[$rangeUri];
+				} else {
+					// set range as datatype for literal widget
+					$config['dtype'] = $GLOBALS['datatypes'][$rangeUri];
+					return 'LiteralEdit';
+				}
+			} else {
+				// not a datatype, we assume resource
+				return 'ResourceEdit';
+			}
+		}
 		
 		// check owl properties
 		if ($property instanceof OWLProperty) {
@@ -194,16 +209,19 @@ class Erfurt_Plugin_Widget_Factory {
 			}
 		}
 		
-		// check for rdfs properties
-		if ($property instanceof RDFSProperty) {
-			if ($range = $property->getRange() instanceof RDFSResource) {
-				return 'ResourceEdit';
-			} elseif ($range instanceof RDFSLiteral) {
-				return 'LiteralEdit';
-			} else {
-				return 'NodeEdit';
-			}
-		}
+		// // check for rdfs properties
+		// if ($property instanceof RDFSProperty) {
+		// 	$range = $property->getRange();
+		// 	if ($range instanceof RDFSResource) {
+		// 		// echo $property->getRange()->getURI();
+		// 		echo in_array($range->getURI(), array_keys($GLOBALS['datatypes']));
+		// 		return 'ResourceEdit';
+		// 	} elseif ($range instanceof RDFSLiteral) {
+		// 		return 'LiteralEdit';
+		// 	} else {
+		// 		return 'NodeEdit';
+		// 	}
+		// }
 		
 		// fallback
 		$log->info(__CLASS__ . ': no suitable widget found. Falling back to NodeEdit.');
