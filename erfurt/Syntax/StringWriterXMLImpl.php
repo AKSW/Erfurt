@@ -454,7 +454,7 @@ class Erfurt_Syntax_StringWriterXMLImpl implements Erfurt_Syntax_StringWriterInt
 	 */
 	private function replaceEntities($value) {
 		
-		if ((strpos($value, $this->base) !== false) && ($value !== $this->base)) {
+		if (($this->base != null) && (strpos($value, $this->base) !== false) && ($value !== $this->base)) {
 			return str_replace($this->base, '#', $value);
 		}
 
