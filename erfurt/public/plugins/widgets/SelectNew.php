@@ -77,9 +77,9 @@ class SelectNew extends Erfurt_Plugin_Widget {
 			} else {
 				$option = $key;
 			}
+			
 			$ret .= '<option value="' . $option . '"';
-			if (
-			    ($key === $this->selected)) {
+			if (($option == $this->selected)) {
 				$ret .= ' selected="selected"';
 			}
 			$ret .= '>' . $val . '</option>' . PHP_EOL;
