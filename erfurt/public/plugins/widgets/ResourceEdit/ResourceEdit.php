@@ -24,8 +24,9 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		$ret = parent::__toString();
 		$first = array_shift($this->values);
 		if ($first instanceof Resource) {
-			$modelUri = $first->getModel()->modelURI;
+			// $modelUri = $first->getModel()->modelURI;
 		}
+		$modelUri = $this->config['modelUri'];
 		
 		$ret .= '<input type="hidden" id="model-' . $this->id . '" value="' . $modelUri . '" />' . PHP_EOL;
 		

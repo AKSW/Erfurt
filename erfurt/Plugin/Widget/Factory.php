@@ -132,6 +132,9 @@ class Erfurt_Plugin_Widget_Factory {
 			$elementName = 'prop[' . $property->getURI() . ']';
 		}
 		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, &$config)) {
+			if ($widgetClass == 'ResourceEdit' || $widgetClass == 'NodeEdit') {
+				$config['modelUri'] = $property->getModel()->modelURI;
+			}
 			$widget = new $widgetClass($elementName, $value, $config);
 			return $widget;
 		}
