@@ -174,9 +174,12 @@ $config->erfurtLibUri = $config->erfurtUriBase .'lib/';
 // TODO: test!!!
 $urlBase = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], '/'))) . 
 		   '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['SERVER_PORT'] != '80' ? ':' . $_SERVER['SERVER_PORT'] : '');
-$rewriteBase = substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
-$fileSystemBase = str_replace('\\', '/', substr($_SERVER['SCRIPT_FILENAME'], 0, strrpos($_SERVER['SCRIPT_FILENAME'], DIRECTORY_SEPARATOR)));
-if (function_exists(str_ireplace)) {
+$scriptNameUnix = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
+$rewriteBase = substr($scriptNameUnix, 0, strrpos($scriptNameUnix, '/'));
+
+$scriptFilenameUnix = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
+$fileSystemBase = substr($scriptFilenameUnix, 0, strrpos($scriptFilenameUnix, '/'));
+if (function_exists('str_ireplace')) {
 	$prefixDir = str_ireplace($fileSystemBase, '', ERFURT_BASE);
 } else {
 	$prefixDir = str_replace($fileSystemBase, '', ERFURT_BASE);
