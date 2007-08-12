@@ -8,11 +8,11 @@
   */
 class NodeEdit extends Erfurt_Plugin_Widget {
 	
-	public function __construct($elementName = null, $values = null) {
+	public function __construct($elementName = null, $values = null, $config = array()) {
 		parent::__construct($elementName, 
 			                $values, 
 							// config
-							array('class' => 'NodeEditContainer')
+							array_merge($config, array('class' => 'NodeEditContainer'))
 		);
 		
 		$this->scripts[] = $this->widgetBaseUrl . 'NodeEdit/node_edit.js';
@@ -54,7 +54,8 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 		$resource = new ResourceEdit($name, $value, array('cardinality' => 1, 
 																	'display' => ($selected == 'literal' ? 'none' : ''), 
 																	'cssId' => 'resource' . $this->id,
-																	'start' => $num
+																	'start' => $num, 
+																	'modelUri' => $this->config['modelUri']
 																	)
 		);
 		$literal = new LiteralEdit($name, $value, array('cardinality' => 1, 
