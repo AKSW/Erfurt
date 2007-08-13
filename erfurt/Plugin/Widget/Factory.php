@@ -127,7 +127,7 @@ class Erfurt_Plugin_Widget_Factory {
 	  */
 	public function getWidgetHtml($class, $property, $value, $config) {
 		if (isset($config['name'])) {
-			$elementName = $config['name'];
+			$elementName = $config['name'] . '[' . $property->getURI() . ']';
 		} else {
 			$elementName = 'prop[' . $property->getURI() . ']';
 		}
@@ -180,7 +180,7 @@ class Erfurt_Plugin_Widget_Factory {
 		// TODO: check preferred class/property combinations or properties only
 		
 		// check value types
-		if (($first instanceof Resource) || Erfurt_Util::isUri($first)) {
+		if (($first instanceof Resource) || (is_string($first) && Erfurt_Util::isUri($first))) {
 			return 'ResourceEdit';
 		} /*elseif ($first instanceof Literal) {
 			$config['dtype'] = $first->getDatatype();

@@ -92,14 +92,18 @@ class Erfurt_Util {
 	  * @param string $uriString the URI to be checked
 	  * @return string 
 	  */
-	public static function isUri($uriString, $allowNameSpaced = true) {
+	public static function isUri(string $uriString, $allowNameSpaced = true) {
 		// TODO: check for URIs
-		$isUri = Zend_Uri::check($uriString);
-		
-		if ($allowNameSpaced) {
-			return ($isUri || preg_match('/^[a-zA-Z_]:[a-zA-Z0-9_-]+$/', $uriString));
+		if (is_string($uriString)) {
+			$isUri = Zend_Uri::check($uriString);
+
+			if ($allowNameSpaced) {
+				return ($isUri || preg_match('/^[a-zA-Z_]:[a-zA-Z0-9_-]+$/', $uriString));
+			} else {
+				return $isUri;
+			}
 		} else {
-			return $isUri;
+			throw new Erfurt_Exception('URI parameter needs to be string!');
 		}
 	}
 	
