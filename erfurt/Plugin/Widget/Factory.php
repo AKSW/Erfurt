@@ -182,9 +182,10 @@ class Erfurt_Plugin_Widget_Factory {
 		// check value types
 		if (($first instanceof Resource) || Erfurt_Util::isUri($first)) {
 			return 'ResourceEdit';
-		} elseif ($first instanceof Literal) {
+		} /*elseif ($first instanceof Literal) {
+			$config['dtype'] = $first->getDatatype();
 			return 'LiteralEdit';
-		}
+		}*/
 		
 		// check range
 		if ($range = $property->getRange()) {

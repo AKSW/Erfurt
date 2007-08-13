@@ -97,7 +97,7 @@ class Erfurt_Util {
 		$isUri = Zend_Uri::check($uriString);
 		
 		if ($allowNameSpaced) {
-			return ($isUri || preg_match('/[a-zA-Z_]:[a-zA-Z0-9_-]+/', $uriString));
+			return ($isUri || preg_match('/^[a-zA-Z_]:[a-zA-Z0-9_-]+$/', $uriString));
 		} else {
 			return $isUri;
 		}
