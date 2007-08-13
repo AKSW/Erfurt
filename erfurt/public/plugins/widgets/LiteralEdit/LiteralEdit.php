@@ -58,6 +58,7 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			$ret .= '<textarea rows="' . ceil(strlen($value) / 56) . '" cols="56" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
 					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
+		$ret .= '<img src="' . $this->publicUri . 'images/delete.gif" onclick="$(\'value-' . $this->id . $num . '\').value=\'\'" />' . PHP_EOL;
 		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL; // style="opacity:0"
 		$ret .= '@ <input type="text" name="' . $name . '[lang]" class="LiteralEditLang" value="' . $lang . '" id="lang-' . 
 				$this->id . $num . '" />' . PHP_EOL;

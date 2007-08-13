@@ -56,6 +56,7 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		// local name input
 		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue" value="' . $value . 
 				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
+		$ret .= '<img src="' . $this->publicUri . 'images/delete.gif" onclick="$(\'value-' . $this->id . $num . '\').value=\'\'" />' . PHP_EOL;
 				// onkeyup="$(\'uri-' . $this->id . $num . '\').value = this.value" 
 		// autocompleter script
 		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
