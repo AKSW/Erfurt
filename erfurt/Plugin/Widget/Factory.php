@@ -41,6 +41,31 @@ class Erfurt_Plugin_Widget_Factory {
 	protected static $instance = null;
 	
 	/**
+	  * @var An array of property URIs for which the LiteralEdit widget should be used.
+	  * Only RDF and RDFS properties need to be set here, since OWL propeties are either 
+	  * defnied as DatatypeProperties or ObjectProperties taking care of selecting the 
+	  * correct widget.
+	  */
+	protected $literalProperties = array(
+		'http://www.w3.org/2000/01/rdf-schema#label', 
+		'http://www.w3.org/2000/01/rdf-schema#comment'
+	);
+	
+	/**
+	  * @var An array of property URIs for which the ResourceEdit widget should be used.
+	  * Only RDF and RDFS properties need to be set here, since OWL propeties are either 
+	  * defnied as DatatypeProperties or ObjectProperties taking care of selecting the 
+	  * correct widget.
+	  */
+	protected $resourceProperties = array(
+		'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 
+		'http://www.w3.org/2000/01/rdf-schema#domain', 
+		'http://www.w3.org/2000/01/rdf-schema#range', 
+		'http://www.w3.org/2000/01/rdf-schema#subClassOf', 
+		'http://www.w3.org/2000/01/rdf-schema#subPropertyOf'
+	);
+	
+	/**
 	  * 
 	  *
 	  * @return An instance of Erfurt_Plugin_Widget_Factory
@@ -187,45 +212,46 @@ class Erfurt_Plugin_Widget_Factory {
 			return 'LiteralEdit';
 		}*/
 		
-		// check range
-		if ($range = $property->getRange()) {
-			$rangeUri = $range->getURI();
-			if (in_array($rangeUri, array_keys($GLOBALS['datatypes']))) {
-				if ($this->pluginManager->isPluginActive($this->datatypePreferences[$rangeUri])) {
-					return $this->datatypePreferences[$rangeUri];
+		// widget inference based on property
+		if (is_object($property)) {
+			// check range
+			if ($range = $property->getRange()) {
+				$rangeUri = $range->getURI();
+				if (in_array($rangeUri, array_keys($GLOBALS['datatypes']))) {
+					if ($this->pluginManager->isPluginActive($this->datatypePreferences[$rangeUri])) {
+						return $this->datatypePreferences[$rangeUri];
+					} else {
+						// set range as datatype for literal widget
+						$config['dtype'] = $GLOBALS['datatypes'][$rangeUri];
+						return 'LiteralEdit';
+					}
 				} else {
-					// set range as datatype for literal widget
-					$config['dtype'] = $GLOBALS['datatypes'][$rangeUri];
-					return 'LiteralEdit';
+					// not a datatype, we assume resource
+					return 'ResourceEdit';
 				}
-			} else {
-				// not a datatype, we assume resource
-				return 'ResourceEdit';
 			}
-		}
-		
-		// check owl properties
-		if ($property instanceof OWLProperty) {
-			if ($property->isObjectProperty()) {
-				return 'ResourceEdit';
-			} elseif ($property->isDatatypeProperty()) {
+
+			$propUri = $property->getURI();
+
+			// check pre-configured literal properties
+			if (in_array($propUri, $this->literalProperties)) {
 				return 'LiteralEdit';
 			}
+
+			// check pre-configured resource properties
+			if (in_array($propUri, $this->resourceProperties)) {
+				return 'ResourceEdit';
+			}
+
+			// check owl properties
+			if ($property instanceof OWLProperty) {
+				if ($property->isObjectProperty()) {
+					return 'ResourceEdit';
+				} elseif ($property->isDatatypeProperty()) {
+					return 'LiteralEdit';
+				}
+			}
 		}
-		
-		// // check for rdfs properties
-		// if ($property instanceof RDFSProperty) {
-		// 	$range = $property->getRange();
-		// 	if ($range instanceof RDFSResource) {
-		// 		// echo $property->getRange()->getURI();
-		// 		echo in_array($range->getURI(), array_keys($GLOBALS['datatypes']));
-		// 		return 'ResourceEdit';
-		// 	} elseif ($range instanceof RDFSLiteral) {
-		// 		return 'LiteralEdit';
-		// 	} else {
-		// 		return 'NodeEdit';
-		// 	}
-		// }
 		
 		// fallback
 		$log->info(__CLASS__ . ': no suitable widget found. Falling back to NodeEdit.');

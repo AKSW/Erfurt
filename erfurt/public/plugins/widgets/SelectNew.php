@@ -69,6 +69,9 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		} else {
 			$ret .= ' class="SelectNew"';
 		}
+		if (!empty($this->config['style'])) {
+			$ret .= ' style="' . $this->config['style'] . '"';
+		}
 		$ret .= ' id="dtype-' . $this->id . '">' . PHP_EOL;
 		
 		foreach ($this->values as $key => $val) {

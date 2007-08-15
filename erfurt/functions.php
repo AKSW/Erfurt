@@ -155,7 +155,8 @@ function pwlURLParamReplace($param,$value=false){
 	if(!$done && $value)
 		$url.="$param=$value&";
 #print_r($_SERVER['SCRIPT_NAME']);
-	return ($_SERVER['REDIRECT_URL']?$_SERVER['REDIRECT_URL']:$_SERVER['PHP_SELF']).'?'.$url;
+	$url_head = ereg_replace('\?.*', '', $_SERVER['REQUEST_URI']);
+	return $url_head.'?'.$url;
 }
 
 function pwlGetCurrentUser() {
