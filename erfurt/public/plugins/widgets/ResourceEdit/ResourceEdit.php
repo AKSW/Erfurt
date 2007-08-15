@@ -21,14 +21,10 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 	}
 	
 	public function __toString() {
-		$ret = parent::__toString();
-		$first = array_shift($this->values);
-		if ($first instanceof Resource) {
-			// $modelUri = $first->getModel()->modelURI;
-		}
 		$modelUri = $this->config['modelUri'];
+		$ret = '<input type="hidden" id="model-' . $this->id . '" value="' . $modelUri . '" />' . PHP_EOL;
 		
-		$ret .= '<input type="hidden" id="model-' . $this->id . '" value="' . $modelUri . '" />' . PHP_EOL;
+		$ret .= parent::__toString();
 		
 		return $ret;
 	}
@@ -58,10 +54,10 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		$ret .= '<img src="' . $this->publicUri . 'images/delete.gif" onclick="$(\'value-' . $this->id . $num . '\').value=\'\'" />' . PHP_EOL;
 				// onkeyup="$(\'uri-' . $this->id . $num . '\').value = this.value" 
-		// autocompleter script
-		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
 		// autocompleter div
 		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autosuggest" style="display:none"></div>' . PHP_EOL;
+		// autocompleter script
+		$ret .= '<script type="text/javascript">getAutocompleter(\'' . $this->id . $num . '\')</script>' . PHP_EOL;
 		// uri input (filled by autocompleter hook) 
 		// $ret .= '<input type="hidden" name="' . $name . $nameMod . '[value]" class="ResourceEditUri" value="' . $uri . 
 		// 		'" id="uri-' . $this->id . $num . '" />' . PHP_EOL;
