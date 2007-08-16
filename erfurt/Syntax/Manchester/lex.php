@@ -1,23 +1,41 @@
 <?php
-//require_once './manchester.php';
+require_once 'SyntaxConstants.php';
 //%declare_class {class OWLParser}
-class TestLexer
+class ManchesterLexer
 {
+
+	const 	NOT_OPERATOR  = SyntaxConstants::NOT_OPERATOR;
+	const 	ALPHANUMERIC  = SyntaxConstants::ALPHANUMERIC;
+	const 	AND_OPERATOR  = SyntaxConstants::AND_OPERATOR;
+	const 	OR_OPERATOR   = SyntaxConstants::OR_OPERATOR;
+	const 	MIN_OPERATOR   = SyntaxConstants::MIN_OPERATOR;
+	const 	MAX_OPERATOR   = SyntaxConstants::MAX_OPERATOR;
+	const 	EXACTLY_OPERATOR  = SyntaxConstants::EXACTLY_OPERATOR;
+	const 	HAS_OPERATOR    = SyntaxConstants::HAS_OPERATOR;
+	const 	ONLYSOME_OPERATOR  = SyntaxConstants::ONLYSOME_OPERATOR;
+	const 	ONLY_OPERATOR   = SyntaxConstants::ONLY_OPERATOR;
+	const 	SOME_OPERATOR   = SyntaxConstants::SOME_OPERATOR;
+	const 	LPAREN         = SyntaxConstants:: LPAREN;
+	const 	RPAREN       = SyntaxConstants::RPAREN;
+	const 	LBRACE       = SyntaxConstants::LBRACE;
+	const 	RBRACE        = SyntaxConstants::RBRACE;
+	const 	LSQUAREBRACKET  = SyntaxConstants::LSQUAREBRACKET;
+	const 	RSQUAREBRACKET  = SyntaxConstants::RSQUAREBRACKET;
+	const 	NUMERIC       = SyntaxConstants::NUMERIC;
+	const 	COMMA        = SyntaxConstants::COMMA;
+
+	private $data;
+	private $N;
+	public $token;
+	public $value;
+    public $line;
+	private $debug = 0;
 	
-//	const TEXT = OWLParser::NOT_OPERATOR;
-//	const OPERATOR = OWLParser::AND_OPERATOR;
-//	const OPERATOR1 = OWLParser::
-    private $data;
-    private $N;
-    public $token;
-    public $value;
-    private $line;
-    private $state = 1;
     function __construct($data)
     {
         $this->data = $data;
         $this->N = 0;
-        $this->line = 1;
+//        $this->line = 1;
     }
 
 
@@ -55,11 +73,26 @@ class TestLexer
               3 => 0,
               4 => 0,
               5 => 0,
+              6 => 0,
+              7 => 0,
+              8 => 0,
+              9 => 0,
+              10 => 0,
+              11 => 0,
+              12 => 0,
+              13 => 0,
+              14 => 0,
+              15 => 0,
+              16 => 0,
+              17 => 0,
+              18 => 0,
+              19 => 0,
+              20 => 0,
             );
         if ($this->N >= strlen($this->data)) {
             return false; // end of input
         }
-        $yy_global_pattern = "/^(and|or|some|not|only|min|max|exactly|has)|^(\\()|^(\\))|^([a-zA-Z]+[0-9]*)|^([ \t\n]+)/";
+        $yy_global_pattern = "/^([ \t\n\r]+)|^([Aa][Nn][Dd][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)/";
 
         do {
             if (preg_match($yy_global_pattern, substr($this->data, $this->N), $yymatches)) {
@@ -99,11 +132,26 @@ class TestLexer
                     // skip this token
                     continue;
                 } else {                    $yy_yymore_patterns = array(
-        1 => "^(\\()|^(\\))|^([a-zA-Z]+[0-9]*)|^([ \t\n]+)",
-        2 => "^(\\))|^([a-zA-Z]+[0-9]*)|^([ \t\n]+)",
-        3 => "^([a-zA-Z]+[0-9]*)|^([ \t\n]+)",
-        4 => "^([ \t\n]+)",
-        5 => "",
+        1 => "^([Aa][Nn][Dd][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        2 => "^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        3 => "^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        4 => "^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        5 => "^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        6 => "^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        7 => "^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        8 => "^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        9 => "^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        10 => "^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        11 => "^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        12 => "^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        13 => "^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        14 => "^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        15 => "^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        16 => "^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        17 => "^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        18 => "^([0-9]+)|^([a-zA-Z]+[0-9]*)",
+        19 => "^([a-zA-Z]+[0-9]*)",
+        20 => "",
     );
 
                     // yymore is needed
@@ -146,262 +194,122 @@ class TestLexer
     function yy_r1_1($yy_subpatterns)
     {
 
-	echo "operator found\n";
-    var_dump($this->value);
-//    echo "    rule operator subpatterns: \n";
-//    var_dump($yy_subpatterns);
+	if ($this->debug) echo "whitespace found\n";
+    return false; // skip this token (do not return it)
     }
     function yy_r1_2($yy_subpatterns)
     {
 
-//	$this->token=self::OPENPAREN;
-	echo "leftbrace found\n";
-    var_dump($this->value);
-//    echo "    rule leftbrace subpatterns: \n";
-//    var_dump($yy_subpatterns);
-//	$this->yybegin(self::THREE);
+	if ($this->debug) echo "and operator found\n";
+	$this->token=self::AND_OPERATOR;
     }
     function yy_r1_3($yy_subpatterns)
     {
 
-	echo "rightbrace found\n";
-    var_dump($this->value);
-  //  echo "    rule rightbrace subpatterns: \n";
-  //  var_dump($yy_subpatterns);
-//	$this->yybegin(self::TWO);
+	if ($this->debug) echo "or operator found\n";
+	$this->token=self::OR_OPERATOR;
     }
     function yy_r1_4($yy_subpatterns)
     {
 
-    echo "rule alphanumeric\n";
-    var_dump($this->value);
-    //echo "    rule alphanumeric subpatterns: \n";
-    //var_dump($yy_subpatterns);
-   // $this->yybegin(self::THREE);
+	if ($this->debug) echo "not operator found\n";
+	$this->token=self::NOT_OPERATOR;
     }
     function yy_r1_5($yy_subpatterns)
     {
 
-    echo "whitespace\n";
-    //echo "    whitespace subpatterns: \n";
-    //var_dump($yy_subpatterns);
-    return false; // skip this token (do not return it)
+	if ($this->debug) echo "min operator found\n";
+	$this->token=self::MIN_OPERATOR;
+    }
+    function yy_r1_6($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "max operator found\n";
+	$this->token=self::MAX_OPERATOR;
+    }
+    function yy_r1_7($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "exactly operator found\n";
+	$this->token=self::EXACTLY_OPERATOR;
+    }
+    function yy_r1_8($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "has operator found\n";
+	$this->token=self::HAS_OPERATOR;
+    }
+    function yy_r1_9($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "onlysome_operator operator found\n";
+	$this->token=self::ONLYSOME_OPERATOR;
+    }
+    function yy_r1_10($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "some_operator operator found\n";
+	$this->token=self::SOME_OPERATOR;
+    }
+    function yy_r1_11($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "only_operator operator found\n";
+	$this->token=self::ONLY_OPERATOR;
+    }
+    function yy_r1_12($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "comma found\n";
+	$this->token=self::COMMA;
+    }
+    function yy_r1_13($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "lparen found\n";
+	$this->token=self::LPAREN;
+    }
+    function yy_r1_14($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "rparen found\n";
+	$this->token=self::RPAREN;
+    }
+    function yy_r1_15($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "lbrace found\n";
+	$this->token=self::LBRACE;
+    }
+    function yy_r1_16($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "rbrace found\n";
+	$this->token=self::RBRACE;
+    }
+    function yy_r1_17($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "lsquarebracket found\n";
+	$this->token=self::LSQUAREBRACKET;
+    }
+    function yy_r1_18($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "rsquarebracket found\n";
+	$this->token=self::RSQUAREBRACKET;
+    }
+    function yy_r1_19($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "numeric found\n";
+	$this->token=self::NUMERIC;
+    }
+    function yy_r1_20($yy_subpatterns)
+    {
+
+	if ($this->debug) echo "alphanumeric found\n";
+	$this->token=self::ALPHANUMERIC;
     }
 
-
-    function yylex2()
-    {
-        $tokenMap = array (
-              1 => 0,
-              2 => 0,
-            );
-        if ($this->N >= strlen($this->data)) {
-            return false; // end of input
-        }
-        $yy_global_pattern = "/^(\\))|^([a-zA-Z]+[0-9]*)/";
-
-        do {
-            if (preg_match($yy_global_pattern, substr($this->data, $this->N), $yymatches)) {
-                $yysubmatches = $yymatches;
-                $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
-                if (!count($yymatches)) {
-                    throw new Exception('Error: lexing failed because a rule matched' .
-                        'an empty string.  Input "' . substr($this->data,
-                        $this->N, 5) . '... state TWO');
-                }
-                next($yymatches); // skip global match
-                $this->token = key($yymatches); // token number
-                if ($tokenMap[$this->token]) {
-                    // extract sub-patterns for passing to lex function
-                    $yysubmatches = array_slice($yysubmatches, $this->token + 1,
-                        $tokenMap[$this->token]);
-                } else {
-                    $yysubmatches = array();
-                }
-                $this->value = current($yymatches); // token value
-                $r = $this->{'yy_r2_' . $this->token}($yysubmatches);
-                if ($r === null) {
-                    $this->N += strlen($this->value);
-                    $this->line += substr_count($this->value, "\n");
-                    // accept this token
-                    return true;
-                } elseif ($r === true) {
-                    // we have changed state
-                    // process this token in the new state
-                    return $this->yylex();
-                } elseif ($r === false) {
-                    $this->N += strlen($this->value);
-                    $this->line += substr_count($this->value, "\n");
-                    if ($this->N >= strlen($this->data)) {
-                        return false; // end of input
-                    }
-                    // skip this token
-                    continue;
-                } else {                    $yy_yymore_patterns = array(
-        1 => "^([a-zA-Z]+[0-9]*)",
-        2 => "",
-    );
-
-                    // yymore is needed
-                    do {
-                        if (!strlen($yy_yymore_patterns[$this->token])) {
-                            throw new Exception('cannot do yymore for the last token');
-                        }
-                        if (preg_match($yy_yymore_patterns[$this->token],
-                              substr($this->data, $this->N), $yymatches)) {
-                            $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
-                            next($yymatches); // skip global match
-                            $this->token = key($yymatches); // token number
-                            $this->value = current($yymatches); // token value
-                            $this->line = substr_count($this->value, "\n");
-                        }
-                    	$r = $this->{'yy_r2_' . $this->token}();
-                    } while ($r !== null || !$r);
-			        if ($r === true) {
-			            // we have changed state
-			            // process this token in the new state
-			            return $this->yylex();
-			        } else {
-	                    // accept
-	                    $this->N += strlen($this->value);
-	                    $this->line += substr_count($this->value, "\n");
-	                    return true;
-			        }
-                }
-            } else {
-                throw new Exception('Unexpected input at line' . $this->line .
-                    ': ' . $this->data[$this->N]);
-            }
-            break;
-        } while (true);
-
-    } // end function
-
-
-    const TWO = 2;
-    function yy_r2_1($yy_subpatterns)
-    {
-
-    echo "alphanumeric (state TWO)\n";
-    var_dump($this->value);
-	$this->yypopstate();
-    }
-    function yy_r2_2($yy_subpatterns)
-    {
-
-    echo "alphanumeric (state TWO)\n";
-    var_dump($this->value);
-    $this->yypopstate();
-    }
-
-
-    function yylex3()
-    {
-        $tokenMap = array (
-              1 => 0,
-              2 => 0,
-            );
-        if ($this->N >= strlen($this->data)) {
-            return false; // end of input
-        }
-        $yy_global_pattern = "/^(\\()|^([a-zA-Z]+[0-9]*)/";
-
-        do {
-            if (preg_match($yy_global_pattern, substr($this->data, $this->N), $yymatches)) {
-                $yysubmatches = $yymatches;
-                $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
-                if (!count($yymatches)) {
-                    throw new Exception('Error: lexing failed because a rule matched' .
-                        'an empty string.  Input "' . substr($this->data,
-                        $this->N, 5) . '... state THREE');
-                }
-                next($yymatches); // skip global match
-                $this->token = key($yymatches); // token number
-                if ($tokenMap[$this->token]) {
-                    // extract sub-patterns for passing to lex function
-                    $yysubmatches = array_slice($yysubmatches, $this->token + 1,
-                        $tokenMap[$this->token]);
-                } else {
-                    $yysubmatches = array();
-                }
-                $this->value = current($yymatches); // token value
-                $r = $this->{'yy_r3_' . $this->token}($yysubmatches);
-                if ($r === null) {
-                    $this->N += strlen($this->value);
-                    $this->line += substr_count($this->value, "\n");
-                    // accept this token
-                    return true;
-                } elseif ($r === true) {
-                    // we have changed state
-                    // process this token in the new state
-                    return $this->yylex();
-                } elseif ($r === false) {
-                    $this->N += strlen($this->value);
-                    $this->line += substr_count($this->value, "\n");
-                    if ($this->N >= strlen($this->data)) {
-                        return false; // end of input
-                    }
-                    // skip this token
-                    continue;
-                } else {                    $yy_yymore_patterns = array(
-        1 => "^([a-zA-Z]+[0-9]*)",
-        2 => "",
-    );
-
-                    // yymore is needed
-                    do {
-                        if (!strlen($yy_yymore_patterns[$this->token])) {
-                            throw new Exception('cannot do yymore for the last token');
-                        }
-                        if (preg_match($yy_yymore_patterns[$this->token],
-                              substr($this->data, $this->N), $yymatches)) {
-                            $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
-                            next($yymatches); // skip global match
-                            $this->token = key($yymatches); // token number
-                            $this->value = current($yymatches); // token value
-                            $this->line = substr_count($this->value, "\n");
-                        }
-                    	$r = $this->{'yy_r3_' . $this->token}();
-                    } while ($r !== null || !$r);
-			        if ($r === true) {
-			            // we have changed state
-			            // process this token in the new state
-			            return $this->yylex();
-			        } else {
-	                    // accept
-	                    $this->N += strlen($this->value);
-	                    $this->line += substr_count($this->value, "\n");
-	                    return true;
-			        }
-                }
-            } else {
-                throw new Exception('Unexpected input at line' . $this->line .
-                    ': ' . $this->data[$this->N]);
-            }
-            break;
-        } while (true);
-
-    } // end function
-
-
-    const THREE = 3;
-    function yy_r3_1($yy_subpatterns)
-    {
-
-	echo "leftbrace found in state 3\n";
-	$this->yypushstate(self::START);
-    }
-    function yy_r3_2($yy_subpatterns)
-    {
-
-    echo "number (state THREE)\n";
-	$this->yypushstate(self::START);
-//    $this->yybegin(self::START);
-    }
-
-}
-
-$a = new TestLexer('not (abc and hello )');
-while ($a->yylex()) {
-	var_dump('advance:' . $a->value);
 }

@@ -1,23 +1,41 @@
 <?php
-//require_once './manchester.php';
+require_once 'SyntaxConstants.php';
 //%declare_class {class OWLParser}
-class TestLexer
+class ManchesterLexer
 {
+
+	const 	NOT_OPERATOR  = SyntaxConstants::NOT_OPERATOR;
+	const 	ALPHANUMERIC  = SyntaxConstants::ALPHANUMERIC;
+	const 	AND_OPERATOR  = SyntaxConstants::AND_OPERATOR;
+	const 	OR_OPERATOR   = SyntaxConstants::OR_OPERATOR;
+	const 	MIN_OPERATOR   = SyntaxConstants::MIN_OPERATOR;
+	const 	MAX_OPERATOR   = SyntaxConstants::MAX_OPERATOR;
+	const 	EXACTLY_OPERATOR  = SyntaxConstants::EXACTLY_OPERATOR;
+	const 	HAS_OPERATOR    = SyntaxConstants::HAS_OPERATOR;
+	const 	ONLYSOME_OPERATOR  = SyntaxConstants::ONLYSOME_OPERATOR;
+	const 	ONLY_OPERATOR   = SyntaxConstants::ONLY_OPERATOR;
+	const 	SOME_OPERATOR   = SyntaxConstants::SOME_OPERATOR;
+	const 	LPAREN         = SyntaxConstants:: LPAREN;
+	const 	RPAREN       = SyntaxConstants::RPAREN;
+	const 	LBRACE       = SyntaxConstants::LBRACE;
+	const 	RBRACE        = SyntaxConstants::RBRACE;
+	const 	LSQUAREBRACKET  = SyntaxConstants::LSQUAREBRACKET;
+	const 	RSQUAREBRACKET  = SyntaxConstants::RSQUAREBRACKET;
+	const 	NUMERIC       = SyntaxConstants::NUMERIC;
+	const 	COMMA        = SyntaxConstants::COMMA;
+
+	private $data;
+	private $N;
+	public $token;
+	public $value;
+    public $line;
+	private $debug = 0;
 	
-//	const TEXT = OWLParser::NOT_OPERATOR;
-//	const OPERATOR = OWLParser::AND_OPERATOR;
-//	const OPERATOR1 = OWLParser::
-    private $data;
-    private $N;
-    public $token;
-    public $value;
-    private $line;
-    private $state = 1;
     function __construct($data)
     {
         $this->data = $data;
         $this->N = 0;
-        $this->line = 1;
+//        $this->line = 1;
     }
 
 /*!lex2php
@@ -28,76 +46,107 @@ class TestLexer
 %line $this->line
 ALPHANUMERIC = /[a-zA-Z]+[0-9]*/
 NUMERIC = /[0-9]+/
-WHITESPACE = /[ \t\n]+/
-LEFTBRACE="("
-RIGHTBRACE=")"
-OPERATOR=/and|or|some|not|only|min|max|exactly|has/
+WHITESPACE = /[ \t\n\r]+/
+LPAREN="("
+RPAREN=")"
+NOT_OPERATOR=/[Nn][Oo][Tt]/
+AND_OPERATOR=/[Aa][Nn][Dd]/
+OR_OPERATOR=/[Oo][Rr]/
+COMMA=","
+LSQUAREBRACKET="["
+RSQUAREBRACKET="]"
+LBRACE="{"
+RBRACE="}"
+MIN_OPERATOR=/[Mm][Ii][Nn]/
+MAX_OPERATOR=/[Mm][Aa][Xx]/
+EXACTLY_OPERATOR=/[Ee][Xx][Aa][Cc][Tt][Ll][Yy]/
+HAS_OPERATOR=/[Hh][Aa][Ss]/
+ONLYSOME_OPERATOR=/[Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee]/
+ONLY_OPERATOR=/[Oo][Nn][Ll][Yy]/
+SOME_OPERATOR=/[Ss][Oo][Mm][Ee]/
+SEPARATOR_CHAR=/[ \t\n\r]+/
 */
 /*!lex2php
 %statename START
-OPERATOR{
-	echo "operator found\n";
-    var_dump($this->value);
-//    echo "    rule operator subpatterns: \n";
-//    var_dump($yy_subpatterns);
-}
-LEFTBRACE {
-//	$this->token=self::OPENPAREN;
-	echo "leftbrace found\n";
-    var_dump($this->value);
-//    echo "    rule leftbrace subpatterns: \n";
-//    var_dump($yy_subpatterns);
-//	$this->yybegin(self::THREE);
-}
-RIGHTBRACE {
-	echo "rightbrace found\n";
-    var_dump($this->value);
-  //  echo "    rule rightbrace subpatterns: \n";
-  //  var_dump($yy_subpatterns);
-//	$this->yybegin(self::TWO);
-}
-ALPHANUMERIC {
-    echo "rule alphanumeric\n";
-    var_dump($this->value);
-    //echo "    rule alphanumeric subpatterns: \n";
-    //var_dump($yy_subpatterns);
-   // $this->yybegin(self::THREE);
-}
 WHITESPACE {
-    echo "whitespace\n";
-    //echo "    whitespace subpatterns: \n";
-    //var_dump($yy_subpatterns);
+	if ($this->debug) echo "whitespace found\n";
     return false; // skip this token (do not return it)
 }
+AND_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "and operator found\n";
+	$this->token=self::AND_OPERATOR;
+}
+OR_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "or operator found\n";
+	$this->token=self::OR_OPERATOR;
+}
+NOT_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "not operator found\n";
+	$this->token=self::NOT_OPERATOR;
+}
+MIN_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "min operator found\n";
+	$this->token=self::MIN_OPERATOR;
+}
+MAX_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "max operator found\n";
+	$this->token=self::MAX_OPERATOR;
+}
+EXACTLY_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "exactly operator found\n";
+	$this->token=self::EXACTLY_OPERATOR;
+}
+HAS_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "has operator found\n";
+	$this->token=self::HAS_OPERATOR;
+}
+ONLYSOME_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "onlysome_operator operator found\n";
+	$this->token=self::ONLYSOME_OPERATOR;
+}
+SOME_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "some_operator operator found\n";
+	$this->token=self::SOME_OPERATOR;
+}
+ONLY_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "only_operator operator found\n";
+	$this->token=self::ONLY_OPERATOR;
+}
+COMMA{
+	if ($this->debug) echo "comma found\n";
+	$this->token=self::COMMA;
+}
+LPAREN {
+	if ($this->debug) echo "lparen found\n";
+	$this->token=self::LPAREN;
+}
+RPAREN {
+	if ($this->debug) echo "rparen found\n";
+	$this->token=self::RPAREN;
+}
+LBRACE {
+	if ($this->debug) echo "lbrace found\n";
+	$this->token=self::LBRACE;
+}
+RBRACE {
+	if ($this->debug) echo "rbrace found\n";
+	$this->token=self::RBRACE;
+}
+LSQUAREBRACKET{
+	if ($this->debug) echo "lsquarebracket found\n";
+	$this->token=self::LSQUAREBRACKET;
+}
+RSQUAREBRACKET{
+	if ($this->debug) echo "rsquarebracket found\n";
+	$this->token=self::RSQUAREBRACKET;
+}
+NUMERIC{
+	if ($this->debug) echo "numeric found\n";
+	$this->token=self::NUMERIC;
+}
+ALPHANUMERIC{
+	if ($this->debug) echo "alphanumeric found\n";
+	$this->token=self::ALPHANUMERIC;
+}
 */
-/*!lex2php
-%statename TWO
-RIGHTBRACE{
-    echo "alphanumeric (state TWO)\n";
-    var_dump($this->value);
-	$this->yypopstate();
-}
-ALPHANUMERIC {
-    echo "alphanumeric (state TWO)\n";
-    var_dump($this->value);
-    $this->yypopstate();
-}
-*/
-/*!lex2php
-%statename THREE
-LEFTBRACE{
-	echo "leftbrace found in state 3\n";
-	$this->yypushstate(self::START);
-}
-ALPHANUMERIC {
-    echo "number (state THREE)\n";
-	$this->yypushstate(self::START);
-//    $this->yybegin(self::START);
-}
-*/
-}
-
-$a = new TestLexer('not (abc and hello )');
-while ($a->yylex()) {
-	var_dump('advance:' . $a->value);
 }

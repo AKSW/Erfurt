@@ -1,101 +1,62 @@
 %name OWL_To_Erfurt_
 %declare_class {class OWLParser}
-%include {require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/erfurt.php';}
+%include {require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/erfurt.php';
+require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php';
+//require_once './SyntaxConstants.php';
+}
 %include_class{
     	private $lex;
-	    function __construct($lexer='lex.php')
+	    function __construct($lexer='/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php')
 	    {
-	        $this->lex = $lexer;
-			self::doParse(12,0);
-			self::doParse(1,0);
-			self::doParse(2,"xxx");
-			self::doParse(3,0);
-			self::doParse(2,"zzz");
-			self::doParse(13,0);
-			//self::doParse(11,0);
-			//self::doParse(2,"yyy");
-	
-//			self::doParse('(',0);
-			/*
-			self::doParse(2,"xxx");
-			self::doParse(9,0);
-			self::doParse(16,0);
-			self::doParse(2,"one");
-			self::doParse(18,0);
-			self::doParse(2,"two");
-			self::doParse(18,0);
-			self::doParse(2,"three");
-			self::doParse(17,0);
-
-			self::doParse(3,0);
-
-
-			self::doParse(1,0);
-			self::doParse(12,0);
-			self::doParse(2,"one");
-			self::doParse(3,0);
-			self::doParse(2,"two");
-			self::doParse(4,0);
-			self::doParse(2,"three");
-			self::doParse(13,0);
-
-			self::doParse(4,0);
-
-			self::doParse(14,0);
-			self::doParse(2,"one");
-			self::doParse(2,"two");
-			self::doParse(2,"three");
-			self::doParse(15,0);
-*/
+		}
+		function parseString($stringToParse){
+			$this->lex = new ManchesterLexer($stringToParse);
+			while ($this->lex->yylex()) {
+			//				var_dump('advance: token=' . $this->lex->token ." value=". $this->lex->value);
+				self::doParse($this->lex->token, $this->lex->value);
+			}
 			self::doParse(0,0);
-			
 		}
 	}
 
-%left NOT_OPERATOR.
-%left ALPHANUMERIC AND_OPERATOR OR_OPERATOR.
+//%left NOT_OPERATOR.
+%left NOT_OPERATOR LPAREN RPAREN AND_OPERATOR OR_OPERATOR.
 %left MIN_OPERATOR MAX_OPERATOR EXACTLY_OPERATOR HAS_OPERATOR.
 %left ONLYSOME_OPERATOR ONLY_OPERATOR SOME_OPERATOR.
 
 %syntax_error {
-    echo "Syntax Error on line " . $this->lex->line . ": token '" . 
-        $this->lex->value . "' while parsing rule:";
+    echo "Syntax Error in token '" . 
+        $this->lex->value."'\n";
     foreach ($this->yystack as $entry) {
         echo $this->tokenName($entry->major) . ' ';
     }
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    throw new Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
-        . '), expected one of: ' . implode(',', $expect));
+    //throw new Exception
+	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
+        . '), expected one of: ' . implode(',', $expect) . "\n");
 }
-    start ::= expr(A).   { echo  A ; }
-	expr(A)::= LPAREN expr(B) RPAREN.{echo B; }
-	expr(A)::= LBRACE list(B) RBRACE.{echo A; A= "{".B."}"; }
-	expr(A)::= expr(B) ONLYSOME_OPERATOR LSQUAREBRACKET enum(C) RSQUAREBRACKET.{echo A; A= B. " onlysome [".C."]"; }
-    expr(A) ::= expr(B) AND_OPERATOR  expr(C).   {
-														A = new Erfurt_Owl_Structured_IntersectionClass(null);
-	 													B = new Erfurt_Owl_Structured_IntersectionClass(null);
-														C = new Erfurt_Owl_Structured_IntersectionClass(null);
+	start ::= expr(A).{print_r(A);}
+	expr(A)::= LPAREN expr(B) RPAREN.{A=B;}
+	expr(A)::= LBRACE enum(B) RBRACE.{echo A; A= "{".B."}"; }
+	expr(A)::= expr(B) ONLYSOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{echo A; A= B. " onlysome [".C."]"; }
+	expr(A)::= expr(B) SOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{/*not finished!!!*/A= $X; foreach(C as $value){$X=new Erfurt_Owl_Structured_SomeValuesFrom(null, B, $value);}}
+    expr(A)::= expr(B) AND_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_IntersectionClass(B."_".C);
 														A->addChildClass(B);
 														A->addChildClass(C);}
-    expr(A) ::= expr(B) OR_OPERATOR  expr(C).   {A = B ." or ". C; }
-    expr(A) ::= expr(B) SOME_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_QuantifierRestriction(null,B,C);}
-    expr(A) ::= NOT_OPERATOR  expr(B).   { echo A; A=" not " . B;}
-    expr(A) ::= expr(B) ONLY_OPERATOR  expr(C).   { echo A; A = new Erfurt_Owl_Structured_AllValuesFrom(null,B,C); }
-    expr(A) ::= expr(B) ONLYSOME_OPERATOR  expr(C).   { echo A; A = B ." onlysome ". C; }
-    expr(A) ::= expr(B) MIN_OPERATOR  ALPHANUMERIC(C).   { echo A; A = B ." min ". C; }
-    expr(A) ::= expr(B) MAX_OPERATOR  ALPHANUMERIC(C).   { echo A; A = B ." max ". C; }
-    expr(A) ::= expr(B) EXACTLY_OPERATOR  expr(C).   { echo A; A = B ." exactly ". C; }
-    expr(A) ::= expr(B) HAS_OPERATOR  expr(C).   { echo A; A = B ." has ". C; }
-	expr(A) ::= ALPHANUMERIC(B). { A = new Erfurt_Owl_Structured_NamedClass(B);}
-	list(A) ::= ALPHANUMERIC(B) list(C).{ echo A; A=B . " ".C;}
-	list(A) ::= ALPHANUMERIC(B).{A=B;}
-	enum(A) ::= ALPHANUMERIC(B) COMMA enum(C).{ echo A; A=B . " , ".C;}
-	enum(A) ::= ALPHANUMERIC(B). {A=B;}
-
-	%code{
-		$x=new OWLParser();
-		// load allowed classes?
-		
-	}
+    expr(A) ::= expr(B) OR_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_UnionClass(B."_".C);
+													A->addChildClass(B);
+													A->addChildClass(C);}
+    expr(A) ::= expr(B) SOME_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_SomeValuesFrom(null,B,C);}
+	expr(A) ::= NOT_OPERATOR  expr(B).   {A = new Erfurt_Owl_Structured_ComplementClass(B);}
+    expr(A) ::= expr(B) ONLY_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_AllValuesFrom(null,B,C); }
+	expr(A) ::= expr(B) MIN_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MinCardinality(null, B, C);}
+    expr(A) ::= expr(B) MAX_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MaxCardinality(null, B, C);}
+    expr(A) ::= expr(B) EXACTLY_OPERATOR  NUMERIC(C).   {A = new Erfurt_Owl_Structured_Cardinality(null, B, C);}
+    expr(A) ::= expr(B) HAS_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_HasValue(null, B, C); }
+	expr(A) ::= ALPHANUMERIC(B). { A = B; B=new Erfurt_Owl_Structured_NamedClass(B);}
+	enum(A) ::= ALPHANUMERIC(B) enum(C).{ echo A; A=B . " ".C;}
+	enum(A) ::= ALPHANUMERIC(B).{A=B;}
+	list(A) ::= ALPHANUMERIC(B) COMMA list(C).{ echo A; A=B . " , ".C;}
+	list(A) ::= ALPHANUMERIC(B). {A=array(B);}
