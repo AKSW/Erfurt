@@ -1,18 +1,18 @@
 %name OWL_To_Erfurt_
 %declare_class {class OWLParser}
-%include {require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/erfurt.php';
-require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php';
+%include {require_once '../../erfurt.php';
+require_once 'lex.php';
 //require_once './SyntaxConstants.php';
 }
 %include_class{
     	private $lex;
-	    function __construct($lexer='/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php')
+	    function __construct()
 	    {
 		}
 		function parseString($stringToParse){
 			$this->lex = new ManchesterLexer($stringToParse);
 			while ($this->lex->yylex()) {
-			//				var_dump('advance: token=' . $this->lex->token ." value=". $this->lex->value);
+			//var_dump('advance: token=' . $this->lex->token ." value=". $this->lex->value);
 				self::doParse($this->lex->token, $this->lex->value);
 			}
 			self::doParse(0,0);
@@ -33,7 +33,6 @@ require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php';
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    //throw new Exception
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
 }

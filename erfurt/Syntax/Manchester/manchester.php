@@ -95,8 +95,8 @@ class OWL_To_Erfurt_yyStackEntry
 
 // code external to the class is included here
 #line 3 "./manchester.y"
-require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/erfurt.php';
-require_once '/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php';
+require_once '../../erfurt.php';
+require_once 'lex.php';
 //require_once './SyntaxConstants.php';
 #line 103 "./manchester.php"
 
@@ -109,13 +109,13 @@ class OWLParser#line 108 "./manchester.php"
 #line 7 "./manchester.y"
 
     	private $lex;
-	    function __construct($lexer='/Users/roll/Sites/ontowiki/lib/Erfurt/Syntax/Manchester/lex.php')
+	    function __construct()
 	    {
 		}
 		function parseString($stringToParse){
 			$this->lex = new ManchesterLexer($stringToParse);
 			while ($this->lex->yylex()) {
-			//				var_dump('advance: token=' . $this->lex->token ." value=". $this->lex->value);
+			//var_dump('advance: token=' . $this->lex->token ." value=". $this->lex->value);
 				self::doParse($this->lex->token, $this->lex->value);
 			}
 			self::doParse(0,0);
@@ -835,65 +835,65 @@ static public $yy_action = array(
     **   function yy_r0($yymsp){ ... }           // User supplied code
     **  #line <lineno> <thisfile>
     */
-#line 40 "./manchester.y"
+#line 39 "./manchester.y"
     function yy_r0(){print_r($this->yystack[$this->yyidx + 0]->minor);    }
 #line 846 "./manchester.php"
-#line 41 "./manchester.y"
+#line 40 "./manchester.y"
     function yy_r1(){$this->_retvalue=$this->yystack[$this->yyidx + -1]->minor;    }
 #line 849 "./manchester.php"
-#line 42 "./manchester.y"
+#line 41 "./manchester.y"
     function yy_r2(){echo $this->_retvalue; $this->_retvalue= "{".$this->yystack[$this->yyidx + -1]->minor."}";     }
 #line 852 "./manchester.php"
-#line 43 "./manchester.y"
+#line 42 "./manchester.y"
     function yy_r3(){echo $this->_retvalue; $this->_retvalue= $this->yystack[$this->yyidx + -4]->minor. " onlysome [".$this->yystack[$this->yyidx + -1]->minor."]";     }
 #line 855 "./manchester.php"
-#line 44 "./manchester.y"
+#line 43 "./manchester.y"
     function yy_r4(){/*not finished!!!*/$this->_retvalue= $X; foreach($this->yystack[$this->yyidx + -1]->minor as $value){$X=new Erfurt_Owl_Structured_SomeValuesFrom(null, $this->yystack[$this->yyidx + -4]->minor, $value);}    }
 #line 858 "./manchester.php"
-#line 45 "./manchester.y"
+#line 44 "./manchester.y"
     function yy_r5(){$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -2]->minor."_".$this->yystack[$this->yyidx + 0]->minor);
 														$this->_retvalue->addChildClass($this->yystack[$this->yyidx + -2]->minor);
 														$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);    }
 #line 863 "./manchester.php"
-#line 48 "./manchester.y"
+#line 47 "./manchester.y"
     function yy_r6(){$this->_retvalue = new Erfurt_Owl_Structured_UnionClass($this->yystack[$this->yyidx + -2]->minor."_".$this->yystack[$this->yyidx + 0]->minor);
 													$this->_retvalue->addChildClass($this->yystack[$this->yyidx + -2]->minor);
 													$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);    }
 #line 868 "./manchester.php"
-#line 51 "./manchester.y"
+#line 50 "./manchester.y"
     function yy_r7(){ $this->_retvalue = new Erfurt_Owl_Structured_SomeValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);    }
 #line 871 "./manchester.php"
-#line 52 "./manchester.y"
+#line 51 "./manchester.y"
     function yy_r8(){$this->_retvalue = new Erfurt_Owl_Structured_ComplementClass($this->yystack[$this->yyidx + 0]->minor);    }
 #line 874 "./manchester.php"
-#line 53 "./manchester.y"
+#line 52 "./manchester.y"
     function yy_r9(){$this->_retvalue = new Erfurt_Owl_Structured_AllValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);     }
 #line 877 "./manchester.php"
-#line 54 "./manchester.y"
+#line 53 "./manchester.y"
     function yy_r10(){ $this->_retvalue = new Erfurt_Owl_Structured_MinCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
 #line 880 "./manchester.php"
-#line 55 "./manchester.y"
+#line 54 "./manchester.y"
     function yy_r11(){ $this->_retvalue = new Erfurt_Owl_Structured_MaxCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
 #line 883 "./manchester.php"
-#line 56 "./manchester.y"
+#line 55 "./manchester.y"
     function yy_r12(){$this->_retvalue = new Erfurt_Owl_Structured_Cardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
 #line 886 "./manchester.php"
-#line 57 "./manchester.y"
+#line 56 "./manchester.y"
     function yy_r13(){ $this->_retvalue = new Erfurt_Owl_Structured_HasValue(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
 #line 889 "./manchester.php"
-#line 58 "./manchester.y"
+#line 57 "./manchester.y"
     function yy_r14(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor; $this->yystack[$this->yyidx + 0]->minor=new Erfurt_Owl_Structured_NamedClass($this->yystack[$this->yyidx + 0]->minor);    }
 #line 892 "./manchester.php"
-#line 59 "./manchester.y"
+#line 58 "./manchester.y"
     function yy_r15(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -1]->minor . " ".$this->yystack[$this->yyidx + 0]->minor;    }
 #line 895 "./manchester.php"
-#line 60 "./manchester.y"
+#line 59 "./manchester.y"
     function yy_r16(){$this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;    }
 #line 898 "./manchester.php"
-#line 61 "./manchester.y"
+#line 60 "./manchester.y"
     function yy_r17(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -2]->minor . " , ".$this->yystack[$this->yyidx + 0]->minor;    }
 #line 901 "./manchester.php"
-#line 62 "./manchester.y"
+#line 61 "./manchester.y"
     function yy_r18(){$this->_retvalue=array($this->yystack[$this->yyidx + 0]->minor);    }
 #line 904 "./manchester.php"
 
@@ -1017,10 +1017,9 @@ static public $yy_action = array(
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    //throw new Exception
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
-#line 1030 "./manchester.php"
+#line 1029 "./manchester.php"
     }
 
     /**

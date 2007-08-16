@@ -29,7 +29,7 @@ class ManchesterLexer
 	public $token;
 	public $value;
     public $line;
-	private $debug = 0;
+	private $debug = 1;
 	
     function __construct($data)
     {
