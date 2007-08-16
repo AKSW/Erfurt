@@ -1,0 +1,9 @@
+PHP Parser for Manchester Syntax in OntoWiki
+
+Installation notes:
+Depends on PEAR packages: PHP_LexerGenerator, PHP_Parser, PHP_ParserGenerator
+
+Currently supports only command line execution:
+to test the parser from command line:
+
+$ php starter.php your manchester syntax string
