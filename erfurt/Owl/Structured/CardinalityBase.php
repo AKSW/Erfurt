@@ -12,6 +12,7 @@ extends Erfurt_Owl_Structured_Restriction
 		$this->cardinality = $cardinality;
 	
 	}
+	
 
 }
 ?>
