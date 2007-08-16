@@ -31,11 +31,13 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		
 		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue" value="' . $value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		$ret .= '<script type="text/javascript">' . 
-		                'cal' . $this->id . ' = new Epoch(\'value-' . $this->id . $num . '\', \'popup\', $(\'value-' . $this->id . $num . '\'), false);' . PHP_EOL . 
-						'valueDate = new Date(' . strtotime($value) * 1000 . ');' . 
-						'cal' . $this->id . '.selectDates([valueDate], true, true, true);' .  
-						'cal' . $this->id . '.goToMonth(valueDate.getFullYear(), valueDate.getMonth());' . 
-		                '</script>' . PHP_EOL;
+		                'cal' . $this->id . ' = new Epoch(\'value-' . $this->id . $num . '\', \'popup\', $(\'value-' . $this->id . $num . '\'), false);' . PHP_EOL;
+		if (!empty($value)) {
+			$ret .= 'valueDate = new Date(' . strtotime($value) * 1000 . ');' . PHP_EOL . 
+					'cal' . $this->id . '.selectDates([valueDate], true, true, true);' . PHP_EOL . 
+					'cal' . $this->id . '.goToMonth(valueDate.getFullYear(), valueDate.getMonth());';
+		}
+		$ret .= '</script>' . PHP_EOL;
 		$ret .= '<input type="hidden" name="' . $name . '[dtype]" value="http://www.w3.org/2001/XMLSchema#date" />' . PHP_EOL;
 		
 		return $ret;
