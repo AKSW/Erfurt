@@ -9,7 +9,7 @@ extends Erfurt_Owl_Structured_Restriction
 	
 		$this->URI = $uri;
 		$this->onProperty = $onProperty;
-		$this->cardinality = $fillerClass;
+		$this->fillerClass = $fillerClass;
 	
 	}
 
