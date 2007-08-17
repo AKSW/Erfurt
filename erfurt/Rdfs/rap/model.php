@@ -179,10 +179,50 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false) {
         
-        if ($implicitClasses) {
-            return array_merge($this->_listDefinedTopClasses($emptyClasses, $systemClasses), $this->_listImplicitTopClasses($systemClasses));
-        } else return $this->_listDefinedTopClasses($emptyClasses, $systemClasses);
-        
+		//$args = func_get_args();
+		//$cache = Zend_Registry::get('cache');
+		//if ($c = $cache->load($this, 'listTopClasses', $args)) {
+		//	return $c;
+		//}
+
+        $sparql = 'SELECT DISTINCT ?class
+				   WHERE {
+					 { ?class rdf:type ?x .
+					   OPTIONAL { ?class rdfs:subClassOf ?super1 . } .
+					   FILTER ( ?x = owl:Class || ?x = owl:DeprecatedClass || ?x = rdfs:Class ) .
+					   FILTER ( !bound(?super1) ) . ' .
+					   (($systemClasses === false) ? 
+						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
+						: '') .
+					 '}' . (($implicitClasses === true) ? 
+					' UNION
+					 { ?implr rdf:type ?class . 
+					   OPTIONAL { ?class rdfs:subClassOf ?super2 . } .
+					   FILTER ( !bound(?super2) ) . ' .
+					   (($systemClasses === false) ? 
+						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
+						: '') .
+					 '}
+		    	   }' : '}');
+						
+		$result = $this->sparqlQueryAs($sparql, 'class');
+		$res = array();
+		
+		foreach ($result as $row) {
+			if (!isset($res[($row['?class']->getURI())])) {
+				if ($emptyClasses === true) {
+					$res[$row['?class']->getURI()] = $row['?class'];
+				} else {
+					if ($row['?class']->countInstancesRecursive() > 0) {
+						$res[$row['?class']->getURI()] = $row['?class'];
+					}
+				}
+			}
+		}
+		
+		ksort($res);
+		//$cache->save($this, 'listTopClasses', $args, null, $res, array('rdf:type', 'rdfs:subClassOf'));
+		return $res;
     }
 
 	/**
