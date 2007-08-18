@@ -142,14 +142,15 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 
         foreach ($dbRecordSet as $row) {
             $arResultRow = array();
-            foreach ($arResultVars as $strVarName) {
+            foreach ($arResultVars as $strVar) {
+				$strVarName = (string)$strVar;
                 if (!isset($this->sg->arVarAssignments[$strVarName])) {
                     //variable is in select, but not in result (test: q-select-2)
                     $arResultRow[$strVarName] = '';
                 } else {
                     $arVarSettings  = $this->sg->arVarAssignments[$strVarName];
                     $strMethod      = $this->arCreationMethods[$arVarSettings[1]];
-                    $arResultRow[$strVarName] = $this->$strMethod($dbRecordSet, $arVarSettings[0], $strVarName);
+                    $arResultRow[$strVarName] = $this->$strMethod($dbRecordSet, $arVarSettings[0], $strVar);
                 }
             }
             $arResult[] = $arResultRow;
@@ -238,8 +239,9 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
     *
     *   @return Resource   RDF triple object resource object
     */
-    protected function createObjectFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVarName) {
+    protected function createObjectFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVar) {
 	
+		$strVarName = (string)$strVar;
         if ($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test
             return '';
@@ -323,17 +325,17 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 	 */
 	private function createResource($uri) {
 		
-		if ($this->class === null) return $this->model->resourceF($uri);
+		if ($this->class === null) return $this->model->resourceF($uri, false);
 		else {
 			switch ($this->class) {
 				case 'instance':
-					return $this->model->instanceF($uri);
+					return $this->model->instanceF($uri, false);
 				case 'class':
-					return $this->model->classF($uri);
+					return $this->model->classF($uri, false);
 				case 'property':
-					return $this->model->propertyF($uri);
+					return $this->model->propertyF($uri, false);
 				default:
-					return $this->model->resourceF($uri);
+					return $this->model->resourceF($uri, false);
 			}
 		}
 	}
@@ -350,11 +352,11 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 		else {
 			switch ($this->class) {
 				case 'instance':
-					return $this->model->instanceF($id);
+					return $this->model->instanceF($id, false);
 				case 'class':
-					return $this->model->classF($id);
+					return $this->model->classF($id, false);
 				case 'property':
-					return $this->model->propertyF($id);
+					return $this->model->propertyF($id, false);
 				default:
 					return new BlankNode($id);
 			}
