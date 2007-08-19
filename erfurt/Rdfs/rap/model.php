@@ -53,7 +53,7 @@ class RDFSModel extends DefaultRDFSModel {
 		if(($subj instanceof Statement))
 			return $subj;
 		else if(is_numeric($subj) && !$pred)
-			return $this->fetchStatementFromRecordSet($this->dbConn->execute("SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is FROM statements WHERE id='$subj'"));
+			return $this->fetchStatementFromRecordSet($this->dbConn->execute("SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE id='$subj'"));
 		if(!($subj instanceof Resource))
 			$subj=$this->resourceF($subj);
 		if(!($pred instanceof Resource))
@@ -79,9 +79,17 @@ class RDFSModel extends DefaultRDFSModel {
 		
 		Zend_Registry::set('cache', array());
 		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
-		DbModel::add($statement);
+		 
+		# sbac
+		if ($this->getStore()->getAc()->isEditSbac()) {
+			$affectedRows = $this->_addExt($statement);
+		} else {
+			$this->dbConn->add($statement);
+			$affectedRows = $this->dbConn->Affected_Rows();
+		}
+		
 		$success=false;
-		if($this->dbConn->Affected_Rows()===false || $this->dbConn->Affected_Rows()===1) {
+		if($affectedRows===false || $affectedRows===1) {
 			$success=true;
 			stmCache::expire($statement);
 			$this->logAdd($statement);
@@ -89,6 +97,52 @@ class RDFSModel extends DefaultRDFSModel {
 			trigger_error('Addition of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
 		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
 		return $success;
+	}
+	
+	private function _addExt(&$statement) {
+	if (!is_a($statement, 'Statement')) {
+			$errmsg = RDFAPI_ERROR . '(class: DbModel; method: add): Statement expected.';
+			trigger_error($errmsg, E_USER_ERROR);
+		}
+
+		if (!$this->contains($statement)) {
+
+			$subject_is = $this->_getNodeFlag($statement->subject());
+			$sql = "INSERT INTO statements
+			        (modelID, subject, predicate, object, l_language, l_datatype, subject_is, object_is)
+			        VALUES
+                    (" .$this->modelID .","
+			."'" .$statement->getLabelSubject() ."',"
+			."'" .$statement->getLabelPredicate() ."',";
+
+			if (is_a($statement->object(), 'Literal')) {
+				$quotedLiteral = $this->dbConn->qstr($statement->obj->getLabel());
+				$sql .=        $quotedLiteral .","
+				."'" .$statement->obj->getLanguage() ."',"
+				."'" .$statement->obj->getDatatype() ."',"
+				."'" .$subject_is ."',"
+				."'l')";
+			}else{
+				$object_is = $this->_getNodeFlag($statement->object());
+				$sql .=   "'" .$statement->obj->getLabel() ."',"
+				."'',"
+				."'',"
+				."'" .$subject_is ."',"
+				."'" .$object_is ."')";
+			}
+			#$rs =& $this->dbConn->execute($sql);
+
+			# start sbac
+			$rs = $this->getStore()->getAc()->getSbac()->addQuery($sql);
+			
+			if (!$rs) {
+				return 'db transaction failed - see logs';
+            } else {
+                return $rs;
+            }
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -106,9 +160,18 @@ class RDFSModel extends DefaultRDFSModel {
 		#	$o->remove();
 		#}
 #print_r($statement->subj->toString().$statement->pred->toString().$statement->obj->toString());
-		DbModel::remove($statement);
+		
+		# sbac
+		if ($this->getStore()->getAc()->isEditSbac()) {
+			$affectedRows = $this->_removeExt($statement);
+		} else {
+			$this->dbConn->remove($statement);
+			$affectedRows = $this->dbConn->Affected_Rows();
+		}
+		
+			
 		$success=false;
-		if($this->dbConn->Affected_Rows()===0 || $this->dbConn->Affected_Rows()===1) {
+		if($affectedRows===0 || $affectedRows===1) {
 			$success=true;
 			stmCache::expire($statement);
 			$this->logRemove($statement);
@@ -116,6 +179,30 @@ class RDFSModel extends DefaultRDFSModel {
 			trigger_error('Deletion of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
 		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
 		return $success;
+	}
+	
+	
+	/**
+	 * override the rap-remove function for sbac
+	 */
+	private function _removeExt(&$statement) {
+
+		if (!is_a($statement, 'Statement')) {
+			$errmsg = RDFAPI_ERROR . '(class: DbModel; method: remove): Statement expected.';
+			trigger_error($errmsg, E_USER_ERROR);
+		}
+
+		$sql = 'DELETE FROM statements
+           WHERE modelID=' .$this->modelID; 
+		$sql .= $this->_createDynSqlPart_SPO ($statement->subj, $statement->pred, $statement->obj);
+		
+		# start sbac
+		$rs = $this->getStore()->getAc()->getSbac()->removeQuery($sql);
+		
+		#$rs =& $this->dbConn->execute($sql);
+		if (!$rs)
+			 return 'db transaction failed - see logs';
+		return $rs;
 	}
 	
 	/**
@@ -126,7 +213,7 @@ class RDFSModel extends DefaultRDFSModel {
 		$ret = array();
 
 		foreach (array('subject', 'predicate', 'object') as $col) {
-			$temp = $this->dbConn->getCol('SELECT SUBSTRING('.$col.',1,LOCATE("#",'.$col.')) ns FROM statements WHERE modelID IN ('.$this->getModelIds().')'.
+			$temp = $this->dbConn->getCol('SELECT SUBSTRING('.$col.',1,LOCATE("#",'.$col.')) ns FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' WHERE modelID IN ('.$this->getModelIds().')'.
 			($col != 'predicate' ? ' AND '.$col.'_is="r"' : '').' GROUP BY ns');
 
 			$ret = array_merge($ret, $temp);
@@ -142,7 +229,7 @@ class RDFSModel extends DefaultRDFSModel {
 	public function listDatatypes() {
 		
 		$ret=$this->dbConn->getCol("SELECT l_datatype
-				FROM statements WHERE modelID IN (".$this->getModelIds().") AND object_is='l' GROUP BY l_datatype");
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->getModelIds().") AND object_is='l' GROUP BY l_datatype");
 		sort($ret);
 		return $ret;
 	}
@@ -152,7 +239,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function listLanguages() {
 		
-		$ret=$this->dbConn->getCol("SELECT l_language FROM statements
+		$ret=$this->dbConn->getCol("SELECT l_language FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 				WHERE modelID IN (".$this->getModelIds().") AND object_is='l' GROUP BY l_language");
 		sort($ret);
 		return array_filter($ret);
@@ -161,7 +248,7 @@ class RDFSModel extends DefaultRDFSModel {
 	
 	protected function _listResourcesCol($col,$search='',$start=0,$count=0,$erg=0) {
 		
-		$sql="SELECT $col res FROM statements
+		$sql="SELECT $col res FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 				WHERE modelID IN (".$this->getModelIds().')'.($col!='predicate'?" AND {$col}_is='r'":'').($search?" AND $col LIKE '%$search%'":'')."
 				GROUP BY res";
 		$res=$count?$this->dbConn->pageExecute($sql,$count,$start/$count+1):$this->dbConn->execute($sql);
@@ -233,7 +320,7 @@ class RDFSModel extends DefaultRDFSModel {
 		foreach($this->vocabulary['Class'] as $cl)
 			$clsql.=" OR s2.object='".$cl->getURI()."'";
 		$sql="SELECT s1.l_language
-		      FROM statements s1 INNER JOIN statements s2
+		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 		            AND s1.predicate='".$this->_dbId($GLOBALS['RDFS_label'])."'
 		            AND s2.predicate='".$this->_dbId($GLOBALS['RDF_type'])."'
@@ -270,11 +357,11 @@ class RDFSModel extends DefaultRDFSModel {
 		foreach($this->vocabulary['Class'] as $cl)
 			$clsql.=" OR s2.object='".$cl->getURI()."'";
 		$sql="SELECT s3.subject
-		      FROM statements s1 INNER JOIN statements s2
+		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 		            AND s2.predicate='".$GLOBALS['RDF_type']->getURI()."'
 		            AND (1=0 ".$clsql."))
-				INNER JOIN statements s3 ON(s2.modelID=s3.modelID AND s1.predicate=s3.subject
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s2.modelID=s3.modelID AND s1.predicate=s3.subject
 					AND s3.predicate='".$GLOBALS['RDF_type']->getURI()."' AND s3.object='".$GLOBALS['OWL_AnnotationProperty']->getURI()."')
 				WHERE (s1.modelID=".$this->modelID.str_replace('modelID','s1.modelID',$this->model->importsSQL).")
 		      GROUP BY s3.subject";
@@ -306,7 +393,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function findSubjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {
 		
-		$sql = 'SELECT subject,subject_is FROM statements
+		$sql = 'SELECT subject,subject_is FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].'
 				WHERE modelID IN ('.$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
 				GROUP BY subject';
 		
@@ -330,7 +417,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function findObjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {
 		
-		$sql = "SELECT object,object_is FROM statements
+		$sql = "SELECT object,object_is FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 				WHERE modelID IN (".$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
 				GROUP BY object';
 				
@@ -342,7 +429,7 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function findPredicates($subject = null, $object = null) {
 		
-		$sql = "SELECT predicate FROM statements WHERE modelID IN (".$this->getModelIds().')';
+		$sql = "SELECT predicate FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->getModelIds().')';
 		$sql .= $this->_createDynSqlPart_SPO($subject, $predicate, $object).(!$count?" GROUP BY predicate":'');
 		
 		return $this->_convertRecordSetToNodeList($sql);
@@ -362,7 +449,7 @@ class RDFSModel extends DefaultRDFSModel {
 
 		$ret = array();
 
-		$sql = 'SELECT s.subject, s.subject_is FROM statements s';
+		$sql = 'SELECT s.subject, s.subject_is FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s';
 		$where = '';
 		$n = 0;
 		
@@ -390,7 +477,7 @@ class RDFSModel extends DefaultRDFSModel {
 				$cond = 'ISNULL(s' . $n . '.object)';
 			}
 				
-			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
+			$sql .= 'JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
 						'AND s' . $n . '.predicate = "' . $this->_dbId($prop) . '" AND ' . $cond . ')';
 						
 			if (!$value) {
@@ -438,10 +525,10 @@ class RDFSModel extends DefaultRDFSModel {
 			$class=$this->property;
 
 		$sql="SELECT s1.object,s1.object_is,s3.object,s3.object_is,s4.object,s4.object_is
-				FROM statements s1
-				LEFT JOIN statements s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.subject AND s2.predicate='".$this->_dbId('RDF_rest')."')
-				LEFT JOIN statements s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.object AND s3.predicate='".$this->_dbId('RDF_first')."')
-				LEFT JOIN statements s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.object AND s4.predicate='".$this->_dbId('RDF_rest')."')
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1
+				LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.subject AND s2.predicate='".$this->_dbId('RDF_rest')."')
+				LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.object AND s3.predicate='".$this->_dbId('RDF_first')."')
+				LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.object AND s4.predicate='".$this->_dbId('RDF_rest')."')
 			WHERE
 				s1.subject='".$this->_dbId($rest)."' AND s1.predicate='".$this->_dbId('RDF_first')."'
 				AND s1.modelID IN (".$this->getModelIds().')';
@@ -536,7 +623,7 @@ class RDFSModel extends DefaultRDFSModel {
 			if($row[0]>$row[1])
 			$res=$this->dbConn->execute('DELETE FROM statements WHERE id="'.$row[0].'"');
 		}*/
-		$res=$this->dbConn->execute('SELECT * FROM statements WHERE modelID IN ('.$this->getModelIds().')');
+		$res=$this->dbConn->execute('SELECT * FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' WHERE modelID IN ('.$this->getModelIds().')');
 		while($row=$res->FetchRow()) {
 			$hash=md5(serialize($row));
 			if($exists[$hash])
@@ -551,8 +638,8 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function listLists() {
 		
-		$sql='SELECT s1.subject,s2.subject FROM statements s1
-				LEFT JOIN statements s2 ON(s1.modelID=s2.modelID AND s1.subject=s2.object AND s2.predicate="'.$this->_dbId('rdf:rest').'")
+		$sql='SELECT s1.subject,s2.subject FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1
+				LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2 ON(s1.modelID=s2.modelID AND s1.subject=s2.object AND s2.predicate="'.$this->_dbId('rdf:rest').'")
 			WHERE s1.predicate="'.$this->_dbId('rdf:first').'"
 				AND s1.modelID IN ('.$this->getModelIds().') HAVING ISNULL(s2.subject)';
 		$res=$this->dbConn->execute($sql);
@@ -581,7 +668,7 @@ class RDFSModel extends DefaultRDFSModel {
 		foreach($this->vocabulary['Class'] as $cl)
 			$clsql.="OR s1.object='".$cl->getURI()."'";
 		$sql="SELECT COUNT(s1.modelID) FROM
-				statements s1 INNER JOIN statements s2
+				".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 					ON((s1.modelID=s2.modelID".(!empty($this->importsIds)?" OR s1.modelID IN (".$this->getModelIds().')':'').")
 						AND s1.predicate='".$this->_dbId('RDF_type')."'
 						AND (1=0 $clsql)
@@ -599,7 +686,7 @@ class RDFSModel extends DefaultRDFSModel {
  	*/
 	public function countTriples($includeImports = true) {
 		
-		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM statements
+		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 			WHERE modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")");
 	}
 
@@ -634,7 +721,7 @@ class RDFSModel extends DefaultRDFSModel {
 			$object=new $this->resource($object,$this);
 		// static part of the sql statement
 		$sql="SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is,id
-			FROM statements WHERE modelID IN (".$this->getModelIds().')';
+			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->getModelIds().')';
 		// dynamic part of the sql statement
 		foreach(array('subject','predicate','object') as $o)
 			if($$o && method_exists($$o,'isBlankNode') && $$o->isBlankNode())
@@ -926,7 +1013,7 @@ class RDFSModel extends DefaultRDFSModel {
 			}
 		// static part of the sql statement
 		$sql="SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is
-			FROM statements WHERE modelID IN (".$this->getModelIds().") AND (".join(' OR ',$w).')';
+			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->getModelIds().") AND (".join(' OR ',$w).')';
 		$recordSet=$count?$this->dbConn->PageExecute($sql,$count,$start/$count+1):$this->dbConn->execute($sql);
 
 		if(!$recordSet)
@@ -940,8 +1027,8 @@ class RDFSModel extends DefaultRDFSModel {
 	 */
 	public function searchFullText($search, $type = null, $start=0, $count = 10000, $erg = 0) {
 		
-		$sql='SELECT s.subject,s.predicate,s.object,s.l_language,s.l_datatype,s.subject_is,s.object_is,MATCH('.(is_string($type)?'subject':'s.object').') AGAINST (\''.$search.'\' /*!40001 IN BOOLEAN MODE */) AS score FROM statements s
-			'.(is_array($type)?'INNER JOIN statements s1 ON(s.modelID=s1.modelID AND s.subject=s1.subject AND s1.predicate="'.$this->_dbId('RDF_type').'" AND s1.object IN ("'.join('","',$type).'"))':'').'
+		$sql='SELECT s.subject,s.predicate,s.object,s.l_language,s.l_datatype,s.subject_is,s.object_is,MATCH('.(is_string($type)?'subject':'s.object').') AGAINST (\''.$search.'\' /*!40001 IN BOOLEAN MODE */) AS score FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s
+			'.(is_array($type)?'INNER JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 ON(s.modelID=s1.modelID AND s.subject=s1.subject AND s1.predicate="'.$this->_dbId('RDF_type').'" AND s1.object IN ("'.join('","',$type).'"))':'').'
 			WHERE MATCH('.(is_string($type)?'subject':'s.object').') AGAINST (\''.$search.'\' /*!40001 IN BOOLEAN MODE */) AND s.modelID IN ('.$this->getModelIds().')'.
 			(is_string($type)?' AND object_is=\'r\'':' AND s.object_is=\'l\'');
 		if($type=='Classes')
@@ -970,7 +1057,7 @@ class RDFSModel extends DefaultRDFSModel {
 			return $c;
 		$sql="SELECT s1.object,s1.object_is,s2.object_is,s2.object,
 				".(!strcasecmp(Zend_Registry::get('config')->database->params->type,'SQLite')?'0':"count(distinct s2.object_is)")." cois
-		      FROM statements s1 LEFT JOIN statements s2
+		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.object=s2.subject AND s2.modelID IN (".$this->getModelIds().") AND s2.predicate='".$this->_dbId('RDFS_subClassOf')."')
 		      WHERE
 			     s1.object_is<>'b' AND s1.predicate='".$this->_dbId('RDF_type')."' AND s1.modelID IN (".$this->getModelIds().")
@@ -986,7 +1073,7 @@ class RDFSModel extends DefaultRDFSModel {
 		$clsql='';
 		foreach($this->vocabulary['Class'] as $cl)
 			$clsql.=" OR object='".$cl->getURI()."'";
-		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM statements
+		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 			WHERE modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")
 				AND subject_is!='b'	AND predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)");
 	}
@@ -1005,7 +1092,7 @@ class RDFSModel extends DefaultRDFSModel {
 		$clsql='';
 		foreach($this->vocabulary['Property'] as $cl)
 			$clsql.="OR object='".$this->_dbId($cl)."'";
-		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM statements
+		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 			WHERE modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")
 				AND predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)");
 	}
@@ -1029,10 +1116,10 @@ class RDFSModel extends DefaultRDFSModel {
 		$c = cache('_listImplicitTopClasses'.$this->modelURI, $args);
         
         $sql = 'SELECT s1.object, s1.object_is
-                FROM statements s1 LEFT JOIN statements s2
+                FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2
                 ON (s1.object=s2.subject AND s2.modelID IN (' . $this->getModelIds() . ') AND
                 s2.predicate="' . $this->_dbId('RDFS_subClassOf') . '")
-                LEFT JOIN statements s3
+                LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s3
                 ON (s1.object=s3.subject AND s3.modelID IN (' . $this->getModelIds() . ') AND
                 s3.predicate="' . $this->_dbId('RDF_type') . '")
                 WHERE s2.subject IS NULL AND s3.subject IS NULL AND s1.object_is = "r" AND 
@@ -1068,7 +1155,7 @@ class RDFSModel extends DefaultRDFSModel {
 		
 		$sql = 'SELECT s1.subject, s1.subject_is, MAX(s2.object_is) AS s2object_is, MAX(s2.object) AS s2object, 
     	        COUNT(DISTINCT s2.object_is) AS count_s2object_is
-                FROM statements s1 LEFT JOIN statements s2
+                FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2
                 ON (s1.subject=s2.subject AND s2.modelID IN (' . $this->getModelIds() . ') AND
                 s2.predicate="' . $this->_dbId('RDFS_subClassOf') . '")                         
                 WHERE s1.modelID IN (' . $this->getModelIds() . ') AND

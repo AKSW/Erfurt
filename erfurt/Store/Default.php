@@ -422,6 +422,13 @@ class Erfurt_Store_Default extends DBStore {
 		$this->ac = $acObj;
 	}
 	
+	/**
+	 * get the ac-object instance
+	 */
+	public function getAc() {
+		return $this->ac;
+	}
+	
 /**
 	 * check the ac-object instance
 	 * 

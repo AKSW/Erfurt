@@ -23,7 +23,7 @@ class RDFSResource extends DefaultRDFSResource {
 	 */
 	public function definingModels() {
 		
-		$sql="SELECT modelID from statements WHERE subject='".$this->model->_dbID($this)."' AND predicate='".$this->model->_dbID('RDF_type')."'";
+		$sql="SELECT modelID from ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE subject='".$this->model->_dbID($this)."' AND predicate='".$this->model->_dbID('RDF_type')."'";
 		return $this->model->dbConn->getCol($sql);
 	}
 

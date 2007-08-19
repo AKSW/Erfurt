@@ -33,6 +33,8 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_CORE_ERROR:
 		case E_COMPILE_ERROR:
 		case E_USER_ERROR:
+			printr(debug_backtrace());
+			break;
 			echo "<div class=\"errfatal\"><b>FATAL:</b> [$errno] $errstr<br />\n";
 			echo "in line $errline of file $errfile. <a href=\"javascript:void(powl.toggleVisibility('errbacktrace'));\">&gt;&gt;</a><div style=\"display:none;\" id=\"errbacktrace\">";
 			if(function_exists('debug_backtrace'))
@@ -44,6 +46,8 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_CORE_WARNING:
 		case E_COMPILE_WARNING:
 		case E_USER_WARNING:
+			printr(debug_backtrace());
+			break;
 			if(!$GLOBALS['_POWL']['errors'][$errno][$errfile][$errline]) {
 				echo "<div class=\"errwarning\"><b>WARNING:</b> [$errno] $errstr<br />\n";
 				echo "in line $errline of file $errfile.<a href=\"javascript:void(powl.toggleVisibility('errbacktrace'));\">&gt;&gt;</a><div style=\"display:none;\" id=\"errbacktrace\">";

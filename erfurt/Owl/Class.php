@@ -395,10 +395,10 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 			$property=new Resource($property);
 			
 		$sql="SELECT s4.subject,s4.predicate,s4.object,s4.l_language,s4.l_datatype,s4.subject_is,s4.object_is,s4.object_is,s4.object
-				FROM statements s1
-				INNER JOIN statements s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.object)
-				INNER JOIN statements s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
-				INNER JOIN statements s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.object)
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
 				s1.subject='".$this->getDBId()."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
 				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type').
@@ -499,10 +499,10 @@ class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
 		foreach($types as $type)
 			$t[]=$this->model->_dbId('owl:'.$type);
 		$sql="SELECT s4.subject,s4.predicate,s4.object,s4.l_language,s4.l_datatype,s4.subject_is,s4.object_is,s4.object_is,s4.object
-				FROM statements s1
-				INNER JOIN statements s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.object)
-				INNER JOIN statements s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
-				INNER JOIN statements s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.modelID=s2.modelID AND s2.subject=s1.object)
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
 				s1.subject='".$this->getDBId()."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
 				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type')."' AND s2.object='".$this->model->_dbId('owl:Restriction')."'

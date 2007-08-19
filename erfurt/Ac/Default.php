@@ -34,6 +34,11 @@ class Erfurt_Ac_Default {
 	protected $_user = null;
 	
 	/**
+	 * instance of the sbac-Model
+	 */
+	protected $_sbacModel = null;
+	
+	/**
 	 * set the permission for the view of all models
 	 */
 	protected $_userAnyModelViewAllowed = false;
@@ -61,6 +66,20 @@ class Erfurt_Ac_Default {
 																							);
 	
 	/**
+	 * storage of the current group properties permissions 
+	 */																							
+	protected $_statementbasedRightsProperties = array('grantStatementsView', 
+																														'grantStatementsEdit', 
+																														'denyStatementsView', 
+																														'denyStatementsEdit',
+																														'statementsModel');
+  
+	/**
+	 * storage of the current group permissions 
+	 */
+	protected $_groupRights = array(); 
+																							
+	/**
 	 * default system ontology uri
 	 */
 	private $_defaultSysOntUri = 'http://localhost/OntoWiki/Config/';
@@ -86,7 +105,7 @@ class Erfurt_Ac_Default {
 	/**
 	 * model class schma uri
 	 */
-	private $_modelClassUri = 'http://ns.ontowiki.net/SysOnt/Model';
+	private $_modelClassUri = 'http://ns.ontowiki.net/SysOnt/model';
 	
 	/**
 	 * any model property 
@@ -132,6 +151,40 @@ class Erfurt_Ac_Default {
 	 * deny action properregexty 
 	 */
 	private $_propDenyAccess = 'http://ns.ontowiki.net/SysOnt/denyAccess';
+	
+	/**
+	 * sbac enabled? 
+	 */
+	private $statementsAcEnabled= false;
+	
+	/**
+	 * sbac edit enabled? 
+	 */
+	private $statementsAcEditEnabled= false;
+	
+	/**
+	 * grant statements view 
+	 */
+	private $_propStatementsModel = 'http://ns.ontowiki.net/SysOnt/model';
+	/**
+	 * grant statements view 
+	 */
+	private $_propGrantStatementsView = 'http://ns.ontowiki.net/SysOnt/grantStatementsView';
+	
+	/**
+	 * deny statements view 
+	 */
+	private $_propDenyStatementsView = 'http://ns.ontowiki.net/SysOnt/denyStatementsView';
+	
+	/**
+	 * grant statements edit 
+	 */
+	private $_propGrantStatementsEdit = 'http://ns.ontowiki.net/SysOnt/grantStatementsEdit';
+	
+	/**
+	 * deny statements edit 
+	 */
+	private $_propDenyStatementsEdit = 'http://ns.ontowiki.net/SysOnt/denyStatementsEdit';
 	
 	
 	/**
@@ -192,6 +245,12 @@ class Erfurt_Ac_Default {
 		} else 
 			throw new Erfurt_Exception('no valid user given', 1103);
 		
+		# check statements ac
+		$e = $this->_config->ac->statements->enabled;
+		if ($e and $e == true) {
+			$this->statementsAcEnabled = true;
+		}
+			
 		# setting up right-field
 		$this->_userRights = array(
 				$this->_propGrantAccess	=>	array(),
@@ -199,15 +258,71 @@ class Erfurt_Ac_Default {
 				$this->_propGrantModelView	=>	array(),
 				$this->_propDenyModelView	=>	array(),
 				$this->_propGrantModelEdit	=>	array(),
-				$this->_propDenyModelEdit	=>	array());
+				$this->_propDenyModelEdit	=>	array(),
+				$this->_propGrantStatementsView	=>	array(),
+				$this->_propDenyStatementsView	=>	array(),
+				$this->_propGrantStatementsEdit	=>	array(),
+				$this->_propDenyStatementsEdit	=>	array()
+				);
+		
+		$this->_statementbasedRightsProperties = array(
+				$this->_propGrantStatementsView	=>	array(),
+				$this->_propDenyStatementsView	=>	array(),
+				$this->_propGrantStatementsEdit	=>	array(),
+				$this->_propDenyStatementsEdit	=>	array()
+				);
+				
+		
 		
 		$this->_getUserModelRights($this->_user['uri']);
 		$this->_log->debug('OntoWiki_Ac::_userRights'."\n".print_r($this->_userRights, true) .
+				"\n_groupRights: " . print_r($this->_groupRights, true) .
 				"\nAnyModelView: " . print_r($this->_userAnyModelViewAllowed, true). 
 				"\nAnyModelEdit: " . print_r($this->_userAnyModelEditAllowed, true) . 
 				"\nAnyAction: ".print_r($this->_userAnyActionAllowed, true));
 		
+		# statement based ac
+		if ($this->statementsAcEnabled 
+					and file_exists(ERFURT_BASE.'Ac/Statements/'.ucfirst($this->_config->database->backend).'.php')) {
+			try {
+				$sbacName = 'Erfurt_Ac_Statements_'.ucfirst($this->_config->database->backend);
+				$sbacObj = new $sbacName($log);
+				$this->_sbacModel= $sbacObj; 
+				
+				# set rights/rules
+				$sbacObj->setUserRules($this->_userRights);
+				$sbacObj->setGroupRules($this->_groupRights);
+				$sbacObj->setActiveUser($this->_user['uri']);
+					  
+				# checks 
+				if ($sbacObj->checkAccessRestriction()) {
+					# perform sbac
+					$this->statementsAcEditEnabled = $sbacObj->isEditSbac();
+					#				"(2, 'http://localhost/OntoWiki/Config/tester2', 'http://xmlns.com/foaf/0.1/nick', 0x74657374657232, '', '', 'r', 'l', 2114),"
+					#printr($sbacObj->editQuery("INSERT INTO `statements` (`modelID`, `subject`, `predicate`, `object`, `l_language`, `l_datatype`, `subject_is`, `object_is`) VALUES (2, 'http://localhost/OntoWiki/Config/tester2', 'http://xmlns.com/foaf/0.1/nick', 0x74657374657232, '', '', 'r', 'l')"));		 			
+					#printr($sbacObj->editQuery("INSERT INTO `statements` (`modelID`, `subject`, `predicate`, `object`, `l_language`, `l_datatype`, `subject_is`, `object_is`) VALUES (2, 'http://localhost/OntoWiki/Config/tester3', 'http://ns.ontowiki.net/SysOnt/userPassword', 0x39373839386561306632646561363231343963646165346630373362343432666631323361616636, '', '', 'r', 'l')")); 
+				}
+				
+			} catch(Exception $e) {
+				$this->_log->info('error in statement based adapter');
+				printr($e);
+			}
+		}
 		
+	}
+	
+	/**
+	 * check if edit-sbac is needed
+	 */
+	public function isEditSbac() {
+		return $this->statementsAcEditEnabled; 
+	}
+	
+	/**
+	 * return sbac object
+	 */
+	public function getSbac() {
+		return $this->_sbacModel; 
 	}
 	
 	/**
@@ -230,6 +345,14 @@ class Erfurt_Ac_Default {
 		$this->_propGrantAccess 				= $this->_config->ac->action->grant;
 		$this->_propDenyAccess 					= $this->_config->ac->action->deny;
 		$this->_defaultActionConfigUri	= $this->_config->ac->action->config;
+		
+		# statementbased
+		$this->_propStatementsModel 					= $this->_config->ac->statements->model;
+		$this->_propGrantStatementsView 		= $this->_config->ac->statements->grantView;
+		$this->_propDenyStatementsView 		= $this->_config->ac->statements->denyView;
+		$this->_propGrantStatementsEdit 		= $this->_config->ac->statements->grantEdit;
+		$this->_propDenyStatementsEdit 			= $this->_config->ac->statements->denyEdit;
+		
 	}
 	
 	/**
@@ -279,16 +402,16 @@ class Erfurt_Ac_Default {
 		}
 		
 		# user groups
-		$sparqlQuery = 'select ?p ?o 
+		$sparqlQuery = 'select ?group ?p ?o 
 													where { 
 														?group ?p ?o.
 														?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
 													}';
 		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
-			$this->_filterAcess($result);
+			$this->_filterAcess($result, true);
 		}
 		
-		## direct user rights
+		## direct user rightsgrantEdit
 		$sparqlQuery = 'select ?p ?o 
 													where { 
 														<'.$this->_user['uri'].'> ?p ?o.
@@ -321,9 +444,10 @@ class Erfurt_Ac_Default {
 	 * saves the results in class var  
 	 * 
 	 * @param array list of sparql results
+	 * @param bool acl's for groups
 	 * @return void
 	 */
-	private function _filterAcess($resultList) {
+	private function _filterAcess($resultList, $group = false) {
 		foreach($resultList as $entry) {
 			if ($entry['?o'] instanceof Literal ) continue;
 			
@@ -347,11 +471,24 @@ class Erfurt_Ac_Default {
 				if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propDenyAccess]))
 					$this->_userRights[$this->_propDenyAccess][] = $entry['?o']->getLocalName();
 			}
-			# othter model
+			# othter model & statements
 			foreach($this->_userRights as $rightUri => $val) {
+				# filter statements for groups
+				if ($group and array_key_exists($entry['?p']->getUri(), $this->_statementbasedRightsProperties)) continue;
+				# perform
 				if ($entry['?p']->getUri() == $rightUri and !in_array($entry['?o']->getUri(), $this->_userRights[$rightUri])) {
 					$this->_userRights[$rightUri][] = $entry['?o']->getUri();
 				}
+			}
+			
+			# group statementbased
+			if ($group and $this->statementsAcEnabled) {
+				if (!array_key_exists($entry['?p']->getUri(), $this->_statementbasedRightsProperties)) continue;
+				
+				if (!array_key_exists($entry['?group']->getUri(), $this->_groupRights)) {
+					$this->_groupRights[$entry['?group']->getUri()] = $this->_statementbasedRightsProperties;
+				}
+				$this->_groupRights[$entry['?group']->getUri()][$entry['?p']->getUri()][] = $entry['?o']->getUri();
 			}
 		}
 	}

@@ -27,8 +27,8 @@ class RDFSProperty extends DefaultRDFSProperty {
 			return $class->countInstancePropertyValues($this,$resourcesOnly,$minDistinctValues);
 		else if ($class !== null) {
 			$sql = 'SELECT COUNT(DISTINCT s1.object, s1.object_is, s1.l_language, s1.l_datatype)
-					FROM statements s1 
-					LEFT JOIN statements s2 ON (
+					FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 
+					LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2 ON (
 						s1.subject = s2.subject AND
 						s2.predicate = "' . $this->model->_dbId('RDF_type'). '" AND 
 						s2.object = "' . $this->model->_dbId('OWL_DatatypeProperty') . '")
@@ -39,7 +39,7 @@ class RDFSProperty extends DefaultRDFSProperty {
 						s1.object_is <> "b"' . 
 						($resourcesOnly ? ' AND s1.object_is = "r"' : '');
 		} else {
-			$sql = "SELECT COUNT(DISTINCT object,object_is,l_language,l_datatype) FROM statements
+			$sql = "SELECT COUNT(DISTINCT object,object_is,l_language,l_datatype) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 				WHERE predicate='".$this->model->_dbId($this)."' AND modelID IN (".$this->model->getModelIds().") 
 				AND object_is <> 'b' ".
 				($resourcesOnly?" AND object_is='r'":'');
@@ -62,8 +62,8 @@ class RDFSProperty extends DefaultRDFSProperty {
 			return $class->listInstancePropertyValues($this, $resourcesOnly);
 		else if ($class !== null) {
 			$sql = 'SELECT s1.object, s1.object_is, s1.l_language, s1.l_datatype
-					FROM statements s1 
-					LEFT JOIN statements s2 ON (
+					FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 
+					LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2 ON (
 						s1.subject = s2.subject AND
 						s2.predicate = "' . $this->model->_dbId('RDF_type'). '" AND 
 						s2.object = "' . $this->model->_dbId('OWL_DatatypeProperty') . '")
@@ -74,7 +74,7 @@ class RDFSProperty extends DefaultRDFSProperty {
 						s1.object_is <> "b"' . 
 						($resourcesOnly ? ' AND s1.object_is = "r"' : '');				
 		} else {
-			$sql = "SELECT object,object_is,l_language,l_datatype FROM statements
+			$sql = "SELECT object,object_is,l_language,l_datatype FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 				WHERE predicate='".$this->model->_dbId($this)."' AND modelID IN (".$this->model->getModelIds().") 
 				AND object_is <> 'b' ".
 				($resourcesOnly?" AND object_is='r'":'')."
@@ -90,7 +90,7 @@ class RDFSProperty extends DefaultRDFSProperty {
 	public function guessMinCardinality() {
 		
 		$sql="SELECT MIN(c) FROM (
-				SELECT COUNT(DISTINCT object) c FROM statements
+				SELECT COUNT(DISTINCT object) c FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 					WHERE predicate='".$this->model->_dbId($this)."' AND modelID IN (".$this->model->getModelIds().")
 					GROUP BY subject,predicate) AS cs
 			GROUP BY c";
@@ -103,7 +103,7 @@ class RDFSProperty extends DefaultRDFSProperty {
 	public function guessMaxCardinality() {
 		
 		$sql="SELECT MAX(c) FROM (
-				SELECT COUNT(DISTINCT object) c FROM statements
+				SELECT COUNT(DISTINCT object) c FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 					WHERE predicate='".$this->model->_dbId($this)."' AND modelID IN (".$this->model->getModelIds().")
 					GROUP BY subject,predicate) AS cs
 			GROUP BY c";

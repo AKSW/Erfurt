@@ -24,7 +24,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listDirectSubClasses($emptyClasses = false) {
 	    
 	    $sql = 'SELECT DISTINCT s.subject, s.subject_is
-	            FROM statements s
+	            FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s
 	            WHERE modelID IN (' . $this->model->getModelIds() . ') AND
 	            s.predicate = "' . $this->model->_dbId('RDFS_subClassOf') . '" AND 
 	            s.object = "' . $this->model->_dbId($this) . '"
@@ -51,7 +51,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listInstancePropertyValues($property,$resourcesOnly=true) {
 		
 		$sql="SELECT DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype
-			FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 				AND s1.predicate='".$this->model->_dbId($property)."'
 				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
 			WHERE s1.modelID IN (".$this->model->getModelIds().")".($resourcesOnly?" AND s1.object_is='r'":'');
@@ -66,7 +66,7 @@ class RDFSClass extends DefaultRDFSClass {
 		
 		if($minDistinctValues>1)
 			$sql="SELECT SUM(b) FROM (SELECT 1 as b
-					FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+					FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 						AND s1.predicate='".$this->model->_dbId($property)."'
 						AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
 					WHERE s1.modelID IN (".$this->model->getModelIds().")".
@@ -74,7 +74,7 @@ class RDFSClass extends DefaultRDFSClass {
 					'GROUP BY s1.object,s1.object_is,s1.l_language,s1.l_datatype HAVING COUNT(*)>='.$minDistinctValues.') c';
 		else
 			$sql="SELECT COUNT(DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype)
-				FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 					AND s1.predicate='".$this->model->_dbId($property)."'
 					AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
 				WHERE s1.modelID IN (".$this->model->getModelIds().")".
@@ -99,7 +99,7 @@ class RDFSClass extends DefaultRDFSClass {
 		}
 		if($subclasses) {
 			$subclassSQL=join('\',\'',$subclasses);
-			$sql="SELECT COUNT(s1.modelID) FROM statements s1 INNER JOIN statements s2
+			$sql="SELECT COUNT(s1.modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 					ON(s2.modelID IN (".$this->model->getModelIds().") AND s1.subject=s2.object AND s1.object_is=s2.object_is)
 				WHERE
 					s1.modelID IN (".$this->model->getModelIds().")
@@ -116,7 +116,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listInstanceLabelLanguages() {
 		
 		$sql="SELECT s1.l_language
-		      FROM statements s1 INNER JOIN statements s2
+		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
 		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
@@ -132,17 +132,17 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listInstanceLabels($language) {
 		
 		$sql="SELECT s1.object,s3.object,s4.object,s5.object
-		      FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
 		            AND s1.l_language='".$language."'
 		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
 		            AND s2.object='".$this->getURI()."')
-				INNER JOIN statements s3 ON(s1.subject=s3.subject AND s1.modelID=s3.modelID
+				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.subject=s3.subject AND s1.modelID=s3.modelID
 					AND s3.predicate='".Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.'labelText'."')
-				LEFT JOIN statements s4 ON(s1.subject=s4.subject AND s1.modelID=s4.modelID
+				LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.subject=s4.subject AND s1.modelID=s4.modelID
 		            AND s4.predicate='".$this->model->_dbId('RDFS_comment')."'
 		            AND s4.l_language='".$language."')
-				LEFT JOIN statements s5 ON(s1.subject=s5.subject AND s1.modelID=s5.modelID
+				LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s5 ON(s1.subject=s5.subject AND s1.modelID=s5.modelID
 		            AND s5.predicate='".$this->model->_dbId('RDFS_seeAlso')."')
 				WHERE s1.modelID IN (".$this->model->getModelIds().")";
 		$ret=array();
@@ -165,7 +165,7 @@ class RDFSClass extends DefaultRDFSClass {
 			return $this->listInstances($start,$count,&$erg);
 		$ret=array();
 
-		$sql='SELECT s.subject,s.subject_is FROM statements s';
+		$sql='SELECT s.subject,s.subject_is FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s';
 		$n=0;
 		if($properties['localName']) {
 			$where.=' AND s.subject LIKE "'.$this->model->baseURI.$properties['localName'].'%"';
@@ -188,7 +188,7 @@ class RDFSClass extends DefaultRDFSClass {
 			else if($compare=='empty')
 				$cond="ISNULL(s$n.object)";
 
-			$sql.='JOIN statements s'.$n." ON(s.modelID=s$n.modelID AND s.subject=s$n.subject AND s$n.predicate='".$this->model->_dbId($prop)."' AND $cond)";
+			$sql.='JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s'.$n." ON(s.modelID=s$n.modelID AND s.subject=s$n.subject AND s$n.predicate='".$this->model->_dbId($prop)."' AND $cond)";
 			if(!$value)
 				$where.=" AND ISNULL(s$n.object)";
 		}
@@ -224,7 +224,7 @@ class RDFSClass extends DefaultRDFSClass {
 
 		$ret = array();
 
-		$sql = 'SELECT s.subject, s.subject_is FROM statements s';
+		$sql = 'SELECT s.subject, s.subject_is FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s';
 		$where = '';
 		$n = 0;
 		
@@ -252,7 +252,7 @@ class RDFSClass extends DefaultRDFSClass {
 				$cond = 'ISNULL(s' . $n . '.object)';
 			}
 				
-			$sql .= 'JOIN statements s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
+			$sql .= 'JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s' . $n . ' ON (s.modelID = s' . $n . '.modelID AND s.subject = s' . $n . '.subject ' .
 						'AND s' . $n . '.predicate = "' . $this->model->_dbId($prop) . '" AND ' . $cond . ')';
 			
 			
@@ -334,7 +334,7 @@ class RDFSClass extends DefaultRDFSClass {
 			$ret=array('owl:Thing'=>$this->model->findNodes(NULL,$GLOBALS['RDFS_domain'],$GLOBALS['OWL_Thing'],'Property'));
 			// get properties with domain not defined
 			$sql="SELECT s1.subject,s1.subject_is,s2.predicate
-				FROM statements s1 LEFT JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 					AND (s2.predicate='".$this->model->_dbId('RDFS_domain')."' OR s2.predicate='".$this->model->_dbId('RDFS_subPropertyOf')."'))
 				WHERE s1.predicate='".$this->model->_dbId('RDF_type')."' AND s1.object IN ('".join("','",$propertyURIs)."')
 					AND s1.modelID IN (".$this->model->getModelIds().")
@@ -361,7 +361,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listSuperClasses() {
 
 #		return $this->listPropertyValues($GLOBALS['RDFS_subClassOf'],'Class'); # <- returns bNodes
-		$sql="SELECT object,object_is FROM statements WHERE subject='".$this->getURI()."'
+		$sql="SELECT object,object_is FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE subject='".$this->getURI()."'
 			AND predicate='".$this->model->_dbId('RDFS_subClassOf')."' AND object_is='r' AND modelID IN (".$this->model->getModelIds().')';
 		return $this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),$this->model->vclass);
 	}
@@ -372,7 +372,7 @@ class RDFSClass extends DefaultRDFSClass {
 	public function listPropertiesUsed() {
 		
 		$sql="SELECT s1.predicate
-			FROM statements s1 INNER JOIN statements s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
+			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 				AND s1.predicate!='".$this->model->_dbId('RDF_type')."'
 				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
 			WHERE s1.modelID IN (".$this->model->getModelIds().")
@@ -385,7 +385,7 @@ class RDFSClass extends DefaultRDFSClass {
 	 */
 	public function countInstances() {
 		
-		$sql="SELECT COUNT(modelID) FROM statements WHERE modelID IN (".$this->model->getModelIds().")
+		$sql="SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->model->getModelIds().")
 			AND predicate='".$this->model->_dbId('RDF_type')."' AND object='".$this->model->_dbId($this)."'";
 		$count=$this->model->dbConn->getOne($sql);
 		return $count?$count:0;
