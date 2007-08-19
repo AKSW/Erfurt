@@ -30,8 +30,8 @@ class Erfurt_Owl_Structured_StructuredClass
 	}
 	
 	//toTreeString
-	public function toTreeString(){
-		return $this->childClasses;
+	public function printChildClasses(){
+		return $this->childClasses; //return string structured
 	}
 
 }
