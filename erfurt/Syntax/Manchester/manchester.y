@@ -36,25 +36,28 @@ require_once 'lex.php';
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
 }
-	start ::= expr(A).{print_r(A);}
-	expr(A)::= LPAREN expr(B) RPAREN.{A=B;}
+	start ::= classExpr(A).{print_r(A);} //classs Expression
+	classExpr(A)::= LPAREN classExpr(B) RPAREN.{A=B;}
 	expr(A)::= LBRACE enum(B) RBRACE.{echo A; A= "{".B."}"; }
-	expr(A)::= expr(B) ONLYSOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{echo A; A= B. " onlysome [".C."]"; }
-	expr(A)::= expr(B) SOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{/*not finished!!!*/A= $X; foreach(C as $value){$X=new Erfurt_Owl_Structured_SomeValuesFrom(null, B, $value);}}
-    expr(A)::= expr(B) AND_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_IntersectionClass(B."_".C);
+	classExpr(A)::= classExpr(B) ONLYSOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{echo A; A= B. " onlysome [".C."]"; }
+	classExpr(A)::= propExpr(B) SOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{/*not finished!!!*/A= $X; foreach(C as $value){$X=new Erfurt_Owl_Structured_SomeValuesFrom(null, B, $value);}}
+    classExpr(A)::= classExpr(B) AND_OPERATOR  classExpr(C).   {A = new Erfurt_Owl_Structured_IntersectionClass(B."_".C);
 														A->addChildClass(B);
 														A->addChildClass(C);}
-    expr(A) ::= expr(B) OR_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_UnionClass(B."_".C);
+    classExpr(A) ::= classExpr(B) OR_OPERATOR  classExpr(C).   {A = new Erfurt_Owl_Structured_UnionClass(B."_".C);
 													A->addChildClass(B);
 													A->addChildClass(C);}
-    expr(A) ::= expr(B) SOME_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_SomeValuesFrom(null,B,C);}
-	expr(A) ::= NOT_OPERATOR  expr(B).   {A = new Erfurt_Owl_Structured_ComplementClass(B);}
-    expr(A) ::= expr(B) ONLY_OPERATOR  expr(C).   {A = new Erfurt_Owl_Structured_AllValuesFrom(null,B,C); }
-	expr(A) ::= expr(B) MIN_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MinCardinality(null, B, C);}
-    expr(A) ::= expr(B) MAX_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MaxCardinality(null, B, C);}
-    expr(A) ::= expr(B) EXACTLY_OPERATOR  NUMERIC(C).   {A = new Erfurt_Owl_Structured_Cardinality(null, B, C);}
-    expr(A) ::= expr(B) HAS_OPERATOR  expr(C).   { A = new Erfurt_Owl_Structured_HasValue(null, B, C); }
-	expr(A) ::= ALPHANUMERIC(B). { A = B; B=new Erfurt_Owl_Structured_NamedClass(B);}
+    classExpr(A) ::= propExpr(B) SOME_OPERATOR  classExpr(C).   { A = new Erfurt_Owl_Structured_SomeValuesFrom(null,B,C);
+												A->addChildClass(B);}
+	classExpr(A) ::= NOT_OPERATOR  classExpr(B).   {A = new Erfurt_Owl_Structured_ComplementClass(B);}
+    classExpr(A) ::= propExpr(B) ONLY_OPERATOR  classExpr(C).   {A = new Erfurt_Owl_Structured_AllValuesFrom(null,B,C); }
+	classExpr(A) ::= propExpr(B) MIN_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MinCardinality(null, B, C);}
+    classExpr(A) ::= propExpr(B) MAX_OPERATOR NUMERIC(C).   { A = new Erfurt_Owl_Structured_MaxCardinality(null, B, C);}
+    classExpr(A) ::= propExpr(B) EXACTLY_OPERATOR  NUMERIC(C).   {A = new Erfurt_Owl_Structured_Cardinality(null, B, C);}
+    classExpr(A) ::= propExpr(B) HAS_OPERATOR  classExpr(C).   { A = new Erfurt_Owl_Structured_HasValue(null, B, C); }
+	classExpr(A) ::= ALPHANUMERIC(B). { A = B; B=new Erfurt_Owl_Structured_NamedClass(B);}
+	propExpr(A) ::= ALPHANUMERIC(B). { A = B;}
+	
 	enum(A) ::= ALPHANUMERIC(B) enum(C).{ echo A; A=B . " ".C;}
 	enum(A) ::= ALPHANUMERIC(B).{A=B;}
 	list(A) ::= ALPHANUMERIC(B) COMMA list(C).{ echo A; A=B . " , ".C;}

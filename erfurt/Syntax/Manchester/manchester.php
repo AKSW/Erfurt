@@ -150,9 +150,9 @@ class OWLParser#line 108 "./manchester.php"
     const NUMERIC                        = 17;
     const ALPHANUMERIC                   = 18;
     const COMMA                          = 19;
-    const YY_NO_ACTION = 60;
-    const YY_ACCEPT_ACTION = 59;
-    const YY_ERROR_ACTION = 58;
+    const YY_NO_ACTION = 57;
+    const YY_ACCEPT_ACTION = 56;
+    const YY_ERROR_ACTION = 55;
 
 /* Next are that tables used to determine what action to take based on the
 ** current state and lookahead token.  These tables are used to implement
@@ -204,66 +204,64 @@ class OWLParser#line 108 "./manchester.php"
 **                          shifting non-terminals after a reduce.
 **  self::$yy_default       Default action for each state.
 */
-    const YY_SZ_ACTTAB = 68;
+    const YY_SZ_ACTTAB = 56;
 static public $yy_action = array(
- /*     0 */    31,    3,    4,   26,   23,   24,    5,   21,    6,    1,
- /*    10 */     3,    4,   26,   23,   24,    5,   21,    6,    1,   26,
- /*    20 */    23,   24,    5,   21,    6,    1,    7,    2,   33,    7,
- /*    30 */     2,   21,    6,    1,   30,   59,   14,   29,    8,   37,
- /*    40 */    10,    8,   12,   28,   35,   38,   28,   34,   11,   25,
- /*    50 */     9,   46,   19,   46,   17,   46,   46,   36,   15,   27,
- /*    60 */    13,   46,   46,   32,   22,   16,   20,   18,
+ /*     0 */    15,   24,   16,    2,   49,    7,    1,   49,   49,   49,
+ /*    10 */    31,    6,    3,   27,   49,   21,   34,   21,   26,    4,
+ /*    20 */     5,    4,    5,   56,   14,    6,    3,    8,   11,   10,
+ /*    30 */    28,   21,   30,    9,   11,   25,   12,   18,   12,   11,
+ /*    40 */    49,   11,   32,   49,   33,   13,   19,   22,   11,   11,
+ /*    50 */    11,   11,   23,   17,   20,   29,
     );
     static public $yy_lookahead = array(
- /*     0 */     3,    4,    5,    6,    7,    8,    9,   10,   11,   12,
- /*    10 */     4,    5,    6,    7,    8,    9,   10,   11,   12,    6,
- /*    20 */     7,    8,    9,   10,   11,   12,    1,    2,   23,    1,
- /*    30 */     2,   10,   11,   12,   16,   21,   22,   14,   13,   17,
- /*    40 */    15,   13,   18,   18,   17,   16,   18,   17,   15,   23,
- /*    50 */    19,   25,   18,   25,   22,   25,   25,   22,   22,   22,
- /*    60 */    22,   25,   25,   24,   24,   22,   24,   22,
+ /*     0 */     6,    7,    8,    9,    0,   11,   12,    3,    4,    5,
+ /*    10 */     3,    4,    5,   17,   10,   10,   17,   10,   17,    1,
+ /*    20 */     2,    1,    2,   21,   22,    4,    5,   15,   26,   19,
+ /*    30 */    22,   10,   16,   15,   26,   22,   18,   22,   18,   26,
+ /*    40 */    27,   26,   16,   27,   22,   22,   22,   22,   26,   26,
+ /*    50 */    26,   26,   18,   25,   25,   25,
 );
-    const YY_SHIFT_USE_DFLT = -4;
-    const YY_SHIFT_MAX = 26;
+    const YY_SHIFT_USE_DFLT = -7;
+    const YY_SHIFT_MAX = 25;
     static public $yy_shift_ofst = array(
- /*     0 */    28,   25,   28,   28,   28,   28,   28,   28,   24,   34,
- /*    10 */    34,   34,   24,   -3,    6,   13,   13,   13,   21,   31,
- /*    20 */    29,   33,   18,   30,   27,   23,   22,
+ /*     0 */    20,   18,   20,   20,   20,   20,   20,   20,   34,   34,
+ /*    10 */    34,   -6,    4,    7,   21,   -1,   -4,   26,    5,    5,
+ /*    20 */    16,   12,    5,   10,    1,    5,
 );
     const YY_REDUCE_USE_DFLT = -1;
-    const YY_REDUCE_MAX = 12;
+    const YY_REDUCE_MAX = 10;
     static public $yy_reduce_ofst = array(
- /*     0 */    14,   37,   38,   32,   43,   45,   35,   36,   26,   39,
- /*    10 */    40,   42,    5,
+ /*     0 */     2,    8,   13,   24,   15,   23,   25,   22,   29,   28,
+ /*    10 */    30,
 );
     static public $yyExpectedTokens = array(
-        /* 0 */ array(1, 2, 13, 18, ),
-        /* 1 */ array(1, 2, 13, 15, 18, ),
-        /* 2 */ array(1, 2, 13, 18, ),
-        /* 3 */ array(1, 2, 13, 18, ),
-        /* 4 */ array(1, 2, 13, 18, ),
-        /* 5 */ array(1, 2, 13, 18, ),
-        /* 6 */ array(1, 2, 13, 18, ),
-        /* 7 */ array(1, 2, 13, 18, ),
+        /* 0 */ array(1, 2, 18, ),
+        /* 1 */ array(1, 2, 15, 18, ),
+        /* 2 */ array(1, 2, 18, ),
+        /* 3 */ array(1, 2, 18, ),
+        /* 4 */ array(1, 2, 18, ),
+        /* 5 */ array(1, 2, 18, ),
+        /* 6 */ array(1, 2, 18, ),
+        /* 7 */ array(1, 2, 18, ),
         /* 8 */ array(18, ),
         /* 9 */ array(18, ),
         /* 10 */ array(18, ),
-        /* 11 */ array(18, ),
-        /* 12 */ array(18, ),
-        /* 13 */ array(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ),
-        /* 14 */ array(4, 5, 6, 7, 8, 9, 10, 11, 12, ),
-        /* 15 */ array(6, 7, 8, 9, 10, 11, 12, ),
-        /* 16 */ array(6, 7, 8, 9, 10, 11, 12, ),
-        /* 17 */ array(6, 7, 8, 9, 10, 11, 12, ),
-        /* 18 */ array(10, 11, 12, ),
-        /* 19 */ array(19, ),
+        /* 11 */ array(6, 7, 8, 9, 11, 12, ),
+        /* 12 */ array(0, 3, 4, 5, 10, ),
+        /* 13 */ array(3, 4, 5, 10, ),
+        /* 14 */ array(4, 5, 10, ),
+        /* 15 */ array(17, ),
+        /* 16 */ array(17, ),
+        /* 17 */ array(16, ),
+        /* 18 */ array(10, ),
+        /* 19 */ array(10, ),
         /* 20 */ array(16, ),
         /* 21 */ array(15, ),
-        /* 22 */ array(16, ),
-        /* 23 */ array(17, ),
+        /* 22 */ array(10, ),
+        /* 23 */ array(19, ),
         /* 24 */ array(17, ),
-        /* 25 */ array(14, ),
-        /* 26 */ array(17, ),
+        /* 25 */ array(10, ),
+        /* 26 */ array(),
         /* 27 */ array(),
         /* 28 */ array(),
         /* 29 */ array(),
@@ -272,16 +270,12 @@ static public $yy_action = array(
         /* 32 */ array(),
         /* 33 */ array(),
         /* 34 */ array(),
-        /* 35 */ array(),
-        /* 36 */ array(),
-        /* 37 */ array(),
-        /* 38 */ array(),
 );
     static public $yy_default = array(
- /*     0 */    58,   58,   58,   58,   58,   58,   58,   58,   58,   58,
- /*    10 */    58,   58,   55,   58,   39,   47,   45,   44,   52,   57,
- /*    20 */    58,   58,   58,   58,   58,   58,   58,   46,   53,   41,
- /*    30 */    43,   40,   56,   54,   50,   51,   48,   49,   42,
+ /*     0 */    55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
+ /*    10 */    55,   55,   50,   55,   35,   55,   55,   55,   43,   41,
+ /*    20 */    55,   55,   40,   54,   55,   48,   46,   47,   42,   53,
+ /*    30 */    38,   36,   39,   44,   45,
 );
 /* The next thing included is series of defines which control
 ** various aspects of the generated parser.
@@ -298,10 +292,10 @@ static public $yy_action = array(
 **    self::YYERRORSYMBOL is the code number of the error symbol.  If not
 **                        defined, then do no error processing.
 */
-    const YYNOCODE = 26;
+    const YYNOCODE = 28;
     const YYSTACKDEPTH = 100;
-    const YYNSTATE = 39;
-    const YYNRULE = 19;
+    const YYNSTATE = 35;
+    const YYNRULE = 20;
     const YYERRORSYMBOL = 20;
     const YYERRSYMDT = 'yy0';
     const YYFALLBACK = 0;
@@ -389,8 +383,8 @@ static public $yy_action = array(
   'EXACTLY_OPERATOR',  'HAS_OPERATOR',  'ONLYSOME_OPERATOR',  'ONLY_OPERATOR',
   'SOME_OPERATOR',  'LBRACE',        'RBRACE',        'LSQUAREBRACKET',
   'RSQUAREBRACKET',  'NUMERIC',       'ALPHANUMERIC',  'COMMA',       
-  'error',         'start',         'expr',          'enum',        
-  'list',        
+  'error',         'start',         'classExpr',     'expr',        
+  'enum',          'list',          'propExpr',    
     );
 
     /**
@@ -398,25 +392,26 @@ static public $yy_action = array(
      * @var array
      */
     static public $yyRuleName = array(
- /*   0 */ "start ::= expr",
- /*   1 */ "expr ::= LPAREN expr RPAREN",
+ /*   0 */ "start ::= classExpr",
+ /*   1 */ "classExpr ::= LPAREN classExpr RPAREN",
  /*   2 */ "expr ::= LBRACE enum RBRACE",
- /*   3 */ "expr ::= expr ONLYSOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET",
- /*   4 */ "expr ::= expr SOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET",
- /*   5 */ "expr ::= expr AND_OPERATOR expr",
- /*   6 */ "expr ::= expr OR_OPERATOR expr",
- /*   7 */ "expr ::= expr SOME_OPERATOR expr",
- /*   8 */ "expr ::= NOT_OPERATOR expr",
- /*   9 */ "expr ::= expr ONLY_OPERATOR expr",
- /*  10 */ "expr ::= expr MIN_OPERATOR NUMERIC",
- /*  11 */ "expr ::= expr MAX_OPERATOR NUMERIC",
- /*  12 */ "expr ::= expr EXACTLY_OPERATOR NUMERIC",
- /*  13 */ "expr ::= expr HAS_OPERATOR expr",
- /*  14 */ "expr ::= ALPHANUMERIC",
- /*  15 */ "enum ::= ALPHANUMERIC enum",
- /*  16 */ "enum ::= ALPHANUMERIC",
- /*  17 */ "list ::= ALPHANUMERIC COMMA list",
- /*  18 */ "list ::= ALPHANUMERIC",
+ /*   3 */ "classExpr ::= classExpr ONLYSOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET",
+ /*   4 */ "classExpr ::= propExpr SOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET",
+ /*   5 */ "classExpr ::= classExpr AND_OPERATOR classExpr",
+ /*   6 */ "classExpr ::= classExpr OR_OPERATOR classExpr",
+ /*   7 */ "classExpr ::= propExpr SOME_OPERATOR classExpr",
+ /*   8 */ "classExpr ::= NOT_OPERATOR classExpr",
+ /*   9 */ "classExpr ::= propExpr ONLY_OPERATOR classExpr",
+ /*  10 */ "classExpr ::= propExpr MIN_OPERATOR NUMERIC",
+ /*  11 */ "classExpr ::= propExpr MAX_OPERATOR NUMERIC",
+ /*  12 */ "classExpr ::= propExpr EXACTLY_OPERATOR NUMERIC",
+ /*  13 */ "classExpr ::= propExpr HAS_OPERATOR classExpr",
+ /*  14 */ "classExpr ::= ALPHANUMERIC",
+ /*  15 */ "propExpr ::= ALPHANUMERIC",
+ /*  16 */ "enum ::= ALPHANUMERIC enum",
+ /*  17 */ "enum ::= ALPHANUMERIC",
+ /*  18 */ "list ::= ALPHANUMERIC COMMA list",
+ /*  19 */ "list ::= ALPHANUMERIC",
     );
 
     /**
@@ -783,7 +778,7 @@ static public $yy_action = array(
     static public $yyRuleInfo = array(
   array( 'lhs' => 21, 'rhs' => 1 ),
   array( 'lhs' => 22, 'rhs' => 3 ),
-  array( 'lhs' => 22, 'rhs' => 3 ),
+  array( 'lhs' => 23, 'rhs' => 3 ),
   array( 'lhs' => 22, 'rhs' => 5 ),
   array( 'lhs' => 22, 'rhs' => 5 ),
   array( 'lhs' => 22, 'rhs' => 3 ),
@@ -796,10 +791,11 @@ static public $yy_action = array(
   array( 'lhs' => 22, 'rhs' => 3 ),
   array( 'lhs' => 22, 'rhs' => 3 ),
   array( 'lhs' => 22, 'rhs' => 1 ),
-  array( 'lhs' => 23, 'rhs' => 2 ),
-  array( 'lhs' => 23, 'rhs' => 1 ),
-  array( 'lhs' => 24, 'rhs' => 3 ),
+  array( 'lhs' => 26, 'rhs' => 1 ),
+  array( 'lhs' => 24, 'rhs' => 2 ),
   array( 'lhs' => 24, 'rhs' => 1 ),
+  array( 'lhs' => 25, 'rhs' => 3 ),
+  array( 'lhs' => 25, 'rhs' => 1 ),
     );
 
     /**
@@ -828,6 +824,7 @@ static public $yy_action = array(
         16 => 16,
         17 => 17,
         18 => 18,
+        19 => 19,
     );
     /* Beginning here are the reduction cases.  A typical example
     ** follows:
@@ -837,65 +834,69 @@ static public $yy_action = array(
     */
 #line 39 "./manchester.y"
     function yy_r0(){print_r($this->yystack[$this->yyidx + 0]->minor);    }
-#line 846 "./manchester.php"
+#line 843 "./manchester.php"
 #line 40 "./manchester.y"
     function yy_r1(){$this->_retvalue=$this->yystack[$this->yyidx + -1]->minor;    }
-#line 849 "./manchester.php"
+#line 846 "./manchester.php"
 #line 41 "./manchester.y"
     function yy_r2(){echo $this->_retvalue; $this->_retvalue= "{".$this->yystack[$this->yyidx + -1]->minor."}";     }
-#line 852 "./manchester.php"
+#line 849 "./manchester.php"
 #line 42 "./manchester.y"
     function yy_r3(){echo $this->_retvalue; $this->_retvalue= $this->yystack[$this->yyidx + -4]->minor. " onlysome [".$this->yystack[$this->yyidx + -1]->minor."]";     }
-#line 855 "./manchester.php"
+#line 852 "./manchester.php"
 #line 43 "./manchester.y"
     function yy_r4(){/*not finished!!!*/$this->_retvalue= $X; foreach($this->yystack[$this->yyidx + -1]->minor as $value){$X=new Erfurt_Owl_Structured_SomeValuesFrom(null, $this->yystack[$this->yyidx + -4]->minor, $value);}    }
-#line 858 "./manchester.php"
+#line 855 "./manchester.php"
 #line 44 "./manchester.y"
     function yy_r5(){$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -2]->minor."_".$this->yystack[$this->yyidx + 0]->minor);
 														$this->_retvalue->addChildClass($this->yystack[$this->yyidx + -2]->minor);
 														$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 863 "./manchester.php"
+#line 860 "./manchester.php"
 #line 47 "./manchester.y"
     function yy_r6(){$this->_retvalue = new Erfurt_Owl_Structured_UnionClass($this->yystack[$this->yyidx + -2]->minor."_".$this->yystack[$this->yyidx + 0]->minor);
 													$this->_retvalue->addChildClass($this->yystack[$this->yyidx + -2]->minor);
 													$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 868 "./manchester.php"
+#line 865 "./manchester.php"
 #line 50 "./manchester.y"
-    function yy_r7(){ $this->_retvalue = new Erfurt_Owl_Structured_SomeValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);    }
-#line 871 "./manchester.php"
-#line 51 "./manchester.y"
-    function yy_r8(){$this->_retvalue = new Erfurt_Owl_Structured_ComplementClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 874 "./manchester.php"
+    function yy_r7(){ $this->_retvalue = new Erfurt_Owl_Structured_SomeValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);
+												$this->_retvalue->addChildClass($this->yystack[$this->yyidx + -2]->minor);    }
+#line 869 "./manchester.php"
 #line 52 "./manchester.y"
-    function yy_r9(){$this->_retvalue = new Erfurt_Owl_Structured_AllValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);     }
-#line 877 "./manchester.php"
+    function yy_r8(){$this->_retvalue = new Erfurt_Owl_Structured_ComplementClass($this->yystack[$this->yyidx + 0]->minor);    }
+#line 872 "./manchester.php"
 #line 53 "./manchester.y"
-    function yy_r10(){ $this->_retvalue = new Erfurt_Owl_Structured_MinCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 880 "./manchester.php"
+    function yy_r9(){$this->_retvalue = new Erfurt_Owl_Structured_AllValuesFrom(null,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);     }
+#line 875 "./manchester.php"
 #line 54 "./manchester.y"
-    function yy_r11(){ $this->_retvalue = new Erfurt_Owl_Structured_MaxCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 883 "./manchester.php"
+    function yy_r10(){ $this->_retvalue = new Erfurt_Owl_Structured_MinCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
+#line 878 "./manchester.php"
 #line 55 "./manchester.y"
-    function yy_r12(){$this->_retvalue = new Erfurt_Owl_Structured_Cardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 886 "./manchester.php"
+    function yy_r11(){ $this->_retvalue = new Erfurt_Owl_Structured_MaxCardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
+#line 881 "./manchester.php"
 #line 56 "./manchester.y"
-    function yy_r13(){ $this->_retvalue = new Erfurt_Owl_Structured_HasValue(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 889 "./manchester.php"
+    function yy_r12(){$this->_retvalue = new Erfurt_Owl_Structured_Cardinality(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
+#line 884 "./manchester.php"
 #line 57 "./manchester.y"
-    function yy_r14(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor; $this->yystack[$this->yyidx + 0]->minor=new Erfurt_Owl_Structured_NamedClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 892 "./manchester.php"
+    function yy_r13(){ $this->_retvalue = new Erfurt_Owl_Structured_HasValue(null, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
+#line 887 "./manchester.php"
 #line 58 "./manchester.y"
-    function yy_r15(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -1]->minor . " ".$this->yystack[$this->yyidx + 0]->minor;    }
-#line 895 "./manchester.php"
+    function yy_r14(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor; $this->yystack[$this->yyidx + 0]->minor=new Erfurt_Owl_Structured_NamedClass($this->yystack[$this->yyidx + 0]->minor);    }
+#line 890 "./manchester.php"
 #line 59 "./manchester.y"
-    function yy_r16(){$this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;    }
-#line 898 "./manchester.php"
-#line 60 "./manchester.y"
-    function yy_r17(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -2]->minor . " , ".$this->yystack[$this->yyidx + 0]->minor;    }
-#line 901 "./manchester.php"
+    function yy_r15(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;    }
+#line 893 "./manchester.php"
 #line 61 "./manchester.y"
-    function yy_r18(){$this->_retvalue=array($this->yystack[$this->yyidx + 0]->minor);    }
-#line 904 "./manchester.php"
+    function yy_r16(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -1]->minor . " ".$this->yystack[$this->yyidx + 0]->minor;    }
+#line 896 "./manchester.php"
+#line 62 "./manchester.y"
+    function yy_r17(){$this->_retvalue=$this->yystack[$this->yyidx + 0]->minor;    }
+#line 899 "./manchester.php"
+#line 63 "./manchester.y"
+    function yy_r18(){ echo $this->_retvalue; $this->_retvalue=$this->yystack[$this->yyidx + -2]->minor . " , ".$this->yystack[$this->yyidx + 0]->minor;    }
+#line 902 "./manchester.php"
+#line 64 "./manchester.y"
+    function yy_r19(){$this->_retvalue=array($this->yystack[$this->yyidx + 0]->minor);    }
+#line 905 "./manchester.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1019,7 +1020,7 @@ static public $yy_action = array(
     }
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
-#line 1029 "./manchester.php"
+#line 1030 "./manchester.php"
     }
 
     /**

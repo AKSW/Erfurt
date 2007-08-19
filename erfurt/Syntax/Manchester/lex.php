@@ -1,35 +1,36 @@
 <?php
-require_once 'SyntaxConstants.php';
+//require_once 'SyntaxConstants.php';
+require_once 'manchester.php';
 //%declare_class {class OWLParser}
 class ManchesterLexer
 {
 
-	const 	NOT_OPERATOR  = SyntaxConstants::NOT_OPERATOR;
-	const 	ALPHANUMERIC  = SyntaxConstants::ALPHANUMERIC;
-	const 	AND_OPERATOR  = SyntaxConstants::AND_OPERATOR;
-	const 	OR_OPERATOR   = SyntaxConstants::OR_OPERATOR;
-	const 	MIN_OPERATOR   = SyntaxConstants::MIN_OPERATOR;
-	const 	MAX_OPERATOR   = SyntaxConstants::MAX_OPERATOR;
-	const 	EXACTLY_OPERATOR  = SyntaxConstants::EXACTLY_OPERATOR;
-	const 	HAS_OPERATOR    = SyntaxConstants::HAS_OPERATOR;
-	const 	ONLYSOME_OPERATOR  = SyntaxConstants::ONLYSOME_OPERATOR;
-	const 	ONLY_OPERATOR   = SyntaxConstants::ONLY_OPERATOR;
-	const 	SOME_OPERATOR   = SyntaxConstants::SOME_OPERATOR;
-	const 	LPAREN         = SyntaxConstants:: LPAREN;
-	const 	RPAREN       = SyntaxConstants::RPAREN;
-	const 	LBRACE       = SyntaxConstants::LBRACE;
-	const 	RBRACE        = SyntaxConstants::RBRACE;
-	const 	LSQUAREBRACKET  = SyntaxConstants::LSQUAREBRACKET;
-	const 	RSQUAREBRACKET  = SyntaxConstants::RSQUAREBRACKET;
-	const 	NUMERIC       = SyntaxConstants::NUMERIC;
-	const 	COMMA        = SyntaxConstants::COMMA;
+	const 	NOT_OPERATOR  = OWLParser::NOT_OPERATOR;
+	const 	ALPHANUMERIC  = OWLParser::ALPHANUMERIC;
+	const 	AND_OPERATOR  = OWLParser::AND_OPERATOR;
+	const 	OR_OPERATOR   = OWLParser::OR_OPERATOR;
+	const 	MIN_OPERATOR   = OWLParser::MIN_OPERATOR;
+	const 	MAX_OPERATOR   = OWLParser::MAX_OPERATOR;
+	const 	EXACTLY_OPERATOR  = OWLParser::EXACTLY_OPERATOR;
+	const 	HAS_OPERATOR    = OWLParser::HAS_OPERATOR;
+	const 	ONLYSOME_OPERATOR  = OWLParser::ONLYSOME_OPERATOR;
+	const 	ONLY_OPERATOR   = OWLParser::ONLY_OPERATOR;
+	const 	SOME_OPERATOR   = OWLParser::SOME_OPERATOR;
+	const 	LPAREN         = OWLParser:: LPAREN;
+	const 	RPAREN       = OWLParser::RPAREN;
+	const 	LBRACE       = OWLParser::LBRACE;
+	const 	RBRACE        = OWLParser::RBRACE;
+	const 	LSQUAREBRACKET  = OWLParser::LSQUAREBRACKET;
+	const 	RSQUAREBRACKET  = OWLParser::RSQUAREBRACKET;
+	const 	NUMERIC       = OWLParser::NUMERIC;
+	const 	COMMA        = OWLParser::COMMA;
 
 	private $data;
 	private $N;
 	public $token;
 	public $value;
     public $line;
-	private $debug = 1;
+	private $debug = 0;
 	
     function __construct($data)
     {
@@ -132,47 +133,64 @@ class ManchesterLexer
                     // skip this token
                     continue;
                 } else {                    $yy_yymore_patterns = array(
-        1 => "^([Aa][Nn][Dd][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        2 => "^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        3 => "^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        4 => "^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        5 => "^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        6 => "^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        7 => "^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        8 => "^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        9 => "^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        10 => "^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        11 => "^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        12 => "^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        13 => "^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        14 => "^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        15 => "^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        16 => "^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        17 => "^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        18 => "^([0-9]+)|^([a-zA-Z]+[0-9]*)",
-        19 => "^([a-zA-Z]+[0-9]*)",
-        20 => "",
+        1 => array(0, "^([Aa][Nn][Dd][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        2 => array(0, "^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        3 => array(0, "^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        4 => array(0, "^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        5 => array(0, "^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        6 => array(0, "^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        7 => array(0, "^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        8 => array(0, "^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        9 => array(0, "^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        10 => array(0, "^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        11 => array(0, "^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        12 => array(0, "^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        13 => array(0, "^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        14 => array(0, "^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        15 => array(0, "^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        16 => array(0, "^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        17 => array(0, "^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        18 => array(0, "^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        19 => array(0, "^([a-zA-Z]+[0-9]*)"),
+        20 => array(0, ""),
     );
 
                     // yymore is needed
                     do {
-                        if (!strlen($yy_yymore_patterns[$this->token])) {
+                        if (!strlen($yy_yymore_patterns[$this->token][1])) {
                             throw new Exception('cannot do yymore for the last token');
                         }
-                        if (preg_match($yy_yymore_patterns[$this->token],
+                        $yysubmatches = array();
+                        if (preg_match('/' . $yy_yymore_patterns[$this->token][1] . '/',
                               substr($this->data, $this->N), $yymatches)) {
+                            $yysubmatches = $yymatches;
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             next($yymatches); // skip global match
-                            $this->token = key($yymatches); // token number
+                            $this->token += key($yymatches) + $yy_yymore_patterns[$this->token][0]; // token number
                             $this->value = current($yymatches); // token value
                             $this->line = substr_count($this->value, "\n");
+                            if ($tokenMap[$this->token]) {
+                                // extract sub-patterns for passing to lex function
+                                $yysubmatches = array_slice($yysubmatches, $this->token + 1,
+                                    $tokenMap[$this->token]);
+                            } else {
+                                $yysubmatches = array();
+                            }
                         }
-                    	$r = $this->{'yy_r1_' . $this->token}();
-                    } while ($r !== null || !$r);
+                    	$r = $this->{'yy_r1_' . $this->token}($yysubmatches);
+                    } while ($r !== null && !is_bool($r));
 			        if ($r === true) {
 			            // we have changed state
 			            // process this token in the new state
 			            return $this->yylex();
+                    } elseif ($r === false) {
+                        $this->N += strlen($this->value);
+                        $this->line += substr_count($this->value, "\n");
+                        if ($this->N >= strlen($this->data)) {
+                            return false; // end of input
+                        }
+                        // skip this token
+                        continue;
 			        } else {
 	                    // accept
 	                    $this->N += strlen($this->value);

@@ -1,28 +1,29 @@
 <?php
-require_once 'SyntaxConstants.php';
+//require_once 'SyntaxConstants.php';
+require_once 'manchester.php';
 //%declare_class {class OWLParser}
 class ManchesterLexer
 {
 
-	const 	NOT_OPERATOR  = SyntaxConstants::NOT_OPERATOR;
-	const 	ALPHANUMERIC  = SyntaxConstants::ALPHANUMERIC;
-	const 	AND_OPERATOR  = SyntaxConstants::AND_OPERATOR;
-	const 	OR_OPERATOR   = SyntaxConstants::OR_OPERATOR;
-	const 	MIN_OPERATOR   = SyntaxConstants::MIN_OPERATOR;
-	const 	MAX_OPERATOR   = SyntaxConstants::MAX_OPERATOR;
-	const 	EXACTLY_OPERATOR  = SyntaxConstants::EXACTLY_OPERATOR;
-	const 	HAS_OPERATOR    = SyntaxConstants::HAS_OPERATOR;
-	const 	ONLYSOME_OPERATOR  = SyntaxConstants::ONLYSOME_OPERATOR;
-	const 	ONLY_OPERATOR   = SyntaxConstants::ONLY_OPERATOR;
-	const 	SOME_OPERATOR   = SyntaxConstants::SOME_OPERATOR;
-	const 	LPAREN         = SyntaxConstants:: LPAREN;
-	const 	RPAREN       = SyntaxConstants::RPAREN;
-	const 	LBRACE       = SyntaxConstants::LBRACE;
-	const 	RBRACE        = SyntaxConstants::RBRACE;
-	const 	LSQUAREBRACKET  = SyntaxConstants::LSQUAREBRACKET;
-	const 	RSQUAREBRACKET  = SyntaxConstants::RSQUAREBRACKET;
-	const 	NUMERIC       = SyntaxConstants::NUMERIC;
-	const 	COMMA        = SyntaxConstants::COMMA;
+	const 	NOT_OPERATOR  = OWLParser::NOT_OPERATOR;
+	const 	ALPHANUMERIC  = OWLParser::ALPHANUMERIC;
+	const 	AND_OPERATOR  = OWLParser::AND_OPERATOR;
+	const 	OR_OPERATOR   = OWLParser::OR_OPERATOR;
+	const 	MIN_OPERATOR   = OWLParser::MIN_OPERATOR;
+	const 	MAX_OPERATOR   = OWLParser::MAX_OPERATOR;
+	const 	EXACTLY_OPERATOR  = OWLParser::EXACTLY_OPERATOR;
+	const 	HAS_OPERATOR    = OWLParser::HAS_OPERATOR;
+	const 	ONLYSOME_OPERATOR  = OWLParser::ONLYSOME_OPERATOR;
+	const 	ONLY_OPERATOR   = OWLParser::ONLY_OPERATOR;
+	const 	SOME_OPERATOR   = OWLParser::SOME_OPERATOR;
+	const 	LPAREN         = OWLParser:: LPAREN;
+	const 	RPAREN       = OWLParser::RPAREN;
+	const 	LBRACE       = OWLParser::LBRACE;
+	const 	RBRACE        = OWLParser::RBRACE;
+	const 	LSQUAREBRACKET  = OWLParser::LSQUAREBRACKET;
+	const 	RSQUAREBRACKET  = OWLParser::RSQUAREBRACKET;
+	const 	NUMERIC       = OWLParser::NUMERIC;
+	const 	COMMA        = OWLParser::COMMA;
 
 	private $data;
 	private $N;

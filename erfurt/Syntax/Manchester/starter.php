@@ -1,5 +1,4 @@
 <?php
-
 $debug=1;
 
 $start = explode(' ',microtime());
@@ -13,5 +12,4 @@ $o= new OWLParser();
 $o->parseString($x);
 $end =  explode(' ',microtime() );
 if($debug)echo "\nparsed in " . ($end[0]+$end[1]-($start[0]+$start[1])). "\n";
-
 ?>
