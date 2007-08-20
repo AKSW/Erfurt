@@ -1,7 +1,7 @@
 .ResourceEditValue {
 /*	display: block;*/
-	width: 85%;
-	margin-bottom: 0.5em;
+	width: 22em;
+	margin: 0 0.5em 0.5em 0;
 	color: #02a;
 /*	border: 1px solid #bbb;*/
 }

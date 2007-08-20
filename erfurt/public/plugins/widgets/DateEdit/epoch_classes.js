@@ -532,8 +532,9 @@ function Epoch(name, mode, targetelement, multiselect) {
 	*/
 	self.show = function ()	{
 		self.updatePos(self.tgt); //update the calendar position, in case the page layout has changed since loading
-		new Effect.Appear(self.calendar, {duration: 0.25});
-		// self.calendar.style.display = 'block'; //'table'; //<iehack> 'table' is the W3C-recommended spec, but IE isn't a fan of those
+		// new Effect.Appear(self.calendar, {duration: 0.25});
+		// $jq(self.calendar).fadeIn(250);
+		self.calendar.style.display = 'block'; //'table'; //<iehack> 'table' is the W3C-recommended spec, but IE isn't a fan of those
 		self.visible = true;
 	};
 	//-----------------------------------------------------------------------------
@@ -541,8 +542,9 @@ function Epoch(name, mode, targetelement, multiselect) {
 	* Hides the calendar
 	*/
 	self.hide = function () {
-		new Effect.Fade(self.calendar, {duration: 0.25});
-		// self.calendar.style.display = 'none';
+		// new Effect.Fade(self.calendar, {duration: 0.25});
+		// $jq(self.calendar).fadeOut(250);
+		self.calendar.style.display = 'none';
 		self.visible = false;
 	};
 	//-----------------------------------------------------------------------------

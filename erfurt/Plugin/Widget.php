@@ -17,7 +17,7 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	/**
 	  * @var File system reference to the widget base directory
 	  */
-	protected $_widgetBaseDir;
+	protected $widgetBaseDir;
 	
 	/**
 	  * @var A unique id for this widget
@@ -53,6 +53,11 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	protected $styles;
 	
 	/**
+	  * @var JavScript code to be executed on page load
+	  */
+	protected $onLoadCode;
+	
+	/**
 	  * Protected constructor. You cannot instantiate this class.
 	  */
 	protected function __construct($elementName = null, $values = null, $widgetConfig = null, $scripts = null, $styles = null) {
@@ -71,6 +76,8 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		if (!$values) {
 			$values = '';
 		}
+		
+		$this->onLoadCode = null;
 		
 		// values are generally handled as an array
 		// even single values should be arrays
@@ -129,7 +136,7 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 			$id = $this->id;
 			$withContainer = true;
 		}
-		if (isset($this->config['display'])) {
+		if (!empty($this->config['display'])) {
 			$displayOption = ' style="display:' . $this->config['display'] . '"';
 		} else {
 			$displayOption = '';
@@ -142,6 +149,8 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		if ($withContainer) {
 			$ret = '<div id="' . $container . '-' . $id . '" class="' . $this->config['class'] . '"' . $displayOption . '>' . PHP_EOL;
 		}
+		$ret .= '<input type="hidden" id="model-' . $id . '" value="' . $this->config['modelUri'] . '" />' . PHP_EOL;
+		$ret .= '<input type="hidden" id="property-' . $id . '" value="' . $this->config['propertyUri'] . '" />' . PHP_EOL;
 		foreach ($this->values as $value) {
 			$ret .= $this->getSingleValueHtml($value, ++$count);
 		}
@@ -191,6 +200,18 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 	  */
 	public function getStylesheets() {
 		return $this->styles;
+	}
+	
+	/**
+	  * Returns an array of stylesheets used by this widget. You don't
+	  * need to overwrite this method. Just set the $styles member
+	  * in your widget class's constructor accordingly. 
+	  * To get the basis URL you can use the $widgetBaseUrl member.
+	  *
+	  * @return array An array of cs sheet URLs
+	  */
+	public function getOnLoadCode() {
+		return $this->onLoadCode;
 	}
 	
 	/**

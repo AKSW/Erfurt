@@ -20,14 +20,13 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		$this->styles[] = $this->widgetBaseUrl . 'ResourceEdit/resource_edit.css';
 	}
 	
-	public function __toString() {
-		$modelUri = $this->config['modelUri'];
-		$ret = '<input type="hidden" id="model-' . $this->id . '" value="' . $modelUri . '" />' . PHP_EOL;
-		
-		$ret .= parent::__toString();
-		
-		return $ret;
-	}
+	// public function __toString() {
+	// 	$ret = '<input type="hidden" id="model-' . $this->id . '" value="' . $this->config['modelUri'] . '" />' . PHP_EOL;
+	// 	
+	// 	$ret .= parent::__toString();
+	// 	
+	// 	return $ret;
+	// }
 	
 	public function getSingleValueHtml($resource = '', $num = 1) {
 		if ($resource instanceof Resource) {
@@ -48,11 +47,11 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 			$nameMod = '';
 		}
 		
-		// $ret  = '<div id="' . $this->id . $num . '-container" class="ResourceEditContainer">' . PHP_EOL;
+		$ret  = '<div>' . PHP_EOL;
 		// local name input
 		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue" value="' . $value . 
 				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
-		$ret .= '<img src="' . $this->publicUri . 'images/delete.gif" onclick="$(\'value-' . $this->id . $num . '\').value=\'\'" />' . PHP_EOL;
+		$ret .= '<img class="delete button" id="img-' . $this->id . $num . '" src="' . $this->publicUri . 'images/delete.gif" alt="del" />' . PHP_EOL;
 				// onkeyup="$(\'uri-' . $this->id . $num . '\').value = this.value" 
 		// autocompleter div
 		$ret .= '<div id="autocomplete-choices-' . $this->id . $num . '" class="autosuggest" style="display:none"></div>' . PHP_EOL;
@@ -61,7 +60,7 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		// uri input (filled by autocompleter hook) 
 		// $ret .= '<input type="hidden" name="' . $name . $nameMod . '[value]" class="ResourceEditUri" value="' . $uri . 
 		// 		'" id="uri-' . $this->id . $num . '" />' . PHP_EOL;
-		// $ret .= '</div>' . PHP_EOL;
+		$ret .= '</div>' . PHP_EOL;
 		
 		return $ret;
 	}

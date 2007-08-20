@@ -97,7 +97,7 @@ class Erfurt_App_Default {
 		// store config in session so that asynchronous requests
 		// have access to modified config data (by e.g. OntoWiki)
 		$session = new Zend_Session_Namespace('ERFURT');
-		$session->config = $config;
+		$session->config = clone $config;
 		
 		$this->ac = null;
 		

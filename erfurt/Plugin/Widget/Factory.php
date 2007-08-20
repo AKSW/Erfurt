@@ -31,6 +31,11 @@ class Erfurt_Plugin_Widget_Factory {
 	protected $requiredStylesheets;
 	
 	/**
+	  * @var An array of required onload actions.
+	  */
+	protected $requiredOnLoadActions;
+	
+	/**
 	  * @var The Erfurt_Plugin_Manager instance used.
 	  */
 	protected $pluginManager;
@@ -89,6 +94,7 @@ class Erfurt_Plugin_Widget_Factory {
 		$this->propertyPreferences = array();
 		$this->requiredScripts = array($config->erfurtPublicUri . 'js/widget.js');
 		$this->requiredStylesheets = array();
+		$this->requiredOnLoadActions = array();
 		
 		$this->pluginManager = Zend_Registry::get('pluginManager');
 		
@@ -157,11 +163,17 @@ class Erfurt_Plugin_Widget_Factory {
 			$elementName = 'prop[' . $property->getURI() . ']';
 		}
 		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, &$config)) {
-			if ($widgetClass == 'ResourceEdit' || $widgetClass == 'NodeEdit') {
-				$config['modelUri'] = $property->getModel()->modelURI;
-			}
+			$config['modelUri'] = $property->getModel()->modelURI;
+			$config['propertyUri'] = $property->getUri();
+			
 			$widget = new $widgetClass($elementName, $value, $config);
-			return $widget;
+			
+			$return = $widget->__toString();
+			
+			if ($onLoad = $widget->getOnLoadCode()) {
+				$this->requiredOnLoadActions[] = $onLoad;
+			}
+			return $return;
 		}
 	}
 	
@@ -177,6 +189,13 @@ class Erfurt_Plugin_Widget_Factory {
 	  */
 	public function getRequiredStylesheets() {
 		return $this->requiredStylesheets;
+	}
+	
+	/**
+	  * Returns an array of required scripts of all active widgets.
+	  */
+	public function getRequiredOnLoadActions() {
+		return $this->requiredOnLoadActions;
 	}
 	
 	/**
