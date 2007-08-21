@@ -420,7 +420,7 @@ abstract class DefaultRDFSClass extends RDFSResource {
 	 **/
 	public function listInstances($start=0,$count=0,$erg=0) {
 		
-		return $this->model->listTypes($this,'RDFSInstance',$start,$count, $erg);
+		return $this->model->listTypes($this,'RDFSInstance',$start,$count,&$erg);
 	}
 	
 	/**
