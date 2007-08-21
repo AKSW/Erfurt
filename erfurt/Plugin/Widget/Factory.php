@@ -162,7 +162,7 @@ class Erfurt_Plugin_Widget_Factory {
 		} else {
 			$elementName = 'prop[' . $property->getURI() . ']';
 		}
-		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, &$config)) {
+		if ($widgetClass = $this->_getWidgetClass($class, $property, $elementName, $value, $config)) {
 			$config['modelUri'] = $property->getModel()->modelURI;
 			$config['propertyUri'] = $property->getUri();
 			

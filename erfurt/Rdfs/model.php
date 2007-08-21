@@ -45,8 +45,8 @@ abstract class DefaultRDFSModel extends DbModel {
 		$this->vclass=($this->type=='OWL'?'OWL':'RDFS').'Class';
 		$this->property=($this->type=='OWL'?'OWL':'RDFS').'Property';
 		$this->instance=($this->type=='OWL'?'OWL':'RDFS').'Instance';
-		$this->asResource=new $this->resource($this->modelURI,&$this);
-#		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
+		$this->asResource=new $this->resource($this->modelURI,$this);
+#		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),$this);
 		$this->importsSQL='';
 
 		$this->vocabulary=array(
@@ -328,7 +328,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function listResourcesSubject($search = '', $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->_listResourcesCol('subject', $search, $start, $count, &$erg);
+		return $this->_listResourcesCol('subject', $search, $start, $count, $erg);
 	}
 	
 	/**
@@ -340,7 +340,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function listResourcesPredicate($search = '', $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->_listResourcesCol('predicate', $search, $start, $count, &$erg);
+		return $this->_listResourcesCol('predicate', $search, $start, $count, $erg);
 	}
 	
 	/**
@@ -352,7 +352,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function listResourcesObject($search = '', $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->_listResourcesCol('object', $search, $start, $count, &$erg);
+		return $this->_listResourcesCol('object', $search, $start, $count, $erg);
 	}
 	
 	/**
@@ -367,7 +367,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @return
 	 **/
 	public function listTypes($type=NULL,$class=NULL,$start=0,$count=0,$erg=0) {
-		return $this->findNodes(NULL,'rdf:type',$type,$class,$start,$count,&$erg);
+		return $this->findNodes(NULL,'rdf:type',$type,$class,$start,$count,$erg);
 	}
 	
 	/**
@@ -645,7 +645,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function find($s, $p, $o, $start = 0, $count = 0, $erg = 0) { 
 	
-		return $this->findAsMemModel($s, $p, $o, $start, $count, &$erg);
+		return $this->findAsMemModel($s, $p, $o, $start, $count, $erg);
 	}
 	
 	/**
@@ -692,7 +692,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function findStatements($s,$p,$o,$start=0,$count=0,$erg=0) {
 		
-		return $this->findAsStatementArray($s, $p, $o, $start, $count, &$erg);
+		return $this->findAsStatementArray($s, $p, $o, $start, $count, $erg);
 	}
 	
 	/**
@@ -709,7 +709,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function findAsStatementArray($s, $p, $o, $offset = 0, $limit = 0, $erg = 0) {
 		
-		$find = $this->find($s, $p, $o, $offset, $limit, &$erg);
+		$find = $this->find($s, $p, $o, $offset, $limit, $erg);
 		return $find->triples;
 	}
 	
@@ -718,7 +718,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function findSubjects($predicate, $class = 'resource', $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->findSubjectsForPredicateAs($predicate, $class, $start, $count, &$erg);
+		return $this->findSubjectsForPredicateAs($predicate, $class, $start, $count, $erg);
 	}
 	
 	/**
@@ -739,7 +739,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function findObjects($predicate, $class = 'resource', $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->findObjectsForPredicateAs($predicate, $class, $start, $count, &$erg);
+		return $this->findObjectsForPredicateAs($predicate, $class, $start, $count, $erg);
 	}	
 	
 	/**
@@ -797,7 +797,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 */
 	public function findNodes($subject, $predicate, $object, $class = null, $start = 0, $count = 0, $erg = 0) {
 		
-		return $this->findNodesAs($subject, $predicate, $object, $class, $start, $count, &$erg);
+		return $this->findNodesAs($subject, $predicate, $object, $class, $start, $count, $erg);
 	}
 	
 	/**
@@ -867,7 +867,7 @@ abstract class DefaultRDFSModel extends DbModel {
 			$class = 'instance';
 		}
 			
-		$res = $this->findAsMemModel($subject, $predicate, $object, $offset, $limit, &$erg);
+		$res = $this->findAsMemModel($subject, $predicate, $object, $offset, $limit, $erg);
 		$ret = array();
 						
 		foreach ($res->triples as $triple) {

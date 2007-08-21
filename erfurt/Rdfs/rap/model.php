@@ -397,7 +397,7 @@ class RDFSModel extends DefaultRDFSModel {
 				WHERE modelID IN ('.$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
 				GROUP BY subject';
 		
-		return $this->_convertRecordSetToNodeList($sql, $class, $offset, $limit, &$erg);
+		return $this->_convertRecordSetToNodeList($sql, $class, $offset, $limit, $erg);
 		
 		/*
 // TODO handle offset and limit
@@ -421,7 +421,7 @@ class RDFSModel extends DefaultRDFSModel {
 				WHERE modelID IN (".$this->getModelIds().') AND predicate="'.$this->_dbId($predicate).'"
 				GROUP BY object';
 				
-		return $this->_convertRecordSetToNodeList($sql, $class, $offset, $limit, &$erg);
+		return $this->_convertRecordSetToNodeList($sql, $class, $offset, $limit, $erg);
 	}
 	
 	/**
@@ -1066,7 +1066,7 @@ class RDFSModel extends DefaultRDFSModel {
 			  	s2.object='".$this->_dbId('RDFS_Resource')."' OR
 				(1=0 AND s2.object_is='r' AND s2.object NOT LIKE '".$this->baseURI."%')
 			  ORDER BY s1.subject";
-		$topclasses=$this->_convertRecordSetToNodeList($sql,$this->vclass,$start,$count,&$erg);
+		$topclasses=$this->_convertRecordSetToNodeList($sql,$this->vclass,$start,$count,$erg);
 		return cache('listTopClassesImplicit'.$this->modelURI,$args,$topclasses);
  	}
 	function countClasses($includeImports=true) {

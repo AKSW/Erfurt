@@ -162,7 +162,7 @@ class RDFSClass extends DefaultRDFSClass {
 			return $c;
 
 		if(!$properties)
-			return $this->listInstances($start,$count,&$erg);
+			return $this->listInstances($start,$count, $erg);
 		$ret=array();
 
 		$sql='SELECT s.subject,s.subject_is FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s';
