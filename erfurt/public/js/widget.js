@@ -1,4 +1,4 @@
-function getEmptyHtml(trigger, id, containerId, property) {
+function getEmptyHtml(trigger, id, containerId, widgetClass) {
 	var count    = $jq('#count-' + id).val();
 	var name     = $jq('#name-' + id).val();
 	var model    = $jq('#model-' + id).val();
@@ -12,7 +12,8 @@ function getEmptyHtml(trigger, id, containerId, property) {
 		'&property=' + encodeURIComponent(property) + 
 		'&count=' + count + 
 		'&name=' + encodeURIComponent(name) + 
-		'&model=' + encodeURIComponent(model);
+		'&class=' + encodeURIComponent(widgetClass);
+		/* '&model=' + encodeURIComponent(model); */
 	
 	$jq(container).load(uri);
 	//new Ajax.Updater(container, uri, {evalScripts: true});

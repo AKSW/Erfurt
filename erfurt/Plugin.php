@@ -35,9 +35,10 @@ abstract class Erfurt_Plugin {
 	protected function __construct() {
 		$config = Zend_Registry::get('config');
 		$this->types = Zend_Registry::get('datatypes');
-		$this->pluginBaseUrl = $config->erfurtPublicUri . $config->pluginDir;
-		$this->pluginBaseDir = ERFURT_BASE . $config->pluginDir;
-		$this->publicUri = $config->erfurtPublicUri;
+		
+		$this->pluginBaseUrl = $config->erfurtUrlBase . $config->publicDir . $config->pluginDir;
+		$this->pluginBaseDir = ERFURT_BASE . $config->publicDir . $config->pluginDir;
+		$this->publicUri = $config->erfurtUrlBase . $config->publicDir;
 	}
 }
 

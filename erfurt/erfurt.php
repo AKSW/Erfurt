@@ -176,16 +176,26 @@ $urlBase = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SE
 		   '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['SERVER_PORT'] != '80' ? ':' . $_SERVER['SERVER_PORT'] : '');
 $scriptNameUnix = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
 $rewriteBase = substr($scriptNameUnix, 0, strrpos($scriptNameUnix, '/'));
-
 $scriptFilenameUnix = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']);
-$fileSystemBase = substr($scriptFilenameUnix, 0, strrpos($scriptFilenameUnix, '/'));
-if (function_exists('str_ireplace')) {
-	$prefixDir = str_ireplace($fileSystemBase, '', ERFURT_BASE);
+
+if (false !== stripos($scriptFilenameUnix, ERFURT_BASE)) {
+	// we are inside Erfurt
+	$postFix = str_ireplace(ERFURT_BASE, '', $scriptFilenameUnix);
+	$config->erfurtUrlBase = $urlBase . str_replace($postFix, '', $scriptNameUnix);
 } else {
-	$prefixDir = str_replace($fileSystemBase, '', ERFURT_BASE);
+	// we are outside Erfurt
+	$fileSystemBase = substr($scriptFilenameUnix, 0, strrpos($scriptFilenameUnix, '/'));
+	$prefixDir = str_ireplace($fileSystemBase, '', ERFURT_BASE);
+	// we can assume PHP5, so str_ireplace should be available
+	// if (function_exists('str_ireplace')) {
+	// 	$prefixDir = str_ireplace($fileSystemBase, '', ERFURT_BASE);
+	// } else {
+	// 	$prefixDir = str_replace($fileSystemBase, '', ERFURT_BASE);
+	// }
+	$config->erfurtUrlBase = $urlBase . $rewriteBase . $prefixDir;
 }
 
-$config->erfurtUrlBase = $urlBase . $rewriteBase . $prefixDir;
+$config->erfurtPublicUrl = $config->erfurtUrlBase . $config->publicDir;
 
 $datatypes = array(
 	'http://www.w3.org/2001/XMLSchema#string'=>'String',
