@@ -84,7 +84,7 @@ class RDFSModel extends DefaultRDFSModel {
 		if ($this->getStore()->getAc()->isEditSbac()) {
 			$affectedRows = $this->_addExt($statement);
 		} else {
-			$this->dbConn->add($statement);
+			DbModel::add($statement);
 			$affectedRows = $this->dbConn->Affected_Rows();
 		}
 		
@@ -165,7 +165,7 @@ class RDFSModel extends DefaultRDFSModel {
 		if ($this->getStore()->getAc()->isEditSbac()) {
 			$affectedRows = $this->_removeExt($statement);
 		} else {
-			$this->dbConn->remove($statement);
+			DbModel::remove($statement);
 			$affectedRows = $this->dbConn->Affected_Rows();
 		}
 		
