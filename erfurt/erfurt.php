@@ -51,7 +51,7 @@ if (is_writable($logDir)) {
 	$erfurtLog = new Zend_Log($writer);
 }
 Zend_Registry::set('erfurtLog', $erfurtLog);
-$erfurtLog->info('Erfurt-Start: ' . date('d.m.Y H:i:s'));
+$erfurtLog->info('Erfurt-Start: ' . @date('d.m.Y H:i:s'));
 
 
 # config

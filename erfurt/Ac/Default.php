@@ -282,6 +282,8 @@ class Erfurt_Ac_Default {
 				"\nAnyAction: ".print_r($this->_userAnyActionAllowed, true));
 		
 		# statement based ac
+		#  set the default value to statements
+		$GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
 		if ($this->statementsAcEnabled 
 					and file_exists(ERFURT_BASE.'Ac/Statements/'.ucfirst($this->_config->database->backend).'.php')) {
 			try {
@@ -308,7 +310,6 @@ class Erfurt_Ac_Default {
 				printr($e);
 			}
 		}
-		
 	}
 	
 	/**

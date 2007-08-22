@@ -549,7 +549,7 @@ abstract class DefaultRDFSModel extends DbModel {
 		
 		foreach(array_keys($this->findNodes($uri,'rdf:type',NULL)) as $class) {
 			if(array_intersect(array_keys($this->findNodes($class,'rdf:type',NULL)),array_keys($this->vocabulary['Class'])))
-				return new $this->instance($uri,$this);
+				return $this->instanceF($uri);
 		}
 		return false;
 	}
