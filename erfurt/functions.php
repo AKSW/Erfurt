@@ -576,8 +576,9 @@ Class stmCache {
 	 */
 	function get() {
 		if(Zend_Registry::get('config')->cache->enable && !$this->value && $ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model=".$this->model->modelID." AND resource='".$this->resource."'"))
-			$this->value=unserialize($ret);
-		return $this->value;
+			return unserialize($ret);
+		
+		return null;
 	}
 	
 	/**

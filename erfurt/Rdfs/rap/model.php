@@ -264,7 +264,7 @@ class RDFSModel extends DefaultRDFSModel {
 	/**
 	 * @see DefaultRDFSModel
 	 */
-	public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false) {
+	public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
         
 		//$args = func_get_args();
 		//$cache = Zend_Registry::get('cache');
@@ -276,8 +276,10 @@ class RDFSModel extends DefaultRDFSModel {
 				   WHERE {
 					 { ?class rdf:type ?x .
 					   OPTIONAL { ?class rdfs:subClassOf ?super1 . } .
+					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
 					   FILTER ( ?x = owl:Class || ?x = owl:DeprecatedClass || ?x = rdfs:Class ) .
-					   FILTER ( !bound(?super1) ) . ' .
+					   FILTER ( !bound(?super1) && !isBlank(?class) ) . ' .
+					   (($hiddenClasses === false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
 					   (($systemClasses === false) ? 
 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
 						: '') .
@@ -285,7 +287,9 @@ class RDFSModel extends DefaultRDFSModel {
 					' UNION
 					 { ?implr rdf:type ?class . 
 					   OPTIONAL { ?class rdfs:subClassOf ?super2 . } .
-					   FILTER ( !bound(?super2) ) . ' .
+					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
+					   FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
+					   (($hiddenClasses === false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
 					   (($systemClasses === false) ? 
 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
 						: '') .

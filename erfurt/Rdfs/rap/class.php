@@ -21,7 +21,7 @@ class RDFSClass extends DefaultRDFSClass {
 	/**
 	 * @see DefaultRDFSClass
 	 */
-	public function listDirectSubClasses($emptyClasses = false) {
+	public function listDirectSubClasses($emptyClasses = false, $hiddenClasses = true) {
 	    
 	    $sql = 'SELECT DISTINCT s.subject, s.subject_is
 	            FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s
@@ -38,9 +38,34 @@ class RDFSClass extends DefaultRDFSClass {
             $subClasses = array();
             
             foreach ($temp as $t) {
-                if (!$t->isEmpty(true)) $subClasses[] = $t;
+                if (!$t->isEmpty(true)) {
+					if ($hiddenClasses === false) {
+						$val = $t->getPropertyValue('http://ns.ontowiki.net/SysOnt/hidden');
+						
+						if ($val == null || $val->getLabel() != 'true') {
+							$subClasses[] = $t;
+						}
+					} else {
+						$subClasses[] = $t;
+					}
+				}
             }
-	    }
+	    } else {
+			if ($hiddenClasses == false) {
+				$temp = $subClasses;
+	            $subClasses = array();
+	
+				foreach ($temp as $t) {
+					$val = $t->getPropertyValue('http://ns.ontowiki.net/SysOnt/hidden');
+		
+					if (($val == null) || ($val->getLabel() != 'true')) {
+						$subClasses[] = $t;
+					}
+				}
+			} else {
+				$subClasses[] = $t;
+			}
+		}
 	      
 	    return $subClasses;
 	}
