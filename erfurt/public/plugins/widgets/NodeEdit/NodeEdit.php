@@ -52,11 +52,11 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 																				)
 		);
 		$resource = new ResourceEdit($name, $value, array('cardinality' => 1, 
-																	'display' => ($selected == 'literal' ? 'none' : ''), 
-																	'cssId' => 'resource' . $this->id,
-																	'start' => $num, 
-																	'modelUri' => $this->config['modelUri']
-																	)
+														  'display' => ($selected == 'literal' ? 'none' : ''), 
+														  'cssId' => 'resource' . $this->id,
+														  'start' => $num, 
+														  'modelUri' => $this->config['modelUri']
+														  )
 		);
 		$literal = new LiteralEdit($name, $value, array('cardinality' => 1, 
 														'display' => ($selected == 'resource' ? 'none' : ''), 
@@ -64,9 +64,8 @@ class NodeEdit extends Erfurt_Plugin_Widget {
 														'start' => $num
 														)
 		);
-		$ret = $checkbox . $resource . $literal;
 		
-		return $ret;
+		return ($checkbox . $resource . $literal);
 	}
 }
 
