@@ -53,6 +53,7 @@
 <!-- Datatypes -->
   <rdfs:Datatype rdf:about="&xsd;string" rdfs:label="String"/>
   <rdfs:Datatype rdf:about="&xsd;anyURI" rdfs:label="Any URI"/>
+  <rdfs:Datatype rdf:about="&xsd;boolean" rdfs:label="Boolean"/>
 
 <!-- Annotation Properties -->
   <owl:AnnotationProperty rdf:about="&rdfs;comment" rdfs:label="comment">
@@ -77,6 +78,14 @@
     <rdfs:comment>This is the user identifier of an OntoWiki account which is used for login</rdfs:comment>
     <rdfs:domain rdf:resource="&foaf;Agent"/>
     <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="hidden"
+                        rdfs:label="hidden">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:comment>All resources (especially Models, Classes and Properties) can be hidden.</rdfs:comment>
+    <rdfs:domain rdf:resource="&owl;Thing"/>
+    <rdfs:range rdf:resource="&xsd;boolean"/>
   </owl:DatatypeProperty>
 
   <owl:DatatypeProperty rdf:about="rawConfig"
