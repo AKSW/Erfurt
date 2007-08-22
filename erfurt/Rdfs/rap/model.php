@@ -81,7 +81,7 @@ class RDFSModel extends DefaultRDFSModel {
 		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
 		 
 		# sbac
-		if ($this->getStore()->getAc()->isEditSbac()) {
+		if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
 			$affectedRows = $this->_addExt($statement);
 		} else {
 			DbModel::add($statement);
@@ -162,7 +162,7 @@ class RDFSModel extends DefaultRDFSModel {
 #print_r($statement->subj->toString().$statement->pred->toString().$statement->obj->toString());
 		
 		# sbac
-		if ($this->getStore()->getAc()->isEditSbac()) {
+		if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
 			$affectedRows = $this->_removeExt($statement);
 		} else {
 			DbModel::remove($statement);
