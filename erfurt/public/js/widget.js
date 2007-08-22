@@ -8,7 +8,7 @@ function getEmptyHtml(trigger, id, containerId, widgetClass) {
 	container.setAttribute('id', 'dyn-cont-' + id);
 	document.getElementById(containerId).appendChild(container);
 	
-	var uri = ow.erfurtpublicbase + 'get_widget.php?id=' + id + 
+	var uri = erfurtPublicUri + 'get_widget.php?id=' + id + 
 		'&property=' + encodeURIComponent(property) + 
 		'&count=' + count + 
 		'&name=' + encodeURIComponent(name) + 
