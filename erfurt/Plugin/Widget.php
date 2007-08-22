@@ -149,8 +149,8 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		if ($withContainer) {
 			$ret = '<div id="' . $container . '-' . $id . '" class="' . $this->config['class'] . '"' . $displayOption . '>' . PHP_EOL;
 		}
-		$ret .= '<input type="hidden" id="model-' . $id . '" value="' . $this->config['modelUri'] . '" />' . PHP_EOL;
-		$ret .= '<input type="hidden" id="property-' . $id . '" value="' . $this->config['propertyUri'] . '" />' . PHP_EOL;
+		$ret .= '<input type="hidden" id="model-' . $this->id . '" value="' . $this->config['modelUri'] . '" />' . PHP_EOL;
+		$ret .= '<input type="hidden" id="property-' . $this->id . '" value="' . $this->config['propertyUri'] . '" />' . PHP_EOL;
 		foreach ($this->values as $value) {
 			$ret .= $this->getSingleValueHtml($value, ++$count);
 		}
