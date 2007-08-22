@@ -36,7 +36,7 @@ class Erfurt_Util {
 	  *
 	  * @return string
 	  */
-	public static function replaceUrlParam($param_replace, $value_replace = false, $other_params = array()) {	
+	public static function replaceUrlParam($param_replace, $value_replace = false, $other_params = array()) {
 		// split query string
 		$queries = explode('&', urldecode($_SERVER['QUERY_STRING']));
 		
@@ -51,7 +51,8 @@ class Erfurt_Util {
 					$url_params[$qry[0]] = $value_replace;
 				}
 				$replaced = true;
-			} else {
+			// don't take false values over
+			} elseif (($qry[1] != 'false') && $qry[1] != '') {
 				$url_params[$qry[0]] = $qry[1];
 			}
 		}
