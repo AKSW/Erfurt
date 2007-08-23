@@ -510,7 +510,7 @@ function isBNode($node) {
 	else false;
 }
 function cacheGetUidFromArgs(&$args) {
-	return crc32(serialize($args));
+	return crc32((serialize($args).$GLOBALS['RAP']['conf']['database']['tblStatements']));
 	foreach($args as $arg)
 		if(is_object($arg)) {
 			if(method_exists($arg,'toString'))
