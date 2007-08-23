@@ -169,7 +169,7 @@ function pwlLogRenderAction($id,$description,$subject,$details,$modelId,$baseURI
 	return $ret;
 }
 
-function pwlLogListEntries($filter=array(),$start=0,$count=0,$erg=0) {
+function pwlLogListEntries($filter=array(),$start=0,$count=0,$erg=0, $modelId) {
 	global $store;
 	if($filter) foreach($filter as $key=>$val) if($val) {
 		switch($key) {
@@ -189,11 +189,13 @@ function pwlLogListEntries($filter=array(),$start=0,$count=0,$erg=0) {
 				break;
 		}
 	}
+	
 	$sql='SELECT la.id,date,user,modelURI,description,modelID,la.subject,details FROM log_actions la '.$join.'
 			INNER JOIN models ON(model_id=modelID)
 			INNER JOIN log_action_descr lad ON (lad.id=descr_id)
-		WHERE ISNULL(parent_id)'.$search.$group.' ORDER BY date DESC';
+		WHERE model_id = ' . $modelId . ' AND ISNULL(parent_id)'.$search.$group.' ORDER BY date DESC';
 #$store->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
+	
 	$res=$store->dbConn->pageExecute($sql,$count,$start/$count+1);
 	$erg=$res->_maxRecordCount?$res->_maxRecordCount:$res->_numOfRows;
 	return $res;
