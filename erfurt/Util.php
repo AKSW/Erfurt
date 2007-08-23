@@ -40,6 +40,8 @@ class Erfurt_Util {
 		// split query string
 		$queries = explode('&', urldecode($_SERVER['QUERY_STRING']));
 		
+		$url_params = array();
+		
 		// split queries in param and value
 		$replaced = false;
 		foreach ($queries as $query) {

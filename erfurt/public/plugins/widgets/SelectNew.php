@@ -37,8 +37,8 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		} else {
 			$count = 0;
 		}
-		if (empty($this->values[''])) {
-			$this->values = array_merge(array('' => 'Datatype'), $this->values);
+		if (empty($this->values['']) && empty($this->selected)) {
+			$this->values = array_merge(array('' => $this->config['emptyLabel']), $this->values);
 		}
 		$ret = '<span id="select-container-' . $this->id . '"';
 		if (!empty($this->config['class'])) {
