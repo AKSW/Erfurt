@@ -84,9 +84,6 @@ define('RDF_BACKEND_INCLUDE_DIR', RDFSAPI_INCLUDE_DIR . ($config->database->back
 
 define('WIDGETS_INCLUDE_DIR', ERFURT_BASE.'lib/plugins/widgets/');
 
-define('MODULES_INCLUDE_DIR', ERFURT_BASE.'lib/modules/');
-
-
 ## HACK FOR OLD GLOBAL FUNCTIONS
 require_once(ERFURT_BASE.'functions.php');
 

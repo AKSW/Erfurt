@@ -90,10 +90,6 @@ class Erfurt_App_Default {
 		
 		#$owAcUserModel = $defaultStore->getModel($config->ac->user->model);
 		
-		// hack until we have a new versioning module
-		// TODO: rewrite versioning module and remove this
-		include_once MODULES_INCLUDE_DIR . 'version/include.php';
-		
 		// store config in session so that asynchronous requests
 		// have access to modified config data (by e.g. OntoWiki)
 		$session = new Zend_Session_Namespace('ERFURT');
