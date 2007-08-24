@@ -23,7 +23,7 @@
  */
 
 /**
- * OWLModel represents an owl based knowledge base.
+ * Erfurt_Owl_Model represents an owl based knowledge base.
  *
  * @package owl
  * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>

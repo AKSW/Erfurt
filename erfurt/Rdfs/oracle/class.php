@@ -8,7 +8,7 @@
  * @access public
  **/
 
-class RDFSClass extends DefaultRDFSClass {
+class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 	
 }
 ?>

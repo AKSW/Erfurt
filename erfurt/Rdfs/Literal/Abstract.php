@@ -8,7 +8,7 @@
  * @version $Id: literal.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class DefaultRDFSLiteral extends Literal {
+abstract class Erfurt_Rdfs_Literal_Abstract extends Literal {
 	
 	protected $model;
 	
@@ -20,7 +20,7 @@ class DefaultRDFSLiteral extends Literal {
 	 * @param $datatype
 	 * @return RDFSLiteral
 	 **/
-	public function DefaultRDFSLiteral($label, $language = '', $datatype = '') {
+	public function __construct($label, $language = '', $datatype = '') {
 		
 		if ($label instanceof Literal) {
 			Literal::Literal($label->getLabel(), $label->getLanguage());

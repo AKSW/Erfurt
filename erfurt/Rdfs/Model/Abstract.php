@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2006
  * @version $Id: model.php 982 2007-05-14 14:09:12Z cweiske $
  */
-abstract class DefaultRDFSModel extends DbModel {
+abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * Provides a view of the model as a resource, e.g. to retrieve
 	 * or set owl:OntologyProperties.
@@ -33,7 +33,7 @@ abstract class DefaultRDFSModel extends DbModel {
 	 * @param string $modelURI
 	 * @return RDFSmodel
 	 **/
-	function DefaultRDFSModel($store,$modelURI,$type=NULL) {
+	function __construct($store,$modelURI,$type=NULL) {
 		if(!$store->modelExists($modelURI))
 			return FALSE;
 
@@ -42,9 +42,9 @@ abstract class DefaultRDFSModel extends DbModel {
 		$this->modelURI = $modelURI;
 		$this->type=$type?$type:$this->getType();
 		$this->resource='RDFSResource';
-		$this->vclass=($this->type=='OWL'?'OWL':'RDFS').'Class';
-		$this->property=($this->type=='OWL'?'OWL':'RDFS').'Property';
-		$this->instance=($this->type=='OWL'?'OWL':'RDFS').'Instance';
+		$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
+		$this->property=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Property';
+		$this->instance=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Instance';
 		$this->asResource=new $this->resource($this->modelURI,&$this);
 #		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
 		$this->importsSQL='';

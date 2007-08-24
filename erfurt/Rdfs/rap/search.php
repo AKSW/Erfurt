@@ -8,7 +8,7 @@
  * @version $Id: search.php 549 2006-03-06 02:19:04Z soerenauer $
  * @access public
  **/
-class InstanceSearch extends DefaultInstanceSearch {
+class InstanceSearch extends Erfurt_Rdfs_InstanceSearch_Abstract {
 
 #######################################################################################################################
 #######################################################################################################################

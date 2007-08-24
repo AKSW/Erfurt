@@ -8,7 +8,7 @@
  * @version $Id: class.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-abstract class DefaultRDFSClass extends RDFSResource {
+abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	
 	/**
 	 * Returns number of all classes that are declared to be sub-classes

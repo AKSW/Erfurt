@@ -8,7 +8,7 @@
  * @version $Id: resource.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-abstract class DefaultRDFSResource extends Resource {
+abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 	
 	/**
 	* A reference to the RDFSModel this resource belongs to.
@@ -22,7 +22,7 @@ abstract class DefaultRDFSResource extends Resource {
 	 * @param RDFSModel $model
 	 * @return
 	 **/
-	public function DefaultRDFSResource($uri,&$model,$expandNS=true) {
+	public function __construct($uri,&$model,$expandNS=true) {
 		
 		if ($uri instanceof Resource) {
 			$uri = $uri->getURI();

@@ -8,7 +8,7 @@
  * @access public
  **/
 
-class RDFSInstance extends DefaultRDFSInstance {
+class RDFSInstance extends Erfurt_Rdfs_Instance_Abstract {
 
 }
 ?>

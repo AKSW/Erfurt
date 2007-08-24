@@ -8,7 +8,7 @@
  * @version $Id: resource.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class RDFSResource extends DefaultRDFSResource {
+class RDFSResource extends Erfurt_Rdfs_Resource_Abstract {
 
 #######################################################################################################################
 #######################################################################################################################

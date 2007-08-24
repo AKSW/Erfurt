@@ -8,15 +8,15 @@
  * @access public
  **/
 
-class RDFSModel extends DefaultRDFSModel {
+class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	
-	function RDFSModel($store,$modelname,$type=NULL) {
+	public function __construct($store,$modelname,$type=NULL) {
 		$modelVars =& $store->dbConn->execute("SELECT * FROM MDSYS.RDF_MODEL$ WHERE MODEL_NAME='" .$modelname ."'");
 		$this->modelOwner 	= $modelVars->fields[0];
 		$this->modelID 	= $modelVars->fields[1];
 		$this->modelName 	= $modelVars->fields[2];
 		$this->tableName 	= $modelVars->fields[3];
-		parent::DefaultRDFSModel($store,$modelname,$type);
+		parent::__construct($store,$modelname,$type);
 	}
 
 	/**

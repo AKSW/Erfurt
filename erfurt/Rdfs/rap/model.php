@@ -8,12 +8,12 @@
  * @version $Id: model.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class RDFSModel extends DefaultRDFSModel {
-	function RDFSModel($store,$modelURI,$type=NULL) {
+class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
+	public function __construct($store,$modelURI,$type=NULL) {
 		$modelVars =& $store->dbConn->execute("SELECT modelURI, modelID, baseURI FROM models WHERE modelURI='" .$modelURI ."'");
 		$this->modelID 	= $modelVars->fields[1];
 		$this->baseURI 	= $this->_checkBaseURI($modelVars->fields[2]);
-		parent::DefaultRDFSModel($store,$modelURI,$type);
+		parent::__construct($store,$modelURI,$type);
 	}
 	
 #######################################################################################################################
@@ -279,23 +279,24 @@ class RDFSModel extends DefaultRDFSModel {
 					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
 					   FILTER ( ?x = owl:Class || ?x = owl:DeprecatedClass || ?x = rdfs:Class ) .
 					   FILTER ( !bound(?super1) && !isBlank(?class) ) . ' .
-					   (($hiddenClasses === false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses === false) ? 
+					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+					   (($systemClasses == false) ? 
 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
 						: '') .
-					 '}' . (($implicitClasses === true) ? 
+					 '}' . (($implicitClasses == true) ? 
 					' UNION
 					 { ?implr rdf:type ?class . 
 					   OPTIONAL { ?class rdfs:subClassOf ?super2 . } .
 					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
 					   FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
-					   (($hiddenClasses === false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses === false) ? 
+					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+					   (($systemClasses == false) ? 
 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
 						: '') .
 					 '}
 		    	   }' : '}');
-						
+		
+				
 		$result = $this->sparqlQueryAs($sparql, 'class');
 		$res = array();
 		

@@ -110,29 +110,21 @@ define("VALIDATE_IDS", false);
 define('BNODE_PREFIX','node');
 #define('INDENTATION'," ");
 
+
+// include rap lib
 require_once(RDFAPI_INCLUDE_DIR.'RdfAPI.php');
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_SPARQL);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DATASET);
 
-#require_once(STORE_INCLUDE_DIR.'Default.php');
-#require_once(RDF_BACKEND_INCLUDE_DIR.'store.php');
-
-require_once(RDFSAPI_INCLUDE_DIR.'model.php');
+// backend-specific classes from rdfs package (not yet auto-loadable)
 require_once(RDF_BACKEND_INCLUDE_DIR.'model.php');
-require_once(RDFSAPI_INCLUDE_DIR.'literal.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'literal.php');
-require_once(RDFSAPI_INCLUDE_DIR.'resource.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'resource.php');
-require_once(RDFSAPI_INCLUDE_DIR.'class.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'class.php');
-require_once(RDFSAPI_INCLUDE_DIR.'property.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'property.php');
-require_once(RDFSAPI_INCLUDE_DIR.'instance.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'instance.php');
-
-require_once(RDFSAPI_INCLUDE_DIR.'search.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'search.php');
 
 $default_prefixes['owl']='http://www.w3.org/2002/07/owl#';
@@ -146,13 +138,6 @@ $OWL_Thing=new Resource(OWL_NS."Thing");
 $OWL_Nothing=new Resource(OWL_NS."Nothing");
 $OWL_AllDifferent=new Resource(OWL_NS."AllDifferent");
 $OWL_distinctMembers=new Resource(OWL_NS."distinctMembers");
-
-require_once(OWLAPI_INCLUDE_DIR.'OWLModel.php');
-require_once(OWLAPI_INCLUDE_DIR.'OWLClass.php');
-require_once(OWLAPI_INCLUDE_DIR.'OWLProperty.php');
-require_once(OWLAPI_INCLUDE_DIR.'OWLInstance.php');
-### END owlapi/owlapi.php ###
-
 
 // HTML rendering related functions (header, footer)
 require_once(POWLAPI_INCLUDE_DIR.'html.php');

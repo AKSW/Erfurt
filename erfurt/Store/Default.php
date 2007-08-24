@@ -143,7 +143,7 @@ class Erfurt_Store_Default extends DBStore {
 		if($m) {
 			if($m->getType()=='OWL') {
 				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
-				$m=new OWLModel($this,$modelURI);
+				$m=new Erfurt_Owl_Model($this,$modelURI);
 				foreach($m->listImports() as $import) if($import instanceof Resource) {
 					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs, $useACL))
 						$m->importsIds = array_merge($m->importsIds, array($imp->modelID => $imp->modelID), !empty($imp->importsIds) ? $imp->importsIds : array());

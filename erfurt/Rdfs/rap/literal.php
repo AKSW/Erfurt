@@ -9,6 +9,6 @@
  * @access public
  **/
 
-class RDFSLiteral extends DefaultRDFSLiteral {
+class RDFSLiteral extends Erfurt_Rdfs_Literal_Abstract {
 }
 ?>

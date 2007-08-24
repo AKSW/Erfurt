@@ -8,7 +8,7 @@
  * @version $Id: property.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-abstract class DefaultRDFSProperty  extends RDFSResource {
+abstract class Erfurt_Rdfs_Property_Abstract  extends RDFSResource {
 	
 	/**
 	 * Gets the domain for the property

@@ -23,7 +23,7 @@
  */
 
 /**
- * OWLClass represents an OWL ontology node characterising a class 
+ * Erfurt_Owl_Class represents an OWL ontology node characterising a class 
  * description.
  *
  * @package owl
@@ -32,7 +32,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @version $Id: $
  */
-class Erfurt_Owl_Class extends Erfurt_Rdfs_Class {
+class Erfurt_Owl_Class extends RDFSClass {
 	
 	/**
 	 * Returns true in case this restriction is a cardinality

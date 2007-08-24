@@ -7,6 +7,6 @@
  * @copyright Copyright (c) 2007
  * @access public
  **/
-class RDFSResource extends DefaultRDFSResource {
+class RDFSResource extends Erfurt_Rdfs_Resource_Abstract {
 }
 ?>

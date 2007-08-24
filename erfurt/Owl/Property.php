@@ -23,7 +23,7 @@
  */
 
 /**
- * OWLProperty represents a property which can be either a datatype property or
+ * Erfurt_Owl_Property represents a property which can be either a datatype property or
  * a object property.
  * 
  * @package owl

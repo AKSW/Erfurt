@@ -8,7 +8,7 @@
  * @version $Id: property.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class RDFSProperty extends DefaultRDFSProperty {
+class RDFSProperty extends Erfurt_Rdfs_Property_Abstract {
 
 #######################################################################################################################
 #######################################################################################################################

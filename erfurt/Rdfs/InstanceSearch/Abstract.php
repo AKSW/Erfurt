@@ -8,7 +8,7 @@
  * @version $Id: search.php 549 2006-03-06 02:19:04Z soerenauer $
  * @access public
  **/
-abstract class DefaultInstanceSearch {
+abstract class Erfurt_Rdfs_InstanceSearch_Abstract {
 	
 	var $model;
 	var $store;
@@ -16,7 +16,7 @@ abstract class DefaultInstanceSearch {
 	var $classes;
 	var $properties;
 	
-	public function DefaultInstanceSearch(&$model,$searchString,$classes=array(),$properties=array()) {
+	public function __construct(&$model,$searchString,$classes=array(),$properties=array()) {
 		
 		$this->model=&$model;
 		$this->store = $model->getStore();

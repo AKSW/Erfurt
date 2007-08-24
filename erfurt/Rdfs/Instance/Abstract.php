@@ -8,7 +8,7 @@
  * @version $Id: instance.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class DefaultRDFSInstance extends RDFSResource {
+class Erfurt_Rdfs_Instance_Abstract extends RDFSResource {
 	
 	/**
 	 * Returns an array of all properties defined for classes which this instance is instance of.

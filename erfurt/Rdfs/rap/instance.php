@@ -8,6 +8,6 @@
  * @version $Id: instance.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-class RDFSInstance extends DefaultRDFSInstance {
+class RDFSInstance extends Erfurt_Rdfs_Instance_Abstract {
 }
 ?>

@@ -23,7 +23,7 @@
  */
 
 /**
- * OWLInstance represents a simple instance (individual) of an OWLClass.
+ * Erfurt_Owl_Instance represents a simple instance (individual) of an OWLClass.
  * 
  * @package owl
  * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
@@ -31,6 +31,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @version $Id: $
  */
-class Erfurt_Owl_Instance extends Erfurt_Rdfs_Instance {
+class Erfurt_Owl_Instance extends RDFSInstance {
 }
 ?>
