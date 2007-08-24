@@ -102,7 +102,7 @@ abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
 		} elseif (is_string($styles)) {
 			$this->styles[] = $styles;
 		}
-		if ($this->config['cardinality'] == 1) {
+		if (isset($this->config['cardinality']) && $this->config['cardinality'] == 1) {
 			$this->config['cardinalityMin'] = 1;
 			$this->config['cardinalityMax'] = 1;
 		}

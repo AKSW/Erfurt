@@ -97,12 +97,21 @@ class Erfurt_Store_Default extends DBStore {
 	 * returns a list of available and permitted models
 	 *   
 	 */
-	function listModels($returnAsArray = false) {
+	function listModels($returnAsArray = false, $withLabel = false) {
 		$models=array();
 		if($ms=parent::listModels()) {
 			if($returnAsArray) {
 				foreach($ms as $model) {
 					if($this->aclCheck('View',$model['modelURI'])) {
+						if ($withLabel === true) {
+							$tempModel = $this->getModel($model['modelURI']);
+							$tempResource = $tempModel->resourceF($model['modelURI']);
+							$label = $tempResource->getPropertyValue('rdfs:label');
+							if ($label) {
+								$model['label'] = $label->getLabel();
+							}
+						}
+						
 						$models[] = $model;
 					}
 				}

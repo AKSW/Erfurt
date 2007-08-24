@@ -27,6 +27,8 @@ function printr($s, $more = false) {
 }
 
 ###################### TAKEN FROM powlapi/include.php ###########################################
+// TODO remove errorHandler
+/*
 function errorHandler($errno, $errstr, $errfile, $errline) {
 	switch ($errno) {
 		case E_ERROR:
@@ -58,11 +60,11 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 			}
 			break;
 		case E_STRICT:
-			#echo "<b>STRICT:</b> [$errno] $errstr<br />\n";
-			#echo "in line $errline of file $errfile<br />";
+			echo "<b>STRICT:</b> [$errno] $errstr<br />\n";
+			echo "in line $errline of file $errfile<br />";
 		default:
-			#echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
-			#echo "in line $errline of file $errline<br />";
+			echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
+			echo "in line $errline of file $errfile<br />";
 			break;
 	}
 }
@@ -83,6 +85,8 @@ function errorRenderer($arr) {
 	}
 }
 set_error_handler("errorHandler");
+*/
+
 function pwlOutput($string) {
 	echo(nl2br($string).'<br />');
 	flush();
@@ -99,7 +103,7 @@ function timer($t='global') {
 	list($low, $high) = split(" ", microtime());
 	$ret=sprintf("%f",$high + $low - $last[$t]);
 	$last[$t]=$high + $low;
-	if($GLOBALS['profile'])
+	if(isset($GLOBALS['profile']) && $GLOBALS['profile'])
 		return $ret;
 }
 timer();

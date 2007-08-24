@@ -68,7 +68,6 @@ Zend_Registry::set('config', $config);
 
 
 ### TAKEN FROM include.php
-
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('max_execution_time','6000');
 ini_set('allow_call_time_pass_reference','1');
@@ -76,7 +75,7 @@ ini_set('allow_call_time_pass_reference','1');
 
 # define constances 
 define('POWLAPI_INCLUDE_DIR', 	ERFURT_BASE.'lib/powlapi/');
-define('OWLAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/owlapi/');
+#define('OWLAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/owlapi/');
 define('RDFSAPI_INCLUDE_DIR', 	ERFURT_BASE.'Rdfs/');
 define('RDFAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/rdfapi-php/');
 

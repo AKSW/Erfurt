@@ -24,10 +24,15 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 		
 		// make an array since
 		// foreach is used later
-		if (is_array($config['options'])) {
+		if (isset($config['options']) && is_array($config['options'])) {
 			$this->options = $config['options'];
 		} else {
-			$this->options = array($config['options'] => $config['options']);
+			if (isset($config['options'])) {
+				$this->options = array($config['options'] => $config['options']);
+			} else {
+				$this->options = array();
+			}
+			
 		}
 		
 		if (is_array($selected)) {

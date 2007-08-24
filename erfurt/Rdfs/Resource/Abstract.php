@@ -73,8 +73,11 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 	public function getLocalName() {
 		
 		static $cache;
-		if($cache[$this->getURI()])
+		
+		if (isset($cache[$this->getURI()])) {
 			return $cache[$this->getURI()];
+		}
+			
 		$ns=$this->getNamespace();
 		if($ns && $ns==$this->getURI())
 			$cache[$this->getURI()]=$this->getURI();

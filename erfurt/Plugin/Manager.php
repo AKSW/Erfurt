@@ -123,7 +123,7 @@ class Erfurt_Plugin_Manager {
 			}
 			
 			// add class found
-			if ($className && class_exists($className)) {
+			if (isset($className) && $className && class_exists($className)) {
 				$this->activePlugins[$className] = $className;
 				unset($className);
 			}

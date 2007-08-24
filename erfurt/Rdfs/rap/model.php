@@ -100,7 +100,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	}
 	
 	private function _addExt(&$statement) {
-	if (!is_a($statement, 'Statement')) {
+	if (!($statement instanceof Statement)) {
 			$errmsg = RDFAPI_ERROR . '(class: DbModel; method: add): Statement expected.';
 			trigger_error($errmsg, E_USER_ERROR);
 		}
@@ -115,7 +115,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			."'" .$statement->getLabelSubject() ."',"
 			."'" .$statement->getLabelPredicate() ."',";
 
-			if (is_a($statement->object(), 'Literal')) {
+			if ($statement->object() instanceof Literal) {
 				$quotedLiteral = $this->dbConn->qstr($statement->obj->getLabel());
 				$sql .=        $quotedLiteral .","
 				."'" .$statement->obj->getLanguage() ."',"
@@ -187,7 +187,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	private function _removeExt(&$statement) {
 
-		if (!is_a($statement, 'Statement')) {
+		if (!($statement instanceof Statement)) {
 			$errmsg = RDFAPI_ERROR . '(class: DbModel; method: remove): Statement expected.';
 			trigger_error($errmsg, E_USER_ERROR);
 		}
@@ -918,7 +918,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	function _dbId($resource) {
 		if(is_string($resource))
-			$resource=is_a($GLOBALS[$resource],'resource')?$GLOBALS[$resource]:new $this->resource($resource,$this);
+			$resource=($GLOBALS[$resource] instanceof Resource)?$GLOBALS[$resource]:new $this->resource($resource,$this);
 		return $resource->getURI();
 	}
 	function _dbIds($resources) {
