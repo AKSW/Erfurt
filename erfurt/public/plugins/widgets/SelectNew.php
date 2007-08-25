@@ -72,7 +72,7 @@ class SelectNew extends Erfurt_Plugin_Widget {
 		if (!empty($this->config['style'])) {
 			$ret .= ' style="' . $this->config['style'] . '"';
 		}
-		$ret .= ' id="dtype-' . $this->id . '">' . PHP_EOL;
+		$ret .= ' id="' . $this->id . '">' . PHP_EOL;
 		
 		foreach ($this->values as $key => $val) {
 			if (is_int($key)) {
