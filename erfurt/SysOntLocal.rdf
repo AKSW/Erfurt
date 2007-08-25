@@ -16,7 +16,7 @@
          xmlns:rdfs="&rdfs;">
 
 <!-- Ontology Information -->
-  <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="OntoWiki System Config">
+  <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="OntoWiki System Configuration">
     <rdfs:comment>This is your OntoWiki configuration model. You can configure model based access control and some actions here.</rdfs:comment>
     <owl:imports>
       <owl:Ontology rdf:about="&SysOnt;"/>
