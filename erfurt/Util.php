@@ -53,14 +53,14 @@ class Erfurt_Util {
 					$url_params[$qry[0]] = $value_replace;
 				}
 				$replaced = true;
-			// don't take false values over
-			} elseif (($qry[1] != 'false') && $qry[1] != '') {
+			// don't take false or empty values over
+			} elseif (($qry[1] != 'false') && $qry[1] != '' && $qry[1] != 'none') {
 				$url_params[$qry[0]] = $qry[1];
 			}
 		}
 		
 		// add param if not found and hence not replaced
-		if ($value_replace && !$replaced) {
+		if (!$replaced) {
 			$url_params[$param_replace] = $value_replace;
 		}
 		
