@@ -95,7 +95,7 @@ class Erfurt_Util {
 	  * @param string $uriString the URI to be checked
 	  * @return string 
 	  */
-	public static function isUri(string $uriString, $allowNameSpaced = true) {
+	public static function isUri($uriString, $allowNameSpaced = true) {
 		// TODO: check for URIs
 		if (is_string($uriString)) {
 			$isUri = Zend_Uri::check($uriString);
