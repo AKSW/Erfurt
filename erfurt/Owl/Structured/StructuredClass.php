@@ -37,24 +37,34 @@ class Erfurt_Owl_Structured_StructuredClass
 		return $this->childClasses; //return string structured
 	}
 
-	public function toString($depth=0){
-		$tab=str_repeat("\t",$depth);
-		if(sizeof($this->URI)>=1)echo $tab.$this->URI."\n";
-		//echo get_class($this);
+	public function initialToString(){
 		
-		
-		foreach ($this->childClasses as $one){
-					echo $tab."has ChildClasses: \n".$tab.$one->toString();
-		}
+		$depth=0;
+		$ret=$this->URI."\n";
+		$tab=str_repeat("-",$depth).">";
 		foreach ($this->equivalentClasses as $one){
-					echo $tab."has EquivalentClass: \n".$tab.$one->toString();
+			$ret.= $tab."E:".$tab.$one->toString($depth)."\n";
 		}
 		foreach ($this->subclassOfClasses as $one){
-					echo $tab."has SubclassOfClasses: \n".$tab.$one->toString();
+			$ret.= $tab."S:".$tab.$one->toString($depth)."\n";
 		}
 		foreach ($this->disjointWithClasses as $one){
-			echo $tab."has disjointWithClasses: \n".$tab.$one->toString();
+			$ret.=  $tab."D:".$tab.$one->toString($depth)."\n";
 		}
+		foreach ($this->childClasses as $one){
+			$ret.=$tab."C:".$tab.$one->toString($depth++)."\n";
+		}
+		
+		return $ret;
+	}
+	
+	public function toString($depth=0){
+		$tab=str_repeat("-",$depth).">";
+		$ret="";
+		foreach ($this->childClasses as $one){
+			 $ret.=$tab."C:".$tab.$one->toString($depth++);
+		}
+		return $ret;
 	}
 	
 	public function getURI(){
@@ -78,7 +88,7 @@ class Erfurt_Owl_Structured_StructuredClass
 	}
 	
 	public function addDisjointWith($structuredClass){
-			$this->disjointWithClasses=$structuredClass;
+			$this->disjointWithClasses[]=$structuredClass;
 			//echo "adding child ".$structuredClass."\n";
 		}
 		public function getDisjointWith(){

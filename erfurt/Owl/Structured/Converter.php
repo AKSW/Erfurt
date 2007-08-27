@@ -2,24 +2,26 @@
 
 class Erfurt_Owl_Structured_Converter
 
-{	private $debug_flag =true;
+{	private $debug_flag = false;
+
 	// returns structured class
 	// WARNING reads the definition recursively until NamedClasses are found
 	public function convert($OWLClass,$first=true)
 	{
-		if($first)
-		{
-			if($OWLClass->isBlankNode()) 
+		if($first==true)
+		{	
+			if($this->isBlankNode($OWLClass)) 
 			{	throw new Exception("blank nodes cannot be converted yet");
 			}//if
 			else 
-			{
+			{	//echo $OWLClass->getURI()."notablanknode";
 				$structClass=new Erfurt_Owl_Structured_NamedClass($OWLClass->getURI());
 			/***initialize Axioms***/
+			
+			
 			/***SubclassOf***/
 				$superClasses=$OWLClass->listSuperClasses();
-				echo "superClasses\n";
-				print_r(array_keys($superClasses));
+				$this->p("superClasses\n",$superClasses);
 				$tmpStruct=array();
 				foreach($superClasses as $one)
 				{
@@ -29,20 +31,17 @@ class Erfurt_Owl_Structured_Converter
 			/***Equivalent***/
 				//!!!!CHECK IF BLANKNODES ARE RETURNED
 				$equiClasses=$OWLClass->listEquivalentClasses() ;
-				echo "equivalentClasses:\n";
-				print_r(array_keys($equiClasses));
+				$this->p("equivalentClasses\n",$equiClasses);
 				$tmpStruct=array();
 				foreach($equiClasses as $one)
 				{
 					$structClass->addEquivalentClass($this->convert($one,false));
 				}//foreach
 				$int=$OWLClass->listIntersectionOf();
+				$this->p("intersectionClasses\n",$int);
     			$uni=$OWLClass->listUnionOf();
-    			echo "intersectionClasses:\n";
-				print_r(array_keys($int));
-				echo "UnionClasses:\n";
-				print_r(array_keys($uni));
-    			
+    			$this->p("UnionClasses\n",$uni);
+    			   			
 				if(sizeof($int)==1)
 				{
 					$structClass->addEquivalentClass($this->convert($int[0],false));
@@ -73,14 +72,14 @@ class Erfurt_Owl_Structured_Converter
 			/***Disjoints***/
 				//!!!!CHECK IF BLANKNODES ARE RETURNED
 				$disjointClasses=$OWLClass->listDisjointWith();
-				echo "disjoint classes:\n";
-				print_r(array_keys($disjointClasses));
+				$this->p("disjointClasses\n",$disjointClasses);
 				$tmpStruct=array();
 				foreach($disjointClasses as $one)
 				{
 					$structClass->addDisjointWith($this->convert($one,false));
 				}//foreach
 				$comp=$OWLClass->listComplementOf();
+				$this->p("complementClasses\n",$comp);
 				foreach($comp as $one)
 				{
 					$structClass->addDisjointWith($this->convert($one,false));
@@ -94,10 +93,15 @@ class Erfurt_Owl_Structured_Converter
 		else
 		{
 			
-			if($OWLClass->isBlankNode())
-			{
+			if($this->isBlankNode($OWLClass))
+			{  
+				//echo $OWLClass->getURI();
 				//classify this blanknode
 				$int=$OWLClass->listIntersectionOf();
+				//print_r($OWLClass->listPropertyValues("owl:intersectionOf",'Class'));
+				echo "|".$OWLClass->getURI()."|\n";
+				echo "|".$OWLClass->isBlankNode()."|\n";
+				$this->p("blanknode",$int);
 				if(sizeof($int)>=1)
 				{
 					$tmp=new Erfurt_Owl_Structured_IntersectionClass();
@@ -131,7 +135,7 @@ class Erfurt_Owl_Structured_Converter
 				}//if
 			}//if
 			else
-			{
+			{	
 				// WARNING: No definitions are made for this Named Class
 				// needs to be done by a separate call to the convert function
 				return new Erfurt_Owl_Structured_NamedClass($OWLClass->getURI());
@@ -141,7 +145,20 @@ class Erfurt_Owl_Structured_Converter
 
 	}//function
 
+public function isBlankNode($OWLClass){
+	if(strpos($OWLClass->getURI(),"ode")==1){
+		return true;
+	}
+	else return false;
 
+}
+
+public function p($string,$array){
+		if($this->debug_flag){
+			echo $string;
+			print_r( array_keys($array));
+		}
+	}
 
 }//class
 ?>
