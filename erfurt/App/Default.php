@@ -34,7 +34,11 @@ class Erfurt_App_Default {
 	 */
 	protected $store = array();
 	
-	
+	/**
+	  * @var Denotes whether Erfurt should throw exceptions
+	  *      or render errors itself instead.
+	  */
+	protected $throwExceptions;
 	
 	/**
 	 *  
@@ -47,18 +51,19 @@ class Erfurt_App_Default {
 	 *
 	 * @param object configuration parameters
 	 */
-	public function __construct($config, $username = '', $password = '') {
+	public function __construct($config, $username = '', $password = '', $throwExceptions = false) {
+		$this->throwExceptions = $throwExceptions;
+		
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
 		
-		$defaultStore = $this->store[$this->defaultStore] = 
-												new $storeClass($config->database->params->type, 
-																								$config->database->params->host, 
-																								$config->database->params->dbname, 
-																								$config->database->params->username, 
-																								$config->database->params->password, 
-																								$config->SysOntModelURI,
-																								$config->database->tableprefix);
+		$defaultStore = $this->store[$this->defaultStore] = new $storeClass($config->database->params->type, 
+																			$config->database->params->host, 
+																			$config->database->params->dbname, 
+																			$config->database->params->username, 
+																			$config->database->params->password, 
+																			$config->SysOntModelURI,
+																			$config->database->tableprefix);
 		
 		try {
 			# check for tables and possible sys-ont
@@ -66,12 +71,20 @@ class Erfurt_App_Default {
 			$defaultStore->init();
 		} catch (Erfurt_Exception $e) {
 			if ($e->getCode() == 1) {
-				print $e->getMessage().'<br/>';
+				
+				$msg = $e->getMessage() . '<br/>' . 
+				       'Database Setup: OntoWiki tables created<br />';
 				$defaultStore->createTables($config->database->type);
-				print 'Database Setup: OntoWiki tables created<br />';
-				die ('<br /><b>Please reload now (the next step will last a few seconds)</b>');
+				
+				if ($throwExceptions) {
+					header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+					throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+				}
+				
+				echo $msg . '<br /><b>Please reload now (the next step will last a few seconds)</b>';
+				exit();
 			} else {
-				die($e->display(true));
+				die ($e->display(true));
 			}
 		}
 	
@@ -178,25 +191,45 @@ class Erfurt_App_Default {
 		/**
 		 * check for ontowiki system ontologies
 		 */
-		if(!$this->store[$this->defaultStore]->modelExists($config->sysont->schema, false)) {
-			echo 'Database Setup: Checking for Ontowiki SysOnt Schema ... no schema found.<br />';
+		if (!$this->store[$this->defaultStore]->modelExists($config->sysont->schema, false)) {
+			$msg = 'Database Setup: Checking for Ontowiki SysOnt Schema ... no schema found.<br />';
+			
 			$m = $this->store[$this->defaultStore]->getNewModel($config->sysont->schema, '', 'RDFS', false);
 			$m->dontCheckForDuplicatesOnAdd = true;
 			$this->store[$this->defaultStore]->dbConn->StartTrans();
 			$m->load(ERFURT_BASE . 'SysOnt.rdf', NULL, true);
-			$this->store[$this->defaultStore]->dbConn->CompleteTrans();	
-			echo 'Database Setup: Ontowiki SysOnt schema created<br />';
-			die ('<br /><b>Please reload now.</b>');
+			$this->store[$this->defaultStore]->dbConn->CompleteTrans();
+			
+			$msg .= 'Database Setup: Ontowiki SysOnt schema created.<br />';
+			
+			if ($this->throwExceptions) {
+				header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+				throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+			} else {
+				echo $msg . '<br /><b>Please reload now.</b>';
+			}
+			
+			exit();
 		}
-		if(!$this->store[$this->defaultStore]->modelExists($config->sysont->model, false)) {
-			echo 'Database Setup: Checking for Ontowiki SysOnt model ... no model found.<br />';
+		if (!$this->store[$this->defaultStore]->modelExists($config->sysont->model, false)) {
+			$msg = 'Database Setup: Checking for Ontowiki SysOnt model ... no model found.<br />';
+			
 			$m = $this->store[$this->defaultStore]->getNewModel($config->sysont->model, '', 'RDFS', false);
 			$m->dontCheckForDuplicatesOnAdd = true;
 			$this->store[$this->defaultStore]->dbConn->StartTrans();
 			$m->load(ERFURT_BASE . 'SysOntLocal.rdf', NULL, true);
 			$this->store[$this->defaultStore]->dbConn->CompleteTrans();
-			echo 'Database Setup: Ontowiki SysOnt model created<br />';
-			die ('<br /><b>Please reload now.</b>');
+			
+			$msg .= 'Database Setup: Ontowiki SysOnt model created<br />';
+			
+			if ($this->throwExceptions) {
+				header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+				throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+			} else {
+				echo $msg . '<br /><b>Please reload now.</b>';
+			}
+			
+			exit();
 		}
 	}
 	
