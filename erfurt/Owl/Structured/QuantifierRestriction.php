@@ -8,7 +8,7 @@ extends Erfurt_Owl_Structured_Restriction
 		$this->setURI($uri);
 		$this->setOnProperty($onProperty);
 		$this->addChildClass($fillerClass);
-	
+	echo "uri=".$this->getURI()."\n";
 	}
 
 }

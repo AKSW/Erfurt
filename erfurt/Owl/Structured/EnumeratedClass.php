@@ -3,12 +3,11 @@
 class Erfurt_Owl_Structured_EnumeratedClass 
 extends Erfurt_Owl_Structured_AnonymousClass 
 {
-		var $oneOfInstances
+		var $oneOfInstances;
 		
 		public function __construct($instancesArray){
 	
-			$this->oneOfInstances=$instanceArray;
-			
+			$this->oneOfInstances=$instancesArray;
 		}
 
 }

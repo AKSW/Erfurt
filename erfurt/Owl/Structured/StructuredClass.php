@@ -20,14 +20,15 @@ class Erfurt_Owl_Structured_StructuredClass
 	}
 	
 	public function addChildClass($structuredClass){
+		//if(null == $this->childClasses) $this->childClasses = array();
 		$this->childClasses[]=$structuredClass;
 		//echo "adding child ".$structuredClass."\n";
 	}
-	public function addChildClasses($arrayStructuredClass){
+/*	public function addChildClasses($arrayStructuredClass){
 		foreach($arrayStructuredClass as $one){
 			$this->childClasses[]=$one;
 		}
-	}
+	}*/
 	public function getChildClasses(){
 		return $this->childClasses;
 	}
@@ -77,6 +78,9 @@ class Erfurt_Owl_Structured_StructuredClass
 	}
 	public function getEquivalentClasses(){
 		return $this->equivalentClasses;
+	}
+	public function setURI($newURI){
+		$this->URI=$newURI;
 	}
 	
 	public function addSubclassOf($structuredClass){
