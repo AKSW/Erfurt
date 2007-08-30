@@ -14,6 +14,11 @@ extends Erfurt_Owl_Structured_StructuredClass
 		//$tab=str_repeat("-",$depth).">";
 		return $this->getURI();
 	}
+	public function toManchesterSyntaxString()
+	{
+		return $this->getURI();
+	}
+
 	
 }
 ?>

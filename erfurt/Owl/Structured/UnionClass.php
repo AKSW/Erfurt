@@ -10,15 +10,17 @@ extends Erfurt_Owl_Structured_AnonymousClass
 		return $this->getChildClasses();
 	}
 
-	public function toManchesterSyntax()
+	public function toManchesterSyntaxString()
 	{
 		$returnString='';
 		$children=$this->getChildClasses();
-		if(null!=$this->children){
-			$returnString.=$this->children[0]. " or " . $this->children[1];
+		foreach ($children as $key => $value) {
+			$returnString.=$value;
+			if ($key<count($children)-1) {
+				$returnString.=" or ";
+			}
 		}
-		return returnString;
+		return $returnString;
 	}
-
 }
 ?>
