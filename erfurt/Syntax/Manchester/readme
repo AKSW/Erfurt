@@ -1,7 +1,7 @@
 PHP Parser for Manchester Syntax in OntoWiki
 
 Installation notes:
-Depends on PEAR packages: PHP_LexerGenerator, PHP_Parser, PHP_ParserGenerator
+Depends on PEAR packages(found in /lib/PEAR/ in your ontowiki directory): PHP_LexerGenerator, PHP_Parser, PHP_ParserGenerator
 
 Currently supports only command line execution:
 to test the parser from command line:
