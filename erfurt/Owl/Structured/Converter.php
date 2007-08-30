@@ -4,6 +4,33 @@ class Erfurt_Owl_Structured_Converter
 
 {	private $debug_flag = false;
 
+	/**
+	new methods:
+	
+		@returns Erfurt_OWL_Structured_StructuredClass
+	public function convertErfurtClass($ErfurtOWLClass){}
+	
+		@returns Erfurt_OWL_StructuredClass LIST
+	public function getEquivalentClasses($ErfurtOWLClass){}
+	
+		@returns Erfurt_OWL_StructuredClass LIST
+	public function getSubclassOfClasses($ErfurtOWLClass){}
+	
+		@returns Erfurt_OWL_StructuredClass LIST
+	public function getDisjointWithClasses($ErfurtOWLClass){}
+	
+		@returns Structured_Axiom List
+	public function convertErfurtModel($ErfurtOWLModel){
+		//$ErfurtOWLModel->blabla
+		
+		
+	}
+	
+	
+	**/
+
+
+
 	// returns structured class
 	// WARNING reads the definition recursively until NamedClasses are found
 	public function convert($OWLClass,$first=true)
