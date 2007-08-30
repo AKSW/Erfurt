@@ -10,10 +10,15 @@ extends Erfurt_Owl_Structured_Restriction
 		
 		//TODO could be an array of instances, maybe???
 		
-		$this->URI = $uri;
-		$this->onProperty = $onProperty;
-		$this->cardinality = $fillerInstance;
-	
+		$this->setURI($uri);
+		$this->setOnProperty($onProperty);
+		$this->fillerInstance = $fillerInstance;
+	}
+
+
+	public function toManchesterSyntaxString()
+	{
+		return $this->getOnProperty() . " has " . $this->fillerInstance;
 	}
 
 }
