@@ -7,12 +7,16 @@ extends Erfurt_Owl_Structured_Restriction
 	
 	public function __construct($uri, $onProperty,$cardinality){
 	
-		$this->URI = $uri;
-		$this->onProperty = $onProperty;
+		$this->setURI($uri);
+		$this->setOnProperty($onProperty);
 		$this->cardinality = $cardinality;
 	
 	}
 	
+	public function getCardinality()
+	{
+		return $this->cardinality;
+	}
 
 }
 ?>
