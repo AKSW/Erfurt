@@ -1,6 +1,8 @@
 <?php
+error_reporting(E_STRICT);
 $debug=1;
 
+date_default_timezone_set('Europe/Berlin');
 $start = explode(' ',microtime());
 require_once 'manchester.php';	
 $x='';

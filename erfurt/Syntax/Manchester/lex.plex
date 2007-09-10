@@ -1,13 +1,15 @@
 <?php
-//require_once 'SyntaxConstants.php';
+/*
+* make changes to this file, if you want to make changes to tokenizer for manchester syntax
+*/
 require_once 'manchester.php';
-//%declare_class {class OWLParser}
 class ManchesterLexer
 {
 
 	const 	NOT_OPERATOR  = OWLParser::NOT_OPERATOR;
 	const 	ALPHANUMERIC  = OWLParser::ALPHANUMERIC;
 	const 	AND_OPERATOR  = OWLParser::AND_OPERATOR;
+	const 	THAT_OPERATOR  = OWLParser::THAT_OPERATOR;
 	const 	OR_OPERATOR   = OWLParser::OR_OPERATOR;
 	const 	MIN_OPERATOR   = OWLParser::MIN_OPERATOR;
 	const 	MAX_OPERATOR   = OWLParser::MAX_OPERATOR;
@@ -52,6 +54,7 @@ LPAREN="("
 RPAREN=")"
 NOT_OPERATOR=/[Nn][Oo][Tt]/
 AND_OPERATOR=/[Aa][Nn][Dd]/
+THAT_OPERATOR=/[Tt][Hh][Aa][Tt]/
 OR_OPERATOR=/[Oo][Rr]/
 COMMA=","
 LSQUAREBRACKET="["
@@ -74,6 +77,10 @@ WHITESPACE {
     return false; // skip this token (do not return it)
 }
 AND_OPERATOR SEPARATOR_CHAR{
+	if ($this->debug) echo "and operator found\n";
+	$this->token=self::AND_OPERATOR;
+}
+THAT_OPERATOR SEPARATOR_CHAR{
 	if ($this->debug) echo "and operator found\n";
 	$this->token=self::AND_OPERATOR;
 }
