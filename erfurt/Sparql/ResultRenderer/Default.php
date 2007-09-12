@@ -190,8 +190,10 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
     *   @return Resource   RDF triple subject resource object
     */
     protected function createSubjectFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVarName) {
-	
-        if ($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
+       
+        $strVarName = (string) $strVarName;
+       
+       if ($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test
             return '';
         }
