@@ -33,7 +33,7 @@ require_once 'lex.php';}
         . '), expected one of: ' . implode(',', $expect) . "\n");
 }
 	start ::= classExpr(A).{
-		print_r(A/*->toManchesterSyntaxString()*/);}
+		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{
 		A=B;}
@@ -42,9 +42,9 @@ require_once 'lex.php';}
 		A= new Erfurt_Owl_Structured_EnumeratedClass(B);}
 	
 	classExpr(A)::= propExpr(B) ONLYSOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{
-		A = new Erfurt_Owl_Structured_IntersectionClass(B ." onlysome ". C);
+		A = new Erfurt_Owl_Structured_IntersectionClass(B ." onlysome ". C->getURI());
 		foreach (C as $value) {
-			A->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom(B . " some " . C,B,$value));}
+			A->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom(B->getURI() . " some " . C,B,$value));}
 		$x=new Erfurt_Owl_Structured_UnionClass("".C);
 		$x->addChildClass(C);
 		A->addChildClass(new Erfurt_Owl_Structured_AllValuesFrom(B." only ".C,B,$x));}
@@ -54,23 +54,49 @@ require_once 'lex.php';}
 		}
 
     classExpr(A) ::= classExpr(B) AND_OPERATOR classExpr(C).{
-		A = new Erfurt_Owl_Structured_IntersectionClass(B." and ".C);
-		A->addChildClass(B);
-		A->addChildClass(C);
-		}
-	    classExpr(A) ::= classExpr(B) THAT_OPERATOR classExpr(C).{
-			A = new Erfurt_Owl_Structured_IntersectionClass(B." and ".C);
+		A = new Erfurt_Owl_Structured_IntersectionClass(B->getURI()." and ".C->getURI());
+		if(B instanceof Erfurt_Owl_Structured_IntersectionClass){
+			A->addChildClass(B->getChildClasses());
+		}else{
 			A->addChildClass(B);
+		}
+		if(C instanceof Erfurt_Owl_Structured_IntersectionClass){
+			A->addChildClass(C->getChildClasses());
+		}else{
 			A->addChildClass(C);
+		}
+		}
+
+	    classExpr(A) ::= classExpr(B) THAT_OPERATOR classExpr(C).{
+			A = new Erfurt_Owl_Structured_IntersectionClass(B->getURI()." that ".C->getURI());
+			if(B instanceof Erfurt_Owl_Structured_IntersectionClass){
+				A->addChildClass(B->getChildClasses());
+			}else{
+				A->addChildClass(B);
+			}
+			if(C instanceof Erfurt_Owl_Structured_IntersectionClass){
+				A->addChildClass(C->getChildClasses());
+			}else{
+				A->addChildClass(C);
+			}
 			}
 
    	classExpr(A) ::= classExpr(B) OR_OPERATOR  classExpr(C).{
-		A = new Erfurt_Owl_Structured_UnionClass(B." or ".C);
-		A->addChildClass(B);
-		A->addChildClass(C);}
+		A = new Erfurt_Owl_Structured_UnionClass(B->getURI()." or ".C->getURI());
+		if(B instanceof Erfurt_Owl_Structured_UnionClass){
+			A->addChildClass(B->getChildClasses());
+		}else{
+			A->addChildClass(B);
+		}
+		if(C instanceof Erfurt_Owl_Structured_UnionClass){
+			A->addChildClass(C->getChildClasses());
+		}else{
+			A->addChildClass(C);
+		}
+		}
 		
     classExpr(A) ::= propExpr(B) SOME_OPERATOR  classExpr(C).{ 
-		A = new Erfurt_Owl_Structured_SomeValuesFrom(B . " some " . C,B,C);}
+		A = new Erfurt_Owl_Structured_SomeValuesFrom(B . " some " . C->getURI(),B,C);}
 		
 	classExpr(A) ::= NOT_OPERATOR  classExpr(B).{
 		A = new Erfurt_Owl_Structured_ComplementClass(B);}

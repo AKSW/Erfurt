@@ -1,4 +1,7 @@
 <?php
+/*
+* make changes to this file, if you want to make changes to tokenizer for manchester syntax
+*/
 require_once 'manchester.php';
 class ManchesterLexer
 {
