@@ -8,5 +8,9 @@ class Erfurt_Owl_Structured_Instance
 		$this->uri = $uri;
 	}
 
+	public function getURI(){
+		return $this->uri;
+	}
+
 }
 ?>

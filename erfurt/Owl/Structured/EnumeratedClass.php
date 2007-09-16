@@ -10,5 +10,17 @@ extends Erfurt_Owl_Structured_AnonymousClass
 			$this->oneOfInstances=$instancesArray;
 		}
 
+		public function toManchesterSyntaxString()
+		{
+			$returnString='{';
+			foreach ($this->oneOfInstances as $key => $value) {
+				$returnString.=$value->toManchesterSyntaxString();
+				if ($key<count($this->oneOfInstances)-1) {
+					$returnString.=' ';
+				}
+			}
+			return $returnString.'}';
+		}
+
 }
 ?>

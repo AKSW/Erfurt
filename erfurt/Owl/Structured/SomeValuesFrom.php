@@ -2,18 +2,21 @@
 
 class Erfurt_Owl_Structured_SomeValuesFrom 
 extends Erfurt_Owl_Structured_QuantifierRestriction
-
 {
 
-public function toTreeString()
-{
-	return "Some values from ".$this->getURI()." ".$this->onProperty."\n".$this->printChildClasses();
-}
-
-public function toManchesterSyntaxString()
-{
-	return $this->getOnProperty() . " some " . join(',',$this->getChildClasses());
-}
+	public function toManchesterSyntaxString()
+	{
+		$returnString='[';
+		$children=$this->getChildClasses();
+		foreach ($children as $key => $value) {
+			$returnString.=$value->toManchesterSyntaxString();
+			if ($key<count($children)-1) {
+				$returnString.=', ';
+			}
+		}
+		$returnString.=']';
+		return $this->getOnProperty() . " some " . $returnString;
+	}
 
 }
 ?>
