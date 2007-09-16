@@ -2,12 +2,12 @@
 
 class Erfurt_Owl_Structured_StructuredClass 
 {	
-	private $childClasses;
+	private $childClasses= array();
 	private $URI;
 	
 	public function __construct($uri){
 	
-		$this->childClasses = array();
+		//$this->childClasses = array();
 		$this->URI=$uri;
 	}
 	
