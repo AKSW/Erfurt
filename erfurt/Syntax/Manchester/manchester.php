@@ -851,7 +851,7 @@ static public $yy_action = array(
     */
 #line 35 "./manchester.y"
     function yy_r0(){
-		print_r($this->yystack[$this->yyidx + 0]->minor->toTreeString());    }
+		print_r($this->yystack[$this->yyidx + 0]->minor->toManchesterSyntaxString());    }
 #line 861 "./manchester.php"
 #line 38 "./manchester.y"
     function yy_r1(){
@@ -863,9 +863,9 @@ static public $yy_action = array(
 #line 869 "./manchester.php"
 #line 44 "./manchester.y"
     function yy_r3(){
-		$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -4]->minor ." onlysome ". $this->yystack[$this->yyidx + -1]->minor->getURI());
+		$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -4]->minor ." onlysome ". $this->yystack[$this->yyidx + -1]->minor);
 		foreach ($this->yystack[$this->yyidx + -1]->minor as $value) {
-			$this->_retvalue->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom($this->yystack[$this->yyidx + -4]->minor->getURI() . " some " . $this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$value));}
+			$this->_retvalue->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom($this->yystack[$this->yyidx + -4]->minor . " some " . $this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$value));}
 		$x=new Erfurt_Owl_Structured_UnionClass("".$this->yystack[$this->yyidx + -1]->minor);
 		$x->addChildClass($this->yystack[$this->yyidx + -1]->minor);
 		$this->_retvalue->addChildClass(new Erfurt_Owl_Structured_AllValuesFrom($this->yystack[$this->yyidx + -4]->minor." only ".$this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$x));    }

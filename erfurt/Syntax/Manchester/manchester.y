@@ -42,9 +42,9 @@ require_once 'lex.php';}
 		A= new Erfurt_Owl_Structured_EnumeratedClass(B);}
 	
 	classExpr(A)::= propExpr(B) ONLYSOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{
-		A = new Erfurt_Owl_Structured_IntersectionClass(B ." onlysome ". C->getURI());
+		A = new Erfurt_Owl_Structured_IntersectionClass(B ." onlysome ". C);
 		foreach (C as $value) {
-			A->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom(B->getURI() . " some " . C,B,$value));}
+			A->addChildClass(new Erfurt_Owl_Structured_SomeValuesFrom(B . " some " . C,B,$value));}
 		$x=new Erfurt_Owl_Structured_UnionClass("".C);
 		$x->addChildClass(C);
 		A->addChildClass(new Erfurt_Owl_Structured_AllValuesFrom(B." only ".C,B,$x));}
