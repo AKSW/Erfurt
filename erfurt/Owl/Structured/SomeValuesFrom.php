@@ -15,7 +15,7 @@ extends Erfurt_Owl_Structured_QuantifierRestriction
 			}
 		}
 		$returnString.=']';
-		return $this->getOnProperty() . " some " . $returnString;
+		return "(".$this->getOnProperty() . " some " . $returnString.")";
 	}
 
 }

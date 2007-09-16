@@ -6,7 +6,7 @@ extends Erfurt_Owl_Structured_QuantifierRestriction
 {
 	public function toManchesterSyntaxString()
 	{
-		$returnString='';
+		$returnString='[';
 		$children=$this->getChildClasses();
 		foreach ($children as $key => $value) {
 			$returnString.=$value->toManchesterSyntaxString();
@@ -14,8 +14,8 @@ extends Erfurt_Owl_Structured_QuantifierRestriction
 				$returnString.=', ';
 			}
 		}
-		$returnString.='';
-		return $this->getOnProperty() . " only " . $returnString;
+		$returnString.=']';
+		return "(".$this->getOnProperty() . " only " . $returnString.")";
 	}
 
 	public function toTreeString()
