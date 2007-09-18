@@ -45,7 +45,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
 		$this->property=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Property';
 		$this->instance=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Instance';
-		$this->asResource=new $this->resource($this->modelURI,&$this);
+		$this->asResource = $this->resourceF($this->modelURI);
 #		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
 		$this->importsSQL='';
 
@@ -568,6 +568,14 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 			if(!$ret=$this->getProperty($uri))
 				$ret=$this->getInstance($uri);
 		return $ret;
+	}
+	
+	/**
+	 * Returns this model as an Erfurt_Rdfs_Resource object
+	 */
+	public function getAsResource() {
+		
+		return $this->asResource;
 	}
 	
 	/**
