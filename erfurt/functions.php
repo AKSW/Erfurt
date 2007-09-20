@@ -565,7 +565,7 @@ function cache($fn,$args=array(),$value=NULL) {
  */
 Class stmCache {
 	var $value=NULL;
-	function stmCache($function,$args=array(),$model='',$resource='') {
+	function stmCache($function='',$args=array(),$model='',$resource='') {
 		$this->fn=$function;
 		$this->args=cacheGetUidFromArgs($args);
 		$this->model=$model;
@@ -618,6 +618,14 @@ Class stmCache {
 				}
 			}
 		}			
+	}
+	
+	function emptyCache() {
+		
+		if (Zend_Registry::get('config')->cache->enable) {
+			Zend_Registry::get('erfurt')->getStore()->dbConn->execute("DELETE FROM cache WHERE model={$this->model->modelID}");
+		}
+		
 	}
 }
 ?>
