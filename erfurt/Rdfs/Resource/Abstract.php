@@ -10,6 +10,8 @@
  **/
 abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 	
+	protected $properties;
+	
 	/**
 	* A reference to the RDFSModel this resource belongs to.
 	**/
@@ -39,6 +41,27 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 		}
 		Resource::Resource($uri);
 		$this->model=&$model;
+		
+		$this->properties = array();
+	}
+	
+	public function __set($key, $value) {
+		
+		$this->properties[$key] = $value;
+	}
+	
+	public function __get($key) {
+		
+		if (isset($this->properties[$key])) {
+			return $this->properties[$key];
+		} else {
+			return false;
+		}
+	}
+	
+	public function __isset($key) {
+		
+		return (array_key_exists($key, $this->properties));
 	}
 	
 	public function __toString() {
@@ -191,7 +214,7 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 	public function getLabelForLanguage($language='') {
 		
 		$label=parray_shift($this->listLabels($language));
-		return $label?$label->getLabel():null;
+		return $label?$label->getLabel():$this->getLocalName();
 	}
 	
 	/**

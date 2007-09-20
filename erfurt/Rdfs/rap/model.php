@@ -3,7 +3,7 @@
  * RDFSmodel
  *
  * @package RDFSAPI
- * @author S�ren Auer <soeren@auer.cx>
+ * @author Sören Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
  * @version $Id: model.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
@@ -264,58 +264,335 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	/**
 	 * @see DefaultRDFSModel
 	 */
+	// public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
+	//         
+	// 		//$args = func_get_args();
+	// 		//$cache = Zend_Registry::get('cache');
+	// 		//if ($c = $cache->load($this, 'listTopClasses', $args)) {
+	// 		//	return $c;
+	// 		//}
+	// 
+	//         $sparql = 'SELECT DISTINCT ?class
+	// 				   WHERE {
+	// 					 { ?class rdf:type ?x .
+	// 					   OPTIONAL { ?class rdfs:subClassOf ?super1 . } .
+	// 					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
+	// 					   FILTER ( ?x = owl:Class || ?x = owl:DeprecatedClass || ?x = rdfs:Class ) .
+	// 					   FILTER ( !bound(?super1) && !isBlank(?class) ) . ' .
+	// 					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+	// 					   (($systemClasses == false) ? 
+	// 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
+	// 						: '') .
+	// 					 '}' . (($implicitClasses == true) ? 
+	// 					' UNION
+	// 					 { ?implr rdf:type ?class . 
+	// 					   OPTIONAL { ?class rdfs:subClassOf ?super2 . } .
+	// 					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
+	// 					   FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
+	// 					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+	// 					   (($systemClasses == false) ? 
+	// 						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
+	// 						: '') .
+	// 					 '}
+	// 		    	   }' : '}');
+	// 		
+	// 				
+	// 		$result = $this->sparqlQueryAs($sparql, 'class');
+	// 		$res = array();
+	// 		
+	// 		foreach ($result as $row) {
+	// 			if (!isset($res[($row['?class']->getURI())])) {
+	// 				if ($emptyClasses === true) {
+	// 					$res[$row['?class']->getURI()] = $row['?class'];
+	// 				} else {
+	// 					if ($row['?class']->countInstancesRecursive() > 0) {
+	// 						$res[$row['?class']->getURI()] = $row['?class'];
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 		
+	// 		ksort($res);
+	// 		//$cache->save($this, 'listTopClasses', $args, null, $res, array('rdf:type', 'rdfs:subClassOf'));
+	// 		return $res;
+	//     }
+	
 	public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
         
-		//$args = func_get_args();
-		//$cache = Zend_Registry::get('cache');
-		//if ($c = $cache->load($this, 'listTopClasses', $args)) {
-		//	return $c;
-		//}
+		$args = func_get_args();
+		$c = new stmCache('listTopClasses', $args, $this);
+		 	
+		$cVal = $c->get();	
+		if (null != $cVal) {
+			return $cVal;
+		}
 
-        $sparql = 'SELECT DISTINCT ?class
-				   WHERE {
-					 { ?class rdf:type ?x .
-					   OPTIONAL { ?class rdfs:subClassOf ?super1 . } .
-					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
-					   FILTER ( ?x = owl:Class || ?x = owl:DeprecatedClass || ?x = rdfs:Class ) .
-					   FILTER ( !bound(?super1) && !isBlank(?class) ) . ' .
-					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses == false) ? 
-						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
-						: '') .
-					 '}' . (($implicitClasses == true) ? 
-					' UNION
-					 { ?implr rdf:type ?class . 
-					   OPTIONAL { ?class rdfs:subClassOf ?super2 . } .
-					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
-					   FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
-					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses == false) ? 
-						'FILTER ( !regex(str(?class), "(http://www.w3.org/2002/07/owl#|http://www.w3.org/1999/02/22-rdf-syntax-ns#|http://www.w3.org/2000/01/rdf-schema#).*") ) . ' 
-						: '') .
-					 '}
-		    	   }' : '}');
+		$sql = 'SELECT s.object 
+				FROM statements s	
+				WHERE s.predicate = "' . EF_RDF_TYPE . '" AND s.object_is <> "b" AND modelID = ' . $this->modelID . '
+				UNION DISTINCT
+				SELECT s.subject
+				FROM statements s
+				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
+				AND s.object IN ("' . EF_RDFS_CLASS . '", "' . EF_OWL_CLASS . '", "' . EF_OWL_DEPRECATED_CLASS . '") 
+				AND s.subject_is <> "b" AND modelID = ' . $this->modelID;
 		
-				
-		$result = $this->sparqlQueryAs($sparql, 'class');
-		$res = array();
+		$sqlResult = $this->getStore()->sqlQuery($sql);
+		$tempClassArray = array(); // contains all classes that fit to the config given by the parameters
 		
-		foreach ($result as $row) {
-			if (!isset($res[($row['?class']->getURI())])) {
-				if ($emptyClasses === true) {
-					$res[$row['?class']->getURI()] = $row['?class'];
+			
+		// check whether classes are top classes
+		foreach ($sqlResult as $row) {
+			if (!$this->hasStatement($row, 'rdfs:subClassOf', null)) {
+				$tempClassArray[] = $this->classF($row[0]);
+			}
+		}
+		
+		// check for system classes iff $systemClasses = false
+		if ($systemClasses == false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if (!((strstr($row->getURI(), EF_RDF_NS)) || (strstr($row->getURI(), EF_RDFS_NS)) || (strstr($row->getURI(), EF_OWL_NS)))) {	
+					$tempClassArray[] = $row;
+				} 
+			}
+		} else {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if (((strstr($row->getURI(), EF_RDF_NS)) || (strstr($row->getURI(), EF_RDFS_NS)) || (strstr($row->getURI(), EF_OWL_NS)))) {	
+					$row->system = true;
+					$tempClassArray[] = $row;
 				} else {
-					if ($row['?class']->countInstancesRecursive() > 0) {
-						$res[$row['?class']->getURI()] = $row['?class'];
-					}
+					$row->system = false;
+					$tempClassArray[] = $row;
 				}
 			}
 		}
 		
-		ksort($res);
-		//$cache->save($this, 'listTopClasses', $args, null, $res, array('rdf:type', 'rdfs:subClassOf'));
-		return $res;
+		// check for empty classes iff $emptyClasses = false
+		if ($emptyClasses == false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if ($row->countInstancesRecursive() > 0) {
+					$tempClassArray[] = $row;
+				}
+			}		
+		} else {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if (($count = $row->countInstancesRecursive()) > 0) {
+					$tempClassArray[] = $row;
+					$row->emptyRecursive = false;
+					$row->countInstancesRecursive = $count;
+					
+				} else {
+					$tempClassArray[] = $row;
+					$row->emptyRecursive = true;
+					$row->countInstancesRecursive = 0;
+				}
+			}
+		}
+			
+		// check for implicit classes iff $implicitClasses = false
+		if ($implicitClasses == false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
+					$tempClassArray[] = $row;
+				}
+			}		
+		} else {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
+					$tempClassArray[] = $row;
+				} else {
+					$row->implicit = true;
+					$tempClassArray[] = $row;
+				}
+			}
+		}
+		
+		// check for hidden classes iff $hiddenClasses = false
+		if ($hiddenClasses === false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach($temp as $row) {
+				if (!$row->isHidden()) {
+					$tempClassArray[$row->getLabelForLanguage()] = $row;
+				}
+			}
+		} else {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach($temp as $row) {
+				if ($row->isHidden()) {
+					$tempClassArray[$row->getLabelForLanguage()] = $row;
+				} else {
+					$tempClassArray[$row->getLabelForLanguage()] = $row;
+				}
+			}
+		}
+		
+	 	ksort($tempClassArray);
+		$c->set($tempClassArray, array('rdf:type', 'rdfs:subClassOf'));
+		return $tempClassArray;
     }
+
+	public function buildClassTree($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
+
+		$sql = 'SELECT s.object 
+				FROM statements s	
+				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
+				UNION DISTINCT
+				SELECT s.subject
+				FROM statements s
+				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
+				AND s.object IN ("' . EF_RDFS_CLASS . '", "' . EF_OWL_CLASS . '", "' . EF_OWL_DEPRECATED_CLASS. '")';
+		
+		$sqlResult = $this->getStore()->sqlQuery($sql);
+		$tempClassArray = array(); // contains all classes that fit to the config given by the parameters
+		
+		// check whether classes are top classes
+		foreach ($sqlResult as $row) {
+			if (!$this->hasStatement(null, 'rdfs:subClassOf', $row[0])) {
+				$tempClasses[] = $this->classF($row[0]);
+			}
+		}
+		
+		// check for system classes iff $systemClasses = false
+		if ($systemClasses === false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if (!((strstr($row->getURI(), EF_RDF_NS)) || (strstr($row->getURI(), EF_RDFS_NS)) || (strstr($row->getURI(), EF_OWL_NS)))) {
+					$tempClassArray[] = $row;
+				} 
+			}
+		}
+		
+		// check for empty classes iff $emptyClasses = false
+		if ($implicitClasses === false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if ($row->countInstancesRecursive() > 0) {
+					$tempClassArray[] = $row;
+				}
+			}		
+		}
+			
+		// check for implicit classes iff $implicitClasses = false
+		if ($implicitClasses === false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach ($temp as $row) {
+				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
+					$tempClassArray[] = $row;
+				}
+			}		
+		}
+		
+		// check for hidden classes iff $hiddenClasses = false
+		if ($hiddenClasses === false) {
+			$temp = $tempClassArray;
+			$tempClassArray = array();
+			foreach($temp as $row) {
+				if (!$row->isHidden()) {
+					$tempClassArray[] = $row;
+				}
+			}
+		} 
+	}
+	
+	/**
+	 * @param mixed $s null, string, Resource or array
+	 * @param mixed $p null, string, Resource or array
+	 * @param moxed $o null,string, Node or array
+	 * @return boolean 
+	 */
+	public function hasStatement($s, $p, $o) {
+		
+		$sql = 'SELECT s.subject, s.predicate, s.object
+				FROM statements s ';
+				
+		if ($s !== null || $p !== null || $o !== null) {
+			$sql .= 'WHERE ';
+		}
+			
+		$subString = '';
+		$predString = '';
+		$objString = '';
+		
+		if ($s === null) {
+			$subString = '';
+		} else if (is_array($s)) {
+			$subString = 's.subject IN (';
+			for ($i=0; $i<count($s); ++$i ) {
+				$subString .= '"' . $this->_dbId($s[$i]) . '"';
+				if ($i < (count($s)-1)) {
+					$subString .= ', ';
+				}
+			}
+			$subString .= ') ';
+		} else {
+			$subString = 's.subject = "' . $this->_dbId($s) . '" ';
+		}
+		
+		if ($s !== null && ($p !== null || $o !== null)) {
+			$subString .= 'AND ';
+		}
+		
+		if ($p === null) {
+			$predString = '';
+		} else if (is_array($p)) {
+			$predString = 's.predicate IN (';
+			for ($i=0; $i<count($p); ++$i ) {
+				$predString .= '"' . $this->_dbId($p[$i]) . '"';
+				if ($i < (count($p)-1)) {
+					$predString .= ', ';
+				}
+			}
+			$predString .= ') ';
+		} else {
+			$predString = 's.predicate = "' . $this->_dbId($p) . '" ';
+		}
+		
+		if ($p !== null && $o !== null) {
+			$predString .= 'AND ';
+		}
+		
+		if ($o === null) {
+			$objString = '';
+		} else if (is_array($o)) {
+			$objString = 's.object IN (';
+			for ($i=0; $i<count($o); ++$i ) {
+				$objString .= '"' . $o[$i] . '"';
+				if ($i < (count($o)-1)) {
+					$objString .= ', ';
+				}
+			}
+			$objString .= ') ';
+		} else {
+			$objString = 's.object = "' . $o . '" ';
+		}
+		
+		$sql .= $subString . $predString . $objString;
+		
+		$result = $this->getStore()->sqlQuery($sql);
+		
+		if (count($result) > 0) {
+			return true;
+		} else {
+			return false; 
+		}
+	}
 
 	/**
 	 * @see DefaultRDFSModel

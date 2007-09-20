@@ -579,8 +579,11 @@ Class stmCache {
 	 * @return mixed value
 	 */
 	function get() {
-		if(Zend_Registry::get('config')->cache->enable && !$this->value && $ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model=".$this->model->modelID." AND resource='".$this->resource."'"))
+		if(Zend_Registry::get('config')->cache->enable && !$this->value && $ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model=".$this->model->modelID." AND resource='".$this->resource."'")) {
+			//print_r(unserialize($ret));
 			return unserialize($ret);
+		}
+			
 		
 		return null;
 	}

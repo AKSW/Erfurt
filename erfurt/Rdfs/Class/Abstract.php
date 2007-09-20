@@ -10,6 +10,45 @@
  **/
 abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	
+	public function isHidden() {
+		
+		if (isset($this->hidden)) {
+			return $this->hidden;
+		} else {
+			$hidden = $this->model->hasStatement($this, 'http://ns.ontowiki.net/SysOnt/hidden', 'true');
+			$this->hidden = $hidden;
+			
+			return $hidden;
+		}
+	}
+	
+	public function isSystem() {
+		
+		if (isset($this->system)) {
+			return $this->system;
+		} else {
+			$system = false;
+			if (((strstr($this->getURI(), EF_RDF_NS)) || (strstr($this->getURI(), EF_RDFS_NS)) || (strstr($this->getURI(), EF_OWL_NS)))) {
+				$system = true;
+			}
+			$this->system = $system;
+			
+			return $system;
+		}
+	}
+	
+	public function isImplicit() {
+		
+		if (isset($this->implicit)) {
+			return $this->implicit;
+		} else {
+			$implicit = !$this->model->hasStatement($this, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS));
+			$this->implicit = $implicit;
+			
+			return $implicit;
+		}
+	}
+	
 	/**
 	 * Returns number of all classes that are declared to be sub-classes
 	 * of this class.
@@ -60,16 +99,32 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
      * instance, false otherwise.
      */
 	public function isEmpty($includeSubClasses = false) {
-
-        if ($this->countInstances() > 0) return false;
-        if ($includeSubClasses) {
-            foreach ($this->listSubClassesRecursive() as $subC) {
-                if ($subC->countInstances() > 0) {
-                    return false;
-                } 
-            }
-            return true;
-        }
+		
+		if ($includeSubClasses === true) {
+			if (isset($this->emptyRecursive)) {
+				return $this->emptyRecursive;
+			} else {
+				if ($this->countInstancesRecursive() > 0) {
+					$this->emptyRecursive = false;
+					return false;
+				} else {
+					$this->emptyRecursive = true;
+					return true;
+				}
+			}
+		} else {
+			if (isset($this->empty)) {
+				return $this->empty;
+			} else {
+				if ($this->countInstances() > 0) {
+					$this->empty = false;
+					return false;
+				} else {
+					$this->empty = true;
+					return true;
+				}
+			}
+		}
     }
 	
 	/**
@@ -374,14 +429,19 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 */
 	public function countInstancesRecursive() {
 		
+		if (isset($this->countInstancesRecursive)) {
+			return $this->countInstancesRecursive;
+		}
+		
 		$count = $this->countInstances();
-		$subclasses = $this->listSubClasses();
+		$subclasses = $this->listDirectSubClasses();
 		
 		if (count($subclasses) === 0) return $count;
 		else {
 			foreach ($subclasses as $s) $count += $s->countInstancesRecursive();
 		}
 		
+		$this->countInstancesRecursive = $count;
 		return $count;
 	}
 	

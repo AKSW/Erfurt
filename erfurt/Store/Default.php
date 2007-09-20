@@ -446,5 +446,10 @@ class Erfurt_Store_Default extends DBStore {
 	public function checkAc() {
 		return ($this->ac === null) ? false : true;
 	}
+	
+	public function sqlQuery($sql) {
+		
+		return $this->dbConn->Execute($sql)->getArray();
+	}
 }
 ?>
