@@ -724,9 +724,12 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$args = func_get_args();
 		$cache = new stmCache('findInstances', $args, $this);
-		if ($cache->value !== null) {
-			$erg = $cache->value[0];
-			return $this->_convertRecordSetToNodeList($cache->value[1], 'instance');
+		
+		$cVal = $cache->get();
+		
+		if ($cVal !== null) {
+			$erg = $cVal[0];
+			return $this->_convertRecordSetToNodeList($cVal[1], 'instance');
 		}
 
 		$ret = array();

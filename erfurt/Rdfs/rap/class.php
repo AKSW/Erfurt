@@ -242,9 +242,12 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		
 		$args = func_get_args();
 		$cache = new stmCache('findInstancesRecursive', $args, $this->model, $this);
-		if ($cache->value !== null) {
-			$erg = $cache->value[0];
-			return $this->model->_convertRecordSetToNodeList($cache->value[1], 'instance');
+		
+		$cVal = $cache->get();
+		
+		if ($cVal !== null) {
+			$erg = $cVal[0];
+			return $this->model->_convertRecordSetToNodeList($cVal[1], 'instance');
 		}
 
 		$ret = array();
