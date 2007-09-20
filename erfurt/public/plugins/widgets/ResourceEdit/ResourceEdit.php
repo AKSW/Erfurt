@@ -49,7 +49,7 @@ class ResourceEdit extends Erfurt_Plugin_Widget {
 		
 		$ret  = '<div>' . PHP_EOL;
 		// local name input
-		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue" value="' . $value . 
+		$ret .= '<input type="text" name="' . $name . $nameMod . '[uri]" class="ResourceEditValue text" value="' . $value . 
 				'" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		$ret .= '<img class="delete button" id="img-' . $this->id . $num . '" src="' . $this->publicUri . 'images/delete.gif" alt="del" />' . PHP_EOL;
 				// onkeyup="$(\'uri-' . $this->id . $num . '\').value = this.value" 

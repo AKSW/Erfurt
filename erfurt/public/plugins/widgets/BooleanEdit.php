@@ -23,7 +23,7 @@ class BooleanEdit extends CheckboxEdit {
 			$this->options = array('1' => 'True', '0' => 'False');
 		}
 		$this->config['cardinalityMax'] = 1;
-		$this->config['class'] = 'BooleanEditContainer';
+		$this->config['class'] = 'BooleanEditContainer radio';
 		$this->config['dtype'] = 'http://www.w3.org/2001/XMLSchema#boolean';
 	}
 	

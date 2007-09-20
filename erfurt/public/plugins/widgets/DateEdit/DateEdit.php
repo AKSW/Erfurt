@@ -29,7 +29,7 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		
 		$name = $this->elementName;
 		
-		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue" value="' . $value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
+		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue text" value="' . $value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		$ret .= '<input type="hidden" name="' . $name . '[dtype]" value="http://www.w3.org/2001/XMLSchema#date" />' . PHP_EOL;
 		
 		$this->onLoadCode = 

@@ -97,7 +97,7 @@ class CheckboxEdit extends Erfurt_Plugin_Widget {
 		if (is_array($this->selected) && in_array($key, $this->selected)) {
 			$ret .= ' checked="checked"';
 		}
-		$ret .= ' class="CheckboxEditValue"';
+		$ret .= ' class="CheckboxEditValue '.$type.'"';
 		if ($this->config['onchange']) {
 			$ret .= ' onchange="' . $this->config['onchange'] . '"';
 		}

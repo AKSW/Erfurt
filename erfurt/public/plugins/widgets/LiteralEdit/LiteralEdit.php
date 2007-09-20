@@ -52,23 +52,23 @@ class LiteralEdit extends Erfurt_Plugin_Widget {
 			$ret = '';
 		}
 		if (!strstr($value, PHP_EOL) && strlen($value) < 20) {
-			$ret .= '<input type="text" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" value="' . 
+			$ret .= '<input type="text" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue text" value="' . 
 					$value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
 			$ret .= '<textarea rows="' . ceil(strlen($value) / 25) . '" cols="25" name="' . $name . '[value]' . $nameMod . '" class="LiteralEditValue" id="value-' . 
 					$this->id . $num . '">' . $value . '</textarea>' . PHP_EOL;
 		}
 		$ret .= '<div class="LiteralEditOptionsContainer" id="opt-cont' . $this->id . $num . '">' . PHP_EOL; // style="opacity:0"
-		$ret .= '@<input type="text" name="' . $name . '[lang]" class="LiteralEditLang" value="' . $lang . '" id="lang-' . 
+		$ret .= '@<input type="text" name="' . $name . '[lang]" class="LiteralEditLang text" value="' . $lang . '" id="lang-' . 
 				$this->id . $num . '" />' . PHP_EOL;
 		
 		if (!empty($this->config['dtype'])) {
-			$ret .= '^^<input type="text" readonly="readonly" name="' . $name . '[dtype]" class="LiteralEditDtype" value="' . 
+			$ret .= '^^<input type="text" readonly="readonly" name="' . $name . '[dtype]" class="LiteralEditDtype text" value="' . 
 					str_replace('&nbsp;', '', $this->config['dtype']) . '" id="dtype-' . $this->id . $num . '" />' . PHP_EOL;
 		} else {
 			if (!empty($this->config['cssId'])) {
 				$ret .= '^^' . new SelectNew($name . '[dtype]', $dtype, $this->types, array('cardinalityMax' => 1, 
-				                                                                      'class' => 'LiteralEditDtype', 
+				                                                                      'class' => 'LiteralEditDtype select', 
 				                                                                      'cssId' => $this->config['cssId'], 
 				                                                                      'start' => $this->config['start']));
 			} else {
