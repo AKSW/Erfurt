@@ -2,13 +2,13 @@
 visit http://www.meanfreepath.com/tools/jscompactor.html to use our free JavaScript/CSS code compactor*/
 
 table.epoch {
-	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
-	font-size: 1em;
+	font-family: Arial, sans-serif;
+	font-size: 0.8em;
 	padding: 1px;
 	border-collapse: collapse;
 	border: solid #bbb 1px;
 	background-color: #fff;
-/*	width: 215px;*/
+    width: 20em;
 	text-align: center;
 	cursor: pointer;
 	/*prevent user from selecting text in Mozilla & Safari - check calendar constructor for IE code)*/
@@ -29,6 +29,7 @@ table.epoch input, table.epoch select {
 
 table.epoch select {
 	width: 6em;
+	min-width:6em;
 }
 
 table.epoch td, table.epoch th {
