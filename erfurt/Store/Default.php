@@ -449,7 +449,13 @@ class Erfurt_Store_Default extends DBStore {
 	
 	public function sqlQuery($sql) {
 		
-		return $this->dbConn->Execute($sql)->getArray();
+		$result = $this->dbConn->Execute($sql);
+		
+		if ($result != null) {
+			return $result->getArray();
+		} else {
+			return null;
+		}
 	}
 }
 ?>
