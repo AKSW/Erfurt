@@ -15,7 +15,7 @@ function getEmptyHtml(trigger, id, containerId, widgetClass) {
 		'&class=' + encodeURIComponent(widgetClass);
 		/* '&model=' + encodeURIComponent(model); */
 	
-	$jq(container).load(uri);
-	//new Ajax.Updater(container, uri, {evalScripts: true});
+	// $jq(container).load(uri, {dataType: 'html'});
+	new Ajax.Updater(container, uri, {evalScripts: true});
 	$jq('#count-' + id).val(parseInt(count) + 1);
 }
