@@ -561,7 +561,7 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 			} elseif ($v instanceof Literal) {
 				$val[] = $this->model->getLiteralId($v);
 			} elseif (is_array($v)) {
-				if ($v['type'] != 'resource' && isset($v['value'])) {
+				if ($v['type'] != 'resource' && isset($v['value']) && !empty($v['value'])) {
 					$vt = new RDFSLiteral($v['value'], $v['lang'] != 'Lang' ? $v['lang'] : null, $v['dtype']);
 					$obj = $val[] = $this->model->getLiteralId($vt);
 				} elseif ($v['type'] != 'literal' && $v['uri']) {

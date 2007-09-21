@@ -32,7 +32,7 @@ class DateEdit extends Erfurt_Plugin_Widget {
 		
 		$ret = '<input type="text" name="' . $name . '[value]" class="DateEditValue text" value="' . $value . '" id="value-' . $this->id . $num . '" />' . PHP_EOL;
 		$ret .= '<input type="hidden" name="' . $name . '[dtype]" value="http://www.w3.org/2001/XMLSchema#date" />' . PHP_EOL;
-		if (!empty($value)) {
+		if ($value && $value != '') {
 			$ret .= '<script type="text/javascript">var cal' . $this->id . $num . '=loadDateEdit(\'' . $this->id . $num . '\',' . strtotime($value) * 1000 . ')</script>';
 		} else {
 			$ret .= '<script type="text/javascript">var cal' . $this->id . $num . '=loadDateEdit(\'' . $this->id . $num . '\')</script>';
