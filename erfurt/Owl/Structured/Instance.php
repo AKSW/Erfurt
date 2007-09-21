@@ -11,6 +11,10 @@ class Erfurt_Owl_Structured_Instance
 	public function getURI(){
 		return $this->uri;
 	}
+	
+	public function toManchesterSyntaxString(){
+		return $this->uri;
+	}
 
 }
 ?>
