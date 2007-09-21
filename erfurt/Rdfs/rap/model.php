@@ -176,6 +176,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			stmCache::expire($statement);
 			$this->logRemove($statement);
 		} else
+			
 			trigger_error('Deletion of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
 		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
 		return $success;
@@ -451,7 +452,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		}
 		
 	 	ksort($tempClassArray);
-		$c->set($tempClassArray, array('rdf:type', 'rdfs:subClassOf'));
+		$c->set($tempClassArray, array('rdf:type', 'rdfs:subClassOf', 'rdfs:label'));
 		return $tempClassArray;
     }
 
@@ -1104,35 +1105,37 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				$recordSet=$this->dbConn->execute($recordSet);
 			$erg=$recordSet->_maxRecordCount?$recordSet->_maxRecordCount:$recordSet->_numOfRows;
 		}
+		
 		if(($recordSet instanceof ADORecordSet))
 			$recordSet=$recordSet->getArray();
 		$ret=array();
-		foreach($recordSet as $fields) {
-			if($fields[1]=='l')
-				$res=new RDFSLiteral($fields[0],$fields[2],$fields[3]);
-			else if($fields[1]=='b' && !$class)
-				$res=new BlankNode($fields[0]);
-			else if($class) {
-				if(strtolower($class)=='resource')
+		if ($recordSet != null) {
+			foreach($recordSet as $fields) {
+				if($fields[1]=='l')
+					$res=new RDFSLiteral($fields[0],$fields[2],$fields[3]);
+				else if($fields[1]=='b' && !$class)
+					$res=new BlankNode($fields[0]);
+				else if($class) {
+					if(strtolower($class)=='resource')
+						$res=$this->resourceF($fields[0]);
+					else if(strtolower($class)=='class')
+						$res=$this->classF($fields[0]);
+					else if(strtolower($class)=='property')
+						$res=$this->propertyF($fields[0]);
+					else if(strtolower($class)=='instance')
+						$res=$this->instanceF($fields[0]);
+					else
+						$res=new $class($fields[0],$this);
+					if($fields[1]=='b')
+						$res->uri=$fields[0];
+				} else
 					$res=$this->resourceF($fields[0]);
-				else if(strtolower($class)=='class')
-					$res=$this->classF($fields[0]);
-				else if(strtolower($class)=='property')
-					$res=$this->propertyF($fields[0]);
-				else if(strtolower($class)=='instance')
-					$res=$this->instanceF($fields[0]);
+				if(method_exists($res,'getLocalName') && $res->getLocalName())
+					$ret[$res->getLocalName()]=$res;
 				else
-					$res=new $class($fields[0],$this);
-				if($fields[1]=='b')
-					$res->uri=$fields[0];
-			} else
-				$res=$this->resourceF($fields[0]);
-			if(method_exists($res,'getLocalName') && $res->getLocalName())
-				$ret[$res->getLocalName()]=$res;
-			else
-				$ret[]=$res;
+					$ret[]=$res;
+			}
 		}
-
 		return $ret;
 	}
 	

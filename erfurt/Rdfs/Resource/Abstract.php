@@ -543,7 +543,7 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 		$values = array_filter($values);
 		
 		if (!($property instanceof RDFSProperty)) {
-			$property = new $this->model->property($property, $this->model);
+			$property = $this->model->propertyF($property);
 		}
 		
 		$range = $property->getRange();
@@ -592,7 +592,7 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 		foreach (array_diff($valuesOldPlain, $values) as $removed) {
 			if (isBnode($valuesOld[$removed])) {
 				if(!method_exists($valuesOld[$removed], 'remove')) {
-					$valuesOld[$removed] = new RDFSResource($valuesOld[$removed]->getURI(), $this->model);
+					$valuesOld[$removed] = $this->model->resourceF($valuesOld[$removed]->getURI());
 				}
 				$valuesOld[$removed]->remove();
 			} else {
