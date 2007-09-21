@@ -1,4 +1,13 @@
+<html><body>
+<html>
+<body>
+<form action="starter.php" method="post">
+String to parse: <input type="text" name="manchesterstring" />
+<input type="submit" />
+</form>
 <?php
+
+
 error_reporting(E_STRICT);
 $debug=1;
 
@@ -9,9 +18,18 @@ $x='';
 for ($i=1; $i < $argc; $i++) { 
 	$x.=$argv[$i].' ';
 }
-//echo $x."\n";
-$o= new OWLParser();
-$o->parseString($x);
-$end =  explode(' ',microtime() );
-if($debug)echo "\nparsed in " . ($end[0]+$end[1]-($start[0]+$start[1])). "\n";
+if(!$_POST["manchesterstring"]=="" &&$x=="" ){
+	echo"you entered: ".$_POST["manchesterstring"]."<br />";
+	//echo $x."\n";
+	$o= new OWLParser();
+	//$o->parseString($x);
+	echo "manchester string = ";
+	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
+	//$o->parseString("aaa  and ccc onlysome [tx, v, e] or t max 3");
+	$end =  explode(' ',microtime() );
+	if($debug)echo "<br />\nparsed in " . ($end[0]+$end[1]-($start[0]+$start[1])). "\n";
+}
+
 ?>
+
+</body></html>

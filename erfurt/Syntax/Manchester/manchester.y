@@ -52,6 +52,10 @@ require_once 'lex.php';}
 	classExpr(A)::= propExpr(B) SOME_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{
 		A=new Erfurt_Owl_Structured_SomeValuesFrom(B." some ".C,B,C);
 		}
+		
+	classExpr(A)::= propExpr(B) ONLY_OPERATOR LSQUAREBRACKET list(C) RSQUAREBRACKET.{
+		A=new Erfurt_Owl_Structured_AllValuesFrom(B." some ".C,B,C);
+		}
 
     classExpr(A) ::= classExpr(B) AND_OPERATOR classExpr(C).{
 		A = new Erfurt_Owl_Structured_IntersectionClass(B->getURI()." and ".C->getURI());
