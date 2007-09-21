@@ -116,7 +116,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			."'" .$statement->getLabelPredicate() ."',";
 
 			if ($statement->object() instanceof Literal) {
-				$quotedLiteral = $this->dbConn->qstr($statement->obj->getLabel());
+				$quotedLiteral = $this->dbConn->qstr($statement->obj->getLabel(), get_magic_quotes_gpc());
 				$sql .=        $quotedLiteral .","
 				."'" .$statement->obj->getLanguage() ."',"
 				."'" .$statement->obj->getDatatype() ."',"
@@ -410,7 +410,17 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$temp = $tempClassArray;
 			$tempClassArray = array();
 			foreach ($temp as $row) {
-				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
+				if ($this->hasStatement($row, 'rdf:type', EF_RDFS_CLASS)) {
+					$row->classType = 'rdfs:Class';
+					$row->implicit = false;
+					$tempClassArray[] = $row;
+				} else if ($this->hasStatement($row, 'rdf:type', EF_OWL_CLASS)) {
+					$row->classType = 'owl:Class';
+					$row->implicit = false;
+					$tempClassArray[] = $row;
+				} else if ($this->hasStatement($row, 'rdf:type', EF_OWL_DEPRECATED_CLASS)) {
+					$row->classType = 'owl:DeprecatedClass';
+					$row->implicit = false;
 					$tempClassArray[] = $row;
 				} else {
 					$row->implicit = true;
@@ -520,11 +530,9 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	public function hasStatement($s, $p, $o) {
 		
 		$sql = 'SELECT s.subject, s.predicate, s.object
-				FROM statements s ';
+				FROM statements s WHERE modelID IN (' . $this->getModelIds() . ')';
 				
-		if ($s !== null || $p !== null || $o !== null) {
-			$sql .= 'WHERE ';
-		}
+		
 			
 		$subString = '';
 		$predString = '';
@@ -533,7 +541,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		if ($s === null) {
 			$subString = '';
 		} else if (is_array($s)) {
-			$subString = 's.subject IN (';
+			$subString = ' AND s.subject IN (';
 			for ($i=0; $i<count($s); ++$i ) {
 				$subString .= '"' . $this->_dbId($s[$i]) . '"';
 				if ($i < (count($s)-1)) {
@@ -542,11 +550,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			}
 			$subString .= ') ';
 		} else {
-			$subString = 's.subject = "' . $this->_dbId($s) . '" ';
+			$subString = ' AND s.subject = "' . $this->_dbId($s) . '" ';
 		}
 		
-		if ($s !== null && ($p !== null || $o !== null)) {
-			$subString .= 'AND ';
+		if ($p !== null || $o !== null) {
+			$subString .= ' AND ';
 		}
 		
 		if ($p === null) {
@@ -565,7 +573,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		}
 		
 		if ($p !== null && $o !== null) {
-			$predString .= 'AND ';
+			$predString .= ' AND ';
 		}
 		
 		if ($o === null) {
@@ -585,6 +593,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$sql .= $subString . $predString . $objString;
 		
+		//echo $sql;
 		$result = $this->getStore()->sqlQuery($sql);
 		
 		if (count($result) > 0) {
@@ -1487,7 +1496,18 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function sparqlQuery($query, $renderer = null) {
 		
-		return $this->store->executeSparql($this, $query, null, $renderer);
+		$args = func_get_args();
+		$c = new stmCache('sparqlQuery', $args, $this);
+		 	
+		$cVal = $c->get();	
+		if (null != $cVal) {
+			return $cVal;
+		}
+		
+		$result = $this->store->executeSparql($this, $query, null, $renderer);
+		$c->set($result, array('rdf:type', 'rdfs:subClassOf'));
+		
+		return $result;
 	}
 	
 	/**
