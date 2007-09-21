@@ -49,6 +49,23 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 		}
 	}
 	
+	public function getClassType() {
+		
+		if (isset($this->classType)) {
+			return $this->classType;
+		} else {
+			if ($this->model->hasStatement($row, 'rdf:type', EF_RDFS_CLASS)) {
+				$this->classType = 'rdfs:Class';
+			} else if ($this->model->hasStatement($row, 'rdf:type', EF_OWL_CLASS)) {
+				$this->classType = 'owl:Class';
+			} else if ($this->model->hasStatement($row, 'rdf:type', EF_OWL_DEPRECATED_CLASS)) {
+				$this->classType = 'owl:DeprecatedClass';
+			}
+			
+			return $this->classType;
+		}
+	}
+	
 	/**
 	 * Returns number of all classes that are declared to be sub-classes
 	 * of this class.
