@@ -1505,7 +1505,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		}
 		
 		$result = $this->store->executeSparql($this, $query, null, $renderer);
-		$c->set($result, array('rdf:type', 'rdfs:subClassOf'));
+		$c->set($result);
 		
 		return $result;
 	}
