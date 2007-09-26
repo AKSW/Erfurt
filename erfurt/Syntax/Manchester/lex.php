@@ -91,12 +91,11 @@ class ManchesterLexer
               18 => 0,
               19 => 0,
               20 => 0,
-              21 => 0,
             );
         if ($this->N >= strlen($this->data)) {
             return false; // end of input
         }
-        $yy_global_pattern = "/^([ \t\n\r]+)|^([Aa][Nn][Dd][ \t\n\r]+)|^([Tt][Hh][Aa][Tt][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)/";
+        $yy_global_pattern = "/^([ \t\n\r]+)|^([Aa][Nn][Dd]|[Tt][Hh][Aa][Tt][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)/";
 
         do {
             if (preg_match($yy_global_pattern, substr($this->data, $this->N), $yymatches)) {
@@ -136,27 +135,26 @@ class ManchesterLexer
                     // skip this token
                     continue;
                 } else {                    $yy_yymore_patterns = array(
-        1 => array(0, "^([Aa][Nn][Dd][ \t\n\r]+)|^([Tt][Hh][Aa][Tt][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        2 => array(0, "^([Tt][Hh][Aa][Tt][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        3 => array(0, "^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        4 => array(0, "^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        5 => array(0, "^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        6 => array(0, "^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        7 => array(0, "^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        8 => array(0, "^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        9 => array(0, "^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        10 => array(0, "^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        11 => array(0, "^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        12 => array(0, "^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        13 => array(0, "^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        14 => array(0, "^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        15 => array(0, "^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        16 => array(0, "^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        17 => array(0, "^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        18 => array(0, "^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        19 => array(0, "^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
-        20 => array(0, "^([a-zA-Z]+[0-9]*)"),
-        21 => array(0, ""),
+        1 => array(0, "^([Aa][Nn][Dd]|[Tt][Hh][Aa][Tt][ \t\n\r]+)|^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        2 => array(0, "^([Oo][Rr][ \t\n\r]+)|^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        3 => array(0, "^([Nn][Oo][Tt][ \t\n\r]+)|^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        4 => array(0, "^([Mm][Ii][Nn][ \t\n\r]+)|^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        5 => array(0, "^([Mm][Aa][Xx][ \t\n\r]+)|^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        6 => array(0, "^([Ee][Xx][Aa][Cc][Tt][Ll][Yy][ \t\n\r]+)|^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        7 => array(0, "^([Hh][Aa][Ss][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        8 => array(0, "^([Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        9 => array(0, "^([Ss][Oo][Mm][Ee][ \t\n\r]+)|^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        10 => array(0, "^([Oo][Nn][Ll][Yy][ \t\n\r]+)|^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        11 => array(0, "^(,)|^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        12 => array(0, "^(\\()|^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        13 => array(0, "^(\\))|^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        14 => array(0, "^(\\{)|^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        15 => array(0, "^(\\})|^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        16 => array(0, "^(\\[)|^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        17 => array(0, "^(\\])|^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        18 => array(0, "^([0-9]+)|^([a-zA-Z]+[0-9]*)"),
+        19 => array(0, "^([a-zA-Z]+[0-9]*)"),
+        20 => array(0, ""),
     );
 
                     // yymore is needed
@@ -228,112 +226,106 @@ class ManchesterLexer
     function yy_r1_3($yy_subpatterns)
     {
 
-	if ($this->debug) echo "and operator found\n";
-	$this->token=self::AND_OPERATOR;
-    }
-    function yy_r1_4($yy_subpatterns)
-    {
-
 	if ($this->debug) echo "or operator found\n";
 	$this->token=self::OR_OPERATOR;
     }
-    function yy_r1_5($yy_subpatterns)
+    function yy_r1_4($yy_subpatterns)
     {
 
 	if ($this->debug) echo "not operator found\n";
 	$this->token=self::NOT_OPERATOR;
     }
-    function yy_r1_6($yy_subpatterns)
+    function yy_r1_5($yy_subpatterns)
     {
 
 	if ($this->debug) echo "min operator found\n";
 	$this->token=self::MIN_OPERATOR;
     }
-    function yy_r1_7($yy_subpatterns)
+    function yy_r1_6($yy_subpatterns)
     {
 
 	if ($this->debug) echo "max operator found\n";
 	$this->token=self::MAX_OPERATOR;
     }
-    function yy_r1_8($yy_subpatterns)
+    function yy_r1_7($yy_subpatterns)
     {
 
 	if ($this->debug) echo "exactly operator found\n";
 	$this->token=self::EXACTLY_OPERATOR;
     }
-    function yy_r1_9($yy_subpatterns)
+    function yy_r1_8($yy_subpatterns)
     {
 
 	if ($this->debug) echo "has operator found\n";
 	$this->token=self::HAS_OPERATOR;
     }
-    function yy_r1_10($yy_subpatterns)
+    function yy_r1_9($yy_subpatterns)
     {
 
 	if ($this->debug) echo "onlysome_operator operator found\n";
 	$this->token=self::ONLYSOME_OPERATOR;
     }
-    function yy_r1_11($yy_subpatterns)
+    function yy_r1_10($yy_subpatterns)
     {
 
 	if ($this->debug) echo "some_operator operator found\n";
 	$this->token=self::SOME_OPERATOR;
     }
-    function yy_r1_12($yy_subpatterns)
+    function yy_r1_11($yy_subpatterns)
     {
 
 	if ($this->debug) echo "only_operator operator found\n";
 	$this->token=self::ONLY_OPERATOR;
     }
-    function yy_r1_13($yy_subpatterns)
+    function yy_r1_12($yy_subpatterns)
     {
 
 	if ($this->debug) echo "comma found\n";
 	$this->token=self::COMMA;
     }
-    function yy_r1_14($yy_subpatterns)
+    function yy_r1_13($yy_subpatterns)
     {
 
 	if ($this->debug) echo "lparen found\n";
 	$this->token=self::LPAREN;
     }
-    function yy_r1_15($yy_subpatterns)
+    function yy_r1_14($yy_subpatterns)
     {
 
 	if ($this->debug) echo "rparen found\n";
 	$this->token=self::RPAREN;
     }
-    function yy_r1_16($yy_subpatterns)
+    function yy_r1_15($yy_subpatterns)
     {
 
 	if ($this->debug) echo "lbrace found\n";
 	$this->token=self::LBRACE;
     }
-    function yy_r1_17($yy_subpatterns)
+    function yy_r1_16($yy_subpatterns)
     {
 
 	if ($this->debug) echo "rbrace found\n";
 	$this->token=self::RBRACE;
     }
-    function yy_r1_18($yy_subpatterns)
+    function yy_r1_17($yy_subpatterns)
     {
 
 	if ($this->debug) echo "lsquarebracket found\n";
 	$this->token=self::LSQUAREBRACKET;
     }
-    function yy_r1_19($yy_subpatterns)
+    function yy_r1_18($yy_subpatterns)
     {
 
 	if ($this->debug) echo "rsquarebracket found\n";
 	$this->token=self::RSQUAREBRACKET;
     }
-    function yy_r1_20($yy_subpatterns)
+    function yy_r1_19($yy_subpatterns)
     {
 
 	if ($this->debug) echo "numeric found\n";
 	$this->token=self::NUMERIC;
     }
-    function yy_r1_21($yy_subpatterns)
+    function yy_r1_20($yy_subpatterns)
     {
 
 	if ($this->debug) echo "alphanumeric found\n";

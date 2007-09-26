@@ -16,7 +16,7 @@ require_once 'lex.php';}
 		}
 	}
 
-%left NOT_OPERATOR AND_OPERATOR THAT_OPERATOR OR_OPERATOR.
+%left NOT_OPERATOR AND_OPERATOR OR_OPERATOR.
 %left MIN_OPERATOR MAX_OPERATOR EXACTLY_OPERATOR HAS_OPERATOR.
 %left ONLYSOME_OPERATOR ONLY_OPERATOR SOME_OPERATOR.
 
@@ -70,20 +70,6 @@ require_once 'lex.php';}
 			A->addChildClass(C);
 		}
 		}
-
-	    classExpr(A) ::= classExpr(B) THAT_OPERATOR classExpr(C).{
-			A = new Erfurt_Owl_Structured_IntersectionClass(B->getURI()." that ".C->getURI());
-			if(B instanceof Erfurt_Owl_Structured_IntersectionClass){
-				A->addChildClass(B->getChildClasses());
-			}else{
-				A->addChildClass(B);
-			}
-			if(C instanceof Erfurt_Owl_Structured_IntersectionClass){
-				A->addChildClass(C->getChildClasses());
-			}else{
-				A->addChildClass(C);
-			}
-			}
 
    	classExpr(A) ::= classExpr(B) OR_OPERATOR  classExpr(C).{
 		A = new Erfurt_Owl_Structured_UnionClass(B->getURI()." or ".C->getURI());

@@ -53,8 +53,7 @@ WHITESPACE = /[ \t\n\r]+/
 LPAREN="("
 RPAREN=")"
 NOT_OPERATOR=/[Nn][Oo][Tt]/
-AND_OPERATOR=/[Aa][Nn][Dd]/
-THAT_OPERATOR=/[Tt][Hh][Aa][Tt]/
+AND_OPERATOR=/[Aa][Nn][Dd]|[Tt][Hh][Aa][Tt]/
 OR_OPERATOR=/[Oo][Rr]/
 COMMA=","
 LSQUAREBRACKET="["
@@ -77,10 +76,6 @@ WHITESPACE {
     return false; // skip this token (do not return it)
 }
 AND_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "and operator found\n";
-	$this->token=self::AND_OPERATOR;
-}
-THAT_OPERATOR SEPARATOR_CHAR{
 	if ($this->debug) echo "and operator found\n";
 	$this->token=self::AND_OPERATOR;
 }

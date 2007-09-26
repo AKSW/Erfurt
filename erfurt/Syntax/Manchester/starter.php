@@ -18,8 +18,8 @@ $x='';
 for ($i=1; $i < $argc; $i++) { 
 	$x.=$argv[$i].' ';
 }
-if(!$_POST["manchesterstring"]=="" &&$x=="" ){
-	echo"you entered: ".$_POST["manchesterstring"]."<br />";
+if(!$_POST["manchesterstring"]=="" || !$x=="" ){
+	echo"you entered: ".($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x)."<br />";
 	//echo $x."\n";
 	$o= new OWLParser();
 	//$o->parseString($x);
@@ -27,7 +27,11 @@ if(!$_POST["manchesterstring"]=="" &&$x=="" ){
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
 	//$o->parseString("aaa  and ccc onlysome [tx, v, e] or t max 3");
 	$end =  explode(' ',microtime() );
-	if($debug)echo "<br />\nparsed in " . ($end[0]+$end[1]-($start[0]+$start[1])). "\n";
+	if($debug){
+		echo "<br />\nparsed in ";
+		print_r ($end[0]-$start[0]);
+		echo "s ";
+	}
 }
 
 ?>
