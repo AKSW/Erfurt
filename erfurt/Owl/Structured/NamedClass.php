@@ -14,10 +14,5 @@ extends Erfurt_Owl_Structured_StructuredClass
 		return $this->getURI();
 	}
 
-	public function toTreeString()
-	{
-		return "instance of NamedClass ".$this->getURI();
-	}
-	
 }
 ?>
