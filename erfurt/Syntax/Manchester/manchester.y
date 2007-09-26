@@ -103,7 +103,7 @@ require_once 'lex.php';}
     classExpr(A) ::= propExpr(B) EXACTLY_OPERATOR  NUMERIC(C).{
 		A = new Erfurt_Owl_Structured_Cardinality(B." exactly ".C, B, C);}
 		
-    classExpr(A) ::= propExpr(B) HAS_OPERATOR  ALPHANUMERIC(C).{
+    classExpr(A) ::= propExpr(B) HAS_OPERATOR  instExpr(C).{
 		A = new Erfurt_Owl_Structured_HasValue(B." has ".C, B, C); }
 
 	classExpr(A) ::= ALPHANUMERIC(B).{

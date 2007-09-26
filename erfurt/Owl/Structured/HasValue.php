@@ -18,7 +18,7 @@ extends Erfurt_Owl_Structured_Restriction
 
 	public function toManchesterSyntaxString()
 	{
-		return $this->getOnProperty() . " has " . $this->fillerInstance;
+		return "(".$this->getOnProperty() . " has " . $this->fillerInstance->toManchesterSyntaxString().")";
 	}
 
 }
