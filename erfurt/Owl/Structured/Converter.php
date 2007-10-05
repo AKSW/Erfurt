@@ -8,18 +8,127 @@ class Erfurt_Owl_Structured_Converter
 	new methods:
 	
 		@returns Erfurt_OWL_Structured_StructuredClass
-	public function convertErfurtClass($ErfurtOWLClass){}
+	**/
+	public function convertErfurtClass($ErfurtOWLClass){
 	
+	
+		/*echo $ErfurtOWLClass->getURI()."\n";
+		print_r($ErfurtOWLClass->listPropertyValues("http://www.w3.org/2002/07/owl#unionOf",'Class'));
+		print_r($ErfurtOWLClass->listUnionOf());
+		//echo "|".$ErfurtOWLClass->getURI()."|\n";
+		echo "|bn:".$this->isBlankNode($ErfurtOWLClass)."|\n";
+	
+	*/
+		if(!($this->isBlankNode($ErfurtOWLClass))) 
+		{	
+			//echo $ErfurtOWLClass->getURI()."notablanknode";
+			$structClass=new Erfurt_Owl_Structured_NamedClass($ErfurtOWLClass->getURI());
+			return $structClass;
+		}//ifBlankNode
+		else 
+		{	
+			
+			
+			//classify this blanknode
+			
+			/*INTERSECTION?**/
+			$int=$ErfurtOWLClass->listIntersectionOf();
+			
+			//$this->p("blanknode",$int);
+			if(sizeof($int)>=1)
+			{
+				$tmp=new Erfurt_Owl_Structured_IntersectionClass();
+				foreach ($int as $one)
+				{
+					$tmp->addChildClass($this->convertErfurtClass($one));
+				}//foreach
+				return $tmp;
+			}//if
+
+			/*UNION?**/
+			$uni=$ErfurtOWLClass->listUnionOf();
+			if(sizeof($uni)>=1)
+			{
+				$tmp=new Erfurt_Owl_Structured_UnionClass();
+				foreach ($uni as $one)
+				{
+					$tmp->addChildClass($this->convertErfurtClass($one));
+				}
+				return $tmp;
+			}//if
+			/*Complement?**/
+			$comp=$ErfurtOWLClass->listComplementOf();
+			if(sizeof($uni)>=1)
+			{
+				$tmp=new Erfurt_Owl_Structured_ComplementClass();
+				foreach ($comp as $one)
+				{
+					$tmp->addChildClass($this->convertErfurtClass($one));
+				}//foreach
+				return $tmp;
+			}//if
+		}//else
+	
+	/* STILL MISSING:
+	property restrictions
+	
+	**/
+	}//function
+	
+	/**
+	@returns Erfurt_OWL_StructuredClass LIST
+	**/
+	public function getEquivalentClasses($ErfurtOWLClass){
+		
+		$list=$ErfurtOWLClass->listEquivalentClasses();
+		$ret=array();
+		//print_r(array_keys($list));
+		
+		foreach ($list as $one){
+		
+			$ret[]=$this->convertErfurtClass($one);
+		}
+		
+		return $ret;
+	}// function
+	
+	/**
 		@returns Erfurt_OWL_StructuredClass LIST
-	public function getEquivalentClasses($ErfurtOWLClass){}
+	**/
+	public function getSubclassOfClasses($ErfurtOWLClass){
+		$list=$ErfurtOWLClass->listSuperClasses();
+		$ret=array();
+		//print_r(array_keys($list));
+
+		foreach ($list as $one){
+
+			$ret[]=$this->convertErfurtClass($one);
+		}
+			
+		return $ret;
 	
+	}
+	
+	/**
 		@returns Erfurt_OWL_StructuredClass LIST
-	public function getSubclassOfClasses($ErfurtOWLClass){}
+	**/
+	public function getDisjointWithClasses($ErfurtOWLClass){
+		$list=$ErfurtOWLClass->listDisjointWith();
+		$ret=array();
+		//print_r(array_keys($list));
+
+		foreach ($list as $one){
+
+			$ret[]=$this->convertErfurtClass($one);
+		}
+				
+		return $ret;
 	
-		@returns Erfurt_OWL_StructuredClass LIST
-	public function getDisjointWithClasses($ErfurtOWLClass){}
 	
+	}
+	/**
 		@returns Structured_Axiom List
+	**/
 	public function convertErfurtModel($ErfurtOWLModel){
 		//$ErfurtOWLModel->blabla
 		
@@ -27,12 +136,27 @@ class Erfurt_Owl_Structured_Converter
 	}
 	
 	
-	**/
+	
+	public function isBlankNode($OWLClass){
+		if(strpos($OWLClass->getURI(),"ode")==1){
+			return true;
+		}
+		else return false;
+	
+	}
+	
+	public function p($string,$array){
+			if($this->debug_flag){
+				echo $string;
+				print_r( array_keys($array));
+			}
+	}
 
 
 
 	// returns structured class
 	// WARNING reads the definition recursively until NamedClasses are found
+	/*
 	public function convert($OWLClass,$first=true)
 	{
 		if($first==true)
@@ -43,10 +167,10 @@ class Erfurt_Owl_Structured_Converter
 			else 
 			{	//echo $OWLClass->getURI()."notablanknode";
 				$structClass=new Erfurt_Owl_Structured_NamedClass($OWLClass->getURI());
-			/***initialize Axioms***/
+			//***initialize Axioms***
 			
 			
-			/***SubclassOf***/
+			//***SubclassOf***
 				$superClasses=$OWLClass->listSuperClasses();
 				$this->p("superClasses\n",$superClasses);
 				$tmpStruct=array();
@@ -55,7 +179,7 @@ class Erfurt_Owl_Structured_Converter
 					$structClass->addSubclassOf($this->convert($one,false));
 				}//foreach
 				
-			/***Equivalent***/
+			//***Equivalent***
 				//!!!!CHECK IF BLANKNODES ARE RETURNED
 				$equiClasses=$OWLClass->listEquivalentClasses() ;
 				$this->p("equivalentClasses\n",$equiClasses);
@@ -96,7 +220,7 @@ class Erfurt_Owl_Structured_Converter
 				
 				
 				
-			/***Disjoints***/
+			//***Disjoints***
 				//!!!!CHECK IF BLANKNODES ARE RETURNED
 				$disjointClasses=$OWLClass->listDisjointWith();
 				$this->p("disjointClasses\n",$disjointClasses);
@@ -172,20 +296,7 @@ class Erfurt_Owl_Structured_Converter
 
 	}//function
 
-public function isBlankNode($OWLClass){
-	if(strpos($OWLClass->getURI(),"ode")==1){
-		return true;
-	}
-	else return false;
-
-}
-
-public function p($string,$array){
-		if($this->debug_flag){
-			echo $string;
-			print_r( array_keys($array));
-		}
-	}
+*/
 
 }//class
 ?>

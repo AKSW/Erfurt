@@ -30,5 +30,15 @@ class Erfurt_Owl_Structured_StructuredClass
 	public function setURI($newURI){
 		$this->URI=$newURI;
 	}
+	
+	public function _toString(){
+		return $this->toManchesterSyntaxString();
+	}
+	
+	public function toManchesterSyntaxString(){
+	
+		return "Method not overwritten correctly";
+	}
+	
 }
 ?>
