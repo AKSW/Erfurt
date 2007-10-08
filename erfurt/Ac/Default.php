@@ -240,8 +240,8 @@ class Erfurt_Ac_Default {
 		$this->_acModel = Zend_Registry::get('owAc');
 		$this->_acModelUri = '';
 		if ($auth->hasIdentity()) {
-    	// Identity exists; get it
-    	$this->_user = $auth->getIdentity();
+	    	// Identity exists; get it
+	    	$this->_user = $auth->getIdentity();
 		} else 
 			throw new Erfurt_Exception('no valid user given', 1103);
 		
@@ -275,7 +275,7 @@ class Erfurt_Ac_Default {
 		
 		
 		$this->_getUserModelRights($this->_user['uri']);
-		$this->_log->debug('OntoWiki_Ac::_userRights'."\n".print_r($this->_userRights, true) .
+		$this->_log->debug('OntoWiki_Ac::_userRights for '.$this->_user['uri']."\n".print_r($this->_userRights, true) .
 				"\n_groupRights: " . print_r($this->_groupRights, true) .
 				"\nAnyModelView: " . print_r($this->_userAnyModelViewAllowed, true). 
 				"\nAnyModelEdit: " . print_r($this->_userAnyModelEditAllowed, true) . 
@@ -373,7 +373,8 @@ class Erfurt_Ac_Default {
 		
 		# query model
 		try {
-			$result = $model->sparqlQuery($prefixed_query.$sparqlQuery, false);
+			$renderer = new Erfurt_Sparql_ResultRenderer_Plain();
+			$result = $model->sparqlQuery($prefixed_query.$sparqlQuery, $renderer);
 		} catch (SparqlParserException $e) {
 			$this->_log->info('Ac::_sparql() - query contains the following error: '.$e->getMessage());
 			die('Ac::_sparql() - query contains the following error: '.$e->getMessage());
@@ -403,21 +404,25 @@ class Erfurt_Ac_Default {
 		}
 		
 		# user groups
-		$sparqlQuery = 'select ?group ?p ?o 
-													where { 
-														?group ?p ?o.
-														?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
-													}';
+		$sparqlQuery = '
+			select ?group ?p ?o
+			where {
+				?group ?p ?o.
+				?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
+			}';
+		$this->_log->debug('Query for user groups: ' . $sparqlQuery);
 		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result, true);
 		}
 		
 		## direct user rightsgrantEdit
-		$sparqlQuery = 'select ?p ?o 
-													where { 
-														<'.$this->_user['uri'].'> ?p ?o.
-													}';
-		
+		$sparqlQuery = '
+			select ?s ?p ?o
+			where {
+				?s ?p ?o.
+				<'.$this->_user['uri'].'> ?p ?o.
+			}';
+		$this->_log->debug('Query for user rights: ' . $sparqlQuery);
 		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result);
 		}
@@ -448,48 +453,52 @@ class Erfurt_Ac_Default {
 	 * @param bool acl's for groups
 	 * @return void
 	 */
-	private function _filterAcess($resultList, $group = false) {
-		foreach($resultList as $entry) {
-			if ($entry['?o'] instanceof Literal ) continue;
+	private function _filterAcess($resultList, $group = false) { // TODO: remove = array()
+		// print_r($resultList);exit();
+		foreach($resultList as $entry) {			
+			if ($entry['o'] instanceof Literal ) continue;
+			
+			$this->_log->debug('Checked o:' . $entry['o'] . ', p:' . $entry['p']);
 			
 			# any action allowed
-			if ($entry['?o']->getUri() == $this->_propAnyAction and $entry['?p']->getUri() == $this->_propGrantAccess) {
+			if ($entry['o'] == $this->_propAnyAction /*and $entry['p'] == $this->_propGrantAccess*/) {
 				$this->_userAnyActionAllowed = true;
+				// print_r($entry); exit();
 			}
 			# any model allowed
-			else if ($entry['?o']->getUri() == $this->_propAnyModel and $entry['?p']->getUri() == $this->_propGrantModelView) {
+			else if ($entry['o'] == $this->_propAnyModel and $entry['p'] == $this->_propGrantModelView) {
 				$this->_userAnyModelViewAllowed = true;
-			} else if ($entry['?o']->getUri() == $this->_propAnyModel and $entry['?p']->getUri() == $this->_propGrantModelEdit) {
+			} else if ($entry['o'] == $this->_propAnyModel and $entry['p'] == $this->_propGrantModelEdit) {
 				$this->_userAnyModelEditAllowed = true;
 			}
 			# grant action
-			else if ($entry['?p']->getUri() == $this->_propGrantAccess) {
-				if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propGrantAccess]))
-					$this->_userRights[$this->_propGrantAccess][] = $entry['?o']->getLocalName();
+			else if ($entry['p'] == $this->_propGrantAccess) {
+				if (!in_array($entry['o'], $this->_userRights[$this->_propGrantAccess]))
+					$this->_userRights[$this->_propGrantAccess][] = $entry['o'];
 			}
 			# deny action
-			else if ($entry['?p']->getUri() == $this->_propDenyAccess) {
-				if (!in_array($entry['?o']->getLocalName(), $this->_userRights[$this->_propDenyAccess]))
-					$this->_userRights[$this->_propDenyAccess][] = $entry['?o']->getLocalName();
+			else if ($entry['p'] == $this->_propDenyAccess) {
+				if (!in_array($entry['o'], $this->_userRights[$this->_propDenyAccess]))
+					$this->_userRights[$this->_propDenyAccess][] = $entry['o'];
 			}
 			# othter model & statements
 			foreach($this->_userRights as $rightUri => $val) {
 				# filter statements for groups
-				if ($group and array_key_exists($entry['?p']->getUri(), $this->_statementbasedRightsProperties)) continue;
+				if ($group and array_key_exists($entry['p'], $this->_statementbasedRightsProperties)) continue;
 				# perform
-				if ($entry['?p']->getUri() == $rightUri and !in_array($entry['?o']->getUri(), $this->_userRights[$rightUri])) {
-					$this->_userRights[$rightUri][] = $entry['?o']->getUri();
+				if ($entry['p'] == $rightUri and !in_array($entry['o'], $this->_userRights[$rightUri])) {
+					$this->_userRights[$rightUri][] = $entry['o'];
 				}
 			}
 			
 			# group statementbased
 			if ($group and $this->statementsAcEnabled) {
-				if (!array_key_exists($entry['?p']->getUri(), $this->_statementbasedRightsProperties)) continue;
+				if (!array_key_exists($entry['p'], $this->_statementbasedRightsProperties)) continue;
 				
-				if (!array_key_exists($entry['?group']->getUri(), $this->_groupRights)) {
-					$this->_groupRights[$entry['?group']->getUri()] = $this->_statementbasedRightsProperties;
+				if (!array_key_exists($entry['group'], $this->_groupRights)) {
+					$this->_groupRights[$entry['group']] = $this->_statementbasedRightsProperties;
 				}
-				$this->_groupRights[$entry['?group']->getUri()][$entry['?p']->getUri()][] = $entry['?o']->getUri();
+				$this->_groupRights[$entry['group']][$entry['p']][] = $entry['o'];
 			}
 		}
 	}
@@ -610,7 +619,7 @@ class Erfurt_Ac_Default {
 		$ret = array();
 		if ($result = $this->_sparql($this->_sysontModel, $sparqlQuery)) {
 			foreach($result as $r) {
-				$s = explode('=', $r['?o']->getLabel());
+				$s = explode('=', $r['o']);
 				# remove quotas
 				if (substr($s[1], 0, 1) == '"') $s[1] = substr($s[1], 1);
 				if (substr($s[1], -1) == '"') $s[1] = substr($s[1], 0,  -1);

@@ -112,6 +112,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			$_SESSION['PWL']['user']= $this->_username;
 		}
 		
+		Zend_Registry::get('erfurtLog')->debug('User authenticated: ' . $result['identity']['uri']);		
 		
 		return new Zend_Auth_Result($result['isValid'], $result['identity'], $result['messages']);
 	}
@@ -141,14 +142,15 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		}
 		
 		foreach($result as $e) {
-			if ($e['?p']->getUri() == $this->_userNamePredicate)
-				$this->_users[$e['?s']->getUri()]['userName'] = $e['?o']->getLabel();
-			else if ($e['?p']->getUri() == $this->_userPasswordPredicate)
-				$this->_users[$e['?s']->getUri()]['userPassword'] = $e['?o']->getLabel();
-			else if ($e['?p']->getUri() == $this->_userMailPredicate)
-				$this->_users[$e['?s']->getUri()]['userEmail'] = $e['?o']->getLocalName();
-			else if ($e['?p']->getUri() == $this->_userMailPredicate and $e['?o']->getUri() == $this->_userDenyLoginAction)
-				$this->_users[$e['?s']->getUri()]['loginForbidden'] = true;
+			
+			if ($e['p'] == $this->_userNamePredicate)
+				$this->_users[$e['s']]['userName'] = $e['o'];
+			else if ($e['p'] == $this->_userPasswordPredicate)
+				$this->_users[$e['s']]['userPassword'] = $e['o'];
+			else if ($e['p'] == $this->_userMailPredicate)
+				$this->_users[$e['s']]['userEmail'] = $e['o'];
+			else if ($e['p'] == $this->_userMailPredicate and $e['o'] == $this->_userDenyLoginAction)
+				$this->_users[$e['s']]['loginForbidden'] = true;
 		}    
 	}
     
@@ -169,9 +171,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 														where { 
 														?s ?p ?o.								
 														?s rdf:type <'.$this->_userClass.'>.
-														?s <'.$this->_userNamePredicate.'> "'.$username.'"
+														?s <'.$this->_userNamePredicate.'> "'.$username.'"^^<' . EF_XSD_NS . 'string>
 														}';
-		
 		if (!$result = $this->_sparql($sparqlQuery)) {
 			return false;
 		}
@@ -179,30 +180,31 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		$uri = '';
 		$checkedPassword = false;
 		foreach($result as $e) {
+			
 			## user check
 			# wront username => not possible :)
-			#if ($e['?p']->getUri() == $this->_userNamePredicate and $e['?s']->getLocalName() != $username)
+			#if ($e['p'] == $this->_userNamePredicate and $e['s'] != $username)
 			#	return false;
 			# wrong password
-			if ($e['?p']->getUri() == $this->_userPasswordPredicate ) {
+			if ($e['p'] == $this->_userPasswordPredicate ) {
 				$checkedPassword = true; 
-				if (!$this->verifyPassword($password, $e['?o']->getLabel(), 'sha1') 
-	       		and !$this->verifyPassword($password, $e['?o']->getLabel(), ''))
+				if (!$this->verifyPassword($password, $e['o'], 'sha1') 
+	       		and !$this->verifyPassword($password, $e['o'], ''))
 					return false;
 	    }
 	      
 			# set params
 			if ($uri == '')
-				$uri = $e['?s']->getUri();
-			if ($e['?p']->getUri() == $this->_userNamePredicate) {
-				$this->_users[$e['?s']->getUri()]['userName'] = $e['?o']->getLabel();
+				$uri = $e['s'];
+			if ($e['p'] == $this->_userNamePredicate) {
+				$this->_users[$e['s']]['userName'] = $e['o'];
 			}
-			else if ($e['?p']->getUri() == $this->_userPasswordPredicate)
-				$this->_users[$e['?s']->getUri()]['userPassword'] = $e['?o']->getLabel();
-			else if ($e['?p']->getUri() == $this->_userMailPredicate)
-				$this->_users[$e['?s']->getUri()]['userEmail'] = $e['?o']->getLocalName();	
+			else if ($e['p'] == $this->_userPasswordPredicate)
+				$this->_users[$e['s']]['userPassword'] = $e['o'];
+			else if ($e['p'] == $this->_userMailPredicate)
+				$this->_users[$e['s']]['userEmail'] = $e['o'];	
 			# user denied to login
-			else if ($e['?p']->getUri() == $this->_userMailPredicate and $e['?o']->getUri() == $this->_userDenyLoginAction)
+			else if ($e['p'] == $this->_userMailPredicate and $e['o'] == $this->_userDenyLoginAction)
 				return false;
 		}
 		# no password 
@@ -281,7 +283,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		}
 		# query model
 		try {
-			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, false);
+			$renderer = new Erfurt_Sparql_ResultRenderer_Plain();
+			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, $renderer);
 		
 		} catch (SparqlParserException $e) {
 			Zend_Registry::get('erfurtLog')->info('Erfurt_Auth_Adapter_RDF::_sparql() - query contains the following error: '.$e->getMessage());

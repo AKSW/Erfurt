@@ -112,7 +112,7 @@ class Erfurt_Store_Default extends DBStore {
 							}
 						}
 						
-						$models[] = $model;
+						$models[$model['modelURI']] = $model;
 					}
 				}
 				return $models;
@@ -124,6 +124,10 @@ class Erfurt_Store_Default extends DBStore {
 			return $ms;
 			
 		return $models;
+	}
+	
+	function countAvailableModels() {
+		return count($this->listModels(true));
 	}
 	
 	
