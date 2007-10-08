@@ -76,6 +76,19 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 		else false;
 	}
 	
+	public function isClass() {
+		if (($this->model->findNode(null, 'rdf:type', $this) || 
+				$this->model->findStatement($this, 'rdf:type', 'owl:Class') || 
+				$this->model->findNode($this, 'rdfs:subClassOf', null) || 
+				$this->model->findNode(null, 'rdfs:subClassOf', $this) || 
+				$this->model->findStatement($this, 'rdf:type', 'rdfs:Class'))) {
+
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public function getLabel() {
 		
 		return $this->isBlankNode()?parent::getLocalName():parent::getLabel();
