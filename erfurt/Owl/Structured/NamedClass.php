@@ -1,17 +1,18 @@
 <?php
 
-class Erfurt_Owl_Structured_NamedClass 
-extends Erfurt_Owl_Structured_StructuredClass 
-{
+class Erfurt_Owl_Structured_NamedClass extends Erfurt_Owl_Structured_StructuredClass {
 	
-   public function toString($depth=0){
-   		//$tab=str_repeat("-",$depth).">";
-   		return $this->getURI();
-   }
+	public function toManchesterSyntaxString () {
+		return $this->getURI () ;
+	}
 	
-	public function toManchesterSyntaxString()
-	{
-		return $this->getURI();
+	public function generateRDF () {
+		$subject = new Resource ( $this->getURI () ) ;
+		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
+		$statement = new Statement ( $subject, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
+		$model = new MemModel ( ) ;
+		$model->add ( $statement ) ;
+		return $model ;
 	}
 
 }

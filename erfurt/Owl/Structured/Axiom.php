@@ -1,10 +1,6 @@
 <?php
 
-class Erfurt_Owl_Structured_Axiom
-{
-
-
-
+class Erfurt_Owl_Structured_Axiom {
 
 }
 ?>
