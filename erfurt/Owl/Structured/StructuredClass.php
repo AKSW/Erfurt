@@ -5,6 +5,8 @@ class Erfurt_Owl_Structured_StructuredClass
 	private $childClasses= array();
 	private $URI;
 	
+	
+	
 	public function __construct($uri){
 	
 		//$this->childClasses = array();
