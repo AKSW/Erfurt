@@ -26,6 +26,7 @@ if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 	echo "manchester string = ";
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
 	//$o->parseString("aaa  and ccc onlysome [tx, v, e] or t max 3");
+	
 	$end =  explode(' ',microtime() );
 	if($debug){
 		echo "<br />\nparsed in ";

@@ -32,8 +32,9 @@ require_once 'lex.php';}
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
 }
+
 	start ::= classExpr(A).{
-		print_r(A->toManchesterSyntaxString());}
+		print_r(A->/*toManchesterSyntaxString*/generateRDF()->writeAsHtmlTable());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{
 		A=B;}
@@ -91,7 +92,7 @@ require_once 'lex.php';}
 	classExpr(A) ::= NOT_OPERATOR  classExpr(B).{
 		A = new Erfurt_Owl_Structured_ComplementClass(B);}
 		
-    classExpr(A) ::= propExpr(B) ONLY_OPERATOR  classExpr(C).{
+    classExpr(A) ::= propExpr(B) ONLY_OPERATOR  instExpr(C).{
 		A = new Erfurt_Owl_Structured_AllValuesFrom(B." only ".C,B,C);}
 		
 	classExpr(A) ::= propExpr(B) MIN_OPERATOR NUMERIC(C).{
@@ -121,8 +122,8 @@ require_once 'lex.php';}
 	instExpr(A) ::= ALPHANUMERIC(B).{
 		A = new Erfurt_Owl_Structured_Instance(B);}
 
-	list(A) ::= classExpr(B) COMMA list(C).{
+	list(A) ::= instExpr(B) COMMA list(C).{
 		A= array_merge(array(B),C);}
 		
-	list(A) ::= classExpr(B).{
+	list(A) ::= instExpr(B).{
 		A=array(B);}
