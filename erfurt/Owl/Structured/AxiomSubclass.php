@@ -4,13 +4,23 @@ class Erfurt_Owl_Structured_AxiomSubclass extends Erfurt_Owl_Structured_Axiom {
 
 
 
-		public function toManchesterSyntaxString () {
-				$returnString = '(' ;
-				$children = $this->getChildClasses () ;
-				foreach ( $children as $value ) {
-					$returnString .= $value->toManchesterSyntaxString () ;
-				}
-				return "not " . $returnString . ")" ;
+	public function toManchesterSyntaxString () {
+			$returnString = '' ;
+			$l=$this->getLeft();
+			$r=$this->getRight();
+			
+			$returnString .= $l->toManchesterSyntaxString()." <= ".$r->toManchesterSyntaxString();
+			
+			return  $returnString . "" ;
 	}
+	
+	public function toDIG1_1String(){
+		$l=$this->getLeft();
+		$r=$this->getRight();
+
+		return "<impliesc>".$l->toDIG1_1String().$r->toDIG1_1String()."</impliesc>" ;
+	}
+		
+		
 }
 ?>

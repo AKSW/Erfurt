@@ -3,14 +3,26 @@
 class Erfurt_Owl_Structured_AxiomDisjointClasses extends Erfurt_Owl_Structured_Axiom  {
 
 
-//not finished
 	public function toManchesterSyntaxString () {
-		$returnString = '(' ;
-			$children = $this->getChildClasses () ;
-			foreach ( $children as $value ) {
-				$returnString .= $value->toManchesterSyntaxString () ;
-			}
-			return "not " . $returnString . ")" ;
+		$returnString = '' ;
+		$l=$this->getLeft();
+		$r=$this->getRight();
+		
+		$returnString .= $l->toManchesterSyntaxString()." != ".$r->toManchesterSyntaxString();
+		
+		return  $returnString . "" ;
 	}
+	
+	
+	public function toDIG1_1String(){
+		$l=$this->getLeft();
+		$r=$this->getRight();
+			
+		return "<disjoint>".$l->toDIG1_1String().$r->toDIG1_1String()."</disjoint>" ;
+	}
+	
+	
+
+	
 }
 ?>

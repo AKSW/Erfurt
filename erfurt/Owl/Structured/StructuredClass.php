@@ -44,6 +44,11 @@ class Erfurt_Owl_Structured_StructuredClass {
 	
 		return "Method not overwritten correctly";
 	}
+	
+	public function toDIG1_1String(){
+		
+			return "Method not overwritten correctly";
+	}
 
 }
 ?>

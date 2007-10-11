@@ -128,20 +128,50 @@ class Erfurt_Owl_Structured_Converter
 		@returns Structured_Axiom List
 	**/
 	public function convertErfurtModel($ErfurtOWLModel){
-		//$ErfurtOWLModel->blabla
+		$Erfurt_OWL_Class_List=$ErfurtOWLModel->listClasses();
+		//$Erfurt_OWL_Class_List_Keys=array_keys($Erfurt_OWL_Class_List);
 		
 		
+		$axioms=array();
+		foreach ($Erfurt_OWL_Class_List as $Erfurt_OWL_Class){
+			
+		//	print_r($Erfurt_OWL_Class);
+			//this step is not needed everytime- remove for optimization
+			$Actual_Structured_Class=$this->convertErfurtClass($Erfurt_OWL_Class);
+	
+			//Axiome
+		
+			$Structured_Class_Array=$this->getDisjointWithClasses($Erfurt_OWL_Class);
+			foreach($Structured_Class_Array as $Structured_Class){
+				$axioms[]=new Erfurt_Owl_Structured_AxiomDisjointClasses($Actual_Structured_Class,$Structured_Class);
+				}
+
+			$Structured_Class_Array=$this->getEquivalentClasses($Erfurt_OWL_Class);
+			foreach($Structured_Class_Array as $Structured_Class){
+				$axioms[]=new Erfurt_Owl_Structured_AxiomEquivalence($Actual_Structured_Class,$Structured_Class);
+				}
+
+			$Structured_Class_Array=$this->getSubclassOfClasses($Erfurt_OWL_Class);
+			foreach($Structured_Class_Array as $Structured_Class){
+				$axioms[]=new Erfurt_Owl_Structured_AxiomSubclass($Actual_Structured_Class,$Structured_Class);
+				}
+
+			
+		
+		}//end outer foreach
+		
+		return $axioms;
 	}
 	
 	
 	
-	public function isBlankNode($OWLClass){
+	/*public function isBlankNode($OWLClass){
 		if(strpos($OWLClass->getURI(),"ode")==1){
 			return true;
 		}
 		else return false;
 	
-	}
+	}*/
 	
 	public function p($string,$array){
 			if($this->debug_flag){

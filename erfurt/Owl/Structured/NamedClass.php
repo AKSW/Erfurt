@@ -14,6 +14,11 @@ class Erfurt_Owl_Structured_NamedClass extends Erfurt_Owl_Structured_StructuredC
 		$model->add ( $statement ) ;
 		return $model ;
 	}
+	
+	public function toDIG1_1String(){
+			
+		return "<catom name=".$this->getURI ()."/>";
+	}
 
 }
 ?>

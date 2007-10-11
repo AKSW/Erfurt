@@ -36,6 +36,17 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		$model->add ( $statement1 ) ;
 		return $model ;
 	}
+	
+	public function toDIG1_1String(){
+		
+		$returnString = '<not>' ;
+		$children = $this->getChildClasses () ;
+		foreach ( $children as $one ) {
+			$returnString .= $one->toManchesterSyntaxString () ;
+		}
+		return $returnString . '</not>' ;
+	}
+
 
 }
 ?>

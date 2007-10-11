@@ -26,5 +26,10 @@ class Erfurt_Owl_Structured_Axiom {
 	public function toManchesterSyntaxString(){
 		return "Method not overwritten correctly";
 	}
+	
+	public function toDIG1_1String(){
+			
+		return "Method not overwritten correctly";
+	}
 }
 ?>
