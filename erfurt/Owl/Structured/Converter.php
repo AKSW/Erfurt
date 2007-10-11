@@ -19,7 +19,7 @@ class Erfurt_Owl_Structured_Converter
 		echo "|bn:".$this->isBlankNode($ErfurtOWLClass)."|\n";
 	
 	*/
-		if(!($this->isBlankNode($ErfurtOWLClass))) 
+		if(!($ErfurtOWLClass->isBlankNode())) 
 		{	
 			//echo $ErfurtOWLClass->getURI()."notablanknode";
 			$structClass=new Erfurt_Owl_Structured_NamedClass($ErfurtOWLClass->getURI());
@@ -27,17 +27,15 @@ class Erfurt_Owl_Structured_Converter
 		}//ifBlankNode
 		else 
 		{	
-			
-			
 			//classify this blanknode
-			
+			//echo $ErfurtOWLClass->getURI()."a\n";
 			/*INTERSECTION?**/
 			$int=$ErfurtOWLClass->listIntersectionOf();
 			
 			//$this->p("blanknode",$int);
 			if(sizeof($int)>=1)
 			{
-				$tmp=new Erfurt_Owl_Structured_IntersectionClass();
+				$tmp=new Erfurt_Owl_Structured_IntersectionClass($ErfurtOWLClass->getURI());
 				foreach ($int as $one)
 				{
 					$tmp->addChildClass($this->convertErfurtClass($one));
@@ -49,7 +47,7 @@ class Erfurt_Owl_Structured_Converter
 			$uni=$ErfurtOWLClass->listUnionOf();
 			if(sizeof($uni)>=1)
 			{
-				$tmp=new Erfurt_Owl_Structured_UnionClass();
+				$tmp=new Erfurt_Owl_Structured_UnionClass($ErfurtOWLClass->getURI());
 				foreach ($uni as $one)
 				{
 					$tmp->addChildClass($this->convertErfurtClass($one));
@@ -60,7 +58,7 @@ class Erfurt_Owl_Structured_Converter
 			$comp=$ErfurtOWLClass->listComplementOf();
 			if(sizeof($uni)>=1)
 			{
-				$tmp=new Erfurt_Owl_Structured_ComplementClass();
+				$tmp=new Erfurt_Owl_Structured_ComplementClass($ErfurtOWLClass->getURI());
 				foreach ($comp as $one)
 				{
 					$tmp->addChildClass($this->convertErfurtClass($one));
