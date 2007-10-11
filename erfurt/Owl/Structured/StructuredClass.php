@@ -36,7 +36,7 @@ class Erfurt_Owl_Structured_StructuredClass {
 	public function getRDFURL () {
 		return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
 	}
-	public function _toString(){
+	public function __toString(){
 		return $this->toManchesterSyntaxString();
 	}
 	
