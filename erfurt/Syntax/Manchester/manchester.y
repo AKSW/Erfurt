@@ -31,10 +31,12 @@ require_once 'lex.php';}
     }
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
+    exit(1);
 }
 
 	start ::= classExpr(A).{
-		print_r(A->/*toManchesterSyntaxString*/generateRDF()->writeAsHtmlTable());}
+		print_r(A->generateRDF()->writeAsHtmlTable());}
+//		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{
 		A=B;}

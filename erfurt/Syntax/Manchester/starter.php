@@ -1,10 +1,7 @@
-<html><body>
 <html>
 <body>
-<form action="starter.php" method="post">
-String to parse: <input type="text" name="manchesterstring" />
-<input type="submit" />
-</form>
+<form action="starter.php" method="post">String to parse: <input
+	type="text" name="manchesterstring" /> <input type="submit" /></form>
 <?php
 
 
@@ -13,9 +10,9 @@ $debug=1;
 
 date_default_timezone_set('Europe/Berlin');
 $start = explode(' ',microtime());
-require_once 'manchester.php';	
+require_once 'manchester.php';
 $x='';
-for ($i=1; $i < $argc; $i++) { 
+for ($i=1; $i < $argc; $i++) {
 	$x.=$argv[$i].' ';
 }
 if(!$_POST["manchesterstring"]=="" || !$x=="" ){
@@ -26,7 +23,7 @@ if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 	echo "manchester string = ";
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
 	//$o->parseString("aaa  and ccc onlysome [tx, v, e] or t max 3");
-	
+
 	$end =  explode(' ',microtime() );
 	if($debug){
 		echo "<br />\nparsed in ";
@@ -37,4 +34,5 @@ if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 
 ?>
 
-</body></html>
+</body>
+</html>
