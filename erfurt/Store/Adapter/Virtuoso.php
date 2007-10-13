@@ -285,7 +285,7 @@ class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Default {
 		if (!$this->modelExists($modelUri, false)) {
 			if ($type === 'OWL') {
 				// add statement (?model rdf:type owl:Ontology)
-				$owlIns = 'INSERT INTO GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . ':type> <' . EF_OWL_NS . ':Ontology>}';
+				$owlIns = 'INSERT INTO GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>}';
 				$this->_getSparqlResult(null, $owlIns);
 				
 				$model = new Erfurt_Owl_Model($this, $modelUri);

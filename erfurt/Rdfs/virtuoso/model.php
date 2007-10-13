@@ -26,12 +26,19 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 	}
 	
-	public function remove($subj, $pred='', $obj='') {
+	public function remove($subj, $pred = '', $obj = '') {
 		
 	}
 	
 	public function getType() {
-		
+		if ($this->askSparql('
+			ASK WHERE {
+				<' . $this->modelURI . '> a <' . EF_OWL_NS . 'Ontology>.
+			}')) {
+			
+			return 'OWL';
+		}
+		return 'RDFS';
 	}
 	
 	public function _dbId($resource) {
@@ -84,29 +91,30 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		// 
 		// $sparql .= 'FILTER (!BOUND(?t))}';
 		
-		$sparql = 'SELECT DISTINCT ?class
-				   WHERE {
-					 { ?class a ?x .
-					   OPTIONAL { ?class <' . EF_RDFS_NS . 'subClassOf> ?super1 . } .
-					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
-					   FILTER (?x = <' . EF_OWL_NS . 'Class> || ?x = <' . EF_OWL_NS . 'DeprecatedClass> || ?x = <' . EF_RDFS_NS . 'Class>) .
-					   FILTER (!bound(?super1) && !isBlank(?class) ) . ' .
-					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses == false) ? 
-						'FILTER (!regex(str(?class), "(' . EF_OWL_NS . '|' . EF_RDFS_NS . '|' . EF_RDF_NS . ').*")) . ' 
-						: '') .
-					 '}' . (($implicitClasses == true) ? 
-					' UNION
-					 { ?implr a ?class . 
-					   OPTIONAL { ?class <' . EF_RDFS_NS . 'subClassOf> ?super2 . } .
-					   OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
-					   FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
-					   (($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
-					   (($systemClasses == false) ? 
-						'FILTER (!regex(str(?class), "(' . EF_OWL_NS . '|' . EF_RDFS_NS . '|' . EF_RDF_NS . ').*") ) . ' 
-						: '') .
-					 '}
-		    	   }' : '}');
+		$sparql = '
+			SELECT DISTINCT ?class
+			WHERE {
+				{ ?class a ?x .
+				OPTIONAL { ?class <' . EF_RDFS_NS . 'subClassOf> ?super1 . } .
+				OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } . 
+				FILTER (?x = <' . EF_OWL_NS . 'Class> || ?x = <' . EF_OWL_NS . 'DeprecatedClass> || ?x = <' . EF_RDFS_NS . 'Class>) .
+				FILTER (!bound(?super1) && !isBlank(?class) ) . ' .
+				(($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+				(($systemClasses == false) ? 
+				'FILTER (!regex(str(?class), "(' . EF_OWL_NS . '|' . EF_RDFS_NS . '|' . EF_RDF_NS . ').*")) . ' 
+				: '') .
+				'}' . (($implicitClasses == true) ? 
+				' UNION
+				{ ?implr a ?class . 
+				OPTIONAL { ?class <' . EF_RDFS_NS . 'subClassOf> ?super2 . } .
+				OPTIONAL { ?class <http://ns.ontowiki.net/SysOnt/hidden> ?h } .
+				FILTER ( !bound(?super2) && !isBlank(?implr) ) . ' .
+				(($hiddenClasses == false) ? ' FILTER ( !bound(?h) || ?h != "true") . ' : '') .
+				(($systemClasses == false) ? 
+				'FILTER (!regex(str(?class), "(' . EF_OWL_NS . '|' . EF_RDFS_NS . '|' . EF_RDF_NS . ').*") ) . ' 
+				: '') .
+				'}
+				 }' : '}');
 		
 		$result = $this->sparqlQuery($sparql);
 		
@@ -119,7 +127,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	}
 	
 	public function hasStatement($s, $p, $o) {
-		return false;
+		return $this->sparqlAsk('
+			ASK WHERE {
+				<' . $s->getURI() . '> <' . $p->getURI() . '> <' . $o->getURI() . '>.
+			}');
 	}
 	
 	public function listClassLabelLanguages() {
@@ -156,23 +167,23 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	
 	public function findInstances($properties = array(), $compare = 'exact', $offset = 0, $limit = 0, $erg = 0) {
 		$sparql = '
-			SELECT ?i
+			SELECT ?instance
 			WHERE {
-				?i a ?t.
+				?instance a ?type.
 			}';
 		
-		return array();
+		return $this->sparqlQuery($sparql);
 	}
 	
 	public function findNodesAs($subject, $predicate, $object, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {
 		return array();
 	}
 	
-	public function getListAs($id_or_rest, $class = null) {
+	public function getListAs($idOrRest, $class = null) {
 		
 	}
 	
-	public function search($search, $where, $compare, $offset=0, $limit=0) {
+	public function search($search, $where, $compare, $offset = 0, $limit = 0) {
 		
 	}
 	
@@ -201,7 +212,13 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	}
 	
 	public function listLists() {
+		$sparql = '
+			SELECT ?list 
+			WHERE {
+				?list a <' . EF_RDF_NS . 'list>.
+			}';
 		
+		return $this->sparqlQuery($sparql);
 	}
 	
 	public function sparqlQuery($query) {
