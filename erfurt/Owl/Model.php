@@ -34,6 +34,12 @@
 class Erfurt_Owl_Model extends RDFSModel {
 	
 	/**
+	  * @var The internal import URI cache. This is needed quite
+	  *      often, hence cached.
+	  */ 
+	protected $importedUris = array();
+	
+	/**
 	 * 
 	 *
 	 * @param Erfurt_Store_Default $store
@@ -41,10 +47,26 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 */
 	public function __construct(Erfurt_Store_Default $store, $modelURI) {
 		
-		parent::__construct($store, $modelURI);
+		parent::__construct($store, $modelURI, 'OWL'); // force type OWL
 		
 		// initialize the import ids for the owl:imports support
 		$this->importsIds = array();
+	}
+	
+	/**
+	  * Adds an owl:import URI to the internam URI cache
+	  *
+	  * @param string $importedUri The graph URI to be added to the cache
+	  */
+	public function addImportUri($importedUri) {
+		$this->importedUris[] = $importedUri;
+	}
+	
+	/**
+	  * Returns the internal import URI cache
+	  */
+	public function getImports() {
+		return $this->importedUris;
 	}
 	
 	/**
