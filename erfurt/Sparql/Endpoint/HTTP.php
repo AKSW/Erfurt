@@ -6,14 +6,17 @@
 $endpoint = new Erfurt_Sparql_Endpoint_HTTP();
 $q = $_GET['query'];
 $endpoint -> setQuery($q);
-$endpoint -> query();
+echo $endpoint -> query();
 
 /**
- * HTTP-Endpoint-class for the RDF protocol from http://www.w3.org/TR/rdf-sparql-protocol/
- * setting up on Erfurt-API
+ * HTTP-Endpoint-class for the SPARQL Protocol for RDF from http://www.w3.org/TR/rdf-sparql-protocol/
+ * basing up on Erfurt-API
  * 
  * @author Christoph Rieß
- * 
+ * TODO HTTP AUTH Support/Login
+ * TODO SBAC (for Viewing statements) Support
+ * TODO HTTP $_POST Support
+ *
  **/
 class Erfurt_Sparql_Endpoint_HTTP {
 	
@@ -79,7 +82,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * TODO Doc
 	 */
 	public function query() {
-		if ($query != '')
+		if ($this -> query != '')
 		return $this -> queryresult = $this -> DBStore -> sparqlQuery($this -> query,$this -> modelIds,"XML");
 	}
 	
