@@ -113,4 +113,5 @@ class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
 		$mrs->Close(); # optional
 		$trs->Close(); # optional
 	}
+}
 ?>
