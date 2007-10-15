@@ -4,7 +4,7 @@
   * Abstract base class for all Erfurt widget plug-ins. 
   *
   * @package Plugin
-  * @author Norman Heino <norman@feedface.de>
+  * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */
 abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {

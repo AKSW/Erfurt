@@ -5,7 +5,7 @@
   *
   * @package Plugin
   * @subpackage Widget
-  * @author Norman Heino <norman@feedface.de>
+  * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */
 class Erfurt_Plugin_Manager {
