@@ -3,7 +3,7 @@
  * RDFSResource
  *
  * @package RDFSAPI
- * @author Sören Auer <soeren@auer.cx>
+ * @author Sï¿½ren Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
  * @version $Id: resource.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
@@ -32,7 +32,8 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 			
 		if($expandNS && !strstr($uri,'/')) {
 			$nsArr = $model->getParsedNamespaces();
-			if(!is_array($nsArr))
+			# Debug output if nsArr isn't Array and not null
+			if(!is_array($nsArr) && $nsArr != null)
 				var_dump($nsArr);
 			foreach($nsArr as $key=>$val)
 				$uri=str_replace($val.':',$key,$uri);
