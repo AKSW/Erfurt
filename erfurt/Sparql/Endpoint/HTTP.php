@@ -4,8 +4,6 @@
  * Interface for Sparql-Endpoint Tests
  */
 $endpoint = new Erfurt_Sparql_Endpoint_HTTP();
-$q = $_GET['query'];
-$endpoint -> setQuery($q);
 echo $endpoint -> query();
 
 /**
@@ -54,11 +52,25 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		
 		error_reporting(E_ERROR);
 		
-		$erfurt = new Erfurt_App_Default($config);		
+		$this -> query = $query;
+		
+		$user = '';
+		
+		$password = '';
+		
+		if (sizeof($_GET) != 0) {
+			if (array_key_exists('query',$_GET))
+				$this -> query = $_GET['query'];
+			if (array_key_exists('user',$_GET))
+				$user = $_GET['user'];
+			if (array_key_exists('password',$_GET))
+				$password = $_GET['password'];
+		}
+		
+		$erfurt = new Erfurt_App_Default($config,$user,$password);		
 		
 		$this -> DBStore = $erfurt->getStore();
 		
-		$this -> query = $query;
 		
 		foreach ($this->DBStore->listModels() as $m)
 			$this -> modelIds[] = $m->getModelId();
