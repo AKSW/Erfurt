@@ -23,16 +23,15 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		//TODO description in _:x owl:complementOf T(description) =? manchesterstring
 		
 
-		$model = new Memmodel ( ) ;
-		$blank = new BlankNode ( "_blankXXX" ) ;
-		$subject = new Resource ( $blank->getID () ) ;
-		
+		$model = $this->getMemModel();
+		$blank = new BlankNode ($model) ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
-		$statement = new Statement ( $subject, $predicate, new Literal ( $this->getURLPrefix () . "Class" ) ) ;
+		$statement = new Statement ( $blank, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
 		$model->add ( $statement ) ;
-		
-		$children = $this->getChildClasses () ;
-		$statement1 = new Statement ( $subject, new Resource ( $this->getURLPrefix () . "complementOf" ), new Literal ( $children [ 0 ]->getURI () ) ) ;
+		$children=$this->getChildClasses();
+		$child=$children[0];
+		$model->addModel($child->generateRDF());
+		$statement1 = new Statement ( $blank, new Resource ( $this->getURLPrefix () . "complementOf" ), $this->getFirstChildBlankNode() ) ;
 		$model->add ( $statement1 ) ;
 		return $model ;
 	}
@@ -47,6 +46,16 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		return $returnString . '</not>' ;
 	}
 
+	//TODO Finish this one!!!
+	public function getFirstChildBlankNode(){
+		$children=$this->getChildClasses();
+		$child=$children[0];
+		print_r($child);
+		if(sizeof($child->getChildClasses())==1){
+			return new Statement(new Resource($this->getURI()),new Resource($this->getRDFURL(),"type"),new Resource ( $this->getURLPrefix () . "Class" ));
+		}
+		else return new BlankNode($this->getMemModel());
+	}
 
 }
 ?>

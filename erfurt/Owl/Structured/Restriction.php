@@ -23,23 +23,27 @@ class Erfurt_Owl_Structured_Restriction extends Erfurt_Owl_Structured_AnonymousC
 	
 	public function generateRDF () {
 		
-		$model = new MemModel ( ) ;
-		$blankNode = new BlankNode ( "_blankXXX" ) ;
-		$this->subject = new Resource ( $blankNode->getID () ) ;
+		$model = $this->getMemModel () ;
+		$blankNode = new BlankNode ( $model ) ;
+		$this->subject = $blankNode ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
-		$statement = new Statement ( $this->subject, $predicate, new Literal ( $this->getURLPrefix () . $this->getOWLType () ) ) ;
+		$statement = new Statement ( $this->subject, $predicate, new Resource ( $this->getURLPrefix () . $this->getOWLType () ) ) ;
 		
-		$statement1 = new Statement ( $this->subject, new Resource ( $this->getURLPrefix () . "OnProperty" ), new Literal ( $this->getOnProperty () ) ) ;
+		$statement1 = new Statement ( $this->subject, new Resource ( $this->getURLPrefix () . "OnProperty" ), new Resource ( $this->getOnProperty () ) ) ;
+		
 		$model->add ( $statement ) ;
 		$model->add ( $statement1 ) ;
-		
+//		$statement = new Statement ( new Resource ( $this->getOnProperty () ), $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
+//		$model->add ( $statement ) ;
+		$statement1 = new Statement ( new Resource ( $this->getOnProperty () ), $predicate, new Resource ( $this->getURLPrefix () . "DatatypeProperty" ) ) ;
+		$model->add ( $statement1 ) ;
 		return $model ;
 	}
 	
 	/**
 	 * function returns the subject, needed for generating the RDF Triples
 	 *
-	 * @return subject
+	 * @return string
 	 */
 	public function getSubject () {
 		return $this->subject ;

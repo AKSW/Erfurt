@@ -10,14 +10,14 @@ class Erfurt_Owl_Structured_NamedClass extends Erfurt_Owl_Structured_StructuredC
 		$subject = new Resource ( $this->getURI () ) ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
 		$statement = new Statement ( $subject, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
-		$model = new MemModel ( ) ;
+		$model = $this->getMemModel () ;
 		$model->add ( $statement ) ;
 		return $model ;
 	}
 	
-	public function toDIG1_1String(){
-			
-		return "<catom name=".$this->getURI ()."/>";
+	public function toDIG1_1String () {
+		
+		return "<catom name=" . $this->getURI () . "/>" ;
 	}
 
 }

@@ -18,7 +18,8 @@ class Erfurt_Owl_Structured_SomeValuesFrom extends Erfurt_Owl_Structured_Quantif
 	public function generateRDF () {
 		
 		$model = parent::generateRDF () ;
-		$requiredString = '' ;
+		$this->getChildrenRDF();
+		/*$requiredString = '' ;
 		$children = $this->getChildClasses () ;
 		foreach ( $children as $key => $value ) {
 			$requiredString .= $value->getURI () ;
@@ -28,7 +29,7 @@ class Erfurt_Owl_Structured_SomeValuesFrom extends Erfurt_Owl_Structured_Quantif
 		}
 		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "someValuesFrom" ), new Literal ( $requiredString ) ) ;
 		$model->add ( $statement ) ;
-		
+		*/
 		return $model ;
 	}
 }

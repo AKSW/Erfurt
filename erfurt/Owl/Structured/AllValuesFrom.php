@@ -28,7 +28,7 @@ class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_Quantifi
 				$rangeString .= ', ' ;
 			}
 		}
-		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "allValuesFrom" ), new Literal ( $rangeString ) ) ;
+		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "allValuesFrom" ), new Resource ( $rangeString ) ) ;
 		$model->add ( $statement ) ;
 		return $model ;
 	}

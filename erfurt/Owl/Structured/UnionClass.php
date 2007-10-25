@@ -1,7 +1,6 @@
 <?php
 
-class Erfurt_Owl_Structured_UnionClass 
-extends Erfurt_Owl_Structured_AnonymousClass {
+class Erfurt_Owl_Structured_UnionClass extends Erfurt_Owl_Structured_AnonymousClass {
 
 	public function toManchesterSyntaxString () {
 		$returnString = '(' ;
@@ -14,29 +13,23 @@ extends Erfurt_Owl_Structured_AnonymousClass {
 		}
 		return $returnString . ')' ;
 	}
-	
+
+	/**
+	 * Enter description here...
+	 *
+	 * @return MemModel
+	 */
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		$predicate = new Resource ( $this->getURLPrefix (), "unionOf" ) ;
-		$rangeString = '' ;
-		$children = $this->getChildClasses () ;
-		foreach ( $children as $key => $value ) {
-			$rangeString .= $value->getURI () ;
-			if ($key < count ( $children ) - 1) {
-				$rangeString .= ' ' ;
-			}
-		}
-		
-		$statement = new Statement ( $this->getSubject (), $predicate, new Literal ( $rangeString ) ) ;
+		$this->getChildrenRDF () ;
+		$statement = new Statement ( $this->getSubject (), $predicate, $this->getFirstChildBlankNode () ) ;
 		$model->add ( $statement ) ;
-		foreach ( $this->getChildClasses () as $value ) {
-			$model->addModel ( $value->generateRDF () ) ;
-		}
 		return $model ;
 	}
 
-	public function toDIG1_1String(){
-		
+	public function toDIG1_1String () {
+
 		$returnString = '<or>' ;
 		$children = $this->getChildClasses () ;
 		foreach ( $children as $one ) {

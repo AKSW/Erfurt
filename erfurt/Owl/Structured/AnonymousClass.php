@@ -1,22 +1,26 @@
 <?php
 
-class Erfurt_Owl_Structured_AnonymousClass extends Erfurt_Owl_Structured_StructuredClass 
+class Erfurt_Owl_Structured_AnonymousClass extends Erfurt_Owl_Structured_StructuredClass
 
 {
-	
+
 	private $subject ;
-	
+
+	/**
+	 * Enter description here...
+	 *
+	 * @return MemModel
+	 */
 	public function generateRDF () {
-		
-		$model = new MemModel ( ) ;
-		$blankNode = new BlankNode ( "_blankXXX" ) ;
-		$this->subject = new Resource ( $blankNode->getID () ) ;
+		$model = $this->getMemModel () ;
+		$blankNode = new BlankNode ( $model ) ;
+		$this->subject = $blankNode ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
-		$statement = new Statement ( $this->subject, $predicate, new Literal ( $this->getURLPrefix () . $this->getURLPrefix () . "Class" ) ) ;
+		$statement = new Statement ( $this->subject, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
 		$model->add ( $statement ) ;
 		return $model ;
 	}
-	
+
 	/**
 	 * function returns the subject, needed for generating the RDF Triples
 	 *

@@ -1,7 +1,7 @@
 <?php
 
-
 // Does this class make any sense? please tell me if you know: kurzum@googlemail.com
+
 
 class Erfurt_Owl_Structured_Instance {
 	private $uri ;
@@ -18,11 +18,10 @@ class Erfurt_Owl_Structured_Instance {
 		return $this->uri ;
 	}
 	
-	public function toDIG1_1String(){
-				
-		return "<individual name=".$this->getURI ()."/>";
+	public function toDIG1_1String () {
+		
+		return "<individual name=" . $this->getURI () . "/>" ;
 	}
-
 
 }
 ?>

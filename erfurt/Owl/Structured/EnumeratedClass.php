@@ -20,27 +20,25 @@ class Erfurt_Owl_Structured_EnumeratedClass extends Erfurt_Owl_Structured_Anonym
 	}
 	
 	public function generateRDF () {
-		
-		//TODO blank node + oneOf?? (in mapping subject=classID)
-		
-
-		$model = new Memmodel ( ) ;
-		$blank = new BlankNode ( "_blankXXX" ) ;
-		$subject = new Resource ( $blank->getID () ) ;
-		
+		$model = $this->getMemModel();
+		$blankNode = new BlankNode ( $model ) ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
-		$statement = new Statement ( $subject, $predicate, new Literal ( $this->getURLPrefix () . "Class" ) ) ;
+		$statement = new Statement ( $blankNode, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
 		$model->add ( $statement ) ;
-		
-		$rangeString = '' ;
+		$constPredicate = new Resource ( $this->getRDFURL (), "type" ) ;
+		$constObject = new Resource ( $this->getRDFURL (), "List" ) ;
+		$constFirst = new Resource ( $this->getRDFURL (), "first" ) ;
+		$constRest = new Resource ( $this->getRDFURL (), "rest" ) ;
 		foreach ( $this->oneOfInstances as $key => $value ) {
-			$rangeString .= $value->getURI () ;
-			if ($key < count ( $this->oneOfInstances ) - 1) {
-				$rangeString .= ' ' ;
-			}
+			$statement = new Statement ( $blankNode, $constPredicate, $constObject ) ;
+			$model->add ( $statement ) ;
+			$statement = new Statement ( $blankNode, $constFirst, new Resource ( $value->getURI () ) ) ;
+			$model->add ( $statement ) ;
+			$newblankNode = $key < sizeof ( $this->oneOfInstances ) - 1 ? new BlankNode ( $model ) : null ;
+			$statement = new Statement ( $blankNode, $constRest, $newblankNode == null ? new Resource ( $this->getRDFURL () . "nil" ) : $newblankNode ) ;
+			$model->add ( $statement ) ;
+			$blankNode = $newblankNode ;
 		}
-		$statement = new Statement ( $subject, new Resource ( $this->getURLPrefix () . "oneOf" ), new Literal ( $rangeString ) ) ;
-		$model->add ( $statement ) ;
 		return $model ;
 	}
 

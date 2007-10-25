@@ -1,9 +1,7 @@
 <?php
 
-class Erfurt_Owl_Structured_IntersectionClass 
-extends Erfurt_Owl_Structured_AnonymousClass 
-{
-	
+class Erfurt_Owl_Structured_IntersectionClass extends Erfurt_Owl_Structured_AnonymousClass {
+
 	public function toManchesterSyntaxString () {
 		$returnString = '(' ;
 		$children = $this->getChildClasses () ;
@@ -15,29 +13,18 @@ extends Erfurt_Owl_Structured_AnonymousClass
 		}
 		return $returnString . ')' ;
 	}
-	
+
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
+		$this->getChildrenRDF();
 		$predicate = new Resource ( $this->getURLPrefix (), "intersectionOf" ) ;
-		$rangeString = '' ;
-		$children = $this->getChildClasses () ;
-		foreach ( $children as $key => $value ) {
-			$rangeString .= $value->getURI () ;
-			if ($key < count ( $children ) - 1) {
-				$rangeString .= ' ' ;
-			}
-		}
-		
-		$statement = new Statement ( $this->getSubject (), $predicate, new Literal ( $rangeString ) ) ;
-		$model->add ( $statement ) ;
-		foreach ( $this->getChildClasses () as $value ) {
-			$model->addModel ( $value->generateRDF () ) ;
-		}
+		$statement = new Statement ( $this->getSubject (), $predicate, $this->getFirstChildBlankNode() ) ;
+		$model->add($statement);
 		return $model ;
 	}
 
-	public function toDIG1_1String(){
-		
+	public function toDIG1_1String () {
+
 		$returnString = '<and>' ;
 		$children = $this->getChildClasses () ;
 		foreach ( $children as $one ) {
