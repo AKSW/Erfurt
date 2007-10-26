@@ -41,7 +41,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 					$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
 				}
 		$pns=DbModel::getParsedNamespaces();
-		$ret=array_filter($pns?array_merge($ret,$pns):$ret);
+		$ret=array_filter($pns?array_merge((array)$ret,$pns):$ret);
 		return cache('getParsedNamespaces'.$this->modelURI,array(),$ret);
 	}
 	
