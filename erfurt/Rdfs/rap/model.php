@@ -206,6 +206,74 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		return $rs;
 	}
 	
+	public function addStatementArray($statements, $startTransaction = true, $completeTransaction = true) {
+		
+		if (!is_array($statements)) {
+// TODO exception code
+			throw new Erfurt_Exception();
+		}
+		
+		if (!$this->isEditable()) 
+			throw new Erfurt_Exception('no rights to extend this model', 1502);
+			
+		Zend_Registry::set('cache', array());
+		
+		if ($startTransaction === true) {
+			$this->dbConn->StartTrans();
+		}
+		foreach ($statements as $stm) {
+			if (!$stm instancof Statement) {
+// TODO exception code
+				throw new Erfurt_Exception();
+			}
+			
+			# sbac
+			if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
+				$affectedRows = $this->_addExt($stm);
+			} else {
+				DbModel::add($stm);
+				$affectedRows = $this->dbConn->Affected_Rows();
+			}
+		}
+		if ($completeTransaction === true) {
+			return $this->dbConn->CompleteTrans();
+		}	
+	}
+	
+	public function removeStatementArray($statements, $startTransaction = true, $completeTransaction = true) {
+		
+		if (!is_array($statements)) {
+// TODO exception code
+			throw new Erfurt_Exception();
+		}
+		
+		if (!$this->isEditable()) 
+			throw new Erfurt_Exception('no rights for editing this model', 1502);
+			
+		Zend_Registry::set('cache', array());
+		
+		if ($startTransaction === true) {
+			$this->dbConn->StartTrans();
+		}
+		foreach ($statements as $stm) {
+			if (!$stm instancof Statement) {
+// TODO exception code
+				throw new Erfurt_Exception();
+			}
+			
+			# sbac
+			if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
+				$affectedRows = $this->_removeExt($stm);
+			} else {
+				DbModel::remove($stm);
+				$affectedRows = $this->dbConn->Affected_Rows();
+			}
+		}
+		if ($completeTransaction === true) {
+			return $this->dbConn->CompleteTrans();
+		}
+	}
+	
 	/**
 	 * @see DefaultRDFSModel
 	 */

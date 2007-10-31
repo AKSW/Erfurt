@@ -1274,5 +1274,95 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	public function getStore() {
 		return $this->store;
 	}
+	
+	/**
+	 * This method makes a diff with the two given (json) models and updates this model
+	 *
+	 * @param string $origModelJson the (json) model before modification
+	 * @param string $modifiedModelJson the (json) modek after modification
+	 */
+	public function updateFromJsonModels($origModelJson, $modifiedModelJson) {
+		
+		// workaround, for it is not possible to determine whether json is corrupt or empty with json_decode
+		if ($origModelJson === '') {
+			$origModel = array();
+		} else {
+			$origModel = json_decode($origModelJson, true);
+		}
+		
+		if ($modifiedModelJson === '') {
+			$modModel = array();
+		} else {
+			$modModel = json_decode($modifiedModelJson, true);
+		}
+		
+		// throws an excpetion if one of the json models was corrupt
+		if (!is_array($origModel)) {
+// TODO exception code
+			throw new Erfurt_Exception('Error in first model');
+		}
+		
+		if (!is_array($modModel)) {
+// TODO exception code
+			throw new Erfurt_Exception('Error in second model');
+		}
+		
+		$addModel = new MemModel();
+		$removeModel = new MemModel();
+		
+		foreach ($origModel as $subject=>$rest) {
+			foreach ($rest as $predicate=>$object) {
+				$s = (strpos($subject, '_') === 0) ? new BlankNode(substr($subject, 2)) : new Resource($subject);
+				$p = new Resource($predicate);
+				
+				if ($object['type'] === 'uri') {
+					$o = new Resource($object['value'])
+				} else if ($object['type'] === 'bnode') {
+					$o = new BlankNode(substr($object['value'], 2));
+				} else {
+					$dtype = (isset($object['datatype'])) ? $object['datatype'] : '';
+					$lang = (isset($object['lang'])) ? $object['lang'] : '';
+					
+					$o = new Literal($object['value'], $lang);
+					$o->setDatatype($dtype);
+				}
+				
+				$removeModel->add(new Statement($s, $p, $o));
+			}
+		}
+		
+		foreach ($modModel as $subject=>$rest) {
+			foreach ($rest as $predicate=>$object) {
+				$s = (strpos($subject, '_') === 0) ? new BlankNode(substr($subject, 2)) : new Resource($subject);
+				$p = new Resource($predicate);
+				
+				if ($object['type'] === 'uri') {
+					$o = new Resource($object['value'])
+				} else if ($object['type'] === 'bnode') {
+					$o = new BlankNode(substr($object['value'], 2));
+				} else {
+					$dtype = (isset($object['datatype'])) ? $object['datatype'] : '';
+					$lang = (isset($object['lang'])) ? $object['lang'] : '';
+					
+					$o = new Literal($object['value'], $lang);
+					$o->setDatatype($dtype);
+				}
+				
+				$addModel->add(new Statement($s, $p, $o));
+			}
+		}
+		
+		$this->addStatementArray($addModel->subtract($removeModel)->triples, true, false);
+		$success = $this->removeStatementArray($removeModel->subtract($addModel)->triples, false, true);
+		
+		if (success == true) {
+// TODO exception code 
+			throw new Erfurt_Exception('successfully updated the model');
+		} else {
+// TODO exception code
+			throw new Erfurt_Exception('error while updating the model');
+		}
+		
+	}
 } 
 ?>
