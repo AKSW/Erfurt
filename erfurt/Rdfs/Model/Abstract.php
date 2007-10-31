@@ -1316,7 +1316,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 				$p = new Resource($predicate);
 				
 				if ($object['type'] === 'uri') {
-					$o = new Resource($object['value'])
+					$o = new Resource($object['value']);
 				} else if ($object['type'] === 'bnode') {
 					$o = new BlankNode(substr($object['value'], 2));
 				} else {
@@ -1337,7 +1337,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 				$p = new Resource($predicate);
 				
 				if ($object['type'] === 'uri') {
-					$o = new Resource($object['value'])
+					$o = new Resource($object['value']);
 				} else if ($object['type'] === 'bnode') {
 					$o = new BlankNode(substr($object['value'], 2));
 				} else {

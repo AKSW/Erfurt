@@ -222,7 +222,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$this->dbConn->StartTrans();
 		}
 		foreach ($statements as $stm) {
-			if (!$stm instancof Statement) {
+			if (!$stm instanceof Statement) {
 // TODO exception code
 				throw new Erfurt_Exception();
 			}
@@ -256,7 +256,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$this->dbConn->StartTrans();
 		}
 		foreach ($statements as $stm) {
-			if (!$stm instancof Statement) {
+			if (!$stm instanceof Statement) {
 // TODO exception code
 				throw new Erfurt_Exception();
 			}
