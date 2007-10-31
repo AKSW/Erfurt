@@ -336,7 +336,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				FROM statements s
 				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
 				AND s.object IN ("' . EF_RDFS_CLASS . '", "' . EF_OWL_CLASS . '", "' . EF_OWL_DEPRECATED_CLASS . '") 
-				AND s.subject_is <> "b" AND modelID = ' . $this->modelID;
+				AND s.subject_is <> "b" AND modelID IN (' . $this->getModelIds() . ')';
 		
 		$sqlResult = $this->getStore()->sqlQuery($sql);
 		$tempClassArray = array(); // contains all classes that fit to the config given by the parameters
