@@ -1575,7 +1575,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			return $cVal;
 		}
 		
-		$result = $this->store->executeSparql($this, $query, null, $renderer);
+		$result = $this->store->executeSparql(array($this->getModelID()), $query, null, $renderer);
 		$c->set($result);
 		
 		return $result;
@@ -1591,7 +1591,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function sparqlQueryAs($query, $class, $renderer = null) {
 		
-		return $this->store->executeSparql($this, $query, $class, $renderer);
+		return $this->store->executeSparql(array($this->getModelID()), $query, $class, $renderer);
 	}
 	
 	public function getNamespaceForPrefix($prefix) {

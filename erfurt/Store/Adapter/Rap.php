@@ -261,23 +261,27 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	
 	/**
 	 *
-	 * @param RDFSModel $model
+	 * @param array $modelURIs
 	 * @param string/Query $query
 	 * @param string/null $class
 	 */
-	public function executeSparql($model, $query, $class = null, $renderer = null) {
+	public function executeSparql($modelURIs, $query, $class = null, $renderer = null) {
 		
-		$engine = new SparqlEngineDb($this, $model->listModelIds());
+		foreach ($modelURIs as $uri) {
+			$modelIDs[] = $this->getModel($uri)->getModelID();
+		}
+		
+		$engine = new SparqlEngineDb($this, $modelIDs);
 		
 		$dataset = new DatasetMem();
-		$dataset->setDefaultGraph($model);
+		$dataset->setDefaultGraph($this->getModel($modelURIs[0]));
 		
 		if (!($query instanceof Query)) {
 			$parser = new SparqlParser();
 			$query = $parser->parse($query);
 		}
 		
-		if ($renderer === null)	$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
+		if ($renderer === null)	$renderer = new Erfurt_Sparql_ResultRenderer_Default($this->getModel($modelURIs[0]), $class);
 		
 		return $engine->queryModel($dataset, $query, $renderer);
 	}
