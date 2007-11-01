@@ -6,7 +6,7 @@
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright
  * @license 
- * @version $Id: $
+ * @version $Id$
  */
 
 //apd_set_pprof_trace();
@@ -19,6 +19,12 @@
 ******************************************************************************/
 # basepath
 define('ERFURT_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
+define('ERFURT_MIN_PHP_VERSION', '5.2.0');
+
+if (!version_compare(phpversion(), ERFURT_MIN_PHP_VERSION, '>=')) {
+	throw new Erfurt_Exception('Erfurt requires at least PHP Version ' . ERFURT_MIN_PHP_VERSION, 2001);
+	exit();
+}
 
 // set include path to lib/
 $include_path  = get_include_path() . PATH_SEPARATOR;
