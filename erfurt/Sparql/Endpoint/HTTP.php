@@ -7,7 +7,7 @@ try {
 	$endpoint = new Erfurt_Sparql_Endpoint_HTTP();
 	echo $endpoint -> query();
 } catch (Exception $e) {
-	echo $e->getMessage();
+	echo 'Erfurt-Message: ' . $e->getMessage() .  ' / Erfurt-Code: ' . $e->getCode();
 }
 
 /**
@@ -27,9 +27,9 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	private $query;
 	
 	/**
-	 * Attribute for storing allowed Model Ids
+	 * Attribute is array for storing allowed Models
 	 */
-	private $modelIds;
+	private $modelURIs;
 	
 	/**
 	 * Storing query result as string formed in XML
@@ -45,6 +45,13 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * Referencing the Database Store Object to perform SPARQL-Queries on
 	 */
 	private $DBStore;
+
+	/**
+	 * String to store the renderer-name to use for the query
+	 *
+	 * @var unknown_type
+	 */
+	private $strRenderer;
 	
 	/**
 	 * Constructor for new Endpoint reading GET/POST Variables for needed values
@@ -55,10 +62,10 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		
 		//check if endpoint is enabled else throw exception
 		if (!$config->endpoint->http)
-			throw new Erfurt_Exception('QueryRequestRefused: Endpoint (HTTP) disabled in erfurt-config');
+			throw new Erfurt_Exception('QueryRequestRefused: Endpoint (HTTP) disabled in erfurt-config',1602);
 		
 		// To surpress warnings
-		error_reporting(E_ERROR);
+		//error_reporting(E_ERROR);
 		
 		$this -> query = $query;
 		
@@ -67,6 +74,9 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		$user = '';
 		
 		$password = '';
+		
+		//default renderer should by XML
+		$this -> strRenderer = 'XML';
 		
 		if (sizeof($_GET) != 0) {
 			if (array_key_exists('query',$_GET))
@@ -77,6 +87,8 @@ class Erfurt_Sparql_Endpoint_HTTP {
 				$password = $_GET['password'];
 			if (array_key_exists('model',$_GET))
 				$model = $_GET['model'];
+			if (array_key_exists('renderer',$_GET))
+				$this -> strRenderer = $_GET['renderer'];
 		}
 		
 		if (sizeof($_POST) != 0) {
@@ -88,10 +100,12 @@ class Erfurt_Sparql_Endpoint_HTTP {
 				$password = $_POST['password'];
 			if (array_key_exists('model',$_POST))
 				$model = $_POST['model'];
-		} 
+			if (array_key_exists('renderer',$_POST))
+				$this -> strRenderer = $_POST['renderer'];
+		}
 		
 		if ($this -> query == '') {
-			throw new Erfurt_Exception('QueryRequestRefused: missing parameters in GET/POST');
+			throw new Erfurt_Exception('QueryRequestRefused: missing parameters in GET/POST',1602);
 		}
 		
 		$erfurt = new Erfurt_App_Default($config);
@@ -104,14 +118,19 @@ class Erfurt_Sparql_Endpoint_HTTP {
 			$identity = $erfurt -> authenticate($user,$password)-> getIdentity();
 			
 		if ($identity['uri'] == '' && $user != '') {
-			throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)');
+			throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)',1602);
 		}
 		
 		// Setting DBStore for interactions with DB
 		$this -> DBStore = $erfurt->getStore();
 		
 		// Check if specific model is wanted or all models allowed for current user are used
-		if ($model != '') {
+		// Howto query on multiple models with given sparql engine (in Erfurt)??
+		
+		if (($this -> modelURIs[] = $this -> DBStore -> getModel($model)->getBaseURI()) == NULL)
+			throw new Erfurt_exception('QueryRequestRefused: Invalid Model specified for Query',1602);
+		/*
+		 	if ($model != '') {
 			$m = $this -> DBStore -> getModel($model);
 			if ($m != null) {
 			$this -> modelIds[] = $m->getModelIds();
@@ -122,7 +141,8 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		foreach ($this->DBStore->listModels() as $m)
 			$this -> modelIds[] = $m->getModelId();
 		}
-
+	*/
+		
 	/*
 		// Setting Content-Type as specified from W3
 
@@ -142,13 +162,15 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * Performing query on DBStore returning xml-result string
 	 */
 	public function query() {
+		
 		try {
-			$this -> queryresult = $this -> DBStore -> sparqlQuery($this -> query,$this -> modelIds,"XML");
-			return $this -> queryresult;
-		} catch (Exception $e) {
+			$this -> queryresult = $this -> DBStore->executeSparql($this->modelURIs,$this->query,null,$this->strRenderer);				
+		} catch (Exception $e) {	
 			header('HTTP/1.1 400 Bad Request');
-			throw new Erfurt_Exception('Query Malformed: ' . $e->getMessage());
+			throw new Erfurt_Exception('Sparql execution error: ' . $e->getMessage(),1601);	
 		}
+		
+		return $this -> queryresult;
 	}
 	
 	/**
