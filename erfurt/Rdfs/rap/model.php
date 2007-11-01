@@ -32,7 +32,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$c=cache('getParsedNamespaces'.$this->modelURI,array());
 		if($c!==NULL)
 			return $c;
-		$ret=array_flip($GLOBALS['default_prefixes']);
+		$ret=array_flip((array) $GLOBALS['default_prefixes']);
 		// get namespace prefixes from SysOnt-Class "Model"
 		if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
 			if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
