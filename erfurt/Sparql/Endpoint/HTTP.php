@@ -127,21 +127,20 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		// Check if specific model is wanted or all models allowed for current user are used
 		// Howto query on multiple models with given sparql engine (in Erfurt)??
 		
-		if (($this -> modelURIs[] = $this -> DBStore -> getModel($model)->getBaseURI()) == NULL)
-			throw new Erfurt_exception('QueryRequestRefused: Invalid Model specified for Query',1602);
-		/*
-		 	if ($model != '') {
-			$m = $this -> DBStore -> getModel($model);
-			if ($m != null) {
-			$this -> modelIds[] = $m->getModelIds();
+		/*if (($this -> modelURIs[] = $this -> DBStore -> getModel($model)->getBaseURI()) == NULL)
+			throw new Erfurt_exception('QueryRequestRefused: Invalid Model specified for Query',1602);*/
+		if ($model != '') {
+
+			if($m = $this->DBStore->getModel($model)) {
+
+				$this -> modelURIs[] = $m->getBaseURI();
 			} else {
-				throw new Erfurt_Exception('QueryRequestRefused: model restricted/not existing');
+				throw new Erfurt_Exception('QueryRequestRefused: invalid model',1602);
 			}
+			
 		} else {
-		foreach ($this->DBStore->listModels() as $m)
-			$this -> modelIds[] = $m->getModelId();
+			;
 		}
-	*/
 		
 	/*
 		// Setting Content-Type as specified from W3
