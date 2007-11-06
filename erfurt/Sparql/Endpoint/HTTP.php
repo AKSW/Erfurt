@@ -60,6 +60,13 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		
 		require_once './../../erfurt.php';
 		
+		$session = new Zend_Session_Namespace('ERFURT');
+		if (isset($session->config)) {
+			$erfurt = new Erfurt_App_Default($session->config);
+		} else {
+			$erfurt = new Erfurt_App_Default($config);
+		}
+		
 		//check if endpoint is enabled else throw exception
 		if (!$config->endpoint->http)
 			throw new Erfurt_Exception('QueryRequestRefused: Endpoint (HTTP) disabled in erfurt-config',1602);
@@ -108,7 +115,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 			throw new Erfurt_Exception('QueryRequestRefused: missing parameters in GET/POST',1602);
 		}
 		
-		$erfurt = new Erfurt_App_Default($config);
+		// $erfurt = new Erfurt_App_Default($config);
 		
 		// Some functions in erfurt missing this variable?? Not in erfurt.php;
 		Zend_Registry::set('strings','');
