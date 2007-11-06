@@ -8,8 +8,8 @@
  * @version $Id: store.php 956 2007-04-23 11:21:47Z cweiske $
  * @access public
  **/
-
 class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
+	
 	/**
 	 * Create tables and indexes for adodb datadict supported databases
 	 *
@@ -129,6 +129,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		if (!$this->dbConn->completeTrans())
 			echo $this->dbConn->errorMsg();
 	}
+	
+	/**
+	 * Create tables and indexes for MySQL databases
+	 *
+	 */
 	function _createTables_MySQL() {
 		#$this->_createTables_Generic();
 		
@@ -260,34 +265,49 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	}
 	
 	/**
-	 *
-	 * @param array $modelURIs
+	 *	Implemtation of Sparql-Method for RAP Stores
+	 * @param array|OWL-Model $model
 	 * @param string/Query $query
 	 * @param string/null $class
+	 * @param string/null $renderer
 	 */
-	public function executeSparql($model, $query, $class = null, $renderer = null) {
+	public function executeSparql($model, $query, $class = null, $renderer = null, $useImports = false) {
 		
+		// Array of modelids used by the RAP Sparql engine
+		$modelIDs = array();
+		
+		// Howto SPARQL'l if first parameter is an instance of an Object 'Model'
 		if (is_object($model)) {
 		
-			$engine = new SparqlEngineDb($this, $model->listModelIds() );
-		
+			$modelIDs[] = $model->getModelID();
 			$dataset = new DatasetMem();
 			$dataset->setDefaultGraph($model);
-		
-			if ($renderer === null)	$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
+			
+			if ($useImports) {
+				foreach ($model->listImports() as $import) {
+					$modelIDs[] = $this->getModel($import->getLabel())->getModelID();
+				}
+			}
 		}
 		
+		// and Howto SPARQL'l if first parameter is an array
 		if (is_array($model)) {
 				
 			foreach ($model as $uri) {
 				$modelIDs[] = $this->getModel($uri)->getModelID();
-			}
 				
-			$engine = new SparqlEngineDb($this, $modelIDs );
-		
-			if ($renderer === null)	$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
-			
+				if ($useImports) {
+					foreach ($this->getModel($uri)->listImports() as $import) {
+						$modelIDs[] = $this->getModel($import->getLabel())->getModelID();
+					}
+				}
+			}
 		}
+		
+		$engine = new SparqlEngineDb($this, $modelIDs );
+		
+		if ($renderer === null)	
+			$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
 		
 		if (!($query instanceof Query)) {
 				$parser = new SparqlParser();
@@ -296,6 +316,5 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		
 		return $engine->queryModel($dataset, $query, $renderer);
 	}
-	
 }
 ?>
