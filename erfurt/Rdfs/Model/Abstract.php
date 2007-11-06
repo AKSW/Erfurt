@@ -135,8 +135,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return array Array of RDFResources
 	 */
 	public function listImports() {
-		
-		return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
+		//TODO using dynamic import predicate defintion from config or so
+		return $this->findNodesAs($this->asResource,new Resource('http://www.w3.org/2002/07/owl#imports'),null);
+		//return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
 	}
 	
 	public function listModelIds() {
@@ -816,7 +817,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 *
 	 * @param RDFSResource/null $subject Subject
 	 * @param RDFSResource/null $predicate Predicate
-	 * @param RDFSResource/nukk $object Object
+	 * @param RDFSResource/null $object Object
 	 * @param string $class	PHPClass which the returned nodes should be instances of.
 	 * @param int $offset Return results starting with this row number.
 	 * @param int $limit Maximum number of records to return.
