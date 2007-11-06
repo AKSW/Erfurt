@@ -1,14 +1,46 @@
 <?php
 /**
- * RDFSStore
+ * Erfurt_Store_Adapter_Rap
  *
- * @package RDFSAPI
- * @author Sören Auer <soeren@auer.cx>
- * @copyright Copyright (c) 2004
+ * @package store
+ * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * @copyright Copyright (c) 2004 - 2007
  * @version $Id: store.php 956 2007-04-23 11:21:47Z cweiske $
- * @access public
- **/
-class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
+ */
+class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract 
+		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface {
+	
+	/**
+	 * Constructor:
+	 * Set the database connection with the given parameters.
+	 *
+	 * @param   string   $dbDriver
+	 * @param   string   $host
+	 * @param   string   $dbName
+	 * @param   string   $user
+	 * @param   string   $password
+	 * @access	public
+	 */
+	public function __construct($dbDriver, $host, $dbName, $user, $password, $SysOntURI = false, $tablePrefix = '') {
+
+		DBStore::DBStore($dbDriver, $host, $dbName, $user, $password);
+
+		// if 'tablePrefix' is set, attach SQL-rewrite function to store
+		if (!empty($tablePrefix)) {
+			$this->dbConn->fnExecute = 'pwlRewriteSQL';
+		}
+
+		# register for init
+		$this->dbDriver = $dbDriver;
+		$this->SysOntURI = $SysOntURI;
+	}
+	
+	/**
+	 * Create common tables for store
+	 */
+	public function createTables() {
+		$this->_createTables_MySql();
+	}
 	
 	/**
 	 * Create tables and indexes for adodb datadict supported databases
@@ -16,12 +48,13 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	 * @throws  SqlError
 	 * @access	private
 	 */
-	function _createTables_Generic() {
+	protected function _createTables_Generic() {
+		
 		$this->dbConn->startTrans();
-	#	$this->dbConn->debug=true;
-		$tables=array(
-			'models'=>array(
-				'fields'=>'
+		
+		$tables = array(
+			'models' => array(
+				'fields' => '
 					modelID		I		NOTNULL	AUTO KEY,
 					modelURI	C(255)	NOTNULL,
 					baseURI		C(255)	NOTNULL',
@@ -134,7 +167,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 	 * Create tables and indexes for MySQL databases
 	 *
 	 */
-	function _createTables_MySQL() {
+	
+	public function _createTables_MySQL() {
 		#$this->_createTables_Generic();
 		
 		$this->dbConn->startTrans();
@@ -308,7 +342,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		
 		if ($renderer === null)	
 			$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
-		
+
 		if (!($query instanceof Query)) {
 				$parser = new SparqlParser();
 				$query = $parser->parse($query);
@@ -316,5 +350,242 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Default {
 		
 		return $engine->queryModel($dataset, $query, $renderer);
 	}
+	public function sqlQuery($sql) {
+		
+		$result = $this->dbConn->Execute($sql);
+		
+		if ($result != null) {
+			return $result->getArray();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * This method checks whether a database with the fiven name exists.
+	 *
+	 * @param string $dbType type of the database (e.g. MySQL)
+	 * @param string $dbName name of the database
+	 * @return boolean Returns true in case the database exists, false else.
+	 */
+	public function isDatabaseCreated($dbType="MySQL", $dbName) {
+		switch (strtolower($dbType)) {
+			case "mysql":
+				$db =& $this->dbConn->execute('USE "' . $dbName . '"');
+				if (!$db) return false;
+				else return true;
+		}
+	}
+	
+	/**
+	 * returns a list of available and permitted models
+	 *   
+	 */
+	public function listModels($returnAsArray = false, $withLabel = false) {
+		$models=array();
+		if($ms=DBStore::listModels()) {
+			if($returnAsArray) {
+				foreach($ms as $model) {
+					if($this->aclCheck('View',$model['modelURI'])) {
+						if ($withLabel === true) {
+							$tempModel = $this->getModel($model['modelURI']);
+							$tempResource = $tempModel->resourceF($model['modelURI']);
+							$label = $tempResource->getPropertyValue('rdfs:label');
+							if ($label) {
+								$model['label'] = $label->getLabel();
+							}
+						}
+						
+						$models[$model['modelURI']] = $model;
+					}
+				}
+				return $models;
+			}
+			foreach($ms as $model)
+				if($this->aclCheck('View',$model['modelURI']))
+					$models[$model['modelURI']]=$this->getModel($model['modelURI']);
+		} else
+			return $ms;
+			
+		return $models;
+	}
+	
+	/**
+	 * returns instance of an model-object
+	 */
+	public function getModel($modelURI, $importedURIs=array(), $useACL = true) {
+		# get model uri
+		$modelURI = is_numeric($modelURI) ? $this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI) : $modelURI;
+		
+		# look for model in every uri variation
+		ob_start(); // prevent DB error message if tables don't exist
+		if(!$this->modelExists($modelURI, $useACL)) {
+			if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
+				$modelURI=rtrim($modelURI,'#/');
+			} else if($this->modelExists($modelURI.'/', $useACL))
+				$modelURI.='/';
+			else if($this->modelExists($modelURI.'#', $useACL))
+				$modelURI.='#';
+			else return false;
+		}
+		$m=new RDFSModel($this,$modelURI);
+		ob_end_clean();
+		
+		
+		if($m) {
+			if($m->getType()=='OWL') {
+				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
+				$m=new Erfurt_Owl_Model($this,$modelURI);
+				foreach($m->listImports() as $import) if($import instanceof Resource) {
+					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs, $useACL))
+						$m->importsIds = array_merge($m->importsIds, array($imp->modelID => $imp->modelID), !empty($imp->importsIds) ? $imp->importsIds : array());
+					$importedURIs[rtrim($import->getURI(),'#/')]=rtrim($import->getURI(),'#/');
+				}
+				if($m->importsIds)
+					$m->importsSQL=' OR modelID='.join(' OR modelID=',$m->importsIds);
+			}
+			
+			# look for edit possibility
+			if ($useACL and $this->checkAc()) {
+				if (!$this->ac->isModelAllowed('view', $modelURI)) {
+					return false;	
+				}
+				$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
+			} else {
+				$m->setEdititable(true);
+			}
+			
+			return $m;
+		} else
+			return false;
+	}
+	
+	
+	/**
+	 * POWLStore::getNewModel()
+	 *
+	 * @param $modelURI
+	 * @param string $baseURI
+	 * @param string $type
+	 * @return
+	 **/
+	public function getNewModel($modelURI,$baseURI='',$type='RDFS', $useACL = true) {
+		if($this->modelExists($modelURI, $useACL))
+			return false;
+		$mt=DBStore::getNewModel($modelURI,$baseURI);
+		unset($this->_models[$modelURI]);
+		if($type=='OWL')
+			$mt->add(new Statement(new resource($modelURI),$GLOBALS['RDF_type'],$GLOBALS['OWL_Ontology']));
+		Zend_Registry::set('cache', array());
+		$m = $this->getModel($modelURI);
+		return $m;
+	}
+	/**
+	 * POWLStore::loadModel()
+	 *
+	 * @param $modelURI
+	 * @param unknown $file
+	 * @param boolean $loadImports
+	 * @param boolean $stream
+	 * @return
+	 **/
+	public function loadModel($modelURI,$file=NULL,$loadImports=false,$stream=false,$filetype=NULL) {
+		static $justLoaded;
+		$justLoaded[$modelURI]=true;
+		$file=$file?$file:$modelURI;
+		if($fp=fopen($file,'rb')) {
+			if($this->SysOnt) {
+				$head=fread($fp,2000);
+				fclose($fp);
+				preg_match_all('/xmlns:([^=]+)=[\'"]([^"\']+)[\'"]/im',$head,$matches);
+				$i=array_search($modelURI,$matches[2]);
+				$name = ($i!==false) ? $matches[1][$i] : $this->SysOnt->getUniqueResourceURI('Modelinstance');
+				$modelInst=$this->SysOnt->addInstance($name,'Model');
+				$modelInst->setPropertyValue('modelURI',$modelURI);
+				foreach($matches[1] as $key=>$val)
+					$modelInst->addPropertyValue('modelXMLNS',trim($val).':'.trim($matches[2][$key]));
+			}
+		} else
+			return false;
+		$model=$this->getNewModel($modelURI);
+		$model->dontCheckForDuplicatesOnAdd=true;
+		$model->logStart('Model created',$modelURI);
+		$model->logEnd();
+	 	$log=$this->logDisabled;
+		$model->logDisabled=true;
+		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
+			$this->dbConn->execute('ALTER TABLE statements DISABLE KEYS');
+	 	$model->load($file,$filetype,$stream);
+		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
+			$this->dbConn->execute('ALTER TABLE statements ENABLE KEYS');
+		$model=$this->getModel($modelURI);
+		if($modelInst) {
+			$type=$model->getType();
+			$modelInst->setPropertyValue('modelType',$type);
+		}
+		if($type=='OWL' && $loadImports)
+			foreach($model->listImports() as $import)
+				if($this->modelExists($import->getURI())) {
+					if(!$justLoaded[$import->getURI()])
+						trigger_error("Imported model \"".$import->getURI()."\" exists!\n",E_USER_WARNING);
+				} else {
+					pwlOutput("Loading imported model \"".$import->getURI()."\".\n");
+					$imp=$this->loadModel($import->getURI(),$import->getURI(),true,$stream);
+				}
+
+		$this->logDisabled=$log;
+		return $model;
+	}
+	/**
+	 * POWLStore::deleteModel()
+	 *
+	 * @param $modelURI
+	 * @return
+	 **/
+	public function deleteModel($modelURI) {
+		if($this->SysOnt)
+			if($mi=$this->SysOnt->getClass('Model'))
+				if($inst=$mi->findInstance(array('modelURI'=>$modelURI)))
+					$inst->remove();
+		$m=$this->getModel($modelURI);
+		$m->delete();
+		cache('modelExists',array($modelURI),false);
+	}
+	
+	/**
+	 * Check if the DbModel with the given modelURI is already stored in the database
+	 *
+	 * @param   string   $modelURI
+	 * @param   boolean  useACL for installation check
+	 * @return  boolean
+	 * @throws	SqlError
+	 * @access	public
+	 */
+	public function modelExists($modelURI, $useACL = true) {
+		$args=func_get_args();
+		$c=cache('modelExists',$args);
+		if($c!==NULL)
+			return $c;
+		
+		$modelExists = false; 
+		if ($modelExists = DBStore::modelExists($modelURI)) {
+			if (is_object($this->ac) and method_exists($this->ac, 'isModelAllowed'))
+				if ($useACL and !$this->ac->isModelAllowed('view', $modelURI))
+					$modelExists = false;
+		}
+		return cache('modelExists', $args, $modelExists);
+	}
+	
+	public function isSetup() {
+		
+		if(Zend_Registry::get('config')->database->backend == 'powl')
+			return true;
+		else  
+			return DBStore::isSetup();
+	}
+	
+	public function executeAdd() {}
+	public function executeRemove() {}
+	public function executeFind() {}
 }
 ?>
