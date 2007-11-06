@@ -398,7 +398,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 
 		$sql = 'SELECT s.object 
 				FROM statements s	
-				WHERE s.predicate = "' . EF_RDF_TYPE . '" AND s.object_is <> "b" AND modelID = ' . $this->modelID . '
+				WHERE s.predicate = "' . EF_RDF_TYPE . '" AND s.object_is <> "b" AND modelID IN (' . $this->getModelIds() . ')
 				UNION DISTINCT
 				SELECT s.subject
 				FROM statements s
@@ -412,7 +412,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			
 		// check whether classes are top classes
 		foreach ($sqlResult as $row) {
-			if (!$this->hasStatement($row, 'rdfs:subClassOf', null)) {
+			if (!$this->hasStatement($row, 'rdfs:subClassOf', null) || $this->hasStatement($row, 'rdfs:subClassOf', EF_OWL_THING)) {
 				$tempClassArray[] = $this->classF($row[0]);
 			}
 		}

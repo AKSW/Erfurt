@@ -26,7 +26,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 	    $sql = 'SELECT DISTINCT s.subject, s.subject_is
 	            FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s
 	            WHERE modelID IN (' . $this->model->getModelIds() . ') AND
-	            s.predicate = "' . $this->model->_dbId('RDFS_subClassOf') . '" AND 
+	            s.predicate = "' . EF_RDFS_SUBCLASSOF . '" AND 
 	            s.object = "' . $this->model->_dbId($this) . '"
 	            GROUP BY s.subject
 	            ORDER BY s.subject';
