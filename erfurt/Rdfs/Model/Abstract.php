@@ -1353,8 +1353,10 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 			}
 		}
 		
-		$this->addStatementArray($addModel->subtract($removeModel)->triples, true, false);
-		$success = $this->removeStatementArray($removeModel->subtract($addModel)->triples, false, true);
+		$this->logStart('model update');
+		$this->addStatementArray($addModel->subtract($removeModel)->triples, false, false);
+		$this->removeStatementArray($removeModel->subtract($addModel)->triples, false, false);
+		$success = $this->logEnd();
 		
 		if (success == true) {
 // TODO exception code 

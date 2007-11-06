@@ -954,7 +954,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		if(!$this->logEnabled())
 			return;
 		array_shift($this->logActions);
-		$this->dbConn->CompleteTrans();
+		return $this->dbConn->CompleteTrans();
 	}
 	
 	/**

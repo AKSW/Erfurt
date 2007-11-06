@@ -45,7 +45,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @param Erfurt_Store_Default $store
 	 * @param string $modelURI
 	 */
-	public function __construct(Erfurt_Store_Default $store, $modelURI) {
+	public function __construct(Erfurt_Store_Abstract $store, $modelURI) {
 		
 		parent::__construct($store, $modelURI, 'OWL'); // force type OWL
 		
