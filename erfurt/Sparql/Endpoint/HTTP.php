@@ -2,7 +2,7 @@
 
 /*
  * <Example>
- */
+ 
 
 // All parameters should be set to an empty string by default
 
@@ -55,9 +55,9 @@ try {
 	
 }
 
-/**
  * </Example>
  */
+
 
 /**
  * HTTP-Endpoint-class for the SPARQL Protocol for RDF from http://www.w3.org/TR/rdf-sparql-protocol/
@@ -183,7 +183,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		}
 	}
 	/**
-	 * Setting renderer
+	 * Setting renderer as string
 	 *
 	 * @param string $renderer
 	 */
