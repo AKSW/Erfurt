@@ -3,7 +3,7 @@
 class Erfurt_Owl_Structured_StructuredClass {
 	private $childClasses = array ( ) ;
 	private $URI ;
-	private $firstChildBlankNode ;
+	private $firstChildBlankNode =null;
 	private $memmodel ;
 	
 	public function __construct ( $uri ) {
@@ -13,8 +13,6 @@ class Erfurt_Owl_Structured_StructuredClass {
 	}
 	
 	public function addChildClass ( $structuredClass ) {
-		//echo"count children:".sizeof($structuredClass)."<br>";
-		//print_r($structuredClass);echo"<br>";
 		if (is_array ( $structuredClass )) {
 			$this->childClasses = array_merge ( $this->childClasses, $structuredClass ) ;
 		} else {
@@ -37,7 +35,7 @@ class Erfurt_Owl_Structured_StructuredClass {
 	public function setURI ( $newURI ) {
 		$this->URI = $newURI ;
 	}
-	
+	//TODO rename
 	public function getURLPrefix () {
 		return "http://www.w3.org/2002/07/owl#" ;
 	}
@@ -64,17 +62,30 @@ class Erfurt_Owl_Structured_StructuredClass {
 	 * @return MemModel
 	 */
 	public function getChildrenRDF () {
-		
-		$this->firstChildBlankNode = new BlankNode ( $this->getMemModel () ) ;
+		if($this->firstChildBlankNode==null){
+			$this->firstChildBlankNode = new BlankNode ( $this->getMemModel () ) ;
+		}
 		$blankNode = $this->getFirstChildBlankNode () ;
 		$constPredicate = new Resource ( $this->getRDFURL (), "type" ) ;
 		$constObject = new Resource ( $this->getRDFURL (), "List" ) ;
 		$constFirst = new Resource ( $this->getRDFURL (), "first" ) ;
 		$constRest = new Resource ( $this->getRDFURL (), "rest" ) ;
 		foreach ( $this->getChildClasses () as $key => $child ) {
-			$statement = new Statement ( $blankNode, $constPredicate, $constObject ) ;
-			$this->getMemModel ()->add ( $statement ) ;
-			$statement = new Statement ( $blankNode, $constFirst, new Resource ( $child->getURI () ) ) ;
+			if($child instanceof Erfurt_Owl_Structured_NamedClass){
+				//TODO use MemModel->unite, to eliminate duplicates
+				$recModel=$child->generateRDF();
+				$statement = new Statement ( $blankNode, $constFirst, new Resource ( $child->getURI () ) ) ;
+				$this->getMemModel()->addModel($recModel);
+				//$statement = new Statement ( $blankNode, $constFirst, new Resource ( $child->getURI () ) ) ;
+			}else{
+				$statement = new Statement ( $blankNode, $constPredicate, $constObject ) ;
+				$this->getMemModel ()->add ( $statement ) ;
+				$recModel=$child->generateRDF();
+				$this->getMemModel()->addModel($recModel);
+				//TODO find out what is the next node id
+//				print_r($child->getFirstChildBlankNode()->uri); echo "<br>";
+				$statement = new Statement ( $blankNode, $constFirst, $child->getFirstChildBlankNode()/*new Resource ( "xxx" ) */) ;
+			}
 			$this->getMemModel ()->add ( $statement ) ;
 			$newblankNode = $key < sizeof ( $this->getChildClasses () ) - 1 ? new BlankNode ( $this->getMemModel () ) : null ;
 			$statement = new Statement ( $blankNode, $constRest, $newblankNode == null ? new Resource ( $this->getRDFURL () . "nil" ) : $newblankNode ) ;
