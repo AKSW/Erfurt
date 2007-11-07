@@ -20,6 +20,7 @@ class Erfurt_Owl_Structured_EnumeratedClass extends Erfurt_Owl_Structured_Anonym
 	}
 	
 	public function generateRDF () {
+		//TODO check if this is correct implementation
 		$model = $this->getMemModel();
 		$blankNode = new BlankNode ( $model ) ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;

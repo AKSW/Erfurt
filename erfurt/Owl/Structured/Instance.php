@@ -22,6 +22,15 @@ class Erfurt_Owl_Structured_Instance {
 		
 		return "<individual name=" . $this->getURI () . "/>" ;
 	}
+	
+	public function generateRDF () {
+		$subject = new Resource ( $this->getURI () ) ;
+		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
+		$statement = new Statement ( $subject, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
+		$model = $this->getMemModel () ;
+		$model->add ( $statement ) ;
+		return $model ;
+	}
 
 }
 ?>

@@ -28,10 +28,20 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
 		$statement = new Statement ( $blank, $predicate, new Resource ( $this->getURLPrefix () . "Class" ) ) ;
 		$model->add ( $statement ) ;
+		//$this->getChildrenRDF();
 		$children=$this->getChildClasses();
 		$child=$children[0];
-		$model->addModel($child->generateRDF());
-		$statement1 = new Statement ( $blank, new Resource ( $this->getURLPrefix () . "complementOf" ), $this->getFirstChildBlankNode() ) ;
+		$model->addModel(
+			$child->generateRDF()
+			)
+			;
+			if($child instanceof Erfurt_Owl_Structured_NamedClass){
+				$node=new Resource($child->getURI());
+			}
+			else{
+				$node=$child->getFirstChildBlankNode();
+			}
+		$statement1 = new Statement ( $blank, new Resource ( $this->getURLPrefix () . "complementOf" ), $node ) ;
 		$model->add ( $statement1 ) ;
 		return $model ;
 	}
