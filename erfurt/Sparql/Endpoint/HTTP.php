@@ -6,12 +6,6 @@
 
 // All parameters should be set to an empty string by default
 
-$query = '';
-$user = '';
-$password = '';
-$model = '';
-$renderer = '';
-
 // Just loading the settings from GET/POST
 if (sizeof($_GET) != 0) {
 			if (array_key_exists('query',$_GET))
@@ -39,14 +33,14 @@ if (sizeof($_POST) != 0) {
 				$renderer = $_POST['renderer'];
 }
 
-try {
-	
+
+try {	
 	$endpoint = new Erfurt_Sparql_Endpoint_HTTP();
 	$endpoint->authenticate($user,$pass);
 	$endpoint->setModel($model);
 	$endpoint->setQuery($query);
 	$endpoint->setRenderer($renderer);
-	
+
 	echo $endpoint -> query();
 	
 } catch (Exception $e) {
@@ -154,17 +148,15 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * @param unknown_type $modeluri
 	 */
 	public function setModel($modeluri) {
-	
-		if ($modeluri != '') {
-			$this->modelURIs = array();
-			
-			if($m = $this->DBStore->getModel($modeluri)) {
-
-				$this -> modelURIs[] = $m->getBaseURI();
-			} else {
-				throw new Erfurt_Exception('QueryRequestRefused: invalid model',1602);
+			if ($modeluri === null)
+				$this->modelURIs = null;
+			else {
+				if ($this->DBStore->aclCheck('view',$modeluri) && $this->DBStore->modelExists($modeluri)) {
+					$this->modelURIs[] = $modeluri;
+				} else {
+					throw new Erfurt_Exception('QueryRequestRefused: invalid model',1602);
+				}
 			}
-		}
 	}
 	
 	/**
@@ -178,6 +170,8 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		if ($user != '')
 			$identity = $this -> erfurt -> authenticate($user,$password)-> getIdentity();
 			
+			$this->DBStore->setAc($this->erfurt->getAc());
+			
 		if ($identity['uri'] == '' && $user != '') {
 			throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)',1602);
 		}
@@ -188,7 +182,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * @param string $renderer
 	 */
 	public function setRenderer($renderer) {
-		if ($renderer != '')
+		if ($renderer != '' && $renderer !== null)
 			$this->strRenderer = $renderer;
 	}
 	
@@ -197,7 +191,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * @param string $query
 	 */
 	public function setQuery($query) {
-		if ($query == '') {
+		if ($query === null) {
 			throw new Erfurt_Exception('QueryRequestRefused: missing parameters in GET/POST',1602);
 		}
 		
@@ -212,7 +206,8 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	public function query() {
 		
 		try {
-			$this -> queryresult = $this -> DBStore->executeSparql($this->modelURIs,$this->query,null,$this->strRenderer);				
+			//header('Content-Type: text/'.strtolower($this->strRenderer));
+			$this -> queryresult = $this -> DBStore -> executeSparql($this->modelURIs,$this->query,null,$this->strRenderer);				
 		} catch (Exception $e) {	
 			header('HTTP/1.1 400 Bad Request');
 			throw new Erfurt_Exception('Sparql execution error: ' . $e->getMessage(),1601);	
