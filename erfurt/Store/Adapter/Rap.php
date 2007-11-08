@@ -305,41 +305,44 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @param string/null $class
 	 * @param string/null $renderer
 	 */
-	public function executeSparql($model, $query, $class = null, $renderer = null, $useImports = false) {
+	public function executeSparql($model = null, $query, $class = null, $renderer = null, $useImports = false) {
 		
-		// Array of modelids used by the RAP Sparql engine
-		$modelIDs = array();
+		// Using all models allowed for current user if no model is specified
+		if ($model === null)
+			foreach ($this->listModels(true) as $modeluri)
+				$model[] = $modeluri['modelURI'];
+			
+		//check if AC and Sbac is enabled
+		if($this->checkAc()) {
+			$Ac = $this->getAc();
+			if ($Ac->getSbac() != null)
+				$Sbac = $Ac->getSbac()->checkAccessRestriction();
+		}
+		
+		$dataset = new DatasetMem();
 		
 		// Howto SPARQL'l if first parameter is an instance of an Object 'Model'
 		if (is_object($model)) {
-		
-			$modelIDs[] = $model->getModelID();
-			$dataset = new DatasetMem();
-			$dataset->setDefaultGraph($model);
 			
-			if ($useImports) {
-				foreach ($model->listImports() as $import) {
-					$modelIDs[] = $this->getModel($import->getLabel())->getModelID();
-				}
-			}
+			$dataset->setDefaultGraph($model);
+			$modelIDs[] = $model->getModelID();
+			
 		}
 		
 		// and Howto SPARQL'l if first parameter is an array
 		if (is_array($model)) {
-				
-			foreach ($model as $uri) {
-				$modelIDs[] = $this->getModel($uri)->getModelID();
-				
-				if ($useImports) {
-					foreach ($this->getModel($uri)->listImports() as $import) {
-						$modelIDs[] = $this->getModel($import->getLabel())->getModelID();
-					}
-				}
+			foreach($model as $m) {
+				//check on model based AC if it is allowed
+				if ($this ->modelExists($m) && $this->aclCheck('view',$m) )
+					$sqlModelUris .= 'modelURI=\''.$m.'\' OR ';
 			}
+			$sqlQuery = 'SELECT modelID FROM models WHERE '.$sqlModelUris.' FALSE ';
+			foreach ($this->sqlQuery($sqlQuery ) as $ID)
+				$modelIDs[] = $ID[0];
 		}
-		
+
 		$engine = new SparqlEngineDb($this, $modelIDs );
-		
+				
 		if ($renderer === null)	
 			$renderer = new Erfurt_Sparql_ResultRenderer_Default($model, $class);
 
@@ -347,8 +350,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				$parser = new SparqlParser();
 				$query = $parser->parse($query);
 		}
+		$result = $engine->queryModel($dataset,$query,$renderer);
+		return $result;
 		
-		return $engine->queryModel($dataset, $query, $renderer);
 	}
 	public function sqlQuery($sql) {
 		
@@ -401,9 +405,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				}
 				return $models;
 			}
-			foreach($ms as $model)
+			
+			foreach($ms as $model) {
 				if($this->aclCheck('View',$model['modelURI']))
 					$models[$model['modelURI']]=$this->getModel($model['modelURI']);
+			}
 		} else
 			return $ms;
 			
