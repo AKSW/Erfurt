@@ -306,7 +306,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @param string/null $renderer
 	 */
 	public function executeSparql($model = null, $query, $class = null, $renderer = null, $useImports = false) {
-		
+
 		// Using all models allowed for current user if no model is specified
 		if ($model === null)
 			foreach ($this->listModels(true) as $modeluri)
@@ -315,6 +315,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		//check if AC and Sbac is enabled
 		if($this->checkAc()) {
 			$Ac = $this->getAc();
+			//var_dump($Ac->getSbac());
 			if ($Ac->getSbac() != null)
 				$Sbac = $Ac->getSbac()->checkAccessRestriction();
 		}
@@ -323,7 +324,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		
 		// Howto SPARQL'l if first parameter is an instance of an Object 'Model'
 		if (is_object($model)) {
-			
+
 			$dataset->setDefaultGraph($model);
 			$modelIDs[] = $model->getModelID();
 			
@@ -351,6 +352,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				$query = $parser->parse($query);
 		}
 		$result = $engine->queryModel($dataset,$query,$renderer);
+		
 		return $result;
 		
 	}
