@@ -4,8 +4,6 @@
  * <Example>
  
 
-// All parameters should be set to an empty string by default
-
 // Just loading the settings from GET/POST
 if (sizeof($_GET) != 0) {
 			if (array_key_exists('query',$_GET))
@@ -36,7 +34,7 @@ if (sizeof($_POST) != 0) {
 
 try {	
 	$endpoint = new Erfurt_Sparql_Endpoint_HTTP();
-	$endpoint->authenticate($user,$pass);
+	$endpoint->authenticate($user,$password);
 	$endpoint->setModel($model);
 	$endpoint->setQuery($query);
 	$endpoint->setRenderer($renderer);
@@ -104,12 +102,15 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	
 	/**
 	 * Constructor for new Endpoint reading GET/POST Variables for needed values
+	 * @param string $query Sparql Query
 	 */
 	public function Erfurt_Sparql_Endpoint_HTTP ($query = '') {
 		
 		require_once './../../erfurt.php';
 		
+		// use ontowiki settings if available
 		$session = new Zend_Session_Namespace('ERFURT');
+		
 		if (isset($session->config)) {
 			$this -> erfurt = new Erfurt_App_Default($session->config);
 		} else {
@@ -165,17 +166,18 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * @param unknown_type $user
 	 * @param unknown_type $pass
 	 */
-	public function authenticate($user , $pass) {
-		// Only authenticate if username isn't empty
-		if ($user != '')
-			$identity = $this -> erfurt -> authenticate($user,$password)-> getIdentity();
+	public function authenticate($user, $password) {
+		
+		if (isset($user) && $user != '' ) {
+			$authResult = $this->erfurt->authenticate($user,$password);
+			$identity = $authResult->getIdentity();
 			
-			$this->DBStore->setAc($this->erfurt->getAc());
-			
-		if ($identity['uri'] == '' && $user != '') {
-			throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)',1602);
+			if ($identity['uri'] == '' ) {
+				throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)',1602);
+			}
 		}
 	}
+	
 	/**
 	 * Setting renderer as string
 	 *
@@ -192,7 +194,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 */
 	public function setQuery($query) {
 		if ($query === null) {
-			throw new Erfurt_Exception('QueryRequestRefused: missing parameters in GET/POST',1602);
+			throw new Erfurt_Exception('QueryRequestRefused: query is empty',1602);
 		}
 		
 		$this -> query = $query;
