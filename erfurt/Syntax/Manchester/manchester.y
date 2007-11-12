@@ -17,7 +17,8 @@ require_once 'lex.php';}
 	}
 
 %left NOT_OPERATOR AND_OPERATOR OR_OPERATOR.
-%left MIN_OPERATOR MAX_OPERATOR EXACTLY_OPERATOR HAS_OPERATOR.
+%left MIN_OPERATOR MAX_OPERATOR.
+%left EXACTLY_OPERATOR HAS_OPERATOR.
 %left ONLYSOME_OPERATOR ONLY_OPERATOR SOME_OPERATOR.
 
 %syntax_error {
@@ -36,6 +37,7 @@ require_once 'lex.php';}
 
 	start ::= classExpr(A).{
 		print_r(A->generateRDF()->writeAsHtmlTable());}
+//		print_r(A->generateRDF()->writeAsHtml());}
 //		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{
@@ -124,8 +126,8 @@ require_once 'lex.php';}
 	instExpr(A) ::= ALPHANUMERIC(B).{
 		A = new Erfurt_Owl_Structured_Instance(B);}
 
-	list(A) ::= instExpr(B) COMMA list(C).{
+	list(A) ::= classExpr(B) COMMA list(C).{
 		A= array_merge(array(B),C);}
 		
-	list(A) ::= instExpr(B).{
+	list(A) ::= classExpr(B).{
 		A=array(B);}

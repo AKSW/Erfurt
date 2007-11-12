@@ -1,38 +1,16 @@
 <?php
 /*
-* make changes to this file, if you want to make changes to tokenizer for manchester syntax
+* edit this file, if you want to make changes to tokenizer for manchester syntax
 */
 require_once 'manchester.php';
 class ManchesterLexer
 {
-
-	const 	NOT_OPERATOR  = OWLParser::NOT_OPERATOR;
-	const 	ALPHANUMERIC  = OWLParser::ALPHANUMERIC;
-	const 	AND_OPERATOR  = OWLParser::AND_OPERATOR;
-	const 	THAT_OPERATOR  = OWLParser::THAT_OPERATOR;
-	const 	OR_OPERATOR   = OWLParser::OR_OPERATOR;
-	const 	MIN_OPERATOR   = OWLParser::MIN_OPERATOR;
-	const 	MAX_OPERATOR   = OWLParser::MAX_OPERATOR;
-	const 	EXACTLY_OPERATOR  = OWLParser::EXACTLY_OPERATOR;
-	const 	HAS_OPERATOR    = OWLParser::HAS_OPERATOR;
-	const 	ONLYSOME_OPERATOR  = OWLParser::ONLYSOME_OPERATOR;
-	const 	ONLY_OPERATOR   = OWLParser::ONLY_OPERATOR;
-	const 	SOME_OPERATOR   = OWLParser::SOME_OPERATOR;
-	const 	LPAREN         = OWLParser:: LPAREN;
-	const 	RPAREN       = OWLParser::RPAREN;
-	const 	LBRACE       = OWLParser::LBRACE;
-	const 	RBRACE        = OWLParser::RBRACE;
-	const 	LSQUAREBRACKET  = OWLParser::LSQUAREBRACKET;
-	const 	RSQUAREBRACKET  = OWLParser::RSQUAREBRACKET;
-	const 	NUMERIC       = OWLParser::NUMERIC;
-	const 	COMMA        = OWLParser::COMMA;
-
 	private $data;
 	private $N;
 	public $token;
 	public $value;
     public $line;
-	private $debug = 0;
+	private $debug = 1;
 	
     function __construct($data)
     {
@@ -41,25 +19,34 @@ class ManchesterLexer
 //        $this->line = 1;
     }
 
+
+	public function printout($text="nothing"){
+		if($this->debug){
+			echo $text." \n";
+		}
+	}
+
 /*!lex2php
 %input $this->data
 %counter $this->N
 %token $this->token
 %value $this->value
 %line $this->line
-ALPHANUMERIC = /[a-zA-Z]+[0-9]*[:][a-zA-Z]+[0-9]*|[a-zA-Z]+[0-9]*/
+%longestmatch 1
+%matchlongest 1
+ALPHANUMERIC = /[a-zA-Z]+[0-9]*/
 NUMERIC = /[0-9]+/
-WHITESPACE = /[ \t\n\r]+/
-LPAREN="("
-RPAREN=")"
+WHITESPACE = /[ \t]+/
+LPAREN=/\(/
+RPAREN=/\)/
 NOT_OPERATOR=/[Nn][Oo][Tt]/
 AND_OPERATOR=/[Aa][Nn][Dd]|[Tt][Hh][Aa][Tt]/
 OR_OPERATOR=/[Oo][Rr]/
-COMMA=","
-LSQUAREBRACKET="["
-RSQUAREBRACKET="]"
-LBRACE="{"
-RBRACE="}"
+COMMA=/,/
+LSQUAREBRACKET=/\[/
+RSQUAREBRACKET=/\]/
+LBRACE=/\{/
+RBRACE=/\}/
 MIN_OPERATOR=/[Mm][Ii][Nn]/
 MAX_OPERATOR=/[Mm][Aa][Xx]/
 EXACTLY_OPERATOR=/[Ee][Xx][Aa][Cc][Tt][Ll][Yy]/
@@ -67,89 +54,93 @@ HAS_OPERATOR=/[Hh][Aa][Ss]/
 ONLYSOME_OPERATOR=/[Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee]/
 ONLY_OPERATOR=/[Oo][Nn][Ll][Yy]/
 SOME_OPERATOR=/[Ss][Oo][Mm][Ee]/
-SEPARATOR_CHAR=/[ \t\n\r]+/
+NEKUDOTAYIM=/:/
 */
 /*!lex2php
 %statename START
 WHITESPACE {
-	if ($this->debug) echo "whitespace found\n";
+	$this->printout("whitespace");
     return false; // skip this token (do not return it)
 }
-AND_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "and operator found\n";
-	$this->token=self::AND_OPERATOR;
+OR_OPERATOR{
+	$this->printout("or");
+	$this->token=OWLParser::OR_OPERATOR;
 }
-OR_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "or operator found\n";
-	$this->token=self::OR_OPERATOR;
+AND_OPERATOR{
+	$this->printout("and");
+	$this->token=OWLParser::AND_OPERATOR;
 }
-NOT_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "not operator found\n";
-	$this->token=self::NOT_OPERATOR;
+NOT_OPERATOR {
+	$this->printout("not");
+	$this->token=OWLParser::NOT_OPERATOR;
 }
-MIN_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "min operator found\n";
-	$this->token=self::MIN_OPERATOR;
+MIN_OPERATOR{
+	$this->printout("min");
+	$this->token=OWLParser::MIN_OPERATOR;
 }
-MAX_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "max operator found\n";
-	$this->token=self::MAX_OPERATOR;
+MAX_OPERATOR {
+	$this->printout("max");
+	$this->token=OWLParser::MAX_OPERATOR;
 }
-EXACTLY_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "exactly operator found\n";
-	$this->token=self::EXACTLY_OPERATOR;
+EXACTLY_OPERATOR{
+	$this->printout("exactly");
+	$this->token=OWLParser::EXACTLY_OPERATOR;
 }
-HAS_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "has operator found\n";
-	$this->token=self::HAS_OPERATOR;
+HAS_OPERATOR {
+	$this->printout("has");
+	$this->token=OWLParser::HAS_OPERATOR;
 }
-ONLYSOME_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "onlysome_operator operator found\n";
-	$this->token=self::ONLYSOME_OPERATOR;
+ONLYSOME_OPERATOR{
+	$this->printout("onlysome");
+	$this->token=OWLParser::ONLYSOME_OPERATOR;
 }
-SOME_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "some_operator operator found\n";
-	$this->token=self::SOME_OPERATOR;
+SOME_OPERATOR {
+	$this->printout("some");
+	$this->token=OWLParser::SOME_OPERATOR;
 }
-ONLY_OPERATOR SEPARATOR_CHAR{
-	if ($this->debug) echo "only_operator operator found\n";
-	$this->token=self::ONLY_OPERATOR;
+ONLY_OPERATOR {
+	$this->printout("only");
+	$this->token=OWLParser::ONLY_OPERATOR;
 }
 COMMA{
-	if ($this->debug) echo "comma found\n";
-	$this->token=self::COMMA;
+	$this->printout("comma");
+	$this->token=OWLParser::COMMA;
 }
 LPAREN {
-	if ($this->debug) echo "lparen found\n";
-	$this->token=self::LPAREN;
+	$this->printout("lparen");
+	$this->token=OWLParser::LPAREN;
 }
 RPAREN {
-	if ($this->debug) echo "rparen found\n";
-	$this->token=self::RPAREN;
+	$this->printout("rparen");
+	$this->token=OWLParser::RPAREN;
 }
 LBRACE {
-	if ($this->debug) echo "lbrace found\n";
-	$this->token=self::LBRACE;
+	$this->printout("lbrace");
+	$this->token=OWLParser::LBRACE;
 }
 RBRACE {
-	if ($this->debug) echo "rbrace found\n";
-	$this->token=self::RBRACE;
+	$this->printout("rbrace");
+	$this->token=OWLParser::RBRACE;
 }
 LSQUAREBRACKET{
-	if ($this->debug) echo "lsquarebracket found\n";
-	$this->token=self::LSQUAREBRACKET;
+	$this->printout("lsquarebracket");
+	$this->token=OWLParser::LSQUAREBRACKET;
 }
 RSQUAREBRACKET{
-	if ($this->debug) echo "rsquarebracket found\n";
-	$this->token=self::RSQUAREBRACKET;
+	$this->printout("rsquarebracket");
+	$this->token=OWLParser::RSQUAREBRACKET;
 }
 NUMERIC{
-	if ($this->debug) echo "numeric found\n";
-	$this->token=self::NUMERIC;
+	$this->printout("numeric");
+	$this->token=OWLParser::NUMERIC;
+}
+ALPHANUMERIC NEKUDOTAYIM ALPHANUMERIC{
+	$this->printout("alphanumeric:alphanumeric");
+	$this->token=OWLParser::ALPHANUMERIC;
 }
 ALPHANUMERIC{
-	if ($this->debug) echo "alphanumeric found\n";
-	$this->token=self::ALPHANUMERIC;
+	$this->printout("alphanumeric");
+	$this->token=OWLParser::ALPHANUMERIC;
 }
 */
 }
