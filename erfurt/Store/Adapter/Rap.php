@@ -22,8 +22,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @access	public
 	 */
 	public function __construct($dbDriver, $host, $dbName, $user, $password, $SysOntURI = false, $tablePrefix = '') {
-
-		DBStore::DBStore($dbDriver, $host, $dbName, $user, $password);
+		try {
+			@DBStore::DBStore($dbDriver, $host, $dbName, $user, $password);
+		} catch (Exception $e) {
+			throw new Erfurt_Exception($e->getMessage(), 2701);
+		}
 
 		// if 'tablePrefix' is set, attach SQL-rewrite function to store
 		if (!empty($tablePrefix)) {
