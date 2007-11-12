@@ -155,14 +155,70 @@ class EventHandler {
     
     function isAnounced($eventname,$nameOrPosition) {
     
+        if (is_numeric($nameOrPosition)) {
+            # look for special position on event stack
+            return array_search($nameOrPosition, $this->events[$eventname]);
+        }
+        elseif (is_string($nameOrPosition)) {
+            # look for method name in event stack
+            if (isset($this->events[$eventname][$nameOrPosition])) {
+                # found: return position
+                return $this->events[$eventname][$nameOrPosition];
+            }
+            else {
+                # not found: return false
+                return false;
+            }
+        }
+        else {
+            return false; # todo: exception
+        }
+    
     }
     
-    function _prepare() {
+    function _prepare($eventname) {
+    
+        $list = $this->events[$eventname];
+        asort($list,SORT_NUMERIC);
+        
+        return array_keys($list);
         
     }
     
     function _searchFree() {
     
+    }
+    
+    function _minPosition($value1, $value2) {
+        
+        if ($value1===false && is_numeric($value2)) {
+            return $value2;
+        }
+        elseif ($value2===false && is_numeric($value1)) {
+            return $value1;
+        }
+        elseif (is_numeric($value1) && is_numeric($value2)) {
+            return min($value1, $value2);
+        }
+        else {
+            return false;
+        }
+    }
+    
+    function _maxPosition($value1, $value2) {
+        
+        if ($value1===false && is_numeric($value2)) {
+            return $value2;
+        }
+        elseif ($value2===false && is_numeric($value1)) {
+            return $value1;
+        }
+        elseif (is_numeric($value1) && is_numeric($value2)) {
+            return max($value1, $value2);
+        }
+        else {
+            return false;
+        }
     }
 }
 
