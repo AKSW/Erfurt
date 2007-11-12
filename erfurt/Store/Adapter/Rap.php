@@ -344,6 +344,31 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			foreach ($this->sqlQuery($sqlQuery ) as $ID)
 				$modelIDs[] = $ID[0];
 		}
+		
+		// Load IDs of allowed import models
+		if ($useImports) {
+			
+			//Get imported models
+			foreach ($modelIDs as $ID) {
+				$sqlmodelIDs .= 'modelID = '.$ID . ' OR ';
+			}
+			$sqlQuery = 'SELECT object FROM statements WHERE ('.$sqlmodelIDs.'FALSE) AND predicate = \'http://www.w3.org/2002/07/owl#imports\'' ;
+			
+			// Get URIs of allowed models for user
+			foreach($this->sqlQuery($sqlQuery) as $m) {
+				//check on model based AC if it is allowed
+				$sqlModelUris = '';
+				if ($this ->modelExists($m[0]) && $this->aclCheck('view',$m[0]) )
+					$sqlModelUris .= 'modelURI=\''.$m[0].'\' OR ';
+			}
+			
+			//Now get the IDs
+			$sqlQuery = 'SELECT modelID FROM models WHERE '.$sqlModelUris.' FALSE ';
+			foreach ($this->sqlQuery($sqlQuery) as $ID) {
+				if (!in_array($ID[0],$modelIDs))
+					$modelIDs[] = $ID[0];
+			}
+		}
 
 		$engine = new SparqlEngineDb($this, $modelIDs );
 				
@@ -354,6 +379,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				$parser = new SparqlParser();
 				$query = $parser->parse($query);
 		}
+		
 		$result = $engine->queryModel($dataset,$query,$renderer);
 		
 		return $result;
