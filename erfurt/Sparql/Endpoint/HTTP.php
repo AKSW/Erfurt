@@ -2,7 +2,7 @@
 
 /*
  * <Example>
- 
+
 
 // Just loading the settings from GET/POST
 if (sizeof($_GET) != 0) {
@@ -47,6 +47,7 @@ try {
 	
 }
 
+
  * </Example>
  */
 
@@ -56,7 +57,6 @@ try {
  * basing up on Erfurt-API
  * 
  * @author Christoph Rieß
- * TODO SBAC (for Viewing statements) Support (done in executeSparql() method)
  *
  **/
 class Erfurt_Sparql_Endpoint_HTTP {
@@ -65,6 +65,11 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	 * Attribute for storing query string
 	 */
 	private $query;
+	
+	/**
+	 * Attribute to check if imports are wanted
+	 */
+	private $useImports;
 	
 	/**
 	 * Attribute is array for storing allowed Models
@@ -124,6 +129,8 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		// To surpress warnings
 		//error_reporting(E_ERROR);
 		
+		$this -> useImports = false;
+		
 		$this -> query = $query;
 		
 		//default renderer should by XML
@@ -179,6 +186,15 @@ class Erfurt_Sparql_Endpoint_HTTP {
 	}
 	
 	/**
+	 * Enable to auto-query on imported model too. 
+	 *
+	 * @param boolean $userImports
+	 */
+	public function setUseImports($useImports = false) {
+		$this->useImports = $useImports;
+	}
+	
+	/**
 	 * Setting renderer as string
 	 *
 	 * @param string $renderer
@@ -209,7 +225,7 @@ class Erfurt_Sparql_Endpoint_HTTP {
 		
 		try {
 			//header('Content-Type: text/'.strtolower($this->strRenderer));
-			$this -> queryresult = $this -> DBStore -> executeSparql($this->modelURIs,$this->query,null,$this->strRenderer);				
+			$this -> queryresult = $this -> DBStore -> executeSparql($this->modelURIs,$this->query,null,$this->strRenderer,$this->useImports);				
 		} catch (Exception $e) {	
 			header('HTTP/1.1 400 Bad Request');
 			throw new Erfurt_Exception('Sparql execution error: ' . $e->getMessage(),1601);	
