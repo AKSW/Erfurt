@@ -59,8 +59,8 @@ class Erfurt_Sparql_Endpoint_Default {
 	 */
 	public function Erfurt_Sparql_Endpoint_Default ($query = '') {
 		
-		require_once './../../erfurt.php';
-		
+		include dirname(__FILE__) . '/../../erfurt.php';
+
 		// use ontowiki settings if available
 		$session = new Zend_Session_Namespace('ERFURT');
 		
@@ -72,14 +72,14 @@ class Erfurt_Sparql_Endpoint_Default {
 		
 		//check if endpoint is enabled else throw exception
 		if (!$config->endpoint->http)
-			throw new Erfurt_Exception('QueryRequestRefused: Endpoint (HTTP) disabled in erfurt-config',1602);
+			throw new Erfurt_Exception('QueryRequestRefused: SPARQL Endpoint disabled in erfurt-config',1602);
 		
 		// To surpress warnings
 		//error_reporting(E_ERROR);
 		
 		$this -> useImports = false;
 		
-		$this -> query = $query;
+		$this -> query = stripslashes($query);
 		
 		//default renderer should by XML
 		$this -> strRenderer = 'XML';
@@ -161,7 +161,7 @@ class Erfurt_Sparql_Endpoint_Default {
 			throw new Erfurt_Exception('QueryRequestRefused: query is empty',1602);
 		}
 		
-		$this -> query = $query;
+		$this -> query = stripslashes($query);
 	}
 	
 	/**
