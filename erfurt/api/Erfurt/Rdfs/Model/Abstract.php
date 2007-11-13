@@ -1277,10 +1277,33 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	}
 	
 	/**
+	 * This method updates the model in two ways, it adds statements that are in the modified model and not in
+	 * original model and it removes statements that are in the original model and not in the modified model.
+	 *
+	 * @param MemModel $originalModel The model, which represents the state before any changes were made.
+	 * @param MemModel $modifiedModel The model, which represents the state after any changes were made.
+	 * @throws Erfurt_Exception Throws an exception in case something went wrong while updating the model.
+	 */
+	public function update(MemModel $originalModel, MemModel $modifiedModel) {
+// TODO handle conflicts, e.g. statement to be added exists already or statement to be removed does not exists 
+// ask seebi
+		$this->logStart('model update');
+		$this->addStatementArray($modifiedModel->subtract($originalModel)->triples, false, false);
+		$this->removeStatementArray($originalModel->subtract($modifiedModel)->triples, false, false);
+		$success = $this->logEnd();
+		
+		if (success == false) {
+// TODO exception code
+			throw new Erfurt_Exception('error while updating the model');
+		}
+	}
+	
+	/**
 	 * This method makes a diff with the two given (json) models and updates this model
 	 *
 	 * @param string $origModelJson the (json) model before modification
 	 * @param string $modifiedModelJson the (json) modek after modification
+	 * @deprecated will be removed soon, when code is outsourced... YES, I GOT RAP SVN ACCESS ;-)
 	 */
 	public function updateFromJsonModels($origModelJson, $modifiedModelJson) {
 		
