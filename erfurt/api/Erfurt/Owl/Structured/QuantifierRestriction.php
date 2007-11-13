@@ -1,4 +1,8 @@
 <?php
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_QuantifierRestriction extends Erfurt_Owl_Structured_Restriction {
 	
 	public function __construct ( $uri , $onProperty , $fillerClass ) {

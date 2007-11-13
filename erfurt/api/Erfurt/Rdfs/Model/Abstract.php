@@ -3,8 +3,8 @@
 /**
  * DefaultRDFSModel
  *
- * @package rdfsapi
- * @author soa
+ * @package rdfs
+ * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2006
  * @version $Id$
  */

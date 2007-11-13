@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_IntersectionClass extends Erfurt_Owl_Structured_AnonymousClass {
 
 	public function toManchesterSyntaxString () {

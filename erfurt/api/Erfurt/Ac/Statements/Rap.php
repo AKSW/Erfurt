@@ -6,6 +6,7 @@ require_once RDFAPI_INCLUDE_DIR . '/model/ModelFactory.php';
 /**
   * class providing OntoWiki statement based ac for rap
   *
+  * @package ac
   * @author Stefan Berger <berger@intersolut.de>
   * @version $Id$
   */
@@ -450,7 +451,7 @@ class Erfurt_Ac_Statements_Rap extends Erfurt_Ac_Statements_Abstract
 		return array('targetUri' => $usingTargetUri, 'from'	=> $from, 'where' => $where, 'add' => $addMore);
 	}
 	
-	/*
+	/**
 	 * perform insert query
 	 *
 	 * @param string $sql

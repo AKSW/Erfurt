@@ -1,0 +1,1906 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Rdfs_Class_Abstract</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Erfurt_Rdfs_Class_Abstract</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|											<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Class that represents an RDFS ontology node characterising a class description.</p>
+<p class="description"><p>Class that represents an RDFS ontology node characterising a class description.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Sören Auer &lt;<a href="mailto:soeren@auer.cx">soeren@auer.cx</a>&gt;, Philipp Frischmuth &lt;philipp@frischmuth24.de&gt;</li>
+				<li><span class="field">version:</span> $Id: Abstract.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004</li>
+				<li><span class="field">abstract:</span> </li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Rdfs---Class---Abstract.php.html">/Rdfs/Class/Abstract.php</a> (line <span class="field">10</span>)
+		</p>
+		
+				
+		<pre>Resource
+   |
+   --<a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html">Erfurt_Rdfs_Resource_Abstract</a>
+      |
+      --<a href="../rdfs/RDFSResource.html">RDFSResource</a>
+         |
+         --Erfurt_Rdfs_Class_Abstract</pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|												<a href="#sec-vars">Vars</a>
+								|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"></td>
+					<td>
+											RDFS Class for OpenLink Virtuoso Backend &lt;http://virtuoso.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																																																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addInstance" title="details" class="method-name">addInstance</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$instance</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#addProperty" title="details" class="method-name">addProperty</a>
+											(<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>
+										<a href="#addSubClass" title="details" class="method-name">addSubClass</a>
+											(<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>&nbsp;<span class="var-name">$subclass</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countInstancePropertyValues" title="details" class="method-name">countInstancePropertyValues</a>
+											(<span class="var-type">string/Resource</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$resourcesOnly</span> = <span class="var-default">true</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$minDistinctValues</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countInstances" title="details" class="method-name">countInstances</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countInstancesOfSubclasses" title="details" class="method-name">countInstancesOfSubclasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countInstancesRecursive" title="details" class="method-name">countInstancesRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countSubClasses" title="details" class="method-name">countSubClasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#countSubClassesRecursive" title="details" class="method-name">countSubClassesRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../rdfs/RDFSInstance.html">RDFSInstance</a></span>
+										<a href="#findInstance" title="details" class="method-name">findInstance</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Array</span>
+										<a href="#findInstances" title="details" class="method-name">findInstances</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#findInstancesRecursive" title="details" class="method-name">findInstancesRecursive</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getClassType" title="details" class="method-name">getClassType</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../rdfs/RDFSInstance.html">RDFSInstance</a></span>
+										<a href="#getInstance" title="details" class="method-name">getInstance</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$uri</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getSuperClass" title="details" class="method-name">getSuperClass</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getSuperClassPath" title="details" class="method-name">getSuperClassPath</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isEmpty" title="details" class="method-name">isEmpty</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$includeSubClasses</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#isHidden" title="details" class="method-name">isHidden</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#isImplicit" title="details" class="method-name">isImplicit</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isSubClassOf" title="details" class="method-name">isSubClassOf</a>
+											(<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>&nbsp;<span class="var-name">$class</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#isSuperClassRecursive" title="details" class="method-name">isSuperClassRecursive</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$class</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#isSystem" title="details" class="method-name">isSystem</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listDirectProperties" title="details" class="method-name">listDirectProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">RDFSClass[]/OWLClass[]</span>
+										<a href="#listDirectSubClasses" title="details" class="method-name">listDirectSubClasses</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$emptyClasses</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listInheritedAnnotationProperties" title="details" class="method-name">listInheritedAnnotationProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listInheritedProperties" title="details" class="method-name">listInheritedProperties</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$includeAnnotationProperties</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listInstanceLabelLanguages" title="details" class="method-name">listInstanceLabelLanguages</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listInstanceLabelLanguagesRecursive" title="details" class="method-name">listInstanceLabelLanguagesRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listInstanceLabels" title="details" class="method-name">listInstanceLabels</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$language</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Node[]</span>
+										<a href="#listInstancePropertyValues" title="details" class="method-name">listInstancePropertyValues</a>
+											(<span class="var-type">string/Resource</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$resourcesOnly</span> = <span class="var-default">true</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Array</span>
+										<a href="#listInstances" title="details" class="method-name">listInstances</a>
+											([<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Array</span>
+										<a href="#listInstancesRecursive" title="details" class="method-name">listInstancesRecursive</a>
+											([<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Array</span>
+										<a href="#listProperties" title="details" class="method-name">listProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Array</span>
+										<a href="#listPropertiesPlain" title="details" class="method-name">listPropertiesPlain</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listPropertiesUsed" title="details" class="method-name">listPropertiesUsed</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listPropertiesUsedRecursive" title="details" class="method-name">listPropertiesUsedRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listSubClasses" title="details" class="method-name">listSubClasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listSubClassesRecursive" title="details" class="method-name">listSubClassesRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listSuperClasses" title="details" class="method-name">listSuperClasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listSuperClassesRecursive" title="details" class="method-name">listSuperClassesRecursive</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removeInstance" title="details" class="method-name">removeInstance</a>
+											(<span class="var-type">String</span>&nbsp;<span class="var-name">$instance</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removeInstances" title="details" class="method-name">removeInstances</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#removeProperty" title="details" class="method-name">removeProperty</a>
+											(<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setProperties" title="details" class="method-name">setProperties</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSubClasses" title="details" class="method-name">setSubClasses</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$subclasses</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSuperClasses" title="details" class="method-name">setSuperClasses</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$superclasses</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_listInheritedProperties" title="details" class="method-name">_listInheritedProperties</a>
+											(<span class="var-type">$propertyURIs</span>&nbsp;<span class="var-name">$propertyURIs</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html">Erfurt_Rdfs_Resource_Abstract</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#var$model">Erfurt_Rdfs_Resource_Abstract::$model</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#var$properties">Erfurt_Rdfs_Resource_Abstract::$properties</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+															<a href="#sec-vars">Vars</a>
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodaddInstance" id="addInstance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addInstance</span> (line <span class="line-number">604</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create new instance</p>
+<p class="description"><p>Create new instance</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addInstance
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$instance</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$instance</span><span class="var-description">: Local name of instance to create.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddProperty" id="addProperty"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addProperty</span> (line <span class="line-number">400</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add this class to the domain of the property.</p>
+<p class="description"><p>Add this class to the domain of the property.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns false if property does not exist.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			addProperty
+		</span>
+					(<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddSubClass" id="addSubClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addSubClass</span> (line <span class="line-number">590</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add a sub-class of this class. object - the subclass will first be created.</p>
+<p class="description"><p>Add a sub-class of this class. If the subclass is a URI instead of a RDFSClass object - the subclass will first be created.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The class created.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>
+		<span class="method-name">
+			addSubClass
+		</span>
+					(<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>&nbsp;<span class="var-name">$subclass</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>
+				<span class="var-name">$subclass</span><span class="var-description">: A class that is a sub-class of this class.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcountInstancePropertyValues" id="countInstancePropertyValues"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">countInstancePropertyValues</span> (line <span class="line-number">363</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Counts all distinct values of $property assigned to instances of this class</p>
+<p class="description"><p>Counts all distinct values of $property assigned to instances of this class</p></p>
+	<ul class="tags">
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countInstancePropertyValues
+		</span>
+					(<span class="var-type">string/Resource</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$resourcesOnly</span> = <span class="var-default">true</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$minDistinctValues</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string/Resource</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$resourcesOnly</span><span class="var-description">: Indicated whether only resources should be returned.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$minDistinctValues</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodcountInstances" id="countInstances"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">countInstances</span> (line <span class="line-number">429</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the number of instances of this class.</p>
+<p class="description"><p>Returns the number of instances of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Number of instances for this class.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countInstances
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodcountInstancesOfSubclasses" id="countInstancesOfSubclasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">countInstancesOfSubclasses</span> (line <span class="line-number">439</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the number of instances of this class and its sub-classes.</p>
+<p class="description"><p>Returns the number of instances of this class and its sub-classes.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Number of instances for this class and its sub-classes.</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countInstancesOfSubclasses
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodcountInstancesRecursive" id="countInstancesRecursive"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">countInstancesRecursive</span> (line <span class="line-number">446</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Counts all direct instances and all instances of all subclasses.</p>
+<p class="description"><p>Counts all direct instances and all instances of all subclasses.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns the number of instances of this class and its subclasses.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countInstancesRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodcountSubClasses" id="countSubClasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">countSubClasses</span> (line <span class="line-number">74</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns number of all classes that are declared to be sub-classes of this class.</p>
+<p class="description"><p>Returns number of all classes that are declared to be sub-classes of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Number of all declared sub-classes of this class.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countSubClasses
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodcountSubClassesRecursive" id="countSubClassesRecursive"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">countSubClassesRecursive</span> (line <span class="line-number">84</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns number of all classes this class is super-class for.</p>
+<p class="description"><p>Returns number of all classes this class is super-class for.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Number of all sub-classes of this class.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			countSubClassesRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodfindInstance" id="findInstance"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">findInstance</span> (line <span class="line-number">561</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return one individual in the model that has this class among its types. with the specified property values will be returned.</p>
+<p class="description"><p>Return one individual in the model that has this class among its types. If an array of PropertyURI=&gt;Value is given, only individuals with the specified property values will be returned.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> object.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../rdfs/RDFSInstance.html">RDFSInstance</a></span>
+		<span class="method-name">
+			findInstance
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$properties</span><span class="var-description">: Array of PropertyURI=&gt;Value pairs.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$compare</span><span class="var-description">: Comparision method to be used - default is exact match.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfindInstances" id="findInstances"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">findInstances</span> (line <span class="line-number">537</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return an array of individuals in the model that have this class among their types. with the specified property values will be returned.</p>
+<p class="description"><p>Return an array of individuals in the model that have this class among their types. If an array of PropertyURI=&gt;Value is given, only individuals with the specified property values will be returned.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of RDFSInstance objects.</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			findInstances
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$properties</span><span class="var-description">: Array of PropertyURI=&gt;Value pairs.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$compare</span><span class="var-description">: Comparision method to be used - default is exact match.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$start</span><span class="var-description">: Return results starting with this row number.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$count</span><span class="var-description">: Maximum number of records to return.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$erg</span><span class="var-description">: Variable passed by reference which will be set to the overall number of records.</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodfindInstancesRecursive" id="findInstancesRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">findInstancesRecursive</span> (line <span class="line-number">549</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return an array of individuals in the model that have this class or its sub-classes among their types. with the specified property values will be returned.</p>
+<p class="description"><p>Return an array of individuals in the model that have this class or its sub-classes among their types. If an array of PropertyURI=&gt;value pairs is given, only individuals with the specified property values will be returned.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of RDFSInstance objects.</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			findInstancesRecursive
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span> = <span class="var-default">array()</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compare</span> = <span class="var-default">'exact'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$properties</span><span class="var-description">: Array of PropertyURI=&gt;Value pairs.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$compare</span><span class="var-description">: Comparision method to be used - default is exact match.</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$offset</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$limit</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$erg</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodgetClassType" id="getClassType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getClassType</span> (line <span class="line-number">51</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getClassType
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetInstance" id="getInstance"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getInstance</span> (line <span class="line-number">575</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return RDFSInstance object with specified URI.</p>
+<p class="description"><p>Return RDFSInstance object with specified URI. If no RDFSInstance is found, return false.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> or false.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../rdfs/RDFSInstance.html">RDFSInstance</a></span>
+		<span class="method-name">
+			getInstance
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$uri</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$uri</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetSuperClass" id="getSuperClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSuperClass</span> (line <span class="line-number">193</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getSuperClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSuperClassPath" id="getSuperClassPath"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSuperClassPath</span> (line <span class="line-number">198</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getSuperClassPath
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisEmpty" id="isEmpty"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isEmpty</span> (line <span class="line-number">117</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Function, which returns whether a class has instances or not (which means empty).</p>
+<p class="description"><p>Function, which returns whether a class has instances or not (which means empty).</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns true iff the class or as the case may be any of it's sub-classes has at least one instance, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isEmpty
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$includeSubClasses</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$includeSubClasses</span><span class="var-description">: Indicates whether just direct instances should be considered or all sub-classes of the class, too (recursion).</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisHidden" id="isHidden"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isHidden</span> (line <span class="line-number">12</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isHidden
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisImplicit" id="isImplicit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isImplicit</span> (line <span class="line-number">39</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isImplicit
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisSubClassOf" id="isSubClassOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isSubClassOf</span> (line <span class="line-number">163</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true if this class is a direct subclass of $class.</p>
+<p class="description"><p>Returns true if this class is a direct subclass of $class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isSubClassOf
+		</span>
+					(<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>&nbsp;<span class="var-name">$class</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../rdfs/RDFSClass.html">RDFSClass</a></span>
+				<span class="var-name">$class</span><span class="var-description">: The class which this class should be sub-class of.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisSuperClassRecursive" id="isSuperClassRecursive"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isSuperClassRecursive</span> (line <span class="line-number">206</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isSuperClassRecursive
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$class</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$class</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisSystem" id="isSystem"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isSystem</span> (line <span class="line-number">24</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			isSystem
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistDirectProperties" id="listDirectProperties"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDirectProperties</span> (line <span class="line-number">253</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of RDFSProperty objects directly attached to this class: i.</p>
+<p class="description"><p>Returns an array of RDFSProperty objects directly attached to this class: i.e. the properties that have this class as domain.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of RDFSProperty objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listDirectProperties
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistDirectSubClasses" id="listDirectSubClasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDirectSubClasses</span> (line <span class="line-number">107</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list with all direct sub-classes of this class.</p>
+<p class="description"><p>Returns a list with all direct sub-classes of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns an array of either RDFSClass objects or OWLClass objects.</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSClass[]/OWLClass[]</span>
+		<span class="method-name">
+			listDirectSubClasses
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$emptyClasses</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$emptyClasses</span><span class="var-description">: Indicated whether empty sub-classes should be returned or not.</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistInheritedAnnotationProperties" id="listInheritedAnnotationProperties"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInheritedAnnotationProperties</span> (line <span class="line-number">276</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listInheritedAnnotationProperties
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistInheritedProperties" id="listInheritedProperties"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInheritedProperties</span> (line <span class="line-number">268</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of RDFSProperty objects inherited from super-classes to this class: i. as domain.</p>
+<p class="description"><p>Returns an array of RDFSProperty objects inherited from super-classes to this class: i.e. the properties that have one of its super-classes as domain.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of RDFSProperty objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listInheritedProperties
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$includeAnnotationProperties</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$includeAnnotationProperties</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistInstanceLabelLanguages" id="listInstanceLabelLanguages"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstanceLabelLanguages</span> (line <span class="line-number">469</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of all distinct label languages for instances of this class.</p>
+<p class="description"><p>Returns an array of all distinct label languages for instances of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> All distinct label languages for instances of this class.</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listInstanceLabelLanguages
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistInstanceLabelLanguagesRecursive" id="listInstanceLabelLanguagesRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstanceLabelLanguagesRecursive</span> (line <span class="line-number">471</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listInstanceLabelLanguagesRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistInstanceLabels" id="listInstanceLabels"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstanceLabels</span> (line <span class="line-number">485</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This method returns the labels for a given language.</p>
+<p class="description"><p>This method returns the labels for a given language.</p></p>
+	<ul class="tags">
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listInstanceLabels
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$language</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$language</span><span class="var-description">: The language code, e.g.: 'de', or 'en'.</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistInstancePropertyValues" id="listInstancePropertyValues"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstancePropertyValues</span> (line <span class="line-number">353</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Lists all distinct values of $property assigned to instances of this class.</p>
+<p class="description"><p>Lists all distinct values of $property assigned to instances of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Node[]</span>
+		<span class="method-name">
+			listInstancePropertyValues
+		</span>
+					(<span class="var-type">string/Resource</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$resourcesOnly</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string/Resource</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$resourcesOnly</span><span class="var-description">: Indicated whether only resources should be returned.</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistInstances" id="listInstances"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstances</span> (line <span class="line-number">497</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return an array of individuals in the model that have this class among their types.</p>
+<p class="description"><p>Return an array of individuals in the model that have this class among their types.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of RDFSInstance objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			listInstances
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$start</span><span class="var-description">: Return results starting with this row number.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$count</span><span class="var-description">: Maximum number of records to return.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$erg</span><span class="var-description">: Variable passed by reference which will be set to the overall number of records.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistInstancesRecursive" id="listInstancesRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInstancesRecursive</span> (line <span class="line-number">512</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return an array of individuals in the model that have this class or one of its sub-classes among their types.</p>
+<p class="description"><p>Return an array of individuals in the model that have this class or one of its sub-classes among their types.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of RDFSInstance objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			listInstancesRecursive
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$start</span><span class="var-description">: Return results starting with this row number.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$count</span><span class="var-description">: Maximum number of records to return.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$erg</span><span class="var-description">: Variable passed by reference which will be set to the overall number of records.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistProperties" id="listProperties"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listProperties</span> (line <span class="line-number">320</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of RDFSProperty objects inherited from super-classes or directly attached to this class: i. class, or optionally one of its super-classes, as domain.</p>
+<p class="description"><p>Returns an array of RDFSProperty objects inherited from super-classes or directly attached to this class: i.e. the properties that have this class, or optionally one of its super-classes, as domain.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of RDFSProperty objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			listProperties
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistPropertiesPlain" id="listPropertiesPlain"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listPropertiesPlain</span> (line <span class="line-number">372</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of local names of the RDFSProperty objects inherited from super-classes or directly attached to this class: i. that have this class, or optionally one of its super-classes, as domain.</p>
+<p class="description"><p>Returns an array of local names of the RDFSProperty objects inherited from super-classes or directly attached to this class: i.e. the properties that have this class, or optionally one of its super-classes, as domain.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of local names of RDFSProperty objects.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			listPropertiesPlain
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistPropertiesUsed" id="listPropertiesUsed"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listPropertiesUsed</span> (line <span class="line-number">330</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of property resource URIs which are set by instances of this class.</p>
+<p class="description"><p>Returns an array of property resource URIs which are set by instances of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of property resource URIs</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listPropertiesUsed
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistPropertiesUsedRecursive" id="listPropertiesUsedRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listPropertiesUsedRecursive</span> (line <span class="line-number">338</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listPropertiesUsedRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistSubClasses" id="listSubClasses"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSubClasses</span> (line <span class="line-number">95</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns all classes that are declared to be sub-classes of this class.</p>
+<p class="description"><p>Returns all classes that are declared to be sub-classes of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> All declared sub-classes of this class.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listSubClasses
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistSubClassesRecursive" id="listSubClassesRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSubClassesRecursive</span> (line <span class="line-number">173</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns all classes this class is super-class for.</p>
+<p class="description"><p>Returns all classes this class is super-class for.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of all super-classes.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listSubClassesRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistSuperClasses" id="listSuperClasses"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSuperClasses</span> (line <span class="line-number">188</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of all classes that are declared to be super-classes of this class.</p>
+<p class="description"><p>Returns an array of all classes that are declared to be super-classes of this class. Each element of the array will be an RDFSClass.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of all declared super-classes of this class.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listSuperClasses
+		</span>
+				()
+			</div>
+	
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+<a name="methodlistSuperClassesRecursive" id="listSuperClassesRecursive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSuperClassesRecursive</span> (line <span class="line-number">219</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of RDFSCLass objects which are a superclass of this class or one of its superclasses.</p>
+<p class="description"><p>Returns an array of RDFSCLass objects which are a superclass of this class or one of its superclasses.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of RDFSClasses.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listSuperClassesRecursive
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodremoveInstance" id="removeInstance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeInstance</span> (line <span class="line-number">622</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes a instance.</p>
+<p class="description"><p>Removes a instance. TODO: redundant?/broken?</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeInstance
+		</span>
+					(<span class="var-type">String</span>&nbsp;<span class="var-name">$instance</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">String</span>
+				<span class="var-name">$instance</span><span class="var-description">: Local name of instance to create.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveInstances" id="removeInstances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeInstances</span> (line <span class="line-number">634</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Deletes all instances of this class.</p>
+<p class="description"><p>Deletes all instances of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeInstances
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodremoveProperty" id="removeProperty"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeProperty</span> (line <span class="line-number">415</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Remove the property from this class.</p>
+<p class="description"><p>Remove the property from this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns false if property does not exist.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			removeProperty
+		</span>
+					(<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../rdfs/RDFSProperty.html">RDFSProperty</a></span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetProperties" id="setProperties"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setProperties</span> (line <span class="line-number">388</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add this class to the domain of the properties and remove it from all others.</p>
+<p class="description"><p>Add this class to the domain of the properties and remove it from all others. FIXME - seems to be broken</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setProperties
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$properties</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$properties</span><span class="var-description">: Array of RDFSProperties.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSubClasses" id="setSubClasses"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSubClasses</span> (line <span class="line-number">152</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the direct subclasses of this class.</p>
+<p class="description"><p>Sets the direct subclasses of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSubClasses
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$subclasses</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$subclasses</span><span class="var-description">: Array of RDFSClass objects, resource URIs or local names.</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSuperClasses" id="setSuperClasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSuperClasses</span> (line <span class="line-number">234</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the super classes of this class.</p>
+<p class="description"><p>Sets the super classes of this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSuperClasses
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$superclasses</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$superclasses</span><span class="var-description">: Array of RDFSClass objects, resource URIs or local names.</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_listInheritedProperties" id="_listInheritedProperties"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_listInheritedProperties</span> (line <span class="line-number">288</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">RDFSClass::_listInheritedProperties()</p>
+<p class="description"><p>RDFSClass::_listInheritedProperties()</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_listInheritedProperties
+		</span>
+					(<span class="var-type">$propertyURIs</span>&nbsp;<span class="var-name">$propertyURIs</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$propertyURIs</span>
+				<span class="var-name">$propertyURIs</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				
+							</li>
+				</ul>
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html">Erfurt_Rdfs_Resource_Abstract</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#method__construct">Erfurt_Rdfs_Resource_Abstract::__construct()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodaddLabel">Erfurt_Rdfs_Resource_Abstract::addLabel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methoddefiningModels">Erfurt_Rdfs_Resource_Abstract::definingModels()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodequals">Erfurt_Rdfs_Resource_Abstract::equals()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetClass">Erfurt_Rdfs_Resource_Abstract::getClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetComment">Erfurt_Rdfs_Resource_Abstract::getComment()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetDBId">Erfurt_Rdfs_Resource_Abstract::getDBId()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetDefiningModel">Erfurt_Rdfs_Resource_Abstract::getDefiningModel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetLabel">Erfurt_Rdfs_Resource_Abstract::getLabel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetLabelForLanguage">Erfurt_Rdfs_Resource_Abstract::getLabelForLanguage()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetLiteralPropertyValue">Erfurt_Rdfs_Resource_Abstract::getLiteralPropertyValue()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetLocalName">Erfurt_Rdfs_Resource_Abstract::getLocalName()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetLocalNameFast">Erfurt_Rdfs_Resource_Abstract::getLocalNameFast()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetModel">Erfurt_Rdfs_Resource_Abstract::getModel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetPropertyValue">Erfurt_Rdfs_Resource_Abstract::getPropertyValue()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodgetType">Erfurt_Rdfs_Resource_Abstract::getType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodhasPropertyValue">Erfurt_Rdfs_Resource_Abstract::hasPropertyValue()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodhasPropertyValueTransitive">Erfurt_Rdfs_Resource_Abstract::hasPropertyValueTransitive()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodisBlankNode">Erfurt_Rdfs_Resource_Abstract::isBlankNode()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodisClass">Erfurt_Rdfs_Resource_Abstract::isClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodisImported">Erfurt_Rdfs_Resource_Abstract::isImported()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodisOfType">Erfurt_Rdfs_Resource_Abstract::isOfType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistClasses">Erfurt_Rdfs_Resource_Abstract::listClasses()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistComments">Erfurt_Rdfs_Resource_Abstract::listComments()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistDifferentFrom">Erfurt_Rdfs_Resource_Abstract::listDifferentFrom()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistLabels">Erfurt_Rdfs_Resource_Abstract::listLabels()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistLabelsPlain">Erfurt_Rdfs_Resource_Abstract::listLabelsPlain()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistLists">Erfurt_Rdfs_Resource_Abstract::listLists()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistLiteralPropertyValues">Erfurt_Rdfs_Resource_Abstract::listLiteralPropertyValues()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistLiteralPropertyValuesPlain">Erfurt_Rdfs_Resource_Abstract::listLiteralPropertyValuesPlain()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistPropertyValues">Erfurt_Rdfs_Resource_Abstract::listPropertyValues()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistPropertyValuesObject">Erfurt_Rdfs_Resource_Abstract::listPropertyValuesObject()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistPropertyValuesRegEx">Erfurt_Rdfs_Resource_Abstract::listPropertyValuesRegEx()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistPropertyValuesSymmetric">Erfurt_Rdfs_Resource_Abstract::listPropertyValuesSymmetric()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistPropertyValuesTransitive">Erfurt_Rdfs_Resource_Abstract::listPropertyValuesTransitive()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodlistSameAs">Erfurt_Rdfs_Resource_Abstract::listSameAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodremove">Erfurt_Rdfs_Resource_Abstract::remove()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodremovePropertyValues">Erfurt_Rdfs_Resource_Abstract::removePropertyValues()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodremoveType">Erfurt_Rdfs_Resource_Abstract::removeType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodrename">Erfurt_Rdfs_Resource_Abstract::rename()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetClass">Erfurt_Rdfs_Resource_Abstract::setClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetComment">Erfurt_Rdfs_Resource_Abstract::setComment()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetDifferentFrom">Erfurt_Rdfs_Resource_Abstract::setDifferentFrom()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetLabel">Erfurt_Rdfs_Resource_Abstract::setLabel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetPropertyValue">Erfurt_Rdfs_Resource_Abstract::setPropertyValue()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetPropertyValues">Erfurt_Rdfs_Resource_Abstract::setPropertyValues()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetPropertyValuesObject">Erfurt_Rdfs_Resource_Abstract::setPropertyValuesObject()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetPropertyValuesSymmetric">Erfurt_Rdfs_Resource_Abstract::setPropertyValuesSymmetric()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetSameAs">Erfurt_Rdfs_Resource_Abstract::setSameAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodsetType">Erfurt_Rdfs_Resource_Abstract::setType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#methodtype">Erfurt_Rdfs_Resource_Abstract::type()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#method__get">Erfurt_Rdfs_Resource_Abstract::__get()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#method__isset">Erfurt_Rdfs_Resource_Abstract::__isset()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#method__set">Erfurt_Rdfs_Resource_Abstract::__set()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Resource_Abstract.html#method__toString">Erfurt_Rdfs_Resource_Abstract::__toString()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:19 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

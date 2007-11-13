@@ -4,7 +4,9 @@
 
 
 
-
+/**
+ * @package reasoning
+ */
 interface Erfurt_Reasoning_ReasoningTasks {
 
 

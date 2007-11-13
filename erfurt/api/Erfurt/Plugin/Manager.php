@@ -3,8 +3,8 @@
 /**
   * Erfurt plug-in manager
   *
-  * @package Plugin
-  * @subpackage Widget
+  * @package plugin
+  * @subpackage widget
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */

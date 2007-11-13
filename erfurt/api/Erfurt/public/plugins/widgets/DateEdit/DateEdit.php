@@ -3,6 +3,8 @@
 /**
   * Erfurt date widget
   *
+  * @package plugin
+  * @subpackage widget
   * @author Norman Heino
   * @version $Id$
   */

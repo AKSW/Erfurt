@@ -9,7 +9,9 @@
 */
 
 
-
+/**
+ * @package reasoning
+ */
 class Erfurt_Reasoning_DIG1_1_PowlToDIGConverter {
 
 	

@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Reasoning_ReasoningTasks</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Interface Erfurt_Reasoning_ReasoningTasks</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|													<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_Reasoning---ReasoningTasks.php.html">/Reasoning/ReasoningTasks.php</a> (line <span class="field">10</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../reasoning/Erfurt_Reasoning_Reasoner.html">Erfurt_Reasoning_Reasoner</a></td>
+					<td>
+											
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#allConceptNames" title="details" class="method-name">allConceptNames</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#allIndividuals" title="details" class="method-name">allIndividuals</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#allRoleNames" title="details" class="method-name">allRoleNames</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ancestors" title="details" class="method-name">ancestors</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#children" title="details" class="method-name">children</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#descendants" title="details" class="method-name">descendants</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#disjoint" title="details" class="method-name">disjoint</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept1</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept2</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#equivalents" title="details" class="method-name">equivalents</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#instance" title="details" class="method-name">instance</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#instances" title="details" class="method-name">instances</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#parents" title="details" class="method-name">parents</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#rancestors" title="details" class="method-name">rancestors</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#rchildren" title="details" class="method-name">rchildren</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#rdescendants" title="details" class="method-name">rdescendants</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#relatedIndividuals" title="details" class="method-name">relatedIndividuals</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#roleFillers" title="details" class="method-name">roleFillers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#rparents" title="details" class="method-name">rparents</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#satisfiable" title="details" class="method-name">satisfiable</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#subsumes" title="details" class="method-name">subsumes</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$concept1</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept2</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#toldvalues" title="details" class="method-name">toldvalues</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$atom</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#types" title="details" class="method-name">types</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodallConceptNames" id="allConceptNames"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">allConceptNames</span> (line <span class="line-number">14</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			allConceptNames
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodallIndividuals" id="allIndividuals"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">allIndividuals</span> (line <span class="line-number">16</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			allIndividuals
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodallRoleNames" id="allRoleNames"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">allRoleNames</span> (line <span class="line-number">15</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			allRoleNames
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodancestors" id="ancestors"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">ancestors</span> (line <span class="line-number">29</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			ancestors
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodchildren" id="children"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">children</span> (line <span class="line-number">28</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			children
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddescendants" id="descendants"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">descendants</span> (line <span class="line-number">30</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			descendants
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddisjoint" id="disjoint"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">disjoint</span> (line <span class="line-number">23</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			disjoint
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept1</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept2</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept1</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept2</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodequivalents" id="equivalents"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">equivalents</span> (line <span class="line-number">31</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			equivalents
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodinstance" id="instance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">instance</span> (line <span class="line-number">44</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			instance
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodinstances" id="instances"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">instances</span> (line <span class="line-number">42</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			instances
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparents" id="parents"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parents</span> (line <span class="line-number">27</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			parents
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrancestors" id="rancestors"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">rancestors</span> (line <span class="line-number">37</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rancestors
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrchildren" id="rchildren"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">rchildren</span> (line <span class="line-number">36</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rchildren
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrdescendants" id="rdescendants"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">rdescendants</span> (line <span class="line-number">38</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rdescendants
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrelatedIndividuals" id="relatedIndividuals"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">relatedIndividuals</span> (line <span class="line-number">46</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			relatedIndividuals
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodroleFillers" id="roleFillers"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">roleFillers</span> (line <span class="line-number">45</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			roleFillers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrparents" id="rparents"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">rparents</span> (line <span class="line-number">35</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			rparents
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsatisfiable" id="satisfiable"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">satisfiable</span> (line <span class="line-number">21</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			satisfiable
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsubsumes" id="subsumes"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">subsumes</span> (line <span class="line-number">22</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			subsumes
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$concept1</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$concept2</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept1</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$concept2</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtoldvalues" id="toldvalues"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">toldvalues</span> (line <span class="line-number">47</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			toldvalues
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$atom</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$atom</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtypes" id="types"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">types</span> (line <span class="line-number">43</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			types
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:27 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

@@ -1,6 +1,8 @@
 <?php
 /**
  * Erfurt application class
+ *
+ * @package app
  */
 class Erfurt_App_Default {
 	

@@ -5,7 +5,7 @@
  * basing up on Erfurt-API
  * 
  * @author Christoph Rieﬂ
- *
+ * @package sparql
  **/
 class Erfurt_Sparql_Endpoint_Default {
 	

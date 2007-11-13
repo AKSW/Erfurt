@@ -2,9 +2,9 @@
 /**
  * RDFSStore
  *
- * @package rdfs
+ * @package store
  * @author Atanas Alexandrov <sirakov@gmail.com> 
- **/
+ */
 class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
 
 	/**

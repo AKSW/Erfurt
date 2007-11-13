@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package ac
+ */
 interface Erfurt_Ac_Statements_Interface {
 	
 	public function checkAccessPossibility ();

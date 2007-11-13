@@ -2,6 +2,7 @@
 /**
   * abstract class providing OntoWiki statement based ac
   *
+  * @package ac
   * @author Stefan Berger <berger@intersolut.de>
   * @version $Id$
   */

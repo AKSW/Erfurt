@@ -86,7 +86,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 		return $this->hasPropertyValue('owl:intersectionOf');
 	}
 	
-	/* Returns an array containing all the classes that are
+	/** Returns an array containing all the classes that are
 	 * declared to be equivalent to this class.
 	 * @return array 
 	 */
@@ -147,8 +147,8 @@ class Erfurt_Owl_Class extends RDFSClass {
 	}
 	
 	/** //TODO
-	 * @param
-	 * @return
+	 * @param $values
+	 * @return void
 	 */
 	public function setEquivalentClasses($values) {
 		
@@ -156,7 +156,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	}
 	
 	/** //TODO
-	 * @param
+	 * @param $values
 	 */
 	public function setDisjointWith($values) {
 		
@@ -164,7 +164,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	}
 	
 	/** //TODO
-	 * @param
+	 * @param $values
 	 */
 	public function setIntersectionOf($values) {
 		
@@ -173,7 +173,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	}
 	
 	/** //TODO
-	 * @param
+	 * @param $values
 	 */
 	public function setUnionOf($values) {
 		
@@ -184,7 +184,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	}
 	
 	/** //TODO
-	 * @param
+	 * @param $values
 	 */
 	public function setComplementOf($values) {
 		
@@ -432,7 +432,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 *
 	 * @param $property
 	 * @param $minmax
-	 * @return
+	 * @return int
 	 */
 	private function _getCardinalityInherited($property,$minmax) {
 		
@@ -449,7 +449,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 * @param Erfurt_Rdfs_Property $property
 	 * @param string $minmax
 	 * @param int $cardinality
-	 * @return
+	 * @return void
 	 */
 	private function _setCardinality($property,$minmax,$cardinality) {
 		
@@ -490,7 +490,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 *
 	 * @param $property
 	 * @param string $type
-	 * @return
+	 * @return array
 	 */
 	public function _getRestrictionStatement($property,$types=array('allValuesFrom','someValuesFrom','hasValue')) {
 		

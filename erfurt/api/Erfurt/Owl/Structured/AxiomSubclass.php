@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_AxiomSubclass extends Erfurt_Owl_Structured_Axiom {
 
 

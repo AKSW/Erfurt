@@ -3,6 +3,8 @@
 /**
   * Erfurt resource edit widget
   *
+  * @package plugin
+  * @subpackage widget
   * @author Norman Heino <norman@feedface.de>
   * @version $Id$
   */

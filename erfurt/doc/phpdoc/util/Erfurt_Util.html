@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Util</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Erfurt_Util</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">class providing some util methods</p>
+<p class="description"><p>class providing some util methods</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Norman Heino &lt;<a href="mailto:norman@feedface.de">norman@feedface.de</a>&gt;</li>
+				<li><span class="field">author:</span> Stefan Berger &lt;<a href="mailto:berger@intersolut.de">berger@intersolut.de</a>&gt;</li>
+				<li><span class="field">version:</span> $Id: Util.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> AKSW Team</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Util.php.html">/Util.php</a> (line <span class="field">12</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+												<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#getListHeaderHtml" title="details" class="method-name">getListHeaderHtml</a>
+											(<span class="var-type">$start</span>&nbsp;<span class="var-name">$start</span>, <span class="var-type">$erg</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">$end</span>&nbsp;<span class="var-name">$end</span>)
+									</div>
+																<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#isUri" title="details" class="method-name">isUri</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$uriString</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$allowNameSpaced</span> = <span class="var-default">true</span>])
+									</div>
+																<div class="method-definition">
+					static 						<span class="method-result">array</span>
+										<a href="#mergeIniFiles" title="details" class="method-name">mergeIniFiles</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$iniFiles</span> = <span class="var-default">array()</span>])
+									</div>
+																<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#replaceUrlParam" title="details" class="method-name">replaceUrlParam</a>
+											(<span class="var-type">$param</span>&nbsp;<span class="var-name">$param_replace</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$value_replace</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$other_params</span> = <span class="var-default">array()</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+								
+																																				</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodgetListHeaderHtml" id="getListHeaderHtml"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method getListHeaderHtml</span> (line <span class="line-number">89</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns HTML code containing links that support paging.</p>
+<p class="description"><p>Returns HTML code containing links that support paging.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getListHeaderHtml
+		</span>
+					(<span class="var-type">$start</span>&nbsp;<span class="var-name">$start</span>, <span class="var-type">$erg</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">$end</span>&nbsp;<span class="var-name">$end</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$start</span>
+				<span class="var-name">$start</span><span class="var-description">: int the first item.</span>			</li>
+					<li>
+				<span class="var-type">$erg</span>
+				<span class="var-name">$count</span><span class="var-description">: int The number of items on one page.</span>			</li>
+					<li>
+				<span class="var-type">$end</span>
+				<span class="var-name">$end</span><span class="var-description">: int the last item.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisUri" id="isUri"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method isUri</span> (line <span class="line-number">99</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks whether the given string is a resource URI (either namespaced or complete).</p>
+<p class="description"><p>Checks whether the given string is a resource URI (either namespaced or complete).</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">string</span>
+		<span class="method-name">
+			isUri
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$uriString</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$allowNameSpaced</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$uriString</span><span class="var-description">: the URI to be checked</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$allowNameSpaced</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmergeIniFiles" id="mergeIniFiles"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method mergeIniFiles</span> (line <span class="line-number">20</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Merge two-three ini-files and returns array</p>
+<p class="description"><p>Merge two-three ini-files and returns array</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> ini-content</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">array</span>
+		<span class="method-name">
+			mergeIniFiles
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$iniFiles</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$iniFiles</span><span class="var-description">: ini files</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodreplaceUrlParam" id="replaceUrlParam"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method replaceUrlParam</span> (line <span class="line-number">40</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Replaces the value for $param in the current URL (<div class="src-code"><ol><li><div class="src-line"><span class="src-var">$_SERVER</span><span class="src-sym">[</span><span class="src-str">'QUERY_STRING'</span><span class="src-sym">]</span></div></li>
+</ol></div>) by $value.</p>
+<p class="description"><p>Replaces the value for $param in the current URL (<div class="src-code"><ol><li><div class="src-line"><span class="src-var">$_SERVER</span><span class="src-sym">[</span><span class="src-str">'QUERY_STRING'</span><span class="src-sym">]</span></div></li>
+</ol></div>) by $value.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">string</span>
+		<span class="method-name">
+			replaceUrlParam
+		</span>
+					(<span class="var-type">$param</span>&nbsp;<span class="var-name">$param_replace</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$value_replace</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$other_params</span> = <span class="var-default">array()</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: The new value of $param or false.</span>			</li>
+					<li>
+				<span class="var-type">$param</span>
+				<span class="var-name">$param_replace</span><span class="var-description">: mixed The param or an array of params whose value(s) should be replaced.</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value_replace</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$other_params</span>			</li>
+				</ul>
+		
+			
+	</div>
+
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:28 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

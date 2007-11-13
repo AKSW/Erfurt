@@ -1,4 +1,7 @@
 <?php
+/**
+ * @package auth
+ */
 class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface 
 { 
 	

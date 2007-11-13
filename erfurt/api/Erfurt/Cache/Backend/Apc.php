@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ * @package cache
+ * @author Philipp Frischmuth <philipp@frischmuth24.de>
+ */
 class Erfurt_Cache_Backend_Apc {
 
 	public function __construct() {

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class InstanceSearch</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class InstanceSearch</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">RDFSmodel</p>
+<p class="description"><p>RDFSmodel</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Sören Auer &lt;<a href="mailto:soeren@auer.cx">soeren@auer.cx</a>&gt;, Philipp Frischmuth &lt;philipp@frischmuth24.de&gt;</li>
+				<li><span class="field">version:</span> $Id: search.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Rdfs---rap---search.php.html">/Rdfs/rap/search.php</a> (line <span class="field">10</span>)
+		</p>
+		
+				
+		<pre><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html">Erfurt_Rdfs_InstanceSearch_Abstract</a>
+   |
+   --InstanceSearch</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listClasses" title="details" class="method-name">listClasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listProperties" title="details" class="method-name">listProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#search" title="details" class="method-name">search</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">10</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#searchInstance" title="details" class="method-name">searchInstance</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_generateSQL" title="details" class="method-name">_generateSQL</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$select</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html">Erfurt_Rdfs_InstanceSearch_Abstract</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#var$classes">Erfurt_Rdfs_InstanceSearch_Abstract::$classes</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#var$model">Erfurt_Rdfs_InstanceSearch_Abstract::$model</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#var$properties">Erfurt_Rdfs_InstanceSearch_Abstract::$properties</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#var$searchString">Erfurt_Rdfs_InstanceSearch_Abstract::$searchString</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#var$store">Erfurt_Rdfs_InstanceSearch_Abstract::$store</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodlistClasses" id="listClasses"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listClasses</span> (line <span class="line-number">23</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">see:</span> DefaultInstanceSearch</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listClasses
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodlistClasses">Erfurt_Rdfs_InstanceSearch_Abstract::listClasses()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodlistProperties" id="listProperties"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listProperties</span> (line <span class="line-number">32</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">see:</span> DefaultInstanceSearch</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listProperties
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodlistProperties">Erfurt_Rdfs_InstanceSearch_Abstract::listProperties()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodsearch" id="search"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">search</span> (line <span class="line-number">41</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">see:</span> DefaultInstanceSearch</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			search
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">0</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$count</span> = <span class="var-default">10</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$start</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$count</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$erg</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodsearch">Erfurt_Rdfs_InstanceSearch_Abstract::search()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodsearchInstance" id="searchInstance"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">searchInstance</span> (line <span class="line-number">52</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">see:</span> DefaultInstanceSearch</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			searchInstance
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$instance</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$instance</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodsearchInstance">Erfurt_Rdfs_InstanceSearch_Abstract::searchInstance()</a></dt>
+					</dl>
+			
+	</div>
+<a name="method_generateSQL" id="_generateSQL"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_generateSQL</span> (line <span class="line-number">70</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_generateSQL
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$select</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$select</span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html">Erfurt_Rdfs_InstanceSearch_Abstract</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#method__construct">Erfurt_Rdfs_InstanceSearch_Abstract::__construct()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodlistClasses">Erfurt_Rdfs_InstanceSearch_Abstract::listClasses()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodlistProperties">Erfurt_Rdfs_InstanceSearch_Abstract::listProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodsearch">Erfurt_Rdfs_InstanceSearch_Abstract::search()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_InstanceSearch_Abstract.html#methodsearchInstance">Erfurt_Rdfs_InstanceSearch_Abstract::searchInstance()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:27 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

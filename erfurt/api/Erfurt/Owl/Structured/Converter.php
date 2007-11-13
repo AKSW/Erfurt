@@ -1,13 +1,16 @@
 <?php
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_Converter
 
 {	private $debug_flag = false;
 
 	/**
-	new methods:
-	
-		@returns Erfurt_OWL_Structured_StructuredClass
+	 * new methods:
+	 *
+	 *	@returns Erfurt_OWL_Structured_StructuredClass
 	**/
 	public function convertErfurtClass($ErfurtOWLClass){
 	

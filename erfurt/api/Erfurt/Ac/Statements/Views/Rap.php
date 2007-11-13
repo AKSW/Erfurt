@@ -2,6 +2,7 @@
 /**
   * class providing OntoWiki custom view management.
   *
+  * @package ac
   * @author Stefan Berger <berger@intersolut.de>
   * @version $Id$
   */

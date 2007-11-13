@@ -21,6 +21,7 @@
     <owl:imports>
       <owl:Ontology rdf:about="&SysOnt;"/>
     </owl:imports>
+	<owl:versionInfo>$Id:$</owl:versionInfo>
   </owl:Ontology>
 
 <!-- Instances -->

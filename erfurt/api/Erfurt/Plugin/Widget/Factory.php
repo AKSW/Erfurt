@@ -3,8 +3,8 @@
 /**
   * Erfurt widget factory
   *
-  * @package Plugin
-  * @subpackage Widget
+  * @package plugin
+  * @subpackage widget
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */

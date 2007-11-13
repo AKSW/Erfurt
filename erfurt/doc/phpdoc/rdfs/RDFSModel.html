@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class RDFSModel</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class RDFSModel</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">RDFSmodel</p>
+<p class="description"><p>RDFSmodel</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Atanas Alexandrov &lt;<a href="mailto:sirakov@gmail.com">sirakov@gmail.com</a>&gt;</li>
+				<li><span class="field">version:</span> $Id: Abstract.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2007</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Rdfs---oracle---model.php.html">/Rdfs/oracle/model.php</a> (line <span class="field">10</span>)
+		</p>
+		
+				
+		<pre>DbModel
+   |
+   --<a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html">Erfurt_Rdfs_Model_Abstract</a>
+      |
+      --RDFSModel</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">RDFSModel</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$store</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$type</span> = <span class="var-default">NULL</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#add" title="details" class="method-name">add</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$subj</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pred</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$obj</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">RDFSResource[]</span>
+										<a href="#findObjectsForPredicateAs" title="details" class="method-name">findObjectsForPredicateAs</a>
+											(<span class="var-type">string/RDFSResource</span>&nbsp;<span class="var-name">$predicate</span>, [<span class="var-type">string/null</span>&nbsp;<span class="var-name">$class</span> = <span class="var-default">'resource'</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">RDFSResource[]</span>
+										<a href="#findPredicates" title="details" class="method-name">findPredicates</a>
+											([<span class="var-type">RDFSResource/string/null</span>&nbsp;<span class="var-name">$subject</span> = <span class="var-default">null</span>], [<span class="var-type">RDFSResource/Literal/string/null</span>&nbsp;<span class="var-name">$object</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">RDFSResource[]</span>
+										<a href="#findSubjectsForPredicateAs" title="details" class="method-name">findSubjectsForPredicateAs</a>
+											(<span class="var-type">string/RDFSResource</span>&nbsp;<span class="var-name">$predicate</span>, [<span class="var-type">string/null</span>&nbsp;<span class="var-name">$class</span> = <span class="var-default">'resource'</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#insertNamespace" title="details" class="method-name">insertNamespace</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$namespace</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string[]</span>
+										<a href="#listDatatypes" title="details" class="method-name">listDatatypes</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string[]</span>
+										<a href="#listLanguages" title="details" class="method-name">listLanguages</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string[]</span>
+										<a href="#listNamespaces" title="details" class="method-name">listNamespaces</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#remove" title="details" class="method-name">remove</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$subj</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pred</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$obj</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removeDuplicateStatements" title="details" class="method-name">removeDuplicateStatements</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#renameNamespace" title="details" class="method-name">renameNamespace</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$fromNS</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$toNS</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html">Erfurt_Rdfs_Model_Abstract</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$asResource">Erfurt_Rdfs_Model_Abstract::$asResource</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$importsIds">Erfurt_Rdfs_Model_Abstract::$importsIds</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$importsSQL">Erfurt_Rdfs_Model_Abstract::$importsSQL</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$instance">Erfurt_Rdfs_Model_Abstract::$instance</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$logActions">Erfurt_Rdfs_Model_Abstract::$logActions</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$resource">Erfurt_Rdfs_Model_Abstract::$resource</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#var$vocabulary">Erfurt_Rdfs_Model_Abstract::$vocabulary</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">12</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSModel</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$store</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$type</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$store</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$modelname</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$type</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#method__construct">Erfurt_Rdfs_Model_Abstract::__construct()</a></dt>
+						<dd>Class constructor.</dd>
+					</dl>
+			
+	</div>
+<a name="methodadd" id="add"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">add</span> (line <span class="line-number">29</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add triple to model</p>
+<p class="description"><p>Add triple to model</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			add
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$subj</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pred</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$obj</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$subj</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pred</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$obj</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodadd">Erfurt_Rdfs_Model_Abstract::add()</a></dt>
+						<dd>Adds a statement to the model.</dd>
+					</dl>
+			
+	</div>
+<a name="methodfindObjectsForPredicateAs" id="findObjectsForPredicateAs"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">findObjectsForPredicateAs</span> (line <span class="line-number">265</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">!!! INCOMPLETE !!!
+ This method returns a list of matching objects for a given predicate.</p>
+<p class="description"><p>!!! INCOMPLETE !!!
+ This method returns a list of matching objects for a given predicate.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter is given).</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSResource[]</span>
+		<span class="method-name">
+			findObjectsForPredicateAs
+		</span>
+					(<span class="var-type">string/RDFSResource</span>&nbsp;<span class="var-name">$predicate</span>, [<span class="var-type">string/null</span>&nbsp;<span class="var-name">$class</span> = <span class="var-default">'resource'</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string/RDFSResource</span>
+				<span class="var-name">$predicate</span>			</li>
+					<li>
+				<span class="var-type">string/null</span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$offset</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$limit</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$erg</span><span class="var-description">: Variable passed by reference which will be set to the overall number of records.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindObjectsForPredicateAs">Erfurt_Rdfs_Model_Abstract::findObjectsForPredicateAs()</a></dt>
+						<dd>This method returns a list of matching objects for a given predicate.</dd>
+					</dl>
+			
+	</div>
+<a name="methodfindPredicates" id="findPredicates"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">findPredicates</span> (line <span class="line-number">199</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list containing resources that act as a predicate in at least one statement belonging to this model.</p>
+<p class="description"><p>Returns a list containing resources that act as a predicate in at least one statement belonging to this model. The result is restricted by the optional parameters $subject and/or $object. In case none of them is given, all resources that act as predicate in the model are returned. The result is a unique list.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSResource[]</span>
+		<span class="method-name">
+			findPredicates
+		</span>
+					([<span class="var-type">RDFSResource/string/null</span>&nbsp;<span class="var-name">$subject</span> = <span class="var-default">null</span>], [<span class="var-type">RDFSResource/Literal/string/null</span>&nbsp;<span class="var-name">$object</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">RDFSResource/string/null</span>
+				<span class="var-name">$subject</span>			</li>
+					<li>
+				<span class="var-type">RDFSResource/Literal/string/null</span>
+				<span class="var-name">$object</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindPredicates">Erfurt_Rdfs_Model_Abstract::findPredicates()</a></dt>
+						<dd>Returns a list containing resources that act as a predicate in at least one statement belonging to this model.</dd>
+					</dl>
+			
+	</div>
+<a name="methodfindSubjectsForPredicateAs" id="findSubjectsForPredicateAs"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">findSubjectsForPredicateAs</span> (line <span class="line-number">246</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">!!! INCOMPLETE !!!
+ This method returns a list of matching subjects for a given predicate.</p>
+<p class="description"><p>!!! INCOMPLETE !!!
+ This method returns a list of matching subjects for a given predicate.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter is given).</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSResource[]</span>
+		<span class="method-name">
+			findSubjectsForPredicateAs
+		</span>
+					(<span class="var-type">string/RDFSResource</span>&nbsp;<span class="var-name">$predicate</span>, [<span class="var-type">string/null</span>&nbsp;<span class="var-name">$class</span> = <span class="var-default">'resource'</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">0</span>], [<span class="var-type">int/null</span>&nbsp;<span class="var-name">$erg</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string/RDFSResource</span>
+				<span class="var-name">$predicate</span>			</li>
+					<li>
+				<span class="var-type">string/null</span>
+				<span class="var-name">$class</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$offset</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$limit</span>			</li>
+					<li>
+				<span class="var-type">int/null</span>
+				<span class="var-name">$erg</span><span class="var-description">: Variable passed by reference which will be set to the overall number of records.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindSubjectsForPredicateAs">Erfurt_Rdfs_Model_Abstract::findSubjectsForPredicateAs()</a></dt>
+						<dd>This method returns a list of matching subjects for a given predicate.</dd>
+					</dl>
+			
+	</div>
+<a name="methodinsertNamespace" id="insertNamespace"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">insertNamespace</span> (line <span class="line-number">100</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Insert new namespace into MSYS.</p>
+<p class="description"><p>Insert new namespace into MSYS.RDF_NAMESPACE Table$</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			insertNamespace
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$namespace</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$namespace</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistDatatypes" id="listDatatypes"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDatatypes</span> (line <span class="line-number">157</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of all XML datatypes (unique) used in the model.</p>
+<p class="description"><p>Returns an array of all XML datatypes (unique) used in the model.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of XML datatypes.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			listDatatypes
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistDatatypes">Erfurt_Rdfs_Model_Abstract::listDatatypes()</a></dt>
+						<dd>Returns an array of all XML datatypes (unique) used in the model.</dd>
+					</dl>
+			
+	</div>
+<a name="methodlistLanguages" id="listLanguages"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listLanguages</span> (line <span class="line-number">176</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of all languages (unique) used in conjunction with literals in the model.</p>
+<p class="description"><p>Returns an array of all languages (unique) used in conjunction with literals in the model.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of language strings.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			listLanguages
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistLanguages">Erfurt_Rdfs_Model_Abstract::listLanguages()</a></dt>
+						<dd>Returns an array of all languages (unique) used in conjunction with literals in the model.</dd>
+					</dl>
+			
+	</div>
+<a name="methodlistNamespaces" id="listNamespaces"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listNamespaces</span> (line <span class="line-number">123</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of all XML namespaces (unique) used in the model (not the namespaces from the namespace table; just namespaces that are used in statements).</p>
+<p class="description"><p>Returns an array of all XML namespaces (unique) used in the model (not the namespaces from the namespace table; just namespaces that are used in statements).</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of XML namespaces.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string[]</span>
+		<span class="method-name">
+			listNamespaces
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistNamespaces">Erfurt_Rdfs_Model_Abstract::listNamespaces()</a></dt>
+						<dd>Returns an array of all XML namespaces (unique) used in the model (not the namespaces from the namespace table; just namespaces that are used in statements).</dd>
+					</dl>
+			
+	</div>
+<a name="methodremove" id="remove"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">remove</span> (line <span class="line-number">69</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Remove triple from model</p>
+<p class="description"><p>Remove triple from model</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			remove
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$subj</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pred</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$obj</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$subj</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pred</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$obj</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremove">Erfurt_Rdfs_Model_Abstract::remove()</a></dt>
+						<dd>Removes a statement from the model</dd>
+					</dl>
+			
+	</div>
+<a name="methodremoveDuplicateStatements" id="removeDuplicateStatements"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeDuplicateStatements</span> (line <span class="line-number">215</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes all statements in this model, that are duplicated.</p>
+<p class="description"><p>Removes all statements in this model, that are duplicated.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeDuplicateStatements
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveDuplicateStatements">Erfurt_Rdfs_Model_Abstract::removeDuplicateStatements()</a></dt>
+						<dd>Removes all statements in this model, that are duplicated.</dd>
+					</dl>
+			
+	</div>
+<a name="methodrenameNamespace" id="renameNamespace"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">renameNamespace</span> (line <span class="line-number">278</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Renames the namespace of every matching statement (has $fromNS as namespace) in this model with the new namespace ($toNs).</p>
+<p class="description"><p>Renames the namespace of every matching statement (has $fromNS as namespace) in this model with the new namespace ($toNs). This method only operated on the triples of the model.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			renameNamespace
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$fromNS</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$toNS</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fromNS</span><span class="var-description">: The old namespace.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$toNS</span><span class="var-description">: The new namespace.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodrenameNamespace">Erfurt_Rdfs_Model_Abstract::renameNamespace()</a></dt>
+						<dd>Renames the namespace of every matching statement (has $fromNS as namespace) in this model with the new namespace ($toNs).</dd>
+					</dl>
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html">Erfurt_Rdfs_Model_Abstract</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#method__construct">Erfurt_Rdfs_Model_Abstract::__construct()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodadd">Erfurt_Rdfs_Model_Abstract::add()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddAnonymousClass">Erfurt_Rdfs_Model_Abstract::addAnonymousClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddClass">Erfurt_Rdfs_Model_Abstract::addClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddInstance">Erfurt_Rdfs_Model_Abstract::addInstance()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddList">Erfurt_Rdfs_Model_Abstract::addList()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddNamedClass">Erfurt_Rdfs_Model_Abstract::addNamedClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodaddProperty">Erfurt_Rdfs_Model_Abstract::addProperty()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodclassF">Erfurt_Rdfs_Model_Abstract::classF()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodcountClasses">Erfurt_Rdfs_Model_Abstract::countClasses()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodcountInstances">Erfurt_Rdfs_Model_Abstract::countInstances()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodcountProperties">Erfurt_Rdfs_Model_Abstract::countProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodcountTriples">Erfurt_Rdfs_Model_Abstract::countTriples()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfind">Erfurt_Rdfs_Model_Abstract::find()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindAsMemModel">Erfurt_Rdfs_Model_Abstract::findAsMemModel()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindAsStatementArray">Erfurt_Rdfs_Model_Abstract::findAsStatementArray()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindFirstAsStatement">Erfurt_Rdfs_Model_Abstract::findFirstAsStatement()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindFirstNodeAs">Erfurt_Rdfs_Model_Abstract::findFirstNodeAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindInstances">Erfurt_Rdfs_Model_Abstract::findInstances()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindNode">Erfurt_Rdfs_Model_Abstract::findNode()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindNodes">Erfurt_Rdfs_Model_Abstract::findNodes()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindNodesAs">Erfurt_Rdfs_Model_Abstract::findNodesAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindObjects">Erfurt_Rdfs_Model_Abstract::findObjects()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindObjectsForPredicateAs">Erfurt_Rdfs_Model_Abstract::findObjectsForPredicateAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindPredicates">Erfurt_Rdfs_Model_Abstract::findPredicates()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindStatement">Erfurt_Rdfs_Model_Abstract::findStatement()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindStatements">Erfurt_Rdfs_Model_Abstract::findStatements()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindSubjects">Erfurt_Rdfs_Model_Abstract::findSubjects()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodfindSubjectsForPredicateAs">Erfurt_Rdfs_Model_Abstract::findSubjectsForPredicateAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetAsResource">Erfurt_Rdfs_Model_Abstract::getAsResource()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetClass">Erfurt_Rdfs_Model_Abstract::getClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetInstance">Erfurt_Rdfs_Model_Abstract::getInstance()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetList">Erfurt_Rdfs_Model_Abstract::getList()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetListAs">Erfurt_Rdfs_Model_Abstract::getListAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetLiteralId">Erfurt_Rdfs_Model_Abstract::getLiteralId()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetModelIds">Erfurt_Rdfs_Model_Abstract::getModelIds()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetNodeId">Erfurt_Rdfs_Model_Abstract::getNodeId()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetOneOf">Erfurt_Rdfs_Model_Abstract::getOneOf()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetParsedNamespaces">Erfurt_Rdfs_Model_Abstract::getParsedNamespaces()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetProperty">Erfurt_Rdfs_Model_Abstract::getProperty()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetResource">Erfurt_Rdfs_Model_Abstract::getResource()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetStore">Erfurt_Rdfs_Model_Abstract::getStore()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodgetType">Erfurt_Rdfs_Model_Abstract::getType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodinstanceF">Erfurt_Rdfs_Model_Abstract::instanceF()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodisEditable">Erfurt_Rdfs_Model_Abstract::isEditable()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistAnnotationProperties">Erfurt_Rdfs_Model_Abstract::listAnnotationProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistClassAnnotationProperties">Erfurt_Rdfs_Model_Abstract::listClassAnnotationProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistClasses">Erfurt_Rdfs_Model_Abstract::listClasses()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistClassLabelLanguages">Erfurt_Rdfs_Model_Abstract::listClassLabelLanguages()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistDatatypes">Erfurt_Rdfs_Model_Abstract::listDatatypes()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistImports">Erfurt_Rdfs_Model_Abstract::listImports()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistInstances">Erfurt_Rdfs_Model_Abstract::listInstances()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistLanguages">Erfurt_Rdfs_Model_Abstract::listLanguages()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistLists">Erfurt_Rdfs_Model_Abstract::listLists()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistModelIds">Erfurt_Rdfs_Model_Abstract::listModelIds()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistNamespaces">Erfurt_Rdfs_Model_Abstract::listNamespaces()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistProperties">Erfurt_Rdfs_Model_Abstract::listProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistRDFTypeInstances">Erfurt_Rdfs_Model_Abstract::listRDFTypeInstances()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistRDFTypeInstancesAs">Erfurt_Rdfs_Model_Abstract::listRDFTypeInstancesAs()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistResources">Erfurt_Rdfs_Model_Abstract::listResources()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistResourcesObject">Erfurt_Rdfs_Model_Abstract::listResourcesObject()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistResourcesPredicate">Erfurt_Rdfs_Model_Abstract::listResourcesPredicate()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistResourcesSubject">Erfurt_Rdfs_Model_Abstract::listResourcesSubject()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistTopClasses">Erfurt_Rdfs_Model_Abstract::listTopClasses()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistTopProperties">Erfurt_Rdfs_Model_Abstract::listTopProperties()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlistTypes">Erfurt_Rdfs_Model_Abstract::listTypes()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodliteralF">Erfurt_Rdfs_Model_Abstract::literalF()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlogAdd">Erfurt_Rdfs_Model_Abstract::logAdd()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlogEnabled">Erfurt_Rdfs_Model_Abstract::logEnabled()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlogEnd">Erfurt_Rdfs_Model_Abstract::logEnd()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlogRemove">Erfurt_Rdfs_Model_Abstract::logRemove()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodlogStart">Erfurt_Rdfs_Model_Abstract::logStart()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodpropertyF">Erfurt_Rdfs_Model_Abstract::propertyF()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodrdqlQuery">Erfurt_Rdfs_Model_Abstract::rdqlQuery()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremove">Erfurt_Rdfs_Model_Abstract::remove()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveClass">Erfurt_Rdfs_Model_Abstract::removeClass()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveDuplicateStatements">Erfurt_Rdfs_Model_Abstract::removeDuplicateStatements()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveInstance">Erfurt_Rdfs_Model_Abstract::removeInstance()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveProperty">Erfurt_Rdfs_Model_Abstract::removeProperty()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodremoveResource">Erfurt_Rdfs_Model_Abstract::removeResource()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodrenameNamespace">Erfurt_Rdfs_Model_Abstract::renameNamespace()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodresourceF">Erfurt_Rdfs_Model_Abstract::resourceF()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodsearch">Erfurt_Rdfs_Model_Abstract::search()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodsearchFullText">Erfurt_Rdfs_Model_Abstract::searchFullText()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodsetEdititable">Erfurt_Rdfs_Model_Abstract::setEdititable()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodsetType">Erfurt_Rdfs_Model_Abstract::setType()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#methodupdateFromJsonModels">Erfurt_Rdfs_Model_Abstract::updateFromJsonModels()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#method_createStatement">Erfurt_Rdfs_Model_Abstract::_createStatement()</a></span><br>
+													<span class="method-name"><a href="../rdfs/Erfurt_Rdfs_Model_Abstract.html#method_listResourcesCol">Erfurt_Rdfs_Model_Abstract::_listResourcesCol()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:24 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

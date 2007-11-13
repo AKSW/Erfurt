@@ -1,0 +1,2408 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class OWLParser</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class OWLParser</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="_Syntax---Manchester---manchester.php.html">/Syntax/Manchester/manchester.php</a> (line <span class="field">103</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#ALPHANUMERIC" title="details" class="const-name">ALPHANUMERIC</a> = 					<span class="var-type"> 18</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#AND_OPERATOR" title="details" class="const-name">AND_OPERATOR</a> = 					<span class="var-type">  2</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#COMMA" title="details" class="const-name">COMMA</a> = 					<span class="var-type"> 19</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#EXACTLY_OPERATOR" title="details" class="const-name">EXACTLY_OPERATOR</a> = 					<span class="var-type">  6</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#HAS_OPERATOR" title="details" class="const-name">HAS_OPERATOR</a> = 					<span class="var-type">  7</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#LBRACE" title="details" class="const-name">LBRACE</a> = 					<span class="var-type"> 13</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#LPAREN" title="details" class="const-name">LPAREN</a> = 					<span class="var-type"> 11</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#LSQUAREBRACKET" title="details" class="const-name">LSQUAREBRACKET</a> = 					<span class="var-type"> 15</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#MAX_OPERATOR" title="details" class="const-name">MAX_OPERATOR</a> = 					<span class="var-type">  5</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#MIN_OPERATOR" title="details" class="const-name">MIN_OPERATOR</a> = 					<span class="var-type">  4</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#NOT_OPERATOR" title="details" class="const-name">NOT_OPERATOR</a> = 					<span class="var-type">  1</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#NUMERIC" title="details" class="const-name">NUMERIC</a> = 					<span class="var-type"> 17</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#ONLYSOME_OPERATOR" title="details" class="const-name">ONLYSOME_OPERATOR</a> = 					<span class="var-type">  8</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#ONLY_OPERATOR" title="details" class="const-name">ONLY_OPERATOR</a> = 					<span class="var-type">  9</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#OR_OPERATOR" title="details" class="const-name">OR_OPERATOR</a> = 					<span class="var-type">  3</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#RBRACE" title="details" class="const-name">RBRACE</a> = 					<span class="var-type"> 14</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#RPAREN" title="details" class="const-name">RPAREN</a> = 					<span class="var-type"> 12</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#RSQUAREBRACKET" title="details" class="const-name">RSQUAREBRACKET</a> = 					<span class="var-type"> 16</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#SOME_OPERATOR" title="details" class="const-name">SOME_OPERATOR</a> = 					<span class="var-type"> 10</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYERRORSYMBOL" title="details" class="const-name">YYERRORSYMBOL</a> = 					<span class="var-type"> 20</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYERRSYMDT" title="details" class="const-name">YYERRSYMDT</a> = 					<span class="var-type"> 'yy0'</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYFALLBACK" title="details" class="const-name">YYFALLBACK</a> = 					<span class="var-type"> 0</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYNOCODE" title="details" class="const-name">YYNOCODE</a> = 					<span class="var-type"> 28</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYNRULE" title="details" class="const-name">YYNRULE</a> = 					<span class="var-type"> 22</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYNSTATE" title="details" class="const-name">YYNSTATE</a> = 					<span class="var-type"> 44</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YYSTACKDEPTH" title="details" class="const-name">YYSTACKDEPTH</a> = 					<span class="var-type"> 100</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_ACCEPT_ACTION" title="details" class="const-name">YY_ACCEPT_ACTION</a> = 					<span class="var-type"> 67</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_ERROR_ACTION" title="details" class="const-name">YY_ERROR_ACTION</a> = 					<span class="var-type"> 66</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_NO_ACTION" title="details" class="const-name">YY_NO_ACTION</a> = 					<span class="var-type"> 68</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_REDUCE_MAX" title="details" class="const-name">YY_REDUCE_MAX</a> = 					<span class="var-type"> 13</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_REDUCE_USE_DFLT" title="details" class="const-name">YY_REDUCE_USE_DFLT</a> = 					<span class="var-type"> -9</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_SHIFT_MAX" title="details" class="const-name">YY_SHIFT_MAX</a> = 					<span class="var-type"> 26</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_SHIFT_USE_DFLT" title="details" class="const-name">YY_SHIFT_USE_DFLT</a> = 					<span class="var-type"> -8</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#YY_SZ_ACTTAB" title="details" class="const-name">YY_SZ_ACTTAB</a> = 					<span class="var-type"> 74</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																				<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yyExpectedTokens" title="details" class="var-name">$yyExpectedTokens</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yyFallback" title="details" class="var-name">$yyFallback</a>
+				</div>
+																								<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yyReduceMap" title="details" class="var-name">$yyReduceMap</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yyRuleInfo" title="details" class="var-name">$yyRuleInfo</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">array</span>
+					<a href="#$yyRuleName" title="details" class="var-name">$yyRuleName</a>
+				</div>
+																								<div class="var-title">
+					static <span class="var-type">array</span>
+					<a href="#$yyTokenName" title="details" class="var-name">$yyTokenName</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">resource|0</span>
+					<a href="#$yyTraceFILE" title="details" class="var-name">$yyTraceFILE</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">string|0</span>
+					<a href="#$yyTracePrompt" title="details" class="var-name">$yyTracePrompt</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yy_action" title="details" class="var-name">$yy_action</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yy_default" title="details" class="var-name">$yy_default</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yy_lookahead" title="details" class="var-name">$yy_lookahead</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yy_reduce_ofst" title="details" class="var-name">$yy_reduce_ofst</a>
+				</div>
+																<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$yy_shift_ofst" title="details" class="var-name">$yy_shift_ofst</a>
+				</div>
+																				<div class="var-title">
+					<span class="var-type">int</span>
+					<a href="#$yyerrcnt" title="details" class="var-name">$yyerrcnt</a>
+				</div>
+																																<div class="var-title">
+					<span class="var-type">int</span>
+					<a href="#$yyidx" title="details" class="var-name">$yyidx</a>
+				</div>
+																																								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$yystack" title="details" class="var-name">$yystack</a>
+				</div>
+																																																																											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																												<div class="method-definition">
+					static 						<span class="method-result">void</span>
+										<a href="#PrintTrace" title="details" class="method-name">PrintTrace</a>
+										()
+									</div>
+																								<div class="method-definition">
+					static 						<span class="method-result">void</span>
+										<a href="#Trace" title="details" class="method-name">Trace</a>
+											(<span class="var-type">resource</span>&nbsp;<span class="var-name">$TraceFILE</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$zTracePrompt</span>)
+									</div>
+																								<div class="method-definition">
+					static 						<span class="method-result">void</span>
+										<a href="#yy_destructor" title="details" class="method-name">yy_destructor</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yypminor</span>)
+									</div>
+																																																																																																																																																																																																																																																								
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#doParse" title="details" class="method-name">doParse</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yytokenvalue</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">2</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">OWLParser</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__destruct" title="details" class="method-name">__destruct</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#parseString" title="details" class="method-name">parseString</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$stringToParse</span>)
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#tokenName" title="details" class="method-name">tokenName</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$tokenType</span>)
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_accept" title="details" class="method-name">yy_accept</a>
+										()
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_find_reduce_action" title="details" class="method-name">yy_find_reduce_action</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$stateno</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$iLookAhead</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_find_shift_action" title="details" class="method-name">yy_find_shift_action</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$iLookAhead</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#yy_get_expected_tokens" title="details" class="method-name">yy_get_expected_tokens</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$token</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#yy_is_expected_token" title="details" class="method-name">yy_is_expected_token</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$token</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_parse_failed" title="details" class="method-name">yy_parse_failed</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#yy_pop_parser_stack" title="details" class="method-name">yy_pop_parser_stack</a>
+											(<span class="var-type">OWL_To_Erfurt_yyParser</span>&nbsp;<span class="var-name">0</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r0" title="details" class="method-name">yy_r0</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r1" title="details" class="method-name">yy_r1</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r2" title="details" class="method-name">yy_r2</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r3" title="details" class="method-name">yy_r3</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r4" title="details" class="method-name">yy_r4</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r5" title="details" class="method-name">yy_r5</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r6" title="details" class="method-name">yy_r6</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r7" title="details" class="method-name">yy_r7</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r8" title="details" class="method-name">yy_r8</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r9" title="details" class="method-name">yy_r9</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r10" title="details" class="method-name">yy_r10</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r11" title="details" class="method-name">yy_r11</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r12" title="details" class="method-name">yy_r12</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r13" title="details" class="method-name">yy_r13</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r14" title="details" class="method-name">yy_r14</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r15" title="details" class="method-name">yy_r15</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r16" title="details" class="method-name">yy_r16</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r17" title="details" class="method-name">yy_r17</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r18" title="details" class="method-name">yy_r18</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r19" title="details" class="method-name">yy_r19</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_r20" title="details" class="method-name">yy_r20</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_reduce" title="details" class="method-name">yy_reduce</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$yyruleno</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_shift" title="details" class="method-name">yy_shift</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$yyNewState</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$yyMajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yypMinor</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#yy_syntax_error" title="details" class="method-name">yy_syntax_error</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$TOKEN</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$yyExpectedTokens" id="$yyExpectedTokens"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yyExpectedTokens</span>
+			 = <span class="var-default">array(<br />        /* 0 */ array(1, 11, 13, 18, ),/* 1 */array(1,11,13,18,),/* 2 */array(1,11,13,18,),/* 3 */array(1,11,13,18,),/* 4 */array(1,11,13,18,),/* 5 */array(1,11,13,15,18,),/* 6 */array(1,11,13,18,),/* 7 */array(1,11,13,18,),/* 8 */array(1,11,13,18,),/* 9 */array(1,11,13,18,),/* 10 */array(18,),/* 11 */array(18,),/* 12 */array(15,18,),/* 13 */array(18,),/* 14 */array(4,5,6,7,8,9,10,),/* 15 */array(0,2,3,12,16,19,),/* 16 */array(2,3,12,),/* 17 */array(2,3,19,),/* 18 */array(2,3,),/* 19 */array(16,),/* 20 */array(16,),/* 21 */array(17,),/* 22 */array(17,),/* 23 */array(16,),/* 24 */array(17,),/* 25 */array(14,),/* 26 */array(15,),/* 27 */array(),/* 28 */array(),/* 29 */array(),/* 30 */array(),/* 31 */array(),/* 32 */array(),/* 33 */array(),/* 34 */array(),/* 35 */array(),/* 36 */array(),/* 37 */array(),/* 38 */array(),/* 39 */array(),/* 40 */array(),/* 41 */array(),/* 42 */array(),/* 43 */array(),)</span>			(line <span class="line-number">238</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyFallback" id="$yyFallback"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yyFallback</span>
+			 = <span class="var-default">array(<br />    )</span>			(line <span class="line-number">323</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The next table maps tokens into fallback tokens. like the following:
+      %fallback ID X Y Z.</p>
+<p class="description"><p>The next table maps tokens into fallback tokens.  If a construct like the following:
+      %fallback ID X Y Z.
+ appears in the grammer, then ID becomes a fallback token for X, Y, and Z.  Whenever one of the tokens X, Y, or Z is input to the parser but it does not parse, the type of the token is changed to ID and the parse is retried before an error is thrown.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyReduceMap" id="$yyReduceMap"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yyReduceMap</span>
+			 = <span class="var-default">array(<br />        0 =&gt; 0,<br />        1 =&gt; 1,<br />        2 =&gt; 2,<br />        3 =&gt; 3,<br />        4 =&gt; 4,<br />        5 =&gt; 5,<br />        6 =&gt; 6,<br />        7 =&gt; 7,<br />        8 =&gt; 8,<br />        9 =&gt; 9,<br />        10 =&gt; 10,<br />        11 =&gt; 11,<br />        12 =&gt; 12,<br />        13 =&gt; 13,<br />        14 =&gt; 14,<br />        15 =&gt; 15,<br />        16 =&gt; 16,<br />        17 =&gt; 17,<br />        18 =&gt; 18,<br />        21 =&gt; 18,<br />        19 =&gt; 19,<br />        20 =&gt; 20,<br />    )</span>			(line <span class="line-number">822</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following table contains a mapping of reduce action to method name that handles the reduction.</p>
+<p class="description"><p>The following table contains a mapping of reduce action to method name that handles the reduction.
+ If a rule is not set, it has no handler.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyRuleInfo" id="$yyRuleInfo"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yyRuleInfo</span>
+			 = <span class="var-default">array(<br />  array( 'lhs' =&gt; 21, 'rhs' =&gt; 1 ),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;5),array('lhs'=&gt;22,'rhs'=&gt;5),array('lhs'=&gt;22,'rhs'=&gt;5),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;2),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;3),array('lhs'=&gt;22,'rhs'=&gt;1),array('lhs'=&gt;24,'rhs'=&gt;1),array('lhs'=&gt;23,'rhs'=&gt;2),array('lhs'=&gt;23,'rhs'=&gt;1),array('lhs'=&gt;26,'rhs'=&gt;1),array('lhs'=&gt;25,'rhs'=&gt;3),array('lhs'=&gt;25,'rhs'=&gt;1),)</span>			(line <span class="line-number">791</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following table contains information about every rule that is used during the reduce.</p>
+<p class="description"><p>The following table contains information about every rule that is used during the reduce.
+ <pre> array(
+  array(
+   int $lhs;         Symbol on the left-hand side of the rule
+   int $nrhs;     Number of right-hand side symbols in the rule
+  ),...
+ );</pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyRuleName" id="$yyRuleName"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">array</span>
+			<span class="var-name">$yyRuleName</span>
+			 = <span class="var-default">array(<br /> /*   0 */ &quot;start ::= classExpr&quot;,<br /> /*   1 */ &quot;classExpr ::= LPAREN classExpr RPAREN&quot;,<br /> /*   2 */ &quot;classExpr ::= LBRACE enum RBRACE&quot;,<br /> /*   3 */ &quot;classExpr ::= propExpr ONLYSOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET&quot;,<br /> /*   4 */ &quot;classExpr ::= propExpr SOME_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET&quot;,<br /> /*   5 */ &quot;classExpr ::= propExpr ONLY_OPERATOR LSQUAREBRACKET list RSQUAREBRACKET&quot;,<br /> /*   6 */ &quot;classExpr ::= classExpr AND_OPERATOR classExpr&quot;,<br /> /*   7 */ &quot;classExpr ::= classExpr OR_OPERATOR classExpr&quot;,<br /> /*   8 */ &quot;classExpr ::= propExpr SOME_OPERATOR classExpr&quot;,<br /> /*   9 */ &quot;classExpr ::= NOT_OPERATOR classExpr&quot;,<br /> /*  10 */ &quot;classExpr ::= propExpr ONLY_OPERATOR instExpr&quot;,<br /> /*  11 */ &quot;classExpr ::= propExpr MIN_OPERATOR NUMERIC&quot;,<br /> /*  12 */ &quot;classExpr ::= propExpr MAX_OPERATOR NUMERIC&quot;,<br /> /*  13 */ &quot;classExpr ::= propExpr EXACTLY_OPERATOR NUMERIC&quot;,<br /> /*  14 */ &quot;classExpr ::= propExpr HAS_OPERATOR instExpr&quot;,<br /> /*  15 */ &quot;classExpr ::= ALPHANUMERIC&quot;,<br /> /*  16 */ &quot;propExpr ::= ALPHANUMERIC&quot;,<br /> /*  17 */ &quot;enum ::= instExpr enum&quot;,<br /> /*  18 */ &quot;enum ::= instExpr&quot;,<br /> /*  19 */ &quot;instExpr ::= ALPHANUMERIC&quot;,<br /> /*  20 */ &quot;list ::= classExpr COMMA list&quot;,<br /> /*  21 */ &quot;list ::= classExpr&quot;,<br />    )</span>			(line <span class="line-number">405</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">For tracing reduce actions, the names of all rules are required.</p>
+<p class="description"><p>For tracing reduce actions, the names of all rules are required.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyTokenName" id="$yyTokenName"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">array</span>
+			<span class="var-name">$yyTokenName</span>
+			 = <span class="var-default">array( <br />  '$',             'NOT_OPERATOR',  'AND_OPERATOR',  'OR_OPERATOR', <br />  'MIN_OPERATOR',  'MAX_OPERATOR',  'EXACTLY_OPERATOR',  'HAS_OPERATOR',<br />  'ONLYSOME_OPERATOR',  'ONLY_OPERATOR',  'SOME_OPERATOR',  'LPAREN',      <br />  'RPAREN',        'LBRACE',        'RBRACE',        'LSQUAREBRACKET',<br />  'RSQUAREBRACKET',  'NUMERIC',       'ALPHANUMERIC',  'COMMA',       <br />  'error',         'start',         'classExpr',     'enum',        <br />  'propExpr',      'list',          'instExpr',    <br />    )</span>			(line <span class="line-number">391</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">For tracing shifts, the names of all terminals and nonterminals</p>
+<p class="description"><p>For tracing shifts, the names of all terminals and nonterminals are required.  The following table supplies these names</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyTraceFILE" id="$yyTraceFILE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">resource|0</span>
+			<span class="var-name">$yyTraceFILE</span>
+						(line <span class="line-number">367</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyTracePrompt" id="$yyTracePrompt"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">string|0</span>
+			<span class="var-name">$yyTracePrompt</span>
+						(line <span class="line-number">372</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">String to prepend to debug output</p>
+<p class="description"><p>String to prepend to debug output</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yy_action" id="$yy_action"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yy_action</span>
+			 = <span class="var-default">array(<br /> /*     0 */    24,   21,   22,   13,   26,   12,    5,   59,    4,   59,<br /> /*    10 */    59,   28,    7,   67,   18,   43,   14,    6,    9,   59,<br /> /*    20 */    42,    7,    8,   59,   10,   17,   59,   14,   40,   15,<br /> /*    30 */    16,    8,   14,   10,    3,    2,    6,    9,   15,   17,<br /> /*    40 */    30,   14,   23,   34,   38,   17,   39,   14,   19,   17,<br /> /*    50 */     1,   14,   20,   36,   51,   35,   11,   14,   31,   37,<br /> /*    60 */    14,   14,   32,   28,   14,    6,    9,   27,   41,   25,<br /> /*    70 */    29,   51,   11,   33,<br />    )</span>			(line <span class="line-number">205</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yy_default" id="$yy_default"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yy_default</span>
+			 = <span class="var-default">array(<br /> /*     0 */    66,   66,   66,   66,   66,   66,   66,   66,   66,   66,<br /> /*    10 */    66,   62,   66,   66,   66,   60,   66,   65,   44,   66,<br /> /*    20 */    66,   66,   66,   66,   66,   66,   66,   56,   63,   57,<br /> /*    30 */    47,   50,   51,   58,   55,   53,   61,   52,   48,   45,<br /> /*    40 */    64,   54,   49,   46,<br />)</span>			(line <span class="line-number">284</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yy_lookahead" id="$yy_lookahead"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yy_lookahead</span>
+			 = <span class="var-default">array(<br /> /*     0 */     4,    5,    6,    7,    8,    9,   10,    0,   15,    2,<br /> /*    10 */     3,   18,    1,   21,   22,   14,   24,    2,    3,   12,<br /> /*    20 */    16,    1,   11,   16,   13,   22,   19,   24,   25,   18,<br /> /*    30 */    22,   11,   24,   13,   19,   15,    2,    3,   18,   22,<br /> /*    40 */    16,   24,   25,   17,   16,   22,   12,   24,   25,   22,<br /> /*    50 */    15,   24,   25,   23,   27,   22,   26,   24,   22,   22,<br /> /*    60 */    24,   24,   22,   18,   24,    2,    3,   17,   26,   23,<br /> /*    70 */    17,   27,   26,   26,<br />)</span>			(line <span class="line-number">215</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yy_reduce_ofst" id="$yy_reduce_ofst"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yy_reduce_ofst</span>
+			 = <span class="var-default">array(<br /> /*     0 */    -8,   27,   17,    3,   23,   37,   36,   33,    8,   40,<br /> /*    10 */    46,   30,   42,   47,<br />)</span>			(line <span class="line-number">234</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yy_shift_ofst" id="$yy_shift_ofst"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$yy_shift_ofst</span>
+			 = <span class="var-default">array(<br /> /*     0 */    11,   11,   11,   11,   11,   20,   11,   11,   11,   11,<br /> /*    10 */    45,   45,   -7,   45,   -4,    7,   34,   15,   63,    4,<br /> /*    20 */    24,   50,   53,   28,   26,    1,   35,<br />)</span>			(line <span class="line-number">227</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyerrcnt" id="$yyerrcnt"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int</span>
+			<span class="var-name">$yyerrcnt</span>
+						(line <span class="line-number">380</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yyidx" id="$yyidx"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int</span>
+			<span class="var-name">$yyidx</span>
+						(line <span class="line-number">376</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$yystack" id="$yystack"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$yystack</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">384</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																			<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodPrintTrace" id="PrintTrace"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method PrintTrace</span> (line <span class="line-number">358</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Output debug information to output (php://output stream)</p>
+<p class="description"><p>Output debug information to output (php://output stream)</p></p>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">void</span>
+		<span class="method-name">
+			PrintTrace
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodTrace" id="Trace"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method Trace</span> (line <span class="line-number">344</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Turn parser tracing on by giving a stream to which to write the trace and a prompt to preface each trace message. by making either argument NULL
+ Inputs:
+<ul><li>A stream resource to which trace output should be written.</li></ul></p>
+<p class="description"><p>Turn parser tracing on by giving a stream to which to write the trace and a prompt to preface each trace message.  Tracing is turned off by making either argument NULL
+ Inputs:
+<ul><li>A stream resource to which trace output should be written.
+   If NULL, then tracing is turned off.</li><li>A prefix string written at the beginning of every
+   line of trace output.  If NULL, then tracing is
+   turned off.</li></ul> Outputs:
+<ul><li>None.</li></ul></p></p>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">void</span>
+		<span class="method-name">
+			Trace
+		</span>
+					(<span class="var-type">resource</span>&nbsp;<span class="var-name">$TraceFILE</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$zTracePrompt</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">resource</span>
+				<span class="var-name">$TraceFILE</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$zTracePrompt</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_destructor" id="yy_destructor"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method yy_destructor</span> (line <span class="line-number">454</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following function deletes the value associated with a symbol.</p>
+<p class="description"><p>The following function deletes the value associated with a symbol.  The symbol can be either a terminal or nonterminal.</p></p>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_destructor
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yypminor</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yymajor</span><span class="var-description">: the symbol code</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$yypminor</span><span class="var-description">: the symbol's value</span>			</li>
+				</ul>
+		
+			
+	</div>
+
+<a name="methoddoParse" id="doParse"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">doParse</span> (line <span class="line-number">1119</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The main parser program.</p>
+<p class="description"><p>The main parser program.
+ The first argument is the major token number.  The second is the token value string as scanned from the input.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			doParse
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yytokenvalue</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">2</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">2</span><span class="var-description">: any extra arguments that should be passed to handlers</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yymajor</span><span class="var-description">: the token number</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$yytokenvalue</span><span class="var-description">: the token value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">110</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">OWLParser</span>
+		<span class="method-name">
+			__construct
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method__destruct" id="__destruct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Destructor __destruct</span> (line <span class="line-number">502</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Deallocate and destroy a parser. all stack elements before shutting the parser down.</p>
+<p class="description"><p>Deallocate and destroy a parser.  Destructors are all called for all stack elements before shutting the parser down.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__destruct
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodparseString" id="parseString"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseString</span> (line <span class="line-number">113</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			parseString
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$stringToParse</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$stringToParse</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodtokenName" id="tokenName"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">tokenName</span> (line <span class="line-number">436</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This function returns the symbolic name associated with a token value.</p>
+<p class="description"><p>This function returns the symbolic name associated with a token value.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			tokenName
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$tokenType</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$tokenType</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_accept" id="yy_accept"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_accept</span> (line <span class="line-number">1097</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following is executed when the parser accepts</p>
+<p class="description"><p>The following is executed when the parser accepts
+ %parse_accept code is inserted here</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_accept
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_find_reduce_action" id="yy_find_reduce_action"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_find_reduce_action</span> (line <span class="line-number">717</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Find the appropriate action for a parser given the non-terminal look-ahead token $iLookAhead.</p>
+<p class="description"><p>Find the appropriate action for a parser given the non-terminal look-ahead token $iLookAhead.
+ If the look-ahead token is self::YYNOCODE, then check to see if the action is independent of the look-ahead.  If it is, return the action, otherwise return self::YY_NO_ACTION.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_find_reduce_action
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$stateno</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$iLookAhead</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$stateno</span><span class="var-description">: Current state number</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$iLookAhead</span><span class="var-description">: The look-ahead token</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_find_shift_action" id="yy_find_shift_action"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_find_shift_action</span> (line <span class="line-number">673</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Find the appropriate action for a parser given the terminal look-ahead token iLookAhead.</p>
+<p class="description"><p>Find the appropriate action for a parser given the terminal look-ahead token iLookAhead.
+ If the look-ahead token is YYNOCODE, then check to see if the action is independent of the look-ahead.  If it is, return the action, otherwise return YY_NO_ACTION.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_find_shift_action
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$iLookAhead</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$iLookAhead</span><span class="var-description">: The look-ahead token</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_get_expected_tokens" id="yy_get_expected_tokens"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_get_expected_tokens</span> (line <span class="line-number">518</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Based on the current state and parser stack, get a list of all</p>
+<p class="description"><p>Based on the current state and parser stack, get a list of all possible lookahead tokens</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			yy_get_expected_tokens
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$token</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$token</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_is_expected_token" id="yy_is_expected_token"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_is_expected_token</span> (line <span class="line-number">593</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Based on the parser state and current parser stack, determine whether the lookahead token is possible.</p>
+<p class="description"><p>Based on the parser state and current parser stack, determine whether the lookahead token is possible.
+ The parser will convert the token value to an error token if not.  This catches some unusual edge cases where the parser would fail.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			yy_is_expected_token
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$token</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$token</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_parse_failed" id="yy_parse_failed"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_parse_failed</span> (line <span class="line-number">1055</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following code executes when the parse fails</p>
+<p class="description"><p>The following code executes when the parse fails
+ Code from %parse_fail is inserted here</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_parse_failed
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_pop_parser_stack" id="yy_pop_parser_stack"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_pop_parser_stack</span> (line <span class="line-number">481</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Pop the parser's stack once.</p>
+<p class="description"><p>Pop the parser's stack once.
+ If there is a destructor routine associated with the token which is popped from the stack, then call it.
+ Return the major token number for the symbol popped.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			yy_pop_parser_stack
+		</span>
+					(<span class="var-type">OWL_To_Erfurt_yyParser</span>&nbsp;<span class="var-name">0</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">OWL_To_Erfurt_yyParser</span>
+				<span class="var-name">0</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_r0" id="yy_r0"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r0</span> (line <span class="line-number">853</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r0
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r1" id="yy_r1"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r1</span> (line <span class="line-number">857</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r1
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r2" id="yy_r2"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r2</span> (line <span class="line-number">861</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r2
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r3" id="yy_r3"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r3</span> (line <span class="line-number">865</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r3
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r4" id="yy_r4"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r4</span> (line <span class="line-number">874</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r4
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r5" id="yy_r5"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r5</span> (line <span class="line-number">879</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r5
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r6" id="yy_r6"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r6</span> (line <span class="line-number">884</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r6
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r7" id="yy_r7"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r7</span> (line <span class="line-number">899</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r7
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r8" id="yy_r8"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r8</span> (line <span class="line-number">914</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r8
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r9" id="yy_r9"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r9</span> (line <span class="line-number">918</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r9
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r10" id="yy_r10"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r10</span> (line <span class="line-number">922</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r10
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r11" id="yy_r11"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r11</span> (line <span class="line-number">926</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r11
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r12" id="yy_r12"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r12</span> (line <span class="line-number">930</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r12
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r13" id="yy_r13"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r13</span> (line <span class="line-number">934</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r13
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r14" id="yy_r14"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r14</span> (line <span class="line-number">938</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r14
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r15" id="yy_r15"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r15</span> (line <span class="line-number">942</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r15
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r16" id="yy_r16"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r16</span> (line <span class="line-number">946</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r16
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r17" id="yy_r17"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r17</span> (line <span class="line-number">950</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r17
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r18" id="yy_r18"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r18</span> (line <span class="line-number">954</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r18
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r19" id="yy_r19"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r19</span> (line <span class="line-number">958</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r19
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_r20" id="yy_r20"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_r20</span> (line <span class="line-number">962</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_r20
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodyy_reduce" id="yy_reduce"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_reduce</span> (line <span class="line-number">1000</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Perform a reduce action and the shift that must immediately follow the reduce.</p>
+<p class="description"><p>Perform a reduce action and the shift that must immediately follow the reduce.
+ For a rule such as:
+ <pre> A ::= B blah C. { dosomething(); }</pre>
+ This function will first call the action, if any, (&quot;dosomething();&quot; in our example), and then it will pop three states from the stack, one for each entry on the right-hand side of the expression (B, blah, and C in our example rule), and then push the result of the action back on to the stack with the resulting state reduced to (as described in the .out file)</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_reduce
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$yyruleno</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yyruleno</span><span class="var-description">: Number of the rule by which to reduce</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_shift" id="yy_shift"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_shift</span> (line <span class="line-number">746</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Perform a shift action.</p>
+<p class="description"><p>Perform a shift action.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_shift
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$yyNewState</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$yyMajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$yypMinor</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yyNewState</span><span class="var-description">: The new state to shift in</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yyMajor</span><span class="var-description">: The major token to shift in</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$yypMinor</span><span class="var-description">: the minor token to shift in</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodyy_syntax_error" id="yy_syntax_error"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">yy_syntax_error</span> (line <span class="line-number">1074</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The following code executes when a syntax error first occurs.</p>
+<p class="description"><p>The following code executes when a syntax error first occurs.
+ %syntax_error code is inserted here</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			yy_syntax_error
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$yymajor</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$TOKEN</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$yymajor</span><span class="var-description">: The major type of the error token</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$TOKEN</span><span class="var-description">: The minor type of the error token</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+														| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constALPHANUMERIC" id="ALPHANUMERIC"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">ALPHANUMERIC</span>
+			 = <span class="const-default"> 18</span>
+			(line <span class="line-number">148</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constAND_OPERATOR" id="AND_OPERATOR"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">AND_OPERATOR</span>
+			 = <span class="const-default">  2</span>
+			(line <span class="line-number">132</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constCOMMA" id="COMMA"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">COMMA</span>
+			 = <span class="const-default"> 19</span>
+			(line <span class="line-number">149</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constEXACTLY_OPERATOR" id="EXACTLY_OPERATOR"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">EXACTLY_OPERATOR</span>
+			 = <span class="const-default">  6</span>
+			(line <span class="line-number">136</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constHAS_OPERATOR" id="HAS_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">HAS_OPERATOR</span>
+			 = <span class="const-default">  7</span>
+			(line <span class="line-number">137</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constLBRACE" id="LBRACE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">LBRACE</span>
+			 = <span class="const-default"> 13</span>
+			(line <span class="line-number">143</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constLPAREN" id="LPAREN"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">LPAREN</span>
+			 = <span class="const-default"> 11</span>
+			(line <span class="line-number">141</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constLSQUAREBRACKET" id="LSQUAREBRACKET"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">LSQUAREBRACKET</span>
+			 = <span class="const-default"> 15</span>
+			(line <span class="line-number">145</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constMAX_OPERATOR" id="MAX_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">MAX_OPERATOR</span>
+			 = <span class="const-default">  5</span>
+			(line <span class="line-number">135</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constMIN_OPERATOR" id="MIN_OPERATOR"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">MIN_OPERATOR</span>
+			 = <span class="const-default">  4</span>
+			(line <span class="line-number">134</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constNOT_OPERATOR" id="NOT_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">NOT_OPERATOR</span>
+			 = <span class="const-default">  1</span>
+			(line <span class="line-number">131</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constNUMERIC" id="NUMERIC"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">NUMERIC</span>
+			 = <span class="const-default"> 17</span>
+			(line <span class="line-number">147</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constONLYSOME_OPERATOR" id="ONLYSOME_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">ONLYSOME_OPERATOR</span>
+			 = <span class="const-default">  8</span>
+			(line <span class="line-number">138</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constONLY_OPERATOR" id="ONLY_OPERATOR"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">ONLY_OPERATOR</span>
+			 = <span class="const-default">  9</span>
+			(line <span class="line-number">139</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constOR_OPERATOR" id="OR_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">OR_OPERATOR</span>
+			 = <span class="const-default">  3</span>
+			(line <span class="line-number">133</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constRBRACE" id="RBRACE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">RBRACE</span>
+			 = <span class="const-default"> 14</span>
+			(line <span class="line-number">144</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constRPAREN" id="RPAREN"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">RPAREN</span>
+			 = <span class="const-default"> 12</span>
+			(line <span class="line-number">142</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constRSQUAREBRACKET" id="RSQUAREBRACKET"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">RSQUAREBRACKET</span>
+			 = <span class="const-default"> 16</span>
+			(line <span class="line-number">146</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constSOME_OPERATOR" id="SOME_OPERATOR"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">SOME_OPERATOR</span>
+			 = <span class="const-default"> 10</span>
+			(line <span class="line-number">140</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYERRORSYMBOL" id="YYERRORSYMBOL"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYERRORSYMBOL</span>
+			 = <span class="const-default"> 20</span>
+			(line <span class="line-number">310</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYERRSYMDT" id="YYERRSYMDT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYERRSYMDT</span>
+			 = <span class="const-default"> 'yy0'</span>
+			(line <span class="line-number">311</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYFALLBACK" id="YYFALLBACK"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYFALLBACK</span>
+			 = <span class="const-default"> 0</span>
+			(line <span class="line-number">312</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYNOCODE" id="YYNOCODE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYNOCODE</span>
+			 = <span class="const-default"> 28</span>
+			(line <span class="line-number">306</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYNRULE" id="YYNRULE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYNRULE</span>
+			 = <span class="const-default"> 22</span>
+			(line <span class="line-number">309</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYNSTATE" id="YYNSTATE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYNSTATE</span>
+			 = <span class="const-default"> 44</span>
+			(line <span class="line-number">308</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYYSTACKDEPTH" id="YYSTACKDEPTH"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YYSTACKDEPTH</span>
+			 = <span class="const-default"> 100</span>
+			(line <span class="line-number">307</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_ACCEPT_ACTION" id="YY_ACCEPT_ACTION"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_ACCEPT_ACTION</span>
+			 = <span class="const-default"> 67</span>
+			(line <span class="line-number">151</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_ERROR_ACTION" id="YY_ERROR_ACTION"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_ERROR_ACTION</span>
+			 = <span class="const-default"> 66</span>
+			(line <span class="line-number">152</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_NO_ACTION" id="YY_NO_ACTION"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_NO_ACTION</span>
+			 = <span class="const-default"> 68</span>
+			(line <span class="line-number">150</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_REDUCE_MAX" id="YY_REDUCE_MAX"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_REDUCE_MAX</span>
+			 = <span class="const-default"> 13</span>
+			(line <span class="line-number">233</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_REDUCE_USE_DFLT" id="YY_REDUCE_USE_DFLT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_REDUCE_USE_DFLT</span>
+			 = <span class="const-default"> -9</span>
+			(line <span class="line-number">232</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_SHIFT_MAX" id="YY_SHIFT_MAX"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_SHIFT_MAX</span>
+			 = <span class="const-default"> 26</span>
+			(line <span class="line-number">226</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_SHIFT_USE_DFLT" id="YY_SHIFT_USE_DFLT"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_SHIFT_USE_DFLT</span>
+			 = <span class="const-default"> -8</span>
+			(line <span class="line-number">225</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+<a name="constYY_SZ_ACTTAB" id="YY_SZ_ACTTAB"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">YY_SZ_ACTTAB</span>
+			 = <span class="const-default"> 74</span>
+			(line <span class="line-number">204</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:24 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

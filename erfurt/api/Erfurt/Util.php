@@ -3,6 +3,7 @@
 /**
   * class providing some util methods
   *
+  * @package util
   * @author Stefan Berger <berger@intersolut.de>
   * @author Norman Heino <norman@feedface.de>
   * @copyright AKSW Team

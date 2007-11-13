@@ -1,8 +1,9 @@
 <?php
-
-class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_QuantifierRestriction 
-
-{
+/**
+ * 
+ * @package owl
+ */
+class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_QuantifierRestriction {
 	//TODO check if allvaluesFrom is classExpr or instExpr in manchester.y
 	public function toManchesterSyntaxString () {
 		$returnString = '[' ;

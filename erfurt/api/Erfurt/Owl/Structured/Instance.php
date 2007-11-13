@@ -2,7 +2,10 @@
 
 // Does this class make any sense? please tell me if you know: kurzum@googlemail.com
 
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_Instance {
 	private $uri ;
 	

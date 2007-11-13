@@ -562,6 +562,8 @@ function cache($fn,$args=array(),$value=NULL) {
  *   PRIMARY KEY  (`id`),
  *   UNIQUE KEY `function` (`function`,`args`,`model`,`resource`)
  * )
+ * 
+ * @package cache
  */
 Class stmCache {
 	var $value=NULL;

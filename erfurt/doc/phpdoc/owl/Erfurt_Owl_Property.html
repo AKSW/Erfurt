@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Owl_Property</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Erfurt_Owl_Property</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Erfurt_Owl_Property represents a property which can be either a datatype property or a object property.</p>
+<p class="description"><p>Erfurt_Owl_Property represents a property which can be either a datatype property or a object property.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Sören Auer &lt;<a href="mailto:soeren@auer.cx">soeren@auer.cx</a>&gt;, Philipp Frischmuth &lt;philipp@frischmuth24.de&gt;</li>
+				<li><span class="field">version:</span> $Id: Property.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2007</li>
+				<li><span class="field">license:</span> <a href="http://opensource.org/licenses/gpl-license.php">GNU Public License</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Owl---Property.php.html">/Owl/Property.php</a> (line <span class="field">35</span>)
+		</p>
+		
+				
+		<pre>RDFSProperty
+   |
+   --Erfurt_Owl_Property</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addDomainToUnionClass" title="details" class="method-name">addDomainToUnionClass</a>
+											(<span class="var-type">Resource</span>&nbsp;<span class="var-name">$class</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addRangeToUnionClass" title="details" class="method-name">addRangeToUnionClass</a>
+											(<span class="var-type">Resource</span>&nbsp;<span class="var-name">$class</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Resource/boolean</span>
+										<a href="#domainIsUnionClass" title="details" class="method-name">domainIsUnionClass</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isAnnotation" title="details" class="method-name">isAnnotation</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isDatatypeProperty" title="details" class="method-name">isDatatypeProperty</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isFunctional" title="details" class="method-name">isFunctional</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isInverseFunctional" title="details" class="method-name">isInverseFunctional</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isObjectProperty" title="details" class="method-name">isObjectProperty</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">NULL</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isSymmetric" title="details" class="method-name">isSymmetric</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isTransitive" title="details" class="method-name">isTransitive</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Resource[]</span>
+										<a href="#listDomainFromUnionClass" title="details" class="method-name">listDomainFromUnionClass</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Property[]</span>
+										<a href="#listEquivalentProperties" title="details" class="method-name">listEquivalentProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Property[]</span>
+										<a href="#listInverseOf" title="details" class="method-name">listInverseOf</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">RDFSResource[]</span>
+										<a href="#listRangeFromDataRange" title="details" class="method-name">listRangeFromDataRange</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Resource[]</span>
+										<a href="#listRangeFromUnionClass" title="details" class="method-name">listRangeFromUnionClass</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Resource/boolean</span>
+										<a href="#rangeIsDataRange" title="details" class="method-name">rangeIsDataRange</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Resource/boolean</span>
+										<a href="#rangeIsUnionClass" title="details" class="method-name">rangeIsUnionClass</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setDomainToUnionClass" title="details" class="method-name">setDomainToUnionClass</a>
+											(<span class="var-type">Resource/Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#setEquivalentProperties" title="details" class="method-name">setEquivalentProperties</a>
+											(<span class="var-type">string[]/Resource[]</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#setInverseOf" title="details" class="method-name">setInverseOf</a>
+											(<span class="var-type">string[]/Resource[]</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRangeToDataRange" title="details" class="method-name">setRangeToDataRange</a>
+											(<span class="var-type">Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRangeToUnionClass" title="details" class="method-name">setRangeToUnionClass</a>
+											(<span class="var-type">Resource/Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodaddDomainToUnionClass" id="addDomainToUnionClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addDomainToUnionClass</span> (line <span class="line-number">56</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addDomainToUnionClass
+		</span>
+					(<span class="var-type">Resource</span>&nbsp;<span class="var-name">$class</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Resource</span>
+				<span class="var-name">$class</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddRangeToUnionClass" id="addRangeToUnionClass"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addRangeToUnionClass</span> (line <span class="line-number">138</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addRangeToUnionClass
+		</span>
+					(<span class="var-type">Resource</span>&nbsp;<span class="var-name">$class</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Resource</span>
+				<span class="var-name">$class</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddomainIsUnionClass" id="domainIsUnionClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">domainIsUnionClass</span> (line <span class="line-number">42</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks whether the domain of this property is an union class description.</p>
+<p class="description"><p>Checks whether the domain of this property is an union class description.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns the domain iff the domain is an union class description, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Resource/boolean</span>
+		<span class="method-name">
+			domainIsUnionClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisAnnotation" id="isAnnotation"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isAnnotation</span> (line <span class="line-number">303</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:AnnotationProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:AnnotationProperty. If the optional parameter $bool is given, owl:AnnotationProperty will be set or removed according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:AnnotationProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isAnnotation
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:AnnotationProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisDatatypeProperty" id="isDatatypeProperty"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isDatatypeProperty</span> (line <span class="line-number">316</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:DatatypeProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:DatatypeProperty. If the optional parameter $bool is given, it will be toggled between owl:DatatypeProperty and owl:ObjectProperty according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:DatatypeProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isDatatypeProperty
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:DatatypeProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisFunctional" id="isFunctional"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isFunctional</span> (line <span class="line-number">250</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:FunctionalProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:FunctionalProperty. If the optional parameter $bool is given, owl:FunctionalProperty will be set or removed according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:FunctionalProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isFunctional
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:FunctionalProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisInverseFunctional" id="isInverseFunctional"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isInverseFunctional</span> (line <span class="line-number">264</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:InverseFunctionalProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:InverseFunctionalProperty. If the optional parameter $bool is given, owl:InverseFunctionalProperty will be set or removed according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:InverseFunctionalProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isInverseFunctional
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:InverseFunctionalProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisObjectProperty" id="isObjectProperty"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isObjectProperty</span> (line <span class="line-number">334</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:ObjectProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:ObjectProperty. If the optional parameter $bool is given, it will be toggled between owl:ObjectProperty and owl:DatatypeProperty according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:ObjectProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isObjectProperty
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:ObjectProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisSymmetric" id="isSymmetric"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isSymmetric</span> (line <span class="line-number">277</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:SymmetricProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:SymmetricProperty. If the optional parameter $bool is given, owl:SymmetricProperty will be set or removed according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:SymmetricProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isSymmetric
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:SymmetricProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisTransitive" id="isTransitive"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isTransitive</span> (line <span class="line-number">290</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if this property is of type owl:TransitiveProperty.</p>
+<p class="description"><p>Checks if this property is of type owl:TransitiveProperty. If the optional parameter $bool is given, owl:TransitiveProperty will be set or removed according to $bool.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if the property is of type owl:TransitiveProperty, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isTransitive
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$bool</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$bool</span><span class="var-description">: Shall the property be set to be of type owl:TransitiveProperty - NULL - no change, TRUE - yes, FALSE - no.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistDomainFromUnionClass" id="listDomainFromUnionClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDomainFromUnionClass</span> (line <span class="line-number">84</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Resource[]</span>
+		<span class="method-name">
+			listDomainFromUnionClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistEquivalentProperties" id="listEquivalentProperties"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listEquivalentProperties</span> (line <span class="line-number">215</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of equivalent OWLProperties indexed by their local names.</p>
+<p class="description"><p>Returns an array of equivalent OWLProperties indexed by their local names.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of equivalent OWLProperties indexed by their local names.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Property[]</span>
+		<span class="method-name">
+			listEquivalentProperties
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistInverseOf" id="listInverseOf"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listInverseOf</span> (line <span class="line-number">205</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of inverse OWLProperties indexed by their local names.</p>
+<p class="description"><p>Returns an array of inverse OWLProperties indexed by their local names.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of inverse OWLProperties indexed by their local names.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Property[]</span>
+		<span class="method-name">
+			listInverseOf
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistRangeFromDataRange" id="listRangeFromDataRange"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listRangeFromDataRange</span> (line <span class="line-number">127</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">RDFSResource[]</span>
+		<span class="method-name">
+			listRangeFromDataRange
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistRangeFromUnionClass" id="listRangeFromUnionClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listRangeFromUnionClass</span> (line <span class="line-number">191</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Resource[]</span>
+		<span class="method-name">
+			listRangeFromUnionClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodrangeIsDataRange" id="rangeIsDataRange"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">rangeIsDataRange</span> (line <span class="line-number">113</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks whether the range of this property is an owl:DataRange.</p>
+<p class="description"><p>Checks whether the range of this property is an owl:DataRange.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns the range iff the range is an owl:DataRange, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Resource/boolean</span>
+		<span class="method-name">
+			rangeIsDataRange
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodrangeIsUnionClass" id="rangeIsUnionClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">rangeIsUnionClass</span> (line <span class="line-number">99</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks whether the range of this property is an union class description.</p>
+<p class="description"><p>Checks whether the range of this property is an union class description.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Returns the range iff the range is an union class description, false otherwise.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Resource/boolean</span>
+		<span class="method-name">
+			rangeIsUnionClass
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetDomainToUnionClass" id="setDomainToUnionClass"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setDomainToUnionClass</span> (line <span class="line-number">67</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setDomainToUnionClass
+		</span>
+					(<span class="var-type">Resource/Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Resource/Resource[]</span>
+				<span class="var-name">$members</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetEquivalentProperties" id="setEquivalentProperties"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEquivalentProperties</span> (line <span class="line-number">237</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets equivalent properties to the properties given in values.</p>
+<p class="description"><p>Sets equivalent properties to the properties given in values.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			setEquivalentProperties
+		</span>
+					(<span class="var-type">string[]/Resource[]</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string[]/Resource[]</span>
+				<span class="var-name">$values</span><span class="var-description">: An array of properties, property URIs or property local names.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetInverseOf" id="setInverseOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setInverseOf</span> (line <span class="line-number">226</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets inverse properties to the properties given in values.</p>
+<p class="description"><p>Sets inverse properties to the properties given in values.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			setInverseOf
+		</span>
+					(<span class="var-type">string[]/Resource[]</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string[]/Resource[]</span>
+				<span class="var-name">$values</span><span class="var-description">: An array of properties, property URIs or property local names.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRangeToDataRange" id="setRangeToDataRange"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRangeToDataRange</span> (line <span class="line-number">172</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRangeToDataRange
+		</span>
+					(<span class="var-type">Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Resource[]</span>
+				<span class="var-name">$members</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRangeToUnionClass" id="setRangeToUnionClass"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRangeToUnionClass</span> (line <span class="line-number">149</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRangeToUnionClass
+		</span>
+					(<span class="var-type">Resource/Resource[]</span>&nbsp;<span class="var-name">$members</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Resource/Resource[]</span>
+				<span class="var-name">$members</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:26 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

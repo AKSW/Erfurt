@@ -27,7 +27,7 @@
 /**
  * Erfurt_Store_Abstract
  *
- * @package rdfsapi
+ * @package store
  * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2006
  * @version $Id$

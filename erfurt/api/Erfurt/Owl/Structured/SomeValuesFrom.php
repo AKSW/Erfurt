@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_SomeValuesFrom extends Erfurt_Owl_Structured_QuantifierRestriction {
 	
 	public function toManchesterSyntaxString () {

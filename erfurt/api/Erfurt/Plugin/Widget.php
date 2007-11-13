@@ -3,7 +3,8 @@
 /**
   * Abstract base class for all Erfurt widget plug-ins. 
   *
-  * @package Plugin
+  * @package plugin
+  * @subpackage widget
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */

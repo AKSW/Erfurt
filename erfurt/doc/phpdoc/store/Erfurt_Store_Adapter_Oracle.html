@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Store_Adapter_Oracle</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Erfurt_Store_Adapter_Oracle</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-vars">Vars</a>
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">RDFSStore</p>
+<p class="description"><p>RDFSStore</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Atanas Alexandrov &lt;<a href="mailto:sirakov@gmail.com">sirakov@gmail.com</a>&gt;</li>
+				<li><span class="field">version:</span> $Id: Default.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2006</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Store---Adapter---Oracle.php.html">/Store/Adapter/Oracle.php</a> (line <span class="field">8</span>)
+		</p>
+		
+				
+		<pre>DBStore
+   |
+   --<a href="../store/Erfurt_Store_Default.html">Erfurt_Store_Default</a>
+      |
+      --Erfurt_Store_Adapter_Oracle</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-vars">Vars</a>
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																				
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#deleteModel" title="details" class="method-name">deleteModel</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getModel" title="details" class="method-name">getModel</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$modelname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$gmq:</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getNewModel" title="details" class="method-name">getNewModel</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$tablename</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$tablename:</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelname:</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#listModels" title="details" class="method-name">listModels</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+										<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../store/Erfurt_Store_Default.html">Erfurt_Store_Default</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$ac">Erfurt_Store_Default::$ac</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$dbDriver">Erfurt_Store_Default::$dbDriver</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$store">Erfurt_Store_Default::$store</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$SysOnt">Erfurt_Store_Default::$SysOnt</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$SysOntURI">Erfurt_Store_Default::$SysOntURI</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../store/Erfurt_Store_Default.html#var$_models">Erfurt_Store_Default::$_models</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-vars">Vars</a>
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methoddeleteModel" id="deleteModel"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteModel</span> (line <span class="line-number">87</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			deleteModel
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$modelname</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../store/Erfurt_Store_Default.html#methoddeleteModel">Erfurt_Store_Default::deleteModel()</a></dt>
+						<dd>POWLStore::deleteModel()</dd>
+					</dl>
+			
+	</div>
+<a name="methodgetModel" id="getModel"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getModel</span> (line <span class="line-number">50</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getModel from MDSYS.</p>
+<p class="description"><p>getModel from MDSYS.RDF_MODEL$</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getModel
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$modelname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$gmq:</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$modelname</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$gmq:</span><span class="var-description">: getModel query</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../store/Erfurt_Store_Default.html#methodgetModel">Erfurt_Store_Default::getModel()</a></dt>
+						<dd>returns instance of an model-object</dd>
+					</dl>
+			
+	</div>
+<a name="methodgetNewModel" id="getNewModel"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getNewModel</span> (line <span class="line-number">16</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create table and model into ORACLE</p>
+<p class="description"><p>Create table and model into ORACLE</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getNewModel
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$tablename</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$modelname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$tablename:</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$modelname:</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$tablename:</span><span class="var-description">: Table, where the data must be stored</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$modelname:</span><span class="var-description">: Name for the new model</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$tablename</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$modelname</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../store/Erfurt_Store_Default.html#methodgetNewModel">Erfurt_Store_Default::getNewModel()</a></dt>
+						<dd>POWLStore::getNewModel()</dd>
+					</dl>
+			
+	</div>
+<a name="methodlistModels" id="listModels"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listModels</span> (line <span class="line-number">70</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">listModels</p>
+<p class="description"><p>listModels List all models</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			listModels
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../store/Erfurt_Store_Default.html#methodlistModels">Erfurt_Store_Default::listModels()</a></dt>
+						<dd>returns a list of available and permitted models</dd>
+					</dl>
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../store/Erfurt_Store_Default.html">Erfurt_Store_Default</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodErfurt_Store_Default">Erfurt_Store_Default::Erfurt_Store_Default()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodaclCheck">Erfurt_Store_Default::aclCheck()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodaclCompute">Erfurt_Store_Default::aclCompute()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodaclGet">Erfurt_Store_Default::aclGet()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodcheckAc">Erfurt_Store_Default::checkAc()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodcountAvailableModels">Erfurt_Store_Default::countAvailableModels()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodcreateTables">Erfurt_Store_Default::createTables()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methoddeleteModel">Erfurt_Store_Default::deleteModel()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodgetAc">Erfurt_Store_Default::getAc()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodgetModel">Erfurt_Store_Default::getModel()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodgetNewModel">Erfurt_Store_Default::getNewModel()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodinit">Erfurt_Store_Default::init()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodisDatabaseCreated">Erfurt_Store_Default::isDatabaseCreated()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodisSetup">Erfurt_Store_Default::isSetup()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodlistModels">Erfurt_Store_Default::listModels()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodloadModel">Erfurt_Store_Default::loadModel()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodmodelExists">Erfurt_Store_Default::modelExists()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodsetAc">Erfurt_Store_Default::setAc()</a></span><br>
+													<span class="method-name"><a href="../store/Erfurt_Store_Default.html#methodsqlQuery">Erfurt_Store_Default::sqlQuery()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:25 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

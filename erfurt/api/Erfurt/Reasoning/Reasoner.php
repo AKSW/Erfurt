@@ -3,6 +3,9 @@
 //    releaseKB
 require_once "ReasoningTasks.php";
 
+/**
+ * @package reasoning
+ */
 interface Erfurt_Reasoning_Reasoner extends Erfurt_Reasoning_ReasoningTasks {
 
 //returns the internal reasonerURI

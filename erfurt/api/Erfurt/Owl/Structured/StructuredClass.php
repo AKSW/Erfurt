@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * @package owl
+ */
 class Erfurt_Owl_Structured_StructuredClass {
 	private $childClasses = array ( ) ;
 	private $URI ;

@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class PEAR</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class PEAR</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|													<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Base class for other PEAR classes. emulation of destructors.</p>
+<p class="description"><p>Base class for other PEAR classes.  Provides rudimentary emulation of destructors.
+ If you want a destructor in your class, inherit PEAR and make a destructor method called _yourclassname (same name as the constructor, but with a &quot;_&quot; prefix).  Also, in your constructor you have to call the PEAR constructor: $this-&gt;PEAR();. The destructor method will be called without parameters.  Note that at in some SAPI implementations (such as Apache), any output during the request shutdown (in which destructors are called) seems to be discarded.  If you need to get any debug information from your destructor, use error_log(), syslog() or something similar.
+ IMPORTANT! To use the emulated destructors you need to create the objects by reference: $obj =&amp; new PEAR_child;</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Stig Bakken &lt;<a href="mailto:ssb@php.net">ssb@php.net</a>&gt;</li>
+				<li><span class="field">author:</span> Greg Beaver &lt;<a href="mailto:cellog@php.net">cellog@php.net</a>&gt;</li>
+				<li><span class="field">author:</span> Tomas V.V. Cox &lt;<a href="mailto:cox@idecnet.com">cox@idecnet.com</a>&gt;</li>
+				<li><span class="field">version:</span> Release: 1.5.3</li>
+				<li><span class="field">copyright:</span> 1997-2006 The PHP Group</li>
+				<li><span class="field">see:</span> <a href="../PEAR/PEAR_Error.html">PEAR_Error</a></li>
+				<li><span class="field">link:</span> <a href="http://pear.php.net/manual/en/core.pear.php#core.pear.pear">http://pear.php.net/manual/en/core.pear.php#core.pear.pear</a></li>
+				<li><span class="field">link:</span> <a href="http://pear.php.net/package/PEAR">http://pear.php.net/package/PEAR</a></li>
+				<li><span class="field">since:</span> Class available since PHP 4.0.2</li>
+				<li><span class="field">license:</span> <a href="http://www.php.net/license/3_0.txt">PHP License 3.0</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Reasoning---DIG1_1---pear---PEAR.php.html">/Reasoning/DIG1_1/pear/PEAR.php</a> (line <span class="field">102</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../PEAR/Net_Socket.html">Net_Socket</a></td>
+					<td>
+											Generalized Socket class.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#PEAR" title="details" class="method-name">PEAR</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$error_class</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#delExpect" title="details" class="method-name">delExpect</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$error_code</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#expectError" title="details" class="method-name">expectError</a>
+											([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">'*'</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#getStaticProperty" title="details" class="method-name">&amp;getStaticProperty</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$var</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#isError" title="details" class="method-name">isError</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#loadExtension" title="details" class="method-name">loadExtension</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$ext</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#popErrorHandling" title="details" class="method-name">popErrorHandling</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#popExpect" title="details" class="method-name">popExpect</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#pushErrorHandling" title="details" class="method-name">pushErrorHandling</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$mode</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">object a</span>
+										<a href="#raiseError" title="details" class="method-name">&amp;raiseError</a>
+											([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$mode</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$userinfo</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$error_class</span> = <span class="var-default">null</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$skipmsg</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#registerShutdownFunc" title="details" class="method-name">registerShutdownFunc</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$args</span> = <span class="var-default">array()</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setErrorHandling" title="details" class="method-name">setErrorHandling</a>
+											([<span class="var-type">int</span>&nbsp;<span class="var-name">$mode</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#staticPopErrorHandling" title="details" class="method-name">staticPopErrorHandling</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#staticPushErrorHandling" title="details" class="method-name">staticPushErrorHandling</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$mode</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#throwError" title="details" class="method-name">&amp;throwError</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$userinfo</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_PEAR" title="details" class="method-name">_PEAR</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodPEAR" id="PEAR"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor PEAR</span> (line <span class="line-number">170</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor. $_PEAR_destructor_object_list for destructor emulation if a destructor object exists.</p>
+<p class="description"><p>Constructor.  Registers this object in $_PEAR_destructor_object_list for destructor emulation if a destructor object exists.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			PEAR
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$error_class</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$error_class</span><span class="var-description">: (optional) which class to use for        error objects, defaults to PEAR_Error.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddelExpect" id="delExpect"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">delExpect</span> (line <span class="line-number">455</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This method deletes all occurences of the specified element from the expected error codes stack.</p>
+<p class="description"><p>This method deletes all occurences of the specified element from the expected error codes stack.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> list of error codes that were deleted or error</li>
+				<li><span class="field">since:</span> PHP 4.3.0</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			delExpect
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$error_code</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$error_code</span><span class="var-description">: error code that should be deleted</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodexpectError" id="expectError"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">expectError</span> (line <span class="line-number">390</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This method is used to tell which errors you expect to get.</p>
+<p class="description"><p>This method is used to tell which errors you expect to get. Expected errors are always returned with error mode PEAR_ERROR_RETURN.  Expected error codes are stored in a stack, and this method pushes a new element onto it.  The list of expected errors are in effect until they are popped off the stack with the popExpect() method.
+ Note that this method can not be called statically</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the new depth of the &quot;expected errors&quot; stack</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			expectError
+		</span>
+					([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">'*'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$code</span><span class="var-description">: a single error code or an array of error codes to expect</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetStaticProperty" id="getStaticProperty"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getStaticProperty</span> (line <span class="line-number">230</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">If you have a class that's mostly/entirely static, and you need static</p>
+<p class="description"><p>If you have a class that's mostly/entirely static, and you need static properties, you can use this method to simulate them. Eg. in your method(s) do this: $myVar = &amp;PEAR::getStaticProperty('myclass', 'myVar'); You MUST use a reference, or they will not persist!</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A reference to the variable. If not set it will be                 auto initialised to NULL.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			&amp;getStaticProperty
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$var</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$class</span><span class="var-description">: The calling classname, to prevent clashes</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$var</span><span class="var-description">: The variable to retrieve.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisError" id="isError"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isError</span> (line <span class="line-number">279</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Tell whether a value is a PEAR error.</p>
+<p class="description"><p>Tell whether a value is a PEAR error.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true if parameter is an error</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			isError
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$data</span><span class="var-description">: the value to test</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$code</span><span class="var-description">: if $data is an error object, return true                        only if $code is a string and                        $obj-&gt;getMessage() == $code or                        $code is an integer and $obj-&gt;getCode() == $code</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodloadExtension" id="loadExtension"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">loadExtension</span> (line <span class="line-number">741</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">OS independant PHP extension load. on the correct extension name for case sensitive OSes.</p>
+<p class="description"><p>OS independant PHP extension load. Remember to take care on the correct extension name for case sensitive OSes.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Success or not on the dl() call</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			loadExtension
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$ext</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$ext</span><span class="var-description">: The extension name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodpopErrorHandling" id="popErrorHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">popErrorHandling</span> (line <span class="line-number">717</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Pop the last error handler used</p>
+<p class="description"><p>Pop the last error handler used</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Always true</li>
+				<li><span class="field">see:</span> PEAR::pushErrorHandling</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			popErrorHandling
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodpopExpect" id="popExpect"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">popExpect</span> (line <span class="line-number">409</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This method pops one element off the expected error codes stack.</p>
+<p class="description"><p>This method pops one element off the expected error codes stack.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the list of error codes that were popped</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			popExpect
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodpushErrorHandling" id="pushErrorHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">pushErrorHandling</span> (line <span class="line-number">686</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Push a new error handler on top of the error handler options stack. you can easily override the actual error handler for some code and restore it later with popErrorHandling.</p>
+<p class="description"><p>Push a new error handler on top of the error handler options stack. With this you can easily override the actual error handler for some code and restore it later with popErrorHandling.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Always true</li>
+				<li><span class="field">see:</span> PEAR::setErrorHandling</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			pushErrorHandling
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$mode</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$mode</span><span class="var-description">: (same as setErrorHandling)</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$options</span><span class="var-description">: (same as setErrorHandling)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodraiseError" id="raiseError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">raiseError</span> (line <span class="line-number">524</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">This method is a wrapper that returns an instance of the configured error class with this object's default error handling applied. specified, the object's defaults are used.</p>
+<p class="description"><p>This method is a wrapper that returns an instance of the configured error class with this object's default error handling applied.  If the $mode and $options parameters are not specified, the object's defaults are used.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> PEAR error object</li>
+				<li><span class="field">see:</span> PEAR::setErrorHandling</li>
+				<li><span class="field">since:</span> PHP 4.0.5</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">object a</span>
+		<span class="method-name">
+			&amp;raiseError
+		</span>
+					([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$mode</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$userinfo</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$error_class</span> = <span class="var-default">null</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$skipmsg</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$message</span><span class="var-description">: a text error message or a PEAR error object</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$code</span><span class="var-description">: a numeric error code (it is up to your class                  to define these if you want to use codes)</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mode</span><span class="var-description">: One of PEAR_ERROR_RETURN, PEAR_ERROR_PRINT,                  PEAR_ERROR_TRIGGER, PEAR_ERROR_DIE,                  PEAR_ERROR_CALLBACK, PEAR_ERROR_EXCEPTION.</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$options</span><span class="var-description">: If $mode is PEAR_ERROR_TRIGGER, this parameter                  specifies the PHP-internal error level (one of                  E_USER_NOTICE, E_USER_WARNING or E_USER_ERROR).                  If $mode is PEAR_ERROR_CALLBACK, this                  parameter specifies the callback function or                  method.  In other error modes this parameter                  is ignored.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$userinfo</span><span class="var-description">: If you need to pass along for example debug                  information, this parameter is meant for that.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$error_class</span><span class="var-description">: The returned error object will be                  instantiated from this class, if specified.</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$skipmsg</span><span class="var-description">: If true, raiseError will only pass error codes,                  the error message parameter will be dropped.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodregisterShutdownFunc" id="registerShutdownFunc"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">registerShutdownFunc</span> (line <span class="line-number">254</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Use this function to register a shutdown method for static classes.</p>
+<p class="description"><p>Use this function to register a shutdown method for static classes.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			registerShutdownFunc
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$args</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$func</span><span class="var-description">: The function name (or array of class/method) to call</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$args</span><span class="var-description">: The arguments to pass to the function</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetErrorHandling" id="setErrorHandling"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setErrorHandling</span> (line <span class="line-number">335</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets how errors generated by this object should be handled.</p>
+<p class="description"><p>Sets how errors generated by this object should be handled. Can be invoked both in objects and statically.  If called statically, setErrorHandling sets the default behaviour for all PEAR objects.  If called in an object, setErrorHandling sets the default behaviour for that object.</p></p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_CALLBACK">PEAR_ERROR_CALLBACK</a></li>
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_EXCEPTION">PEAR_ERROR_EXCEPTION</a></li>
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_DIE">PEAR_ERROR_DIE</a></li>
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_TRIGGER">PEAR_ERROR_TRIGGER</a></li>
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_RETURN">PEAR_ERROR_RETURN</a></li>
+				<li><span class="field">see:</span> <a href="../PEAR/_Reasoning---DIG1_1---pear---PEAR.php.html#definePEAR_ERROR_PRINT">PEAR_ERROR_PRINT</a></li>
+				<li><span class="field">since:</span> PHP 4.0.5</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setErrorHandling
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$mode</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mode</span><span class="var-description">: One of PEAR_ERROR_RETURN, PEAR_ERROR_PRINT,        PEAR_ERROR_TRIGGER, PEAR_ERROR_DIE,        PEAR_ERROR_CALLBACK or PEAR_ERROR_EXCEPTION.</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$options</span><span class="var-description">: When $mode is PEAR_ERROR_TRIGGER, this is the error level (one        of E_USER_NOTICE, E_USER_WARNING or E_USER_ERROR).
+        When $mode is PEAR_ERROR_CALLBACK, this parameter is expected        to be the callback function or method.  A callback        function is a string with the name of the function, a        callback method is an array of two elements: the element        at index 0 is the object, and the element at index 1 is        the name of the method to call in the object.
+        When $mode is PEAR_ERROR_PRINT or PEAR_ERROR_DIE, this is        a printf format string used when printing the error        message.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodstaticPopErrorHandling" id="staticPopErrorHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">staticPopErrorHandling</span> (line <span class="line-number">636</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			staticPopErrorHandling
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodstaticPushErrorHandling" id="staticPushErrorHandling"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">staticPushErrorHandling</span> (line <span class="line-number">601</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			staticPushErrorHandling
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$mode</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$options</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$mode</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$options</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodthrowError" id="throwError"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">throwError</span> (line <span class="line-number">587</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Simpler form of raiseError with fewer options. message, code and userinfo are enough.</p>
+<p class="description"><p>Simpler form of raiseError with fewer options.  In most cases message, code and userinfo are enough.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;throwError
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$code</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$userinfo</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$message</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$code</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$userinfo</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_PEAR" id="_PEAR"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_PEAR</span> (line <span class="line-number">209</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Destructor (the emulated type of. but is included for forward compatibility, so subclass destructors should always call it.</p>
+<p class="description"><p>Destructor (the emulated type of...).  Does nothing right now, but is included for forward compatibility, so subclass destructors should always call it.
+ See the note in the class desciption about output from destructors.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_PEAR
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:25 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

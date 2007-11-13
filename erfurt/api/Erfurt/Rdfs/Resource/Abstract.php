@@ -2,12 +2,11 @@
 /**
  * RDFSResource
  *
- * @package RDFSAPI
- * @author S�ren Auer <soeren@auer.cx>
+ * @package rdfs
+ * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004
  * @version $Id$
- * @access public
- **/
+ */
 abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 	
 	protected $properties;

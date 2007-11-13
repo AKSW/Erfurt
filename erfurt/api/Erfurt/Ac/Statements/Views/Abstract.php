@@ -1,10 +1,11 @@
 <?php
 /**
-  * class providing OntoWiki custom view abstract.
-  *
-  * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id$
-  */
+ * class providing OntoWiki custom view abstract.
+ *
+ * @package ac
+ * @author Stefan Berger <berger@intersolut.de>
+ * @version $Id$
+ */
 abstract class Erfurt_Ac_Statements_Views_Abstract {
 	
 	

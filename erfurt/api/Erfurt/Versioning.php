@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package versioning
+ * @author Sören Auer, Philipp Frischmuth <philipp@frischmuth24.de>
+ */
 class Erfurt_Versioning {
 	
 	protected $model;

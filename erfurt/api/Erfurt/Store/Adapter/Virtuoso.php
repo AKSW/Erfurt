@@ -7,6 +7,7 @@
   *
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
+  * @package store
   */
 class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Default {
 	

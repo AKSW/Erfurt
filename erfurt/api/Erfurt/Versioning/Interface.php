@@ -4,6 +4,7 @@
   * Defines an interface a store adapter must imlement in order to provide
   * versioning capabilities.
   *
+  * @package versioning
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */

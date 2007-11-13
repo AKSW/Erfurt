@@ -2,6 +2,7 @@
 /**
   * class providing special configs 
   *
+  * @package config
   * @author Stefan Berger <berger@intersolut.de>
   * @copyright AKSW Team
   * @version $Id$

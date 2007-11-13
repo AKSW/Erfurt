@@ -3,6 +3,12 @@
 * edit this file, if you want to make changes to tokenizer for manchester syntax
 */
 require_once 'manchester.php';
+
+/**
+ * @package syntax
+ */
+// TODO @ Rolland?! use erfurt conform class naming (Erfurt_Syntax_Manchester_Lexer in file
+// Erfurt/Syntax/Manchester/Lexer.php)... phil
 class ManchesterLexer
 {
 	private $data;

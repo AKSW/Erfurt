@@ -30,7 +30,7 @@
   * announced methods will be started when the event is triggered. Methods can
   * be ranked in position.
   *
-  * @package: Erfurt
+  * @package: eventhandler
   * @author:  Michael Haschke
   * @version: $Id$
   * @access: public

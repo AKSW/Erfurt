@@ -3,6 +3,7 @@
 /**
   * RDFS Resource for OpenLink Virtuoso Backend <http://virtuoso.openlinksw.com/>
   *
+  * @package rdfs
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */

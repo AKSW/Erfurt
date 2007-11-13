@@ -2,12 +2,11 @@
 /**
  * RDFSmodel
  *
- * @package RDFSAPI
- * @author Sören Auer <soeren@auer.cx>
+ * @package rdfs
+ * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004
  * @version $Id$
- * @access public
- **/
+ */
 class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	public function __construct($store,$modelURI,$type=NULL) {
 		$modelVars =& $store->dbConn->execute("SELECT modelURI, modelID, baseURI FROM models WHERE modelURI='" .$modelURI ."'");

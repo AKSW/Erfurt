@@ -2,11 +2,10 @@
 /**
  * RDFSInstance
  *
- * @package RDFSAPI
+ * @package rdfs
  * @author Atanas Alexandrov <sirakov@gmail.com>
  * @copyright Copyright (c) 2007
- * @access public
- **/
+ */
 
 class RDFSInstance extends Erfurt_Rdfs_Instance_Abstract {
 

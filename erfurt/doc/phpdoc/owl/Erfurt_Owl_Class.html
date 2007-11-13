@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Erfurt_Owl_Class</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Erfurt_Owl_Class</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Erfurt_Owl_Class represents an OWL ontology node characterising a class description.</p>
+<p class="description"><p>Erfurt_Owl_Class represents an OWL ontology node characterising a class description.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Sören Auer &lt;<a href="mailto:soeren@auer.cx">soeren@auer.cx</a>&gt;, Philipp Frischmuth &lt;philipp@frischmuth24.de&gt;</li>
+				<li><span class="field">version:</span> $Id: Class.php 1634 2007-11-13 15:20:06Z p_frischmuth $</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2007</li>
+				<li><span class="field">license:</span> <a href="http://opensource.org/licenses/gpl-license.php">GNU Public License</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Owl---Class.php.html">/Owl/Class.php</a> (line <span class="field">35</span>)
+		</p>
+		
+				
+		<pre>RDFSClass
+   |
+   --Erfurt_Owl_Class</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getCardinalityMax" title="details" class="method-name">getCardinalityMax</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getCardinalityMaxInherited" title="details" class="method-name">getCardinalityMaxInherited</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getCardinalityMin" title="details" class="method-name">getCardinalityMin</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getCardinalityMinInherited" title="details" class="method-name">getCardinalityMinInherited</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#getRestriction" title="details" class="method-name">getRestriction</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">String[]</span>&nbsp;<span class="var-name">$type</span> = <span class="var-default">array('allValuesFrom','someValuesFrom','hasValue')</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#getRestrictionAllValuesFrom" title="details" class="method-name">getRestrictionAllValuesFrom</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#getRestrictionHasValue" title="details" class="method-name">getRestrictionHasValue</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#getRestrictionSomeValuesFrom" title="details" class="method-name">getRestrictionSomeValuesFrom</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isAllValuesFromRestriction" title="details" class="method-name">isAllValuesFromRestriction</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isCardinalityRestriction" title="details" class="method-name">isCardinalityRestriction</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isHasValueRestriction" title="details" class="method-name">isHasValueRestriction</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isIntersection" title="details" class="method-name">isIntersection</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isSomeValuesFromRestriction" title="details" class="method-name">isSomeValuesFromRestriction</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listComplementOf" title="details" class="method-name">listComplementOf</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listDisjointWith" title="details" class="method-name">listDisjointWith</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listEquivalentClasses" title="details" class="method-name">listEquivalentClasses</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listEquivalentClassesInfered" title="details" class="method-name">listEquivalentClassesInfered</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listIntersectionOf" title="details" class="method-name">listIntersectionOf</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listIntersections" title="details" class="method-name">listIntersections</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listSubClassesInfered" title="details" class="method-name">listSubClassesInfered</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listSuperClassesInfered" title="details" class="method-name">listSuperClassesInfered</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Erfurt_Owl_Class[]</span>
+										<a href="#listUnionOf" title="details" class="method-name">listUnionOf</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCardinality" title="details" class="method-name">setCardinality</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCardinalityMax" title="details" class="method-name">setCardinalityMax</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCardinalityMin" title="details" class="method-name">setCardinalityMin</a>
+											(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setComplementOf" title="details" class="method-name">setComplementOf</a>
+											(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setDisjointWith" title="details" class="method-name">setDisjointWith</a>
+											(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setEquivalentClasses" title="details" class="method-name">setEquivalentClasses</a>
+											(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIntersectionOf" title="details" class="method-name">setIntersectionOf</a>
+											(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setUnionOf" title="details" class="method-name">setUnionOf</a>
+											(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_getRestrictionStatement" title="details" class="method-name">_getRestrictionStatement</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$types</span> = <span class="var-default">array('allValuesFrom','someValuesFrom','hasValue')</span>])
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodgetCardinalityMax" id="getCardinalityMax"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCardinalityMax</span> (line <span class="line-number">260</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the maximum cardinality of a property.</p>
+<p class="description"><p>Returns the maximum cardinality of a property.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Maximum cardinality of a property</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getCardinalityMax
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCardinalityMaxInherited" id="getCardinalityMaxInherited"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCardinalityMaxInherited</span> (line <span class="line-number">284</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the maximum cardinality of a property or a maximum cardinality for that property inherited from a superclass.</p>
+<p class="description"><p>Returns the maximum cardinality of a property or a maximum cardinality for that property inherited from a superclass.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Maximum cardinality of a property</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getCardinalityMaxInherited
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCardinalityMin" id="getCardinalityMin"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCardinalityMin</span> (line <span class="line-number">249</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the minimum cardinality of a property.</p>
+<p class="description"><p>Returns the minimum cardinality of a property.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Minimum cardinality of a property.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getCardinalityMin
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCardinalityMinInherited" id="getCardinalityMinInherited"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCardinalityMinInherited</span> (line <span class="line-number">272</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the minimum cardinality of a property or a minimum cardinality for that property inherited from a superclass.</p>
+<p class="description"><p>Returns the minimum cardinality of a property or a minimum cardinality for that property inherited from a superclass.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Minimum cardinality of a property.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getCardinalityMinInherited
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRestriction" id="getRestriction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRestriction</span> (line <span class="line-number">295</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO add comment check functionality</p>
+<p class="description"><p>//TODO add comment check functionality</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			getRestriction
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type">String[]</span>&nbsp;<span class="var-name">$type</span> = <span class="var-default">array('allValuesFrom','someValuesFrom','hasValue')</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">String[]</span>
+				<span class="var-name">$type</span><span class="var-description">: with value restriction types</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRestrictionAllValuesFrom" id="getRestrictionAllValuesFrom"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRestrictionAllValuesFrom</span> (line <span class="line-number">311</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO add comment check functionality</p>
+<p class="description"><p>//TODO add comment check functionality</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			getRestrictionAllValuesFrom
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRestrictionHasValue" id="getRestrictionHasValue"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRestrictionHasValue</span> (line <span class="line-number">331</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO add comment check functionality</p>
+<p class="description"><p>//TODO add comment check functionality</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			getRestrictionHasValue
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRestrictionSomeValuesFrom" id="getRestrictionSomeValuesFrom"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRestrictionSomeValuesFrom</span> (line <span class="line-number">321</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO add comment check functionality</p>
+<p class="description"><p>//TODO add comment check functionality</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			getRestrictionSomeValuesFrom
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisAllValuesFromRestriction" id="isAllValuesFromRestriction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isAllValuesFromRestriction</span> (line <span class="line-number">74</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true in case this restriction is an all values from restriction.</p>
+<p class="description"><p>Returns true in case this restriction is an all values from restriction.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isAllValuesFromRestriction
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisCardinalityRestriction" id="isCardinalityRestriction"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isCardinalityRestriction</span> (line <span class="line-number">42</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true in case this restriction is a cardinality restriction.</p>
+<p class="description"><p>Returns true in case this restriction is a cardinality restriction.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isCardinalityRestriction
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisHasValueRestriction" id="isHasValueRestriction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isHasValueRestriction</span> (line <span class="line-number">54</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true in case this restriction is a has value restriction.</p>
+<p class="description"><p>Returns true in case this restriction is a has value restriction.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isHasValueRestriction
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisIntersection" id="isIntersection"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isIntersection</span> (line <span class="line-number">84</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true in case this class is an intersection of a list of classes.</p>
+<p class="description"><p>Returns true in case this class is an intersection of a list of classes.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isIntersection
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisSomeValuesFromRestriction" id="isSomeValuesFromRestriction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isSomeValuesFromRestriction</span> (line <span class="line-number">64</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns true in case this restriction is a some values from restriction.</p>
+<p class="description"><p>Returns true in case this restriction is a some values from restriction.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isSomeValuesFromRestriction
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistComplementOf" id="listComplementOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listComplementOf</span> (line <span class="line-number">144</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of classes, that are declared  to be a</p>
+<p class="description"><p>Returns a list of classes, that are declared  to be a Complement of this class with owl:complementOf</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listComplementOf
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistDisjointWith" id="listDisjointWith"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDisjointWith</span> (line <span class="line-number">114</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array containing all the classes that are declared to be disjoint with this class.</p>
+<p class="description"><p>Returns an array containing all the classes that are declared to be disjoint with this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listDisjointWith
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistEquivalentClasses" id="listEquivalentClasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listEquivalentClasses</span> (line <span class="line-number">93</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array containing all the classes that are declared to be equivalent to this class.</p>
+<p class="description"><p>Returns an array containing all the classes that are declared to be equivalent to this class.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listEquivalentClasses
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistEquivalentClassesInfered" id="listEquivalentClassesInfered"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listEquivalentClassesInfered</span> (line <span class="line-number">104</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array containing all the classes that are</p>
+<p class="description"><p>Returns an array containing all the classes that are declared to be equivalent to this class and all classes that declare to be equivalent to this class</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listEquivalentClassesInfered
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistIntersectionOf" id="listIntersectionOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listIntersectionOf</span> (line <span class="line-number">124</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of classes, that are declared  to be an</p>
+<p class="description"><p>Returns a list of classes, that are declared  to be an intersection of this class with owl:intersectionOf</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listIntersectionOf
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistIntersections" id="listIntersections"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listIntersections</span> (line <span class="line-number">375</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of nodes representing owl:intersectionOf lists the class is part of</p>
+<p class="description"><p>Returns a list of nodes representing owl:intersectionOf lists the class is part of</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of nodes representing owl:intersectionOf lists the class is part of</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listIntersections
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistSubClassesInfered" id="listSubClassesInfered"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSubClassesInfered</span> (line <span class="line-number">201</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Changed see comments below</p>
+<p class="description"><p>Changed see comments below Returns a list of subclasses merged with the list of subclasses of the equivalent classes</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listSubClassesInfered
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistSuperClassesInfered" id="listSuperClassesInfered"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listSuperClassesInfered</span> (line <span class="line-number">232</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of Superclasses</p>
+<p class="description"><p>Returns a list of Superclasses</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listSuperClassesInfered
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistUnionOf" id="listUnionOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listUnionOf</span> (line <span class="line-number">134</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of classes, that are declared  to be a</p>
+<p class="description"><p>Returns a list of classes, that are declared  to be a union of this class with owl:unionOf</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Erfurt_Owl_Class[]</span>
+		<span class="method-name">
+			listUnionOf
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetCardinality" id="setCardinality"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCardinality</span> (line <span class="line-number">342</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the cardinality for a property.</p>
+<p class="description"><p>Sets the cardinality for a property.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCardinality
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$cardinality</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetCardinalityMax" id="setCardinalityMax"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCardinalityMax</span> (line <span class="line-number">365</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the maximum cardinality for a property.</p>
+<p class="description"><p>Sets the maximum cardinality for a property.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCardinalityMax
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$cardinality</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetCardinalityMin" id="setCardinalityMin"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCardinalityMin</span> (line <span class="line-number">354</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the minimum cardinality for a property.</p>
+<p class="description"><p>Sets the minimum cardinality for a property.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCardinalityMin
+		</span>
+					(<span class="var-type">Erfurt_Rdfs_Property</span>&nbsp;<span class="var-name">$property</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$cardinality</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Erfurt_Rdfs_Property</span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$cardinality</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetComplementOf" id="setComplementOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setComplementOf</span> (line <span class="line-number">189</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO</p>
+<p class="description"><p>//TODO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setComplementOf
+		</span>
+					(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$values</span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetDisjointWith" id="setDisjointWith"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setDisjointWith</span> (line <span class="line-number">161</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO</p>
+<p class="description"><p>//TODO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setDisjointWith
+		</span>
+					(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$values</span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetEquivalentClasses" id="setEquivalentClasses"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEquivalentClasses</span> (line <span class="line-number">153</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO</p>
+<p class="description"><p>//TODO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setEquivalentClasses
+		</span>
+					(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$values</span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIntersectionOf" id="setIntersectionOf"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIntersectionOf</span> (line <span class="line-number">169</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO</p>
+<p class="description"><p>//TODO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIntersectionOf
+		</span>
+					(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$values</span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetUnionOf" id="setUnionOf"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setUnionOf</span> (line <span class="line-number">178</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">//TODO</p>
+<p class="description"><p>//TODO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setUnionOf
+		</span>
+					(<span class="var-type">$values</span>&nbsp;<span class="var-name">$values</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">$values</span>
+				<span class="var-name">$values</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getRestrictionStatement" id="_getRestrictionStatement"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getRestrictionStatement</span> (line <span class="line-number">495</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_getRestrictionStatement
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$property</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$types</span> = <span class="var-default">array('allValuesFrom','someValuesFrom','hasValue')</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$property</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$types</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 13 Nov 2007 20:48:21 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>
