@@ -5,7 +5,7 @@
   * TODO: RECHTE REIHENFOLGE 
   *
   * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id: $
+  * @version $Id$
   */
 class Erfurt_Ac_Default {
 	/**

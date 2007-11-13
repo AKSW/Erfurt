@@ -6,7 +6,7 @@
  * @package RDFSAPI
  * @author Sören Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
- * @version $Id: search.php 549 2006-03-06 02:19:04Z soerenauer $
+ * @version $Id$
  * @access public
  **/
 abstract class Erfurt_Rdfs_InstanceSearch_Abstract {

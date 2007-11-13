@@ -29,7 +29,7 @@
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version $Id: StringWriterXMLImpl.php 1010 2007-06-03 13:11:24Z p_frischmuth $
+ * @version $Id$
  */
 class Erfurt_Syntax_StringWriterXMLImpl implements Erfurt_Syntax_StringWriterInterface {
 

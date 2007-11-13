@@ -5,7 +5,7 @@
  * @package store
  * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004 - 2007
- * @version $Id: store.php 956 2007-04-23 11:21:47Z cweiske $
+ * @version $Id$
  */
 class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract 
 		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface {

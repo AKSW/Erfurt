@@ -6,7 +6,7 @@
  * @package rdfsapi
  * @author soa
  * @copyright Copyright (c) 2006
- * @version $Id: model.php 982 2007-05-14 14:09:12Z cweiske $
+ * @version $Id$
  */
 abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**

@@ -3,7 +3,7 @@
   * class providing OntoWiki custom view management.
   *
   * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id: $
+  * @version $Id$
   */
 class Erfurt_Ac_Statements_Views_Rap  extends Erfurt_Ac_Statements_Views_Abstract  {
 	

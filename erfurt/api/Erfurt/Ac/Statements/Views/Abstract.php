@@ -3,7 +3,7 @@
   * class providing OntoWiki custom view abstract.
   *
   * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id: $
+  * @version $Id$
   */
 abstract class Erfurt_Ac_Statements_Views_Abstract {
 	

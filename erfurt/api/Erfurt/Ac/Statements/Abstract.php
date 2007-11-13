@@ -3,7 +3,7 @@
   * abstract class providing OntoWiki statement based ac
   *
   * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id: $
+  * @version $Id$
   */
 abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_Interface {
 	

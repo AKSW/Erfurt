@@ -5,7 +5,7 @@
  * @package RDFSAPI
  * @author S�ren Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
- * @version $Id: resource.php 956 2007-04-23 11:21:47Z cweiske $
+ * @version $Id$
  * @access public
  **/
 abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {

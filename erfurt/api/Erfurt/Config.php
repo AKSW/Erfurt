@@ -4,7 +4,7 @@
   *
   * @author Stefan Berger <berger@intersolut.de>
   * @copyright AKSW Team
-  * @version $Id: Util.php 919 2007-04-01 22:48:13Z nheino $
+  * @version $Id$
   */
 class Erfurt_Config extends Zend_Config {
 	protected $_nestSeparator= '.';

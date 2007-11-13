@@ -30,7 +30,7 @@
  * @package rdfsapi
  * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2006
- * @version $Id: store.php 834 2007-03-12 08:18:05Z cweiske $
+ * @version $Id$
  */
 abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface {
 		

@@ -6,7 +6,7 @@
   * @author Stefan Berger <berger@intersolut.de>
   * @author Norman Heino <norman@feedface.de>
   * @copyright AKSW Team
-  * @version $Id: Util.php 919 2007-04-01 22:48:13Z nheino $
+  * @version $Id$
   */
 class Erfurt_Util {
 	

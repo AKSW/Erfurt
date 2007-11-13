@@ -5,7 +5,7 @@
  * @package RDFSAPI
  * @author S�ren Auer <soeren@auer.cx>
  * @copyright Copyright (c) 2004
- * @version $Id: property.php 956 2007-04-23 11:21:47Z cweiske $
+ * @version $Id$
  * @access public
  **/
 class RDFSProperty extends Erfurt_Rdfs_Property_Abstract {
