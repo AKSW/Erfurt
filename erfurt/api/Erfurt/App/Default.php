@@ -47,12 +47,21 @@ class Erfurt_App_Default {
 	protected $defaultStore = 'default';
 	
 	/**
+	 *  
+	 * @var Object event handler
+	 */
+	protected $EH = null;
+	
+	/**
 	 * constructor
 	 *
 	 * @param object configuration parameters
 	 */
 	public function __construct($config, $username = '', $password = '', $throwExceptions = false) {
 		$this->throwExceptions = $throwExceptions;
+		
+		# general object for event handling
+		$this->EH = new Erfurt_EventHandler;
 		
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));

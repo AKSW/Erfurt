@@ -1,7 +1,7 @@
 <?php
 
 /*
- * eventhandler.php
+ * EventHandler.php
  * Encoding: utf-8
  *
  * Copyright (c) 2007, OntoWiki project team
@@ -24,27 +24,72 @@
  */
 
 /**
-  * A short description of the file or class.
+  * Erfurt EventHandler
   *
-  * @package: EventHandler
+  * Provides functionality to announce methods/functions to named events,
+  * announced methods will be started when the event is triggered. Methods can
+  * be ranked in position.
+  *
+  * @package: Erfurt
   * @author:  Michael Haschke
   * @version: $Id$
+  * @access: public
   */
-class EventHandler {
+class Erfurt_EventHandler {
     
     private $_events = array();
     private $_autoid = array();
     private $_autoincr = 100;
 
-    function EventHandler() {
+    public function __construct() {
     
     }
     
-    function trigger($eventname, $attributes) {
-    
+	/**
+	 * Erfurt_EventHandler::trigger()
+	 *
+	 * @param String    $eventname  name of triggered event
+ 	 * @param Pointer   $attribute  Pointer to one var
+ 	 *
+ 	 * @return Bool response
+ 	 *      o true: all started methods did return true
+ 	 *      o false: at least as one started method returned false
+ 	 *
+ 	 * @access public
+ 	 */
+    public function trigger($eventname, &$attribute) {
+        
+        # prepare ordered function list for event
+        $list = $this->_prepare($eventname);
+        
+        # use announced functions
+        $response = true;
+        foreach ($list as $function) {
+            $response = call_user_func($function,&$attribute);
+        }
+        
+        return $response;
+        
     }
     
-    function announce($eventname,$functionname,array $position) {
+	/**
+	 * Erfurt_EventHandler::announce()
+	 * announce a function to a named event
+	 *
+	 * @param String    $eventname      name of triggered event
+ 	 * @param String    $functionname   name of function/method which should be started when event is triggered
+ 	 * @param Array     $position       info about ranking, array may contain one to three elements:
+ 	 *      o pos: integer
+ 	 *      o before: string or array of more strings with function names which should be started after announced function
+ 	 *      o after: string or array of more strings with function names which should be started before announced function
+ 	 *
+ 	 * @return Bool
+ 	 *      o true: function was added to event
+ 	 *      o false: function was not added to event
+ 	 *
+ 	 * @access public
+ 	 */
+    public function announce($eventname,$functionname,$position=array()) {
     
         # todo: check function name for correct spelling
     
@@ -54,7 +99,7 @@ class EventHandler {
             if (!isset($this->_autoid[$eventname]))
                 $this->_autoid[$eventname] = 0;
             $functionpos = $this->_autoid[$eventname];
-            if (isset($position['pos']) && is_int($position['pos']))
+            if (isset($position['pos']) && is_numeric($position['pos']))
                 $functionpos = $position['pos'];
             
             if (isset($position['after']) && (is_string($position['after']) || (is_array($position['after']) && count($position['after'])>0)) && !isset($position['before'])) {
@@ -68,11 +113,15 @@ class EventHandler {
                 for ($i=1; $i<count($position['after']); $i++)
                     $minpos = $this->_minPosition($minpos,$this->isAnnounced($eventname,$position['after'][$i]));
                     
+                # minpos = false (after-methods do not exist)
+                if ($minpos===false)
+                    return $this->announce($eventname,$functionname); # insert on auto id
+                    
                 # check: if position is occupied then auto increment position
-                while (!$this->isAnnounced($eventname,$minpos)) $minpos = $minpos + $this->_autoincr;
+                while ($this->isAnnounced($eventname,$minpos) !== false) $minpos = $minpos + $this->_autoincr/2;
                 
                 # add function and it's position to event's function stack
-                $this->events[$eventname][$functionname] = $minpos;
+                $this->_events[$eventname][$functionname] = $minpos;
             
             }
             elseif (isset($position['before']) && (is_string($position['before']) || (is_array($position['before']) && count($position['before'])>0)) && !isset($position['after'])) {
@@ -86,11 +135,15 @@ class EventHandler {
                 for ($i=1; $i<count($position['before']); $i++)
                     $maxpos = $this->_maxPosition($maxpos,$this->isAnnounced($eventname,$position['before'][$i]));
                     
+                # maxpos = false (after-methods do not exist)
+                if ($maxpos===false)
+                    return $this->announce($eventname,$functionname); # insert on auto id
+                    
                 # check: if position is occupied then auto increment position
-                while (!$this->isAnnounced($eventname,$maxpos)) $maxpos = $maxpos - $this->_autoincr;
+                while ($this->isAnnounced($eventname,$maxpos) !== false) $maxpos = $maxpos - $this->_autoincr/2;
                 
                 # add function and it's position to event's function stack
-                $this->events[$eventname][$functionname] = $maxpos;
+                $this->_events[$eventname][$functionname] = $maxpos;
             
             }
             elseif (isset($position['after']) && (is_string($position['after']) || (is_array($position['after']) && count($position['after'])>0))
@@ -113,20 +166,15 @@ class EventHandler {
                 for ($i=1; $i<count($position['before']); $i++)
                     $maxpos = $this->_maxPosition($maxpos,$this->isAnnounced($eventname,$position['before'][$i]));
                     
-                if ($maxpos < $minpos || $maxpos-$minpos==1) {
+                if ($maxpos < $minpos) {
                     return false; # wanted position is not available
                 }
                 else {
                     # search for free position between minpos and maxpos (providing biggest difference)
-                    $functionpos = $this->_searchFreePosition($eventname, array($minpos, $maxpos));
+                    $functionpos = $this->_searchFreePosition($eventname, $minpos, $maxpos);
                     
-                    # add function on free position or return false (no free position)
-                    if ($functionpos === false) {
-                        return false;
-                    }
-                    else {
-                        $this->events[$eventname][$functionname] = $functionpos;
-                    }
+                    # add function on free position
+                    $this->_events[$eventname][$functionname] = $functionpos;
                 }
                 
             }
@@ -134,13 +182,13 @@ class EventHandler {
                 # announce on position defined by auto id
                 
                 # check: if position is occupied then auto increment position
-                while (!$this->isAnnounced($eventname,$functionpos)) $functionpos = $functionpos + $this->_autoincr;
+                while ($this->isAnnounced($eventname,$functionpos) !== false) $functionpos = $functionpos + $this->_autoincr;
                 
                 # add function and it's position to event's function stack
-                $this->events[$eventname][$functionname] = $functionpos;
+                $this->_events[$eventname][$functionname] = $functionpos;
                 
                 # save last auto id (when no special position was defined)
-                if (!isset($position['pos']) || !is_int($position['pos'])) $this->_autoid[$eventname] = $functionpos;
+                if (!isset($position['pos']) || !is_numeric($position['pos'])) $this->_autoid[$eventname] = $functionpos;
                 
             }
             
@@ -153,17 +201,56 @@ class EventHandler {
     
     }
     
-    function isAnounced($eventname,$nameOrPosition) {
+	/**
+	 * Erfurt_EventHandler::reannounce()
+	 * re-announce a function to a named event, parameters are exact the same
+	 * like at announce(). Reannouncements only work with already announced functions.
+	 *
+ 	 * @return Mixed
+ 	 *      o true: function was added to event
+ 	 *      o false: function was not added to event
+ 	 *      o null: function was not announced before
+ 	 *
+ 	 * @access public
+ 	 */
+    public function reannounce($eventname,$functionname,$position=array()) {
+    
+        if ($this->isAnnounced($eventname,$functionname)!==false) {
+            return $this->announce($eventname,$functionname,$position);
+        }
+        else {
+            return null;
+        }
+    
+    }
+    
+	/**
+	 * Erfurt_EventHandler::isAnnounced()
+	 *
+	 * @param String    $eventname      name of triggered event
+ 	 * @param Mixed     $nameOrPosition function name or position id
+ 	 *      o function name must be a string
+ 	 *      o position must be numeric
+ 	 *
+ 	 * @return Mixed
+ 	 *      o false: function is not added to event or position is not occupied
+ 	 *      o string: function which is set to the position
+ 	 *      o numeric: position of function
+ 	 *
+ 	 * @access public
+ 	 */
+    public function isAnnounced($eventname,$nameOrPosition) {
+        $this->_check($eventname);
     
         if (is_numeric($nameOrPosition)) {
             # look for special position on event stack
-            return array_search($nameOrPosition, $this->events[$eventname]);
+            return array_search($nameOrPosition, $this->_events[$eventname]);
         }
         elseif (is_string($nameOrPosition)) {
             # look for method name in event stack
-            if (isset($this->events[$eventname][$nameOrPosition])) {
+            if (isset($this->_events[$eventname][$nameOrPosition])) {
                 # found: return position
-                return $this->events[$eventname][$nameOrPosition];
+                return $this->_events[$eventname][$nameOrPosition];
             }
             else {
                 # not found: return false
@@ -176,20 +263,110 @@ class EventHandler {
     
     }
     
-    function _prepare($eventname) {
+	/**
+	 * Erfurt_EventHandler::listAnnounced()
+	 *
+	 * @param String    $eventname      name of triggered event
+ 	 *
+ 	 * @return Array    sorted list of all functions which are added to a named event
+ 	 *      o key: functionname
+ 	 *      o value: position
+ 	 *
+ 	 * @access public
+ 	 */
+    public function listAnnounced($eventname) {
+        $this->_check($eventname);
+        $list = $this->_events[$eventname];
+        asort($list,SORT_NUMERIC);
+        
+        return $list;
+    }
     
-        $list = $this->events[$eventname];
+    private function _prepare($eventname) {
+    
+        $list = $this->_events[$eventname];
         asort($list,SORT_NUMERIC);
         
         return array_keys($list);
         
     }
     
-    function _searchFree() {
+    private function _searchFreePosition($eventname, $minpos, $maxpos) {
+    
+        # sort method list
+        $list = $this->_events[$eventname];
+        asort($list,SORT_NUMERIC);
+
+        # get all methods between min and max position
+        $keyBeg = array_search($minpos,$list);
+        $keyEnd = array_search($maxpos,$list);
+        
+        $allKeys = array_keys($list);
+
+        $numkeyBeg = array_search($keyBeg,$allKeys);
+        $numkeyEnd = array_search($keyEnd,$allKeys);
+        
+        $methodList = array_slice($list, $numkeyBeg, $numkeyEnd - $numkeyBeg + 1, true);
+        
+        # look for biggest id gap between two methods
+        $c = 0;
+        $max = 0;
+        $pos1 = 0;
+        $pos2 = 0;
+        $name1 = null;
+        $name2 = null;
+        $maxBegPos = 0;
+        $maxEndPos = 0;
+        $maxBegName = null;
+        $maxEndName = null;
+        foreach ($methodList as $functionname => $functionpos) {
+            if ($c++ == 0) {
+                # first step
+                $name1 = $functionname;
+                $pos1 = $functionpos;
+            }
+            else {
+                # next step - compare difference between positions of functions
+                $name2 = $functionname;
+                $pos2 = $functionpos;
+                if (max($max, $pos2-$pos1) > $max) {
+                    # save info about bigger gap
+                    $maxBegPos = $pos1;
+                    $maxEndPos = $pos2;
+                    $maxBegName = $name1;
+                    $maxEndName = $name2;
+                }
+                $pos1 = $pos2;
+                $name1 = $name2;
+            }
+        }
+        
+        # doing very difficulty math to get the midpoint between min and max
+        
+        $newpos = ($maxBegPos+$maxEndPos)/2;
+        
+        return $newpos;
+
     
     }
     
-    function _minPosition($value1, $value2) {
+    private function _minPosition($value1, $value2) {
+        
+        if ($value1===false && is_numeric($value2)) {
+            return $value2;
+        }
+        elseif ($value2===false && is_numeric($value1)) {
+            return $value1;
+        }
+        elseif (is_numeric($value1) && is_numeric($value2)) {
+            return max($value1, $value2);
+        }
+        else {
+            return false;
+        }
+    }
+    
+    private function _maxPosition($value1, $value2) {
         
         if ($value1===false && is_numeric($value2)) {
             return $value2;
@@ -205,20 +382,9 @@ class EventHandler {
         }
     }
     
-    function _maxPosition($value1, $value2) {
-        
-        if ($value1===false && is_numeric($value2)) {
-            return $value2;
-        }
-        elseif ($value2===false && is_numeric($value1)) {
-            return $value1;
-        }
-        elseif (is_numeric($value1) && is_numeric($value2)) {
-            return max($value1, $value2);
-        }
-        else {
-            return false;
-        }
+    private function _check($eventname) {
+        if (!isset($this->_events[$eventname])) $this->_events[$eventname] = array();
+        return true;
     }
 }
 
