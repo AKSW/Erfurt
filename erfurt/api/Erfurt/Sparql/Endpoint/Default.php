@@ -5,6 +5,7 @@
  * basing up on Erfurt-API
  * 
  * @author Christoph Rieß
+ * @version $Id$
  * @package sparql
  **/
 class Erfurt_Sparql_Endpoint_Default {
@@ -49,37 +50,32 @@ class Erfurt_Sparql_Endpoint_Default {
 	/**
 	 * Holding Erfurt_Default_App Instance
 	 *
-	 * @var unknown_type
+	 * @var Erfurt_App_Default the default class to work on
 	 */
 	private $erfurt;
 	
 	/**
 	 * Constructor for new Endpoint reading GET/POST Variables for needed values
-	 * @param string $query Sparql Query
+	 * @param Erfurt_Config $config Sparql Query
 	 */
-	public function Erfurt_Sparql_Endpoint_Default ($query = '') {
+	public function Erfurt_Sparql_Endpoint_Default ($config = null) {
 		
-		include dirname(__FILE__) . '/../../erfurt.php';
+		//Load default config from erfurt.ini
+		if ($config === null || !is_object($config))
+			require (dirname(__FILE__) . '/../../erfurt.php');
 
-		// use ontowiki settings if available
-		$session = new Zend_Session_Namespace('ERFURT');
+		$this -> erfurt = new Erfurt_App_Default($config);
 		
-		if (isset($session->config)) {
-			$this -> erfurt = new Erfurt_App_Default($session->config);
-		} else {
-			$this -> erfurt = new Erfurt_App_Default($config);
-		}
-		
-		//check if endpoint is enabled else throw exception
+		//check if endpoint is enabled throwing exception if not exception
 		if (!$config->endpoint->http)
 			throw new Erfurt_Exception('QueryRequestRefused: SPARQL Endpoint disabled in erfurt-config',1602);
 		
 		// To surpress warnings
 		//error_reporting(E_ERROR);
 		
-		$this -> useImports = false;
+		$this -> useImports = true;
 		
-		$this -> query = stripslashes($query);
+		$this -> query = '';
 		
 		//default renderer should by XML
 		$this -> strRenderer = 'XML';
@@ -99,14 +95,13 @@ class Erfurt_Sparql_Endpoint_Default {
 	}
 	
 	/**
-	 * Setting special model to execute query on.
+	 * Adding model to execute query on.
 	 *
 	 * @param unknown_type $modeluri
+	 * @return void
 	 */
-	public function setModel($modeluri) {
-			if ($modeluri === null)
-				$this->modelURIs = null;
-			else {
+	public function addModel($modeluri) {
+			if ($modeluri !== null) {
 				if ($this->DBStore->aclCheck('view',$modeluri) && $this->DBStore->modelExists($modeluri)) {
 					$this->modelURIs[] = $modeluri;
 				} else {
@@ -120,6 +115,8 @@ class Erfurt_Sparql_Endpoint_Default {
 	 *
 	 * @param unknown_type $user
 	 * @param unknown_type $pass
+	 * @return void
+	 * @throws Erfurt_Exception
 	 */
 	public function authenticate($user, $password) {
 
@@ -137,6 +134,7 @@ class Erfurt_Sparql_Endpoint_Default {
 	 * Enable to auto-query on imported model too. 
 	 *
 	 * @param boolean $userImports
+	 * @return void
 	 */
 	public function setUseImports($useImports = false) {
 		$this->useImports = $useImports;
@@ -146,6 +144,7 @@ class Erfurt_Sparql_Endpoint_Default {
 	 * Setting renderer as string
 	 *
 	 * @param string $renderer
+	 * @return void
 	 */
 	public function setRenderer($renderer) {
 		if ($renderer != '' && $renderer !== null)
@@ -154,14 +153,19 @@ class Erfurt_Sparql_Endpoint_Default {
 	
 	/**
 	 * Method to set a new query or alter an existing (just setting the query string)
+	 * 
 	 * @param string $query
+	 * @return void
 	 */
 	public function setQuery($query) {
 		if ($query === null) {
 			throw new Erfurt_Exception('QueryRequestRefused: query is empty',1602);
 		}
-		
-		$this -> query = stripslashes($query);
+		$parser = new SparqlParser();
+		$this -> query = $parser -> parse(stripslashes($query));
+		foreach ($this -> query ->getFromPart() as $resource) {
+			$this -> addModel($resource->uri);
+		}
 	}
 	
 	/**
@@ -183,7 +187,9 @@ class Erfurt_Sparql_Endpoint_Default {
 	}
 	
 	/**
-	 * Getting the result (xml-string)
+	 * Getting the result (datatype maybe varying on different renderers)
+	 * 
+	 * @return string|array|object result of sparql-query
 	 */
 	public function getQueryResult() {
 		return $this -> queryresult;
