@@ -3,6 +3,11 @@
 require_once 'Default.php';
 /*
  * <Example>
+ * Short example showing the use of the Sparql_Endpoint class in Erfurt and
+ * actually the final HTTP-Endpoint in Erfurt. 
+ * The Configuration is here loaded from erfurt.ini.
+ *
+ * version: $Id$
 */
 
 // Just loading the settings from GET/POST
@@ -35,14 +40,10 @@ if (sizeof($_POST) != 0) {
 
 try {
 	$endpoint = new Erfurt_Sparql_Endpoint_Default();
+	
 	$endpoint->authenticate($user,$password);
 	
-	if($_GET['imports'] !== 'false')
-		$endpoint ->setUseImports($_GET['imports']);
-		
-	$query = stripslashes($query);
-	
-	$endpoint->setModel($model);
+	$endpoint->addModel($model);
 	
 	$endpoint->setQuery($query);
 	
@@ -51,9 +52,11 @@ try {
 	echo $endpoint -> query();
 	
 } catch (Exception $e) {
-	
-	echo 'Erfurt-Message: ' . $e->getMessage() .  ' / Erfurt-Code: ' . $e->getCode();
-	
+
+		$errString =  'Erfurt-Message: ' . $e->getMessage();
+		if ($e->getCode())
+			$errString .=  ' / Erfurt-Code: ' . $e->getCode();
+		echo $errString;
 }
 
 /*
