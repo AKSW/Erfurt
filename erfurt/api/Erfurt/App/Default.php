@@ -52,7 +52,7 @@ class Erfurt_App_Default {
 	 *  
 	 * @var Object event handler
 	 */
-	public $EH = null;
+	protected $eh = null;
 	
 	/**
 	 * constructor
@@ -63,7 +63,7 @@ class Erfurt_App_Default {
 		$this->throwExceptions = $throwExceptions;
 		
 		# general object for event handling
-		$this->EH = new Erfurt_EventHandler;
+		$this->eh = new Erfurt_EventHandler;
 		
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
@@ -274,6 +274,13 @@ class Erfurt_App_Default {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * returns the event handler
+	 */
+	public function getEventHandler() {
+        return $this->eh;
 	}
 	
 	/**
