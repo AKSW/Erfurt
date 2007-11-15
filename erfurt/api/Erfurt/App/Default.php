@@ -52,7 +52,7 @@ class Erfurt_App_Default {
 	 *  
 	 * @var Object event handler
 	 */
-	protected $EH = null;
+	public $EH = null;
 	
 	/**
 	 * constructor
