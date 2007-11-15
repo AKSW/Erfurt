@@ -12,38 +12,43 @@ class Erfurt_Sparql_Endpoint_Default {
 	
 	/**
 	 * Attribute for storing query string
+	 * 
+	 * @var string the query
 	 */
 	private $query;
 	
 	/**
-	 * Attribute to check if imports are wanted
+	 * Attribute signaling if queries should be automatically extended to the imported models
+	 * 
+	 * @var boolean
 	 */
 	private $useImports;
 	
 	/**
 	 * Attribute is array for storing allowed Models
+	 * 
+	 * @var array holding the modeluris to query on as strings
 	 */
 	private $modelURIs;
 	
 	/**
-	 * Storing query result as string formed in XML
+	 * Storing query result as string|array|object depending on which renderer has been specified
+	 * 
+	 * @var string|array|object the query result
 	 */
 	private $queryresult;
 	
 	/**
-	 * Storing some http header settings (unused yet)
-	 */
-	private $httpsettings;
-	
-	/**
 	 * Referencing the Database Store Object to perform SPARQL-Queries on
+	 * 
+	 * @var object Holding reference on the store to query on.
 	 */
 	private $DBStore;
 
 	/**
 	 * String to store the renderer-name to use for the query
 	 *
-	 * @var unknown_type
+	 * @var string renderer to use
 	 */
 	private $strRenderer;
 	
@@ -55,7 +60,9 @@ class Erfurt_Sparql_Endpoint_Default {
 	private $erfurt;
 	
 	/**
-	 * Constructor for new Endpoint reading GET/POST Variables for needed values
+	 * Constructor for new Endpoint, using given configuration to established 
+	 * connection to store and query on it.
+	 * 
 	 * @param Erfurt_Config $config Sparql Query
 	 */
 	public function Erfurt_Sparql_Endpoint_Default ($config = null) {
@@ -97,7 +104,7 @@ class Erfurt_Sparql_Endpoint_Default {
 	/**
 	 * Adding model to execute query on.
 	 *
-	 * @param unknown_type $modeluri
+	 * @param string $modeluri
 	 * @return void
 	 */
 	public function addModel($modeluri) {
@@ -113,8 +120,8 @@ class Erfurt_Sparql_Endpoint_Default {
 	/**
 	 * Doing authentication
 	 *
-	 * @param unknown_type $user
-	 * @param unknown_type $pass
+	 * @param string $user
+	 * @param string $pass
 	 * @return void
 	 * @throws Erfurt_Exception
 	 */
@@ -172,6 +179,7 @@ class Erfurt_Sparql_Endpoint_Default {
 	 * Performing query on DBStore returning result
 	 * 
 	 * @return string|array|object result with type varying from which renderer has been choosen
+	 * @throws Erfurt_Exception
 	 */
 	public function query() {
 		
