@@ -39,10 +39,13 @@ class Erfurt_EventHandler {
     
     private $_events = array();
     private $_autoid = array();
+    private $_classes = array();
     private $_autoincr = 100;
+    private $_erfurt = null;
+    private $_pluginManager = null;
 
-    public function __construct() {
-    
+    public function __construct($o) {
+        $this->_erfurt = $o;
     }
     
 	/**
@@ -57,7 +60,7 @@ class Erfurt_EventHandler {
  	 *
  	 * @access public
  	 */
-    public function trigger($eventname, &$attribute) {
+    public function trigger($eventname, $attribute) {
         
         # prepare ordered function list for event
         $list = $this->_prepare($eventname);
@@ -65,7 +68,21 @@ class Erfurt_EventHandler {
         # use announced functions
         $response = true;
         foreach ($list as $function) {
-            $response = call_user_func($function,&$attribute);
+        
+            # prepare class and function
+            if ($this->_pluginManager === null) $this->_pluginManager = $this->_erfurt->getPluginManager();
+            $this->_pluginManager->prepare($function);
+            
+            $classMethod = explode('::',$function);
+            $class = $classMethod[0];
+            $method = $classMethod[1];
+            
+            # check for object, create object
+            if (!isset($this->_classes[$class]))
+                eval('$this->_classes[$class] = new '.$class.'($this->_erfurt);');
+
+            # call method
+            eval('$response = $this->_classes[$class]->'.$method.'($attribute);');
         }
         
         return $response;
@@ -283,6 +300,7 @@ class Erfurt_EventHandler {
     }
     
     private function _prepare($eventname) {
+        $this->_check($eventname);
     
         $list = $this->_events[$eventname];
         asort($list,SORT_NUMERIC);

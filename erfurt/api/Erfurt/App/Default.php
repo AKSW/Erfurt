@@ -55,6 +55,12 @@ class Erfurt_App_Default {
 	protected $eh = null;
 	
 	/**
+	 *  
+	 * @var Object for plugin manager
+	 */
+	protected $pluginManager = null;
+	
+	/**
 	 * constructor
 	 *
 	 * @param object configuration parameters
@@ -63,7 +69,11 @@ class Erfurt_App_Default {
 		$this->throwExceptions = $throwExceptions;
 		
 		# general object for event handling
-		$this->eh = new Erfurt_EventHandler;
+		$this->eh = new Erfurt_EventHandler($this);
+		
+		# init plugin manager 
+		$this->pluginManager = new Erfurt_PluginManager($this);
+		# $this->pluginManager->init(path to folder for erfurt plugins);
 		
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
@@ -281,6 +291,13 @@ class Erfurt_App_Default {
 	 */
 	public function getEventHandler() {
         return $this->eh;
+	}
+	
+	/**
+	 * returns the plugin manager
+	 */
+	public function getPluginManager() {
+        return $this->pluginManager;
 	}
 	
 	/**
