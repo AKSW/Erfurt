@@ -1288,10 +1288,17 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 // TODO handle conflicts, e.g. statement to be added exists already or statement to be removed does not exists 
 // ask seebi
 		$this->logStart('model update');
-		$this->addStatementArray($modifiedModel->subtract($originalModel)->triples, false, false);
-		$this->removeStatementArray($originalModel->subtract($modifiedModel)->triples, false, false);
-		$success = $this->logEnd();
+		$addModel = new MemModel();
+		$addModel->addModel($modifiedModel);
+		$addModel = $addModel->subtract($originalModel);
+		$this->addStatementArray($addModel->triples, false, false);
 		
+		$removeModel = new MemModel();
+		$removeModel->addModel($originalModel);
+		$removeModel->subtract($modifiedModel);
+		$this->removeStatementArray($removeModel->triples, false, false);
+		$success = $this->logEnd();
+	
 		if (success == false) {
 // TODO exception code
 			throw new Erfurt_Exception('error while updating the model');
