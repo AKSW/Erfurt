@@ -73,7 +73,9 @@ class Erfurt_App_Default {
 		
 		# init plugin manager 
 		$this->pluginManager = new Erfurt_PluginManager($this);
-		# $this->pluginManager->init(path to folder for erfurt plugins);
+		if ($config->plugins->erfurt && strlen($config->plugins->erfurt)>0) {
+    		$this->pluginManager->init(REAL_BASE . $this->config->plugins->erfurt); # Is absolute path correct for erfurt?
+		}
 		
 		Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
