@@ -265,7 +265,7 @@ class Erfurt_PluginManager {
 class PluginTriggerZendEvents extends Zend_Controller_Plugin_Abstract {
 
     private $_eh = null;
-    private $_request = null;
+    public $request = null;
 
     function __construct(Erfurt_EventHandler $eh) {
         $this->_eh = $eh;
@@ -273,35 +273,35 @@ class PluginTriggerZendEvents extends Zend_Controller_Plugin_Abstract {
 
     public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         $this->_eh->trigger('ZendRoutStartup',$this);
         $this->_eh->trigger('ZendRoutStartup_'.$request->getModuleName().'_'.$request->getControllerName().'_'.$request->getActionName(),$this);
     }
 
     public function routeShutdown(Zend_Controller_Request_Abstract $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         $this->_eh->trigger('ZendRoutShutdown',$this);
         $this->_eh->trigger('ZendRoutShutdown_'.$request->getModuleName().'_'.$request->getControllerName().'_'.$request->getActionName(),$this);
     }
 
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         $this->_eh->trigger('ZendDispatchLoopStartup',$this);
         $this->_eh->trigger('ZendDispatchLoopStartup_'.$request->getModuleName().'_'.$request->getControllerName().'_'.$request->getActionName(),$this);
     }
 
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         $this->_eh->trigger('ZendPreDispatch',$this);
         $this->_eh->trigger('ZendPreDispatch_'.$request->getModuleName().'_'.$request->getControllerName().'_'.$request->getActionName(),$this);
     }
 
     public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
         $this->_eh->trigger('ZendPostDispatch',$this);
         $this->_eh->trigger('ZendPostDispatch_'.$request->getModuleName().'_'.$request->getControllerName().'_'.$request->getActionName(),$this);
     }
