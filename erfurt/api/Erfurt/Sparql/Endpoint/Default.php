@@ -74,8 +74,10 @@ class Erfurt_Sparql_Endpoint_Default {
 		$this -> erfurt = new Erfurt_App_Default($config);
 		
 		//check if endpoint is enabled throwing exception if not exception
-		if (!$config->endpoint->http)
+		if (!$config->endpoint->http) {
+			header('HTTP/1.0 400 Bad Request');
 			throw new Erfurt_Exception('QueryRequestRefused: SPARQL Endpoint disabled in erfurt-config',1602);
+		}
 		
 		// To surpress warnings
 		//error_reporting(E_ERROR);
@@ -112,6 +114,7 @@ class Erfurt_Sparql_Endpoint_Default {
 				if ($this->DBStore->aclCheck('view',$modeluri) && $this->DBStore->modelExists($modeluri)) {
 					$this->modelURIs[] = $modeluri;
 				} else {
+					header('HTTP/1.0 400 Bad Request');
 					throw new Erfurt_Exception('QueryRequestRefused: invalid model',1602);
 				}
 			}
@@ -132,6 +135,7 @@ class Erfurt_Sparql_Endpoint_Default {
 			$identity = $authResult->getIdentity();
 			
 			if ($identity['uri'] == '' ) {
+				header('HTTP/1.0 400 Bad Request');
 				throw new Erfurt_Exception('QueryRequestRefused: invalid login (user and/or password)',1602);
 			}
 		}
@@ -165,13 +169,15 @@ class Erfurt_Sparql_Endpoint_Default {
 	 * @return void
 	 */
 	public function setQuery($query) {
-		if ($query === null) {
-			throw new Erfurt_Exception('QueryRequestRefused: query is empty',1602);
-		}
-		$parser = new SparqlParser();
-		$this -> query = $parser -> parse(stripslashes($query));
-		foreach ($this -> query ->getFromPart() as $resource) {
-			$this -> addModel($resource->uri);
+		try {
+			$parser = new SparqlParser();
+			$this -> query = $parser -> parse(stripslashes($query));
+			foreach ($this -> query ->getFromPart() as $resource) {
+				$this -> addModel($resource->uri);
+			}
+		} catch (Exception $e) {
+			header('HTTP/1.1 400 Bad Request');
+			throw new Erfurt_Exception('MalformedQuery: ' . $e->getMessage(),1603);
 		}
 	}
 	
@@ -188,7 +194,7 @@ class Erfurt_Sparql_Endpoint_Default {
 			$this -> queryresult = $this -> DBStore -> executeSparql($this->modelURIs,$this->query,null,$this->strRenderer,$this->useImports);				
 		} catch (Exception $e) {	
 			header('HTTP/1.1 400 Bad Request');
-			throw new Erfurt_Exception('Sparql execution error: ' . $e->getMessage(),1601);	
+			throw new Erfurt_Exception('QueryRequestRefused: Sparql Error: ' . $e->getMessage(),1602);	
 		}
 		
 		return $this -> queryresult;
