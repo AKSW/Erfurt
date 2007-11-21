@@ -1,7 +1,7 @@
 %name OWL_To_Erfurt_
 %declare_class {class OWLParser}
 %include {require_once '../../erfurt.php';
-require_once 'lex.php';}
+require_once 'Lexer.php';}
 %include_class{
     	private $lex;
 	    function __construct()

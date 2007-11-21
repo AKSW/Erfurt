@@ -1,4 +1,4 @@
 <?php
 require_once '../../lib/PEAR/PHP/LexerGenerator.php';
-$lex = new PHP_LexerGenerator('lex.plex');
+$lex = new PHP_LexerGenerator('Lexer.plex');
 ?>

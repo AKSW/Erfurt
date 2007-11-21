@@ -6,13 +6,13 @@ If you want to update the packages, you can replace them with newer version from
 
 Updating Tokenizer:
 Syntax of the PHP_LexerGenerator is similar to flex (http://www.gnu.org/software/flex/). For differences see http://pear.php.net/package/PHP_LexerGenerator.
-To make changes to the Manchester Tokenizer edit the lex.plex file.
-To generate lex.php, needed for Parser (manchester.php), execute generateLexer.php.
+To make changes to the Manchester Tokenizer edit the Lexer.plex file.
+To generate Lexer.php, needed for Parser (Parser.php), execute generateLexer.php.
 
 Updating Parser:
 Syntax of the PHP_ParserGenerator is similar to lemon parser generator. For differences see http://pear.php.net/package/PHP_ParserGenerator/.
-To make changes to Manchester Parser edit the manchester.y file.
-To generate manchester.php, execute generateParser.php.
+To make changes to Manchester Parser edit the Parser.y file.
+To generate Parser.php, execute generateParser.php.
 
 Currently supports only command line execution.
 to test the parser from command line:

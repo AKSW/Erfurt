@@ -10,7 +10,7 @@ $debug=1;
 
 date_default_timezone_set('Europe/Berlin');
 $start = explode(' ',microtime());
-require_once 'manchester.php';
+require_once 'Parser.php';
 $x='';
 for ($i=1; $i < $argc; $i++) {
 	$x.=$argv[$i].' ';
