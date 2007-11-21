@@ -34,6 +34,10 @@ class Erfurt_Owl_Structured_Instance {
 		$model->add ( $statement ) ;
 		return $model ;
 	}
+	public function __toString()
+		{
+			return $this->uri;
+		}
 
 }
 ?>

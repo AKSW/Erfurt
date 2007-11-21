@@ -79,15 +79,14 @@ class Erfurt_Owl_Structured_StructuredClass {
 				$recModel=$child->generateRDF();
 				$statement = new Statement ( $blankNode, $constFirst, new Resource ( $child->getURI () ) ) ;
 				$this->getMemModel()->addModel($recModel);
-				//$statement = new Statement ( $blankNode, $constFirst, new Resource ( $child->getURI () ) ) ;
 			}else{
 				$statement = new Statement ( $blankNode, $constPredicate, $constObject ) ;
 				$this->getMemModel ()->add ( $statement ) ;
 				$recModel=$child->generateRDF();
+				$it=$recModel->getStatementIterator();
+				$nextBlankNode=$it->next()->getSubject();
 				$this->getMemModel()->addModel($recModel);
-				//TODO find out what is the next node id
-//				print_r($child->getFirstChildBlankNode()->uri); echo "<br>";
-				$statement = new Statement ( $blankNode, $constFirst, $child->getFirstChildBlankNode()/*new Resource ( "xxx" ) */) ;
+				$statement = new Statement ( $blankNode, $constFirst, $nextBlankNode ) ;
 			}
 			$this->getMemModel ()->add ( $statement ) ;
 			$newblankNode = $key < sizeof ( $this->getChildClasses () ) - 1 ? new BlankNode ( $this->getMemModel () ) : null ;
