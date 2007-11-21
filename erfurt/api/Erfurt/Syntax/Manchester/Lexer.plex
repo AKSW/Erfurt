@@ -34,7 +34,7 @@ class ManchesterLexer
 %line $this->line
 %longestmatch 1
 %matchlongest 1
-ALPHANUMERIC = /[a-zA-Z]+[0-9]*/
+ALPHANUMERIC = /[a-zA-Z0-9]+/
 NUMERIC = /[0-9]+/
 WHITESPACE = /[ \t]+/
 LPAREN=/\(/
