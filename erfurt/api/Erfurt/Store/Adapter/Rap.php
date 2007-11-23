@@ -312,8 +312,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 
 		// Using all models allowed for current user if no model is specified
 		if ($model === null)
-			foreach ($this->listModels(true) as $modeluri)
-				$model[] = $modeluri['modelURI'];
+			if (sizeof($modellist = $this->listModels(true)) != 0)
+				foreach ($modellist as $modeluri)
+					$model[] = $modeluri['modelURI'];
+			else
+				throw new Erfurt_Exception('No models allowed');
 			
 		//check if AC and Sbac is enabled
 		if($this->checkAc()) {
