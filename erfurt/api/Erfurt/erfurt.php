@@ -119,6 +119,8 @@ require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_SPARQL);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DATASET);
+require_once(RDFAPI_INCLUDE_DIR.'/syntax/SyntaxJSON.php');
+require_once(RDFAPI_INCLUDE_DIR.'/syntax/SyntaxN3.php');
 
 // backend-specific classes from rdfs package (not yet auto-loadable)
 require_once(RDF_BACKEND_INCLUDE_DIR.'model.php');
