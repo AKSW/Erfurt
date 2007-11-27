@@ -33,7 +33,7 @@
  * @copyright Copyright (c) 2006
  * @version $Id$
  */
-abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface, Erfurt_Store_DataInterface {
+abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface {
 	
 	/**
 	 * @deprecated do not use this member directly, for it won't be public forever...
