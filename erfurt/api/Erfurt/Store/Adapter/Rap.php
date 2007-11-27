@@ -302,21 +302,23 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 *	Implemtation of Sparql-Method for RAP Stores
-	 * @param array|OWL-Model $model
-	 * @param string/Query $query
-	 * @param string/null $class
-	 * @param string/null $renderer
+	 * Implemtation of Sparql-Method for RAP Stores
+	 * 
+	 * @see Erfurt_Store_SparqlInterface
 	 */
 	public function executeSparql($model = null, $query, $class = null, $renderer = null, $useImports = false) {
 
 		// Using all models allowed for current user if no model is specified
-		if ($model === null)
-			if (sizeof($modellist = $this->listModels(true)) != 0)
-				foreach ($modellist as $modeluri)
+		if ($model === null) {
+			if (sizeof($modellist = $this->listModels(true)) != 0) {
+				foreach ($modellist as $modeluri) {
 					$model[] = $modeluri['modelURI'];
-			else
+				}
+			} else {
 				throw new Erfurt_Exception('No models allowed');
+			}
+		}
+			
 			
 		//check if AC and Sbac is enabled
 		if($this->checkAc()) {
@@ -388,6 +390,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		return $result;
 		
 	}
+	
+	
 	public function sqlQuery($sql) {
 		
 		$result = $this->dbConn->Execute($sql);
@@ -593,13 +597,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 * Check if the DbModel with the given modelURI is already stored in the database
-	 *
-	 * @param   string   $modelURI
-	 * @param   boolean  useACL for installation check
-	 * @return  boolean
-	 * @throws	SqlError
-	 * @access	public
+	 * @see Erfurt_Store_DataInterface
 	 */
 	public function modelExists($modelURI, $useACL = true) {
 		$args=func_get_args();
@@ -616,16 +614,31 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		return cache('modelExists', $args, $modelExists);
 	}
 	
+	/**
+	 * @see Erfurt_Store_MainInterface
+	 */
 	public function isSetup() {
 		
-		if(Zend_Registry::get('config')->database->backend == 'powl')
+		if (Zend_Registry::get('config')->database->backend == 'powl') {
 			return true;
-		else  
+		} else {
 			return DBStore::isSetup();
+		} 
 	}
 	
+	/**
+	 * @see Erfurt_Store_DataInterface
+	 */
 	public function executeAdd() {}
+	
+	/**
+	 * @see Erfurt_Store_DataInterface
+	 */
 	public function executeRemove() {}
+	
+	/**
+	 * @see Erfurt_Store_DataInterface
+	 */
 	public function executeFind() {}
 }
 ?>

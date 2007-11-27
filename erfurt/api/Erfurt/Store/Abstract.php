@@ -25,60 +25,56 @@
  */
 
 /**
- * Erfurt_Store_Abstract
+ * This class implements all methods, that are not backend-specific. A backend-specific store can extend this class.
  *
  * @package store
- * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * @author Sören Auer <soeren@auer.cx>
+ * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2006
  * @version $Id$
  */
-abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface {
-		
+abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface, Erfurt_Store_DataInterface {
+	
+	/**
+	 * @deprecated do not use this member directly, for it won't be public forever...
+	 */
 	public $SysOnt;
+	
+	/**
+	 * @deprecated do not use this member directly, for it won't be public forever...
+	 */
 	public $_models;
 	
+	/**
+	 * @var 
+	 */ 
 	protected $store;
+	
+	/**
+	 * @var 
+	 */
 	protected $dbDriver;
+	
+	/**
+	 * @var string The uri of the system ontology.
+	 */
 	protected $SysOntURI = false;
 	
 	/**
-	 * instance of ac-object
+	 * @var Erfurt_Ac_Default/Erfurt_Ac_Statements_Abstract instance of ac-object
 	 */
 	protected $ac = null;
 	
 	
-	
 	/**
-	 * init function
-	 * 
-	 * separate from constructor for exeption handling
-	 */
-	public function init() {
-//TODO: ERRORCODE
-		if (!$this->isSetup()) {
-			throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
-		} 
-	}
-
-	public function countAvailableModels() {
-		
-		return count($this->listModels(true));
-	}
-	
-	/**
-	 * Check if the DbModel with the given modelURI is already stored in the database
-	 *
-	 * @param   string   View || Edit || ??
-	 * @param   mixed		Model-Object || URI-String
-	 * @param   string 	Property
-	 * @return  boolean
-	 * @access	public
+	 *  @see Erfurt_Store_MainInterface
 	 */
 	public function aclCheck($accessType,$model='',$property='',$class='',$instance='') {
 		
-		if($model instanceof Model)
-			$model = $model->modelURI;
-		
+		if ($model instanceof Model) {
+			$model = $model->getModelURI();
+		}
+			
 		# ow user
 		if ($this->checkAc()) {
 			if ($this->ac->isModelAllowed('view', $model)) {
@@ -109,6 +105,9 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 			return $this->aclCompute($_SESSION['PWL']['user'],$accessType,$model,$property,$class,$instance);
 	}
 	
+	/**
+	 * @see Erfurt_Store_MainInterface
+	 */
 	public function aclCompute($user,$accessType,$model,$property='',$class='',$instance='') {
 		if($model instanceof Model)
 			$model=$model->modelURI;
@@ -156,47 +155,70 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 		return $ret;
 	}
 	
-	public function aclGet($user,$accessType,$model='',$property='',$class='',$instance='') {
-		$acl=$this->SysOnt->getClass('ACL');
-		$ta=array(
-			$this->SysOnt->modelURI.'aclModel'=>$model,
-			$this->SysOnt->modelURI.'aclProperty'=>$property,
-			$this->SysOnt->modelURI.'aclClass'=>$class,
-			$this->SysOnt->modelURI.'aclInstance'=>$instance,
-			$this->SysOnt->modelURI.'aclAccessType'=>$accessType?$this->SysOnt->modelURI.$accessType:'',
-			$this->SysOnt->modelURI.'aclUser'=>$user?$this->SysOnt->modelURI.$user:'');
-#print_r($ta);
-		if($rules=$acl->findInstancesRecursive($ta)) {
-#print_r($rules);
-			return array_shift($rules);
-		}
-		else
-			false;
-	}
-
 	/**
-	 * set the ac-object instance
-	 * 
-	 * @param object ac-object
+	 * @see Erfurt_Store_MainInterface
 	 */
-	public function setAc($acObj = null) {
-		$this->ac = $acObj;
+	public function aclGet($user,$accessType,$model='',$property='',$class='',$instance='') {
+		
+		$acl = $this->SysOnt->getClass('ACL');
+		
+		$ta = array(
+			$this->SysOnt->modelURI.'aclModel' 		=> $model,
+			$this->SysOnt->modelURI.'aclProperty'	=> $property,
+			$this->SysOnt->modelURI.'aclClass'		=> $class,
+			$this->SysOnt->modelURI.'aclInstance'	=> $instance,
+			$this->SysOnt->modelURI.'aclAccessType'	=> $accessType ? $this->SysOnt->modelURI.$accessType : '',
+			$this->SysOnt->modelURI.'aclUser'		=> $user ? $this->SysOnt->modelURI.$user : ''
+		);
+
+		if ($rules=$acl->findInstancesRecursive($ta)) {
+			return array_shift($rules);
+		} else {
+			return false;
+		}	
 	}
 	
 	/**
-	 * get the ac-object instance
+	 * @see Erfurt_Store_MainInterface
+	 */
+	public function checkAc() {
+		
+		return ($this->ac === null) ? false : true;
+	}
+	
+// TODO where used???
+// TODO doc
+	public function countAvailableModels() {
+
+		return count($this->listModels(true));
+	}
+	
+	/**
+	 * @see Erfurt_Store_MainInterface
 	 */
 	public function getAc() {
 		return $this->ac;
 	}
 	
+	
 	/**
-	 * check the ac-object instance
-	 * 
-	 * @return boolean object is set
+	 * init function (separate from constructor for exeption handling)
+	 *
+	 * @see Erfurt_Store_MainInterface
 	 */
-	public function checkAc() {
-		return ($this->ac === null) ? false : true;
+	public function init() {
+//TODO: ERRORCODE
+		if (!$this->isSetup()) {
+			throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
+		} 
+	}
+
+	/**
+	 * @see Erfurt_Store_MainInterface
+	 */
+	public function setAc($acObj = null) {
+		
+		$this->ac = $acObj;
 	}
 }
 ?>
