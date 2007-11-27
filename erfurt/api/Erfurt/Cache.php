@@ -9,7 +9,7 @@ class Erfurt_Cache {
 	public $firstLevelCache;
 	protected $secondLevelCache;
 	
-	public function __construct(Erfurt_Store_Default $store) {
+	public function __construct(Erfurt_Store_Abstract $store) {
 		
 		if (extension_loaded('apc')) {
 			$this->firstLevelCache = new Erfurt_Cache_Backend_Apc();
@@ -79,6 +79,21 @@ class Erfurt_Cache {
 		
 		$this->firstLevelCache->expireFunction($model, $function);
 		$this->secondLevelCache->expireFunction($model, $function);
+	}
+	
+	public function isCached(DbModel $model, $function, Array $args = array(), $resource = null, $firstLevelOnly = false) {
+		
+	}
+	
+	/**
+	 * This method is for debugging... it returns the current cache state. That means it returns an integer number
+	 * representing what the load method would return. It does not change the current status of caching, i.e. uncached
+	 * values stay uncached. 
+	 *
+	 * @return int Returns 0 iff uncached, 1 iff level1-cached, 2 iff level2-cached, 3 iff level1-and-level2-cached
+	 */
+	public function getCacheState(DbModel $model, $function, Array $args = array(), $resource = null, $firstLevelOnly = false) {
+		
 	}
 }
 ?>

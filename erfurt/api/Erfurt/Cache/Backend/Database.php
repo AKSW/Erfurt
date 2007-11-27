@@ -8,7 +8,7 @@ class Erfurt_Cache_Backend_Database {
 
 	protected $store;
 
-	public function __construct(Erfurt_Store_Default $store) {
+	public function __construct(Erfurt_Store_Abstract $store) {
 	
 		$this->store = $store;
 	}
@@ -71,17 +71,17 @@ class Erfurt_Cache_Backend_Database {
 		$this->store->dbConn->execute($sql);
 	}
 	
-	public function expire(DbModel $model, Statement $stm) {
+	public function expire(DbModel $model, Statement $stm = null) {
 		
 		if ($statement === null) {
-			$triggers = '"ALL"';
+			$sql = 'DELETE FROM cache WHERE model = ' . $model->getModelID();
 		} else {
-			$triggers = '"ALL", "' . $stm->getSubject()->getURI() . '", "' . $stm->getPredicate()->getURI() . '", ' .
+			$triggers = '"' . $stm->getSubject()->getURI() . '", "' . $stm->getPredicate()->getURI() . '", ' .
 						$stm->getObject()->getURI() . '"';
+						
+			$sql = 'DELETE FROM cache WHERE model = ' . $model->getModelID() . ' AND ((trigger1 IN (' . $triggers .') 
+					OR trigger2 IN (' . $triggers . ') OR trigger3 IN (' . $triggers . ')) OR trigger1 = "")';
 		}
-		
-		$sql = 'DELETE FROM cache WHERE model = ' . $model->getModelID() . ' AND (trigger1 IN (' . $triggers .') 
-				OR trigger2 IN (' . $triggers . ') OR trigger3 IN (' . $triggers . '))';
 		
 		$this->store->dbConn->execute($sql);
 	}

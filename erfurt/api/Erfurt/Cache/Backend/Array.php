@@ -33,7 +33,7 @@ class Erfurt_Cache_Backend_Array {
 		$this->cacheArray[$modelID][$uid] = $value;
 	}
 	
-	public function expire(DbModel $model, Statement $stm) {
+	public function expire(DbModel $model, Statement $stm = null) {
 		
 		$modelID = $model->getModelID();
 		

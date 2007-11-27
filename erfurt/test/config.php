@@ -18,8 +18,9 @@ if (!function_exists('__autoload')) {
 }
 
 // include rap lib
-require_once(RDFAPI_INCLUDE_DIR.'RdfAPI.php');
-require_once(RDFAPI_INCLUDE_DIR.'model/DbModel.php');
+require_once(RDFAPI_INCLUDE_DIR . 'RdfAPI.php');
+require_once(RDFAPI_INCLUDE_DIR . 'model/DbModel.php');
+require_once(RDFAPI_INCLUDE_DIR . 'model/DbStore.php');
 
 require_once 'Erfurt/Rdfs/rap/model.php';
 require_once 'Erfurt/Rdfs/rap/resource.php';
@@ -32,6 +33,8 @@ Zend_Registry::set('config', new Erfurt_Config(array('/Users/philipp/Sites/erfur
 
 
 require_once('Erfurt/constants.php');
+
+
 
 //echo $include_path;
 ?>

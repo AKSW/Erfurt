@@ -1,6 +1,10 @@
 <?php
 require_once '../../../config.php';
 
+/**
+ * @author Philipp Frischmuth <philipp@frischmuth24.de>
+ * @version $Id$
+ */
 class RDFSModelTest extends PHPUnit_Framework_TestCase {
 	
 	protected $store;
@@ -26,8 +30,8 @@ class RDFSModelTest extends PHPUnit_Framework_TestCase {
 		$bn1 	= new BlankNode('bn1');
 		$bn2	= new BlankNode('bn2');
 		$lit1	= new Literal('Literal1');
-		$lit2	= new Literal('Literal2', 'en');
-		$lit3	= new Literal('Literal3', 'en', 'http://www.w3.org/2001/XMLSchema#string');
+		$lit2	= new Literal('Literal1', 'en');
+		$lit3	= new Literal('Literal1', 'en', 'http://www.w3.org/2001/XMLSchema#string');
 		
 		$rdf_type = new Resource(EF_RDF_TYPE);
 		$rdfs_label = new Resource(EF_RDFS_LABEL);

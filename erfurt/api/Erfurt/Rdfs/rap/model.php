@@ -389,10 +389,16 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
         
 		$args = func_get_args();
 		$c = new stmCache('listTopClasses', $args, $this);
-		 	
 		$cVal = $c->get();	
-		if (null != $cVal) {
-			return $cVal;
+		
+		if ($cVal !== null) {
+			$retVal = array();
+			
+			foreach ($cVal as $str) {
+				$retVal[] = $this->classF($str, false);
+			}
+			
+			return $retVal;
 		}
 
 		$sql = 'SELECT s.object 
@@ -503,7 +509,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$tempClassArray = array();
 			foreach($temp as $row) {
 				if (!$row->isHidden()) {
-					$tempClassArray[$row->getLabelForLanguage()] = $row;
+					$tempClassArray[] = $row;
 				}
 			}
 		} else {
@@ -511,15 +517,20 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$tempClassArray = array();
 			foreach($temp as $row) {
 				if ($row->isHidden()) {
-					$tempClassArray[$row->getLabelForLanguage()] = $row;
+					$tempClassArray[] = $row;
 				} else {
-					$tempClassArray[$row->getLabelForLanguage()] = $row;
+					$tempClassArray[] = $row;
 				}
 			}
 		}
 		
-	 	ksort($tempClassArray);
-		$c->set($tempClassArray, array('rdf:type', 'rdfs:subClassOf', 'rdfs:label'));
+		ksort($tempClassArray);
+		$cacheVal = array();
+		foreach ($tempClassArray as $tempClass) {
+			$cacheVal[] = $tempClass->getURI();
+		}
+	 	
+		$c->set($cacheVal, array('rdf:type', 'rdfs:subClassOf', 'rdfs:label'));
 		return $tempClassArray;
     }
 
