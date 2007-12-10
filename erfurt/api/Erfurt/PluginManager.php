@@ -41,6 +41,7 @@ class Erfurt_PluginManager {
     private $_prepared = array();
     private $_erfurt = null;
     private $_eh = null;
+    private $_vars = array();
 
     public function __construct($o) {
     
@@ -260,6 +261,37 @@ class Erfurt_PluginManager {
         
     }
     
+    /* magic methods,
+       see http://de3.php.net/manual/en/language.oop5.overloading.php */
+    
+    public function __get($v)
+    {
+        if (isset($this->_vars[$v])) {
+            return $this->_vars[$v];
+        } else {
+            return null;
+        }
+    }
+
+    public function __set($vName, $vValue)
+    {
+        $this->_var[$vName] = $vValue;
+        if (isset($this->_vars[$vName]) && $this->_vars[$vName] === $vValue) {
+            return $this->_vars[$vName];
+        } else {
+            return false;
+        }
+    }
+
+    public function __isset($v)
+    {
+        return isset($this->_vars[$v]);
+    }
+
+    public function __unset($v)
+    {
+        unset($this->_vars[$v]);
+    }
 }
 
 class PluginTriggerZendEvents extends Zend_Controller_Plugin_Abstract {
