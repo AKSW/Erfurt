@@ -1,0 +1,9 @@
+# Only developer need this ...
+#Options +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+RewriteEngine off
+# In most cases, you do not need to define the rewrite-base
+#RewriteBase /ontowiki-live/
+#RewriteRule !\.(js|ico|gif|jpg|png|css|php)$ boot.php
+</IfModule>
