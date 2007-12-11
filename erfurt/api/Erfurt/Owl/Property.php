@@ -32,7 +32,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @version $Id$
  */
-class Erfurt_Owl_Property  extends RDFSProperty {
+class Erfurt_Owl_Property  extends Erfurt_Rdfs_Property_Default {
 	
 	/**
 	 * Checks whether the domain of this property is an union class description.

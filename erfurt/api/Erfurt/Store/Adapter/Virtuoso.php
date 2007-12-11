@@ -9,7 +9,7 @@
   * @version $Id$
   * @package store
   */
-class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Default {
+class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Abstract {
 	
 	/**
 	  * Constructs a new Erfurt_Store_Adapter_Virtuoso object.

@@ -5,7 +5,7 @@
  * @package store
  * @author Atanas Alexandrov <sirakov@gmail.com> 
  */
-class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Default {
+class Erfurt_Store_Adapter_Oracle extends Erfurt_Store_Abstract {
 
 	/**
 	 * Create table and model into ORACLE

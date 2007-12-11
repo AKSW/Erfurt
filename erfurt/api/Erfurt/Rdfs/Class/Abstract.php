@@ -399,7 +399,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 **/
 	public function addProperty($property) {
 		
-		if(!($property instanceof RDFSProperty))
+		if(!($property instanceof Erfurt_Rdfs_Property))
 			if(!$property=$this->model->getProperty($property))
 				return false;
 		if(!in_array($this,$property->listDomain()))
@@ -414,7 +414,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 **/
 	public function removeProperty($property) {
 		
-		if(!($property instanceof RDFSProperty))
+		if(!($property instanceof Erfurt_Rdfs_Property))
 			$property=$this->model->getProperty($property);
 		$stms=$this->model->find($property,$GLOBALS['RDFS_domain'],$this);
 		foreach($stms->triples as $stm)

@@ -95,7 +95,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 **/
 	function propertyF($uri, $expandNS = true) {
 		
-		return new RDFSProperty($uri, $this, $expandNS);
+		return new Erfurt_Rdfs_Property_Default($uri, $this, $expandNS);
 	}
 	
 	/**
@@ -134,9 +134,10 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 *
 	 * @return array Array of RDFResources
 	 */
-	public function listImports() {
+	public function listImports($asString = false) {
 		//TODO using dynamic import predicate defintion from config or so
-		return $this->findNodesAs($this->asResource,new Resource('http://www.w3.org/2002/07/owl#imports'),null);
+		return $this->findNodesAs($this->asResource,new Resource('http://www.w3.org/2002/07/owl#imports'),null,
+								  (($asString === true) ? 'string' : null));
 		//return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
 	}
 	
@@ -912,6 +913,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 						break;
 					case 'instance':
 						$ret[$uri] = $this->instanceF($r, false);
+						break;
+					case 'string':
+						$ret[] = $r->getURI();
 						break;
 					default:
 						$ret[$uri] = $r;

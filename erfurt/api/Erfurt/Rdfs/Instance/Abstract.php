@@ -80,7 +80,7 @@ class Erfurt_Rdfs_Instance_Abstract extends RDFSResource {
 	 **/
 	public function setPropertyValue($prop,$value) {
 		
-		if(!($prop instanceof RDFSProperty))
+		if(!($prop instanceof Erfurt_Rdfs_Property))
 			$prop=$this->model->propertyF($prop);
 #print_r($prop);
 		$range=$prop->getRange();
@@ -103,7 +103,7 @@ class Erfurt_Rdfs_Instance_Abstract extends RDFSResource {
 	 **/
 	public function addPropertyValue($prop,$value) {
 		
-		if(!($prop instanceof RDFSProperty))
+		if(!($prop instanceof Erfurt_Rdfs_Property))
 			$prop=$this->model->propertyF($prop);
 		$range=$prop->getRange();
 		if(!in_array($value,$this->listPropertyValuesPlain($prop)))
@@ -120,7 +120,7 @@ class Erfurt_Rdfs_Instance_Abstract extends RDFSResource {
 	 **/
 	public function removePropertyValues($prop,$value='') {
 		
-		if(!($prop instanceof RDFSProperty))
+		if(!($prop instanceof Erfurt_Rdfs_Property))
 			$prop=new $this->model->property($prop,$this->model);
 		if($value && !($value instanceof Node))
 			$value=$prop->isObjectProperty()?$this->model->resourceF($value):new RDFSLiteral($value);

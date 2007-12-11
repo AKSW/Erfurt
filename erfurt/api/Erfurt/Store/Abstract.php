@@ -1,36 +1,11 @@
 <?php
-/*
- * Erfurt/Store/Abstract.php
- * Encoding: UTF-8
- *
- * Copyright (c) 2006 	Sören Auer <soeren@auer.cx>
- *                    	Philipp Frischmuth <philipp@frischmuth24.de>
- * 						Stefan Berger <berger@intersolut.de>
- *
- * This file is part of pOWL - web based ontology editor.
- *
- * pOWL is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * pOWL is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with pOWL; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
 /**
  * This class implements all methods, that are not backend-specific. A backend-specific store can extend this class.
  *
  * @package store
  * @author Sören Auer <soeren@auer.cx>
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2006
+ * @copyright Copyright (c) 2006-2007
  * @version $Id$
  */
 abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_MainInterface {
@@ -111,7 +86,7 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 	public function aclCompute($user,$accessType,$model,$property='',$class='',$instance='') {
 		if($model instanceof Model)
 			$model=$model->modelURI;
-		else if($model instanceof RDFSProperty) {
+		else if($model instanceof Erfurt_Rdfs_Property) {
 			$property=$model;
 			$model=$property->model->modelURI;
 		} else if($model instanceof RDFSClass) {
@@ -186,8 +161,9 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 		return ($this->ac === null) ? false : true;
 	}
 	
-// TODO where used???
-// TODO doc
+	/**
+	 * @see Erfurt_Store_CountableInterface
+	 */
 	public function countAvailableModels() {
 
 		return count($this->listModels(true));

@@ -1,25 +1,27 @@
 <?php
 /**
- * Erfurt_Store_Adapter_Rap
+ * This is an adapter-class for the RAP backend. In this case this means the use of the RAP db scheme and a 
+ * relational database accessed via adodb.
  *
  * @package store
- * @author Sören Auer <soeren@auer.cx>, Philipp Frischmuth <philipp@frischmuth24.de>
+ * @author Sören Auer <soeren@auer.cx>
+ * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004 - 2007
  * @version $Id$
  */
 class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract 
-		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface {
+		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface, Erfurt_Store_CountableInterface {
 	
 	/**
-	 * Constructor:
 	 * Set the database connection with the given parameters.
 	 *
-	 * @param   string   $dbDriver
-	 * @param   string   $host
-	 * @param   string   $dbName
-	 * @param   string   $user
-	 * @param   string   $password
-	 * @access	public
+	 * @param string $dbDriver A string that identifies the db-driver (e.g. 'mysqli')
+	 * @param string $host A string that identifies the host (e.g. 'localhost')
+	 * @param string $dbName The name of the database to use.
+	 * @param string $user The db-user to use.
+	 * @param string $password The password that is used with $user.
+	 * @param string $SysOntURI (default: false) An optional uri that identifies the system ontology.
+	 * @param string $tablePrefix (default: '') An optional table prefix, that is used in front of every table name.
 	 */
 	public function __construct($dbDriver, $host, $dbName, $user, $password, $SysOntURI = false, $tablePrefix = '') {
 		try {
@@ -39,140 +41,20 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 * Create common tables for store
+	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function createTables() {
+// TODO check for different backends
 		$this->_createTables_MySql();
 	}
-	
+
 	/**
-	 * Create tables and indexes for adodb datadict supported databases
+	 * This method creates tables and indexes for MySQL databases.
+	 * Do not use this method directly, it is only public for compatibility with rap. 
 	 *
-	 * @throws  SqlError
-	 * @access	private
-	 */
-	protected function _createTables_Generic() {
-		
-		$this->dbConn->startTrans();
-		
-		$tables = array(
-			'models' => array(
-				'fields' => '
-					modelID		I		NOTNULL	AUTO KEY,
-					modelURI	C(255)	NOTNULL,
-					baseURI		C(255)	NOTNULL',
-				'options'=>'',
-				'indexes'=>array('modelURI'),
-			),
-			'statements'=>array(
-				'fields'=>'
-					modelID		I		NOTNULL,
-					subject		C(255)	NOTNULL,
-					predicate	C(255)	NOTNULL,
-					object		B,
-					l_language	C(255),
-					l_datatype	C(255),
-					subject_is	C(1)	NOTNULL,
-					object_is	C(1)	NOTNULL,
-					id			I		NOTNULL	AUTO KEY',
-				'options'=>'',
-				'indexes'=>array('modelID','subject','predicate','object'),
-			),
-			'namespaces'=>array(
-				'fields'=>'
-					modelID		I		NOTNULL AUTO KEY,
-					namespace	C(255)	NOTNULL KEY,
-					prefix		C(255)	NOTNULL',
-				'options'=>'',
-				'indexes'=>array(),
-			),
-			'popularity'=>array(
-			    'fields'=>'
-			        date        TIMESTAMP       NOT NULL,
-			        modelID     INT             NOT NULL,
-			        uri         VARCHAR(255)    NOT NULL',
-			    'options'=>'',
-			    'indexes'=>array(),
-			),
-			'ratings'=>array(
-			    'fields'=>'
-			        modelID     INT             NOT NULL,
-			        user        VARCHAR(255)    NOT NULL,
-			        resource    VARCHAR(255)    NOT NULL,
-			        rating      DECIMAL(1,0)    NOT NULL',
-			    'options'=>'UNIQUE KEY "modelID" ("modelID", "user", "resource")',
-			    'indexes'=>array()
-			),
-			'cache'=>array(
-			    'fields'=>'
-			        id          int(11)             NOT NULL auto_increment,
-			        trigger1    VARCHAR(255)        NOT NULL DEFAULT "",
-			        trigger2    VARCHAR(255)        NOT NULL DEFAULT "",
-			        trigger3    VARCHAR(255)        NOT NULL DEFAULT "",
-			        function    VARCHAR(255)        NOT NULL DEFAULT "",
-			        args        VARCHAR(255)        NOT NULL DEFAULT "",
-			        model       INT(11)             NOT NULL DEFAULT "0",
-			        resource    VARCHAR(255)        NOT NULL DEFAULT "",
-			        value       longblob            NOT NULL',
-			    'options'=>'PRIMARY KEY ("id"),
-			                UNIQUE KEY "function" ("function", "args", "model", "resource")',
-			    'indexes'=>array()
-			),
-			'log_statements'=>array(
-    			'fields'=>'
-    				id			INTEGER	AUTO KEY,
-    				subject		C(255)	NOTNULL,
-    				predicate		C(255)	NOTNULL,
-    				object			B,
-    				l_language	C(255),
-    				l_datatype	C(255),
-    				subject_is	C(1)	NOTNULL,
-    				object_is	C(1)	NOTNULL,
-    				ar			C(1)	NOTNULL,
-    				action_id	I		NOTNULL',
-    			'options'=>'',
-    			'indexes'=>array('action_id'),
-    		),
-    		'log_actions'=>array(
-    			'fields'=>'
-    				id			INTEGER	AUTO KEY,
-    				parent_id	I,
-    				model_id	I		NOTNULL,
-    				user		C(255)	NOTNULL,
-    				date		T		NOTNULL,
-    				descr_id	I		NOTNULL,
-    				subject		C(255),
-    				details		B',
-    			'options'=>'',
-    			'indexes'=>array('model_id','parent_id','user'),
-    		),
-    		'log_action_descr'=>array(
-    			'fields'=>'
-    				id			INTEGER	AUTO KEY,
-    				description	C(255)	NOTNULL',
-    			'options'=>'',
-    			'indexes'=>array('description'),
-    		)
-		);
-		$dict=NewDataDictionary($this->dbConn, Zend_Registry::get('config')->database->params->type == 'pdo' ? 'db2' : NULL);
-#$this->dbConn->execute('connect to POWL;');
-		foreach($tables as $tablename=>$table) {
-#print_r($dict->CreateTableSQL($tablename,$table['fields'],$table['options']));
-			$dict->ExecuteSQLArray($dict->CreateTableSQL($tablename,$table['fields'],$table['options']));
-			foreach($table['indexes'] as $indexname=>$index)
-				$dict->ExecuteSQLArray($dict->CreateIndexSQL(is_numeric($indexname)?'idx_'.str_replace('_','',$tablename).'_'.strtr($index,array('_'=>'',','=>'')):$indexname,$tablename,$index));
-		}
-		if (!$this->dbConn->completeTrans())
-			echo $this->dbConn->errorMsg();
-	}
-	
-	/**
-	 * Create tables and indexes for MySQL databases
-	 *
-	 */
-	
+	 * @access protected
+	 */	
 	public function _createTables_MySQL() {
-		#$this->_createTables_Generic();
 		
 		$this->dbConn->startTrans();
 
@@ -391,7 +273,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		
 	}
 	
-	
+	/**
+	 * @see Erfurt_Store_SqlInterface
+	 */
 	public function sqlQuery($sql) {
 		
 		$result = $this->dbConn->Execute($sql);
@@ -404,11 +288,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 * This method checks whether a database with the fiven name exists.
-	 *
-	 * @param string $dbType type of the database (e.g. MySQL)
-	 * @param string $dbName name of the database
-	 * @return boolean Returns true in case the database exists, false else.
+	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function isDatabaseCreated($dbType="MySQL", $dbName) {
 		switch (strtolower($dbType)) {
@@ -420,8 +300,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 * returns a list of available and permitted models
-	 *   
+	 * @see Erfurt_Store_DataInterface
 	 */
 	public function listModels($returnAsArray = false, $withLabel = false) {
 		$models=array();
@@ -455,7 +334,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	}
 	
 	/**
-	 * returns instance of an model-object
+	 * @see Erfurt_Store_DataInterface
 	 */
 	public function getModel($modelURI, $importedURIs=array(), $useACL = true) {
 		# get model uri
@@ -506,13 +385,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	
 	
 	/**
-	 * POWLStore::getNewModel()
-	 *
-	 * @param $modelURI
-	 * @param string $baseURI
-	 * @param string $type
-	 * @return
-	 **/
+	 * @see Erfurt_Store_DataInterface 
+	 */
 	public function getNewModel($modelURI,$baseURI='',$type='RDFS', $useACL = true) {
 		if($this->modelExists($modelURI, $useACL))
 			return false;
@@ -524,15 +398,10 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		$m = $this->getModel($modelURI);
 		return $m;
 	}
+	
 	/**
-	 * POWLStore::loadModel()
-	 *
-	 * @param $modelURI
-	 * @param unknown $file
-	 * @param boolean $loadImports
-	 * @param boolean $stream
-	 * @return
-	 **/
+	 * @see Erfurt_Store_DataInterface
+	 */
 	public function loadModel($modelURI,$file=NULL,$loadImports=false,$stream=false,$filetype=NULL) {
 		static $justLoaded;
 		$justLoaded[$modelURI]=true;
@@ -580,20 +449,18 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		$this->logDisabled=$log;
 		return $model;
 	}
+	
 	/**
-	 * POWLStore::deleteModel()
-	 *
-	 * @param $modelURI
-	 * @return
-	 **/
+	 * @see Erfurt_Store_DataInterface
+	 */
 	public function deleteModel($modelURI) {
-		if($this->SysOnt)
-			if($mi=$this->SysOnt->getClass('Model'))
-				if($inst=$mi->findInstance(array('modelURI'=>$modelURI)))
-					$inst->remove();
-		$m=$this->getModel($modelURI);
+		#if($this->SysOnt)
+		#	if($mi=$this->SysOnt->getClass('Model'))
+		#		if($inst=$mi->findInstance(array('modelURI'=>$modelURI)))
+		#			$inst->remove();
+		$m = $this->getModel($modelURI);
 		$m->delete();
-		cache('modelExists',array($modelURI),false);
+		#cache('modelExists',array($modelURI),false);
 	}
 	
 	/**
@@ -602,6 +469,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	public function modelExists($modelURI, $useACL = true) {
 		$args=func_get_args();
 		$c=cache('modelExists',$args);
+		$c = NULL;
 		if($c!==NULL)
 			return $c;
 		
@@ -630,15 +498,311 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function executeAdd() {}
+// TODO
 	
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function executeRemove() {}
+// TODO
 	
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
-	public function executeFind() {}
+	public function executeFind(Model $m, Resource $s = null, Resource $p = null, Node $o = null, $distinct = true,
+						$sR = true, $sB = true, $oR = true, $oB = true, $oL = true, $offset = 0, $limit = -1) {
+							
+		$sql = 'SELECT subject, subject_is, predicate, object, object_is, l_language, l_datatype 
+				FROM ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . '
+				WHERE modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND ';
+				
+		if ($s !== null) {
+			$sql .= 'subject = "' . $s->getLabel() . '" AND '; 
+			
+			if ($s instanceof BlankNode) {
+				$sql .= 'subject_is = "b" AND ';
+			} else {
+				$sql .= 'subject_is = "r" AND ';
+			}
+			
+		}
+		if ($p !== null) {
+			$sql .= 'predicate = "' . $p->getURI() . '" AND ';
+		}
+		if ($o !== null) {
+			$sql .= 'object = "' . $o->getLabel() . '" AND ';
+			
+			if ($o instanceof Literal) {
+				$sql .= 'l_language = "' . $o->getLanguage() . '" AND l_datatype = "' . $o->getDatatype() . 
+						'" AND object_is = "l" AND ';
+			} else if ($o instanceof BlankNode) {
+				$sql .= 'object_is = "b" AND ';
+			} else {
+				$sql .= 'object_is = "r" AND ';
+			}
+		}
+		
+		if ($s === null) {
+			$subjectIs = array();
+			if ($sR === true) {
+				$subjectIs[] = '"r"';
+			}
+			if ($sB === true) {
+				$subjectIs[] = '"b"';
+			}
+			
+			$sql .= 'subject_is IN (' . join(',', $subjectIs) . ') AND ';
+		}
+		
+		if ($o === null) {
+			$objectIs = array();
+			if ($oR === true) {
+				$objectIs[] = '"r"';
+			}
+			if ($oB === true) {
+				$objectIs[] = '"b"';
+			}
+			if ($oL === true) {
+				$objectIs[] = '"l"';
+			}
+			
+			$sql .= 'object_is IN (' . join(',', $objectIs) . ') AND ';
+		}
+		
+		
+		// in order to make the code more easy to read... just add a 1 (always true)
+		$sql .= '1 ';
+		
+		if ($distinct === true) {
+			$sql .= 'GROUP BY object, object_is, l_language, l_datatype';
+		}
+		
+		return $this->_convertSqlResultToStatementList($this->sqlQuery($sql));
+	}
+	
+	/**
+	 * @see Erfurt_Store_DataInterface
+	 */
+	public function executeFindOnMatchingSubjectType(Model $m, Resource $sType, Resource $p = null, 
+						Node $o = null, $distinct = true, $sR = true, $sB = true, $oR = true, $oB = true, 
+						$oL = true, $offset = 0, $limit = -1) {
+							
+		$subjectIs = array();
+		if ($sR === true) {
+			$subjectIs[] = '"r"';
+		}
+		if ($sB === true) {
+			$subjectIs[] = '"b"';
+		}
+	
+		$sql = 'SELECT s1.subject, s1.subject_is, s1.predicate, s1.object, s1.object_is, s1.l_language, s1.l_datatype 
+				FROM ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s1
+				LEFT JOIN ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s2
+				ON (s1.subject = s2.subject AND s1.subject_is = s2.subject_is AND s2.predicate = "' . EF_RDF_TYPE . '"
+				AND s2.object = "' . $sType->getLabel() . '"
+				AND s2.modelID IN (' . join(',', $this->_listModelIDs($m)) . '))
+				WHERE s1.modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND
+				s2.subject IS NOT NULL AND s1.subject_is IN (' . join(',', $subjectIs) . ') AND ';
+		
+		if ($p !== null) {
+			$sql .= 's1.predicate = "' . $p->getURI() . '" AND ';
+		}
+		
+		if ($o !== null) {
+			$sql .= 's1.object = "' . $o->getLabel() . '" AND ';
+			
+			if ($o instanceof Literal) {
+				$sql .= 's1.object_is = "l" AND s1.l_language = "' . $o->getLanguage() . '" AND s1.l_datatype = "' . 
+						$o->getDatatype() . '" AND ';
+			} else if ($o instanceof BlankNode) {
+				$sql .= 's1.object_is = "b" AND ';
+			} else {
+				$sql .= 's1.object_is = "r" AND ';
+			}
+		} else {
+			$objectIs = array();
+			if ($oR === true) {
+				$objectIs[] = '"r"';
+			}
+			if ($oB === true) {
+				$objectIs[] = '"b"';
+			}
+			if ($oL === true) {
+				$objectIs[] = '"l"';
+			}
+			
+			$sql .= 's1.object_is IN (' . join(',', $objectIs) . ') AND ';
+		}
+		
+		// in order to make the code more easy to read... just add a 1 (always true)
+		$sql .= '1 ';
+		
+		if ($distinct === true) {
+			$sql .= 'GROUP BY s1.object, s1.object_is, s1.l_language, s1.l_datatype';
+		}
+		
+		return $this->_convertSqlResultToStatementList($this->sqlQuery($sql));
+	}
+	
+	/*
+	 * Converts an sql result (sqlQuery()) into a list of Statement objects.
+	 * 
+	 * @param string[][] A string array containing all result rows and columns
+	 * @return Statement[] Returns a list of Statement objects.
+	 */
+	protected function _convertSqlResultToStatementList($result) {
+		
+		$stmArray = array();
+		
+		foreach ($result as $row) {
+			
+			$s = null;
+			if ($row[1] === 'b') {
+				$s = new BlankNode($row[0]); 
+			} else {
+				$s = new Resource($row[0]);
+			}
+			
+			$p = new Resource ($row[2]);
+			
+			$o = null;
+			if ($row[4] === 'b') {
+				$o = new BlankNode($row[3]);
+			} else if ($row[4] === 'l') {
+				$o = new Literal($row[3], $row[5], $row[6]);
+			} else {
+				$o = new Resource($row[3]);
+			}
+			
+			$stmArray[] = new Statement($s, $p, $o);
+		}
+		
+		return $stmArray;
+	}
+	
+	/*
+	 * helper function, that returns the modelID for a given modelURI
+	 * 
+	 * @param string $modelURI The uri of the model.
+	 * @return int Returns the id of the model.
+	 */
+	protected function _getModelID($modelURI) {
+		
+		$sql = 'SELECT modelID FROM models WHERE modelURI = "' . $modelURI . '"';
+		
+		return $this->dbConn->getOne($sql);
+	}
+	
+	/*
+	 * Returns a list containing all model ids for the given model (model id for the model and all owl:imports models).
+	 * 
+	 * @param Model $m The model, where to look for the ids.
+	 * @return int[] Returns a list of model ids.
+	 */
+	protected function _listModelIDs(Model $m) {
+		
+		$modelIDs = array();
+		$modelIDs[] = $this->_getModelID($m->modelURI);
+		
+		foreach ($m->listImports(true) as $mURI) {
+			$modelIDs[] = $this->_getModelID($mURI);
+		}
+		
+		return $modelIDs;
+	}
+	
+	/**
+	 * @see Erfurt_Store_CountableInterface
+	 */
+	public function executeCountValues(Model $model, Resource $subject = null, Resource $predicate = null, 
+						$distinct = true, $r = true, $b = true, $l = true) {
+		
+		$modelIDs = array();
+		$modelIDs[] = $this->_getModelID($model->modelURI);
+		
+		foreach ($model->listImports(true) as $mURI) {
+			$modelIDs[] = $this->_getModelID($mURI);
+		}
+		
+		$sql = 'SELECT COUNT(';
+		
+		if ($distinct === true) {
+			$sql .= 'DISTINCT ';
+		}
+		
+		$sql .= 'object, object_is, l_language, l_datatype) FROM ' . 
+				$GLOBALS['RAP']['conf']['database']['tblStatements'] . 
+				' WHERE modelID IN (' . join(',', $modelIDs) . ') AND ';;
+				
+		if ($subject !== null) {
+			$sql .= 'subject = "' . $subject->getLabel() . '" AND ';
+		}
+		
+		if ($predicate !== null) {
+			$sql .= 'predicate = "' . $predicate->getURI() . '" AND ';
+		}
+		
+		$objectIs = array();
+		if ($r === true) {
+			$objectIs[] = '"r"';
+		}
+		if ($b === true) {
+			$objectIs[] = '"b"';
+		}
+		if ($l === true) {
+			$objectIs[] = '"l"';
+		}
+		
+		$sql .= 'object_is IN (' . join(',', $objectIs) . ')';
+		
+		return $this->dbConn->getOne($sql);
+	}
+	
+	/**
+	 * @see Erfurt_Store_CountableInterface
+	 */
+	public function executeCountValuesOnMatchingSubjectType(Model $model, Resource $subjectType, 
+						Resource $predicate = null, $distinct = true, $r = true, $b = true, $l = true) {
+	
+		$modelIDs = array();
+		$modelIDs[] = $this->_getModelID($model->modelURI);
+
+		foreach ($model->listImports(true) as $mURI) {
+			$modelIDs[] = $this->_getModelID($mURI);
+		}
+		
+		$objectIs = array();
+		if ($r === true) {
+			$objectIs[] = '"r"';
+		}
+		if ($b === true) {
+			$objectIs[] = '"b"';
+		}
+		if ($l === true) {
+			$objectIs[] = '"l"';
+		}
+		
+		$sql = 'SELECT COUNT(';
+		
+		if ($distinct === true) {
+			$sql .= 'DISTINCT ';
+		}
+		
+		$sql .= 's1.object, s1.object_is, s1.l_language, s1.l_datatype) FROM ' . 
+				$GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s1 
+				LEFT JOIN ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s2 
+				ON (s1.subject = s2.subject AND s2.predicate = "' . EF_RDF_TYPE . '" 
+				AND s2.object = "' . $subjectType->getLabel() . '"
+				AND s2.modelID IN (' . join(',', $modelIDs) . '))
+				WHERE s1.modelID IN (' . join(',', $modelIDs) . ') AND s2.subject IS NOT NULL';
+				
+		if ($predicate !== null) {
+			$sql .= ' AND s1.predicate = "' . $predicate->getURI() . '"';
+		}
+		
+		$sql .= ' AND s1.object_is IN(' . join(',', $objectIs) . ')';
+				
+		return $this->dbConn->getOne($sql);
+	}	
 }
 ?>

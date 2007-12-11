@@ -555,14 +555,14 @@ abstract class Erfurt_Rdfs_Resource_Abstract extends Resource {
 		}
 		$values = array_filter($values);
 		
-		if (!($property instanceof RDFSProperty)) {
+		if (!($property instanceof Erfurt_Rdfs_Property)) {
 			$property = $this->model->propertyF($property);
 		}
 		
 		$range = $property->getRange();
 		$val = array();
 		
-		if ($language || $newLang || $datatype || $newDtype || ($property instanceof OWLProperty && $property->isDatatypeProperty())) {
+		if ($language || $newLang || $datatype || $newDtype || ($property instanceof Erfurt_Owl_Property && $property->isDatatypeProperty())) {
 			$valuesAreLiterals = true;
 		} else {
 			$valuesAreLiterals = false;

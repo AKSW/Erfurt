@@ -49,8 +49,11 @@ define('EF_RDF_PROPERTY', EF_RDF_NS.'Property');
 define('EF_RDFS_COMMENT', EF_RDFS_NS.'comment');
 define('EF_RDFS_LABEL', EF_RDFS_NS.'label');
 define('EF_RDFS_SUBCLASSOF', EF_RDFS_NS.'subClassOf');
+define('EF_RDFS_SUBPROPERTYOF', EF_RDFS_NS.'subPropertyOf');
 define('EF_RDFS_DATATYPE', EF_RDFS_NS.'Datatype');
 define('EF_RDFS_CLASS', EF_RDFS_NS.'Class');
+define('EF_RDFS_DOMAIN', EF_RDFS_NS.'domain');
+define('EF_RDFS_RANGE', EF_RDFS_NS.'range');
 	
 define('EF_XSD_STRING', EF_XSD_NS.'string');
 	

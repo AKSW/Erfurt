@@ -1,5 +1,7 @@
 <?php
-require_once 'config.php';
+if (!defined('ERFURT_TEST_CONFIG')) {
+	require_once '../config.php';
+}
 
 /**
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
@@ -11,10 +13,16 @@ class Erfurt_CacheTest extends PHPUnit_Framework_TestCase {
 	protected $model;
 	protected $cache;
 	
+	public static function suite() {
+		
+		return new PHPUnit_Framework_testSuite('Erfurt_CacheTest');
+	}
+	
 	public function setUp() {
 		
-		$this->store = new Erfurt_Store_Adapter_Rap('mysqli', 'localhost', 'erfurt_testbed', 'powl', 'powl');
+		$this->store = Zend_Registry::get('store');
 		$this->model = $this->store->getNewModel('http://ns.ontowiki.net/unittest/Erfurt_CacheTest/0.1/');
+		#$this->model->load('DefaultTest.rdf');
 		$this->cache = new Erfurt_Cache($this->store);
 	}
 	
