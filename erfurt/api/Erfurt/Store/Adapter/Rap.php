@@ -469,7 +469,6 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	public function modelExists($modelURI, $useACL = true) {
 		$args=func_get_args();
 		$c=cache('modelExists',$args);
-		$c = NULL;
 		if($c!==NULL)
 			return $c;
 		
