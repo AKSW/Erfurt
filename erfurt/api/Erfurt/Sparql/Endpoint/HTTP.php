@@ -43,6 +43,8 @@ try {
 	
 	$endpoint->authenticate($user,$password);
 	
+	$endpoint->setUseImports(true);
+	
 	$endpoint->addModel($model);
 	
 	$endpoint->setQuery($query);
