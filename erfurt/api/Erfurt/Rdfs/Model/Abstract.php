@@ -43,7 +43,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		$this->type=$type?$type:$this->getType();
 		$this->resource='RDFSResource';
 		$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
-		$this->property=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Property';
+		$this->property=($this->type=='OWL'?'Erfurt_Owl_Property':'Erfurt_Rdfs_Property_Default');
 		$this->instance=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Instance';
 		$this->asResource = $this->resourceF($this->modelURI);
 #		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
@@ -634,7 +634,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function listAnnotationProperties($includePredefined = false) {
 		
-		$ret=$this->listTypes($GLOBALS['OWL_AnnotationProperty'],'RDFSProperty');
+		$ret=$this->listTypes($GLOBALS['OWL_AnnotationProperty'],'Erfurt_Rdfs_Property_Default');
 		if($includePredefined)
 			$ret=array_merge($ret,array(
 				$GLOBALS['RDFS_isDefinedBy']->getURI()=>$GLOBALS['RDFS_isDefinedBy'],

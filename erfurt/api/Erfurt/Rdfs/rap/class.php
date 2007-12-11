@@ -404,7 +404,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
 			WHERE s1.modelID IN (".$this->model->getModelIds().")
 			GROUP BY s1.predicate";
-		return $this->model->_convertRecordSetToNodeList($sql,'RDFSProperty');
+		return $this->model->_convertRecordSetToNodeList($sql,'Erfurt_Rdfs_Property_Default');
 	}
 	
 	/**
