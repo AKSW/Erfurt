@@ -127,7 +127,6 @@ require_once(RDF_BACKEND_INCLUDE_DIR.'model.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'literal.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'resource.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'class.php');
-require_once(RDF_BACKEND_INCLUDE_DIR.'property.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'instance.php');
 require_once(RDF_BACKEND_INCLUDE_DIR.'search.php');
 
