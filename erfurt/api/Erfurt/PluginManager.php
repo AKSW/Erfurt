@@ -275,7 +275,7 @@ class Erfurt_PluginManager {
 
     public function __set($vName, $vValue)
     {
-        $this->_var[$vName] = $vValue;
+        $this->_vars[$vName] = $vValue;
         if (isset($this->_vars[$vName]) && $this->_vars[$vName] === $vValue) {
             return $this->_vars[$vName];
         } else {
