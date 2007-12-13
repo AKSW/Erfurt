@@ -79,10 +79,6 @@ class Erfurt_App_Default {
     		$this->pluginManager->init(REAL_BASE . $this->config->plugins->erfurt); # Is absolute path correct for erfurt?
 		}
 		
-		# zend events to erfurt trigger
-		$pmFront = Zend_Controller_Front::getInstance();
-        $pmFront->registerPlugin(new PluginTriggerZendEvents($this->eh));
-		
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
 		
 		$defaultStore = $this->store[$this->defaultStore] = new $storeClass($config->database->params->type, 

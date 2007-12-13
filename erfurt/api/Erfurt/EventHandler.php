@@ -43,6 +43,7 @@ class Erfurt_EventHandler {
     private $_autoincr = 100;
     private $_erfurt = null;
     private $_pluginManager = null;
+    public $currentEventname = false;
 
     public function __construct($o) {
         $this->_erfurt = $o;
@@ -61,6 +62,9 @@ class Erfurt_EventHandler {
  	 * @access public
  	 */
     public function trigger($eventname, $attribute) {
+        
+        # save current event name
+        $this->currentEventname = $eventname;
         
         # prepare ordered function list for event
         $list = $this->_prepare($eventname);
@@ -84,6 +88,9 @@ class Erfurt_EventHandler {
             # call method
             eval('$response = $this->_classes[$class]->'.$method.'($attribute);');
         }
+        
+        # delete current eventname
+        $this->currentEventname = false;
         
         return $response;
         
