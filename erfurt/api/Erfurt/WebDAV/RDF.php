@@ -83,19 +83,57 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 	var $show_system_class;
 	//usefull for wirting the model in DB
 	var $mount_point;
+	
 	/**
-	 *Constructor-Handler
-	 *needed to use a lot of configuration from config.inc.php
-	 *@param Array - this array contains the properties
+	 * Attribute for storing the current Erfurt App Object
+	 * 
+	 * @access private
+	 * @var Erfurt_App_Default the application supporting ACL things like that
 	 */
-	function HTTP_WebDAV_Server_RDF($optionen)
-	{
-		$this->origin =$optionen['origin'];
-		$this->limit = $optionen['limit'];
-		$this->namespaces =$optionen['NS'];
-		$this->output = $optionen['output'];
-		$this->show_system_class= $optionen['show_system_class'];
-		$this->mount_point =$optionen['mountpoint'];
+	private $erfurt = null;
+	
+	/**
+	 * Attribute for storing allowed models
+	 * 
+	 * @access private
+	 * @var Array of model-URI's
+	 */
+	private $models = null;
+	
+	/**
+	 * Attribute for storing the recent model
+	 */
+	private $model = null;
+	
+	/**
+	 * Constructor-Handle
+	 * needed to use a lot of configuration from config.inc.php
+	 * 
+	 * @param Array - this array contains the properties
+	 * @param Erfurt_App_Default Object
+	 */
+	function HTTP_WebDAV_Server_RDF($optionen,$erfurt) {
+		
+		$this -> erfurt = $erfurt;
+		
+		$this -> models = array_keys($erfurt->getStore()->listModels(true));
+		
+		$this -> show_system_class = true;
+		
+		$this->limit = 20;
+		
+		$this->output = array ( 'class' => array(	'showClassDir' =>TRUE,
+										'showCSV' => TRUE));
+		
+		/*
+		 * Ugly code from here
+		 */
+//		$this->origin =$optionen['origin'];
+//		$this->limit = $optionen['limit'];
+//		$this->namespaces =$optionen['NS'];
+//		$this->output = $optionen['output'];
+//		$this->show_system_class= $optionen['show_system_class'];
+//		$this->mount_point =$optionen['mountpoint'];
 		//Source is DB
 		if($this->origin=="DB") {
 			$this->DB = $optionen['DB'];
@@ -123,15 +161,18 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		}
 			
 		//Namespaces hinzufgen und erkennen
-		if($this->origin !="SE") {
-			$nms = $this->Model->getParsedNamespaces();
-			$this->namespaces =array_merge($this->namespaces,$nms);
-		}
-		foreach($this->namespaces as $key=>$value) {
-			$this->querystring.=" PREFIX $value: <$key>";
-		}
-		$this->querystring.="\n";
+//		if($this->origin !="SE") {
+//			$nms = $this->Model->getParsedNamespaces();
+//			$this->namespaces =array_merge($this->namespaces,$nms);
+//		}
+//		foreach($this->namespaces as $key=>$value) {
+//			$this->querystring.=" PREFIX $value: <$key>";
+//		}
+		$this->querystring = "";
+
+		parent::__construct();
 	}
+	
 	/**
 	 * Serve a webdav request
 	 *
@@ -158,8 +199,9 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		}
 
 		// establish connection to property/locking db
-		mysql_connect($this->db_host, $this->db_user, $this->db_passwd) or die(mysql_error());
-		mysql_select_db($this->db_name) or die(mysql_error());
+		//TODO Locking/Unlocking for DAV Protocol
+		//		mysql_connect($this->db_host, $this->db_user, $this->db_passwd) or die(mysql_error());
+		//		mysql_select_db($this->db_name) or die(mysql_error());
 		// TODO throw on connection problems
 		// let the base class do all the work
 		parent::ServeRequest();
@@ -194,21 +236,38 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		// prepare property array
 		$files["files"] = array();
 
+		$arPath = explode('/',$path);
+		
 		// information for contained resources requested?
 		if (!empty($options["depth"]))  { // TODO check for is_dir() first?
 
-		// make sure path ends with '/'
-		$options["path"] = $this->_slashify($options["path"]);
-		if  ($path == "/") {
-			$this->Ausgabe_formal("Ausgabe","classes",$files,"Resource");
-			$this->Ausgabe_formal("Ausgabe","resources",$files,"Resource");
-		}
-		else if(preg_match("/^\/classes/",$path)){
-			require("include/Classes.php");
-		}
-		else if(preg_match("/^\/resources/",$path)) {
-			require("include/Resources.php");
-		}
+			// make sure path ends with '/'
+			$options["path"] = $this->_slashify($options["path"]);
+			if  ($path == "/") {
+				$i = 0;
+				foreach ($this->models as $model => $value) {
+					$this->Ausgabe_formal('Ausgabe','MODEL_'.$i++,$files,"Resource");
+				}
+				
+			}
+			else if ( $arPath[1] != '' && $arPath[2] == '' ) {
+				$this->Ausgabe_formal("Ausgabe",$path . "classes/",$files,"Resource");
+				$this->Ausgabe_formal("Ausgabe",$path . "resources/",$files,"Resource");
+			}
+			else if(in_array('classes',$arPath)) {
+				$this->model = $this->erfurt->getStore()->getModel(
+					$this->models[str_replace('MODEL_','',$arPath[1])]
+				);
+				foreach ($this->model->getParsedNamespaces() as $ns => $prefix)
+					$this->querystring .= 'PREFIX ' . $prefix . ': <' . $ns . '> ' . PHP_EOL;
+				require("include/Classes.php");
+			}
+			else if(in_array('resources',$arPath)) {
+				$this->model = $this->erfurt->getStore()->getModel(
+					$this->models[str_replace('MODEL_','',$arPath[1])]
+				);
+				require("include/Resources.php");
+			}
 		}
 		// ok, all done
 		return true;
@@ -223,6 +282,7 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 	function fileinfo($path,$mime)
 	{
 		// map URI path to filesystem path
+		//echo $path;
 		$fspath =$path;
 		// create result array
 		$info = array();
@@ -263,11 +323,12 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 
 		// get additional properties from database
 		$query = "SELECT ns, name, value FROM properties WHERE path = '$path'";
-		$res = mysql_query($query);
-		while ($row = mysql_fetch_assoc($res)) {
-			$info["props"][] = $this->mkprop($row["ns"], $row["name"], $row["value"]);
-		}
-		mysql_free_result($res);
+		//TODO Locking/Unlocking for DAV Protocol
+		//		$res = mysql_query($query);
+		//		while ($row = mysql_fetch_assoc($res)) {
+		//			$info["props"][] = $this->mkprop($row["ns"], $row["name"], $row["value"]);
+		//		}
+		//		mysql_free_result($res);
 
 		return $info;
 	}
@@ -654,7 +715,7 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 			$query = $this->querystring."SELECT ?pred ?obj
 					                    WHERE { <$sub> ?pred ?obj
 												}";
-			$result = $this->Model->sparqlQuery($query);
+			$result = $this->model->sparqlQuery($query);
 			$model = ModelFactory::getDefaultModel();
 			if(!empty($result) && is_array($result)){
 				foreach($result as $O_Array => $O_Value){
@@ -714,55 +775,56 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		return "";
 	}
 
-	/**
-	 * LOCK method handler
-	 *
-	 * @param  array  general parameter passing array
-	 * @return bool   true on success
-	 */
-	function LOCK(&$options)
-	{
-		if (isset($options["update"])) { // Lock Update
-			$query = "UPDATE locks SET expires = ".(time()+300);
-			mysql_query($query);
-
-			if (mysql_affected_rows()) {
-				$options["timeout"] = 300; // 5min hardcoded
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		$options["timeout"] = time()+300; // 5min. hardcoded
-
-		$query = "INSERT INTO locks
-                        SET token   = '$options[locktoken]'
-                          , path    = '$options[path]'
-                          , owner   = '$options[owner]'
-                          , expires = '$options[timeout]'
-                          , exclusivelock  = " .($options['scope'] === "exclusive" ? "1" : "0")
-		;
-		mysql_query($query);
-
-		return mysql_affected_rows() ? "200 OK" : "409 Conflict";
-	}
-
-	/**
-	 * UNLOCK method handler
-	 *
-	 * @param  array  general parameter passing array
-	 * @return bool   true on success
-	 */
-	function UNLOCK(&$options)
-	{
-		$query = "DELETE FROM locks
-                      WHERE path = '$options[path]'
-                        AND token = '$options[token]'";
-		mysql_query($query);
-
-		return mysql_affected_rows() ? "204 No Content" : "409 Conflict";
-	}
+	//TODO Locking/Unlocking for DAV Protocol
+	//	/**
+	//	 * LOCK method handler
+	//	 *
+	//	 * @param  array  general parameter passing array
+	//	 * @return bool   true on success
+	//	 */
+	//	function LOCK(&$options)
+	//	{
+	//		if (isset($options["update"])) { // Lock Update
+	//			$query = "UPDATE locks SET expires = ".(time()+300);
+	//			mysql_query($query);
+	//
+	//			if (mysql_affected_rows()) {
+	//				$options["timeout"] = 300; // 5min hardcoded
+	//				return true;
+	//			} else {
+	//				return false;
+	//			}
+	//		}
+	//
+	//		$options["timeout"] = time()+300; // 5min. hardcoded
+	//
+	//		$query = "INSERT INTO locks
+	//                        SET token   = '$options[locktoken]'
+	//                          , path    = '$options[path]'
+	//                          , owner   = '$options[owner]'
+	//                          , expires = '$options[timeout]'
+	//                          , exclusivelock  = " .($options['scope'] === "exclusive" ? "1" : "0")
+	//		;
+	//		mysql_query($query);
+	//
+	//		return mysql_affected_rows() ? "200 OK" : "409 Conflict";
+	//	}
+	//
+	//	/**
+	//	 * UNLOCK method handler
+	//	 *
+	//	 * @param  array  general parameter passing array
+	//	 * @return bool   true on success
+	//	 */
+	//	function UNLOCK(&$options)
+	//	{
+	//		$query = "DELETE FROM locks
+	//                      WHERE path = '$options[path]'
+	//                        AND token = '$options[token]'";
+	//		mysql_query($query);
+	//
+	//		return mysql_affected_rows() ? "204 No Content" : "409 Conflict";
+	//	}
 
 	/**
 	 * checkLock() helper
@@ -772,28 +834,29 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 	 */
 	function checkLock($path)
 	{
-		$result = false;
-		//Die connection to testDB
-		$query = "SELECT owner, token, expires, exclusivelock
-                  FROM locks
-                 WHERE path = '$path'
-               ";
-		$res = mysql_query($query);
-
-		if ($res) {
-			$row = mysql_fetch_array($res);
-			mysql_free_result($res);
-
-			if ($row) {
-				$result = array( "type"    => "write",
-                                                     "scope"   => $row["exclusivelock"] ? "exclusive" : "shared",
-                                                     "depth"   => 0,
-                                                     "owner"   => $row['owner'],
-                                                     "token"   => $row['token'],
-                                                     "expires" => $row['expires']
-				);
-			}
-		}
+		//TODO Locking/Unlocking for DAV Protocol
+		//		$result = false;
+		//		//Die connection to testDB
+		//		$query = "SELECT owner, token, expires, exclusivelock
+		//                  FROM locks
+		//                 WHERE path = '$path'
+		//               ";
+		//		$res = mysql_query($query);
+		//
+		//		if ($res) {
+		//			$row = mysql_fetch_array($res);
+		//			mysql_free_result($res);
+		//
+		//			if ($row) {
+		//				$result = array( "type"    => "write",
+		//                                                     "scope"   => $row["exclusivelock"] ? "exclusive" : "shared",
+		//                                                     "depth"   => 0,
+		//                                                     "owner"   => $row['owner'],
+		//                                                     "token"   => $row['token'],
+		//                                                     "expires" => $row['expires']
+		//				);
+		//			}
+		//		}
 		return $result;
 	}
 
@@ -840,9 +903,14 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 	function Ausgabe_formal($result,$path,&$files,$mime)
 	{
 		//Ausgabe von Resources und classes
-		if($result=="Ausgabe") $files["files"][] =$this->fileinfo($path,$mime);
+		if($result=="Ausgabe") {
+			$files["files"][] =$this->fileinfo($path,$mime);
+		}
+		
 		//Ausgabe der Unterverzeichnisse  resources/R_1_50
-		if($result=="Pfad") $files["files"][] = $this->fileinfo($path,$mime);
+		if($result=="Pfad") {
+			$files["files"][] = $this->fileinfo($path,$mime);
+		}
 	}
 
 	/**
@@ -884,7 +952,7 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		//echo $neu_wert;
 		return $neu_wert;
 	}
-	
+
 	/**
 	 * forms the uri in an abbreviated notation
 	 * @param string the complete uri like http://example.com/adresse
@@ -946,14 +1014,14 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 						WHERE 	{ 
 									<$subname> <$predname> ?y
 									}";            	
-			$result = $this->Model->sparqlQuery($querystring);
+			$result = $this->model->sparqlQuery($querystring);
 			foreach($result as $O_Value){
 				$wert = $this->iri2displayname($O_Value['?y']->getLabel());
 				echo $wert."\n";
 			}
 		}
 	}
-	
+
 	/**
 	 * check the given value whether an base class or an subclass is
 	 * @param string the uri
@@ -961,12 +1029,11 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 	 * @return bool
 	 */
 	function FindSuperClass($wert,$path) {
-		syslog(LOG_INFO,"Der wert ist $wert");
 		$Super_Query=$this->querystring."Select DISTINCT ?y
 		WHERE {
 			<$wert> rdfs:subClassOf ?y
 					}";
-		$result=$this->Model->sparqlQuery($Super_Query);
+		$result=$this->model->sparqlQuery($Super_Query);
 		//if the result is empty then it must be a base class
 		if(!is_array( $result) || empty($result)) return true;
 		else if(count($result) == 1)	{
@@ -988,7 +1055,7 @@ class HTTP_WebDAV_Server_RDF extends HTTP_WebDAV_Server
 		}
 		else return false;
 	}
-	
+
 	/**
 	 * check the candidate to IRI
 	 * @param string the Uri
