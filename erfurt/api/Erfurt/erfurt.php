@@ -30,6 +30,7 @@ if (!version_compare(phpversion(), ERFURT_MIN_PHP_VERSION, '>=')) {
 $include_path  = get_include_path() . PATH_SEPARATOR;
 $include_path .= ERFURT_BASE . PATH_SEPARATOR;
 $include_path .= ERFURT_BASE . 'lib/' . PATH_SEPARATOR;
+$include_path .= ERFURT_BASE . 'lib/PEAR/' . PATH_SEPARATOR;
 set_include_path($include_path);
 
 // overwrite if it does not exists; needed for autodiscovering missing classes
