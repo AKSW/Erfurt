@@ -17,7 +17,7 @@
 // |          Christian Stocker <chregu@bitflux.ch>                       |
 // +----------------------------------------------------------------------+
 //
-// $Id: _parse_proppatch.php,v 1.3 2004/01/05 12:41:34 hholzgra Exp $
+// $Id: _parse_proppatch.php,v 1.6 2006/10/10 11:53:17 hholzgra Exp $
 //
 
 /**
@@ -25,7 +25,7 @@
  * 
  * @package HTTP_WebDAV_Server
  * @author Hartmut Holzgraefe <hholzgra@php.net>
- * @version 0.99.1dev
+ * @version @package-version@
  */
 class _parse_proppatch 
 {
@@ -152,8 +152,10 @@ class _parse_proppatch
 
         if ($this->depth >= 4) {
             $this->current["val"] .= "<$tag";
-            foreach ($attr as $key => $val) {
-                $this->current["val"] .= ' '.$key.'="'.str_replace('"','&quot;', $val).'"';
+            if (isset($attr)) {
+                foreach ($attr as $key => $val) {
+                    $this->current["val"] .= ' '.$key.'="'.str_replace('"','&quot;', $val).'"';
+                }
             }
             $this->current["val"] .= ">";
         }
@@ -204,11 +206,18 @@ class _parse_proppatch
      * @return void
      * @access private
      */
-    function _data($parser, $data) {
+    function _data($parser, $data) 
+    {
         if (isset($this->current)) {
             $this->current["val"] .= $data;
         }
     }
 }
 
-?>
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * indent-tabs-mode:nil
+ * End:
+ */

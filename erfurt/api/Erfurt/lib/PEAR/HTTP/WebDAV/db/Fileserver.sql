@@ -1,3 +1,16 @@
+-- MySQL dump 9.06
+--
+-- Host: localhost    Database: webdav
+---------------------------------------------------------
+-- Server version	4.0.3-beta
+
+CREATE DATABASE webdav;
+USE webdav;
+
+--
+-- Table structure for table 'locks'
+--
+
 CREATE TABLE locks (
   token varchar(255) NOT NULL default '',
   path varchar(200) NOT NULL default '',
@@ -14,6 +27,14 @@ CREATE TABLE locks (
   KEY expires (expires)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table 'locks'
+--
+
+
+--
+-- Table structure for table 'properties'
+--
 
 CREATE TABLE properties (
   path varchar(255) NOT NULL default '',
@@ -23,4 +44,9 @@ CREATE TABLE properties (
   PRIMARY KEY  (path,name,ns),
   KEY path (path)
 ) TYPE=MyISAM;
+
+--
+-- Dumping data for table 'properties'
+--
+
 
