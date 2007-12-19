@@ -341,7 +341,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		$modelURI = is_numeric($modelURI) ? $this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI) : $modelURI;
 		
 		# look for model in every uri variation
-		ob_start(); // prevent DB error message if tables don't exist
+		#ob_start(); // prevent DB error message if tables don't exist
 		if(!$this->modelExists($modelURI, $useACL)) {
 			if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
 				$modelURI=rtrim($modelURI,'#/');
@@ -352,7 +352,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			else return false;
 		}
 		$m=new RDFSModel($this,$modelURI);
-		ob_end_clean();
+		#ob_end_clean();
 		
 		
 		if($m) {
@@ -467,10 +467,10 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function modelExists($modelURI, $useACL = true) {
-		#$args=func_get_args();
-		#$c=cache('modelExists',$args);
-		#if($c!==NULL)
-		#	return $c;
+		$args=func_get_args();
+		$c=cache('modelExists',$args);
+		if($c!==NULL)
+			return $c;
 		
 		$modelExists = false; 
 		if ($modelExists = DBStore::modelExists($modelURI)) {
@@ -478,8 +478,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				if ($useACL and !$this->ac->isModelAllowed('view', $modelURI))
 					$modelExists = false;
 		}
-		return $modelExists;
-		#return cache('modelExists', $args, $modelExists);
+		#return $modelExists;
+		return cache('modelExists', $args, $modelExists);
 	}
 	
 	/**
