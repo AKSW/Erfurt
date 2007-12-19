@@ -10,84 +10,150 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 	
 	/**
 	 * instance of config-object
+	 * 
+	 * @var object
 	 */
 	protected $_config = null;
 	
 	
 	/**
-	 * instance of config-object
+	 * instance of log-object
+	 * 
+	 * @var object
 	 */
 	protected $_log = null;
 	
+	/**
+	 * agent needs read sbac 
+	 * 
+	 * @var boolean
+	 */
 	protected $_needViewSbac = false;
 	
+	/**
+	 * agent needs edit sbac
+	 * 
+	 * @var boolean
+	 */
 	protected $_needEditSbac = false;
 	
+	/**
+	 * common view name
+	 * 
+	 * @var string
+	 */
 	protected $_viewName = '';
 	
+	/**
+	 * agents personal read sbac view
+	 * 
+	 * @var string
+	 */
 	protected $_personalViewName = '';
 	
+	/**
+	 * agents personal edit sbac view
+	 * 
+	 * @var string
+	 */
 	protected $_personalEditName = '';
-	
 	
 	/**
 	 * instance of the sysont-Model
+	 * 
+	 * @var object
 	 */
 	protected $_sysontModel = null;
 	
+	/**
+	 * field of agent personal rules
+	 * 
+	 * @var array
+	 */
 	protected $_userRules = null;
 	
+	/**
+	 * field of group rules
+	 * 
+	 * @var array
+	 */
 	protected $_groupRules = null;
-	
+
+	/**
+	 * agent uri
+	 * 
+	 * @var string
+	 */
 	protected $_activeUserUri = '';
 	
+	/**
+	 * field of rules
+	 * 
+	 * @var array
+	 */
 	protected $_rules = null;
 	
 	/**
-	 * model uri 
+	 * model uri
+	 * 
+	 * @var string 
 	 */
 	protected  $_propStatementsModel = 'http://ns.ontowiki.net/SysOnt/model';
 	/**
 	 * grant statements view 
+	 * 
+	 * @var string
 	 */
 	protected $_propGrantStatementsView = 'http://ns.ontowiki.net/SysOnt/grantStatementsView';
 	
 	/**
-	 * deny statements view 
+	 * deny statements view
+	 * 
+	 * @var string 
 	 */
 	protected $_propDenyStatementsView = 'http://ns.ontowiki.net/SysOnt/denyStatementsView';
 	
 	/**
 	 * grant statements edit 
+	 * 
+	 * @var string
 	 */
 	protected $_propGrantStatementsEdit = 'http://ns.ontowiki.net/SysOnt/grantStatementsEdit';
 	
 	/**
-	 * deny statements edit 
+	 * deny statements edit
+	 * 
+	 * @var string 
 	 */
 	protected $_propDenyStatementsEdit = 'http://ns.ontowiki.net/SysOnt/denyStatementsEdit';
 	
 	/**
 	 * sqarql where clause
+	 * 
+	 * @var string
 	 */
 	protected  $_propSparqlClause = 'http://ns.ontowiki.net/SysOnt/denyStatementsEdit';
 	
 	/**
 	 * current User rule replace 
+	 * 
+	 * @var string
 	 */
 	protected $_currentUserReplace = '%currentUser%';
 	
 	/**
 	 * current selector subject rule replace 
+	 * 
+	 * @var string
 	 */
 	protected $_selectorSubjectReplace = '%selectorSubject%';
-	
 	
 	
 	/**
 	 * Constructor
 	 */
 	public function __construct(Zend_Log $log = null) {
+		# set special log object
 		if (Zend_Registry::isRegistered('erfurtLog')) {
 			$this->_log = Zend_Registry::get('erfurtLog');
 		} else {
@@ -97,11 +163,12 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 		# system configuration
 		$this->_sysontModel = Zend_Registry::get('sysontModel');
 		
+		# set config
 		$this->_config = $config = Zend_Registry::get('config');
 		$this->_setUris();
 	}
 	
-/**
+	/**
 	 * parse sparql query 
 	 * 
 	 * @param object active model instance to query sparql
@@ -110,11 +177,14 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 	 * @throws Erfurt_Exception if query does not work
 	 */
 	private function _sparql($sparqlQuery) {
+		static $prefixed_query;
 		$model = $this->_sysontModel;
 		# get all ns
-		$prefixed_query = '';
-		foreach ($model->getParsedNamespaces() as $uri => $prefix) {
-			$prefixed_query .= 'PREFIX ' . $prefix . ': <' . $uri . '>' . PHP_EOL;
+		if (empty($prefixed_query)) {
+			$prefixed_query = '';
+			foreach ($model->getParsedNamespaces() as $uri => $prefix) {
+				$prefixed_query .= 'PREFIX ' . $prefix . ': <' . $uri . '>' . PHP_EOL;
+			}
 		}
 		
 		# query model
@@ -476,6 +546,11 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 	
 	/**
 	 * returns the details of some selectors
+	 * 
+	 * gets some selector informations from database 
+	 * and retrieves detail informations
+	 * 
+	 * @return array selector informations
 	 */
 	public function getSelectorDetails(Array $selectors) {
 		$sel = array();
@@ -505,6 +580,11 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 	}
 	
 	
+	/**
+	 * get first key of an array
+	 * 
+	 * @return mixed key if is array or false
+	 */
 	public function getFirstKey($arr) {
 		foreach($arr as $k => $v)
 			return $k;

@@ -300,7 +300,6 @@ class Erfurt_Ac_Default {
 				$sbacObj->setUserRules($this->_userRights);
 				$sbacObj->setGroupRules($this->_groupRights);
 				$sbacObj->setActiveUser($this->_user['uri']);
-					  
 				# checks 
 				if ($sbacObj->checkAccessRestriction()) {
 					# perform sbac
@@ -315,6 +314,8 @@ class Erfurt_Ac_Default {
 				printr($e);
 			}
 		}
+		#printr(debug_backtrace(), 1);exit;
+		#$GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
 	}
 	
 	/**

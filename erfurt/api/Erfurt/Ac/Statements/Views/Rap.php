@@ -8,15 +8,32 @@
   */
 class Erfurt_Ac_Statements_Views_Rap  extends Erfurt_Ac_Statements_Views_Abstract  {
 	
+	/**
+	 * db connection string
+	 * 
+	 * @var object
+	 */
 	private $db = null;
 	
+	
+	/**
+	 * constructor
+	 * 
+	 * @return void
+	 */
 	public function __construct() {
 		$this->db = Zend_Registry::get('erfurt')->getStore()->dbConn;
 	}
 	
+	/**
+	 * create view
+	 * 
+	 * @return array list of views
+	 */
 	public function getViews() {
-		$sql = 'SELECT TABLE_NAME
-							FROM information_schema.views';
+		$sql = "SELECT TABLE_NAME
+							FROM information_schema.views
+							WHERE TABLE_SCHEMA = '".$this->db->database."'";
 		$views = $this->db->getAll($sql);
 		$ret = array();
 		if ($views) {
@@ -27,6 +44,11 @@ class Erfurt_Ac_Statements_Views_Rap  extends Erfurt_Ac_Statements_Views_Abstrac
 		return $ret;
 	}
 	
+	/**
+	 * create view
+	 * 
+	 * @return bool result
+	 */
 	public function createView($name, $from, $where, $add, $merge = true, $type = 'view') {
 		$alg = '';
 		if ($merge) {
@@ -40,10 +62,23 @@ class Erfurt_Ac_Statements_Views_Rap  extends Erfurt_Ac_Statements_Views_Abstrac
 		return $res;
 	}
 	
+	/**
+	 * drop a special views
+	 * 
+	 * @return bool result
+	 */
 	public function dropView($viewName) {
-		
+		$views = $this->getViews();
+		$sql = "DROP VIEW IF EXISTS '".$viewName."'";
+		$res = $this->db->Execute($sql);
+		return $res;
 	}
 
+	/**
+	 * drops all available views
+	 * 
+	 * @return bool result
+	 */
 	public function dropViews() {
 		$views = $this->getViews();
 		$sql = "DROP VIEW IF EXISTS ".implode(", ", $views);

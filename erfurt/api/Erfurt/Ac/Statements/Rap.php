@@ -172,6 +172,12 @@ class Erfurt_Ac_Statements_Rap extends Erfurt_Ac_Statements_Abstract
 		 
 	}
 	
+	
+	/**
+	 * get plain list of models
+	 * 
+	 * @return array key is modelID and value is modelURI 
+	 */
 	private function getModelList() {
 		static $ret;
 		if (is_array($ret)) return $ret;
