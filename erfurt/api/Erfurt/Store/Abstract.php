@@ -92,7 +92,7 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 		} else if($model instanceof RDFSClass) {
 			$class=$model;
 			$model=$class->model->modelURI;
-		} else if($model instanceof RDFSInstance) {
+		} else if($model instanceof Erfurt_Rdfs_Instance) {
 			$instance=$model;
 			$model=$instance->model->modelURI;
 		}

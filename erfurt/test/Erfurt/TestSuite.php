@@ -22,6 +22,7 @@ class Erfurt_TestSuite {
 		
 		$suite->addTest(Erfurt_Cache_TestSuite::suite());
 		$suite->addTest(Erfurt_Rdfs_TestSuite::suite());
+		$suite->addTest(Erfurt_Store_TestSuite::suite());
 		
 		return $suite;
 	}

@@ -229,7 +229,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	/**
 	 *
 	 *
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function listPriorVersion() {
 		
@@ -249,7 +249,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	/**
 	 *
 	 *
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function listBackwardCompatibleWith() {
 		
@@ -269,7 +269,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	/**
 	 *
 	 *
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function listIncompatibleWith() {
 		
@@ -289,7 +289,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	/**
 	 *
 	 *
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function listAllDifferentSets() {
 // TODO check method name		
@@ -301,7 +301,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 *
 	 * @param string/Resource $set
 	 * @param string/null $class
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function getAllDifferent($set, $class = null) {
 		
@@ -313,7 +313,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 *
 	 *
 	 * @param string/Resource $set
-	 * @param RDFSResource[] $members
+	 * @param Erfurt_Rdfs_Resource[] $members
 	 */
 	public function setAllDifferent($set, $members) {
 		
@@ -324,7 +324,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	/**
 	 *
 	 *
-	 * @param RDFSResource[] $members
+	 * @param Erfurt_Rdfs_Resource[] $members
 	 */
 	public function addAllDifferent($members) {
 		
@@ -341,7 +341,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 */
 	public function removeAllDifferent($set) {
 		
-		if(!($set instanceof RDFSResource))	$set = $this->resourceF($set);
+		if(!($set instanceof Erfurt_Rdfs_Resource))	$set = $this->resourceF($set);
 		$set->remove();
 	}
 	

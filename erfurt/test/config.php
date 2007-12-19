@@ -39,16 +39,15 @@ require_once(RDFAPI_INCLUDE_DIR . 'dataset/DatasetP.php');
 require_once(RDFAPI_INCLUDE_DIR . 'sparql/SPARQL.php');
 
 require_once 'Erfurt/Rdfs/rap/model.php';
-require_once 'Erfurt/Rdfs/rap/resource.php';
 require_once 'Erfurt/functions.php';
 require_once 'Erfurt/Rdfs/rap/class.php';
 
 $config = new Erfurt_Config(array('/Users/philipp/Sites/erfurt_doc_it/api/Erfurt/erfurt.ini'), 'erfurt');
 Zend_Registry::set('config', $config);
 
-$writer = new Zend_Log_Writer_Null();
-$erfurtLog = new Zend_Log($writer);
-Zend_Registry::set('erfurtLog', $erfurtLog);
+#$writer = new Zend_Log_Writer_Null();
+#$erfurtLog = new Zend_Log($writer);
+#Zend_Registry::set('erfurtLog', $erfurtLog);
 
 Zend_Registry::set('erfurt', new Erfurt_App_Default($config));
 

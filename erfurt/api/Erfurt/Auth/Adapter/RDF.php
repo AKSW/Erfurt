@@ -53,7 +53,10 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	* @return void
 	*/ 
 	public function __construct($acModel, $username, $password) { 
-		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::_constuctor()');
+		if (Zend_Registry::isRegistered('erfurtLog')) {
+			Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::_constuctor()');
+		}
+		
 		$this->_acModel = $acModel;
 		
 		$this->_username = $username;
@@ -114,9 +117,11 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			# TODO: POWL HACK
 			$_SESSION['PWL']['user']= $this->_username;
 		}
-		
-		Zend_Registry::get('erfurtLog')->debug('User authenticated: ' . $result['identity']['uri']);		
-		
+
+		if (Zend_Registry::isRegistered('erfurtLog')) {
+			Zend_Registry::get('erfurtLog')->debug('User authenticated: ' . $result['identity']['uri']);
+		}
+				
 		return new Zend_Auth_Result($result['isValid'], $result['identity'], $result['messages']);
 	}
  

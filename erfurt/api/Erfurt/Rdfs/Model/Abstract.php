@@ -17,7 +17,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	var $logActions=array();
 	var $importsSQL;
 	var $importsIds=array();
-	var	$resource='RDFSResource';
+	var	$resource='Erfurt_Rdfs_Resource_Default';
 	var $vocabulary;
 	var $instance;
 	
@@ -41,10 +41,10 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		$this->store 	=& $store;
 		$this->modelURI = $modelURI;
 		$this->type=$type?$type:$this->getType();
-		$this->resource='RDFSResource';
+		$this->resource='Erfurt_Rdfs_Resource_Default';
 		$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
 		$this->property=($this->type=='OWL'?'Erfurt_Owl_Property':'Erfurt_Rdfs_Property_Default');
-		$this->instance=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Instance';
+		$this->instance=($this->type=='OWL'?'Erfurt_Owl_Instance':'Erfurt_Rdfs_Instance_Default');
 		$this->asResource = $this->resourceF($this->modelURI);
 #		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
 		$this->importsSQL='';
@@ -71,11 +71,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Resource factory.
 	 *
 	 * @param string $uri URI or localname of the resource to generate
-	 * @return RDFSResource
+	 * @return Erfurt_Rdfs_Resource
 	 **/
 	function resourceF($uri, $expandNS = true) {
 		
-		return new RDFSResource($uri, $this, $expandNS);
+		return new Erfurt_Rdfs_Resource_Default($uri, $this, $expandNS);
 	}
 	/**
 	 * Class factory.
@@ -91,7 +91,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Property factory.
 	 *
 	 * @param string $uri URI or localname of the property to generate
-	 * @return RDFSProperty
+	 * @return Erfurt_Rdfs_Property
 	 **/
 	function propertyF($uri, $expandNS = true) {
 		
@@ -102,11 +102,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Instance factory.
 	 *
 	 * @param string $uri URI or localname of the instance to generate
-	 * @return RDFSInstance
+	 * @return Erfurt_Rdfs_Instance
 	 **/
 	function instanceF($uri, $expandNS = true) {
 		
-		return new RDFSInstance($uri, $this, $expandNS);
+		return new Erfurt_Rdfs_Instance_Default($uri, $this, $expandNS);
 	}
 	
 	/**
@@ -115,11 +115,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @param string $label
 	 * @param string/null $language
 	 * @param string/Resource/null $datatype
-	 * @return RDFSLiteral
+	 * @return Erfurt_Rdfs_Literal
 	 */
 	public function literalF($label, $language = '', $datatype = '') {
 		
-		return new RDFSLiteral($label, $language, $datatype);
+		return new Erfurt_Rdfs_Literal_Default($label, $language, $datatype);
 	}
 	
 	/**
@@ -202,8 +202,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * Creates a new Statement with the given parameters
 	 *
-	 * @param RDFSResource/string/Statement/int $subj Subject of the Statement
-	 * @param RDFSResource/string/null $pred Predicate of the Statement
+	 * @param Erfurt_Rdfs_Resource/string/Statement/int $subj Subject of the Statement
+	 * @param Erfurt_Rdfs_Resource/string/null $pred Predicate of the Statement
 	 * @param RDFSNode/string/null $obj Object of the Statement
 	 * @param string/null $objLang Optional a language
 	 * @param string/null $objDType  Optional a datatype
@@ -217,8 +217,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 *
 	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
 	 * specific backend.
-	 * @param RDFSResource $subj Subject of the Statement
-	 * @param RDFSResource $pred Predicate of the Statement
+	 * @param Erfurt_Rdfs_Resource $subj Subject of the Statement
+	 * @param Erfurt_Rdfs_Resource $pred Predicate of the Statement
 	 * @param RDFSNode $obj Object of the Statement
 	 * @return boolean Returns true iff the statement was added successfully.
 	 */
@@ -229,9 +229,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 *
 	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
 	 * specific backend.
-	 * @param RDFSResource $subj Subject of the Statement
-	 * @param RDFSResource $pred Predicate of the Statement
-	 * @param RDFSResource_or_Literal $obj Object of the Statement
+	 * @param Erfurt_Rdfs_Resource $subj Subject of the Statement
+	 * @param Erfurt_Rdfs_Resource $pred Predicate of the Statement
+	 * @param Erfurt_Rdfs_Resource_or_Literal $obj Object of the Statement
 	 * @return boolean Returns true iff the statement was removed successfully.
 	 */
 	public function remove($subj,$pred='',$obj='') { /* abstract */ }
@@ -316,8 +316,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @param int/null $start
 	 * @param int/null $count
 	 * @param int/null $erg
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
+	 * @return Erfurt_Rdfs_Resource[] Returns an associative array, where the key is the URI of the resource and the
+	 * value is an
+	 * Erfurt_Rdfs_Resource object.
 	 */
 	abstract protected function _listResourcesCol($col, $search = '', $start = 0, $count = 0, $erg = 0);
 	
@@ -325,8 +326,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
 	 * which occur as subjects of statements in the model. An optional offset can be set by passing the $start parameter.
 	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
+	 * @return Erfurt_Rdfs_Resource[] Returns an associative array, where the key is the URI of the resource and the
+	 * value is an
+	 * Erfurt_Rdfs_Resource object.
 	 */
 	public function listResourcesSubject($search = '', $start = 0, $count = 0, $erg = 0) {
 		
@@ -337,8 +339,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
 	 * which occur as predicate of statements in the model. An optional offset can be set by passing the $start parameter.
 	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
+	 * @return Erfurt_Rdfs_Resource[] Returns an associative array, where the key is the URI of the resource and the
+	 *  value is an
+	 * Erfurt_Rdfs_Resource object.
 	 */
 	public function listResourcesPredicate($search = '', $start = 0, $count = 0, $erg = 0) {
 		
@@ -349,8 +352,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Returns an array of all (or if $count is given max. $count) matching (if search string is given) resource URIs, 
 	 * which occur as objects of statements in the model. An optional offset can be set by passing the $start parameter.
 	 *
-	 * @return RDFSResource[] Returns an associative array, where the key is the URI of the resource and the value is an
-	 * RDFSResource object.
+	 * @return Erfurt_Rdfs_Resource[] Returns an associative array, where the key is the URI of the resource and the
+	 * value is an
+	 * Erfurt_Rdfs_Resource object.
 	 */
 	public function listResourcesObject($search = '', $start = 0, $count = 0, $erg = 0) {
 		
@@ -361,7 +365,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Find helper function.
 	 *
 	 * @deprecated use listRDFTypeInstances or listRDFTypeInstancesAs instead
-	 * @param RDFSResource $type
+	 * @param Erfurt_Rdfs_Resource $type
 	 * @param RDFSClass $class
 	 * @param int $start
 	 * @param int $count
@@ -376,7 +380,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * This method searches for rdf:type instances of a specific type or of all types if no type is given.
 	 * You can set the optional parameter to 'class' or 'property' if you want such objects to be returned.
 	 *
-	 * @param RDFSResource/null $type Indicates whether to return only rdf:type instances of the given type.
+	 * @param Erfurt_Rdfs_Resource/null $type Indicates whether to return only rdf:type instances of the given type.
 	 * @param int/null $offset An optional offset.
 	 * @param int/null $limit An optional limit.
 	 * @return mixed[] Returns an array that holds RFDSResource/BlankNode/RDFSClass/RDFSProperty objects
@@ -390,7 +394,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * This method searches for rdf:type instances of a specific type or of all types if no type is given.
 	 * You can set the optional parameter to 'class' or 'property' if you want such objects to be returned.
 	 *
-	 * @param RDFSResource/null $type Indicates whether to return only rdf:type instances of the given type.
+	 * @param Erfurt_Rdfs_Resource/null $type Indicates whether to return only rdf:type instances of the given type.
 	 * @param string $class Indicates whether to return specific objects, e.g. 'class' or 'property'.
 	 * @param int/null $offset An optional offset.
 	 * @param int/null $limit An optional limit.
@@ -529,11 +533,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	}
 	
 	/**
-	 * Adds a new instance to the model and returns an instance of RDFSInstance or OWLInstance.
+	 * Adds a new instance to the model and returns an instance of Erfurt_Rdfs_Instance or OWLInstance.
 	 *
 	 * @param string $uri
 	 * @param string $class
-	 * @return RDFSInstance The instance created.
+	 * @return Erfurt_Rdfs_Instance The instance created.
 	 */
 	public function addInstance($uri, $class) {
 		
@@ -542,10 +546,10 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	}
 	
 	/**
-	 * Returns a RDFSInstance object corresponding to the URI or false if such one does not exist.
+	 * Returns a Erfurt_Rdfs_Instance object corresponding to the URI or false if such one does not exist.
 	 *
 	 * @param string $uri
-	 * @return RDFSInstance/false The property or false if the class does not exist.
+	 * @return Erfurt_Rdfs_Instance/false The property or false if the class does not exist.
 	 */
 	public function getInstance($uri) {
 		
@@ -557,7 +561,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	}
 	
 	/**
-	 * Returns a RDFSClass, RDFSProperty or RDFSInstance object corresponding to the URI or 
+	 * Returns a RDFSClass, Erfurt_Rdfs_Property or Erfurt_Rdfs_Instance object corresponding to the URI or 
 	 * if there is not matching statement (in the given order...).
 	 *
 	 * @param string $uri
@@ -583,7 +587,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * Lists all instances of any class in the model.
 	 *
-	 * @return RDFSInstance[] Returns an array of RDFSInstance instances in the model.
+	 * @return Erfurt_Rdfs_Instance[] Returns an array of Erfurt_Rdfs_Instance instances in the model.
 	 */
 	abstract public function listInstances($start = 0, $erg = 0, $end = 0);
 	
@@ -663,9 +667,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * null input for any parameter will match anything.
 	 * Example: $result = $m->find(null, null, $node); -> Finds all triples with $node as object.
 	 *
-	 * @param RDFSResource/null $s Subject
-	 * @param RDFSResource/null $p Predicate
-	 * @param RDFSResource/null $o Object
+	 * @param Erfurt_Rdfs_Resource/null $s Subject
+	 * @param Erfurt_Rdfs_Resource/null $p Predicate
+	 * @param Erfurt_Rdfs_Resource/null $o Object
 	 * @param int $offset Return results starting with this row number.
 	 * @param int $limit Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
@@ -685,9 +689,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * Returns the first statements of this model matching the parameters.
 	 *
-	 * @param RDFSResource/null $s Subject
-	 * @param RDFSResource/null $p Predicate
-	 * @param RDFSResource/null $o Object
+	 * @param Erfurt_Rdfs_Resource/null $s Subject
+	 * @param Erfurt_Rdfs_Resource/null $p Predicate
+	 * @param Erfurt_Rdfs_Resource/null $o Object
 	 *
 	 * @return Statement Returns an Statement object.
 	 */
@@ -708,9 +712,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * Returns the statements of this model matching the parameters.
 	 *
-	 * @param RDFSResource/null $s Subject
-	 * @param RDFSResource/null $p Predicate
-	 * @param RDFSResource/null $o Object
+	 * @param Erfurt_Rdfs_Resource/null $s Subject
+	 * @param Erfurt_Rdfs_Resource/null $p Predicate
+	 * @param Erfurt_Rdfs_Resource/null $o Object
 	 * @param int $offset Return results starting with this row number.
 	 * @param int $limit Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
@@ -734,13 +738,13 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * This method returns a list of matching subjects for a given predicate.
 	 * 
-	 * @param string/RDFSResource $predicate
+	 * @param string/Erfurt_Rdfs_Resource $predicate
 	 * @param string/null $class
 	 * @param int/null $offset
 	 * @param int/null $limit
 	 * @param int/null $erg Variable passed by reference which will be set to the overall number of records.
-	 * @return RDFSResource[] Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter
-	 * is given).
+	 * @return Erfurt_Rdfs_Resource[] Returns an array of Erfurt_Rdfs_Resource objects or of one of its subclasses 
+	 * (when $class parameter is given).
 	 */
 	abstract public function findSubjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0);
 	
@@ -755,13 +759,13 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * This method returns a list of matching objects for a given predicate.
 	 * 
-	 * @param string/RDFSResource $predicate
+	 * @param string/Erfurt_Rdfs_Resource $predicate
 	 * @param string/null $class
 	 * @param int/null $offset
 	 * @param int/null $limit
 	 * @param int/null $erg Variable passed by reference which will be set to the overall number of records.
-	 * @return RDFSResource[] Returns an array of RDFSResource objects or of one of its subclasses (when $class parameter
-	 * is given).
+	 * @return Erfurt_Rdfs_Resource[] Returns an array of Erfurt_Rdfs_Resource objects or of one of its subclasses 
+	 * (when $class parameter is given).
 	 */
 	abstract public function findObjectsForPredicateAs($predicate, $class = 'resource', $offset = 0, $limit = 0, $erg = 0);
 	
@@ -770,9 +774,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * The result is restricted by the optional parameters $subject and/or $object. In case none of them is given, all
 	 * resources that act as predicate in the model are returned. The result is a unique list.
 	 *
-	 * @param RDFSResource/string/null $subject
-	 * @param RDFSResource/Literal/string/null $object
-	 * @return RDFSResource[]
+	 * @param Erfurt_Rdfs_Resource/string/null $subject
+	 * @param Erfurt_Rdfs_Resource/Literal/string/null $object
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	abstract public function findPredicates($subject = null, $object = null);
 	
@@ -789,11 +793,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * This method returns the node (where the parameter is null) of the first matching statement, if there
 	 * is at least one matching statement.
 	 *
-	 * @param RDFSResource/null $subject Subject
-	 * @param RDFSResource/null $predicate Predicate
-	 * @param RDFSResource/null $object Object
+	 * @param Erfurt_Rdfs_Resource/null $subject Subject
+	 * @param Erfurt_Rdfs_Resource/null $predicate Predicate
+	 * @param Erfurt_Rdfs_Resource/null $object Object
 	 * @param string $class	PHPClass which the returned nodes should be instances of.
-	 * @return RDFSResource/Literal
+	 * @return Erfurt_Rdfs_Resource/Literal/null
 	 */
 	public function findFirstNodeAs($subject, $predicate, $object, $class = 'resource') {
 		
@@ -816,14 +820,14 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * is at least one matching statement. Whether the node represents the subject, predicate or object node depends
 	 * one the parameter, which is null.
 	 *
-	 * @param RDFSResource/null $subject Subject
-	 * @param RDFSResource/null $predicate Predicate
-	 * @param RDFSResource/null $object Object
+	 * @param Erfurt_Rdfs_Resource/null $subject Subject
+	 * @param Erfurt_Rdfs_Resource/null $predicate Predicate
+	 * @param Erfurt_Rdfs_Resource/null $object Object
 	 * @param string $class	PHPClass which the returned nodes should be instances of.
 	 * @param int $offset Return results starting with this row number.
 	 * @param int $limit Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
-	 * @return Node[] Array of nodes (RDFSResources or Literals).
+	 * @return Node[] Array of nodes (Erfurt_Rdfs_Resources or Literals).
 	 */
 	public function findNodesAs($subject, $predicate, $object, $class = 'resource', $offset = 0, $limit = 0, $erg = 0) {
 // TODO Sparqlize
@@ -900,7 +904,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 				$uri = $r->getLocalName();
 			}
 
-			if (($r instanceof RDFSResource) || ($r instanceof BlankNode)) {
+			if (($r instanceof Erfurt_Rdfs_Resource) || ($r instanceof BlankNode)) {
 				switch ($class) {
 					case 'resource':
 						$ret[$uri] = $r;
@@ -942,7 +946,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @param int $count Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
 	 *
-	 * @return Array of RDFSInstance objects.
+	 * @return Array of Erfurt_Rdfs_Instance objects.
 	 **/
 	
 	/**
@@ -1013,7 +1017,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * This is usually a list, so all list items are returned.
 	 *
 	 * @param Resource/string $oneOf The URI of the resource that identifies the owl:oneOf relationship
-	 * @return RDFSResource Returns an array of resources.
+	 * @return Erfurt_Rdfs_Resource Returns an array of resources.
 	 */
 	public function getOneOf($oneOf) {
 		
@@ -1032,7 +1036,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Returns the members of an RDF list as an array.
 	 *
 	 * @param Resource/string $id_or_rest The resource or resource URI representing the list, or the rest of a list.
-	 * @return RDFSResource Returns an array of list members.
+	 * @return Erfurt_Rdfs_Resource Returns an array of list members.
 	 */
 	abstract public function getListAs($id_or_rest, $class = null);
 	
@@ -1087,7 +1091,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function removeResource($resource) {
 		
-		if (!($resource instanceof RDFSResource)) {
+		if (!($resource instanceof Erfurt_Rdfs_Resource)) {
 			$resource = $this->resourceF($resource);
 		}
 			

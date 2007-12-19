@@ -37,7 +37,7 @@ class editliteral extends powlModuleWidget {
 					$config['cardinalityMax'] != 1) ? '['.++$c.']' : '');
 					
 			if (is_array($value) && $value['value'])
-				$value = new RDFSLiteral($value['value'],$value['lang'],$value['dtype']);
+				$value = new Erfurt_Rdfs_Literal_Default($value['value'],$value['lang'],$value['dtype']);
 				
 			if (!is_a($value,'literal'))
 				$value = new Literal(is_a($value, 'Resource') ? $value->getURI() : $value);
@@ -149,7 +149,7 @@ class editnode extends powlModuleWidget {
 			
 		// if(is_array($value) && $value['value']) {
 		// 	if($value['type']=='literal')
-		// 		$value=new RDFSLiteral($value['value'],$value['lang'],$value['dtype']);
+		// 		$value=new Erfurt_Rdfs_Literal_Default($value['value'],$value['lang'],$value['dtype']);
 		// 	else
 		// 		$value=new Resource($value['value']);
 		// }

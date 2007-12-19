@@ -122,7 +122,7 @@ class Erfurt_Owl_Property  extends Erfurt_Rdfs_Property_Default {
 	/**
 	 * 
 	 *
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function listRangeFromDataRange() {
 		

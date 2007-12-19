@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2004
  * @version $Id$
  */
-abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
+abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	
 	public function isHidden() {
 		
@@ -492,11 +492,11 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 * @param int $count Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
 	 *
-	 * @return Array of RDFSInstance objects.
+	 * @return Array of Erfurt_Rdfs_Instance objects.
 	 **/
 	public function listInstances($start=0,$count=0,$erg=0) {
 		
-		return $this->model->listTypes($this,'RDFSInstance',$start,$count,&$erg);
+		return $this->model->listTypes($this,'instance',$start,$count,&$erg);
 	}
 	
 	/**
@@ -507,7 +507,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 * @param int $count Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
 	 *
-	 * @return Array of RDFSInstance objects.
+	 * @return Array of Erfurt_Rdfs_Instance objects.
 	 **/
 	public function listInstancesRecursive($start=0,$count=0,$erg=0) {
 		
@@ -532,7 +532,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 * @param int $count Maximum number of records to return.
 	 * @param int $erg Variable passed by reference which will be set to the overall number of records.
 	 *
-	 * @return Array of RDFSInstance objects.
+	 * @return Array of Erfurt_Rdfs_Instance objects.
 	 */
 	abstract public function findInstances($properties=array(),$compare='exact',$start=0,$count=0,$erg=0);
 	
@@ -544,7 +544,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 * @param array $properties Array of PropertyURI=>Value pairs.
 	 * @param string $compare Comparision method to be used - default is exact match.
 	 *
-	 * @return array Array of RDFSInstance objects.
+	 * @return array Array of Erfurt_Rdfs_Instance objects.
 	 **/
 	abstract public function findInstancesRecursive($properties = array(), $compare = 'exact', $offset = 0, $limit = 0,$erg = 0);
 
@@ -556,7 +556,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	 * @param array $properties Array of PropertyURI=>Value pairs.
 	 * @param string $compare Comparision method to be used - default is exact match.
 	 *
-	 * @return RDFSInstance object.
+	 * @return Erfurt_Rdfs_Instance object.
 	 **/
 	public function findInstance($properties=array(),$compare='exact') {
 		
@@ -565,12 +565,12 @@ abstract class Erfurt_Rdfs_Class_Abstract extends RDFSResource {
 	}
 	
 	/**
-	 * Return RDFSInstance object with specified URI.
-	 * If no RDFSInstance is found, return false.
+	 * Return Erfurt_Rdfs_Instance object with specified URI.
+	 * If no Erfurt_Rdfs_Instance is found, return false.
 	 *
 	 * @param string $uri
 	 *
-	 * @return RDFSInstance or false.
+	 * @return Erfurt_Rdfs_Instance or false.
 	 **/
 	public function getInstance($uri) {
 		

@@ -276,11 +276,15 @@ class Erfurt_Ac_Default {
 		
 		
 		$this->_getUserModelRights($this->_user['uri']);
-		$this->_log->debug('OntoWiki_Ac::_userRights for '.$this->_user['uri']."\n".print_r($this->_userRights, true) .
-				"\n_groupRights: " . print_r($this->_groupRights, true) .
-				"\nAnyModelView: " . print_r($this->_userAnyModelViewAllowed, true). 
-				"\nAnyModelEdit: " . print_r($this->_userAnyModelEditAllowed, true) . 
-				"\nAnyAction: ".print_r($this->_userAnyActionAllowed, true));
+		if ($this->_log !== null) {
+			$this->_log->debug('OntoWiki_Ac::_userRights for '.$this->_user['uri']."\n".
+					print_r($this->_userRights, true) .
+					"\n_groupRights: " . print_r($this->_groupRights, true) .
+					"\nAnyModelView: " . print_r($this->_userAnyModelViewAllowed, true). 
+					"\nAnyModelEdit: " . print_r($this->_userAnyModelEditAllowed, true) . 
+					"\nAnyAction: ".print_r($this->_userAnyActionAllowed, true));
+		}
+		
 		
 		# statement based ac
 		#  set the default value to statements
@@ -394,7 +398,11 @@ class Erfurt_Ac_Default {
 	 * @param string user uri
 	 */
 	private function _getUserModelRights($userURI) {
-		$this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
+		
+		if ($this->_log !== null) {
+			$this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
+		}
+		
 		
 		
 		# super admin
@@ -411,7 +419,11 @@ class Erfurt_Ac_Default {
 				?group ?p ?o.
 				?group <'.$this->_config->ac->group->membership.'> <'.$this->_user['uri'].'>.
 			}';
-		$this->_log->debug('Query for user groups: ' . $sparqlQuery);
+			
+		if ($this->_log !== null) {
+			$this->_log->debug('Query for user groups: ' . $sparqlQuery);
+		}
+		
 		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result, true);
 		}
@@ -423,7 +435,11 @@ class Erfurt_Ac_Default {
 				?s ?p ?o.
 				<'.$this->_user['uri'].'> ?p ?o.
 			}';
-		$this->_log->debug('Query for user rights: ' . $sparqlQuery);
+			
+		if ($this->_log !== null) {
+			$this->_log->debug('Query for user rights: ' . $sparqlQuery);
+		}
+		
 		if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
 			$this->_filterAcess($result);
 		}
@@ -459,7 +475,10 @@ class Erfurt_Ac_Default {
 		foreach($resultList as $entry) {			
 			if ($entry['o'] instanceof Literal ) continue;
 			
-			$this->_log->debug('Checked o:' . $entry['o'] . ', p:' . $entry['p']);
+			if ($this->_log !== null) {
+				$this->_log->debug('Checked o:' . $entry['o'] . ', p:' . $entry['p']);
+			}
+			
 			
 			# any action allowed
 			if ($entry['o'] == $this->_propAnyAction /*and $entry['p'] == $this->_propGrantAccess*/) {

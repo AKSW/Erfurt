@@ -400,7 +400,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
-				s1.subject='".$this->getDBId()."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
+				s1.subject='".$this->model->_dbId($this)."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
 				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type').
 					"' AND s2.object='".$this->model->_dbId('owl:Restriction')."'
 				AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$this->model->_dbId($property)."'
@@ -504,9 +504,9 @@ class Erfurt_Owl_Class extends RDFSClass {
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
-				s1.subject='".$this->getDBId()."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
+				s1.subject='".$this->model->_dbId($this)."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
 				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type')."' AND s2.object='".$this->model->_dbId('owl:Restriction')."'
-				AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$property->getDBId()."'
+				AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$this->model->_dbId($property)."'
 				AND s4.predicate IN ('".join("','",$t)."')
 				AND s1.modelID IN(".$this->model->getModelIds().')';
 				

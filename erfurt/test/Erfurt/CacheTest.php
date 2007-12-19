@@ -21,15 +21,17 @@ class Erfurt_CacheTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		
 		$this->store = Zend_Registry::get('store');
+		
+		if ($this->store->modelExists('http://ns.ontowiki.net/unittest/Erfurt_CacheTest/0.1/')) {
+			$this->store->deleteModel('http://ns.ontowiki.net/unittest/Erfurt_CacheTest/0.1/');	
+		}
+		
 		$this->model = $this->store->getNewModel('http://ns.ontowiki.net/unittest/Erfurt_CacheTest/0.1/');
 		#$this->model->load('DefaultTest.rdf');
 		$this->cache = new Erfurt_Cache($this->store);
 	}
 	
-	public function tearDown() {
-		
-		$this->store->deleteModel('http://ns.ontowiki.net/unittest/Erfurt_CacheTest/0.1/');
-	}
+
 	
 	public function testSaveAndLoad() {
 		

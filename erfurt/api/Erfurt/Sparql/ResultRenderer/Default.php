@@ -323,7 +323,7 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 	 *
 	 *
 	 * @param string $uri
-	 * @return RDFSResource  
+	 * @return Erfurt_Rdfs_Resource  
 	 */
 	private function createResource($uri) {
 		
@@ -346,7 +346,7 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 	 *
 	 *
 	 * @param string $uri
-	 * @return RDFSResource  
+	 * @return BlankNode  
 	 */
 	private function createBlankNode($id) {
 		
@@ -369,7 +369,7 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
 	 *
 	 *
 	 * @param string $uri
-	 * @return RDFSResource  
+	 * @return Erfurt_Rdfs_Literal  
 	 */
 	private function createLiteral($label, $language = null, $datatype = null) {
 		

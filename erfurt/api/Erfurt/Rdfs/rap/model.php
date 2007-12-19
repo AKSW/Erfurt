@@ -58,14 +58,16 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		if(!($pred instanceof Resource))
 			$pred=$this->resourceF($pred);
 		if(!($obj instanceof Node)) {
-			if($objLang || $objDType)
-				$obj=new RDFSLiteral($obj,$objLang,($objDType instanceof Resource)?$objDType->getURI():$objDType);
-			else if(preg_match('/"(.*)"@(.*)\^\^(.*)/ms',$obj,$matches))
-				$obj=new RDFSLiteral($matches[1],$matches[2],$matches[3]);
-			else
-				$obj=$this->resourceF($obj);
+			if($objLang || $objDType) {
+				$obj = $this->literalF($obj, $objLang, ($objDType instanceof Resource)?$objDType->getURI():$objDType);
+			} else if(preg_match('/"(.*)"@(.*)\^\^(.*)/ms', $obj, $matches)) {
+				$obj = $this->literalF($matches[1], $matches[2], $matches[3]);
+			} else {
+				$obj = $this->resourceF($obj);
+			}
 		}
-		return new Statement($subj,$pred,$obj);
+		
+		return new Statement($subj, $pred, $obj);
 	}
 	
 	/**
@@ -773,7 +775,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 // TODO handle offset and limit
 // TODO check whether to use a generic method for such cases instead of direct sparql
 // TODO add a class parameter to sparqlQuery method
-		if (!$predicate instanceof RDFSResource) $predicate = $this->resourceF($predicate);
+		if (!$predicate instanceof Erfurt_Rdfs_Resource) $predicate = $this->resourceF($predicate);
 
 		$sparql = 'SELECT DISTINCT ?subject
 				   WHERE { ?subject <' . $predicate->getURI() . '> ?object } ';
@@ -913,10 +915,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			if(Zend_Registry::get('config')->database->backend=='powl' && $row[$i+1]=='r') {
 				$n=$this->_getNodeById($row[$i]);
 				$row[$i]=$n->getURI();
-				$row[$i+1]=isBNode($n)?'b':$row[$i+1];
+				$row[$i+1]=((($n) instanceof BlankNode) || (method_exists($n, 'isBlankNode') && $n->isBlankNode())) ? 
+					'b' : $row[$i+1];
 			}
 			if($row[$i+1]=='l')
-				$ret[$row[$i]]=new RDFSLiteral($row[$i]);
+				$ret[$row[$i]] = $this->literalF($row[$i]);
 			else if($row[$i+1]=='r' && $row[$i]!=$GLOBALS['RDF_nil']->getURI()) {
 				$r=($class && class_exists($class)?new $class($row[$i],$this):new $this->resource($row[$i],$this));
 				$ret[$r->getLocalName()]=$class=='Plain'?$r->getLocalName():$r;
@@ -1172,10 +1175,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 *
 	 * @param   object  ADORecordSet
-	 * @return  array  Array of RDFSResources
+	 * @return  array  Array of Erfurt_Rdfs_Resources
 	 * @access	private
 	 */
-	function _convertRecordSetToNodeList(&$recordSet,$class='RDFSResource',$start=0,$count=100000,$erg=0)  {
+	function _convertRecordSetToNodeList(&$recordSet,$class='resource',$start=0,$count=100000,$erg=0)  {
 		if(is_string($recordSet)) {
 			if($count)
 				$recordSet=$this->dbConn->PageExecute($recordSet,$count,$start/$count+1);
@@ -1190,7 +1193,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		if ($recordSet != null) {
 			foreach($recordSet as $fields) {
 				if($fields[1]=='l')
-					$res=new RDFSLiteral($fields[0],$fields[2],$fields[3]);
+					$res = $this->literalF($fields[0], $fields[2], $fields[3]);
 				else if($fields[1]=='b' && !$class)
 					$res=new BlankNode($fields[0]);
 				else if($class) {
@@ -1253,7 +1256,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$pred=$this->resourceF($row[1]);
 		// object
 		if($row[6]=='l')
-			$obj=new RDFSLiteral($row[2],$row[3],$row[4]);
+			$obj = $this->literalF($row[2], $row[3], $row[4]);
 		else if($row[6] == 'b')
 			$obj=new BlankNode($row[2]);
 		else
@@ -1573,7 +1576,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 *
 	 * @param string/Query $query
 	 * @param SparqlEngineDb_ResultRenderer $renderer
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function sparqlQuery($query, $renderer = null) {
 		
@@ -1597,7 +1600,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * @param string/Query $query
 	 * @param string $class
 	 * @param SparqlEngineDb_ResultRenderer $renderer
-	 * @return RDFSResource[]
+	 * @return Erfurt_Rdfs_Resource[]
 	 */
 	public function sparqlQueryAs($query, $class, $renderer = null) {
 

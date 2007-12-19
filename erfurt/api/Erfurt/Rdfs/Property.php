@@ -9,7 +9,7 @@
  * @copyright Copyright (c) 2004-2007
  * @version $Id$
  */
-interface Erfurt_Rdfs_Property {
+interface Erfurt_Rdfs_Property extends Erfurt_Rdfs_Resource {
 
 	/**
 	 * Adds the class in $classes or the array of classes in $classes as domain for this property.

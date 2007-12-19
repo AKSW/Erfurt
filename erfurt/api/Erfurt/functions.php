@@ -253,7 +253,7 @@ function pwlDeny() {
 /**
  * Returns a HTML form snippet combining meta information about a resource
  *
- * @param RDFSResource $resource
+ * @param Erfurt_Rdfs_Resource $resource
  * @return string $ret HTML code for the metainformations of this resource
  **/
 function pwlResourceMetaShow($resource,$showIdentity=true,$editable=true) {
@@ -343,7 +343,7 @@ function pwlResourceMetaProcess($resource) {
 	$labels=array();
 	foreach($_REQUEST['lang'] as $key=>$val)
 		if(!empty($_REQUEST['label'][$key]))
-			$labels[]=new RDFSLiteral($_REQUEST['label'][$key],$val);
+			$labels[] = new Erfurt_Rdfs_Literal_Default($_REQUEST['label'][$key], $val);
 	$resource->setLabel($labels,NULL);
 	// save comment for resource
 	if($_REQUEST['comments'])
@@ -353,7 +353,7 @@ function pwlResourceMetaProcess($resource) {
 	$annotations=array();
 	foreach($_REQUEST['annotationProperty'] as $key=>$val)
 		if($_REQUEST['annotationValue'][$key])
-			$annotations[$val][]=new RDFSLiteral($_REQUEST['annotationValue'][$key]);
+			$annotations[$val][]=new Erfurt_Rdfs_Literal_Default($_REQUEST['annotationValue'][$key]);
 	foreach(array_diff(array_keys($resource->model->listAnnotationProperties(true)),array_unique($_REQUEST['annotationProperty'])) as $removed)
 		$resource->setPropertyValues($removed);
 	foreach($annotations as $property=>$values)
@@ -508,11 +508,6 @@ function parray_shift($array){
 	return array_shift($array);
 }
 
-function isBNode($node) {
-	if(is_a($node,'Blanknode') || (method_exists($node,'isBlankNode') && $node->isBlankNode()))
-		return true;
-	else false;
-}
 function cacheGetUidFromArgs(&$args) {
 	return crc32((serialize($args).$GLOBALS['RAP']['conf']['database']['tblStatements']));
 	foreach($args as $arg)

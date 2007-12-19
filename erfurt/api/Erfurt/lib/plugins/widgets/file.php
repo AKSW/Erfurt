@@ -39,7 +39,7 @@ class file extends powlModuleWidget {
 			mkdir($path);
 #print_r($_SERVER['DOCUMENT_ROOT']);
 		move_uploaded_file($_FILES[$name]['tmp_name'],$path.'/'.$_FILES[$name]['name']);
-		return new RDFSLiteral($uriBase.'/'.$_FILES[$name]['name']);
+		return new Erfurt_Rdfs_Literal_Default($uriBase.'/'.$_FILES[$name]['name']);
 	}
 }
 ?>

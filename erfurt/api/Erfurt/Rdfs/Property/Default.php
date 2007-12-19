@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2004-2007
  * @version $Id$
  */
-class Erfurt_Rdfs_Property_Default extends RDFSResource implements Erfurt_Rdfs_Property {
+class Erfurt_Rdfs_Property_Default extends Erfurt_Rdfs_Resource_Default implements Erfurt_Rdfs_Property {
 	
 	/**
 	 * @see Erfurt_Rdfs_Property

@@ -467,10 +467,10 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function modelExists($modelURI, $useACL = true) {
-		$args=func_get_args();
-		$c=cache('modelExists',$args);
-		if($c!==NULL)
-			return $c;
+		#$args=func_get_args();
+		#$c=cache('modelExists',$args);
+		#if($c!==NULL)
+		#	return $c;
 		
 		$modelExists = false; 
 		if ($modelExists = DBStore::modelExists($modelURI)) {
@@ -478,7 +478,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				if ($useACL and !$this->ac->isModelAllowed('view', $modelURI))
 					$modelExists = false;
 		}
-		return cache('modelExists', $args, $modelExists);
+		return $modelExists;
+		#return cache('modelExists', $args, $modelExists);
 	}
 	
 	/**
@@ -577,6 +578,87 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		}
 		
 		return $this->_convertSqlResultToStatementList($this->sqlQuery($sql));
+	}
+	
+	/**
+	 * @see Erfurt_Store_DataInterface
+	 */
+	public function executeFindDefiningModels(Resource $s = null, Resource $p = null, Node $o = null, 
+						$sR = true, $sB = true, $oR = true, $oB = true, $oL = true) {
+	
+		$sql = 'SELECT m.modelURI
+				FROM models m 
+				LEFT JOIN ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s
+				ON (m.modelID = s.modelID)
+				WHERE s.modelID IS NOT NULL AND ';
+
+		if ($s !== null) {
+			$sql .= 's.subject = "' . $s->getLabel() . '" AND '; 
+
+			if ($s instanceof BlankNode) {
+				$sql .= 's.subject_is = "b" AND ';
+			} else {
+				$sql .= 's.subject_is = "r" AND ';
+			}
+		}
+				
+		if ($p !== null) {
+			$sql .= 's.predicate = "' . $p->getURI() . '" AND ';
+		}
+				
+		if ($o !== null) {
+			$sql .= 's.object = "' . $o->getLabel() . '" AND ';
+
+			if ($o instanceof Literal) {
+				$sql .= 's._language = "' . $o->getLanguage() . '" AND s.l_datatype = "' . $o->getDatatype() . 
+						'" AND s.object_is = "l" AND ';
+			} else if ($o instanceof BlankNode) {
+				$sql .= 's.object_is = "b" AND ';
+			} else {
+				$sql .= 's.object_is = "r" AND ';
+			}
+		}
+
+		if ($s === null) {
+			$subjectIs = array();
+					
+			if ($sR === true) {
+				$subjectIs[] = '"r"';
+			}
+			if ($sB === true) {
+				$subjectIs[] = '"b"';
+			}
+
+			$sql .= 's.subject_is IN (' . join(',', $subjectIs) . ') AND ';
+		}
+
+		if ($o === null) {
+			$objectIs = array();
+				
+			if ($oR === true) {
+				$objectIs[] = '"r"';
+			}
+			if ($oB === true) {
+				$objectIs[] = '"b"';
+			}
+			if ($oL === true) {
+				$objectIs[] = '"l"';
+			}
+
+			$sql .= 's.object_is IN (' . join(',', $objectIs) . ') AND ';
+		}
+
+		// in order to make the code more easy to read... just add a 1 (always true)
+		$sql .= '1 ';
+
+		$result = $this->sqlQuery($sql);
+		$resultList = array();
+		
+		foreach ($result as $row) {
+			$resultList[] = $row[0];
+		}
+
+		return $resultList;
 	}
 	
 	/**
