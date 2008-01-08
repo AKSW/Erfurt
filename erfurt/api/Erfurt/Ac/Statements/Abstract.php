@@ -234,19 +234,8 @@ abstract class Erfurt_Ac_Statements_Abstract implements  Erfurt_Ac_Statements_In
 	 * Checks, if a special access is needed
 	 */
 	public function checkAccessRestriction () {
-		$b = debug_backtrace();
-		$k = $b[1];
-		unset($k['object']);
-		unset($k['args']);
+		$this->_log->debug('Erfurt_Ac_Statements_Abstract::checkAccessRestriction()');
 		
-		$this->_log->debug('Erfurt_Ac_Statements_Abstract::checkAccessRestriction() - '.print_r($k, 1));
-		$k = $b[2];
-		unset($k['object']);
-		unset($k['args']);
-		$this->_log->debug('Erfurt_Ac_Statements_Abstract::checkAccessRestriction() 222- '.print_r($k, 1));
-		
-		unset($b);
-		unset($k);
 		
 		#if ($this->_userRules == null or $this->_groupRules == null or $this->_activeUserUri == '') 
 			#throw new Erfurt_Exception('missing rules data', 1150);
