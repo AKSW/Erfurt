@@ -608,10 +608,11 @@ Class stmCache {
 	function expire($stm) {
 		
 		if (Zend_Registry::get('config')->cache->enable) {
-			foreach (is_a($stm,'statement')?array($stm->subj,$stm->pred,$stm->obj):func_get_args() as $arg) {
-				if (is_a($arg,'resource')) {
-					Zend_Registry::get('erfurt')->getStore()->dbConn->execute("DELETE FROM cache WHERE model={$arg->model->modelID} AND
-						(trigger1='".$arg->getURI()."' OR trigger1='' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')");
+			foreach (($stm instanceof Statement) ? array($stm->subj, $stm->pred, $stm->obj) : func_get_args() as $arg) {
+				if ($arg instanceof Resource) {
+					$sql = "DELETE FROM cache WHERE model={$arg->getModel()->getModelID()} AND
+						(trigger1='".$arg->getURI()."' OR trigger1='' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')";
+					Zend_Registry::get('erfurt')->getStore()->dbConn->execute($sql);
 				}
 			}
 		}			
