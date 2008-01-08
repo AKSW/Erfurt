@@ -20,6 +20,7 @@
 # basepath
 define('ERFURT_BASE', str_replace('\\', '/', dirname(__FILE__)) . '/');
 define('ERFURT_MIN_PHP_VERSION', '5.2.0');
+$GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
 
 if (!version_compare(phpversion(), ERFURT_MIN_PHP_VERSION, '>=')) {
 	throw new Erfurt_Exception('Erfurt requires at least PHP Version ' . ERFURT_MIN_PHP_VERSION, 2001);
