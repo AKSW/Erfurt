@@ -1,5 +1,7 @@
 <?php
 /**
+ * interface for the statement based access control classes
+ * 
  * @package ac
  */
 interface Erfurt_Ac_Statements_Interface {

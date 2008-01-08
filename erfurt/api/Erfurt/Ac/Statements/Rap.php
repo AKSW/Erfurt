@@ -4,7 +4,9 @@ require_once RDFAPI_INCLUDE_DIR . '/sparql/SparqlEngineDb.php';
 require_once RDFAPI_INCLUDE_DIR . '/model/ModelFactory.php';
 
 /**
-  * class providing OntoWiki statement based ac for rap
+  * class providing Erfurt-API statement based ac for rap
+  * 
+  * Uses SPARQL-Transformation classes
   *
   * @package ac
   * @author Stefan Berger <berger@intersolut.de>

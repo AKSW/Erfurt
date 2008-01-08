@@ -4,7 +4,7 @@
  * relational database accessed via adodb.
  *
  * @package store
- * @author Sören Auer <soeren@auer.cx>
+ * @author Sï¿½ren Auer <soeren@auer.cx>
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004 - 2007
  * @version $Id$
@@ -188,7 +188,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * 
 	 * @see Erfurt_Store_SparqlInterface
 	 */
-	public function executeSparql($model = null, $query, $class = null, $renderer = null, $useImports = false) {
+	public function executeSparql($model = null, $query, $class = null, $renderer = null, $useImports = false, $useAcl = true) {
 
 		// Using all models allowed for current user if no model is specified
 		if ($model === null) {
@@ -201,9 +201,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			}
 		}
 			
-			
 		//check if AC and Sbac is enabled
-		if($this->checkAc()) {
+		if($this->checkAc() and $useAcl) {
 			$Ac = $this->getAc();
 			//var_dump($Ac->getSbac());
 			if ($Ac->getSbac() != null)

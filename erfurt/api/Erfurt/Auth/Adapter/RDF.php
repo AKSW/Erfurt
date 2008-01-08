@@ -83,6 +83,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	* @return Zend_Auth_Result
 	*/ 
 	public function authenticate() { 
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::authenticate()');
+		
 		# returnset
 		$result = array(
 	           'isValid'  => false,
@@ -94,12 +96,14 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	               ),
 	           'messages' => array()
 	           );
+	           
 	  if ($this->_username == 'Anonymous') {
 	  	$result['isValid'] = true;
 	  	$result['identity'] = $this->_getAnonymous();
 	  }
 		# database user
 		else if ($this->_username == $this->_dbUsername and $this->_password == $this->_dbPassword) {
+			
 			$result['isValid'] = true;
 	  	$result['identity'] = $this->_getSuperAdmin();
 		}
@@ -110,6 +114,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		 
 		# valid user from sysont
 		else {
+
 			$result['isValid'] = true;
 			$result['identity']['uri'] = $userUri;
 			$result['identity']['email'] = $this->_users[$userUri]['userEmail'];
@@ -121,7 +126,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		if (Zend_Registry::isRegistered('erfurtLog')) {
 			Zend_Registry::get('erfurtLog')->debug('User authenticated: ' . $result['identity']['uri']);
 		}
-				
+	
 		return new Zend_Auth_Result($result['isValid'], $result['identity'], $result['messages']);
 	}
  
@@ -184,6 +189,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		if (!$result = $this->_sparql($sparqlQuery)) {
 			return false;
 		}
+		 
 		
 		$uri = '';
 		$checkedPassword = false;
@@ -215,6 +221,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			else if ($e['p'] == $this->_userMailPredicate and $e['o'] == $this->_userDenyLoginAction)
 				return false;
 		}
+		
 		# no password 
 		if (!$checkedPassword and $password != '')
 			return false;
@@ -250,6 +257,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	* @return bool   True, if the passwords match
 	*/
 	private function verifyPassword($password1, $password2, $cryptType = "md5") {
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::verifyPassword()');
+		
 	   switch ($cryptType) {
 	       case "crypt" :
 	           return ((string)crypt($password1, $password2) === (string)$password2);
@@ -282,6 +291,8 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 	private function _sparql($sparqlQuery) {
 		static $prefixed_query;
 		
+		Zend_Registry::get('erfurtLog')->debug('Erfurt_Auth_Adapter_RDF::_sparql()');
+		
 		# get all 
 		if ($prefixed_query == '') { 
 		$prefixed_query = '';
@@ -289,10 +300,12 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 				$prefixed_query .= 'PREFIX ' . $prefix . ': <' . $uri . '>' . PHP_EOL;
 			}
 		}
+		
+		
 		# query model
 		try {
 			$renderer = new Erfurt_Sparql_ResultRenderer_Plain();
-			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, $renderer);
+			$result = $this->_acModel->sparqlQuery($prefixed_query.$sparqlQuery, $renderer, false);
 		
 		} catch (SparqlParserException $e) {
 			Zend_Registry::get('erfurtLog')->info('Erfurt_Auth_Adapter_RDF::_sparql() - query contains the following error: '.$e->getMessage());
@@ -301,6 +314,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			Zend_Registry::get('erfurtLog')->info('Erfurt_Auth_Adapter_RDF::_sparql() - There was a problem with your query, most likely due to a syntax error.: '.$e->getMessage());
 			return false;
 		}
+		
 		return $result;
 	}
 	

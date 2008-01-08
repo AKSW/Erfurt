@@ -276,7 +276,7 @@ class Erfurt_App_Default {
 		
 		# set ac for new user
 		if ($result->isValid() and $this->ac ) {
-		  $this->ac->init(); 
+			$this->ac->init();
 			if (!$this->ac->isActionAllowed('Login')) {
 				$this->auth->clearIdentity();
 				$identity = array(
