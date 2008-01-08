@@ -110,6 +110,16 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	}
 	
 	/**
+	 * This method returns the uri that identifies the model.
+	 * 
+	 * @return string A string representation of the model uri.
+	 */
+	public function getModelURI() {
+		
+		return $this->modelURI;
+	}
+	
+	/**
 	 *
 	 *
 	 * @param string $label

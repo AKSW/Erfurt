@@ -24,7 +24,7 @@ interface Erfurt_Store_DataInterface {
 	 * This method executes a find-query on a specific model. The $s, $p and $o parameters are used in order to
 	 * determine the result set.
 	 * 
-	 * @param Model $model The model, where to search for matching triples.
+	 * @param Model/null $model The model, where to search for matching triples or null.
 	 * @param Resource/null $s A specific subject or null in order to match all subjects.
 	 * @param Resource/null $p A specific predicate or null in order to match all predicates.
 	 * @param Node/null $o A specific object or null in order to match all objects.
@@ -38,8 +38,9 @@ interface Erfurt_Store_DataInterface {
 	 * @param int $limit This optional parameter limits the result by $limit.
 	 * @return Statement[] Returns a list of Statements objects.
 	 */
-	public function executeFind(Model $m, Resource $s = null, Resource $p = null, Node $object = null, $distinct = true,
-						$sR = true, $sB = true, $oR = true, $oB = true, $oL = true, $offset = 0, $limit = -1);
+	public function executeFind(Model $m = null, Resource $s = null, Resource $p = null, Node $object = null, 
+						$distinct = true, $sR = true, $sB = true, $oR = true, $oB = true, $oL = true, $offset = 0,
+						$limit = -1);
 	
 	/**
 	 * This method executes a find-query on a specific model. The $p and $o parameters are used in order to

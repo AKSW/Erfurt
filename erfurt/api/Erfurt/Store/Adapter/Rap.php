@@ -509,12 +509,16 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
-	public function executeFind(Model $m, Resource $s = null, Resource $p = null, Node $o = null, $distinct = true,
-						$sR = true, $sB = true, $oR = true, $oB = true, $oL = true, $offset = 0, $limit = -1) {
+	public function executeFind(Model $m = null, Resource $s = null, Resource $p = null, Node $o = null, 
+						$distinct = true, $sR = true, $sB = true, $oR = true, $oB = true, $oL = true, $offset = 0,
+						$limit = -1) {
 							
 		$sql = 'SELECT subject, subject_is, predicate, object, object_is, l_language, l_datatype 
-				FROM ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . '
-				WHERE modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND ';
+				FROM ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' WHERE ';
+				
+		if ($m !== null) {
+			$sql .= 'modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND ';
+		}	
 				
 		if ($s !== null) {
 			$sql .= 'subject = "' . $s->getLabel() . '" AND '; 
@@ -780,7 +784,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @param Model $m The model, where to look for the ids.
 	 * @return int[] Returns a list of model ids.
 	 */
-	protected function _listModelIDs(Model $m) {
+	protected function _listModelIDs(Model $m = null) {
+		
+		if ($m === null) {
+			return array();
+		}
 		
 		$modelIDs = array();
 		$modelIDs[] = $this->_getModelID($m->modelURI);
