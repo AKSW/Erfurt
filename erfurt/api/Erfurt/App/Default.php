@@ -72,7 +72,6 @@ class Erfurt_App_Default {
 			Zend_Registry::get('erfurtLog')->debug('Erfurt_App_Default::__construct()');
 		}
 		
-		
 		# general object for event handling
 		$this->eh = new Erfurt_EventHandler($this);
 		
