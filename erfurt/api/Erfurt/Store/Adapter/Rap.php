@@ -459,18 +459,20 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		#			$inst->remove();
 		$m = $this->getModel($modelURI);
 		$m->delete();
-		#cache('modelExists',array($modelURI),false);
+		cache('modelExists',array($modelURI),false);
 	}
 	
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function modelExists($modelURI, $useACL = true) {
-		$args=func_get_args();
-		$c=cache('modelExists',$args);
-		if($c!==NULL)
+		$args = array($modelURI);
+
+		$c = cache('modelExists', $args);
+		if ($c !== null) {
 			return $c;
-		
+		}
+			
 		$modelExists = false; 
 		if ($modelExists = DBStore::modelExists($modelURI)) {
 			if (is_object($this->ac) and method_exists($this->ac, 'isModelAllowed'))

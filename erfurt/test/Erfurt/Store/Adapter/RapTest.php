@@ -10,6 +10,7 @@ if (!defined('ERFURT_TEST_CONFIG')) {
 class Erfurt_Store_Adapter_RapTest extends PHPUnit_Framework_TestCase {
 	
 	protected $store;
+	protected $model;
 	
 	public static function suite() {
 		
@@ -19,13 +20,19 @@ class Erfurt_Store_Adapter_RapTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		
 		$this->store = $this->store = Zend_Registry::get('store');
+		
+		if ($this->store->modelExists(
+				'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/')) {
+			$this->store->deleteModel(
+				'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/');	
+		}
+		
+		$this->model = $this->store->getNewModel(
+				'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/');
 	}
 	
 	public function testExecuteFindDefiningModels() {
-		
-		$model = $this->store->getNewModel(
-			'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/');
-		
+			
 		$s = new Resource(
 			'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/res1');
 			
@@ -35,14 +42,11 @@ class Erfurt_Store_Adapter_RapTest extends PHPUnit_Framework_TestCase {
 		$o = new Resource(
 			'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/res3');
 		
-		$model->add(new Statement($s, $p, $o));
+		$this->model->add(new Statement($s, $p, $o));
 			
 		$defModels = $this->store->executeFindDefiningModels($s, $p, $o);
 		
-		$this->assertEquals($model->modelURI, $defModels[0]);
-		
-		$this->store->deleteModel(
-			'http://ns.ontowiki.net/unittest/Erfurt_Store_Adapter_RapTest/testExecuteDefiningModels/');
+		$this->assertEquals($this->model->modelURI, $defModels[0]);
 	}
 }
 ?>

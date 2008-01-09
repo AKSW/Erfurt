@@ -43,14 +43,14 @@ require_once 'Erfurt/functions.php';
 require_once 'Erfurt/Rdfs/rap/class.php';
 
 $config = new Erfurt_Config(array('/Users/philipp/Sites/erfurt_doc_it/api/Erfurt/erfurt.ini'), 'erfurt');
+
 Zend_Registry::set('config', $config);
 
 #$writer = new Zend_Log_Writer_Null();
 #$erfurtLog = new Zend_Log($writer);
 #Zend_Registry::set('erfurtLog', $erfurtLog);
 
-Zend_Registry::set('erfurt', new Erfurt_App_Default($config));
-
+#Zend_Registry::set('erfurt', new Erfurt_App_Default($config));
 
 switch (ERFURT_TEST_CONFIG_BACKEND) {
 	case 'rap':

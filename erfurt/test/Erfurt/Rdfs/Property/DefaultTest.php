@@ -24,7 +24,8 @@ class Erfurt_Rdfs_Property_DefaultTest extends PHPUnit_Framework_TestCase {
 		if ($this->store->modelExists('http://ns.ontowiki.net/unittest/Erfurt_Rdfs_Property_DefaultTest/0.1/')) {
 			$this->store->deleteModel('http://ns.ontowiki.net/unittest/Erfurt_Rdfs_Property_DefaultTest/0.1/');	
 		}
-		
+	
+	
 		$this->model = $this->store->getNewModel(
 						'http://ns.ontowiki.net/unittest/Erfurt_Rdfs_Property_DefaultTest/0.1/');
 						

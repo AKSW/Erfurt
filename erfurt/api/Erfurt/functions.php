@@ -523,24 +523,27 @@ function cacheGetUidFromArgs(&$args) {
 		else $uid.=$arg;
 	return crc32($uid);
 }
-function cache($fn,$args=array(),$value=NULL) {
-	if(!Zend_Registry::get('config')->cache)
+function cache($fn, $args = array(), $value = null) {
+	
+	if (!Zend_Registry::get('config')->cache->enable) {
 		return $value;
+	}
+		
 	if (Zend_Registry::isRegistered('cache')) {
 		$cache = Zend_Registry::get('cache');
 	} else { 
-		Zend_Registry::set('cache',array());
+		Zend_Registry::set('cache', array());
 		$cache = Zend_Registry::get('cache');
 	}
 
 	$uid = cacheGetUidFromArgs($args);
-	if(func_num_args()==3)
-		$cache[$fn][$uid]=$value;
-	else
-		$value=isset($cache[$fn][$uid])?$cache[$fn][$uid]:NULL;
-	
+	if (func_num_args() == 3) {
+		$cache[$fn][$uid] = $value;
+	} else {
+		$value = isset($cache[$fn][$uid]) ? $cache[$fn][$uid] : null;
+	}
+		
 	Zend_Registry::set('cache', $cache);
-	
 	return $value;
 }
 /**
@@ -609,7 +612,7 @@ Class stmCache {
 		
 		if (Zend_Registry::get('config')->cache->enable) {
 			foreach (($stm instanceof Statement) ? array($stm->subj, $stm->pred, $stm->obj) : func_get_args() as $arg) {
-				if ($arg instanceof Resource) {
+				if ($arg instanceof Erfurt_Rdfs_Resource) {
 					$sql = "DELETE FROM cache WHERE model={$arg->getModel()->getModelID()} AND
 						(trigger1='".$arg->getURI()."' OR trigger1='' OR trigger2='".$arg->getURI()."' OR trigger3='".$arg->getURI()."')";
 					Zend_Registry::get('erfurt')->getStore()->dbConn->execute($sql);
