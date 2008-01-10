@@ -148,11 +148,18 @@ class Erfurt_App_Default {
 		}
 		
 		# system configuration informations
+		
 		$this->sysontModel = $defaultStore->getModel($config->sysont->model);
 		Zend_Registry::set('sysontModel', $this->sysontModel);
 		
 		# access control informations
-		$this->acModel = $defaultStore->getModel($config->ac->model);
+		if ($config->sysont->model === $config->ac->model) {
+			// avoid calling expensive getModel method if sysont = ac model
+			$this->acModel = $this->sysontModel;
+			
+		} else {
+			$this->acModel = $defaultStore->getModel($config->ac->model);
+		}
 		Zend_Registry::set('owAc', $this->acModel);
 		
 		

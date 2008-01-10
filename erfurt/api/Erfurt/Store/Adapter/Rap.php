@@ -200,7 +200,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				throw new Erfurt_Exception('No models allowed');
 			}
 		}
-			
+		
+		// !!! important
 		//check if AC and Sbac is enabled
 		if($this->checkAc() and $useAcl) {
 			$Ac = $this->getAc();
@@ -336,26 +337,28 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function getModel($modelURI, $importedURIs=array(), $useACL = true) {
+
 		# get model uri
 		$modelURI = is_numeric($modelURI) ? $this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI) : $modelURI;
 		
 		# look for model in every uri variation
 		#ob_start(); // prevent DB error message if tables don't exist
 		if(!$this->modelExists($modelURI, $useACL)) {
-			if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
-				$modelURI=rtrim($modelURI,'#/');
-			} else if($this->modelExists($modelURI.'/', $useACL))
-				$modelURI.='/';
-			else if($this->modelExists($modelURI.'#', $useACL))
-				$modelURI.='#';
-			else return false;
+			#if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
+			#	$modelURI=rtrim($modelURI,'#/');
+			#} else if($this->modelExists($modelURI.'/', $useACL))
+			#	$modelURI.='/';
+			#else if($this->modelExists($modelURI.'#', $useACL))
+			#	$modelURI.='#';
+			#else return false;
+			
+			return false;
 		}
-		$m=new RDFSModel($this,$modelURI);
+		$m = new RDFSModel($this, $modelURI);
 		#ob_end_clean();
 		
-		
-		if($m) {
-			if($m->getType()=='OWL') {
+		if ($m) {
+			if ($m->getType() === 'OWL') {
 				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
 				$m=new Erfurt_Owl_Model($this,$modelURI);
 				foreach($m->listImports() as $import) if($import instanceof Resource) {

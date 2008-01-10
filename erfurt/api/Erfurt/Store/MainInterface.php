@@ -9,7 +9,6 @@
  */
 interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 		
-// TODO doc
 	/**
 	 * Check if the DbModel with the given modelURI is already stored in the database
 	 *
@@ -21,10 +20,10 @@ interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 	 */
 	public function aclCheck($accessType,$model='',$property='',$class='',$instance='');
 	
-// TODO doc
+// TODO delete?
 	public function aclCompute($user,$accessType,$model,$property='',$class='',$instance='');
 	
-// TODO doc
+// TODO delete?
 	public function aclGet($user,$accessType,$model='',$property='',$class='',$instance='');	
 	
 	/**
