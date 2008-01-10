@@ -20,6 +20,8 @@ class Erfurt_TestSuite {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		
+		$suite->addTest(Erfurt_Ac_TestSuite::suite());
+		$suite->addTest(Erfurt_App_TestSuite::suite());
 		$suite->addTest(Erfurt_Cache_TestSuite::suite());
 		$suite->addTest(Erfurt_Rdfs_TestSuite::suite());
 		$suite->addTest(Erfurt_Store_TestSuite::suite());
