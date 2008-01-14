@@ -4,15 +4,19 @@ define('ERFURT_TEST_CONFIG_BACKEND', 'rap');
 define('ERFURT_TEST_CONFIG_DBTYPE', 'mysqli');
 define('ERFURT_TEST_CONFIG_HOST', 'localhost');
 define('ERFURT_TEST_CONFIG_DBNAME', 'erfurt_testbed');
-define('ERFURT_TEST_CONFIG_USER', 'powl');
-define('ERFURT_TEST_CONFIG_PW', 'powl');
+define('ERFURT_TEST_CONFIG_USER', 'erfurt-user');
+define('ERFURT_TEST_CONFIG_PW', 'erfurt-pass');
 
+
+##
+##### DO NOT EDIT BELOW THIS LINE #####
+##
 
 define('ERFURT_BASE', str_replace('\\', '/', dirname(__FILE__)).'/../api/Erfurt/');
 define('ERFURT_TEST_BASE', str_replace('\\', '/', dirname(__FILE__)).'/');
 define('RDFAPI_INCLUDE_DIR', ERFURT_BASE . 'lib/rdfapi-php/');
 
-
+define('ERFURT_INI', ERFURT_BASE . 'erfurt.ini');
 
 $include_path  = get_include_path() . PATH_SEPARATOR;
 $include_path .= ERFURT_BASE . '../' . PATH_SEPARATOR;
@@ -42,7 +46,8 @@ require_once 'Erfurt/Rdfs/rap/model.php';
 require_once 'Erfurt/functions.php';
 require_once 'Erfurt/Rdfs/rap/class.php';
 
-$config = new Erfurt_Config(array('/Users/philipp/Sites/erfurt_doc_it/api/Erfurt/erfurt.ini'), 'erfurt');
+#$config = new Erfurt_Config(array('/Users/philipp/Sites/erfurt_doc_it/api/Erfurt/erfurt.ini'), 'erfurt');
+$config = new Erfurt_Config(array(ERFURT_INI), 'erfurt');
 
 Zend_Registry::set('config', $config);
 
