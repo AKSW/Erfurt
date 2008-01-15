@@ -70,6 +70,17 @@ interface Erfurt_Rdfs_Resource {
 	
 	public function getPropertyValue($property, $class = null);
 	
+	/**
+	 * This method returns a qualified name for the resource, i.e. if the namespace of the resource equals the base
+	 * uri of the model, only the localname is returned, otherwise the namespace is replaced by a prefix and a 
+	 * colon (:).
+	 * 
+	 * @link http://www.w3.org/TR/REC-xml-names/#ns-qualnames
+	 * @return string Returns a string containing the qname for the resource.
+	 * 
+	 */
+	public function getQualifiedName();
+	
 	public function getType();
 	public function hasPropertyValue($property, $value = null);
 	public function hasPropertyValueTransitive($property, $value);

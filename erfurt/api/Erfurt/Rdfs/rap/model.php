@@ -24,21 +24,31 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 #######################################################################################################################
 	
 	/**
+	 * @see Erfurt_Rdfs_Model_Abstract
+	 */
+	public function addNamespace($prefix = '', $ns = '') {
+		
+		// has to be overwritten in order to expire the cache...
+		cache('getParsedNamespaces'.$this->modelURI, array(), null);
+		DbModel::addNamespace($prefix, $ns);
+	}
+	
+	/**
 	 * @see DefaultRDFSModel
 	 */
 	public function getParsedNamespaces() {
 		
 		$c=cache('getParsedNamespaces'.$this->modelURI,array());
-		if($c!==NULL)
+		if($c!==null)
 			return $c;
 		$ret=array_flip((array) $GLOBALS['default_prefixes']);
 		// get namespace prefixes from SysOnt-Class "Model"
-		if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
-			if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
-				foreach($inst->listPropertyValuesPlain(Zend_Registry::get('SysOntSchemaURI').'modelXMLNS') as $prefix) {
-					$ns=explode(':',$prefix,2);
-					$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
-				}
+		#if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
+		#	if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
+		#		foreach($inst->listPropertyValuesPlain(Zend_Registry::get('SysOntSchemaURI').'modelXMLNS') as $prefix) {
+		#			$ns=explode(':',$prefix,2);
+		#			$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
+		#		}
 		$pns=DbModel::getParsedNamespaces();
 		$ret=array_filter($pns?array_merge((array)$ret,$pns):$ret);
 		return cache('getParsedNamespaces'.$this->modelURI,array(),$ret);

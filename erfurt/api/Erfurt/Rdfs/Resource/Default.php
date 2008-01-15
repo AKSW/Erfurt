@@ -245,6 +245,35 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	}
 	
 	/**
+	 * @see Erfurt_Rdfs_Resource
+	 */
+	public function getQualifiedName() {
+		
+		// blank nodes are local and have no namespace
+		if ($this->isBlankNode()) {
+			return $this->getLocalName();
+		}
+		
+		$ns = $this->getNamespace();
+		
+		// if namespace equals base uri return only localname
+		if ($ns === $this->getModel()->getBaseURI()) {
+			return $this->getLocalName();
+		}
+		
+		$namespaces = $this->getModel()->getParsedNamespaces();
+		foreach ($namespaces as $ns_uri => $prefix) {
+			if ($ns_uri === $ns) {
+				$uri = $this->getURI();
+				return str_replace($ns, $prefix.':', $uri);
+			}
+		}
+		
+		// add namespace or return uri ???!!! cheack with seebi and norman
+		return $this->getURI();
+	}
+	
+	/**
 	 * @see Erfurt_Rdfs_Resource  
 	 */
 	public function getType() {

@@ -1,5 +1,7 @@
 <?php
-require_once '../../../config.php';
+if (!defined('ERFURT_TEST_CONFIG')) {
+	require_once '../../../config.php';
+}
 
 /**
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
@@ -9,6 +11,11 @@ class RDFSModelTest extends PHPUnit_Framework_TestCase {
 	
 	protected $store;
 	protected $model;
+	
+	public static function suite() {
+		
+		return new PHPUnit_Framework_TestSuite('RDFSModelTest');
+	}
 	
 	public function setUp() {
 		

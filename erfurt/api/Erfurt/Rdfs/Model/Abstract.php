@@ -135,6 +135,14 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	/**
 	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
 	 * specific backend.
+	 * @param string prefix
+	 * @param string $ns
+	 */
+	public function addNamespace($prefix = '', $ns = '') { /* abstract */ }
+	
+	/**
+	 * @abstract Can't use abstract construct, for this is inherited from RAP DbModel -> Implement this for a
+	 * specific backend.
 	 * @return string[] Returns an associative array where the key is a namespace and the value a prefix.
 	 */
 	public function getParsedNamespaces() { /* abstract */ }

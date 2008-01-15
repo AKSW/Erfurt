@@ -20,7 +20,9 @@ class Erfurt_Rdfs_TestSuite {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		
+		$suite->addTest(RDFSModelTest::suite());
 		$suite->addTest(Erfurt_Rdfs_Property_DefaultTest::suite());
+		$suite->addTest(Erfurt_Rdfs_Resource_DefaultTest::suite());
 		
 		return $suite;
 	}
