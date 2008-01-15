@@ -1,16 +1,11 @@
 <?
 
-/**
- * @version $Id$
- */
-
-
-#define("RDFAPI_INCLUDE_DIR", "rdfapi-php/api/");
-define("RDFAPI_INCLUDE_DIR", "../lib/rdfapi-php/");
-include(RDFAPI_INCLUDE_DIR."RdfAPI.php");
-include(RDFAPI_INCLUDE_DIR."syntax/RdfSerializer.php");
-include(RDFAPI_INCLUDE_DIR."syntax/N3Serializer.php");
-include(RDFAPI_INCLUDE_DIR."util/ModelComparator.php");
+//#define("RDFAPI_INCLUDE_DIR", "rdfapi-php/api/");
+//define("RDFAPI_INCLUDE_DIR", "rdfapi-php/api/");
+//include(RDFAPI_INCLUDE_DIR."RdfAPI.php");
+//include(RDFAPI_INCLUDE_DIR."syntax/RdfSerializer.php");
+//include(RDFAPI_INCLUDE_DIR."syntax/N3Serializer.php");
+//include(RDFAPI_INCLUDE_DIR."util/ModelComparator.php");
 
 //Namespsaces
 $_WEBDAV['NS'] = array('http://www.daml.org/2001/10/html/airport-ont#'=>'air',
@@ -28,19 +23,19 @@ $_WEBDAV['NS'] = array('http://www.daml.org/2001/10/html/airport-ont#'=>'air',
 			'http://purl.org/vocab/relationship/'=>'rel',
 			'http://purl.org/net/ldap#'=>'ns1',
 			'http://www.xfront.com/owl/ontologies/camera/'=>'camera',
-);
-
+	);
+								
 //db parameter to connect the db and use it
 $_WEBDAV['DB'] = array('type'=>'MySQL',
-	'host'=>'localhost',
-	'db'=>'ontowiki',
-	'user'=>'owuser',
-	'pass'=>'owpass' ,
+	'host'=>'127.0.0.1',
+	'db'=>'3base',
+	'user'=>'root',
+	'pass'=>'welldone' ,
 	'model' =>'1'
 );
 
 //the limit parameter we could use to seperate the model because these are could not represent if they is too large for RAP
-$_WEBDAV['limit'] = "50";
+$_WEBDAV['limit'] = "10";
 
 //this select the origin of the browsing model either DB Database or SE Sparql_Endpoint or file
 $_WEBDAV['origin']="DB";
@@ -50,14 +45,12 @@ $_WEBDAV['base'] = "/var/www/localhost/htdocs/Dokumente/wine.owl";
 $_WEBDAV['output']['resource'] =array('showResourceDir' =>TRUE,
 										'showResourceN3' => TRUE,
 										'showResourceRDF' => TRUE
-);
-
+										);
+															
 $_WEBDAV['output']['class'] =array(	'showClassDir' =>TRUE,
 										'showCSV' => TRUE
-);
+									);	
+$_WEBDAV['show_system_class']=TRUE;	
 
-$_WEBDAV['show_system_class']=TRUE;
-
-$_WEBDAV['mountpoint']="/DAV";
-
+$_WEBDAV['mountpoint']="/";																	
 ?>

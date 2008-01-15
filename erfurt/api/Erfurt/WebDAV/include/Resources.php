@@ -3,63 +3,62 @@
  *the resource handling of all the webdav-shares
  *generic modell view of resources which show the subject-predicate-object behavior 
  *
- * @version $Id$
- */   	
+*/   	
 $this->GetComponents($path);
 //subject search
-if($this->components[2] !="" && $this->components[3] =="") {
-	list($bla,$anfang,$ende) = split("_",$this->components[2]);								
+if($this->components[3] != NULL && $this->components[4] == NULL) {
+	list($bla,$anfang,$ende) = split("_",$this->components[3]);								
 	$query=$this->querystring."SELECT DISTINCT ?resource
 	WHERE {?resource ?predicate ?object 
 	      }
 	ORDER BY ?resource";
-	$res = $this->Model->sparqlQuery($query);
+	$res = $this -> Erfurt_selectedModel->sparqlQuery($query);
 	$res_result = array_slice($res,$anfang,$this->limit);
 	}
 //predicate search
-else if($this->components[3] !="" &&$this->components[4]=="") {
+else if($this->components[4] != NULL && $this->components[5]== NULL) {
 			    
-	    $subname = $this->displayname2iri($this->components[3]);
+	    $subname = $this->displayname2iri($this->components[4]);
 	    $subname = "<$subname>";	
 	    $query=$this->querystring."SELECT DISTINCT ?y
 	    WHERE { $subname ?y ?z
 				}
 				ORDER BY ?y
 				";
-		   	 $res_result = $this->Model->sparqlQuery($query);						  
+		   	 $res_result = $this -> Erfurt_selectedModel->sparqlQuery($query);						  
 }
 /**Object search
 *
 */		
-else if($this->components[3] !="" &&$this->components[4]!="") {
+else if($this->components[4] != NULL &&$this->components[5]!= NULL) {
 				    
-    $subname = $this->displayname2iri($this->components[3]);
+    $subname = $this->displayname2iri($this->components[4]);
     $subname = "<$subname>";	
-    $predname = $this->displayname2iri($this->components[4]);
+    $predname = $this->displayname2iri($this->components[5]);
     $predname = "<$predname>";	
     $query.=$this->querystring."SELECT DISTINCT ?z
     WHERE { $subname $predname ?z
 	    	}
 			ORDER BY ?z														
 			";
-	 $res_result = $this->Model->sparqlQuery($query);						  
+	 $res_result = $this -> Erfurt_selectedModel->sparqlQuery($query);						  
 }
 /**if the object is an iri and exist in these model then could a redirct in this directory
 *else the object in an Literal then show the String Literaln and do nothing 
 *
 */
-else if($this->components[3] !="" && $this->components[4] !="" &&$this->components[5]!=""){
-   if($this->is_URI($this->components[5])) {
-		$subname = $this->displayname2iri($this->components[5]);
+else if($this->components[4] != NULL && $this->components[5] != NULL && $this->components[6]!= NULL){
+   if($this->is_URI($this->components[6])) {
+		$subname = $this->displayname2iri($this->components[6]);
 		//Suche das bergebene Objekt im Baum als Subjekt, wenn es gefunden wird, dann stelle den Pfad darauf ein
 		$SName= "<$subname>";									
-		$path = "resources".$this->components[5]."/";							
+		$path = "resources".$this->components[6]."/";							
 		//echo "DER neue".$this->path;
 		$query.=$this->querystring."SELECT DISTINCT ?y 
 			WHERE {
 			<$subname> ?y ?z
 			}";
-			$res_result = $this->Model->sparqlQuery($query);									
+			$res_result = $this -> Erfurt_selectedModel->sparqlQuery($query);									
 	}								
 	
 }
@@ -68,7 +67,7 @@ else {
 	WHERE {?x ?y ?z 
 	      }
 	ORDER BY ?x";
-	$res = $this->Model->sparqlQuery($querys);
+	$res = $this -> Erfurt_selectedModel->sparqlQuery($querys);
 	for($i=0;$i < count($res);$i = $i+$this->limit){
 		$anfang = $i;
 		$ende = $i+$this->limit;
@@ -105,7 +104,7 @@ if(is_array($res_result)) {
 				}
 			  	$wert =$path.$wert;	
 	   			//Ausgabe der konfigurierten Dateien Resourcedirectory Resource N3 und Resource rdf
-	  			if($this->components[3]=="") {			    		
+	  			if($this->components[4] == NULL) {			    		
 	    			if($this->output['resource']['showResourceDir']){
 						$files["files"][] = $this->fileinfo($wert,$mime);
 					}

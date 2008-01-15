@@ -2,7 +2,6 @@
 /**
  *@param $candidate
  *@return 
- *@version $Id$
 */    
 $Properties = array();
   	list($sub,$bla) = split("\.csv",$candidate);
@@ -11,7 +10,7 @@ $Properties = array();
   	$inst_query ="Select DISTINCT ?x
   		WHERE { ?x rdf:type <$subname>
 					}";
-	$result = $this->Model->sparqlQuery($inst_query);
+	$result = $this -> Erfurt_selectedModel -> sparqlQuery($inst_query);
    if(is_array($result)){
 	//Jeden Kandidaten welcher eine Klasse ist	
 		foreach($result as $O_Array =>$O_Value) {
@@ -44,7 +43,7 @@ $Properties = array();
 		$k=0;
 		$property_query="Select DISTINCT ?y ?z
 			WHERE { $inst_wert ?y ?z }";		
-		$eintrage_array = $this->Model->sparqlQuery($property_query);	
+		$eintrage_array = $this->Erfurt_selectedModel->sparqlQuery($property_query);	
 		//IRI aufschreiben	
 		echo $this->iri2displayname($instwert).";";					
 		foreach($Properties as $P_Array =>$P_Value) {

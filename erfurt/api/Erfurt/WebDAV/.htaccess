@@ -5,5 +5,5 @@
 RewriteEngine off
 # In most cases, you do not need to define the rewrite-base
 #RewriteBase /ontowiki-live/
-#RewriteRule !\.(js|ico|gif|jpg|png|css|php)$ boot.php
+#RewriteRule !\.(js|ico|gif|jpg|png|css|php)$ index.php
 </IfModule>
