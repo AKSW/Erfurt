@@ -383,7 +383,7 @@ class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Abstract {
 		$this->dbConn->execute('
 			CREATE TABLE popularity(
 				id       INT IDENTITY PRIMARY KEY, 
-				date_c   TIMESTAMP NOT NULL, 
+				ef_date   TIMESTAMP NOT NULL, 
 				model    IRI_ID NOT NULL, 
 				resource IRI_ID NOT NULL
 			)');
@@ -393,8 +393,8 @@ class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Abstract {
 			CREATE TABLE ratings(
 				id       INT IDENTITY PRIMARY KEY, 
 				model    IRI_ID NOT NULL, 
-				user_c   IRI_ID NOT NULL, 
-				resource IRI_ID NOT NULL, 
+				ef_user   IRI_ID NOT NULL, 
+				ef_resource IRI_ID NOT NULL, 
 				rating   DECIMAL(1,0) NOT NULL
 			)');
 		
@@ -408,7 +408,7 @@ class Erfurt_Store_Adapter_Virtuoso extends Erfurt_Store_Abstract {
 				function_c VARCHAR(255) NOT NULL DEFAULT \'\', 
 				args       VARCHAR(255) NOT NULL DEFAULT \'\', 
 				model      IRI_ID NOT NULL, 
-				resource   IRI_ID NOT NULL, 
+				ef_resource   IRI_ID NOT NULL, 
 				value      LONG VARCHAR NOT NULL
 			)');
 		

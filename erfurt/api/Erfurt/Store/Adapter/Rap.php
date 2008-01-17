@@ -108,7 +108,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		// table: popularity
 		$this->dbConn->execute("CREATE TABLE popularity (
 									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			 						date TIMESTAMP NOT NULL,
+			 						ef_date TIMESTAMP NOT NULL,
 									modelID INT UNSIGNED NOT NULL,
 									uri VARCHAR(255) COLLATE ascii_bin NOT NULL) ENGINE MyISAM");
 								
@@ -116,12 +116,12 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		$this->dbConn->execute("CREATE TABLE ratings (
 									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 									modelID INT UNSIGNED NOT NULL,
-									user VARCHAR(255) COLLATE ascii_bin NOT NULL,
-									resource VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									ef_user VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									ef_resource VARCHAR(255) COLLATE ascii_bin NOT NULL,
 									rating DECIMAL(1,0) NOT NULL) ENGINE MyISAM");
 		
 		// index: (unique) modelID, user, resource -> a user can only rate one resource in a specific model
-		$this->dbConn->execute('CREATE UNIQUE INDEX r_model_user_res_idx ON ratings (modelID,user,resource)');
+		$this->dbConn->execute('CREATE UNIQUE INDEX r_model_user_res_idx ON ratings (modelID,ef_user,ef_resource)');
 		
 		// table: cache
 		$this->dbConn->execute("CREATE TABLE cache (
@@ -132,11 +132,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 									function VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
 									args VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
 									model INT UNSIGNED NOT NULL DEFAULT 0,
-									resource VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
+									ef_resource VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT '',
 									value LONGTEXT COLLATE utf8_bin NOT NULL) ENGINE MyISAM");
 
 		// index: (unique) function, args, model, resource -> must be unique
-		$this->dbConn->execute('CREATE UNIQUE INDEX c_func_args_model_res_idx ON cache (function, args, model, resource)');
+		$this->dbConn->execute('CREATE UNIQUE INDEX c_func_args_model_res_idx ON cache (function, args, model, ef_resource)');
 		
 		// table: log_statements
 		$this->dbConn->execute("CREATE TABLE log_statements (
@@ -159,8 +159,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 									id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 									parent_id INT UNSIGNED,
 									model_id INT UNSIGNED NOT NULL,
-									user VARCHAR(255) COLLATE ascii_bin NOT NULL,
-									date DATETIME NOT NULL,
+									ef_user VARCHAR(255) COLLATE ascii_bin NOT NULL,
+									ef_date DATETIME NOT NULL,
 									descr_id INT UNSIGNED NOT NULL,
 									subject VARCHAR(255) COLLATE ascii_bin,
 									details LONGTEXT COLLATE utf8_bin) ENGINE MyISAM");
@@ -168,7 +168,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		// index: model_id, parent_id, user
 		$this->dbConn->execute('CREATE INDEX loga_modelid_idx ON log_actions (model_id)');
 		$this->dbConn->execute('CREATE INDEX loga_parentid_idx ON log_actions (parent_id)');
-		$this->dbConn->execute('CREATE INDEX loga_user_idx ON log_actions (user)');
+		$this->dbConn->execute('CREATE INDEX loga_user_idx ON log_actions (ef_user)');
 		
 		// table: log_action_descr
 		$this->dbConn->execute("CREATE TABLE log_action_descr (

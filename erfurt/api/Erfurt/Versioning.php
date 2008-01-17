@@ -25,13 +25,13 @@ class Erfurt_Versioning {
 				if ($value) {
 					switch ($key) {
 						case 'date':
-							$search .= ' AND date LIKE "' . $value . '"';
+							$search .= ' AND ef_date LIKE "' . $value . '"';
 							break;
 						case 'model':
 							$search .= ' AND modelURI = "' . $value . '"';
 							break;
 						case 'user':
-							$search .= ' AND user = "' . $value . '"';
+							$search .= ' AND ef_user = "' . $value . '"';
 							break;
 						case 'resource':
 							$join = 'INNER JOIN log_statements s ON (s.action_id = la.id)';
@@ -43,12 +43,12 @@ class Erfurt_Versioning {
 			}
 		}
 		
-		$sql = 'SELECT la.id, date, user, modelURI, description, modelID, la.subject, details 
+		$sql = 'SELECT la.id, ef_date, ef_user, modelURI, description, modelID, la.subject, details 
 				FROM log_actions la ' . 
 				$join . 
 			   'INNER JOIN models ON (model_id = modelID)
 				INNER JOIN log_action_descr lad ON (lad.id = descr_id)
-				WHERE model_id = ' . $this->model->getModelID() . ' AND ISNULL(parent_id)' . $search . $group . ' ORDER BY date DESC';
+				WHERE model_id = ' . $this->model->getModelID() . ' AND ISNULL(parent_id)' . $search . $group . ' ORDER BY ef_date DESC';
 				
 		$result = $this->model->getStore()->getDbConn()->pageExecute($sql, $limit, ($offset/$limit+1));
 		$erg = (($result->_maxRecordCount) ? $result->_maxRecordCount : $result->_numOfRows);

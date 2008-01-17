@@ -579,7 +579,7 @@ Class stmCache {
 	 * @return mixed value
 	 */
 	function get() {
-		if(Zend_Registry::get('config')->cache->enable && ($ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model=".$this->model->modelID." AND resource='".$this->resource."'"))) {
+		if(Zend_Registry::get('config')->cache->enable && ($ret = Zend_Registry::get('erfurt')->getStore()->dbConn->getOne("SELECT value FROM cache WHERE function='".$this->fn."' AND args='".$this->args."' AND model=".$this->model->modelID." AND ef_resource='".$this->resource."'"))) {
 			//print_r(unserialize($ret));
 			return unserialize($ret);
 		}
@@ -603,7 +603,7 @@ Class stmCache {
 				foreach($triggers as $trigger)
 					$tr[]=is_a($trigger, 'resource') ? $trigger->getURI() : $this->model->_dbId($trigger);
 			}
-			Zend_Registry::get('erfurt')->getStore()->dbConn->execute("REPLACE cache SET value=".Zend_Registry::get('erfurt')->getStore()->dbConn->qstr(serialize($value)).",function='{$this->fn}',args='{$this->args}',model='{$this->model->modelID}',resource='{$this->resource}',trigger1='{$tr[0]}',trigger2='{$tr[1]}',trigger3='{$tr[2]}'");
+			Zend_Registry::get('erfurt')->getStore()->dbConn->execute("REPLACE cache SET value=".Zend_Registry::get('erfurt')->getStore()->dbConn->qstr(serialize($value)).",function='{$this->fn}',args='{$this->args}',model='{$this->model->modelID}',ef_resource='{$this->resource}',trigger1='{$tr[0]}',trigger2='{$tr[1]}',trigger3='{$tr[2]}'");
 		}
 	}
 	
