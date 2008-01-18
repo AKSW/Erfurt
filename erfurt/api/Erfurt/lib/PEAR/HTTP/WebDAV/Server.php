@@ -144,7 +144,7 @@ class HTTP_WebDAV_Server
 
         // default uri is the complete request uri
         $uri = (@$this->_SERVER["HTTPS"] === "on" ? "https:" : "http:");
-        $uri.= "//$this->_SERVER[HTTP_HOST]$this->_SERVER[SCRIPT_NAME]";
+        $uri.= '//' . $this->_SERVER[HTTP_HOST] . $this->_SERVER[SCRIPT_NAME] ;
         
         $path_info = empty($this->_SERVER["PATH_INFO"]) ? "/" : $this->_SERVER["PATH_INFO"];
 
