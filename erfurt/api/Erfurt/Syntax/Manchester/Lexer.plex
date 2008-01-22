@@ -1,8 +1,13 @@
 <?php
 /*
-* edit Erfurt_Syntax_Manchester_Lexer.plex file, if you want to make changes to tokenizer for manchester syntax
-*/
+ * edit Erfurt_Syntax_Manchester_Lexer.plex file, if you want to make changes to tokenizer for manchester syntax
+ */
 require_once 'Parser.php';
+
+/**
+ * 
+ * @package syntax 
+ */
 class ManchesterLexer
 {
 	private $data;

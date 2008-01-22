@@ -1,12 +1,15 @@
 <?php
-/* Driver template for the PHP_OWL_To_Erfurt_rGenerator parser generator. (PHP port of LEMON)
-*/
+/* 
+ * Driver template for the PHP_OWL_To_Erfurt_rGenerator parser generator. (PHP port of LEMON)
+ */
 
 /**
  * This can be used to store both the string representation of
  * a token, and any useful meta-data associated with the token.
  *
  * meta-data should be stored as an array
+ * 
+ * @package syntax
  */
 class OWL_To_Erfurt_yyToken implements ArrayAccess
 {
@@ -83,6 +86,8 @@ class OWL_To_Erfurt_yyToken implements ArrayAccess
  *   +  The semantic value stored at this level of the stack.  This is
  *      the information used by the action routines in the grammar.
  *      It is sometimes called the "minor" token.
+ * 
+ * @package syntax
  */
 class OWL_To_Erfurt_yyStackEntry
 {

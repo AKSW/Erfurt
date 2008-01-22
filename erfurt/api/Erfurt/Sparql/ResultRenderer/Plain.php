@@ -2,6 +2,9 @@
 
 require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/ResultRenderer/PlainText.php';
 
+/**
+ * @package sparql
+ */
 class Erfurt_Sparql_ResultRenderer_Plain extends SparqlEngineDb_ResultRenderer_PlainText
 {	
 	protected function getVariableArrayFromRecordSet(ADORecordSet $dbRecordSet, $strResultForm)

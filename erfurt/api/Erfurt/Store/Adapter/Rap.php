@@ -4,7 +4,7 @@
  * relational database accessed via adodb.
  *
  * @package store
- * @author S�ren Auer <soeren@auer.cx>
+ * @author Sören Auer <soeren@auer.cx>
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004 - 2007
  * @version $Id$
@@ -388,6 +388,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	
 	/**
 	 * @see Erfurt_Store_DataInterface 
+	 * @trigger EFModelAddedEvent
 	 */
 	public function getNewModel($modelURI,$baseURI='',$type='RDFS', $useACL = true) {
 		if($this->modelExists($modelURI, $useACL))
@@ -398,6 +399,10 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			$mt->add(new Statement(new resource($modelURI),$GLOBALS['RDF_type'],$GLOBALS['OWL_Ontology']));
 		Zend_Registry::set('cache', array());
 		$m = $this->getModel($modelURI);
+		
+		// trigger event
+		// TODO
+		
 		return $m;
 	}
 	

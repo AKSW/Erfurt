@@ -1,5 +1,4 @@
 <?php
-
 function pr($s, $more = false) {
         print '<pre>';
         $a = debug_backtrace();
@@ -23,70 +22,9 @@ function printr($s, $more = false) {
 
         print_r($s);
         print '</pre>';
-
 }
 
 ###################### TAKEN FROM powlapi/include.php ###########################################
-// TODO remove errorHandler
-/*
-function errorHandler($errno, $errstr, $errfile, $errline) {
-	switch ($errno) {
-		case E_ERROR:
-		case E_CORE_ERROR:
-		case E_COMPILE_ERROR:
-		case E_USER_ERROR:
-			printr(debug_backtrace());
-			break;
-			echo "<div class=\"errfatal\"><b>FATAL:</b> [$errno] $errstr<br />\n";
-			echo "in line $errline of file $errfile. <a href=\"javascript:void(powl.toggleVisibility('errbacktrace'));\">&gt;&gt;</a><div style=\"display:none;\" id=\"errbacktrace\">";
-			if(function_exists('debug_backtrace'))
-				errorRenderer(debug_backtrace());
-			echo('</div></div>');
-			exit(1);
-			break;
-		case E_WARNING:
-		case E_CORE_WARNING:
-		case E_COMPILE_WARNING:
-		case E_USER_WARNING:
-			printr(debug_backtrace());
-			break;
-			if(!$GLOBALS['_POWL']['errors'][$errno][$errfile][$errline]) {
-				echo "<div class=\"errwarning\"><b>WARNING:</b> [$errno] $errstr<br />\n";
-				echo "in line $errline of file $errfile.<a href=\"javascript:void(powl.toggleVisibility('errbacktrace'));\">&gt;&gt;</a><div style=\"display:none;\" id=\"errbacktrace\">";
-				if(function_exists('debug_backtrace'))
-					errorRenderer(debug_backtrace());
-				echo('</div></div>');
-				$GLOBALS['_POWL']['errors'][$errno][$errfile][$errline]=true;
-			}
-			break;
-		case E_STRICT:
-			echo "<b>STRICT:</b> [$errno] $errstr<br />\n";
-			echo "in line $errline of file $errfile<br />";
-		default:
-			echo "<b>NOTICE:</b> [$errno] $errstr<br />\n";
-			echo "in line $errline of file $errfile<br />";
-			break;
-	}
-}
-function errorRenderer($arr) {
-	static $c;
-	foreach($arr as $key=>$val) {
-		#$val=is_object($val)?get_object_vars($val):$val;
-		if(is_array($val)) {
-			echo('<img onclick="powl.toggleVisibility(\'err'.++$c.'\')" id="optionalIMG'.$id.$cat.'" src="'.Zend_Registry::get('config')->erfurtPublicUri.'images/plus.gif">&nbsp;'.$key.'<br /><div id="err'.$c.'" style="display:none;margin-left:20px;">');
-			#print_r($val);
-			errorRenderer($val);
-			echo('</div');
-		} else {
-			echo('<div>'.$key.'=><xmp style="display:inline">');
-			print_r($val);
-			echo('</xmp></div>');
-		}
-	}
-}
-set_error_handler("errorHandler");
-*/
-
 function pwlOutput($string) {
 	echo(nl2br($string).'<br />');
 	flush();
@@ -381,16 +319,17 @@ function pwlShowViewLinks($type) {
 	}
 	return $ret;
 }
-class powlModule {
-}
 
-class powlModuleTab extends powlModule {
-	var $conf=array(
-		'tabpage'=>'index.php',
-		'css'=>'',
-		'js'=>'',
-	);
-}
+#class powlModule {
+#}
+
+#class powlModuleTab extends powlModule {
+#	var $conf=array(
+#		'tabpage'=>'index.php',
+#		'css'=>'',
+#		'js'=>'',
+#	);
+#}
 
 function pwlGetSysOntClass($localName) {
 	if(!empty(Zend_Registry::get('erfurt')->getStore()->SysOnt->modelURI) && $class = Zend_Registry::get('erfurt')->getStore()->SysOnt->getClass(Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.$localName))
@@ -562,6 +501,7 @@ function cache($fn, $args = array(), $value = null) {
  * )
  * 
  * @package cache
+ * @deprecated wil be replaced by new Erfurt_Cache classes<strong></strong>
  */
 Class stmCache {
 	var $value=NULL;

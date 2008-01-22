@@ -2,7 +2,7 @@
 /**
  *
  *
- *
+ * @package sparql 
  * @author Christian Weiske (original version)
  */
 class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRenderer {

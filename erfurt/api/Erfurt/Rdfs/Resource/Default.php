@@ -1,17 +1,19 @@
 <?php
 /**
  * TODO
- *
+ * 
  * @package rdfs
  * @author Sören Auer <soeren@auer.cx>
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2004-2007
+ * @copyright Copyright (c) 2004-2007, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @see http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/phpdoc/model/Resource.html
  * @version $Id: $
  */
 class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resource {
 	
 	/**
-	 * @var
+	 * @var array
 	 */
 	protected $properties;
 	
@@ -19,14 +21,13 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	 * A reference to the RDFSModel this resource belongs to.
 	 * 
 	 * @var Erfurt_Rdfs_Model
-	 * @access protected
 	 */
 	protected $model;
 	
 	/**
 	 * Constructor
 	 *
-	 * @param string $uri
+	 * @param string $uri ttt
 	 * @param RDFSModel $model
 	 * @return
 	 **/
@@ -358,7 +359,7 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	}
 	
 	/**
-	 * Erfurt_Rdfs_Resource
+	 * @see Erfurt_Rdfs_Resource
 	 */
 	public function listComments($language = null) {
 		
@@ -366,7 +367,7 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	}
 	
 	/**
-	 * Erfurt_Rdfs_Resource
+	 * @see Erfurt_Rdfs_Resource
 	 */
 	public function listDifferentFrom() {
 		

@@ -50,13 +50,13 @@ class Erfurt_App_Default {
 	
 	/**
 	 *  
-	 * @var Object event handler
+	 * @var object event handler
 	 */
 	protected $eh = null;
 	
 	/**
 	 *  
-	 * @var Object for plugin manager
+	 * @var object for plugin manager
 	 */
 	protected $pluginManager = null;
 	
@@ -271,6 +271,8 @@ class Erfurt_App_Default {
 	 * authtenticate user
 	 * 
 	 * authenticate a user to the store
+	 * 
+	 * @trigger ExampleEvent ttt
 	 */
 	public function authenticate($username = '', $password = '') {
 		

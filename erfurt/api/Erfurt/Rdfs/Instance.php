@@ -18,6 +18,7 @@ interface Erfurt_Rdfs_Instance extends Erfurt_Rdfs_Resource {
 	 *
 	 * @param RDFSProperty $prop The property the value should be added to.
 	 * @param $value Value for the property
+	 * @trigger test trigger
 	 */
 	public function addPropertyValue($prop, $value);
 	

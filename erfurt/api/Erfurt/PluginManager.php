@@ -1,38 +1,13 @@
 <?php
-
-/*
- * PluginManager.php
- * Encoding: utf-8
- *
- * Copyright (c) 2007, OntoWiki project team
- *
- * This file is part of OntoWiki.
- *
- * OntoWiki is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * OntoWiki is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OntoWiki; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
 /**
-  * Erfurt Plugin Manager
-  *
-  * 
-  *
-  * @package: Erfurt
-  * @author:  Michael Haschke
-  * @version: $Id: EventHandler.php 1638 2007-11-13 19:53:20Z p_frischmuth $
-  * @access: public
-  */
+ * Erfurt Plugin Manager
+ *
+ * 
+ *
+ * @package erfurt
+ * @author  Michael Haschke
+ * @version $Id: EventHandler.php 1638 2007-11-13 19:53:20Z p_frischmuth $
+ */
 class Erfurt_PluginManager {
     
     private $_pluginFolders = array(); # all directories where plugin files and classes may be located

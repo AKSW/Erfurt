@@ -13,8 +13,8 @@ interface Erfurt_Rdfs_Resource {
 	/**
 	 * Adds a label to this resource
 	 *
-	 * @param $language
-	 * @param $label
+	 * @param string $language
+	 * @param string $label
 	 */
 	public function addLabel($label, $language = '');
 	
@@ -24,10 +24,10 @@ interface Erfurt_Rdfs_Resource {
 	 * Checks if the resource equals another resource.
 	 * Two resources are equal, if they have the same URI
 	 *
-	 * @param object resource $that
+	 * @param Erfurt_Rdfs_Resource $that
 	 * @return	boolean
 	 */
-	public function equals($that);
+	public function equals(Erfurt_Rdfs_Resource $that);
 	
 	/**
 	 * Returns an RDFSClass this instance is an instance of.

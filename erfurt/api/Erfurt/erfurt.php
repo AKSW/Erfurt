@@ -36,6 +36,10 @@ set_include_path($include_path);
 
 // overwrite if it does not exists; needed for autodiscovering missing classes
 if (!function_exists('__autoload')) {
+	/**
+	 *
+	 * @package erfurt
+	 */
 	function __autoload($class) {
 		// try Erfurt dir
 		if (file_exists($file = ERFURT_BASE . str_replace('_', DIRECTORY_SEPARATOR, substr($class, 7)) . '.php')) {
@@ -82,14 +86,14 @@ ini_set('allow_call_time_pass_reference','1');
 
 
 # define constances 
-define('POWLAPI_INCLUDE_DIR', 	ERFURT_BASE.'lib/powlapi/');
+#define('POWLAPI_INCLUDE_DIR', 	ERFURT_BASE.'lib/powlapi/');
 #define('OWLAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/owlapi/');
 define('RDFSAPI_INCLUDE_DIR', 	ERFURT_BASE.'Rdfs/');
 define('RDFAPI_INCLUDE_DIR', 		ERFURT_BASE.'lib/rdfapi-php/');
 
 define('RDF_BACKEND_INCLUDE_DIR', RDFSAPI_INCLUDE_DIR . ($config->database->backend ? $config->database->backend : 'rap') . '/');
 
-define('WIDGETS_INCLUDE_DIR', ERFURT_BASE.'lib/plugins/widgets/');
+#define('WIDGETS_INCLUDE_DIR', ERFURT_BASE.'lib/plugins/widgets/');
 
 ## HACK FOR OLD GLOBAL FUNCTIONS
 require_once(ERFURT_BASE.'functions.php');
@@ -134,16 +138,16 @@ $default_prefixes['owl']='http://www.w3.org/2002/07/owl#';
 
 
 // Add vocabulary missing in rdfapi-php/api/vocabulary/owl.php
-$OWL_equivalentClass=new Resource(OWL_NS."equivalentClass");
-$OWL_equivalentProperty=new Resource(OWL_NS."equivalentProperty");
-$OWL_Thing=new Resource(OWL_NS."Thing");
-$OWL_Nothing=new Resource(OWL_NS."Nothing");
-$OWL_AllDifferent=new Resource(OWL_NS."AllDifferent");
-$OWL_distinctMembers=new Resource(OWL_NS."distinctMembers");
+$OWL_equivalentClass = new Resource(OWL_NS."equivalentClass");
+$OWL_equivalentProperty = new Resource(OWL_NS."equivalentProperty");
+$OWL_Thing = new Resource(OWL_NS."Thing");
+$OWL_Nothing = new Resource(OWL_NS."Nothing");
+$OWL_AllDifferent = new Resource(OWL_NS."AllDifferent");
+$OWL_distinctMembers = new Resource(OWL_NS."distinctMembers");
 
 // HTML rendering related functions (header, footer)
-require_once(POWLAPI_INCLUDE_DIR.'html.php');
-require_once(POWLAPI_INCLUDE_DIR.'widget.php');
+#require_once(POWLAPI_INCLUDE_DIR.'html.php');
+#require_once(POWLAPI_INCLUDE_DIR.'widget.php');
 
 if (empty($config->erfurtUriBase)) {
 	if (!empty($_SERVER['DOCUMENT_ROOT']) && ereg($_SERVER['DOCUMENT_ROOT'], ERFURT_BASE)) {
@@ -214,8 +218,10 @@ Zend_Registry::set('datatypes', $datatypes);
 ### END powlapi/include.php ###
 
 // for debugging purposes
-if($config ->debug === true)
+if($config ->debug === true) {
 	require_once(RDFAPI_INCLUDE_DIR.'util/adodb/adodb-errorhandler.inc.php');
+}
+	
 	
 // instantiate plug-in manager
 $pluginManager = new Erfurt_Plugin_Manager();
@@ -224,12 +230,12 @@ $pluginManager->addPluginDir(ERFURT_BASE . $config->widgetDir);
 Zend_Registry::set('pluginManager', $pluginManager);
 
 // load crucial widget classes to render user interface	 	 
-include_once(WIDGETS_INCLUDE_DIR.'select.php');
-include_once(WIDGETS_INCLUDE_DIR.'checkbox.php');
-include_once(WIDGETS_INCLUDE_DIR.'text.php');
-include_once(WIDGETS_INCLUDE_DIR.'textselect.php');
-include_once(WIDGETS_INCLUDE_DIR.'node.php');
-include_once(WIDGETS_INCLUDE_DIR.'file.php');
+#include_once(WIDGETS_INCLUDE_DIR.'select.php');
+#include_once(WIDGETS_INCLUDE_DIR.'checkbox.php');
+#include_once(WIDGETS_INCLUDE_DIR.'text.php');
+#include_once(WIDGETS_INCLUDE_DIR.'textselect.php');
+#include_once(WIDGETS_INCLUDE_DIR.'node.php');
+#include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
 require_once('constants.php');
 ?>

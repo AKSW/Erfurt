@@ -1,9 +1,8 @@
 <?php
-
 /**
  * WebDAV-supporting-class for browsing ontologies inside Erfurt-API
  * 
- * @package WebDAV
+ * @package webdav
  * @author Christoph Rieß <c.riess@polizisten-duzer.de>
  * @version $Id$
  */
