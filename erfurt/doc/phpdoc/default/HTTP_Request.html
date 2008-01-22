@@ -1,1749 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class HTTP_Request</title>
-			<link rel="stylesheet" href="../media/stylesheet.css" />
-			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
-		</head>
-		<body>
-			<div class="page-body">			
-<h2 class="class-name">Class HTTP_Request</h2>
-
-<a name="sec-description"></a>
-<div class="info-box">
-	<div class="info-box-title">Description</div>
-	<div class="nav-bar">
-					<span class="disabled">Description</span> |
-													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-						
-					</div>
-	<div class="info-box-body">
-        		<!-- ========== Info from phpDoc block ========= -->
-		<p class="notes">
-			Located in <a class="field" href="_Reasoning---DIG1_1---pear---HTTP_Request.php.html">/Reasoning/DIG1_1/pear/HTTP_Request.php</a> (line <span class="field">1</span>)
-		</p>
-		
-				
-		<pre></pre>
-	
-			</div>
-</div>
-
-
-
-	<a name="sec-var-summary"></a>
-	<div class="info-box">
-		<div class="info-box-title">Variable Summary</span></div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
-							| 
-									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-								</div>
-		<div class="info-box-body">
-			<div class="var-summary">
-																																																																																																																																																																																																																								<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_allowRedirects" title="details" class="var-name">$_allowRedirects</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_body" title="details" class="var-name">$_body</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_bodyDisallowed" title="details" class="var-name">$_bodyDisallowed</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_http" title="details" class="var-name">$_http</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_listeners" title="details" class="var-name">$_listeners</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_maxRedirects" title="details" class="var-name">$_maxRedirects</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_method" title="details" class="var-name">$_method</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_pass" title="details" class="var-name">$_pass</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_postData" title="details" class="var-name">$_postData</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_postFiles" title="details" class="var-name">$_postFiles</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_proxy_host" title="details" class="var-name">$_proxy_host</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_proxy_pass" title="details" class="var-name">$_proxy_pass</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_proxy_port" title="details" class="var-name">$_proxy_port</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_proxy_user" title="details" class="var-name">$_proxy_user</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_readTimeout" title="details" class="var-name">$_readTimeout</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_redirects" title="details" class="var-name">$_redirects</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_requestHeaders" title="details" class="var-name">$_requestHeaders</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_response" title="details" class="var-name">$_response</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_saveBody" title="details" class="var-name">$_saveBody</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_sock" title="details" class="var-name">$_sock</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_socketOptions" title="details" class="var-name">$_socketOptions</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_timeout" title="details" class="var-name">$_timeout</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_url" title="details" class="var-name">$_url</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_useBrackets" title="details" class="var-name">$_useBrackets</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_user" title="details" class="var-name">$_user</a>
-				</div>
-											</div>
-		</div>
-	</div>
-
-	<a name="sec-method-summary"></a>
-	<div class="info-box">
-		<div class="info-box-title">Method Summary</span></div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-				 
-				|
-						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
-		</div>
-		<div class="info-box-body">			
-			<div class="method-summary">
-																																																																																																																																																																																																																																																																				
-												<div class="method-definition">
-											<span class="method-result">HTTP_Request</span>
-										<a href="#HTTP_Request" title="details" class="method-name">HTTP_Request</a>
-											([<span class="var-type"></span>&nbsp;<span class="var-name">$url</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addCookie" title="details" class="method-name">addCookie</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addFile" title="details" class="method-name">addFile</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$inputName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$fileName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$contentType</span> = <span class="var-default">'application/octet-stream'</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addHeader" title="details" class="method-name">addHeader</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addPostData" title="details" class="method-name">addPostData</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">false</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addQueryString" title="details" class="method-name">addQueryString</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">false</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addRawPostData" title="details" class="method-name">addRawPostData</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$postdata</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">true</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addRawQueryString" title="details" class="method-name">addRawQueryString</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$querystring</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">true</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#attach" title="details" class="method-name">attach</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">&$listener</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#clearCookies" title="details" class="method-name">clearCookies</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#clearPostData" title="details" class="method-name">clearPostData</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#detach" title="details" class="method-name">detach</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">&$listener</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#disconnect" title="details" class="method-name">disconnect</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#getResponseBody" title="details" class="method-name">getResponseBody</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#getResponseCode" title="details" class="method-name">getResponseCode</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#getResponseCookies" title="details" class="method-name">getResponseCookies</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#getResponseHeader" title="details" class="method-name">getResponseHeader</a>
-											([<span class="var-type"></span>&nbsp;<span class="var-name">$headername</span> = <span class="var-default">null</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#getUrl" title="details" class="method-name">getUrl</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#removeHeader" title="details" class="method-name">removeHeader</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#reset" title="details" class="method-name">reset</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#sendRequest" title="details" class="method-name">sendRequest</a>
-											([<span class="var-type"></span>&nbsp;<span class="var-name">$saveBody</span> = <span class="var-default">true</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setBasicAuth" title="details" class="method-name">setBasicAuth</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$user</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pass</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setBody" title="details" class="method-name">setBody</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$body</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setHttpVer" title="details" class="method-name">setHttpVer</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$http</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setMethod" title="details" class="method-name">setMethod</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setProxy" title="details" class="method-name">setProxy</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$host</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$port</span> = <span class="var-default">8080</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$user</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pass</span> = <span class="var-default">null</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#setURL" title="details" class="method-name">setURL</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_arrayMapRecursive" title="details" class="method-name">_arrayMapRecursive</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$callback</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_buildRequest" title="details" class="method-name">_buildRequest</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_flattenArray" title="details" class="method-name">_flattenArray</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$values</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_generateHostHeader" title="details" class="method-name">_generateHostHeader</a>
-										()
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_notify" title="details" class="method-name">_notify</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$event</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">null</span>])
-									</div>
-								</div>
-		</div>
-	</div>		
-
-	<a name="sec-vars"></a>
-	<div class="info-box">
-		<div class="info-box-title">Variables</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
-						
-			
-										| 
-									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-					</div>
-		<div class="info-box-body">
-			<a name="var$_allowRedirects" id="$_allowRedirects"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_allowRedirects</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Whether to allow redirects    * @var boolean</p>
-<p class="description"><p>* Whether to allow redirects    * @var boolean</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_body" id="$_body"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_body</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Request body    * @var string</p>
-<p class="description"><p>* Request body    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_bodyDisallowed" id="$_bodyDisallowed"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_bodyDisallowed</span>
-			 = <span class="var-default">array('TRACE')</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* A list of methods that MUST NOT have a request body, per RFC 2616    * @var array</p>
-<p class="description"><p>* A list of methods that MUST NOT have a request body, per RFC 2616    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_http" id="$_http"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_http</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* HTTP Version    * @var string</p>
-<p class="description"><p>* HTTP Version    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_listeners" id="$_listeners"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_listeners</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Attached listeners    * @var array</p>
-<p class="description"><p>* Attached listeners    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_maxRedirects" id="$_maxRedirects"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_maxRedirects</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Maximum redirects allowed    * @var integer</p>
-<p class="description"><p>* Maximum redirects allowed    * @var integer</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_method" id="$_method"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_method</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Type of request    * @var string</p>
-<p class="description"><p>* Type of request    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_pass" id="$_pass"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_pass</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Basic Auth Password    * @var string</p>
-<p class="description"><p>* Basic Auth Password    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_postData" id="$_postData"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_postData</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Post data    * @var array</p>
-<p class="description"><p>* Post data    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_postFiles" id="$_postFiles"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_postFiles</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Files to post    * @var array</p>
-<p class="description"><p>* Files to post    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_proxy_host" id="$_proxy_host"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_proxy_host</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Proxy server    * @var string</p>
-<p class="description"><p>* Proxy server    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_proxy_pass" id="$_proxy_pass"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_proxy_pass</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Proxy password    * @var string</p>
-<p class="description"><p>* Proxy password    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_proxy_port" id="$_proxy_port"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_proxy_port</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Proxy port    * @var integer</p>
-<p class="description"><p>* Proxy port    * @var integer</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_proxy_user" id="$_proxy_user"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_proxy_user</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Proxy username    * @var string</p>
-<p class="description"><p>* Proxy username    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_readTimeout" id="$_readTimeout"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_readTimeout</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Timeout for reading from socket (array(seconds, microseconds))    * @var array</p>
-<p class="description"><p>* Timeout for reading from socket (array(seconds, microseconds))    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_redirects" id="$_redirects"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_redirects</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Current number of redirects    * @var integer</p>
-<p class="description"><p>* Current number of redirects    * @var integer</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_requestHeaders" id="$_requestHeaders"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_requestHeaders</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Request headers    * @var array</p>
-<p class="description"><p>* Request headers    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_response" id="$_response"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_response</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* HTTP_Response object    * @var object HTTP_Response</p>
-<p class="description"><p>* HTTP_Response object    * @var object HTTP_Response</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_saveBody" id="$_saveBody"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_saveBody</span>
-			 = <span class="var-default"> true</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Whether to save response body in response object property    * @var bool</p>
-<p class="description"><p>* Whether to save response body in response object property    * @var bool</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_sock" id="$_sock"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_sock</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Socket object    * @var object Net_Socket</p>
-<p class="description"><p>* Socket object    * @var object Net_Socket</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_socketOptions" id="$_socketOptions"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_socketOptions</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Options to pass to Net_Socket::connect.</p>
-<p class="description"><p>* Options to pass to Net_Socket::connect. See stream_context_create    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_timeout" id="$_timeout"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_timeout</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Connection timeout.</p>
-<p class="description"><p>* Connection timeout.    * @var float</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_url" id="$_url"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_url</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Instance of Net_URL    * @var object Net_URL</p>
-<p class="description"><p>* Instance of Net_URL    * @var object Net_URL</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_useBrackets" id="$_useBrackets"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_useBrackets</span>
-			 = <span class="var-default"> true</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Whether to append brackets [] to array variables    * @var bool</p>
-<p class="description"><p>* Whether to append brackets [] to array variables    * @var bool</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_user" id="$_user"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_user</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Basic Auth Username    * @var string</p>
-<p class="description"><p>* Basic Auth Username    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-						
-		</div>
-	</div>
-	
-	<a name="sec-methods"></a>
-	<div class="info-box">
-		<div class="info-box-title">Methods</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
-						
-		</div>
-		<div class="info-box-body">
-			<A NAME='method_detail'></A>
-
-<a name="methodHTTP_Request" id="HTTP_Request"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">Constructor HTTP_Request</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Constructor    *    * Sets up the object    * @param    string  The url to fetch/access    * @param    array   Associative array of parameters which can have the following keys:    *</p>
-<p class="description"><p>* Constructor    *    * Sets up the object    * @param    string  The url to fetch/access    * @param    array   Associative array of parameters which can have the following keys:    * <ul><li>method         - Method to use, GET, POST etc (string)</li><li>http           - HTTP Version to use, 1.0 or 1.1 (string)</li><li>user           - Basic Auth username (string)</li><li>pass           - Basic Auth password (string)</li><li>proxy_host     - Proxy server host (string)</li><li>proxy_port     - Proxy server port (integer)</li><li>proxy_user     - Proxy auth username (string)</li><li>proxy_pass     - Proxy auth password (string)</li><li>timeout        - Connection timeout in seconds (float)</li><li>allowRedirects - Whether to follow redirects or not (bool)</li><li>maxRedirects   - Max number of redirects to follow (integer)</li><li>useBrackets    - Whether to append [] to array variable names (bool)</li><li>saveBody       - Whether to save response body in response object property (bool)</li><li>readTimeout    - Timeout for reading / writing data over the socket (array (seconds, microseconds))</li><li>socketOptions  - Options to pass to Net_Socket object (array)</li></ul>    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">HTTP_Request</span>
-		<span class="method-name">
-			HTTP_Request
-		</span>
-					([<span class="var-type"></span>&nbsp;<span class="var-name">$url</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$url</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$params</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddCookie" id="addCookie"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addCookie</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Appends a cookie to &quot;Cookie:&quot; header    *    * @param string $name cookie name    * @param string $value cookie value    * @access public</p>
-<p class="description"><p>* Appends a cookie to &quot;Cookie:&quot; header    *    * @param string $name cookie name    * @param string $value cookie value    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addCookie
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$value</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddFile" id="addFile"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">addFile</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds a file to upload    *    * This also changes content-type to 'multipart/form-data' for proper upload    *    * @access public    * @param  string    name of file-upload field    * @param  mixed     file name(s)    * @param  mixed     content-type(s) of file(s) being uploaded    * @return bool      true on success    * @throws PEAR_Error</p>
-<p class="description"><p>* Adds a file to upload    *    * This also changes content-type to 'multipart/form-data' for proper upload    *    * @access public    * @param  string    name of file-upload field    * @param  mixed     file name(s)    * @param  mixed     content-type(s) of file(s) being uploaded    * @return bool      true on success    * @throws PEAR_Error</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addFile
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$inputName</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$fileName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$contentType</span> = <span class="var-default">'application/octet-stream'</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$inputName</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$fileName</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$contentType</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddHeader" id="addHeader"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addHeader</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds a request header    *    * @param string     Header name    * @param string     Header value    * @access public</p>
-<p class="description"><p>* Adds a request header    *    * @param string     Header name    * @param string     Header value    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addHeader
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$value</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddPostData" id="addPostData"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">addPostData</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds postdata items    *    * @param string     Post data name    * @param string     Post data value    * @param bool       Whether data is already urlencoded or not, default = not    * @access public</p>
-<p class="description"><p>* Adds postdata items    *    * @param string     Post data name    * @param string     Post data value    * @param bool       Whether data is already urlencoded or not, default = not    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addPostData
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">false</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$value</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$preencoded</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddQueryString" id="addQueryString"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addQueryString</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds a querystring parameter    *    * @param string     Querystring parameter name    * @param string     Querystring parameter value    * @param bool       Whether the value is already urlencoded or not, default = not    * @access public</p>
-<p class="description"><p>* Adds a querystring parameter    *    * @param string     Querystring parameter name    * @param string     Querystring parameter value    * @param bool       Whether the value is already urlencoded or not, default = not    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addQueryString
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">false</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$value</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$preencoded</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddRawPostData" id="addRawPostData"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">addRawPostData</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds raw postdata (DEPRECATED)    *    * @param string     The data    * @param bool       Whether data is preencoded or not, default = already encoded    * @access public    * @deprecated       deprecated since 1.</p>
-<p class="description"><p>* Adds raw postdata (DEPRECATED)    *    * @param string     The data    * @param bool       Whether data is preencoded or not, default = already encoded    * @access public    * @deprecated       deprecated since 1.3.0, method setBody() should be used instead</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addRawPostData
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$postdata</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">true</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$postdata</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$preencoded</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddRawQueryString" id="addRawQueryString"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addRawQueryString</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets the querystring to literally what you supply    *    * @param string     The querystring data.</p>
-<p class="description"><p>* Sets the querystring to literally what you supply    *    * @param string     The querystring data. Should be of the format foo=bar&amp;x=y etc    * @param bool       Whether data is already urlencoded or not, default = already encoded    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addRawQueryString
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$querystring</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$preencoded</span> = <span class="var-default">true</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$querystring</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$preencoded</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodattach" id="attach"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">attach</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Adds a Listener to the list of listeners that are notified of    * the object's events    *    * @param    object   HTTP_Request_Listener instance to attach    * @return   boolean  whether the listener was successfully attached    * @access   public</p>
-<p class="description"><p>* Adds a Listener to the list of listeners that are notified of    * the object's events    *    * @param    object   HTTP_Request_Listener instance to attach    * @return   boolean  whether the listener was successfully attached    * @access   public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			attach
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">&$listener</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">&$listener</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodclearCookies" id="clearCookies"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">clearCookies</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Clears any cookies that have been added (DEPRECATED).</p>
-<p class="description"><p>* Clears any cookies that have been added (DEPRECATED).    *    * Useful for multiple request scenarios    *    * @access public    * @deprecated deprecated since 1.2</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			clearCookies
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodclearPostData" id="clearPostData"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">clearPostData</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Clears any postdata that has been added (DEPRECATED).</p>
-<p class="description"><p>* Clears any postdata that has been added (DEPRECATED).    *    * Useful for multiple request scenarios.    *    * @access public    * @deprecated deprecated since 1.2</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			clearPostData
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methoddetach" id="detach"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">detach</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Removes a Listener from the list of listeners    *    * @param    object   HTTP_Request_Listener instance to detach    * @return   boolean  whether the listener was successfully detached    * @access   public</p>
-<p class="description"><p>* Removes a Listener from the list of listeners    *    * @param    object   HTTP_Request_Listener instance to detach    * @return   boolean  whether the listener was successfully detached    * @access   public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			detach
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">&$listener</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">&$listener</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methoddisconnect" id="disconnect"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">disconnect</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Disconnect the socket, if connected.</p>
-<p class="description"><p>* Disconnect the socket, if connected. Only useful if using Keep-Alive.     *     * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			disconnect
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodgetResponseBody" id="getResponseBody"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">getResponseBody</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Returns the body of the response    *    * @access public    * @return mixed     response body, false if not set</p>
-<p class="description"><p>* Returns the body of the response    *    * @access public    * @return mixed     response body, false if not set</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getResponseBody
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodgetResponseCode" id="getResponseCode"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">getResponseCode</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Returns the response code    *    * @access public    * @return mixed     Response code, false if not set</p>
-<p class="description"><p>* Returns the response code    *    * @access public    * @return mixed     Response code, false if not set</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getResponseCode
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodgetResponseCookies" id="getResponseCookies"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">getResponseCookies</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Returns cookies set in response    *    * @access public    * @return mixed     array of response cookies, false if none are present</p>
-<p class="description"><p>* Returns cookies set in response    *    * @access public    * @return mixed     array of response cookies, false if none are present</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getResponseCookies
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodgetResponseHeader" id="getResponseHeader"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">getResponseHeader</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Returns either the named header or all if no name given    *    * @access public    * @param string     The header name to return, do not set to get all headers    * @return mixed     either the value of $headername (false if header is not present)    *                   or an array of all headers</p>
-<p class="description"><p>* Returns either the named header or all if no name given    *    * @access public    * @param string     The header name to return, do not set to get all headers    * @return mixed     either the value of $headername (false if header is not present)    *                   or an array of all headers</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getResponseHeader
-		</span>
-					([<span class="var-type"></span>&nbsp;<span class="var-name">$headername</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$headername</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodgetUrl" id="getUrl"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">getUrl</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Returns the current request URL    *    * @return   string  Current request URL    * @access   public</p>
-<p class="description"><p>* Returns the current request URL    *    * @return   string  Current request URL    * @access   public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			getUrl
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$url</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodremoveHeader" id="removeHeader"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">removeHeader</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Removes a request header    *    * @param string     Header name to remove    * @access public</p>
-<p class="description"><p>* Removes a request header    *    * @param string     Header name to remove    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			removeHeader
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodreset" id="reset"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">reset</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Resets the object to its initial state (DEPRECATED).</p>
-<p class="description"><p>* Resets the object to its initial state (DEPRECATED).    * Takes the same parameters as the constructor.    *    * @param  string $url    The url to be requested    * @param  array  $params Associative array of parameters    *                        (see constructor for details)    * @access public    * @deprecated deprecated since 1.2, call the constructor if this is necessary</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			reset
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$url</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$params</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsendRequest" id="sendRequest"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">sendRequest</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sends the request    *    * @access public    * @param  bool   Whether to store response body in Response object property,    *                set this to false if downloading a LARGE file and using a Listener    * @return mixed  PEAR error on error, true otherwise</p>
-<p class="description"><p>* Sends the request    *    * @access public    * @param  bool   Whether to store response body in Response object property,    *                set this to false if downloading a LARGE file and using a Listener    * @return mixed  PEAR error on error, true otherwise</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			sendRequest
-		</span>
-					([<span class="var-type"></span>&nbsp;<span class="var-name">$saveBody</span> = <span class="var-default">true</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$saveBody</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetBasicAuth" id="setBasicAuth"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">setBasicAuth</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets basic authentication parameters    *    * @param string     Username    * @param string     Password</p>
-<p class="description"><p>* Sets basic authentication parameters    *    * @param string     Username    * @param string     Password</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setBasicAuth
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$user</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pass</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$pass</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetBody" id="setBody"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">setBody</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets the request body (for POST, PUT and similar requests)    *    * @param    string  Request body    * @access   public</p>
-<p class="description"><p>* Sets the request body (for POST, PUT and similar requests)    *    * @param    string  Request body    * @access   public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setBody
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$body</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$body</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetHttpVer" id="setHttpVer"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">setHttpVer</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets the HTTP version to use, 1.</p>
-<p class="description"><p>* Sets the HTTP version to use, 1.0 or 1.1    *    * @param string     Version to use. Use the defined constants for this    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setHttpVer
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$http</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$http</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetMethod" id="setMethod"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">setMethod</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets the method to be used, GET, POST etc.</p>
-<p class="description"><p>* Sets the method to be used, GET, POST etc.    *    * @param string     Method to use. Use the defined constants for this    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setMethod
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$method</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$method</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetProxy" id="setProxy"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">setProxy</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets a proxy to be used    *    * @param string     Proxy host    * @param int        Proxy port    * @param string     Proxy username    * @param string     Proxy password    * @access public</p>
-<p class="description"><p>* Sets a proxy to be used    *    * @param string     Proxy host    * @param int        Proxy port    * @param string     Proxy username    * @param string     Proxy password    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setProxy
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$host</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$port</span> = <span class="var-default">8080</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$user</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$pass</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$host</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$port</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$user</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$pass</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetURL" id="setURL"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">setURL</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Sets the URL to be requested    *    * @param  string The url to be requested    * @access public</p>
-<p class="description"><p>* Sets the URL to be requested    *    * @param  string The url to be requested    * @access public</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setURL
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$url</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_arrayMapRecursive" id="_arrayMapRecursive"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_arrayMapRecursive</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Recursively applies the callback function to the value    *    * @param    mixed   Callback function    * @param    mixed   Value to process    * @access   private    * @return   mixed   Processed value</p>
-<p class="description"><p>* Recursively applies the callback function to the value    *    * @param    mixed   Callback function    * @param    mixed   Value to process    * @access   private    * @return   mixed   Processed value</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_arrayMapRecursive
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$callback</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$callback</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$value</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_buildRequest" id="_buildRequest"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">_buildRequest</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Builds the request string    *    * @access private    * @return string The request string</p>
-<p class="description"><p>* Builds the request string    *    * @access private    * @return string The request string</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_buildRequest
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="method_flattenArray" id="_flattenArray"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_flattenArray</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Helper function to change the (probably multidimensional) associative array    * into the simple one.</p>
-<p class="description"><p>* Helper function to change the (probably multidimensional) associative array    * into the simple one.    *    * @param    string  name for item    * @param    mixed   item's values    * @return   array   array with the following items: array('item name', 'item value');</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_flattenArray
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$name</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$values</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$name</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$values</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_generateHostHeader" id="_generateHostHeader"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">_generateHostHeader</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Generates a Host header for HTTP/1.</p>
-<p class="description"><p>* Generates a Host header for HTTP/1.1 requests    *    * @access private    * @return string</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_generateHostHeader
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="method_notify" id="_notify"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_notify</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Notifies all registered listeners of an event.</p>
-<p class="description"><p>* Notifies all registered listeners of an event.    *    * Events sent by HTTP_Request object    * - 'connect': on connection to server    * - 'sentRequest': after the request was sent    * - 'disconnect': on disconnection from server    *    * Events sent by HTTP_Response object    * - 'gotHeaders': after receiving response headers (headers are passed in $data)    * - 'tick': on receiving a part of response body (the part is passed in $data)    * - 'gzTick': on receiving a gzip-encoded part of response body (ditto)    * - 'gotBody': after receiving the response body (passes the decoded body in $data if it was gzipped)    *    * @param    string  Event name    * @param    mixed   Additional data    * @access   private</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_notify
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$event</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$event</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$data</span>			</li>
-				</ul>
-		
-			
-	</div>
-						
-		</div>
-	</div>
-
-
-	<p class="notes" id="credit">
-		Documentation generated on Tue, 13 Nov 2007 20:48:23 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
-	</p>
-	</div></body>
-</html>

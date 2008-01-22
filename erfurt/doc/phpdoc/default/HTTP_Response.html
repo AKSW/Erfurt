@@ -1,554 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class HTTP_Response</title>
-			<link rel="stylesheet" href="../media/stylesheet.css" />
-			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
-		</head>
-		<body>
-			<div class="page-body">			
-<h2 class="class-name">Class HTTP_Response</h2>
-
-<a name="sec-description"></a>
-<div class="info-box">
-	<div class="info-box-title">Description</div>
-	<div class="nav-bar">
-					<span class="disabled">Description</span> |
-													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-						
-					</div>
-	<div class="info-box-body">
-        		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Response class to complement the Request class</p>
-<p class="description"><p>* Response class to complement the Request class</p></p>
-		<p class="notes">
-			Located in <a class="field" href="_Reasoning---DIG1_1---pear---HTTP_Request.php.html">/Reasoning/DIG1_1/pear/HTTP_Request.php</a> (line <span class="field">1</span>)
-		</p>
-		
-				
-		<pre></pre>
-	
-			</div>
-</div>
-
-
-
-	<a name="sec-var-summary"></a>
-	<div class="info-box">
-		<div class="info-box-title">Variable Summary</span></div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
-							| 
-									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-								</div>
-		<div class="info-box-body">
-			<div class="var-summary">
-																																																																																								<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_body" title="details" class="var-name">$_body</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_chunkLength" title="details" class="var-name">$_chunkLength</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_code" title="details" class="var-name">$_code</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_cookies" title="details" class="var-name">$_cookies</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_headers" title="details" class="var-name">$_headers</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_listeners" title="details" class="var-name">$_listeners</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_protocol" title="details" class="var-name">$_protocol</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_sock" title="details" class="var-name">$_sock</a>
-				</div>
-																<div class="var-title">
-					<span class="var-type">mixed</span>
-					<a href="#$_toRead" title="details" class="var-name">$_toRead</a>
-				</div>
-											</div>
-		</div>
-	</div>
-
-	<a name="sec-method-summary"></a>
-	<div class="info-box">
-		<div class="info-box-title">Method Summary</span></div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-				 
-				|
-						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
-		</div>
-		<div class="info-box-body">			
-			<div class="method-summary">
-																																																												
-												<div class="method-definition">
-											<span class="method-result">HTTP_Response</span>
-										<a href="#HTTP_Response" title="details" class="method-name">HTTP_Response</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">&$sock</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$listeners</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#process" title="details" class="method-name">process</a>
-											([<span class="var-type"></span>&nbsp;<span class="var-name">$saveBody</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$canHaveBody</span> = <span class="var-default">true</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_decodeGzip" title="details" class="method-name">_decodeGzip</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$data</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_notify" title="details" class="method-name">_notify</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$event</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">null</span>])
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_parseCookie" title="details" class="method-name">_parseCookie</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$headervalue</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_processHeader" title="details" class="method-name">_processHeader</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$header</span>)
-									</div>
-																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#_readChunked" title="details" class="method-name">_readChunked</a>
-										()
-									</div>
-								</div>
-		</div>
-	</div>		
-
-	<a name="sec-vars"></a>
-	<div class="info-box">
-		<div class="info-box-title">Variables</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
-						
-			
-										| 
-									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-					</div>
-		<div class="info-box-body">
-			<a name="var$_body" id="$_body"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_body</span>
-			 = <span class="var-default"> ''</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Response body    * @var string</p>
-<p class="description"><p>* Response body    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_chunkLength" id="$_chunkLength"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_chunkLength</span>
-			 = <span class="var-default"> 0</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Used by _readChunked(): remaining length of the current chunk    * @var string</p>
-<p class="description"><p>* Used by _readChunked(): remaining length of the current chunk    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_code" id="$_code"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_code</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Return code    * @var string</p>
-<p class="description"><p>* Return code    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_cookies" id="$_cookies"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_cookies</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Cookies set in response    * @var array</p>
-<p class="description"><p>* Cookies set in response    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_headers" id="$_headers"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_headers</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Response headers    * @var array</p>
-<p class="description"><p>* Response headers    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_listeners" id="$_listeners"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_listeners</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Attached listeners    * @var array</p>
-<p class="description"><p>* Attached listeners    * @var array</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_protocol" id="$_protocol"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_protocol</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Protocol    * @var string</p>
-<p class="description"><p>* Protocol    * @var string</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_sock" id="$_sock"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_sock</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Socket object    * @var object</p>
-<p class="description"><p>* Socket object    * @var object</p></p>
-	
-	
-		
-		
-
-</div>
-<a name="var$_toRead" id="$_toRead"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_toRead</span>
-						(line <span class="line-number">1</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Bytes left to read from message-body    * @var null|int</p>
-<p class="description"><p>* Bytes left to read from message-body    * @var null|int</p></p>
-	
-	
-		
-		
-
-</div>
-						
-		</div>
-	</div>
-	
-	<a name="sec-methods"></a>
-	<div class="info-box">
-		<div class="info-box-title">Methods</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
-						
-		</div>
-		<div class="info-box-body">
-			<A NAME='method_detail'></A>
-
-<a name="methodHTTP_Response" id="HTTP_Response"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">Constructor HTTP_Response</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Constructor    *    * @param  object Net_Socket     socket to read the response from    * @param  array                 listeners attached to request    * @return mixed PEAR Error on error, true otherwise</p>
-<p class="description"><p>* Constructor    *    * @param  object Net_Socket     socket to read the response from    * @param  array                 listeners attached to request    * @return mixed PEAR Error on error, true otherwise</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">HTTP_Response</span>
-		<span class="method-name">
-			HTTP_Response
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">&$sock</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$listeners</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">&$sock</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">&$listeners</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodprocess" id="process"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">process</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Processes a HTTP response    *    * This extracts response code, headers, cookies and decodes body if it    * was encoded in some way    *    * @access public    * @param  bool      Whether to store response body in object property, set    *                   this to false if downloading a LARGE file and using a Listener.</p>
-<p class="description"><p>* Processes a HTTP response    *    * This extracts response code, headers, cookies and decodes body if it    * was encoded in some way    *    * @access public    * @param  bool      Whether to store response body in object property, set    *                   this to false if downloading a LARGE file and using a Listener.    *                   This is assumed to be true if body is gzip-encoded.    * @param  bool      Whether the response can actually have a message-body.    *                   Will be set to false for HEAD requests.    * @throws PEAR_Error    * @return mixed     true on success, PEAR_Error in case of malformed response</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			process
-		</span>
-					([<span class="var-type"></span>&nbsp;<span class="var-name">$saveBody</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$canHaveBody</span> = <span class="var-default">true</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$saveBody</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$canHaveBody</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_decodeGzip" id="_decodeGzip"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_decodeGzip</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Decodes the message-body encoded by gzip    *    * The real decoding work is done by gzinflate() built-in function, this    * method only parses the header and checks data for compliance with    * RFC 1952    *    * @access   private    * @param    string  gzip-encoded data    * @return   string  decoded data</p>
-<p class="description"><p>* Decodes the message-body encoded by gzip    *    * The real decoding work is done by gzinflate() built-in function, this    * method only parses the header and checks data for compliance with    * RFC 1952    *    * @access   private    * @param    string  gzip-encoded data    * @return   string  decoded data</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_decodeGzip
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$data</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$data</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_notify" id="_notify"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">_notify</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Notifies all registered listeners of an event.</p>
-<p class="description"><p>* Notifies all registered listeners of an event.    *    * @param    string  Event name    * @param    mixed   Additional data    * @access   private    * @see HTTP_Request::_notify()</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_notify
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$event</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$event</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$data</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_parseCookie" id="_parseCookie"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_parseCookie</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Parse a Set-Cookie header to fill $_cookies array    *    * @access private    * @param  string    value of Set-Cookie header</p>
-<p class="description"><p>* Parse a Set-Cookie header to fill $_cookies array    *    * @access private    * @param  string    value of Set-Cookie header</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_parseCookie
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$headervalue</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$headervalue</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_processHeader" id="_processHeader"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">_processHeader</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Processes the response header    *    * @access private    * @param  string    HTTP header</p>
-<p class="description"><p>* Processes the response header    *    * @access private    * @param  string    HTTP header</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_processHeader
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$header</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$header</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_readChunked" id="_readChunked"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">_readChunked</span> (line <span class="line-number">1</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">* Read a part of response body encoded with chunked Transfer-Encoding    *    * @access private    * @return string</p>
-<p class="description"><p>* Read a part of response body encoded with chunked Transfer-Encoding    *    * @access private    * @return string</p></p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			_readChunked
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-						
-		</div>
-	</div>
-
-
-	<p class="notes" id="credit">
-		Documentation generated on Tue, 13 Nov 2007 20:48:23 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
-	</p>
-	</div></body>
-</html>
