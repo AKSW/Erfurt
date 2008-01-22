@@ -1,0 +1,31 @@
+/* Banner (top bar) classes */
+body {
+
+	margin: 0px;
+	padding: 0px;
+}
+
+.banner {  
+}
+
+.banner-menu { 
+
+	border-top: 1px solid #ccc;	
+}
+
+
+
+.banner-title 
+{ 
+	text-align: left; 
+	font-size: 14pt; 
+	font-weight: bold; 
+	margin: .2em;
+}
+
+.package-selector 
+{ 
+	background-color: #AAAADD; 
+	border: 1px solid black; 
+	color: yellow;
+}
