@@ -12,49 +12,51 @@ require_once 'HTTP/WebDAV/Server.php';
 class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	
 	/**
-	 * Enter description here...
+	 * Storing Instance of Erfurt_App_Default
 	 *
 	 * @var unknown_type
 	 */
 	private $erfurt;
 	
 	/**
-	 * Enter description here...
+	 * Storing recent path as array
 	 *
 	 * @var unknown_type
 	 */
 	private $arPath;
 	
 	/**
-	 * Enter description here...
+	 * Storing recent path as string
 	 *
 	 * @var unknown_type
 	 */
 	private $strPath;
 	
 	/**
-	 * Enter description here...
-	 *
+	 * For storing all allowed models
+	 * 
 	 * @var unknown_type
 	 */
 	private $arModels;
 	
 	/**
-	 * Enter description here...
+	 * (obsolete)
 	 *
 	 * @var unknown_type
 	 */
 	private $arFiles;
 	
 	/**
-	 * Enter description here...
+	 * Stores instance of currently selected model to browse
+	 * through
 	 *
 	 * @var unknown_type
 	 */
 	private $selectedModel;
 	
 	/**
-	 * Enter description here...
+	 * Contructor for this class, sets attributes correctly for following
+	 * operations
 	 *
 	 * @param unknown_type $config
 	 */
@@ -87,7 +89,7 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Overwrites same Method in super class adding further functionality
 	 *
 	 */
 	public function ServeRequest() {
@@ -97,7 +99,7 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 
 	/**
-	 * Enter description here...
+	 * Implmentation of PUT-Command for WebDAV
 	 *
 	 * @param unknown_type $options
 	 * @param unknown_type $files
@@ -121,7 +123,7 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Implmentation of GET-Command for WebDAV
 	 *
 	 * @param unknown_type $options
 	 * @param unknown_type $files
@@ -152,7 +154,7 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Implmentation of PROPFIND-Command for WebDAV
 	 *
 	 * @param unknown_type $options
 	 * @param unknown_type $files
@@ -194,10 +196,12 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Creates Array to add directory to special $files array of WebDAV Class
 	 *
 	 * @param unknown_type $path
 	 * @param unknown_type $name
+	 * 
+	 * @return string serialized Resource in expected format
 	 */
 	private function addDirectory($path, $name = null) {
 		$arDirectory = array();
@@ -216,7 +220,7 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Creates Array to add file to special $files array of WebDAV Class
 	 *
 	 */
 	private function addFile($path, $name = null, $mime = 'unknown', $size = 0) {
@@ -234,9 +238,11 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Method for browsing in Classes-tree inside a model
 	 *
-	 * @param unknown_type $subPath
+	 * @param array $subPath
+	 * 
+	 * @return array files formatted as needed by HTTP_WebDAV_Server Class
 	 */
 	private function handleClasses($subPath) {
 		
@@ -270,9 +276,11 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Method for browsing in Resource-tree inside a model
 	 *
-	 * @param unknown_type $subPath
+	 * @param array $subPath
+	 * 
+	 * @return array files formatted as needed by HTTP_WebDAV_Server Class
 	 */
 	private function handleResources($subPath) {
 		
@@ -323,10 +331,10 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Exports given Resource from Erfurt to n3 or rdf
 	 *
-	 * @param unknown_type $resUri
-	 * @param unknown_type $fileType
+	 * @param string $resUri
+	 * @param string $fileType ( 'n3' | 'rdf' )
 	 */
 	private function fileExport($resUri,$fileType) {
 		
@@ -359,6 +367,23 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 			
 		}
 			
+	}
+	
+	/**
+	 * Authenticate User for further Access Control inside Erfurt_App_Default
+	 *
+	 * @param string $type
+	 * @param string $user
+	 * @param string $passwd
+	 * @return boolean true if successful false else
+	 */
+	public function check_auth($type = 'Basic', $user, $passwd) {
+		
+		if ($user != '') {
+			return $this -> erfurt -> authenticate($user,$passwd);
+		}
+		
+		return true;
 	}
 
 }
