@@ -139,7 +139,7 @@ class Erfurt_Rdfs_Instance_Default extends Erfurt_Rdfs_Resource_Default {
 			if (method_exists($prop, 'isObjectProperty') && $prop->isObjectProperty()) {
 				$value = $this->model->resourceF($value);
 			} else {
-				if (isBnode($range) || !$range) {
+				if ($this->isBlankNode($range) || !$range) {
 					$value = new Literal($value);
 				} else {
 					$value = new Literal($value, '', $range->getURI());
