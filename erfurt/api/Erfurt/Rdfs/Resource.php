@@ -27,7 +27,7 @@ interface Erfurt_Rdfs_Resource {
 	 * @param Erfurt_Rdfs_Resource $that
 	 * @return	boolean
 	 */
-	public function equals(Erfurt_Rdfs_Resource $that);
+	public function equals($that);
 	
 	/**
 	 * Returns an RDFSClass this instance is an instance of.
