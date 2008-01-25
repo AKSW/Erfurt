@@ -257,17 +257,17 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		
 		$ns = $this->getNamespace();
 		
-		// if namespace equals base uri return only localname
-		if ($ns === $this->getModel()->getBaseURI()) {
-			return $this->getLocalName();
-		}
-		
 		$namespaces = $this->getModel()->getParsedNamespaces();
 		foreach ($namespaces as $ns_uri => $prefix) {
 			if ($ns_uri === $ns) {
 				$uri = $this->getURI();
 				return str_replace($ns, $prefix.':', $uri);
 			}
+		}
+		
+		// if namespace equals base uri return only localname
+		if ($ns === $this->getModel()->getBaseURI()) {
+			return $this->getLocalName();
 		}
 		
 		// add namespace or return uri ???!!! cheack with seebi and norman
