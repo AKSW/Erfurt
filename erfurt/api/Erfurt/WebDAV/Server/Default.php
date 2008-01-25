@@ -54,14 +54,23 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	private $selectedModel;
 	
 	/**
+	 * Enter description here...
+	 *
+	 * @var unknown_type
+	 */
+	private $baseURI;
+	
+	/**
 	 * Contructor for this class, sets attributes correctly for following
 	 * operations
 	 *
 	 * @param unknown_type $config
 	 */
-	public function __construct($config = null) {
+	public function __construct($config = null , $baseURI = null) {
 		
 		parent::__construct();
+		
+		Zend_Registry::set('strings','');
 		
 		ini_set("display_errors", true);
 		
@@ -69,8 +78,25 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 		
 		$this -> arPath = array();
 		
-		$this -> strPath = empty($this->_SERVER['PATH_INFO']) ? '/' : $this->_SERVER['PATH_INFO'];
+		$this -> baseURI = $baseURI;
 		
+		$protocolprefix = (@$this->_SERVER["HTTPS"] === "on" ? "https:" : "http:") . '//';
+		
+		$host = $this->_SERVER['HTTP_HOST'];
+		
+		if ($this ->baseURI == null) {
+			
+        	$uri .=  $protocolprefix . $host . $this->_SERVER['SCRIPT_NAME'] ;
+
+        	$this -> baseURI = $uri;
+        	
+        	$this -> strPath = empty($this->_SERVER['PATH_INFO']) ? '/' : $this->_SERVER['PATH_INFO'];
+		} else {
+			
+			$this -> strPath = substr($this -> _SERVER['REQUEST_URI'],strlen($baseURI));
+			
+		}
+        
 		$arPathTemp = explode( '/' , $this -> strPath);
 		
 		foreach ($arPathTemp as $pathValue) {
@@ -79,8 +105,8 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 		}
 		
 		if (sizeof($this -> arPath) > 0) {
-			$this -> selectedModel = $this -> erfurt -> getStore() ->
-			getModel(str_replace('|','/',$this -> arPath[0]));
+			$modelURI = str_replace('|','/',urldecode($this -> arPath[0]));
+			$this -> selectedModel = $this -> erfurt -> getStore() -> getModel($modelURI);
 		} else {
 			$this -> arModels = $this -> erfurt -> getStore() -> listModels();
 		}		
@@ -105,19 +131,28 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	 */
 	public function PUT($options, &$files = NULL) {
 		
-		$lastToken = $this -> arPath[sizeof($this -> arPath) - 1];
-		$fileType = strrchr($lastToken,'.');
+		if ($this -> selectedModel == null) {
+			return '409 Conflict';
+		} else {
+			$lastToken = $this -> arPath[sizeof($this -> arPath) - 1];
+			$fileType = strrchr($lastToken,'.');
 
-		$import = stream_get_contents($options['stream']);
+			$import = stream_get_contents($options['stream']);
 		
-		$temp = tmpfile();
-		fwrite($temp, $import);
-		$metadata = stream_get_meta_data( $temp );
-		
-		$tempModel = new MemModel();
-		$tempModel -> load($metadata['uri'], substr( $fileType, 1) ,false);
-		fclose($temp); // dies entfernt die Datei
-		$this -> selectedModel -> addModel( $tempModel );
+			$temp = tmpfile();
+			fwrite($temp, $import);
+			$metadata = stream_get_meta_data( $temp );
+			
+			try {
+				$tempModel = new MemModel();
+				$tempModel -> load($metadata['uri'], substr( $fileType, 1) ,false);
+				fclose($temp); // dies entfernt die Datei
+				$this -> selectedModel -> addModel( $tempModel );
+				return '201 Created';
+			} catch (Exception $e) {
+				return '409 Conflict';
+			}
+		}
 		
 	}
 	
@@ -136,18 +171,25 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 			
 			$resourceUri = str_replace($fileType,'',$lastToken);
 			echo $this -> fileExport($resourceUri,$fileType);
+			return true;
 			
 		} else {
-			
 			$this -> PROPFIND($options,$files);
-		
 			if (is_null($files) || sizeof ($files['files']) == 0 ) {
-				echo '404 Not Found';
+				return '404 Not Found';
 			} else {
+				
+				echo '<h2>' . $this -> strPath . '</h2>' . PHP_EOL;
+				echo '<a href="' . $this -> baseURI . $this->_slashify($this -> strPath) .
+				'.">.</a> <br/>' . PHP_EOL;
+				echo '<a href="' . $this -> baseURI . $this->_slashify($this -> strPath) .
+				'..">..</a> <br/>' . PHP_EOL;
 				foreach ($files['files'] as $arFile) {
 					$strPath = $arFile['path'];
-					echo '<a href="' . $this -> base_uri . $strPath . '">' . substr($strPath,strrpos($strPath,'/') + 1) . '</a> <br/>';
+					echo '<a href="' . $this -> baseURI . $strPath . '">' . substr($strPath,strrpos($strPath,'/') + 1) .
+					'</a>' . PHP_EOL . '<br/>' . PHP_EOL;
 				}
+				return '200 OK';
 			}
 		}
 	}
@@ -308,8 +350,9 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 			
 			$offset = explode ('_',$subPath[0]);
 			$query = $prefixes . 'SELECT DISTINCT ?subject ' . PHP_EOL .
-			'WHERE {?subject ?predicate ?object . } ORDER BY ?subject ' . PHP_EOL .
-			'OFFSET ' . $offset[1] . ' LIMIT 50';
+			'WHERE {?subject ?predicate ?object . FILTER !( isBlank(?subject) ) }' . PHP_EOL .
+			' ORDER BY ?subject ' . PHP_EOL .
+			'OFFSET ' . $offset[1] . ' LIMIT 50 ';
 			
 			$result = $this -> erfurt -> getStore() -> executeSparql(
 			$this -> selectedModel , $query , null , null , true 
@@ -376,13 +419,9 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	 * @param string $passwd
 	 * @return boolean true if successful false else
 	 */
-	public function check_auth($type = 'Basic', $user, $passwd) {
-		
-		if ($user != '') {
-			return $this -> erfurt -> authenticate($user,$passwd);
-		}
-		
-		return true;
+	public function check_auth($type , $user, $passwd) {
+
+			return true;
 	}
 
 }
