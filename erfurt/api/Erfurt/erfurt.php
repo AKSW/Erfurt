@@ -237,5 +237,5 @@ Zend_Registry::set('pluginManager', $pluginManager);
 #include_once(WIDGETS_INCLUDE_DIR.'node.php');
 #include_once(WIDGETS_INCLUDE_DIR.'file.php');
 
-require_once('constants.php');
+require_once(ERFURT_BASE.'constants.php');
 ?>
