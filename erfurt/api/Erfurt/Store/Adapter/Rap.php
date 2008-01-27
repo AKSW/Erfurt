@@ -44,8 +44,155 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function createTables() {
-// TODO check for different backends
-		$this->_createTables_MySql();
+		
+		$driver = strtolower($this->dbDriver);
+		switch($driver) {
+			case 'mysql':
+			case 'mysqli':
+				$this->_createTables_MySql();
+				break;
+			case: 'oracle':
+				$this->_createTables_Oracle();
+				break;
+			default:
+				// TODO throw an exception
+				$this->_createTables_MySql();
+				break;
+		}
+	}
+	
+	public function _createTables_Oracle() {
+		 
+		$this->dbConn->startTrans();
+		
+		// table: models
+		$this->dbConn->execute("CREATE TABLE models (
+									modelID INT,
+									modelURI VARCHAR(255) NOT NULL,
+									baseURI VARCHAR(255) DEFAULT '' NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE models ADD
+									CONSTRAINT pk_models
+									PRIMARY KEY(modelID)
+									USING INDEX COMPUTE STATISTICS;");
+								
+		// table: statements	
+		$this->dbConn->execute("CREATE TABLE statements (
+									id INT,
+									modelID INT NOT NULL,
+									subject VARCHAR2(255) NOT NULL,
+									predicate VARCHAR2(255) NOT NULL,
+									object CLOB,
+									l_language CHAR(2) DEFAULT '',
+									l_datatype VARCHAR2(255) DEFAULT '',
+									subject_is char(1) NOT NULL,
+									object_is  char(1) NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE statements ADD
+									CONSTRAINT pk_statements
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+		
+		// table: namespaces
+		$this->dbConn->execute("CREATE TABLE namespaces (
+									modelID int NOT NULL,
+									namespace varchar2(255) NOT NULL,
+									prefix varchar2(255) NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE namespaces ADD
+									CONSTRAINT pk_namespaces
+									PRIMARY KEY(modelID,namespace)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: popularity
+		$this->dbConn->execute("CREATE TABLE popularity (
+									id INT,
+									ef_date DATE NOT NULL,
+									modelID INT NOT NULL,
+									uri VARCHAR2(255) NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE popularity ADD
+									CONSTRAINT pk_popularity
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: ratings
+		$this->dbConn->execute("CREATE TABLE ratings (
+									id INT,
+									modelID INT NOT NULL,
+									ef_user VARCHAR2(255) NOT NULL,
+									ef_resource VARCHAR2(255) NOT NULL,
+									rating DECIMAL(1,0) NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE ratings ADD
+									CONSTRAINT pk_ratings
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: cache
+		$this->dbConn->execute("CREATE TABLE cache (
+									id INT,
+									trigger1 VARCHAR2(255) NOT NULL,
+									trigger2 VARCHAR2(255) NOT NULL,
+									trigger3 VARCHAR2(255) NOT NULL,
+									function VARCHAR2(255) NOT NULL,
+									args VARCHAR2(255) NOT NULL,
+									model INT default '0' NOT NULL,
+									ef_resource VARCHAR2(255) NOT NULL,
+									value CLOB NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE cache ADD
+									CONSTRAINT pk_cache
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: log_statements
+		$this->dbConn->execute("CREATE TABLE log_statements (
+									id INT,
+									subject VARCHAR2(255) NOT NULL,
+									predicate VARCHAR2(255) NOT NULL,
+									object CLOB,
+									l_language CHAR(2) DEFAULT '',
+									l_datatype VARCHAR2(255) DEFAULT '',
+									subject_is VARCHAR2(1) NOT NULL,
+									object_is  VARCHAR2(1) NOT NULL,
+									ar CHAR(1) NOT NULL,
+									action_id INT NOT NULL);");
+
+		$this->dbConn->execute("ALTER TABLE log_statements ADD
+									CONSTRAINT pk_log_statements
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: log_actions
+		$this->dbConn->execute("CREATE TABLE log_actions (
+									id INT,
+									parent_id INT,
+									model_id INT NOT NULL,
+									ef_user VARCHAR2(255) NOT NULL,
+									ef_date DATE NOT NULL,
+									descr_id INT NOT NULL,
+									subject VARCHAR2(255),
+									details CLOB);");
+
+		$this->dbConn->execute("ALTER TABLE log_actions ADD
+									CONSTRAINT pk_log_actions
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+
+		// table: log_action_descr
+		$this->dbConn->execute("CREATE TABLE log_action_descr (
+									id INT,
+									description VARCHAR2(255) NOT NULL);");
+									
+		$this->dbConn->execute("ALTER TABLE log_action_descr ADD
+									CONSTRAINT pk_log_actions_descr
+									PRIMARY KEY(id)
+									USING INDEX COMPUTE STATISTICS;");
+		
+		if (!$this->dbConn->completeTrans()) {
+			echo $this->dbConn->errorMsg();
+		}
 	}
 
 	/**
