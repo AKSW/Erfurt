@@ -51,7 +51,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			case 'mysqli':
 				$this->_createTables_MySql();
 				break;
-			case: 'oracle':
+			case 'oracle':
 				$this->_createTables_Oracle();
 				break;
 			default:
