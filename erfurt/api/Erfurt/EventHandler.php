@@ -18,7 +18,7 @@ class Erfurt_EventHandler {
     private $_autoincr = 100;
     private $_erfurt = null;
     private $_pluginManager = null;
-    public $currentEventname = false;
+    public $eventTraceState = array();
 
     public function __construct($o) {
         $this->_erfurt = $o;
@@ -38,8 +38,8 @@ class Erfurt_EventHandler {
  	 */
     public function trigger($eventname, $attribute) {
         
-        # save current event name
-        $this->currentEventname = $eventname;
+        # add current event to trace and include running id
+        $this->eventTraceState[$eventname] = count($this->eventTraceState);
         
         # prepare ordered function list for event
         $list = $this->_prepare($eventname);
@@ -64,8 +64,8 @@ class Erfurt_EventHandler {
             eval('$response = $this->_classes[$class]->'.$method.'($attribute);');
         }
         
-        # delete current eventname
-        $this->currentEventname = false;
+        # delete current event from trace
+        unset($this->eventTraceState[$eventname]);
         
         return $response;
         
