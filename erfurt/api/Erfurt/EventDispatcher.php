@@ -1,6 +1,6 @@
 <?php
 /**
- * Erfurt EventHandler
+ * Erfurt EventDispatcher
  *
  * Provides functionality to announce methods/functions to named events,
  * announced methods will be started when the event is triggered. Methods can
@@ -10,7 +10,7 @@
  * @author  Michael Haschke
  * @version $Id$
  */
-class Erfurt_EventHandler {
+class Erfurt_EventDispatcher {
     
     private $_events = array();
     private $_autoid = array();
@@ -25,7 +25,7 @@ class Erfurt_EventHandler {
     }
     
 	/**
-	 * Erfurt_EventHandler::trigger()
+	 * Erfurt_EventDispatcher::trigger()
 	 *
 	 * @param String    $eventname  name of triggered event
  	 * @param Pointer   $attribute  Pointer to one var
@@ -72,7 +72,7 @@ class Erfurt_EventHandler {
     }
     
 	/**
-	 * Erfurt_EventHandler::announce()
+	 * Erfurt_EventDispatcher::announce()
 	 * announce a function to a named event
 	 *
 	 * @param String    $eventname      name of triggered event
@@ -201,7 +201,7 @@ class Erfurt_EventHandler {
     }
     
 	/**
-	 * Erfurt_EventHandler::reannounce()
+	 * Erfurt_EventDispatcher::reannounce()
 	 * re-announce a function to a named event, parameters are exact the same
 	 * like at announce(). Reannouncements only work with already announced functions.
 	 *
@@ -224,7 +224,7 @@ class Erfurt_EventHandler {
     }
     
 	/**
-	 * Erfurt_EventHandler::isAnnounced()
+	 * Erfurt_EventDispatcher::isAnnounced()
 	 *
 	 * @param String    $eventname      name of triggered event
  	 * @param Mixed     $nameOrPosition function name or position id
@@ -263,7 +263,7 @@ class Erfurt_EventHandler {
     }
     
 	/**
-	 * Erfurt_EventHandler::listAnnounced()
+	 * Erfurt_EventDispatcher::listAnnounced()
 	 *
 	 * @param String    $eventname      name of triggered event
  	 *

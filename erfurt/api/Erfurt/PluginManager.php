@@ -6,7 +6,7 @@
  *
  * @package erfurt
  * @author  Michael Haschke
- * @version $Id: EventHandler.php 1638 2007-11-13 19:53:20Z p_frischmuth $
+ * @version $Id: PluginManager.php 1638 2007-11-13 19:53:20Z p_frischmuth $
  */
 class Erfurt_PluginManager {
     
@@ -15,13 +15,13 @@ class Erfurt_PluginManager {
     private $_included = array();
     private $_prepared = array();
     private $_erfurt = null;
-    private $_eh = null;
+    private $_ed = null;
     private $_vars = array();
 
     public function __construct($o) {
     
         $this->_erfurt = $o;
-        $this->_eh = $o->getEventHandler();
+        $this->_ed = $o->getEventDispatcher();
     
     }
     
@@ -137,7 +137,7 @@ class Erfurt_PluginManager {
                                 $this->_classRelations[$class.'::'.$method] = $namespace;
                                 
                                 # announce method to event
-                                $this->_eh->announce($event,$class.'::'.$method);
+                                $this->_ed->announce($event,$class.'::'.$method);
                                 
                             }
                     }

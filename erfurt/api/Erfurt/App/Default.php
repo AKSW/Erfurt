@@ -52,7 +52,7 @@ class Erfurt_App_Default {
 	 *  
 	 * @var object event handler
 	 */
-	protected $eh = null;
+	protected $ed = null;
 	
 	/**
 	 *  
@@ -73,7 +73,7 @@ class Erfurt_App_Default {
 		}
 		
 		# general object for event handling
-		$this->eh = new Erfurt_EventHandler($this);
+		$this->ed = new Erfurt_EventDispatcher($this);
 		
 		# init plugin manager 
 		$this->pluginManager = new Erfurt_PluginManager($this);
@@ -301,10 +301,10 @@ class Erfurt_App_Default {
 	}
 	
 	/**
-	 * returns the event handler
+	 * returns the event dispatcher
 	 */
-	public function getEventHandler() {
-        return $this->eh;
+	public function getEventDispatcher() {
+        return $this->ed;
 	}
 	
 	/**
