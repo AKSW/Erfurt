@@ -420,8 +420,13 @@ class Erfurt_WebDAV_Server_Default extends HTTP_WebDAV_Server {
 	 * @return boolean true if successful false else
 	 */
 	public function check_auth($type , $user, $passwd) {
-
-			return true;
+		
+			if ($user != null) {
+				$this -> erfurt -> authenticate($user,$password);
+				return true;
+			} else {
+				return true;
+			}
 	}
 
 }
