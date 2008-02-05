@@ -1,14 +1,14 @@
 <?php
 
 /**
-  * Abstract base class for all Erfurt widget plug-ins. 
+  * Abstract base class for all Erfurt plugin widgets. 
   *
-  * @package plugin
-  * @subpackage widget
+  * @package widget
+  * @subpackage plugin
   * @author Norman Heino <norman.heino@googlemail.com>
   * @version $Id$
   */
-abstract class Erfurt_Plugin_Widget extends Erfurt_Plugin {
+abstract class Erfurt_Plugin_Widget extends Erfurt_Widget {
 	
 	/**
 	  * @var URL reference to the widget base directory
