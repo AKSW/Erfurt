@@ -1,11 +1,13 @@
 <?php
 /**
- * Erfurt EventDispatcher
+ * Erfurt Event Dispatcher
  *
  * Provides functionality to announce methods/functions to named events,
  * announced methods will be started when the event is triggered. Methods can
  * be ranked in position.
  *
+ * @package plugin
+ * @package events
  * @package erfurt
  * @author  Michael Haschke
  * @version $Id$
@@ -48,26 +50,41 @@ class Erfurt_EventDispatcher {
         $response = true;
         foreach ($list as $function) {
         
-            # prepare class and function
+            # get pm object
             if ($this->_pluginManager === null) $this->_pluginManager = $this->_erfurt->getPluginManager();
-            $this->_pluginManager->prepare($function);
-            
+
             $classMethod = explode('::',$function);
             $class = $classMethod[0];
             $method = $classMethod[1];
-            
-            # check for object, create object
-            if (!isset($this->_classes[$class]))
-                eval('$this->_classes[$class] = new '.$class.'($this->_erfurt);');
+
+            # prepare class instance
+            if (isset($this->_classes[$class])) {                               # check for known class instance
+                $classinstance = $this->_classes[$class];
+            }
+            elseif ($classinstance = $this->_pluginManager->prepare($class)) {  # check for plugin class instance
+                $this->_classes[$class] = $classinstance;
+            }
+            elseif ($classinstance = $this->_instanciate($class)) {             # check for other class instance
+                $this->_classes[$class] = $classinstance;
+            }
+            else {  # no available instance for class
+                $classinstance = false;
+            }
 
             # call method
-            eval('$response = $this->_classes[$class]->'.$method.'($attribute);');
+            if ($classinstance !== false) {
+                eval('$response = $classinstance->'.$method.'($attribute);');
+            }
+            else {
+                $response = false;
+                # todo: trigger/log error
+            }
         }
         
         # delete current event from trace
         unset($this->eventTraceState[$eventname]);
-        
-        return $response;
+
+        return $response; # one 'false' feedback destroys whole event chain result
         
     }
     
@@ -281,6 +298,22 @@ class Erfurt_EventDispatcher {
         return $list;
     }
     
+    private function _instanciate($classname) {
+
+        if (false !== include_once($classname.'.php')) {
+            if (class_exists($classname,false)) {
+                return eval('return new '.$classname.'();');
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    
+    }
+
     private function _prepare($eventname) {
         $this->_check($eventname);
     

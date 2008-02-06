@@ -2,20 +2,51 @@
 /**
  * Erfurt Plugin Manager
  *
- * 
+ * Provides methods to initialize and activate plugins founded in a submitted
+ * directory, save their configurations, instanciate their classes by request
+ * and announce plugin methods to event dispatcher as subscriber/listener.
  *
+ * @package plugin
  * @package erfurt
  * @author  Michael Haschke
  * @version $Id: PluginManager.php 1638 2007-11-13 19:53:20Z p_frischmuth $
  */
 class Erfurt_PluginManager {
     
-    private $_pluginFolders = array(); # all directories where plugin files and classes may be located
-    private $_classRelations = array();
+	/**
+	 * all directories where plugin files and classes may be located
+	 */																								
+    private $_pluginFolders = array(); 
+
+	/**
+	 * relations between plugin class and plugin "namespace"
+	 * "namespace" = absolute filename of ini-file without extension
+	 */																								
+    private $_relationClassPlugin = array();
+
+	/**
+	 * all directories which were inluded to PHP include path
+	 */																								
     private $_included = array();
-    private $_prepared = array();
+
+	/**
+	 * all previously prepared instances of plugin classes
+	 */																								
+    private $_instances = array();
+
+	/**
+	 * Erfurt App object
+	 */																								
     private $_erfurt = null;
+
+	/**
+	 * EventDispatcher object
+	 */																								
     private $_ed = null;
+
+	/**
+	 * saved vars by magic methods
+	 */																								
     private $_vars = array();
 
     public function __construct($o) {
@@ -41,14 +72,11 @@ class Erfurt_PluginManager {
         # set up a fresh environment
         if ($refresh === true) {
             $this->_pluginFolders = array();
-            $this->_classRelations = array();
+            $this->_relationsClassPlugin = array();
             $this->_included = array();
-            $this->_prepared = array();
+            $this->_instances = array();
         }
     
-        # add folder to include path
-        # set_include_path(get_include_path() . PATH_SEPARATOR . $folder);
-        
         # load plugin configurations
         $this->_loadConfigurations($folder);
         
@@ -60,30 +88,33 @@ class Erfurt_PluginManager {
 	 * Erfurt_PluginManager::prepare()
 	 * prepare system environment for usage of class:method from a plugin
 	 *
-	 * @param String    $classMethod  name of method in class (classname::methodname)
+	 * @param String    $classname  name of plugin class
  	 *
- 	 * @return Bool|Null
- 	 *      o true: success
- 	 *      o false: preparation failed
- 	 *      o null: preparation was already tried before
+ 	 * @return Mixed
+ 	 *      o class object: success
+ 	 *      o bool false: preparation failed
  	 *
  	 * @access public
  	 */
-    public function prepare($classMethod) {
-    
-        if (isset($this->_classRelations[$classMethod])) {      # search for related namespace
-            $namespace = $this->_classRelations[$classMethod];
-            if ($this->_includeFolders($namespace)) {           # include folders related to namespace
-                $this->_prepared[$classMethod] = true;              # mark class::method as prepared
-                unset($this->_classRelations[$classMethod]);        # delete relation to namespace
-                return true;
+    public function prepare($classname) {
+
+        if (isset($this->_instances[$classname])) {                 # class instance available
+            return $this->_instances[$classname];
+        }
+        elseif (isset($this->_relationClassPlugin[$classname])) {   # search for related namespace
+            $namespace = $this->_relationClassPlugin[$classname];
+            if ($this->_includeFolders($namespace)) {               # include folders related to namespace
+                if (false !== $this->_instanciate($classname)) {
+                    # unset($this->_relationClassPlugin[$classname]); # delete relation to namespace
+                    return $this->_instances[$classname];
+                }
+                else {
+                    return false;
+                }
             }
             else {
                 return false;
             }
-        }
-        elseif (isset($this->_prepared[$classMethod])) {
-            return null;
         }
         else {
             return false;
@@ -91,6 +122,60 @@ class Erfurt_PluginManager {
     
     }
     
+	/**
+	 * Erfurt_PluginManager::getPluginRoot()
+	 * returns absolute root dir path of plugin using submitted class
+	 *
+	 * @param String    $classname  name of plugin class
+ 	 *
+ 	 * @return Mixed
+ 	 *      o String: absolute path of plugin root dir
+ 	 *      o Bool false: class not known
+ 	 *
+ 	 * @access public
+ 	 */
+    public function getPluginRoot($classname) {
+        if (isset($this->_relationClassPlugin[$classname])) {
+            $namespace = $this->_relationClassPlugin[$classname];
+            return dirname($namespace);
+        }
+        else {
+            return false;
+        }   
+    }
+    
+    # create instance of class
+    # returns object or false
+    private function _instanciate($classname) {
+
+        if (false !== include_once($classname.'.php')) {
+            if (class_exists($classname,false)) {
+                eval('$this->_instances[$classname] = new '.$classname.'($this->_erfurt);');
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+        
+        # maybe todo: do not use include path but look itself in _pluginFolders[namespace] for php file
+    }
+    
+    
+	/**
+	 * Erfurt_PluginManager::_loadConfigurations()
+	 * read plugin configurations and save information when switch=on
+	 *
+	 * @param String    $folder  plugin dir on server
+ 	 *
+ 	 * @return Bool true after all
+ 	 *      o currently no errors (cannot read config file, etc) are catched
+ 	 *
+ 	 * @access private
+ 	 */
     private function _loadConfigurations($folder) {
     
         # get list of all active plugins
@@ -113,7 +198,8 @@ class Erfurt_PluginManager {
                 if ($pluginConfig->get('folder') !== null) {
                     $tempPluginFolders = $pluginConfig->folder->toArray();
                     foreach ($tempPluginFolders as $folderKey => $folderValue) {
-                        $pluginFolders[$folderKey] = realpath($pluginRoot.$folderValue);
+                        if ($realpath = realpath($pluginRoot.$folderValue))
+                            $pluginFolders[$folderKey] = $realpath;
                     }
                     # save plugin folders with absolute path names
                     $this->_pluginFolders[$namespace] = array_unique($pluginFolders);
@@ -134,7 +220,7 @@ class Erfurt_PluginManager {
                                 $method = str_replace(' ','',$announce['method']);
                                 
                                 # save releation between class/method and plugin namespace
-                                $this->_classRelations[$class.'::'.$method] = $namespace;
+                                $this->_relationClassPlugin[$class] = $namespace;
                                 
                                 # announce method to event
                                 $this->_ed->announce($event,$class.'::'.$method);
@@ -156,7 +242,7 @@ class Erfurt_PluginManager {
                                 $method = str_replace(' ','',$announce['method']);
                                 
                                 # save relation between class/method and plugin namespace
-                                $this->_classRelations[$class.'::'.$method] = $namespace;
+                                $this->_relationClassPlugin[$class] = $namespace;
                                 
                             }
                     }
@@ -169,6 +255,16 @@ class Erfurt_PluginManager {
         return true;
     }
     
+	/**
+	 * Erfurt_PluginManager::_listActivePlugins()
+	 * right now all plugins in submitted folder and switch=on are activated
+	 *
+	 * @param String    $folder plugin dir on server
+ 	 *
+ 	 * @return Array with .ini-files (= plugin "namespaces")
+ 	 *
+ 	 * @access private
+ 	 */
     private function _listActivePlugins($folder) {
     
         # next version: plugins are marked as active in erfurt/ontowiki configuration
@@ -204,6 +300,18 @@ class Erfurt_PluginManager {
         return $plugins;
     }
 
+	/**
+	 * Erfurt_PluginManager::_includeFolders()
+	 * include all folders used by submitted plugin to PHP include dir
+	 *
+	 * @param String    $namespace  plugin's "namespace" 
+ 	 *
+ 	 * @return Bool
+ 	 *      o true: successfully included to PHP include path
+ 	 *      o false: no success
+ 	 *
+ 	 * @access private
+ 	 */
     private function _includeFolders($namespace) {
         
         if (isset($this->_pluginFolders[$namespace])) {
@@ -213,7 +321,7 @@ class Erfurt_PluginManager {
             if (count($folders) > 0) {
             
                 # add folders to include path
-                if (set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR,$folders)) !== false) {
+                if (set_include_path(rtrim(get_include_path(),PATH_SEPARATOR) . PATH_SEPARATOR . implode(PATH_SEPARATOR,$folders)) !== false) {
                     # include worked
                     unset($this->_pluginFolders[$namespace]);
                     $this->_included = array_merge($this->_included,$folders); # add folders to included folders
