@@ -4,7 +4,7 @@
  * @package cache
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  */
-class Erfurt_Cache_Backend_Apc {
+class Erfurt_Cache_Backend_Apc implements Erfurt_Cache {
 
 	public function __construct() {
 	
@@ -39,6 +39,11 @@ class Erfurt_Cache_Backend_Apc {
 	public function expire(DbModel $model, Statement $stm) {
 		
 		apc_clear_cache('user');
+	}
+	
+	public function emptyCache(DbModel $model) {
+		
+		$this->expire($model);
 	}
 	
 	public function expireFunction(DbModel $model, $function) {

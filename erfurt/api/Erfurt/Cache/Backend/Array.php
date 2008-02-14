@@ -4,19 +4,19 @@
  * @package cache
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  */
-class Erfurt_Cache_Backend_Array {
+class Erfurt_Cache_Backend_Array implements Erfurt_Cache {
 
-	public $cacheArray;
+	protected $cacheArray;
 
 	public function __construct() {
 		
 		$this->cacheArray = array();
 	}
 	
-	public function load(DbModel $model, $function, Array $args, $resource) {
+	public function load(DbModel $model, $function, $args, $resource) {
 		
 		$modelID = $model->getModelID();
-		$uid = $this->getUID($function, $args, $resource);
+		$uid = $this->_getUID($function, $args, $resource);
 		
 		if (isset($this->cacheArray[$modelID][$uid])) {
 			return $this->cacheArray[$modelID][$uid];
@@ -25,10 +25,10 @@ class Erfurt_Cache_Backend_Array {
 		}
 	}
 	
-	public function save(DbModel $model, $function, Array $args, $resource, $value, Array $triggers) {
+	public function save(DbModel $model, $function, $args, $resource, $value, $triggers) {
 		
 		$modelID = $model->getModelID();
-		$uid = $this->getUID($function, $args, $resource);
+		$uid = $this->_getUID($function, $args, $resource);
 		
 		$this->cacheArray[$modelID][$uid] = $value;
 	}
@@ -41,6 +41,11 @@ class Erfurt_Cache_Backend_Array {
 		unset($this->cacheArray[$modelID]);
 	}
 	
+	public function emptyCache(DbModel $model) {
+		
+		$this->expire($model);
+	}
+	
 	public function expireFunction(DbModel $model, $function) {
 		
 		$modelID = $model->getModelID();
@@ -49,7 +54,7 @@ class Erfurt_Cache_Backend_Array {
 		unset($this->cacheArray[$modelID]);
 	}
 	
-	protected function getUID($function, Array $args, $resource) {
+	protected function _getUID($function, $args, $resource) {
 		
 		if ($resource !== null) {
 			$uid = $resource->getURI();

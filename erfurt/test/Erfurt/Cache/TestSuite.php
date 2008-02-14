@@ -20,7 +20,7 @@ class Erfurt_Cache_TestSuite {
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		
-		$suite->addTest(Erfurt_CacheTest::suite());
+		$suite->addTest(Erfurt_Cache_FrontendTest::suite());
 		
 		return $suite;
 	}
