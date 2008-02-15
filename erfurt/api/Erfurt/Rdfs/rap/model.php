@@ -546,70 +546,68 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		return $tempClassArray;
     }
 
-	public function buildClassTree($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
+	public function resourceTree($hierProps, $subRelProps, $instProps, $entryPoint = null, $search = null) {
+		
+		if ($search == null) {
+			$sparql = 'SELECT ?s ?par ?sub WHERE 	{ 
+												?s <' . $instProps . '> <' . $hierProps . '> . 
+												OPTIONAL { ?s <' . $subRelProps . '> ?par } .
+												OPTIONAL { ?sub <' . $subRelProps . '> ?s } 
+											}';
 
-		$sql = 'SELECT s.object 
-				FROM statements s	
-				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
-				UNION DISTINCT
-				SELECT s.subject
-				FROM statements s
-				WHERE s.predicate = "' . EF_RDF_TYPE . '" 
-				AND s.object IN ("' . EF_RDFS_CLASS . '", "' . EF_OWL_CLASS . '", "' . EF_OWL_DEPRECATED_CLASS. '")';
-		
-		$sqlResult = $this->getStore()->sqlQuery($sql);
-		$tempClassArray = array(); // contains all classes that fit to the config given by the parameters
-		
-		// check whether classes are top classes
-		foreach ($sqlResult as $row) {
-			if (!$this->hasStatement(null, 'rdfs:subClassOf', $row[0])) {
-				$tempClasses[] = $this->classF($row[0]);
-			}
-		}
-		
-		// check for system classes iff $systemClasses = false
-		if ($systemClasses === false) {
-			$temp = $tempClassArray;
-			$tempClassArray = array();
-			foreach ($temp as $row) {
-				if (!((strstr($row->getURI(), EF_RDF_NS)) || (strstr($row->getURI(), EF_RDFS_NS)) || (strstr($row->getURI(), EF_OWL_NS)))) {
-					$tempClassArray[] = $row;
-				} 
-			}
-		}
-		
-		// check for empty classes iff $emptyClasses = false
-		if ($implicitClasses === false) {
-			$temp = $tempClassArray;
-			$tempClassArray = array();
-			foreach ($temp as $row) {
-				if ($row->countInstancesRecursive() > 0) {
-					$tempClassArray[] = $row;
-				}
-			}		
-		}
+			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
+			return $this->_buildHierarchyRecursive($sparqlResult, $entryPoint);
+		} else {
+			$sparql = 'SELECT ?s WHERE 	{ 
+												?s <' . $instProps . '> <' . $hierProps . '> . 
+												?s ?p ?o .
+												FILTER (isLiteral(?o) && regex(?o, "' . $search . '", "i"))
+											}';
 			
-		// check for implicit classes iff $implicitClasses = false
-		if ($implicitClasses === false) {
-			$temp = $tempClassArray;
-			$tempClassArray = array();
-			foreach ($temp as $row) {
-				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
-					$tempClassArray[] = $row;
-				}
-			}		
+			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
+			
+			$result = array();
+			foreach ($sparqlResult as $row) {
+				$result[$row['s']]['uri'] = $row['s'];
+			}
+			
+			return $result;
 		}
 		
-		// check for hidden classes iff $hiddenClasses = false
-		if ($hiddenClasses === false) {
-			$temp = $tempClassArray;
-			$tempClassArray = array();
-			foreach($temp as $row) {
-				if (!$row->isHidden()) {
-					$tempClassArray[] = $row;
+	}
+	
+	protected function _buildHierarchyRecursive($sparqlResult, $entryPoint) {
+		
+		$result = array();
+		foreach ($sparqlResult as $row) {
+			if ($entryPoint === null) {
+				if (($row['par'] === '') || ($row['par'] === EF_OWL_THING)) {
+					$result[$row['s']]['uri'] = $row['s'];
+					if ($row['sub'] !== '') {
+						if (!isset($result[$row['s']]['childs'])) {
+							$result[$row['s']]['childs'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
+						} else {
+							$result[$row['s']]['childs'] = array_merge($result[$row['s']]['childs'], 
+									$this->_buildHierarchyRecursive($sparqlResult, $row['sub']));
+						}
+					}
+				} 
+			} else {
+				if ($row['par'] === $entryPoint) {
+					$result[$row['s']]['uri'] = $row['s'];
+					if ($row['sub'] !== '') {
+						if (!isset($result[$row['s']]['childs'])) {
+							$result[$row['s']]['childs'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
+						} else {
+							$result[$row['s']]['childs'] = array_merge($result[$row['s']]['childs'], 
+									$this->_buildHierarchyRecursive($sparqlResult, $row['sub']));
+						}
+					}
 				}
 			}
-		} 
+		}
+		
+		return $result;
 	}
 	
 	/**
