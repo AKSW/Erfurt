@@ -109,7 +109,9 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 		}
 	  # normal user
 		else if (($userUri = $this->fetchData($this->_username, $this->_password)) === false) {
-			$result['messages'][] = Zend_Registry::get('strings')->auth->login->msg->incorrect;
+// TODO bug #1881292 (authentification problem) strings are ow specific... not available in erfurt; just a quick hack
+			#$result['messages'][] = Zend_Registry::get('strings')->auth->login->msg->incorrect;
+			$result['messages'][] = 'Incorrect login data!';
 		} 
 		 
 		# valid user from sysont
