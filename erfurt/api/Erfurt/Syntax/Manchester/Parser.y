@@ -1,5 +1,6 @@
+// PHP section
 %name OWL_To_Erfurt_
-%declare_class {class OWLParser}
+%declare_class {class OWLParser }
 %include {require_once '../../erfurt.php';
 require_once 'Lexer.php';}
 %include_class{
@@ -16,10 +17,14 @@ require_once 'Lexer.php';}
 		}
 	}
 
+// Precedence section
+
 %left NOT_OPERATOR AND_OPERATOR OR_OPERATOR.
 %left MIN_OPERATOR MAX_OPERATOR.
 %left EXACTLY_OPERATOR HAS_OPERATOR.
 %left ONLYSOME_OPERATOR ONLY_OPERATOR SOME_OPERATOR.
+
+// Exception Handling section
 
 %syntax_error {
     echo "Syntax Error in token '" . 
@@ -35,9 +40,11 @@ require_once 'Lexer.php';}
     exit(1);
 }
 
+// Rules section
+
 	start ::= classExpr(A).{
-		print_r(A->generateRDF()->writeAsHtmlTable());}
-//		print_r(A->generateRDF()->writeAsHtml());}
+//		print_r(A->generateRDF()->writeAsHtmlTable());}
+		print_r(A->generateRDF()->writeAsHtml());}
 //		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{

@@ -17,5 +17,5 @@ To generate Parser.php, execute generateParser.php.
 Currently supports only command line execution.
 to test the parser from command line:
 
-$ php starter.php your manchester syntax string
+run starter.php your manchester syntax string
 make sure, that your php executable includes the needed PEAR packages

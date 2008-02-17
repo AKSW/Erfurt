@@ -17,12 +17,9 @@ for ($i=1; $i < $argc; $i++) {
 }
 if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 	echo"you entered: ".($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x)."<br />";
-	//echo $x."\n";
-	$o= new OWLParser();
-	//$o->parseString($x);
-	echo "manchester string = ";
+	$o= new ManchesterParser();
+	echo "output string = " . "<br />";
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
-	//$o->parseString("aaa  and ccc onlysome [tx, v, e] or t max 3");
 
 	$end =  explode(' ',microtime() );
 	if($debug){

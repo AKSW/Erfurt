@@ -1,7 +1,8 @@
 <?php
 /*
- * edit Erfurt_Syntax_Manchester_Lexer.plex file, if you want to make changes to tokenizer for manchester syntax
- */
+* edit Erfurt_Syntax_Manchester_Lexer.plex file to modify the Manchester OWL Syntax tokenizer
+*/
+// PHP section
 require_once 'Parser.php';
 
 /**
@@ -15,7 +16,7 @@ class ManchesterLexer
 	public $token;
 	public $value;
     public $line;
-	private $debug = 1;
+	private $debug = 0;
 	
     function __construct($data)
     {
@@ -30,6 +31,8 @@ class ManchesterLexer
 			echo $text." \n";
 		}
 	}
+
+// Patterns section
 
 
     private $_yy_state = 1;
@@ -56,6 +59,9 @@ class ManchesterLexer
         $this->_yy_state = $state;
     }
 
+
+
+// Rules section
 
 
     function yylex1()
@@ -183,128 +189,129 @@ class ManchesterLexer
     function yy_r1_0($yy_subpatterns)
     {
 
-	$this->printout("whitespace");
+//	$this->printout("whitespace");
     return false; // skip this token (do not return it)
     }
     function yy_r1_1($yy_subpatterns)
     {
 
-	$this->printout("or");
+//	$this->printout("or");
 	$this->token=OWLParser::OR_OPERATOR;
     }
     function yy_r1_2($yy_subpatterns)
     {
 
-	$this->printout("and");
+//	$this->printout("and");
 	$this->token=OWLParser::AND_OPERATOR;
     }
     function yy_r1_3($yy_subpatterns)
     {
 
-	$this->printout("not");
+//	$this->printout("not");
 	$this->token=OWLParser::NOT_OPERATOR;
     }
     function yy_r1_4($yy_subpatterns)
     {
 
-	$this->printout("min");
+//	$this->printout("min");
 	$this->token=OWLParser::MIN_OPERATOR;
     }
     function yy_r1_5($yy_subpatterns)
     {
 
-	$this->printout("max");
+//	$this->printout("max");
 	$this->token=OWLParser::MAX_OPERATOR;
     }
     function yy_r1_6($yy_subpatterns)
     {
 
-	$this->printout("exactly");
+//	$this->printout("exactly");
 	$this->token=OWLParser::EXACTLY_OPERATOR;
     }
     function yy_r1_7($yy_subpatterns)
     {
 
-	$this->printout("has");
+//	$this->printout("has");
 	$this->token=OWLParser::HAS_OPERATOR;
     }
     function yy_r1_8($yy_subpatterns)
     {
 
-	$this->printout("onlysome");
+//	$this->printout("onlysome");
 	$this->token=OWLParser::ONLYSOME_OPERATOR;
     }
     function yy_r1_9($yy_subpatterns)
     {
 
-	$this->printout("some");
+//	$this->printout("some");
 	$this->token=OWLParser::SOME_OPERATOR;
     }
     function yy_r1_10($yy_subpatterns)
     {
 
-	$this->printout("only");
+//	$this->printout("only");
 	$this->token=OWLParser::ONLY_OPERATOR;
     }
     function yy_r1_11($yy_subpatterns)
     {
 
-	$this->printout("comma");
+//	$this->printout("comma");
 	$this->token=OWLParser::COMMA;
     }
     function yy_r1_12($yy_subpatterns)
     {
 
-	$this->printout("lparen");
+//	$this->printout("lparen");
 	$this->token=OWLParser::LPAREN;
     }
     function yy_r1_13($yy_subpatterns)
     {
 
-	$this->printout("rparen");
+//	$this->printout("rparen");
 	$this->token=OWLParser::RPAREN;
     }
     function yy_r1_14($yy_subpatterns)
     {
 
-	$this->printout("lbrace");
+//	$this->printout("lbrace");
 	$this->token=OWLParser::LBRACE;
     }
     function yy_r1_15($yy_subpatterns)
     {
 
-	$this->printout("rbrace");
+//	$this->printout("rbrace");
 	$this->token=OWLParser::RBRACE;
     }
     function yy_r1_16($yy_subpatterns)
     {
 
-	$this->printout("lsquarebracket");
+//	$this->printout("lsquarebracket");
 	$this->token=OWLParser::LSQUAREBRACKET;
     }
     function yy_r1_17($yy_subpatterns)
     {
 
-	$this->printout("rsquarebracket");
+//	$this->printout("rsquarebracket");
 	$this->token=OWLParser::RSQUAREBRACKET;
     }
     function yy_r1_18($yy_subpatterns)
     {
 
-	$this->printout("numeric");
+//	$this->printout("numeric");
 	$this->token=OWLParser::NUMERIC;
     }
     function yy_r1_19($yy_subpatterns)
     {
 
-	$this->printout("alphanumeric:alphanumeric");
+//	$this->printout("alphanumeric:alphanumeric");
 	$this->token=OWLParser::ALPHANUMERIC;
     }
     function yy_r1_20($yy_subpatterns)
     {
 
-	$this->printout("alphanumeric");
+//	$this->printout("alphanumeric");
 	$this->token=OWLParser::ALPHANUMERIC;
     }
 
 }
+?>

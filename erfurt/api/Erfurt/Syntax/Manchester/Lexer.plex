@@ -1,7 +1,8 @@
 <?php
 /*
- * edit Erfurt_Syntax_Manchester_Lexer.plex file, if you want to make changes to tokenizer for manchester syntax
- */
+* edit Erfurt_Syntax_Manchester_Lexer.plex file to modify the Manchester OWL Syntax tokenizer
+*/
+// PHP section
 require_once 'Parser.php';
 
 /**
@@ -15,7 +16,7 @@ class ManchesterLexer
 	public $token;
 	public $value;
     public $line;
-	private $debug = 1;
+	private $debug = 0;
 	
     function __construct($data)
     {
@@ -30,6 +31,8 @@ class ManchesterLexer
 			echo $text." \n";
 		}
 	}
+
+// Patterns section
 
 /*!lex2php
 %input $this->data
@@ -61,91 +64,95 @@ ONLY_OPERATOR=/[Oo][Nn][Ll][Yy]/
 SOME_OPERATOR=/[Ss][Oo][Mm][Ee]/
 NEKUDOTAYIM=/:/
 */
+
+// Rules section
+
 /*!lex2php
 %statename START
 WHITESPACE {
-	$this->printout("whitespace");
+//	$this->printout("whitespace");
     return false; // skip this token (do not return it)
 }
 OR_OPERATOR{
-	$this->printout("or");
+//	$this->printout("or");
 	$this->token=OWLParser::OR_OPERATOR;
 }
 AND_OPERATOR{
-	$this->printout("and");
+//	$this->printout("and");
 	$this->token=OWLParser::AND_OPERATOR;
 }
 NOT_OPERATOR {
-	$this->printout("not");
+//	$this->printout("not");
 	$this->token=OWLParser::NOT_OPERATOR;
 }
 MIN_OPERATOR{
-	$this->printout("min");
+//	$this->printout("min");
 	$this->token=OWLParser::MIN_OPERATOR;
 }
 MAX_OPERATOR {
-	$this->printout("max");
+//	$this->printout("max");
 	$this->token=OWLParser::MAX_OPERATOR;
 }
 EXACTLY_OPERATOR{
-	$this->printout("exactly");
+//	$this->printout("exactly");
 	$this->token=OWLParser::EXACTLY_OPERATOR;
 }
 HAS_OPERATOR {
-	$this->printout("has");
+//	$this->printout("has");
 	$this->token=OWLParser::HAS_OPERATOR;
 }
 ONLYSOME_OPERATOR{
-	$this->printout("onlysome");
+//	$this->printout("onlysome");
 	$this->token=OWLParser::ONLYSOME_OPERATOR;
 }
 SOME_OPERATOR {
-	$this->printout("some");
+//	$this->printout("some");
 	$this->token=OWLParser::SOME_OPERATOR;
 }
 ONLY_OPERATOR {
-	$this->printout("only");
+//	$this->printout("only");
 	$this->token=OWLParser::ONLY_OPERATOR;
 }
 COMMA{
-	$this->printout("comma");
+//	$this->printout("comma");
 	$this->token=OWLParser::COMMA;
 }
 LPAREN {
-	$this->printout("lparen");
+//	$this->printout("lparen");
 	$this->token=OWLParser::LPAREN;
 }
 RPAREN {
-	$this->printout("rparen");
+//	$this->printout("rparen");
 	$this->token=OWLParser::RPAREN;
 }
 LBRACE {
-	$this->printout("lbrace");
+//	$this->printout("lbrace");
 	$this->token=OWLParser::LBRACE;
 }
 RBRACE {
-	$this->printout("rbrace");
+//	$this->printout("rbrace");
 	$this->token=OWLParser::RBRACE;
 }
 LSQUAREBRACKET{
-	$this->printout("lsquarebracket");
+//	$this->printout("lsquarebracket");
 	$this->token=OWLParser::LSQUAREBRACKET;
 }
 RSQUAREBRACKET{
-	$this->printout("rsquarebracket");
+//	$this->printout("rsquarebracket");
 	$this->token=OWLParser::RSQUAREBRACKET;
 }
 NUMERIC{
-	$this->printout("numeric");
+//	$this->printout("numeric");
 	$this->token=OWLParser::NUMERIC;
 }
 ALPHANUMERIC NEKUDOTAYIM ALPHANUMERIC{
-	$this->printout("alphanumeric:alphanumeric");
+//	$this->printout("alphanumeric:alphanumeric");
 	$this->token=OWLParser::ALPHANUMERIC;
 }
 ALPHANUMERIC{
-	$this->printout("alphanumeric");
+//	$this->printout("alphanumeric");
 	$this->token=OWLParser::ALPHANUMERIC;
 }
 */
 }
+?>
