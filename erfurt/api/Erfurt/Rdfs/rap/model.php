@@ -546,6 +546,23 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		return $tempClassArray;
     }
 
+	/**
+	 * Builds a tree containing resources in a hierarchical structure.
+	 * 
+	 * If a search string is given a flat array is returned, containing matching resources.
+	 * Currently all literal values are regexped ("$search") against the search string...
+	 * The result depends on the configuration made via the following parameters:
+	 * 
+	 * @param string $hierProps (later array) e.g owl:Class
+	 * @param string $subRelProps (later array) e.g. rdfs:subClassOf
+	 * @param string $instProps (later array) e.g. rdf:type
+	 * @param string/null $entryPoint An optional entry point... all resources after that point are returned; 
+	 * if no entry point is given owl:Thing is assumed alternatively all resources that have no $subRelProps statement
+	 * @param string/null $search An optional search string
+	 * @return array Returns an associative array where the key is the uri of the current resource and the values is
+	 * an associative array, too. The value contains a 'uri' key containing again the uri and optionally a 'childs' key,
+	 * containing the childs in the same structure.
+	 */
 	public function resourceTree($hierProps, $subRelProps, $instProps, $entryPoint = null, $search = null) {
 		
 		if ($search == null) {
