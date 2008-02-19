@@ -400,11 +400,11 @@ class Erfurt_Owl_Class extends RDFSClass {
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
-				s1.subject='".$this->model->_dbId($this)."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
-				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type').
-					"' AND s2.object='".$this->model->_dbId('owl:Restriction')."'
-				AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$this->model->_dbId($property)."'
-				AND (s4.predicate='".$this->model->_dbId('owl:cardinality')."' OR s4.predicate='".$this->model->_dbId('owl:'.$minmax.'Cardinality')."')
+				s1.subject='".$this->getURI()."' AND s1.predicate='".EF_RDFS_SUBCLASSOF."'
+				AND s2.subject_is='b' AND s2.predicate='".EF_RDF_TYPE.
+					"' AND s2.object='".EF_OWL_RESTRICTION."'
+				AND s3.predicate='".EF_OWL_ONPROPERTY."' AND s3.object='".$this->model->_dbId($property)."'
+				AND (s4.predicate='".EF_OWL_CARDINALITY."' OR s4.predicate='".$this->model->_dbId('owl:'.$minmax.'Cardinality')."')
 				AND s1.modelID IN (".$this->model->getModelIds().')';
 		if($rs=$this->model->dbConn->execute($sql))
 			$stmts=$this->model->_convertRecordSetToMemModel($rs);
@@ -470,16 +470,16 @@ class Erfurt_Owl_Class extends RDFSClass {
 				if($cardinality)
 					$this->model->add($cardinalitystm->subj,$cardinalitystm->pred,$value);
 				else {
-					$r=$this->model->resourceF($cardinalitystm->subj->getURI());
+					$r = $this->model->resourceF($cardinalitystm->subj->getURI(), false);
 					$r->remove();
 				}
 			}
 		} else if($cardinality) { // create new restriction
 			if(!$restriction) {
 				$restriction=new Blanknode($this->model->getUniqueResourceURI(BNODE_PREFIX));
-				$this->model->add($restriction,"rdf:type","owl:Restriction");
-				$this->model->add($restriction,"owl:onProperty",$property);
-				$this->model->add($this,"rdfs:subClassOf",$restriction);
+				$this->model->add($restriction,EF_RDF_TYPE,EF_OWL_RESTRICTION);
+				$this->model->add($restriction,EF_OWL_ONPROPERTY,$property);
+				$this->model->add($this,EF_RDFS_SUBCLASSOF,$restriction);
 			}
 			$this->model->add($restriction,"owl:".$minmax."Cardinality",$value);
 		}
@@ -504,9 +504,9 @@ class Erfurt_Owl_Class extends RDFSClass {
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.modelID=s3.modelID AND s3.subject=s2.subject)
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s4 ON(s1.modelID=s4.modelID AND s4.subject=s2.subject)
 			WHERE
-				s1.subject='".$this->model->_dbId($this)."' AND s1.predicate='".$this->model->_dbId('rdfs:subClassOf')."'
-				AND s2.subject_is='b' AND s2.predicate='".$this->model->_dbId('rdf:type')."' AND s2.object='".$this->model->_dbId('owl:Restriction')."'
-				AND s3.predicate='".$this->model->_dbId('owl:onProperty')."' AND s3.object='".$this->model->_dbId($property)."'
+				s1.subject='".$this->getURI()."' AND s1.predicate='".EF_RDFS_SUBCLASSOF."'
+				AND s2.subject_is='b' AND s2.predicate='".EF_RDF_TYPE."' AND s2.object='".EF_OWL_RESTRICTION."'
+				AND s3.predicate='".EF_OWL_ONPROPERTY."' AND s3.object='".$this->model->_dbId($property)."'
 				AND s4.predicate IN ('".join("','",$t)."')
 				AND s1.modelID IN(".$this->model->getModelIds().')';
 				

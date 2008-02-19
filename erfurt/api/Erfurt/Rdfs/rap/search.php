@@ -73,7 +73,7 @@ class InstanceSearch extends Erfurt_Rdfs_InstanceSearch_Abstract {
 			FROM statements s INNER JOIN statements s1 ON(
 				'.(!$this->allModels?'s1.modelID IN ('.$this->model->getModelIds().') AND':'').'
 				s.subject=s1.subject AND
-				s1.predicate="'.$GLOBALS['RDF_type']->getURI().'")
+				s1.predicate="'.EF_RDF_TYPE.'")
 			WHERE
 				MATCH(s.object) AGAINST (\''.$this->searchString.'\' /*!40001 IN BOOLEAN MODE */) AND
 				'.(!$this->allModels?'s.modelID IN ('.$this->model->getModelIds().') AND':'').'

@@ -24,6 +24,9 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	 */
 	protected $model;
 	
+	protected $_propertyValueCache;
+	protected $_propertySubjectCache;
+	
 	/**
 	 * Constructor
 	 *
@@ -32,12 +35,22 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	 * @return
 	 **/
 	public function __construct($uri, Erfurt_Rdfs_Model_Abstract $model, $expandNS = true) {
+
+#debug
+#$GLOBALS['EFResourceConstruct']++;
+
+#Zend_Registry::get('erfurtLog')->debug('Erfurt_Rdfs_Resource_Default::__construct()');
 		
 		if ($uri instanceof Resource) {
 			$uri = $uri->getURI();
 		}
+		
+		if ($uri == '') {
+			return false;
+		}
 			
-		if($expandNS && !strstr($uri,'/')) {
+		if($expandNS && !strstr($uri,'/') && !(substr($uri, 0, 4) == 'http')) {
+$GLOBALS['EFResourceConstruct'] .= $uri."#".xdebug_call_function().LINEFEED;
 			$nsArr = $model->getParsedNamespaces();
 			# Debug output if nsArr isn't Array and not null
 			if(!is_array($nsArr) && $nsArr != null)
@@ -50,8 +63,13 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		
 		Resource::Resource($uri);
 		$this->model = $model;
-		
-		$this->properties = array();
+
+# deprecated... remove asap		
+$this->properties = array();
+
+
+		$this->_propertyValueCache = null;
+		$this->_propertySubjectCache = null;
 	}
 	
 	public function __set($key, $value) {
@@ -105,6 +123,101 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		} else {
 			return false;
 		}
+	}
+	
+	protected function _fetchPropertyValues() {
+
+// TODO use sparql if faster
+		// $sparql = 'SELECT ?p ?o WHERE { <' . $uri . '> ?p ?o }';
+		// 		$result = $this->model->sparqlQuery($sparql, new Erfurt_Sparql_ResultRenderer_Plain());
+		// 		
+		// 		foreach ($result as $row) {
+		// 			$propString = $row['?p'];
+		// 			if (isset($this->_propertyValueCache["$propString"])) {
+		// 				if (is_string($this->_propertyValueCache["$propString"])) {
+		// 					$temp = $this->_propertyValueCache["$propString"];
+		// 					$this->_propertyValueCache["$propString"] = array();
+		// 					$this->_propertyValueCache["$propString"][] = $temp;
+		// 					$this->_propertyValueCache["$propString"][] = $row['?o'];
+		// 				} else if (is_array($this->_propertyValueCache["$propString"])) {
+		// 					$this->_propertyValueCache["$propString"][] = $row['?o'];
+		// 				}
+		// 			} else {
+		// 				$this->_propertyValueCache["$propString"] = $row['?o'];
+		// 			}
+		// 		}
+		
+		$sql = 'SELECT DISTINCT predicate, object, object_is, l_language, l_datatype 
+				FROM statements 
+				WHERE subject = "' . $this->uri . '" AND modelID IN (' . $this->model->getModelIds() . ')';
+		 		 
+#echo $sql;
+		$result = $this->model->getStore()->sqlQuery($sql);
+		
+		if ($result === null) {
+			throw new Exception('Error in _fetchPropertyValues() method: Could not fetch properties.');
+		}
+		
+		$this->_propertyValueCache = array(); 			
+		foreach ($result as $row) {
+			$propString = $row['0'];
+			
+			if (isset($this->_propertyValueCache["$propString"])) {
+				if (is_array($this->_propertyValueCache["$propString"])) {
+		 			if ($row[2] == 'l') {
+		 				$this->_propertyValueCache["$propString"][] = $this->model->literalF($row[1], $row[3],
+		 						$row[4]);
+		 			} else if ($row[2] == 'b'){
+		 				$this->_propertyValueCache["$propString"][] = new BlankNode($row[1]);
+		 			} else {
+						$this->_propertyValueCache["$propString"][] = $this->model->resourceF($row[1]);
+					}
+		 		}
+		 	} else {
+		 		if ($row[2] == 'l') {
+		 			$this->_propertyValueCache["$propString"] = array($this->model->literalF($row[1], $row[3], $row[4]));
+		 		} else if ($row[2] == 'b') {
+		 			$this->_propertyValueCache["$propString"] = array(new BlankNode($row[1]));
+		 		} else {
+					$this->_propertyValueCache["$propString"] = array($this->model->resourceF($row[1], false));
+				}
+		 	}
+		 }
+	}
+	
+	protected function _fetchPropertySubjects() {
+		
+		$sql = 'SELECT DISTINCT predicate, subject, subject_is
+				FROM statements 
+				WHERE object = "' . $this->uri . '" AND modelID IN (' . $this->model->getModelIds() . ')';
+		 		 
+#echo $sql;
+		$result = $this->model->getStore()->sqlQuery($sql);
+		
+		if ($result === null) {
+			throw new Exception('Error in _fetchPropertySubjects() method: Could not fetch properties.');
+		}
+		
+		$this->_propertySubjectCache = array(); 			
+		foreach ($result as $row) {
+			$propString = $row['0'];
+			
+			if (isset($this->_propertySubjectCache["$propString"])) {
+				if (is_array($this->_propertySubjectCache["$propString"])) {
+		 			if ($row[2] == 'b') {
+		 				$this->_propertySubjectCache["$propString"][] = new BlankNode($row['1']);
+		 			} else {
+		 				$this->_propertySubjectCache["$propString"][] = $this->model->resourceF($row['1']);
+		 			}
+		 		}
+		 	} else {
+		 		if ($row[2] == 'b') {
+		 			$this->_propertySubjectCache["$propString"] = array(new BlankNode($row['1']));
+		 		} else {
+		 			$this->_propertySubjectCache["$propString"] = array($this->model->resourceF($row['1'], false));
+		 		}
+		 	}
+		 }
 	}
 	
 	public function getClass($class = null) {
@@ -274,6 +387,32 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		return $this->getURI();
 	}
 	
+	public function getTitle($language = null) {
+	
+		$config = Zend_Registry::get('config');
+		foreach ($config->titleProperties->toArray() as $title) {
+			// if language is set search for label with language tag
+			if ($language && ($ret = $this->getLiteralPropertyValue($title, $language))) {
+				$label = $ret->getLabel($language);
+			// else use anonymous labels (w/o lang tag)
+			} else if ($ret = $this->getLiteralPropertyValue($title)) {
+				$label = $ret->getLabel();
+			// if still nothing found, try english labels
+			} else if ($ret = $this->getLiteralPropertyValue($title, 'en')) {
+				$label = $ret->getLabel('en');
+			}
+			if ($label) {
+				break;
+			}
+		}
+		
+		if (!$label) {
+			$label = $this->getLocalName();
+		}
+		
+		return $label;
+	}
+	
 	/**
 	 * @see Erfurt_Rdfs_Resource  
 	 */
@@ -284,11 +423,22 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	
 	public function hasPropertyValue($property, $value = null) {
 		
-		if ($this->model->findNode($this, $property, $value)) {
-			return true;
-		} else {
+		$val = $this->getPropertyValue($property);
+		if ($val === null) {
 			return false;
+		} else {
+			if (($value === null) || ($val->getLabel() === $value)) {
+				return true;
+			} else {
+				return false;
+			}
 		}
+		
+		#if ($this->model->findNode($this, $property, $value)) {
+		#	return true;
+		#} else {
+		#	return false;
+		#}
 	}
 	
 	public function hasPropertyValueTransitive($property, $value) {
@@ -317,16 +467,28 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	 */
 	public function isClass() {
 		
-		if (($this->model->findNode(null, 'rdf:type', $this) || 
-				$this->model->findStatement($this, 'rdf:type', 'owl:Class') || 
-				$this->model->findNode($this, 'rdfs:subClassOf', null) || 
-				$this->model->findNode(null, 'rdfs:subClassOf', $this) || 
-				$this->model->findStatement($this, 'rdf:type', 'rdfs:Class'))) {
-
+		if ($this->hasPropertyValue(EF_RDF_TYPE, EF_OWL_CLASS) ||
+			$this->hasPropertyValue(EF_RDF_TYPE, EF_OWL_DEPRECATED_CLASS) ||
+			$this->hasPropertyValue(EF_RDF_TYPE, EF_RDFS_CLASS) ||
+			$this->hasPropertyValue(EF_RDFS_SUBCLASSOF) ||
+			$this->isPropertyValue(EF_RDF_TYPE) ||
+			$this->isPropertyValue(EF_RDFS_SUBCLASSOF)) {
+		
 			return true;
+		} else {
+			return false;
 		}
 		
-		return false;
+		#if (($this->model->findNode(null, EF_RDF_TYPE, $this) || 
+		#		$this->model->findStatement($this, EF_RDF_TYPE, EF_OWL_CLASS) || 
+		#		$this->model->findNode($this, EF_RDFS_SUBCLASSOF, null) || 
+		#		$this->model->findNode(null, EF_RDFS_SUBCLASSOF, $this) || 
+		#		$this->model->findStatement($this, EF_RDF_TYPE, EF_RDFS_CLASS))) {
+		#
+		#			return true;
+		#}
+		
+		#return false;
 	}
 	
 	/**
@@ -351,6 +513,17 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		} else {
 			return false;
 		}
+	}
+	
+	public function isPropertyValue($property) {
+		
+		$val = array_shift($this->listPropertyValuesObject($property));
+		if ($val === null) {
+			return false;
+		} else {
+			return true;
+		}
+				
 	}
 	
 	public function listClasses() {
@@ -434,14 +607,136 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 		return $ret;
 	}
 	
+	public function listPropertiesUsedAsObject() {
+		
+		if ($this->_propertySubjectCache === null) {
+			$this->_fetchPropertySubjects();
+		}
+		
+		$ret = array();
+		foreach ($this->_propertySubjectCache as $key => $value) {
+			$ret[] = $this->model->resourceF($key, false);
+		}
+		
+		return $ret;	
+	}
+	
 	public function listPropertyValues($property = null, $class = null) {
 		
-		return $this->model->findNodes($this, $property, null, $class);
+		#return $this->model->findNodes($this, $property, null, $class);
+		
+		if ($this->_propertyValueCache === null) {
+			$this->_fetchPropertyValues();
+		}
+		
+		$ret = array();
+		if ($property === null) {
+			foreach ($this->_propertyValueCache as $prop_array) {
+// TODO make use of the $class param!!!
+				$ret = array_merge($ret, $prop_array);
+			}
+		} else if (isset($this->_propertyValueCache["$property"])) {
+			if ($class === null) {
+				$ret = $this->_propertyValueCache["$property"];
+			} else {
+				$class = strtolower($class);
+				if (($class === 'owlclass') || ($class === 'rdfsclass')) {
+					$class = 'class';
+				} else if (($class === 'owlproperty') || ($class === 'rdfsproperty')) {
+					$class = 'property';
+				} else if (($class === 'owlinstance') || ($class === 'rdfsinstance')) {
+					$class = 'instance';
+				}
+				
+				foreach ($this->_propertyValueCache["$property"] as $row) {
+					if ($row instanceof Erfurt_Rdfs_Resource) {
+						switch ($class) {
+							case 'class':
+							case 'RDFSClass':
+							case 'Erfurt_Owl_Class':
+								$ret[] = $this->model->classF($row, false);
+								break;
+							case 'property':
+							case 'Erfurt_Rdfs_Property':
+							case 'Erfurt_Owl_Property':
+								$ret[] = $this->model->propertyF($row, false);
+								break;
+							case 'instance':
+							case 'Erfurt_Rdfs_Instance':
+							case 'Erfurt_Owl_Instance':
+								$ret[] = $this->model->instanceF($row, false);
+								break;
+							default:
+								$ret[] = $row;
+						}
+					}
+				}
+			}
+		} 
+		
+		return $ret;
 	}
 	
 	public function listPropertyValuesObject($property, $class = null) {
 		
-		return $this->model->findNodes(null, $property, $this, $class);
+		#return $this->model->findNodes(null, $property, $this, $class);
+		
+		if ($this->_propertySubjectCache === null) {
+			$this->_fetchPropertySubjects();
+		}
+		
+		$ret = array();
+		if ($property === null) {
+			foreach ($this->_propertySubjectCache as $prop_array) {
+// TODO make use of the $class param!!!
+				$ret = array_merge($ret, $prop_array);
+			}
+		} else {
+			if ($property instanceof Erfurt_Rdfs_Resource) {
+				$property = $property->getURI();
+			}
+			
+			if (isset($this->_propertySubjectCache["$property"])) {
+				if ($class === null) {
+					$ret = $this->_propertySubjectCache["$property"];
+				} else {
+					$class = strtolower($class);
+					if (($class === 'owlclass') || ($class === 'rdfsclass')) {
+						$class = 'class';
+					} else if (($class === 'owlproperty') || ($class === 'rdfsproperty')) {
+						$class = 'property';
+					} else if (($class === 'owlinstance') || ($class === 'rdfsinstance')) {
+						$class = 'instance';
+					}
+				
+					foreach ($this->_propertySubjectCache["$property"] as $row) {
+						if ($row instanceof Erfurt_Rdfs_Resource) {
+							switch ($class) {
+								case 'class':
+								case 'RDFSClass':
+								case 'Erfurt_Owl_Class':
+									$ret[] = $this->model->classF($row, false);
+									break;
+								case 'property':
+								case 'Erfurt_Rdfs_Property':
+								case 'Erfurt_Owl_Property':
+									$ret[] = $this->model->propertyF($row, false);
+									break;
+								case 'instance':
+								case 'Erfurt_Rdfs_Instance':
+								case 'Erfurt_Owl_Instance':
+									$ret[] = $this->model->instanceF($row, false);
+									break;
+								default:
+									$ret[] = $row;
+							}
+						}
+					}
+				}
+			} 
+		}
+		
+		return $ret;
 	}
 	
 	public function listPropertyValuesRegEx($property = null, $class = null) {
@@ -734,7 +1029,8 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 	public function type($type = null, $setType = null) {
 		
 		if($type === null) {
-			return $this->model->findNodes($this, EF_RDF_TYPE, null);
+			return $this->listPropertyValues(EF_RDF_TYPE);
+			#return $this->model->findNodes($this, EF_RDF_TYPE, null);
 		} else if ($setType === null) {
 			return $this->isOfType($type);
 		} else if ($setType === true) {

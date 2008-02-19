@@ -12,8 +12,12 @@
 class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract 
 		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface, Erfurt_Store_CountableInterface {
 	
+	private $_modelCache;
+	private $_modelInfoCache;
+	
 	/**
-	 * Set the database connection with the given parameters.
+	 * Set the database connection with the given parameters. 
+	 * Always use init() method afterwards, for else the behaviour can be unexpected...
 	 *
 	 * @param string $dbDriver A string that identifies the db-driver (e.g. 'mysqli')
 	 * @param string $host A string that identifies the host (e.g. 'localhost')
@@ -38,6 +42,35 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		# register for init
 		$this->dbDriver = $dbDriver;
 		$this->SysOntURI = $SysOntURI;
+		
+		$this->_modelCache = array();
+		$this->_modelInfoCache = null;
+		
+#debug
+$GLOBALS['EFStoreConstruct']++;
+	}
+	
+	/**
+	 * init function (separate from constructor for exeption handling)
+	 *
+	 * @see Erfurt_Store_MainInterface
+	 */
+	public function init() {
+//TODO: ERRORCODE
+
+		try {
+			// try to fetch model and namespace infos... if all tables are present this should not lead to an error.
+			$this->_fetchModelInfos();
+		} catch (Exception $e) {
+			// error while fetching model and namespace infos... should only be the case if the tables aren't present,
+			// for db connection is already established (in constructor)... so let's check for tables
+			if (!$this->isSetup()) {
+				throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
+			} else {
+// TODO error code
+				throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.');
+			}
+		}
 	}
 	
 	/**
@@ -424,7 +457,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function sqlQuery($sql) {
-		
+#$GLOBALS['adodbCountExecute'] .= xdebug_call_class()."#".xdebug_call_function().LINEFEED;		
 		$result = $this->dbConn->Execute($sql);
 		
 		if ($result != null) {
@@ -438,6 +471,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function isDatabaseCreated($dbType="MySQL", $dbName) {
+
 		switch (strtolower($dbType)) {
 			case "mysql":
 				$db =& $this->dbConn->execute('USE "' . $dbName . '"');
@@ -449,35 +483,68 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
-	public function listModels($returnAsArray = false, $withLabel = false) {
-		$models=array();
-		if($ms=DBStore::listModels()) {
-			if($returnAsArray) {
-				foreach($ms as $model) {
-					if($this->aclCheck('View',$model['modelURI'])) {
-						if ($withLabel === true) {
-							$tempModel = $this->getModel($model['modelURI']);
-							$tempResource = $tempModel->resourceF($model['modelURI']);
-							$label = $tempResource->getPropertyValue('rdfs:label');
-							if ($label) {
-								$model['label'] = $label->getLabel();
-							}
-						}
-						
-						$models[$model['modelURI']] = $model;
-					}
+	public function listModels($returnAsArray = false) {
+		
+		$models = array();
+		// $returnAsArray means return an array that contains modelURI and baseURI as string only!
+		if ($returnAsArray) {
+			foreach($this->_modelInfoCache as $m_info) {
+				if ($this->aclCheck('View', $m_info['modelURI'])) {
+					$model = array();
+					$model['modelURI'] = $m_info['modelURI'];
+					$model['baseURI'] = $m_info['baseURI'];
+					
+					$models[$model['modelURI']] = $model;
 				}
-				return $models;
 			}
-			
-			foreach($ms as $model) {
-				if($this->aclCheck('View',$model['modelURI']))
-					$models[$model['modelURI']]=$this->getModel($model['modelURI']);
+		} else {
+			// return instances of the models
+			foreach($this->_modelInfoCache as $m_info) {
+				if ($this->aclCheck('View', $m_info['modelURI'])) {
+					$models[$m_info['modelURI']] = $this->getModel($m_info['modelURI']);
+				}
 			}
-		} else
-			return $ms;
-			
+		}
+		
 		return $models;
+		
+		// $models=array();
+		// 		if($ms=DBStore::listModels()) {
+		// 			if($returnAsArray) {
+		// 				foreach($ms as $model) {
+		// 					if($this->aclCheck('View',$model['modelURI'])) {
+		// 						if ($withLabel === true) {
+		// 							$tempModel = $this->getModel($model['modelURI']);
+		// 							$tempResource = $tempModel->resourceF($model['modelURI'], false);
+		// 							$label = $tempResource->getPropertyValue('rdfs:label');
+		// 							if ($label) {
+		// 								$model['label'] = $label->getLabel();
+		// 							}
+		// 						}
+		// 						
+		// 						$models[$model['modelURI']] = $model;
+		// 					}
+		// 				}
+		// 				return $models;
+		// 			}
+		// 			
+		// 			foreach($ms as $model) {
+		// 				if($this->aclCheck('View',$model['modelURI']))
+		// 					$models[$model['modelURI']]=$this->getModel($model['modelURI']);
+		// 			}
+		// 		} else
+		// 			return $ms;
+		// 			
+		// 		return $models;
+	}
+	
+	public function listNamespaces($modelURI) {
+		
+		if (isset($this->_modelInfoCache["$modelURI"])) {
+			return $this->_modelInfoCache["$modelURI"]["namespaces"];
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -485,12 +552,22 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 */
 	public function getModel($modelURI, $importedURIs=array(), $useACL = true) {
 
-		# get model uri
-		$modelURI = is_numeric($modelURI) ? $this->dbConn->getOne('SELECT modelURI FROM models WHERE modelID='.$modelURI) : $modelURI;
+// TODO remove if possible
+		// if modelURI contains a number, get the modelURI from the database
+		#if (is_numeric($modelURI)) {
+		#	$sql = 'SELECT modelURI FROM models WHERE modelID = ' . $modelURI;
+		#	$modelURI = $this->dbConn->getOne($sql);
+		#}
 		
+		// if model is already in cache return the cached value
+		if (isset($this->_modelCache["$modelURI"])) {
+			return $this->_modelCache["$modelURI"];
+		}
+
+// TODO remove if possible
 		# look for model in every uri variation
 		#ob_start(); // prevent DB error message if tables don't exist
-		if(!$this->modelExists($modelURI, $useACL)) {
+		#if(!$this->modelExists($modelURI, $useACL)) {
 			#if(rtrim($modelURI,'#/') != $modelURI && $this->modelExists(rtrim($modelURI,'#/'), $useACL)) {
 			#	$modelURI=rtrim($modelURI,'#/');
 			#} else if($this->modelExists($modelURI.'/', $useACL))
@@ -499,37 +576,44 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			#	$modelURI.='#';
 			#else return false;
 			
-			return false;
-		}
-		$m = new RDFSModel($this, $modelURI);
+		#	return false;
+		#}
+		#$m = new RDFSModel($this, $modelURI);
 		#ob_end_clean();
 		
-		if ($m) {
-			if ($m->getType() === 'OWL') {
-				$importedURIs[rtrim($modelURI,'#/')]=rtrim($modelURI,'#/');
-				$m=new Erfurt_Owl_Model($this,$modelURI);
-				foreach($m->listImports() as $import) if($import instanceof Resource) {
-					if(!in_array(rtrim($import->getURI(),'#/'),$importedURIs) && $imp=$this->getModel($import->getURI(),$importedURIs, $useACL))
-						$m->importsIds = array_merge($m->importsIds, array($imp->modelID => $imp->modelID), !empty($imp->importsIds) ? $imp->importsIds : array());
-					$importedURIs[rtrim($import->getURI(),'#/')]=rtrim($import->getURI(),'#/');
-				}
-				if($m->importsIds)
-					$m->importsSQL=' OR modelID='.join(' OR modelID=',$m->importsIds);
-			}
-			
-			# look for edit possibility
-			if ($useACL and $this->checkAc()) {
-				if (!$this->ac->isModelAllowed('view', $modelURI)) {
-					return false;	
-				}
-				$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
-			} else {
-				$m->setEdititable(true);
-			}
-			
-			return $m;
-		} else
+// TODO throw an exception?!
+		// check whether model with given uri exists... if not return false
+		// if model exists check whether model is viewable... if not return false
+		if (!$this->modelExists($modelURI, $useACL)) {
 			return false;
+		} else if ($useACL && $this->checkAc()) {
+			if (!$this->ac->isModelAllowed('view', $modelURI)) {
+				return false;	
+			}
+		}
+		
+		// everything seems ok by now... let's check the db whether there is a statement with owl ns... for type
+		$sql = 'SELECT count(*) FROM statements s WHERE 
+				(predicate LIKE "' . EF_OWL_NS . '%" OR object LIKE "' . EF_OWL_NS . '%") AND 
+				modelID IN ( SELECT modelID FROM models WHERE modelURI = "' . $modelURI . '")';
+		
+		if ($this->dbConn->getOne($sql) > 0) {
+			// type is owl
+			$m = new Erfurt_Owl_Model($this, $modelURI);
+		} else {
+			// type is rdfs
+			$m = new RDFSModel($this, $modelURI);
+		}
+		
+		// check for edit possibility
+		if ($useACL and $this->checkAc()) {
+			$m->setEdititable($this->ac->isModelAllowed('edit', $modelURI));
+		} else {
+			$m->setEdititable(true);
+		}
+		
+		$this->_modelCache["$modelURI"] = $m;
+		return $m;
 	}
 	
 	
@@ -538,13 +622,22 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @trigger EFModelAddedEvent
 	 */
 	public function getNewModel($modelURI,$baseURI='',$type='RDFS', $useACL = true) {
-		if($this->modelExists($modelURI, $useACL))
+		
+		if ($this->modelExists($modelURI, $useACL)) {
 			return false;
-		$mt=DBStore::getNewModel($modelURI,$baseURI);
-		unset($this->_models[$modelURI]);
-		if($type=='OWL')
-			$mt->add(new Statement(new resource($modelURI),$GLOBALS['RDF_type'],$GLOBALS['OWL_Ontology']));
+		}
+			
+		$mt = DBStore::getNewModel($modelURI, $baseURI);
+		#unset($this->_models[$modelURI]);
+		
+		if ($type == 'OWL') {
+			$mt->add(new Statement(new Resource($modelURI), new Resource(EF_RDF_TYPE), new Resource(EF_OWL_ONTOLOGY)));
+		}
+		
+		$this->_modelInfoCache = null;
+		$this->_fetchModelInfos();
 		Zend_Registry::set('cache', array());
+		
 		$m = $this->getModel($modelURI);
 		
 		// trigger event
@@ -574,7 +667,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			}
 		} else
 			return false;
-		$model=$this->getNewModel($modelURI);
+		
+		$model = $this->getNewModel($modelURI);
+		
 		$model->dontCheckForDuplicatesOnAdd=true;
 		$model->logStart('Model created',$modelURI);
 		$model->logEnd();
@@ -621,13 +716,28 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_DataInterface
 	 */
 	public function modelExists($modelURI, $useACL = true) {
-		$args = array($modelURI);
-
+		
+		$args = array($modelURI, $useACL);
 		$c = cache('modelExists', $args);
 		if ($c !== null) {
 			return $c;
 		}
+		
+		$modelExists = false;
+			if (isset($this->_modelInfoCache["$modelURI"])) {
+				if (is_object($this->ac) && method_exists($this->ac, 'isModelAllowed')) {
+					if ($useACL and !$this->ac->isModelAllowed('view', $modelURI)) {
+						$modelExists = false;
+					} else {
+						$modelExists = true;
+					}
+				} else {
+					$modelExists = true;
+				}				
+			}
 			
+		return cache('modelExists', $args, $modelExists);
+		
 		$modelExists = false; 
 		if ($modelExists = DBStore::modelExists($modelURI)) {
 			if (is_object($this->ac) and method_exists($this->ac, 'isModelAllowed'))
@@ -921,6 +1031,48 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		return $stmArray;
 	}
 	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	private function _fetchModelInfos() {
+		
+		$sql = 'SELECT m.modelID, m.modelURI, m.baseURI, n.namespace, n.prefix
+				FROM models m
+				LEFT JOIN namespaces n
+				ON (m.modelID = n.modelID)';
+	
+		$result = $this->sqlQuery($sql);
+		if (!$result) {
+			throw new Exception('Error while fetching model and namespace informations.');
+		} else {
+			$this->_modelInfoCache = array();
+			foreach ($result as $row) {
+				if (!isset($this->_modelInfoCache["$row[1]"])) {
+					$this->_modelInfoCache["$row[1]"]['modelID'] = $row[0];
+					$this->_modelInfoCache["$row[1]"]['modelURI'] = $row[1];
+					$this->_modelInfoCache["$row[1]"]['baseURI'] = $row[2];
+					$this->_modelInfoCache["$row[1]"]['namespaces'] = array();
+
+					if ($row[3] != '') {
+						$this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+					}
+				} else {
+					$this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+				}
+			}
+		}
+	}
+	
+	public function getModelInfos($modelURI) {
+		
+		if (isset($this->_modelInfoCache["$modelURI"])) {
+			return $this->_modelInfoCache["$modelURI"];
+		} else {
+			return false;
+		}
+	}
+	
 	/*
 	 * helper function, that returns the modelID for a given modelURI
 	 * 
@@ -929,9 +1081,15 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 */
 	protected function _getModelID($modelURI) {
 		
-		$sql = 'SELECT modelID FROM models WHERE modelURI = "' . $modelURI . '"';
+		if (isset($this->_modelInfoCache["$modelURI"])) {
+			return $this->_modelInfoCache["$modelURI"]["modelID"];
+		} else {
+			return false;
+		}
 		
-		return $this->dbConn->getOne($sql);
+		
+		#$sql = 'SELECT modelID FROM models WHERE modelURI = "' . $modelURI . '"';
+		#return $this->dbConn->getOne($sql);
 	}
 	
 	/*

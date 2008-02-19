@@ -30,7 +30,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 	            GROUP BY s.subject
 	            ORDER BY s.subject';
 	            
-	    $subClasses = $this->model->_convertRecordSetToNodeList($sql, $this->model->vclass);
+	    $subClasses = $this->model->_convertRecordSetToNodeList($sql, 'class');
 	    
 	    if (!$emptyClasses) {
 	        $temp = $subClasses;
@@ -77,7 +77,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		$sql="SELECT DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype
 			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 				AND s1.predicate='".$this->model->_dbId($property)."'
-				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+				AND s2.predicate='".EF_RDF_TYPE."' AND s2.object='".$this->model->_dbId($this)."')
 			WHERE s1.modelID IN (".$this->model->getModelIds().")".($resourcesOnly?" AND s1.object_is='r'":'');
 #print_r($sql);
 		return $this->model->_convertRecordSetToNodeList($sql);
@@ -92,7 +92,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 			$sql="SELECT SUM(b) FROM (SELECT 1 as b
 					FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 						AND s1.predicate='".$this->model->_dbId($property)."'
-						AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+						AND s2.predicate='".EF_RDF_TYPE."' AND s2.object='".$this->model->_dbId($this)."')
 					WHERE s1.modelID IN (".$this->model->getModelIds().")".
 						($resourcesOnly?" AND s1.object_is='r'":'').
 					'GROUP BY s1.object,s1.object_is,s1.l_language,s1.l_datatype HAVING COUNT(*)>='.$minDistinctValues.') c';
@@ -100,7 +100,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 			$sql="SELECT COUNT(DISTINCT s1.object,s1.object_is,s1.l_language,s1.l_datatype)
 				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 					AND s1.predicate='".$this->model->_dbId($property)."'
-					AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+					AND s2.predicate='".EF_RDF_TYPE."' AND s2.object='".$this->model->_dbId($this)."')
 				WHERE s1.modelID IN (".$this->model->getModelIds().")".
 					($resourcesOnly?" AND s1.object_is='r'":'');
 #print_r($sql);
@@ -127,8 +127,8 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 					ON(s2.modelID IN (".$this->model->getModelIds().") AND s1.subject=s2.object AND s1.object_is=s2.object_is)
 				WHERE
 					s1.modelID IN (".$this->model->getModelIds().")
-					AND s1.predicate='".$this->model->_dbId('RDFS_subClassOf')."' AND s1.object='".$this->model->_dbId($this)."'
-					AND s2.predicate='".$this->model->_dbId('RDF_type')."'";
+					AND s1.predicate='".EF_RDFS_SUBCLASSOF."' AND s1.object='".$this->model->_dbId($this)."'
+					AND s2.predicate='".EF_RDF_TYPE."'";
 			$count+=$this->model->dbConn->getOne($sql);
 		}
 		return $count;
@@ -142,8 +142,8 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		$sql="SELECT s1.l_language
 		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
-		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
-		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
+		            AND s1.predicate='".EF_RDFS_LABEL."'
+		            AND s2.predicate='".EF_RDF_TYPE."'
 		            AND s2.object='".$this->model->_dbId($this)."')
 				WHERE s1.modelID IN (".$this->model->getModelIds().")
 		      GROUP BY s1.l_language";
@@ -157,9 +157,9 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		
 		$sql="SELECT s1.object,s3.object,s4.object,s5.object
 		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
-		            AND s1.predicate='".$this->model->_dbId('RDFS_label')."'
+		            AND s1.predicate='".EF_RDFS_LABEL."'
 		            AND s1.l_language='".$language."'
-		            AND s2.predicate='".$this->model->_dbId('RDF_type')."'
+		            AND s2.predicate='".EF_RDF_TYPE."'
 		            AND s2.object='".$this->getURI()."')
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s1.subject=s3.subject AND s1.modelID=s3.modelID
 					AND s3.predicate='".Zend_Registry::get('erfurt')->getStore()->SysOnt->baseURI.'labelText'."')
@@ -216,7 +216,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 			if(!$value)
 				$where.=" AND ISNULL(s$n.object)";
 		}
-		$sql.=' WHERE s.modelID IN ('.$this->model->getModelIds().') AND s.predicate=\''.$this->model->_dbId('RDF_type').'\'
+		$sql.=' WHERE s.modelID IN ('.$this->model->getModelIds().') AND s.predicate=\''.EF_RDF_TYPE.'\'
 			AND s.object=\''.$this->model->_dbId($this).'\''.(!empty($where)?$where:'').' GROUP BY s.subject';
 #print_r($sql);
 		if($count)
@@ -295,7 +295,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		$subClassesSql = join('", "', $subClassesIds);
 		
 
-		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND s.predicate = "' . $this->model->_dbId('RDF_type') . '" ' .
+		$sql .= ' WHERE s.modelID IN (' . $this->model->getModelIds() . ') AND s.predicate = "' . EF_RDF_TYPE . '" ' .
 					'AND s.object IN ("' . $this->model->_dbId($this) . '", "' . $subClassesSql . '")';
 		
 		$sql .= (!empty($where)) ? $where : '';
@@ -363,7 +363,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 			$sql="SELECT s1.subject,s1.subject_is,s2.predicate
 				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
 					AND (s2.predicate='".$this->model->_dbId('RDFS_domain')."' OR s2.predicate='".$this->model->_dbId('RDFS_subPropertyOf')."'))
-				WHERE s1.predicate='".$this->model->_dbId('RDF_type')."' AND s1.object IN ('".join("','",$propertyURIs)."')
+				WHERE s1.predicate='".EF_RDF_TYPE."' AND s1.object IN ('".join("','",$propertyURIs)."')
 					AND s1.modelID IN (".$this->model->getModelIds().")
 				HAVING ".$this->model->dbConn->IfNull("s2.predicate","'_pwlnull'")."='_pwlnull'";
 			$ret['owl:Thing']=$this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),$this->model->property);
@@ -389,7 +389,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 
 #		return $this->listPropertyValues($GLOBALS['RDFS_subClassOf'],'Class'); # <- returns bNodes
 		$sql="SELECT object,object_is FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE subject='".$this->getURI()."'
-			AND predicate='".$this->model->_dbId('RDFS_subClassOf')."' AND object_is='r' AND modelID IN (".$this->model->getModelIds().')';
+			AND predicate='".EF_RDFS_SUBCLASSOF."' AND object_is='r' AND modelID IN (".$this->model->getModelIds().')';
 		return $this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),$this->model->vclass);
 	}
 	
@@ -400,8 +400,8 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 		
 		$sql="SELECT s1.predicate
 			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2 ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
-				AND s1.predicate!='".$this->model->_dbId('RDF_type')."'
-				AND s2.predicate='".$this->model->_dbId('RDF_type')."' AND s2.object='".$this->model->_dbId($this)."')
+				AND s1.predicate!='".EF_RDF_TYPE."'
+				AND s2.predicate='".EF_RDF_TYPE."' AND s2.object='".$this->model->_dbId($this)."')
 			WHERE s1.modelID IN (".$this->model->getModelIds().")
 			GROUP BY s1.predicate";
 		return $this->model->_convertRecordSetToNodeList($sql,'Erfurt_Rdfs_Property_Default');
@@ -413,7 +413,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 	public function countInstances() {
 		
 		$sql="SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->model->getModelIds().")
-			AND predicate='".$this->model->_dbId('RDF_type')."' AND object='".$this->model->_dbId($this)."'";
+			AND predicate='".EF_RDF_TYPE."' AND object='".$this->model->_dbId($this)."'";
 		$count=$this->model->dbConn->getOne($sql);
 		return $count?$count:0;
 	}

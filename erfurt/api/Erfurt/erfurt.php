@@ -121,8 +121,8 @@ define('BNODE_PREFIX','node');
 
 // include rap lib
 require_once(RDFAPI_INCLUDE_DIR.'RdfAPI.php');
-require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
-require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
+#require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DBASE);
+#require_once(RDFAPI_INCLUDE_DIR.PACKAGE_VOCABULARY);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_SPARQL);
 require_once(RDFAPI_INCLUDE_DIR.PACKAGE_DATASET);
 require_once(RDFAPI_INCLUDE_DIR.'/syntax/SyntaxJSON.php');
@@ -138,12 +138,12 @@ $default_prefixes['owl']='http://www.w3.org/2002/07/owl#';
 
 
 // Add vocabulary missing in rdfapi-php/api/vocabulary/owl.php
-$OWL_equivalentClass = new Resource(OWL_NS."equivalentClass");
-$OWL_equivalentProperty = new Resource(OWL_NS."equivalentProperty");
-$OWL_Thing = new Resource(OWL_NS."Thing");
-$OWL_Nothing = new Resource(OWL_NS."Nothing");
-$OWL_AllDifferent = new Resource(OWL_NS."AllDifferent");
-$OWL_distinctMembers = new Resource(OWL_NS."distinctMembers");
+#$OWL_equivalentClass = new Resource(OWL_NS."equivalentClass");
+#$OWL_equivalentProperty = new Resource(OWL_NS."equivalentProperty");
+#$OWL_Thing = new Resource(OWL_NS."Thing");
+#$OWL_Nothing = new Resource(OWL_NS."Nothing");
+#$OWL_AllDifferent = new Resource(OWL_NS."AllDifferent");
+#$OWL_distinctMembers = new Resource(OWL_NS."distinctMembers");
 
 // HTML rendering related functions (header, footer)
 #require_once(POWLAPI_INCLUDE_DIR.'html.php');

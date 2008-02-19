@@ -13,14 +13,24 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * Provides a view of the model as a resource, e.g. to retrieve
 	 * or set owl:OntologyProperties.
 	 **/
-	var $asResource;
 	var $logActions=array();
-	var $importsSQL;
-	var $importsIds=array();
-	var	$resource='Erfurt_Rdfs_Resource_Default';
-	var $vocabulary;
+	#var $importsSQL;
+	
+	#var	$resource='Erfurt_Rdfs_Resource_Default';
+	
 	var $instance;
 	
+	
+	protected $importsIds;
+	protected $vocabulary;
+	protected $asResource;
+	
+	
+	protected $_resourceCache;
+	protected $_classCache;
+	protected $_instanceCache;
+	protected $_propertyCache;
+
 	/**
 	 * if is set, model can be written
 	 */
@@ -34,38 +44,52 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return RDFSmodel
 	 **/
 	function __construct($store,$modelURI,$type=NULL) {
-		if(!$store->modelExists($modelURI))
-			return FALSE;
+		#if(!$store->modelExists($modelURI))
+		#	return FALSE;
 
+		$this->_resourceCache = array();
+		$this->_classCache = array();
+		$this->_instanceCache = array();
+		$this->_propertyCache = array();
+
+		$this->importsIds = null;
 		$this->dbConn 	=& $store->dbConn;
 		$this->store 	=& $store;
 		$this->modelURI = $modelURI;
 		$this->type=$type?$type:$this->getType();
-		$this->resource='Erfurt_Rdfs_Resource_Default';
-		$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
-		$this->property=($this->type=='OWL'?'Erfurt_Owl_Property':'Erfurt_Rdfs_Property_Default');
-		$this->instance=($this->type=='OWL'?'Erfurt_Owl_Instance':'Erfurt_Rdfs_Instance_Default');
-		$this->asResource = $this->resourceF($this->modelURI);
+		#$this->resource='Erfurt_Rdfs_Resource_Default';
+		#$this->vclass=($this->type=='OWL'?'Erfurt_Owl_':'RDFS').'Class';
+		#$this->property=($this->type=='OWL'?'Erfurt_Owl_Property':'Erfurt_Rdfs_Property_Default');
+		#$this->instance=($this->type=='OWL'?'Erfurt_Owl_Instance':'Erfurt_Rdfs_Instance_Default');
+		$this->asResource = $this->resourceF($this->modelURI, false);
 #		$this->asResource=new $this->resource(rtrim($this->modelURI,'/#'),&$this);
-		$this->importsSQL='';
+		#$this->importsSQL='';
 
 		$this->vocabulary=array(
 				'Class'=>array(
-					$this->_dbId('OWL_Class')=>$GLOBALS['OWL_Class'],
-					$this->_dbId('RDFS_Class')=>$GLOBALS['RDFS_Class'],
-					$this->_dbId('OWL_DeprecatedClass')=>$GLOBALS['OWL_DeprecatedClass']),
+					EF_OWL_CLASS=>EF_OWL_CLASS,
+					EF_RDFS_CLASS=>EF_RDFS_CLASS,
+					EF_OWL_DEPRECATED_CLASS=>EF_OWL_DEPRECATED_CLASS),
 				'Property'=>array(
-					$this->_dbId('RDF_Property')=>$GLOBALS['RDF_Property'],
-					$this->_dbId('OWL_DatatypeProperty')=>$GLOBALS['OWL_DatatypeProperty'],
-					$this->_dbId('OWL_ObjectProperty')=>$GLOBALS['OWL_ObjectProperty'],
-					$this->_dbId('OWL_AnnotationProperty')=>$GLOBALS['OWL_AnnotationProperty'],
-					$this->_dbId('OWL_DeprecatedProperty')=>$GLOBALS['OWL_DeprecatedProperty'],
-					$this->_dbId('OWL_FunctionalProperty')=>$GLOBALS['OWL_FunctionalProperty'],
-					$this->_dbId('OWL_InverseFunctionalProperty')=>$GLOBALS['OWL_InverseFunctionalProperty'],
-					$this->_dbId('OWL_SymmetricProperty')=>$GLOBALS['OWL_SymmetricProperty'],
-					$this->_dbId('OWL_TransitiveProperty')=>$GLOBALS['OWL_TransitiveProperty'],
-					)
+					EF_RDF_PROPERTY=>EF_RDF_PROPERTY,
+					EF_OWL_DATATYPE_PROPERTY=>EF_OWL_DATATYPE_PROPERTY,
+					EF_OWL_OBJECT_PROPERTY=>EF_OWL_OBJECT_PROPERTY,
+					EF_OWL_ANNOTATION_PROPERTY=>EF_OWL_ANNOTATION_PROPERTY,
+					EF_OWL_DEPRECATED_PROPERTY=>EF_OWL_DEPRECATED_PROPERTY,
+					EF_OWL_FUNCTIONAL_PROPERTY=>EF_OWL_FUNCTIONAL_PROPERTY,
+					EF_OWL_INVERSEFUNCTIONAL_PROPERTY=>EF_OWL_INVERSEFUNCTIONAL_PROPERTY,
+					EF_OWL_SYMMETRIC_PROPERTY=>EF_OWL_SYMMETRIC_PROPERTY,
+					EF_OWL_TRANSITIVE_PROPERTY=>EF_OWL_TRANSITIVE_PROPERTY)
 			);
+
+#debug
+#TODO remove the above if possible
+#if (Zend_Registry::isRegistered('owLog')) {
+#	Zend_Registry::get('owLog')->debug('vocabulary: ' . serialize($this->vocabulary));
+#}
+
+#debug
+$GLOBALS['EFModelConstruct']++;
 	}
 	/**
 	 * Resource factory.
@@ -73,10 +97,40 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @param string $uri URI or localname of the resource to generate
 	 * @return Erfurt_Rdfs_Resource
 	 **/
-	function resourceF($uri, $expandNS = true) {
-		
-		return new Erfurt_Rdfs_Resource_Default($uri, $this, $expandNS);
+	public function resourceF($uri, $expandNS = true) {
+$GLOBALS['resourceFGeneralCount']++;
+		// iff $uri is already a Erfurt_Rdfs_Resource instance return it directly
+		if ($uri instanceof Erfurt_Rdfs_Resource) {
+			return $uri;
+		} else if ($uri instanceof Resource) {
+			// in case $uri is a RAP Resource instance... check for cached value as well
+			$uriString = $uri->getURI();
+			
+			if (isset($this->_resourceCache["$uriString"])) {
+				return $this->_resourceCache["$uriString"];
+			} else {
+				$r = new Erfurt_Rdfs_Resource_Default($uri, $this, false);
+				$this->_resourceCache["$uriString"] = $r;
+
+#debug
+$GLOBALS['resourceFCount']++;
+				return $r;
+			}
+		} else {
+			// in case $uri is a string containing the uri look for cached value
+			if (isset($this->_resourceCache["$uri"])) {
+				return $this->_resourceCache["$uri"];
+			} else {
+				$r = new Erfurt_Rdfs_Resource_Default($uri, $this, $expandNS);
+				#$GLOBALS['resourceFCount'].= $uri.'#'.$this->modelID.LINEFEED;
+				$this->_resourceCache["$uri"] = $r;
+#debug
+$GLOBALS['resourceFCount']++;
+				return $r;
+			}
+		}
 	}
+	
 	/**
 	 * Class factory.
 	 *
@@ -84,7 +138,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return RDFSClass
 	 **/
 	function classF($uri, $expandNS = true) {
-		
+
+#debug
+$GLOBALS['classFCount']++;
 		return new RDFSClass($uri, $this, $expandNS);
 	}
 	/**
@@ -94,7 +150,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return Erfurt_Rdfs_Property
 	 **/
 	function propertyF($uri, $expandNS = true) {
-		
+
+#debug
+$GLOBALS['propertyFCount']++;
 		return new Erfurt_Rdfs_Property_Default($uri, $this, $expandNS);
 	}
 	
@@ -105,7 +163,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return Erfurt_Rdfs_Instance
 	 **/
 	function instanceF($uri, $expandNS = true) {
-		
+
+#debug
+$GLOBALS['instanceFCount']++;
 		return new Erfurt_Rdfs_Instance_Default($uri, $this, $expandNS);
 	}
 	
@@ -128,7 +188,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return Erfurt_Rdfs_Literal
 	 */
 	public function literalF($label, $language = '', $datatype = '') {
-		
+	
 		return new Erfurt_Rdfs_Literal_Default($label, $language, $datatype);
 	}
 	
@@ -154,14 +214,26 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function listImports($asString = false) {
 		//TODO using dynamic import predicate defintion from config or so
-		return $this->findNodesAs($this->asResource,new Resource('http://www.w3.org/2002/07/owl#imports'),null,
+		return $this->findNodesAs($this->asResource, new Resource('http://www.w3.org/2002/07/owl#imports'), null,
 								  (($asString === true) ? 'string' : null));
 		//return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
 	}
 	
 	public function listModelIds() {
 		
-		return array_merge($this->importsIds,array($this->modelID));
+		if ($this->importsIds === null) {
+			$this->importsIds = array();
+			
+			$sql = 'SELECT modelID FROM models 
+					WHERE modelURI IN ("' . join('", "', $this->listImports(true)). '")';
+
+			$result = $this->store->sqlQuery($sql);
+			foreach ($result as $row) {
+				$this->importsIds[] = $row[0];
+			}
+		}
+		
+		return array_merge($this->importsIds, array($this->modelID));
 	}
 	
 	public function getModelIds() {
@@ -186,7 +258,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 		$tempbNode= new BlankNode($uri);
      		$res1 = $this->find($tempbNode, NULL, NULL);
   	 		$res2 = $this->find(NULL, NULL, $tempbNode);
-	 		$Node= new $this->resource($uri,$this);
+	 		$Node= $this->resourceF($uri, false);
      		$res3 = $this->find($Node, NULL, NULL);
   	 		$res4 = $this->find(NULL, NULL, $Node);
 	 		if ($res1->size()==0 && $res2->size()==0 && $res3->size()==0 && $res4->size()==0)
@@ -260,20 +332,20 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return string Returns one of RDF, RDFS or OWL.
 	 */
 	public function getType() {
-		 
+// TODO remove or clean up... vocabulary does not exist anymore	 
 		if(!empty(Zend_Registry::get('config')->SysOntModelURI) && $this->modelURI == Zend_Registry::get('config')->SysOntModelURI)
 			$type='OWL';
 		else if(!empty($this->store->SysOnt) && $modelClass = $this->store->SysOnt->getClass('Model'))
 			if($modelInstance=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
 				$type=$modelInstance->getPropertyValuePlain('modelType');
-		if((!empty($type) && $type=='OWL') || (empty($type) && ($this->findNode(NULL,'rdf:type','owl:Ontology') || $this->findNode(NULL,'rdf:type','owl:Class')))) {
+		if((!empty($type) && $type=='OWL') || (empty($type) && ($this->findNode(NULL,EF_RDF_TYPE,EF_OWL_ONTOLOGY) || $this->findNode(NULL,EF_RDF_TYPE,EF_OWL_CLASS)))) {
 			return 'OWL';
 		} else {
 			$this->vocabulary=array(
-				'Class'=>array($this->_dbId('RDFS_Class')=>$GLOBALS['RDFS_Class']),
-				'Property'=>array($this->_dbId('RDF_Property')=>$GLOBALS['RDF_Property'])
+				'Class'=>array(EF_RDFS_CLASS=>EF_RDFS_CLASS),
+				'Property'=>array(EF_RDF_PROPERTY=>EF_RDF_PROPERTY)
 			);
-			if(!empty($type) && $type=='RDFS' || (empty($type) && $this->findNode(NULL,'rdf:type','rdfs:Class')))
+			if(!empty($type) && $type=='RDFS' || (empty($type) && $this->findNode(NULL,EF_RDF_TYPE,EF_RDFS_CLASS)))
 				return 'RDFS';
 			else
 				return 'RDF';
@@ -289,7 +361,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		
 		if ($type != $this->getType()) {
 			if ($type == 'OWL')
-				$this->add($this->modelURI, 'rdf:type', 'owl:Ontology');
+				$this->add($this->modelURI, EF_RDF_TYPE, EF_OWL_ONTOLOGY);
 		}
 	}
 	
@@ -391,7 +463,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return
 	 **/
 	public function listTypes($type=NULL,$class=NULL,$start=0,$count=0,$erg=0) {
-		return $this->findNodes(NULL,'rdf:type',$type,$class,$start,$count,&$erg);
+		return $this->findNodes(NULL, EF_RDF_TYPE, $type,$class,$start,$count,&$erg);
 	}
 	
 	/**
@@ -405,7 +477,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function listRDFTypeInstances($type = null, $offset = null, $limit = null) {
 		
-		return $this->findNodes(null, 'rdf:type', $type, null, $offset, $limit);
+		return $this->findNodes(null, EF_RDF_TYPE, $type, null, $offset, $limit);
 	}
 	
 	/**
@@ -420,7 +492,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function listRDFTypeInstancesAs($type = null, $class, $offset = null, $limit = null) {
 		
-		return $this->findNodes(null, 'rdf:type', $type, $class, $offset, $limit);
+		return $this->findNodes(null, EF_RDF_TYPE, $type, $class, $offset, $limit);
 	}
 	
 	/**
@@ -432,7 +504,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		
 		$ret=array();
 		foreach($this->vocabulary['Class'] as $class)
-			$ret=array_merge($ret,$this->findNodes(NULL,'rdf:type',$class,'Class'));
+			$ret=array_merge($ret,$this->findNodes(NULL, EF_RDF_TYPE, $class,'Class'));
 		return $ret;
 	}
 	
@@ -469,8 +541,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		return $this->addNamedClass($uri);
 		
 		$cl=$this->vocabulary['Class'];
-		$this->add($uri,'rdf:type',current($cl));
-		return new $this->vclass($uri,$this);
+		$this->add($uri, EF_RDF_TYPE, current($cl));
+		return $this->classF($uri);
 	}
 	
 	/**
@@ -483,9 +555,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	public function addNamedClass($uri) {
 		
 		$cl = $this->vocabulary['Class'];
-		$this->add($uri, 'rdf:type', current($cl));
+		$this->add($uri, EF_RDF_TYPE, current($cl));
 		
-		return new $this->classF($uri);
+		return $this->classF($uri);
 	}
 	
 	/**
@@ -497,8 +569,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	public function addAnonymousClass() {
 		
 		$bNode=new BlankNode($this->getUniqueResourceURI(BNODE_PREFIX));
-		$this->add($bNode,'rdf:type',current($this->vocabulary['Class']));
-		return new $this->vclass($bNode->getURI(),$this);
+		$this->add($bNode,EF_RDF_TYPE,current($this->vocabulary['Class']));
+		return $this->classF($bNode->getURI(), false);
 	}
 	
 	/**
@@ -509,12 +581,13 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function getClass($uri) {
 		
-		$uri=($uri instanceof Resource)?$uri->getURI():$uri;
-		if($uri)
+		$uri = ($uri instanceof Resource) ? $uri->getURI() : $uri;
+		
+		if ($uri)
 		foreach($this->vocabulary['Class'] as $class) {
-			$cl=$this->find($uri,'rdf:type',$class);
+			$cl=$this->find($uri,EF_RDF_TYPE,$class);
 			if($cl->triples)
-				return new $this->vclass($uri,$this);
+				return $this->classF($uri);
 		}
 		return false;
 	}
@@ -528,8 +601,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	public function addProperty($uri) {
 		
 		reset($this->vocabulary['Property']);
-		$this->add($uri,'rdf:type',current($this->vocabulary['Property']));
-		return new $this->property($uri,$this);
+		$this->add($uri, EF_RDF_TYPE, current($this->vocabulary['Property']));
+		return $this->propertyF($uri);
 	}
 	
 	/**
@@ -543,9 +616,9 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 		$uri=($uri instanceof Resource)?$uri->getURI():$uri;
 		if($uri)
 		foreach($this->vocabulary['Property'] as $property) {
-			$cl=$this->find($uri, 'rdf:type', $property);
+			$cl=$this->find($uri, EF_RDF_TYPE, $property);
 			if($cl->triples)
-				return new $this->property($uri,$this);
+				return $this->propertyF($uri);
 		}
 		return false;
 	}
@@ -559,7 +632,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function addInstance($uri, $class) {
 		
-		$this->add($uri,'rdf:type',$class);
+		$this->add($uri,EF_RDF_TYPE,$class);
 		return $this->instanceF($uri);
 	}
 	
@@ -571,8 +644,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function getInstance($uri) {
 		
-		foreach(array_keys($this->findNodes($uri,'rdf:type',NULL)) as $class) {
-			if(array_intersect(array_keys($this->findNodes($class,'rdf:type',NULL)),array_keys($this->vocabulary['Class'])))
+		foreach(array_keys($this->findNodes($uri,EF_RDF_TYPE,NULL)) as $class) {
+			if(array_intersect(array_keys($this->findNodes($class,EF_RDF_TYPE,NULL)),array_keys($this->vocabulary['Class'])))
 				return $this->instanceF($uri);
 		}
 		return false;
@@ -642,7 +715,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 			foreach($prop->listSuperProperties() as $superprop)
 				if($this->findStatement($superprop, null, null)) $toAdd=false;
 			if ($toAdd)
-				$topprop[$prop->getLocalName()] = $this->propertyF($prop);
+				$topprop[$prop->getLocalName()] = $this->propertyF($prop, false);
 		}
 		
 		return $topprop;
@@ -676,7 +749,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @deprecated Use findAsMemModel instead.
 	 */
 	public function find($s, $p, $o, $start = 0, $count = 0, $erg = 0) { 
-	
+
 		return $this->findAsMemModel($s, $p, $o, $start, $count, &$erg);
 	}
 	
@@ -828,7 +901,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @deprecated Use findNodesAs instead.
 	 */
 	public function findNodes($subject, $predicate, $object, $class = null, $start = 0, $count = 0, $erg = 0) {
-		
+	
 		return $this->findNodesAs($subject, $predicate, $object, $class, $start, $count, &$erg);
 	}
 	

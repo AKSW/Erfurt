@@ -50,7 +50,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 		parent::__construct($store, $modelURI, 'OWL'); // force type OWL
 		
 		// initialize the import ids for the owl:imports support
-		$this->importsIds = array();
+		$this->importsIds = null;
 	}
 	
 	/**
@@ -77,8 +77,36 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @return Erfurt_Owl_Property
 	 */
 	public function classF($uri, $expandNS = true) {
-		
-		return new Erfurt_Owl_Class($uri, $this, $expandNS); 
+
+		// iff $uri is already a Erfrut_Owl_Class instance return it directly
+		if ($uri instanceof Erfurt_Owl_Class) {
+			return $uri;
+		} else if ($uri instanceof Resource) {
+			$uriString = $uri->getURI();
+			
+			if (isset($this->_classCache["$uriString"])) {
+				return $this->_classCache["$uriString"];
+			} else {
+				$r = new Erfurt_Owl_Class($uri, $this, false);
+				$this->_classCache["$uriString"] = $r;
+				
+#debug
+$GLOBALS['classFCount']++;
+				return $r;
+			}
+		} else {
+			// in case $uri is a string containing the uri look for cached value
+			if (isset($this->_classCache["$uri"])) {
+				return $this->_classCache["$uri"];
+			} else {
+				$r = new Erfurt_Owl_Class($uri, $this, $expandNS);
+				$this->_classCache["$uri"] = $r;
+
+#debug
+$GLOBALS['classFCount']++;
+					return $r;
+			}
+		}
 	}
 	
 	/**
@@ -89,7 +117,9 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @return Erfurt_Owl_Property
 	 */
 	public function propertyF($uri, $expandNS = true) {
-		
+
+#debug
+$GLOBALS['propertyFCount']++;		
 		return new Erfurt_Owl_Property($uri, $this, $expandNS); 
 	}
 	
@@ -101,8 +131,36 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 * @return Erfurt_Owl_Property
 	 */
 	public function instanceF($uri, $expandNS = true) {
-		
-		return new Erfurt_Owl_Instance($uri, $this, $expandNS); 
+
+		// iff $uri is already a Erfrut_Owl_Instance instance return it directly
+		if ($uri instanceof Erfurt_Owl_Instance) {
+			return $uri;
+		} else if ($uri instanceof Resource) {
+			$uriString = $uri->getURI();
+			
+			if (isset($this->_instanceCache["$uriString"])) {
+				return $this->_instanceCache["$uriString"];
+			} else {
+				$r = new Erfurt_Owl_Instance($uri, $this, false);
+				$this->_instanceCache["$uriString"] = $r;
+				
+#debug
+$GLOBALS['instanceFCount']++;
+				return $r;
+			}
+		} else {
+			// in case $uri is a string containing the uri look for cached value
+			if (isset($this->_instanceCache["$uri"])) {
+				return $this->_instanceCache["$uri"];
+			} else {
+				$r = new Erfurt_Owl_Instance($uri, $this, $expandNS);
+				$this->_instanceCache["$uri"] = $r;
+
+#debug
+$GLOBALS['instanceFCount']++;
+					return $r;
+			}
+		}
 	}
 	
 	/**
@@ -113,7 +171,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 */
 	public function addDatatypeProperty($uri) {
 		
-		$this->add($uri, 'rdf:type', 'owl:DatatypeProperty');
+		$this->add($uri, EF_RDF_TYPE, EF_OWL_DATATYPE_PROPERTY);
 		return $this->propertyF($uri);
 	}
 	
@@ -125,7 +183,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 */
 	public function addObjectProperty($uri) {
 		
-		$this->add($uri, 'rdf:type', 'owl:ObjectProperty');
+		$this->add($uri, EF_RDF_TYPE, EF_OWL_OBJECT_PROPERTY);
 		return $this->propertyF($uri);
 	}
 	
@@ -293,7 +351,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	 */
 	public function listAllDifferentSets() {
 // TODO check method name		
-		return $this->findNodes(null, 'rdf:type', 'owl:AllDifferent');
+		return $this->findNodes(null, EF_RDF_TYP, EF_OWL_ALLDIFFERENT);
 	}
 	
 	/**
@@ -329,7 +387,7 @@ class Erfurt_Owl_Model extends RDFSModel {
 	public function addAllDifferent($members) {
 		
 		$allDifferent = new BlankNode($this->getUniqueResourceURI(EF_BNODE_PREFIX));
-		$this->add($allDifferent, 'rdf:type', 'owl:AllDifferent');
+		$this->add($allDifferent, EF_RDF_TYPE, 'owl:AllDifferent');
 		$distinctMembers = $this->addList($members, false);
 		$this->add($allDifferent, 'owl:distinctMembers', $distinctMembers);
 	}

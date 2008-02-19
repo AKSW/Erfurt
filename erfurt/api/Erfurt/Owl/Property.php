@@ -177,7 +177,7 @@ class Erfurt_Owl_Property  extends Erfurt_Rdfs_Property_Default {
 		
 		$this->removeRange();
 		$range = new Blanknode($this->model->getUniqueResourceURI(EF_BNODE_PREFIX));
-		$this->model->add($range, 'rdf:type', 'owl:DataRange');
+		$this->model->add($range, EF_RDF_TYPE, 'owl:DataRange');
 		$oneOf = $this->model->addList($members);
 		$this->model->add($range, 'owl:oneOf', $oneOf);
 		$this->addRange($range);

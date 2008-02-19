@@ -103,7 +103,7 @@ class Erfurt_Rdfs_Instance_Default extends Erfurt_Rdfs_Resource_Default {
 	public function removePropertyValues($prop, $value = '') {
 		
 		if (!($prop instanceof Erfurt_Rdfs_Property)) {
-			$prop = new $this->model->propertyF($prop);
+			$prop = $this->model->propertyF($prop);
 		}
 			
 		if ($value && !($value instanceof Node)) {

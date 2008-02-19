@@ -8,11 +8,20 @@
  * @version $Id$
  */
 class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
-	public function __construct($store,$modelURI,$type=NULL) {
-		$modelVars =& $store->dbConn->execute("SELECT modelURI, modelID, baseURI FROM models WHERE modelURI='" .$modelURI ."'");
-		$this->modelID 	= $modelVars->fields[1];
-		$this->baseURI 	= $this->_checkBaseURI($modelVars->fields[2]);
-		parent::__construct($store,$modelURI,$type);
+	
+	public function __construct($store, $modelURI, $type = null) {
+		
+		$modelVars = $store->getModelInfos($modelURI);
+		$this->modelID = $modelVars['modelID'];
+		$this->baseURI = $modelVars['baseURI'];
+		
+		
+		#$modelVars =& $store->dbConn->execute("SELECT modelURI, modelID, baseURI FROM models WHERE modelURI='" .$modelURI ."'");
+// TODO remove the above sql... when no sql is executed directly in this class anymore 
+		#$this->modelID 	= $modelVars->fields[1];
+		#$this->baseURI 	= $this->_checkBaseURI($modelVars->fields[2]);
+		
+		parent::__construct($store, $modelURI, $type);
 	}
 	
 #######################################################################################################################
@@ -37,11 +46,14 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * @see DefaultRDFSModel
 	 */
 	public function getParsedNamespaces() {
-		
-		$c=cache('getParsedNamespaces'.$this->modelURI,array());
-		if($c!==null)
+
+		$args = array();
+		$c = cache(('getParsedNamespaces'.$this->modelURI),$args);
+		if ($c !== null) {
 			return $c;
-		$ret=array_flip((array) $GLOBALS['default_prefixes']);
+		}
+			
+		$ret = array_flip((array) $GLOBALS['default_prefixes']);
 		// get namespace prefixes from SysOnt-Class "Model"
 		#if(0 && !empty($this->store->SysOnt) && $modelClass=$this->store->SysOnt->getClass('Model'))
 		#	if($inst=$modelClass->findInstance(array('modelURI'=>$this->modelURI)))
@@ -49,9 +61,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		#			$ns=explode(':',$prefix,2);
 		#			$ret[$ns[1].(ereg('[#/]$',$ns[1])?'':'#')]=$ns[0];
 		#		}
-		$pns=DbModel::getParsedNamespaces();
-		$ret=array_filter($pns?array_merge((array)$ret,$pns):$ret);
-		return cache('getParsedNamespaces'.$this->modelURI,array(),$ret);
+		#$pns=DbModel::getParsedNamespaces();
+		#$ret = array_filter($pns?array_merge((array)$ret,$pns):$ret);
+		$pns = $this->store->listNamespaces($this->modelURI);
+		$ret = array_filter(array_merge((array)$ret, $pns));
+		return cache(('getParsedNamespaces'.$this->modelURI), $args, $ret);
 	}
 	
 	/**
@@ -336,7 +350,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$ret=array();
 		foreach($res->getArray() as $a)
 			foreach($a as $r)
-				$ret[$r]=$this->resourceF($r);
+				$ret[$r]=$this->resourceF($r, false);
 
 		return $ret;
 	}
@@ -399,6 +413,9 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	
 	public function listTopClasses($systemClasses = false, $emptyClasses = false, $implicitClasses = false, $hiddenClasses = true) {
         
+# debug (this method is expensive and always will be... caching is the only solution)
+#return array();
+
 		$args = func_get_args();
 		$c = new stmCache('listTopClasses', $args, $this);
 		$cVal = $c->get();	
@@ -429,7 +446,8 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			
 		// check whether classes are top classes
 		foreach ($sqlResult as $row) {
-			if (!$this->hasStatement($row, 'rdfs:subClassOf', null) || $this->hasStatement($row, 'rdfs:subClassOf', EF_OWL_THING)) {
+			if (!$this->hasStatement($row, EF_RDFS_SUBLCASSOF, null) || 
+					$this->hasStatement($row, EF_RDFS_SUBLCASSOF, EF_OWL_THING)) {
 				$tempClassArray[] = $this->classF($row[0]);
 			}
 		}
@@ -488,7 +506,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$temp = $tempClassArray;
 			$tempClassArray = array();
 			foreach ($temp as $row) {
-				if ($this->hasStatement($row, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
+				if ($this->hasStatement($row, EF_RDF_TYPE, array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS))) {
 					$tempClassArray[] = $row;
 				}
 			}		
@@ -496,15 +514,15 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$temp = $tempClassArray;
 			$tempClassArray = array();
 			foreach ($temp as $row) {
-				if ($this->hasStatement($row, 'rdf:type', EF_RDFS_CLASS)) {
+				if ($this->hasStatement($row, EF_RDF_TYPE, EF_RDFS_CLASS)) {
 					$row->classType = 'rdfs:Class';
 					$row->implicit = false;
 					$tempClassArray[] = $row;
-				} else if ($this->hasStatement($row, 'rdf:type', EF_OWL_CLASS)) {
+				} else if ($this->hasStatement($row, EF_RDF_TYPE, EF_OWL_CLASS)) {
 					$row->classType = 'owl:Class';
 					$row->implicit = false;
 					$tempClassArray[] = $row;
-				} else if ($this->hasStatement($row, 'rdf:type', EF_OWL_DEPRECATED_CLASS)) {
+				} else if ($this->hasStatement($row, EF_RDF_TYPE, EF_OWL_DEPRECATED_CLASS)) {
 					$row->classType = 'owl:DeprecatedClass';
 					$row->implicit = false;
 					$tempClassArray[] = $row;
@@ -571,11 +589,8 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 												OPTIONAL { ?s <' . $subRelProps . '> ?par } .
 												OPTIONAL { ?sub <' . $subRelProps . '> ?s } 
 											}';
-
+											
 			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
-
-
-
 			return $this->_buildHierarchyRecursive($sparqlResult, $entryPoint);
 		} else {
 			$sparql = 'SELECT ?s WHERE 	{ 
@@ -641,8 +656,6 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$sql = 'SELECT s.subject, s.predicate, s.object
 				FROM statements s WHERE modelID IN (' . $this->getModelIds() . ')';
 				
-		
-			
 		$subString = '';
 		$predString = '';
 		$objString = '';
@@ -722,8 +735,8 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$sql="SELECT s1.l_language
 		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
-		            AND s1.predicate='".$this->_dbId($GLOBALS['RDFS_label'])."'
-		            AND s2.predicate='".$this->_dbId($GLOBALS['RDF_type'])."'
+		            AND s1.predicate='".EF_RDFS_LABEL."'
+		            AND s2.predicate='".EF_RDF_TYPE."'
 		            AND (1=0 ".$clsql."))
 				WHERE s1.modelID IN (".$this->getModelIds().")
 		      GROUP BY s1.l_language";
@@ -741,7 +754,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			foreach($this->rdqlQuery($q) as $res)
 				if($res['?x']) {
 					if(method_exists($res['?x'],'getLocalName')) {
-						$ret[$res['?x']->getLocalName()]=new $this->instance($res['?x']->getURI(),$this);
+						$ret[$res['?x']->getLocalName()] = $this->instanceF($res['?x']->getURI());
 					}
 				}
 		}
@@ -759,12 +772,12 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$sql="SELECT s3.subject
 		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
 		         ON(s1.subject=s2.subject AND s1.modelID=s2.modelID
-		            AND s2.predicate='".$GLOBALS['RDF_type']->getURI()."'
+		            AND s2.predicate='".EF_RDF_TYPE."'
 		            AND (1=0 ".$clsql."))
 				INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s3 ON(s2.modelID=s3.modelID AND s1.predicate=s3.subject
-					AND s3.predicate='".$GLOBALS['RDF_type']->getURI()."' AND s3.object='".$GLOBALS['OWL_AnnotationProperty']->getURI()."')
-				WHERE (s1.modelID=".$this->modelID.str_replace('modelID','s1.modelID',$this->model->importsSQL).")
-		      GROUP BY s3.subject";
+					AND s3.predicate='".EF_RDF_TYPE."' AND s3.object='".EF_OWL_ANNOTATION_PROPERTY."')
+				WHERE (s1.modelID IN (" . $this->getModelIDs() . ")) 
+		  		GROUP BY s3.subject";
 #print_r($sql);
 		return $this->dbConn->getCol($sql);
 	}
@@ -888,7 +901,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			}		
 		}
 
-		$sql .= ' WHERE s.modelID IN (' . $this->getModelIds() . ') AND	s.predicate = "' . $this->_dbId('RDF_type') . '" ' .
+		$sql .= ' WHERE s.modelID IN (' . $this->getModelIds() . ') AND	s.predicate = "' . EF_RDF_TYPE . '" ' .
 		 			'AND s.object NOT IN ("' . EF_OWL_RESTRICTION . '", "' . EF_OWL_CLASS .'", "' . EF_RDFS_CLASS . '", ' .
 		            '"' . EF_OWL_DEPRECATED_CLASS . '", "' . EF_RDF_PROPERTY . '", "' . EF_OWL_DATATYPE_PROPERTY . '", ' .
 		            '"' . EF_OWL_OBJECT_PROPERTY . '", "' . EF_OWL_ANNOTATION_PROPERTY . '", "' . EF_OWL_DEPRECATED_PROPERTY. '", ' .
@@ -949,10 +962,51 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			if($row[$i+1]=='l')
 				$ret[$row[$i]] = $this->literalF($row[$i]);
 			else if($row[$i+1]=='r' && $row[$i]!=$GLOBALS['RDF_nil']->getURI()) {
-				$r=($class && class_exists($class)?new $class($row[$i],$this):new $this->resource($row[$i],$this));
+				if (class_exists($class)) {
+					switch ($class) {
+						case 'resource';
+						case 'Erfurt_Rdfs_Resource':
+							$r = $this->resourceF($row[$i]);
+							break;
+						case 'class':
+						case 'RDFSClass':
+							$r = $this->classF($row[$i]);
+							break;
+						case 'instance':
+						case 'Erfurt_Rdfs_Instance':
+							$r = $this->classF($row[$i]);
+							break;
+						case 'property':
+						case 'Erfurt_Rdfs_Property':
+							$r = $this->propertyF($row[$i]);
+							break;
+						default:
+							$r = new $class($row[$i], $this);
+							#debug
+							echo $class;
+					}
+				} else {
+					$r = $this->resourceF($row[$i]);
+				}
+				
+				#$r=($class && class_exists($class)?new $class($row[$i],$this) : $this->resourceF($row[$i]));
 				$ret[$r->getLocalName()]=$class=='Plain'?$r->getLocalName():$r;
 			} else if($row[$i]) {
-				$member=$row[$i+1]=='b'?($class && class_exists($class)?new $class($row[$i],$this):new BlankNode($row[$i])):new $this->resource($row[$i],$this);
+				if (class_exists($class)) {
+					if ($row[$i+1] == 'b') {
+						echo $class;
+// TODO use factory
+						$member = new $class($row[$i], $this);
+					} else {
+						$member = $this->resourceF($row[$i]);
+					}
+				} else {
+					if ($row[$i+1] == 'b') {
+						$member = new BlankNode($row[$i]);
+					} else {
+						$member = $this->resourceF($row[$i]);
+					}
+				}
 				if($row[$i+1]=='b') // Blanknodes have empty namespace
 					$member->uri=$row[$i];
 				$list=$this->getList($member,$class);
@@ -1068,18 +1122,33 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
  	*/
 	public function countInstances($includeImports = true) {
 	
-		$clsql='';
-		foreach($this->vocabulary['Class'] as $cl)
-			$clsql.="OR s1.object='".$cl->getURI()."'";
-		$sql="SELECT COUNT(s1.modelID) FROM
-				".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 INNER JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
-					ON((s1.modelID=s2.modelID".(!empty($this->importsIds)?" OR s1.modelID IN (".$this->getModelIds().')':'').")
-						AND s1.predicate='".$this->_dbId('RDF_type')."'
-						AND (1=0 $clsql)
-						AND s2.predicate='".$this->_dbId('RDF_type')."'
-						AND s2.object=s1.subject
-					)
-				WHERE s2.modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")";
+		$clsql = '';
+		foreach ($this->vocabulary['Class'] as $cl) {
+			$clsql .= "OR s1.object='" . $cl->getURI() . "'";
+		}
+			
+		// old
+		// $sql = "SELECT COUNT(s1.modelID) FROM " . $GLOBALS['RAP']['conf']['database']['tblStatements'] . " s1 
+		// 				INNER JOIN " . $GLOBALS['RAP']['conf']['database']['tblStatements']." s2 
+		// 				ON ((s1.modelID = s2.modelID" . (!empty($this->importsIds) ? " OR s1.modelID IN (" .
+		// 					$this->getModelIds() . ')' : '') . ") 
+		// 					AND s1.predicate = '" . EF_RDF_TYPE . "'
+		// 					AND (1=0 $clsql)
+		// 					AND s2.predicate = '" . EF_RDF_TYPE . "'
+		// 					AND s2.object = s1.subject
+		// 				)
+		// 				WHERE s2.modelID IN (" . ($includeImports ? $this->getModelIds() : $this->modelID) . ")";
+						
+		$sql = "SELECT COUNT(s1.modelID) FROM " . $GLOBALS['RAP']['conf']['database']['tblStatements'] . " s1 
+				INNER JOIN " . $GLOBALS['RAP']['conf']['database']['tblStatements']." s2 
+				ON ((s1.modelID IN (" . ($includeImports ? $this->getModelIds() : $this->modelID) . ")) 
+					AND s1.predicate = '" . EF_RDF_TYPE . "'
+					AND (1=0 $clsql)
+					AND s2.predicate = '" . EF_RDF_TYPE . "'
+					AND s2.object = s1.subject
+				)
+				WHERE s2.modelID IN (" . ($includeImports ? $this->getModelIds() : $this->modelID) . ")";
+		
 		return $this->dbConn->getOne($sql);
 	}
 	
@@ -1117,12 +1186,13 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * @access	protected
 	 */
 	protected function query($subject,$predicate,$object,$start=0,$count='') {
+
 		if(!($subject instanceof Node) && $subject!=NULL)
-			$subject=new $this->resource($subject,$this);
+			$subject = $this->resourceF($subject);
 		if(!($predicate instanceof Node) && $predicate!=NULL)
-			$predicate=new $this->resource($predicate,$this);
+			$predicate = $this->resourceF($predicate);
 		if(!($object instanceof Node) && $object != NULL)
-			$object=new $this->resource($object,$this);
+			$object = $this->resourceF($object);
 		// static part of the sql statement
 		$sql="SELECT subject,predicate,object,l_language,l_datatype,subject_is,object_is,id
 			FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE modelID IN (".$this->getModelIds().')';
@@ -1226,19 +1296,25 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 					$res=new BlankNode($fields[0]);
 				else if($class) {
 					if(strtolower($class)=='resource')
-						$res=$this->resourceF($fields[0]);
+						$res=$this->resourceF($fields[0], false);
 					else if(strtolower($class)=='class')
-						$res=$this->classF($fields[0]);
+						$res=$this->classF($fields[0], false);
 					else if(strtolower($class)=='property')
-						$res=$this->propertyF($fields[0]);
+						$res=$this->propertyF($fields[0], false);
 					else if(strtolower($class)=='instance')
-						$res=$this->instanceF($fields[0]);
-					else
-						$res=new $class($fields[0],$this);
+						$res=$this->instanceF($fields[0], false);
+					else {
+#debug
+if (Zend_Registry::isRegistered('owLog')) {
+	Zend_Registry::get('owLog')->debug('_convertRecordSetToNodeList#$class: ' . $class);
+}
+						$res = new $class($fields[0],$this);
+					}
+						
 					if($fields[1]=='b')
 						$res->uri=$fields[0];
 				} else
-					$res=$this->resourceF($fields[0]);
+					$res=$this->resourceF($fields[0], false);
 				if(method_exists($res,'getLocalName') && $res->getLocalName())
 					$ret[$res->getLocalName()]=$res;
 				else
@@ -1280,15 +1356,15 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	}
 	
 	function _convertRowToStatement($row) {
-		$sub=$row[5]=='r'?$this->resourceF($row[0]):new BlankNode($row[0]);
-		$pred=$this->resourceF($row[1]);
+		$sub=$row[5]=='r'?$this->resourceF($row[0], false):new BlankNode($row[0]);
+		$pred=$this->resourceF($row[1], false);
 		// object
 		if($row[6]=='l')
 			$obj = $this->literalF($row[2], $row[3], $row[4]);
 		else if($row[6] == 'b')
 			$obj=new BlankNode($row[2]);
 		else
-			$obj=$this->resourceF($row[2]);
+			$obj=$this->resourceF($row[2], false);
 		$stm=new Statement($sub,$pred,$obj);
 		$stm->dbId=$row[7];
 		return $stm;
@@ -1318,8 +1394,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * @access	private
 	 */
 	function _dbId($resource) {
-		if(is_string($resource))
-			$resource=($GLOBALS[$resource] instanceof Resource)?$GLOBALS[$resource]:new $this->resource($resource,$this);
+		
+		if (is_string($resource)) {
+			$resource = $this->resourceF($resource);
+		}
+			
 		return $resource->getURI();
 	}
 	function _dbIds($resources) {
@@ -1341,12 +1420,12 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		if($recordSet->EOF)
 			return false;
 		// subject
-		$sub=$recordSet->fields[5] == 'r'?new $this->resource($recordSet->fields[0],$this):new BlankNode($recordSet->fields[0]);
+		$sub=$recordSet->fields[5] == 'r' ? $this->resourceF($recordSet->fields[0]) : new BlankNode($recordSet->fields[0]);
 		// predicate
-		$pred=new $this->resource($recordSet->fields[1],$this);
+		$pred = $this->resourceF($recordSet->fields[1]);
 		// object
 		if ($recordSet->fields[6]=='r')
-			$obj=new $this->resource($recordSet->fields[2],$this);
+			$obj = $this->resourceF($recordSet->fields[2]);
 		else if($recordSet->fields[6]=='b')
 			$obj=new BlankNode($recordSet->fields[2]);
 		else {
@@ -1412,7 +1491,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				$w[]="$whe rlike '$search'";
 			else {
 				if($whe!='object') {
-					$r=new $this->resource($search,$this);
+					$r = $this->resourceF($search);
 					$w[]="$whe='".$this->_dbId($r)."'";
 				} else
 					$w[]="$whe='$search'";
@@ -1434,15 +1513,15 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	public function searchFullText($search, $type = null, $start=0, $count = 10000, $erg = 0) {
 		
 		$sql='SELECT s.subject,s.predicate,s.object,s.l_language,s.l_datatype,s.subject_is,s.object_is,MATCH('.(is_string($type)?'subject':'s.object').') AGAINST (\''.$search.'\' /*!40001 IN BOOLEAN MODE */) AS score FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s
-			'.(is_array($type)?'INNER JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 ON(s.modelID=s1.modelID AND s.subject=s1.subject AND s1.predicate="'.$this->_dbId('RDF_type').'" AND s1.object IN ("'.join('","',$type).'"))':'').'
+			'.(is_array($type)?'INNER JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 ON(s.modelID=s1.modelID AND s.subject=s1.subject AND s1.predicate="'.EF_RDF_TYPE.'" AND s1.object IN ("'.join('","',$type).'"))':'').'
 			WHERE MATCH('.(is_string($type)?'subject':'s.object').') AGAINST (\''.$search.'\' /*!40001 IN BOOLEAN MODE */) AND s.modelID IN ('.$this->getModelIds().')'.
 			(is_string($type)?' AND object_is=\'r\'':' AND s.object_is=\'l\'');
 		if($type=='Classes')
-			$sql.=' AND predicate=\''.$this->_dbId('RDF_type').'\' AND object IN (\''.join('\',\'',array_keys($this->vocabulary['Class'])).'\')';
+			$sql.=' AND predicate=\''.EF_RDF_TYPE.'\' AND object IN (\''.join('\',\'',array_keys($this->vocabulary['Class'])).'\')';
 		else if($type=='Properties')
-			$sql.=' AND predicate=\''.$this->_dbId('RDF_type').'\' AND object IN (\''.join('\',\'',array_keys($this->vocabulary['Property'])).'\')';
+			$sql.=' AND predicate=\''.EF_RDF_TYPE.'\' AND object IN (\''.join('\',\'',array_keys($this->vocabulary['Property'])).'\')';
 		else if($type=='Instances')
-			$sql.=' AND predicate=\''.$this->_dbId('RDF_type').'\' AND object NOT IN (\''.join('\',\'',array_keys(array_merge($this->vocabulary['Class'],$this->vocabulary['Property']))).'\')';
+			$sql.=' AND predicate=\''.EF_RDF_TYPE.'\' AND object NOT IN (\''.join('\',\'',array_keys(array_merge($this->vocabulary['Class'],$this->vocabulary['Property']))).'\')';
 #	print_r($sql);
 #	exit;
 		$rs=$this->dbConn->PageExecute($sql,$count,$start/$count+1);
@@ -1464,9 +1543,9 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$sql="SELECT s1.object,s1.object_is,s2.object_is,s2.object,
 				".(!strcasecmp(Zend_Registry::get('config')->database->params->type,'SQLite')?'0':"count(distinct s2.object_is)")." cois
 		      FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1 LEFT JOIN ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s2
-		         ON(s1.object=s2.subject AND s2.modelID IN (".$this->getModelIds().") AND s2.predicate='".$this->_dbId('RDFS_subClassOf')."')
+		         ON(s1.object=s2.subject AND s2.modelID IN (".$this->getModelIds().") AND s2.predicate='".EF_RDFS_SUBCLASSOF."')
 		      WHERE
-			     s1.object_is<>'b' AND s1.predicate='".$this->_dbId('RDF_type')."' AND s1.modelID IN (".$this->getModelIds().")
+			     s1.object_is<>'b' AND s1.predicate='".EF_RDF_TYPE."' AND s1.modelID IN (".$this->getModelIds().")
 			  GROUP BY s1.object
 			  HAVING (cois=0 OR s2.object_is IS NULL) OR (cois=1 AND s2.object_is='b') OR
 			  	s2.object='".$this->_dbId('RDFS_Resource')."' OR
@@ -1481,16 +1560,16 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$clsql.=" OR object='".$cl->getURI()."'";
 		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 			WHERE modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")
-				AND subject_is!='b'	AND predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)");
+				AND subject_is!='b'	AND predicate='".EF_RDF_TYPE."' AND (1=0 $clsql)");
 	}
 	function getInstance($uri) {
-		$res=($uri instanceof Resource)?$uri:new $this->resource($uri,$this);
+		$res=($uri instanceof Resource) ? $uri : $this->resourceF($uri);
 		$uri=$res->getURI();
 		foreach($this->vocabulary['Class'] as $class) {
 			$q="SELECT ?x WHERE (<".$uri.">,<rdf:type>,?x) (?x,<rdf:type>,<".$class->getURI().">)";
 			$instance=$this->rdqlQuery($q);
 			if($instance[0]['?x'])
-				return new $this->instance($uri,$this);
+				return $this->instanceF($uri);
 		}
 		return false;
 	}
@@ -1500,7 +1579,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$clsql.="OR object='".$this->_dbId($cl)."'";
 		return $this->dbConn->getOne("SELECT COUNT(modelID) FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']."
 			WHERE modelID IN (".($includeImports?$this->getModelIds():$this->modelID).")
-				AND predicate='".$this->_dbId('RDF_type')."' AND (1=0 $clsql)");
+				AND predicate='".EF_RDF_TYPE."' AND (1=0 $clsql)");
 	}
 	
 /*******************************************************************************
@@ -1524,12 +1603,12 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
         $sql = 'SELECT s1.object, s1.object_is
                 FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2
                 ON (s1.object=s2.subject AND s2.modelID IN (' . $this->getModelIds() . ') AND
-                s2.predicate="' . $this->_dbId('RDFS_subClassOf') . '")
+                s2.predicate="' . EF_RDFS_SUBCLASSOF . '")
                 LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s3
                 ON (s1.object=s3.subject AND s3.modelID IN (' . $this->getModelIds() . ') AND
-                s3.predicate="' . $this->_dbId('RDF_type') . '")
+                s3.predicate="' . EF_RDF_TYPE . '")
                 WHERE s2.subject IS NULL AND s3.subject IS NULL AND s1.object_is = "r" AND 
-                s1.predicate = "' . $this->_dbId('RDF_type') . '"
+                s1.predicate = "' . EF_RDF_TYPE . '"
                 AND s1.modelID IN (' . $this->getModelIds() . ') ';
         
         if (!$systemClasses) $sql .= 'AND s1.object NOT LIKE "' . RDF_NAMESPACE_URI . '%"
@@ -1563,12 +1642,12 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
     	        COUNT(DISTINCT s2.object_is) AS count_s2object_is
                 FROM '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s1 LEFT JOIN '.$GLOBALS['RAP']['conf']['database']['tblStatements'].' s2
                 ON (s1.subject=s2.subject AND s2.modelID IN (' . $this->getModelIds() . ') AND
-                s2.predicate="' . $this->_dbId('RDFS_subClassOf') . '")                         
+                s2.predicate="' . EF_RDFS_SUBCLASSOF . '")                         
                 WHERE s1.modelID IN (' . $this->getModelIds() . ') AND
-                s1.predicate = "' . $this->_dbId('RDF_type') . '" AND 
-                (s1.object = "' . $this->_dbId('RDFS_Class') . '"
-                 OR s1.object = "' . $this->_dbId('OWL_Class') . '"
-                 OR s1.object = "' . $this->_dbId('OWL_DeprecatedClass') . '")
+                s1.predicate = "' . EF_RDF_TYPE . '" AND 
+                (s1.object = "' . EF_RDFS_CLASS . '"
+                 OR s1.object = "' . EF_OWL_CLASS . '"
+                 OR s1.object = "' . EF_OWL_DEPRECATED_CLASS . '")
                 AND s1.subject_is = "r" ';
 
          if (!$systemClasses) {

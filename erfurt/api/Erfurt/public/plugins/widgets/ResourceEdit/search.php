@@ -20,7 +20,7 @@ $results = $search->search(0, 50, &$erg);
 $ret = '<ul>' . PHP_EOL;
 foreach ($results->getRows() as $row) {
 	// TODO: use better property names
-	$res = $model->resourceF($row[0]);
+	$res = $model->resourceF($row[0], false);
 	$localName = $res->getLocalName();
 	$uri = $res->getURI();
 	

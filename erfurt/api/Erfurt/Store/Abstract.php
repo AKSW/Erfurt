@@ -176,19 +176,6 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 		return $this->ac;
 	}
 	
-	
-	/**
-	 * init function (separate from constructor for exeption handling)
-	 *
-	 * @see Erfurt_Store_MainInterface
-	 */
-	public function init() {
-//TODO: ERRORCODE
-		if (!$this->isSetup()) {
-			throw new Erfurt_Exception('Database Setup: Checking for tables ... no tables found.', 1);
-		} 
-	}
-
 	/**
 	 * @see Erfurt_Store_MainInterface
 	 */

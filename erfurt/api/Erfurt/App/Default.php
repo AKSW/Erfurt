@@ -148,7 +148,6 @@ class Erfurt_App_Default {
 		}
 		
 		# system configuration informations
-		
 		$this->sysontModel = $defaultStore->getModel($config->sysont->model);
 		Zend_Registry::set('sysontModel', $this->sysontModel);
 		
@@ -283,7 +282,7 @@ class Erfurt_App_Default {
 		$result = $this->auth->authenticate($this->authAdapter);
 		
 		# set ac for new user
-		if ($result->isValid() and $this->ac ) {
+		if ($result->isValid() and $this->ac) {
 			$this->ac->init();
 			if (!$this->ac->isActionAllowed('Login')) {
 				$this->auth->clearIdentity();

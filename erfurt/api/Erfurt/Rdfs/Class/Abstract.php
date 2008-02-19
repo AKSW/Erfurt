@@ -41,7 +41,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		if (isset($this->implicit)) {
 			return $this->implicit;
 		} else {
-			$implicit = !$this->model->hasStatement($this, 'rdf:type', array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS));
+			$implicit = !$this->model->hasStatement($this, EF_RDF_TYPE, array(EF_RDFS_CLASS, EF_OWL_CLASS, EF_OWL_DEPRECATED_CLASS));
 			$this->implicit = $implicit;
 			
 			return $implicit;
@@ -53,11 +53,11 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		if (isset($this->classType)) {
 			return $this->classType;
 		} else {
-			if ($this->model->hasStatement($row, 'rdf:type', EF_RDFS_CLASS)) {
+			if ($this->model->hasStatement($row, EF_RDF_TYPE, EF_RDFS_CLASS)) {
 				$this->classType = 'rdfs:Class';
-			} else if ($this->model->hasStatement($row, 'rdf:type', EF_OWL_CLASS)) {
+			} else if ($this->model->hasStatement($row, EF_RDF_TYPE, EF_OWL_CLASS)) {
 				$this->classType = 'owl:Class';
-			} else if ($this->model->hasStatement($row, 'rdf:type', EF_OWL_DEPRECATED_CLASS)) {
+			} else if ($this->model->hasStatement($row, EF_RDF_TYPE, EF_OWL_DEPRECATED_CLASS)) {
 				$this->classType = 'owl:DeprecatedClass';
 			}
 			
@@ -574,7 +574,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function getInstance($uri) {
 		
-		$res=$this->model->find($uri,'rdf:type',$this);
+		$res=$this->model->find($uri,EF_RDF_TYPE,$this);
 		if($res->triples)
 			return $this->model->instanceF($uri);
 		else return false;
@@ -606,9 +606,9 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		if(!($instance instanceof Resource))
 			$instance=$this->model->instanceF($instance);
 		// check if name is allowed
-		$stms=$this->model->find($instance,'rdf:type',NULL);
+		$stms=$this->model->find($instance,EF_RDF_TYPE,NULL);
 		if(!$stms->triples)
-			$this->model->add($instance,'rdf:type',$this);
+			$this->model->add($instance,EF_RDF_TYPE,$this);
 		return $instance;
 	}
 	
