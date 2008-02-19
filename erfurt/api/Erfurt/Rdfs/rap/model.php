@@ -573,6 +573,9 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 											}';
 
 			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
+
+
+
 			return $this->_buildHierarchyRecursive($sparqlResult, $entryPoint);
 		} else {
 			$sparql = 'SELECT ?s WHERE 	{ 
@@ -601,10 +604,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				if (($row['par'] === '') || ($row['par'] === EF_OWL_THING)) {
 					$result[$row['s']]['uri'] = $row['s'];
 					if ($row['sub'] !== '') {
-						if (!isset($result[$row['s']]['childs'])) {
-							$result[$row['s']]['childs'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
+						if (!isset($result[$row['s']]['children'])) {
+							$result[$row['s']]['children'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
 						} else {
-							$result[$row['s']]['childs'] = array_merge($result[$row['s']]['childs'], 
+							$result[$row['s']]['children'] = array_merge($result[$row['s']]['children'], 
 									$this->_buildHierarchyRecursive($sparqlResult, $row['sub']));
 						}
 					}
@@ -613,10 +616,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				if ($row['par'] === $entryPoint) {
 					$result[$row['s']]['uri'] = $row['s'];
 					if ($row['sub'] !== '') {
-						if (!isset($result[$row['s']]['childs'])) {
-							$result[$row['s']]['childs'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
+						if (!isset($result[$row['s']]['children'])) {
+							$result[$row['s']]['children'] = $this->_buildHierarchyRecursive($sparqlResult, $row['s']);
 						} else {
-							$result[$row['s']]['childs'] = array_merge($result[$row['s']]['childs'], 
+							$result[$row['s']]['children'] = array_merge($result[$row['s']]['children'], 
 									$this->_buildHierarchyRecursive($sparqlResult, $row['sub']));
 						}
 					}
@@ -1613,7 +1616,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			return $cVal;
 		}
 		
-		$result = $this->store->executeSparql($this, $query, null, $renderer, false, $useAcl);
+		$result = $this->store->executeSparql($this, $query, null, $renderer, true, $useAcl);
 		$c->set($result);
 		
 		return $result;
@@ -1629,7 +1632,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function sparqlQueryAs($query, $class, $renderer = null, $useAcl = true) {
 
-		return $this->store->executeSparql($this, $query, $class, $renderer, false, $useAcl);
+		return $this->store->executeSparql($this, $query, $class, $renderer, true, $useAcl);
 	}
 	
 	public function getNamespaceForPrefix($prefix) {
