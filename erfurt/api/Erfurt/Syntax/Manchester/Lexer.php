@@ -1,14 +1,15 @@
 <?php
-/*
-* edit Erfurt_Syntax_Manchester_Lexer.plex file to modify the Manchester OWL Syntax tokenizer
-*/
+/**
+ * Auto-generated tokenizer for the Manchester OWL Syntax. For modification make changes to Erfurt_Syntax_Manchester_Lexer.plex
+ * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
+ * @package syntax
+ * @version 
+ */
+
 // PHP section
 require_once 'Parser.php';
 
-/**
- * 
- * @package syntax 
- */
 class ManchesterLexer
 {
 	private $data;
@@ -78,7 +79,7 @@ class ManchesterLexer
     			'/^[Mm][Ii][Nn]/',
     			'/^[Mm][Aa][Xx]/',
     			'/^[Ee][Xx][Aa][Cc][Tt][Ll][Yy]/',
-    			'/^[Hh][Aa][Ss]/',
+    			'/^[Vv][Aa][Ll][Uu][Ee]/',
     			'/^[Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee]/',
     			'/^[Ss][Oo][Mm][Ee]/',
     			'/^[Oo][Nn][Ll][Yy]/',
@@ -232,7 +233,7 @@ class ManchesterLexer
     {
 
 //	$this->printout("has");
-	$this->token=OWLParser::HAS_OPERATOR;
+	$this->token=OWLParser::VALUE_OPERATOR;
     }
     function yy_r1_8($yy_subpatterns)
     {

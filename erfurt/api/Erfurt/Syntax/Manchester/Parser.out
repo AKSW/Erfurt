@@ -13,7 +13,7 @@ State 0:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -40,7 +40,7 @@ State 1:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
           list ::= * classExpr COMMA list
@@ -69,7 +69,7 @@ State 2:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
           list ::= * classExpr COMMA list
@@ -97,7 +97,7 @@ State 3:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
           list ::= * classExpr COMMA list
@@ -127,7 +127,7 @@ State 4:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
           list ::= * classExpr COMMA list
@@ -157,7 +157,7 @@ State 5:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -184,7 +184,7 @@ State 6:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -210,7 +210,7 @@ State 7:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -236,7 +236,7 @@ State 8:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -262,7 +262,7 @@ State 9:
           classExpr ::= * propExpr MIN_OPERATOR NUMERIC
           classExpr ::= * propExpr MAX_OPERATOR NUMERIC
           classExpr ::= * propExpr EXACTLY_OPERATOR NUMERIC
-          classExpr ::= * propExpr HAS_OPERATOR instExpr
+          classExpr ::= * propExpr VALUE_OPERATOR instExpr
           classExpr ::= * ALPHANUMERIC
           propExpr ::= * ALPHANUMERIC
 
@@ -305,7 +305,7 @@ State 12:
                       instExpr shift  41
 
 State 13:
-          classExpr ::= propExpr HAS_OPERATOR * instExpr
+          classExpr ::= propExpr VALUE_OPERATOR * instExpr
           instExpr ::= * ALPHANUMERIC
 
                   ALPHANUMERIC shift  28
@@ -320,12 +320,12 @@ State 14:
           classExpr ::= propExpr * MIN_OPERATOR NUMERIC
           classExpr ::= propExpr * MAX_OPERATOR NUMERIC
           classExpr ::= propExpr * EXACTLY_OPERATOR NUMERIC
-          classExpr ::= propExpr * HAS_OPERATOR instExpr
+          classExpr ::= propExpr * VALUE_OPERATOR instExpr
 
                   MIN_OPERATOR shift  24
                   MAX_OPERATOR shift  21
               EXACTLY_OPERATOR shift  22
-                  HAS_OPERATOR shift  13
+                VALUE_OPERATOR shift  13
              ONLYSOME_OPERATOR shift  26
                  ONLY_OPERATOR shift  12
                  SOME_OPERATOR shift  5
@@ -446,7 +446,7 @@ State 32:
                      {default} reduce 7
 
 State 33:
-     (14) classExpr ::= propExpr HAS_OPERATOR instExpr *
+     (14) classExpr ::= propExpr VALUE_OPERATOR instExpr *
 
                      {default} reduce 14
 

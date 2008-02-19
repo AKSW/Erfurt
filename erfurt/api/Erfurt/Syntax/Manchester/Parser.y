@@ -1,3 +1,11 @@
+/**
+ * Auto-generated parser for the Manchester OWL Syntax. For modification make changes to Erfurt_Syntax_Manchester_Parser.y
+ * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
+ * @package syntax
+ * @version 
+ */
+
 // PHP section
 %name OWL_To_Erfurt_
 %declare_class {class OWLParser }
@@ -21,7 +29,7 @@ require_once 'Lexer.php';}
 
 %left NOT_OPERATOR AND_OPERATOR OR_OPERATOR.
 %left MIN_OPERATOR MAX_OPERATOR.
-%left EXACTLY_OPERATOR HAS_OPERATOR.
+%left EXACTLY_OPERATOR VALUE_OPERATOR.
 %left ONLYSOME_OPERATOR ONLY_OPERATOR SOME_OPERATOR.
 
 // Exception Handling section
@@ -43,8 +51,8 @@ require_once 'Lexer.php';}
 // Rules section
 
 	start ::= classExpr(A).{
-//		print_r(A->generateRDF()->writeAsHtmlTable());}
-		print_r(A->generateRDF()->writeAsHtml());}
+		print_r(A->generateRDF()->writeAsHtmlTable());}
+//		print_r(A->generateRDF()->writeAsHtml());}
 //		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{
@@ -115,7 +123,7 @@ require_once 'Lexer.php';}
     classExpr(A) ::= propExpr(B) EXACTLY_OPERATOR  NUMERIC(C).{
 		A = new Erfurt_Owl_Structured_Cardinality(B." exactly ".C, B, C);}
 		
-    classExpr(A) ::= propExpr(B) HAS_OPERATOR  instExpr(C).{
+    classExpr(A) ::= propExpr(B) VALUE_OPERATOR  instExpr(C).{
 		A = new Erfurt_Owl_Structured_HasValue(B." has ".C, B, C); }
 
 	classExpr(A) ::= ALPHANUMERIC(B).{

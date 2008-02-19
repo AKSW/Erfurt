@@ -4,6 +4,13 @@
 	type="text" name="manchesterstring" /> <input type="submit" /></form>
 <?php
 
+/**
+ * Test file for the Manchester OWL Syntax. Refer to readme file for more information.
+ * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
+ * @package syntax
+ * @version 
+ */
 
 error_reporting(E_STRICT);
 $debug=1;
@@ -17,7 +24,7 @@ for ($i=1; $i < $argc; $i++) {
 }
 if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 	echo"you entered: ".($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x)."<br />";
-	$o= new ManchesterParser();
+	$o= new OWLParser();
 	echo "output string = " . "<br />";
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
 

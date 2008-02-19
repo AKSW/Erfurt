@@ -1,14 +1,15 @@
 <?php
-/*
-* edit Erfurt_Syntax_Manchester_Lexer.plex file to modify the Manchester OWL Syntax tokenizer
-*/
+/**
+ * Auto-generated tokenizer for the Manchester OWL Syntax. For modification make changes to Erfurt_Syntax_Manchester_Lexer.plex
+ * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
+ * @package syntax
+ * @version 
+ */
+
 // PHP section
 require_once 'Parser.php';
 
-/**
- * 
- * @package syntax 
- */
 class ManchesterLexer
 {
 	private $data;
@@ -58,7 +59,7 @@ RBRACE=/\}/
 MIN_OPERATOR=/[Mm][Ii][Nn]/
 MAX_OPERATOR=/[Mm][Aa][Xx]/
 EXACTLY_OPERATOR=/[Ee][Xx][Aa][Cc][Tt][Ll][Yy]/
-HAS_OPERATOR=/[Hh][Aa][Ss]/
+VALUE_OPERATOR=/[Vv][Aa][Ll][Uu][Ee]/
 ONLYSOME_OPERATOR=/[Oo][Nn][Ll][Yy][Ss][Oo][Mm][Ee]/
 ONLY_OPERATOR=/[Oo][Nn][Ll][Yy]/
 SOME_OPERATOR=/[Ss][Oo][Mm][Ee]/
@@ -97,9 +98,9 @@ EXACTLY_OPERATOR{
 //	$this->printout("exactly");
 	$this->token=OWLParser::EXACTLY_OPERATOR;
 }
-HAS_OPERATOR {
+VALUE_OPERATOR {
 //	$this->printout("has");
-	$this->token=OWLParser::HAS_OPERATOR;
+	$this->token=OWLParser::VALUE_OPERATOR;
 }
 ONLYSOME_OPERATOR{
 //	$this->printout("onlysome");

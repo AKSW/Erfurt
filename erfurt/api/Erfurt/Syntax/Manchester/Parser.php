@@ -94,17 +94,17 @@ class OWL_To_Erfurt_yyStackEntry
 };
 
 // code external to the class is included here
-#line 4 "./Parser.y"
+#line 12 "./Parser.y"
 require_once '../../erfurt.php';
 require_once 'Lexer.php';#line 101 "./Parser.php"
 
 // declare_class is output here
-#line 3 "./Parser.y"
+#line 11 "./Parser.y"
 class OWLParser #line 106 "./Parser.php"
 {
 /* First off, code is included which follows the "include_class" declaration
 ** in the input file. */
-#line 6 "./Parser.y"
+#line 14 "./Parser.y"
 
     	private $lex;
 	    function __construct()
@@ -134,7 +134,7 @@ class OWLParser #line 106 "./Parser.php"
     const MIN_OPERATOR                   =  4;
     const MAX_OPERATOR                   =  5;
     const EXACTLY_OPERATOR               =  6;
-    const HAS_OPERATOR                   =  7;
+    const VALUE_OPERATOR                 =  7;
     const ONLYSOME_OPERATOR              =  8;
     const ONLY_OPERATOR                  =  9;
     const SOME_OPERATOR                  = 10;
@@ -390,7 +390,7 @@ static public $yy_action = array(
      */
     static public $yyTokenName = array( 
   '$',             'NOT_OPERATOR',  'AND_OPERATOR',  'OR_OPERATOR', 
-  'MIN_OPERATOR',  'MAX_OPERATOR',  'EXACTLY_OPERATOR',  'HAS_OPERATOR',
+  'MIN_OPERATOR',  'MAX_OPERATOR',  'EXACTLY_OPERATOR',  'VALUE_OPERATOR',
   'ONLYSOME_OPERATOR',  'ONLY_OPERATOR',  'SOME_OPERATOR',  'LPAREN',      
   'RPAREN',        'LBRACE',        'RBRACE',        'LSQUAREBRACKET',
   'RSQUAREBRACKET',  'NUMERIC',       'ALPHANUMERIC',  'COMMA',       
@@ -417,7 +417,7 @@ static public $yy_action = array(
  /*  11 */ "classExpr ::= propExpr MIN_OPERATOR NUMERIC",
  /*  12 */ "classExpr ::= propExpr MAX_OPERATOR NUMERIC",
  /*  13 */ "classExpr ::= propExpr EXACTLY_OPERATOR NUMERIC",
- /*  14 */ "classExpr ::= propExpr HAS_OPERATOR instExpr",
+ /*  14 */ "classExpr ::= propExpr VALUE_OPERATOR instExpr",
  /*  15 */ "classExpr ::= ALPHANUMERIC",
  /*  16 */ "propExpr ::= ALPHANUMERIC",
  /*  17 */ "enum ::= instExpr enum",
@@ -849,20 +849,19 @@ static public $yy_action = array(
     **   function yy_r0($yymsp){ ... }           // User supplied code
     **  #line <lineno> <thisfile>
     */
-#line 45 "./Parser.y"
+#line 53 "./Parser.y"
     function yy_r0(){
-//		print_r($this->yystack[$this->yyidx + 0]->minor->generateRDF()->writeAsHtmlTable());}
-		print_r($this->yystack[$this->yyidx + 0]->minor->generateRDF()->writeAsHtml());    }
-#line 862 "./Parser.php"
-#line 50 "./Parser.y"
+		print_r($this->yystack[$this->yyidx + 0]->minor->generateRDF()->writeAsHtmlTable());    }
+#line 861 "./Parser.php"
+#line 58 "./Parser.y"
     function yy_r1(){
 		$this->_retvalue=$this->yystack[$this->yyidx + -1]->minor;    }
-#line 866 "./Parser.php"
-#line 53 "./Parser.y"
+#line 865 "./Parser.php"
+#line 61 "./Parser.y"
     function yy_r2(){
 		$this->_retvalue= new Erfurt_Owl_Structured_EnumeratedClass($this->yystack[$this->yyidx + -1]->minor);    }
-#line 870 "./Parser.php"
-#line 56 "./Parser.y"
+#line 869 "./Parser.php"
+#line 64 "./Parser.y"
     function yy_r3(){
 		$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -4]->minor ." onlysome ". $this->yystack[$this->yyidx + -1]->minor);
 		foreach ($this->yystack[$this->yyidx + -1]->minor as $value) {
@@ -870,18 +869,18 @@ static public $yy_action = array(
 		$x=new Erfurt_Owl_Structured_UnionClass("".$this->yystack[$this->yyidx + -1]->minor);
 		$x->addChildClass($this->yystack[$this->yyidx + -1]->minor);
 		$this->_retvalue->addChildClass(new Erfurt_Owl_Structured_AllValuesFrom($this->yystack[$this->yyidx + -4]->minor." only ".$this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$x));    }
-#line 879 "./Parser.php"
-#line 64 "./Parser.y"
+#line 878 "./Parser.php"
+#line 72 "./Parser.y"
     function yy_r4(){
 		$this->_retvalue=new Erfurt_Owl_Structured_SomeValuesFrom($this->yystack[$this->yyidx + -4]->minor." some ".$this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$this->yystack[$this->yyidx + -1]->minor);
 		    }
-#line 884 "./Parser.php"
-#line 68 "./Parser.y"
+#line 883 "./Parser.php"
+#line 76 "./Parser.y"
     function yy_r5(){
 		$this->_retvalue=new Erfurt_Owl_Structured_AllValuesFrom($this->yystack[$this->yyidx + -4]->minor." some ".$this->yystack[$this->yyidx + -1]->minor,$this->yystack[$this->yyidx + -4]->minor,$this->yystack[$this->yyidx + -1]->minor);
 		    }
-#line 889 "./Parser.php"
-#line 72 "./Parser.y"
+#line 888 "./Parser.php"
+#line 80 "./Parser.y"
     function yy_r6(){
 		$this->_retvalue = new Erfurt_Owl_Structured_IntersectionClass($this->yystack[$this->yyidx + -2]->minor->getURI()." and ".$this->yystack[$this->yyidx + 0]->minor->getURI());
 		if($this->yystack[$this->yyidx + -2]->minor instanceof Erfurt_Owl_Structured_IntersectionClass){
@@ -895,8 +894,8 @@ static public $yy_action = array(
 			$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);
 		}
 		    }
-#line 904 "./Parser.php"
-#line 86 "./Parser.y"
+#line 903 "./Parser.php"
+#line 94 "./Parser.y"
     function yy_r7(){
 		$this->_retvalue = new Erfurt_Owl_Structured_UnionClass($this->yystack[$this->yyidx + -2]->minor->getURI()." or ".$this->yystack[$this->yyidx + 0]->minor->getURI());
 		if($this->yystack[$this->yyidx + -2]->minor instanceof Erfurt_Owl_Structured_UnionClass){
@@ -910,59 +909,59 @@ static public $yy_action = array(
 			$this->_retvalue->addChildClass($this->yystack[$this->yyidx + 0]->minor);
 		}
 		    }
-#line 919 "./Parser.php"
-#line 100 "./Parser.y"
+#line 918 "./Parser.php"
+#line 108 "./Parser.y"
     function yy_r8(){ 
 		$this->_retvalue = new Erfurt_Owl_Structured_SomeValuesFrom($this->yystack[$this->yyidx + -2]->minor . " some " . $this->yystack[$this->yyidx + 0]->minor->getURI(),$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);    }
-#line 923 "./Parser.php"
-#line 103 "./Parser.y"
+#line 922 "./Parser.php"
+#line 111 "./Parser.y"
     function yy_r9(){
 		$this->_retvalue = new Erfurt_Owl_Structured_ComplementClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 927 "./Parser.php"
-#line 106 "./Parser.y"
+#line 926 "./Parser.php"
+#line 114 "./Parser.y"
     function yy_r10(){
 		$this->_retvalue = new Erfurt_Owl_Structured_AllValuesFrom($this->yystack[$this->yyidx + -2]->minor." only ".$this->yystack[$this->yyidx + 0]->minor,$this->yystack[$this->yyidx + -2]->minor,$this->yystack[$this->yyidx + 0]->minor);    }
-#line 931 "./Parser.php"
-#line 109 "./Parser.y"
+#line 930 "./Parser.php"
+#line 117 "./Parser.y"
     function yy_r11(){
 		$this->_retvalue = new Erfurt_Owl_Structured_MinCardinality($this->yystack[$this->yyidx + -2]->minor." min ".$this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 935 "./Parser.php"
-#line 112 "./Parser.y"
+#line 934 "./Parser.php"
+#line 120 "./Parser.y"
     function yy_r12(){
 		$this->_retvalue = new Erfurt_Owl_Structured_MaxCardinality($this->yystack[$this->yyidx + -2]->minor." max ".$this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 939 "./Parser.php"
-#line 115 "./Parser.y"
+#line 938 "./Parser.php"
+#line 123 "./Parser.y"
     function yy_r13(){
 		$this->_retvalue = new Erfurt_Owl_Structured_Cardinality($this->yystack[$this->yyidx + -2]->minor." exactly ".$this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);    }
-#line 943 "./Parser.php"
-#line 118 "./Parser.y"
+#line 942 "./Parser.php"
+#line 126 "./Parser.y"
     function yy_r14(){
 		$this->_retvalue = new Erfurt_Owl_Structured_HasValue($this->yystack[$this->yyidx + -2]->minor." has ".$this->yystack[$this->yyidx + 0]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 947 "./Parser.php"
-#line 121 "./Parser.y"
+#line 946 "./Parser.php"
+#line 129 "./Parser.y"
     function yy_r15(){
 		$this->_retvalue =new Erfurt_Owl_Structured_NamedClass($this->yystack[$this->yyidx + 0]->minor);    }
-#line 951 "./Parser.php"
-#line 124 "./Parser.y"
+#line 950 "./Parser.php"
+#line 132 "./Parser.y"
     function yy_r16(){
 		$this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;    }
-#line 955 "./Parser.php"
-#line 127 "./Parser.y"
+#line 954 "./Parser.php"
+#line 135 "./Parser.y"
     function yy_r17(){
 		$this->_retvalue=array_merge(array($this->yystack[$this->yyidx + -1]->minor),$this->yystack[$this->yyidx + 0]->minor);    }
-#line 959 "./Parser.php"
-#line 130 "./Parser.y"
+#line 958 "./Parser.php"
+#line 138 "./Parser.y"
     function yy_r18(){
 		$this->_retvalue=array($this->yystack[$this->yyidx + 0]->minor);    }
-#line 963 "./Parser.php"
-#line 133 "./Parser.y"
+#line 962 "./Parser.php"
+#line 141 "./Parser.y"
     function yy_r19(){
 		$this->_retvalue = new Erfurt_Owl_Structured_Instance($this->yystack[$this->yyidx + 0]->minor);    }
-#line 967 "./Parser.php"
-#line 136 "./Parser.y"
+#line 966 "./Parser.php"
+#line 144 "./Parser.y"
     function yy_r20(){
 		$this->_retvalue= array_merge(array($this->yystack[$this->yyidx + -2]->minor),$this->yystack[$this->yyidx + 0]->minor);    }
-#line 971 "./Parser.php"
+#line 970 "./Parser.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1074,7 +1073,7 @@ static public $yy_action = array(
      */
     function yy_syntax_error($yymajor, $TOKEN)
     {
-#line 29 "./Parser.y"
+#line 37 "./Parser.y"
 
     echo "Syntax Error in token '" . 
         $this->lex->value."'\n";
@@ -1087,7 +1086,7 @@ static public $yy_action = array(
 	echo ('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN
         . '), expected one of: ' . implode(',', $expect) . "\n");
     exit(1);
-#line 1097 "./Parser.php"
+#line 1096 "./Parser.php"
     }
 
     /**

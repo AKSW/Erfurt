@@ -1,4 +1,12 @@
 <?php
+/**
+ * Class for generating the Manchester OWL Syntax Parser
+ * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
+ * @package syntax
+ * @version
+ *
+ */
 
 include '../../lib/PEAR/PHP/ParserGenerator.php';
 $a=new PHP_ParserGenerator();
