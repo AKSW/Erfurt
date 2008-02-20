@@ -41,6 +41,13 @@ interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 	public function getAc();
 	
 	/**
+	 * Returns an array containing infos for the model indentified by the given uri.
+	 * 
+	 * @return array
+	 */
+	public function getModelInfos($modelURI);
+	
+	/**
 	 * Initializes the store.
 	 */
 	public function init();
@@ -51,6 +58,13 @@ interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 	 * @return boolean Returns true iff the store is initiaized and ready to use, else false.
 	 */
 	public function isSetup();
+	
+	/**
+	 * Lists namespaces and the belonging prefixes for a given model... iff model exists.
+	 * 
+	 * @return string[]/false
+	 */
+	public function listNamespaces($modelURI);
 	
 	/**
 	 * This method sets the ac-object for the store.

@@ -90,8 +90,6 @@ class Erfurt_Owl_Model extends RDFSModel {
 				$r = new Erfurt_Owl_Class($uri, $this, false);
 				$this->_classCache["$uriString"] = $r;
 				
-#debug
-$GLOBALS['classFCount']++;
 				return $r;
 			}
 		} else {
@@ -102,8 +100,6 @@ $GLOBALS['classFCount']++;
 				$r = new Erfurt_Owl_Class($uri, $this, $expandNS);
 				$this->_classCache["$uri"] = $r;
 
-#debug
-$GLOBALS['classFCount']++;
 					return $r;
 			}
 		}
@@ -117,9 +113,7 @@ $GLOBALS['classFCount']++;
 	 * @return Erfurt_Owl_Property
 	 */
 	public function propertyF($uri, $expandNS = true) {
-
-#debug
-$GLOBALS['propertyFCount']++;		
+	
 		return new Erfurt_Owl_Property($uri, $this, $expandNS); 
 	}
 	
@@ -144,8 +138,6 @@ $GLOBALS['propertyFCount']++;
 				$r = new Erfurt_Owl_Instance($uri, $this, false);
 				$this->_instanceCache["$uriString"] = $r;
 				
-#debug
-$GLOBALS['instanceFCount']++;
 				return $r;
 			}
 		} else {
@@ -156,8 +148,6 @@ $GLOBALS['instanceFCount']++;
 				$r = new Erfurt_Owl_Instance($uri, $this, $expandNS);
 				$this->_instanceCache["$uri"] = $r;
 
-#debug
-$GLOBALS['instanceFCount']++;
 					return $r;
 			}
 		}

@@ -149,6 +149,7 @@ class Erfurt_App_Default {
 		
 		# system configuration informations
 		$this->sysontModel = $defaultStore->getModel($config->sysont->model);
+		$defaultStore->SysOnt = $this->sysontModel;
 		Zend_Registry::set('sysontModel', $this->sysontModel);
 		
 		# access control informations

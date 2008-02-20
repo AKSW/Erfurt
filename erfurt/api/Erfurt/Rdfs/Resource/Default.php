@@ -45,12 +45,11 @@ class Erfurt_Rdfs_Resource_Default extends Resource implements Erfurt_Rdfs_Resou
 			$uri = $uri->getURI();
 		}
 		
-		if ($uri == '') {
-			return false;
-		}
+		#if ($uri == '') {
+		#	return false;
+		#}
 			
 		if($expandNS && !strstr($uri,'/') && !(substr($uri, 0, 4) == 'http')) {
-$GLOBALS['EFResourceConstruct'] .= $uri."#".xdebug_call_function().LINEFEED;
 			$nsArr = $model->getParsedNamespaces();
 			# Debug output if nsArr isn't Array and not null
 			if(!is_array($nsArr) && $nsArr != null)
@@ -109,6 +108,37 @@ $this->properties = array();
 	/**
 	 * @see Erfurt_Rdfs_Resource
 	 */
+	public function countPropertyValuesObject($prop) {
+//TODO use method from store... faster for e.g. rdf:type is not fetched by default	
+		if ($this->model->getStore() instanceof Erfurt_Store_CountableInterface) {
+			return count($this->listPropertyValuesObject($prop));
+		} else {
+// TODO exception code
+			throw new Erfurt_Exception('count not supported by store');
+		}
+	}
+	
+	/**
+	 * @see Erfurt_Rdfs_Resource
+	 */
+	public function countPropertyValuesObjectRecursive($prop, $subRelProp) {
+		
+		if ($this->model->getStore() instanceof Erfurt_Store_CountableInterface) {
+			$count = $this->countPropertyValuesObject($prop);
+			foreach ($this->listPropertyValuesObject($subRelProp) as $subItem) {
+				$count += $subItem->countPropertyValuesObjectRecursive($prop, $subRelProp);
+			}
+			
+			return $count;
+		} else {
+// TODO exception code
+			throw new Erfurt_Exception('count not supported by store');
+		}
+	}
+	
+	/**
+	 * @see Erfurt_Rdfs_Resource
+	 */
 	public function definingModels() {
 		
 		return $this->store->executeFindDefiningModels($this, new Resource(EF_RDF_TYPE), null);
@@ -127,95 +157,56 @@ $this->properties = array();
 	
 	protected function _fetchPropertyValues() {
 
-// TODO use sparql if faster
-		// $sparql = 'SELECT ?p ?o WHERE { <' . $uri . '> ?p ?o }';
-		// 		$result = $this->model->sparqlQuery($sparql, new Erfurt_Sparql_ResultRenderer_Plain());
-		// 		
-		// 		foreach ($result as $row) {
-		// 			$propString = $row['?p'];
-		// 			if (isset($this->_propertyValueCache["$propString"])) {
-		// 				if (is_string($this->_propertyValueCache["$propString"])) {
-		// 					$temp = $this->_propertyValueCache["$propString"];
-		// 					$this->_propertyValueCache["$propString"] = array();
-		// 					$this->_propertyValueCache["$propString"][] = $temp;
-		// 					$this->_propertyValueCache["$propString"][] = $row['?o'];
-		// 				} else if (is_array($this->_propertyValueCache["$propString"])) {
-		// 					$this->_propertyValueCache["$propString"][] = $row['?o'];
-		// 				}
-		// 			} else {
-		// 				$this->_propertyValueCache["$propString"] = $row['?o'];
-		// 			}
-		// 		}
-		
-		$sql = 'SELECT DISTINCT predicate, object, object_is, l_language, l_datatype 
-				FROM statements 
-				WHERE subject = "' . $this->uri . '" AND modelID IN (' . $this->model->getModelIds() . ')';
-		 		 
-#echo $sql;
-		$result = $this->model->getStore()->sqlQuery($sql);
-		
-		if ($result === null) {
-			throw new Exception('Error in _fetchPropertyValues() method: Could not fetch properties.');
+		$sparql = 	'SELECT ?p ?o WHERE
+					{
+						<' . $this->uri . '> ?p ?o . ';
+						
+		$config = Zend_Registry::get('config');
+		if (isset($config->prefetchExlusionPropertiesSubject)) {
+			foreach ($config->prefetchExlusionPropertiesSubject->toArray() as $exclude) {
+				$sparql .= 'FILTER ( ?p != <' . $exclude . '> ) . ';
+			}
 		}
+		$sparql .= 	'}';
+
+		$result = $this->model->sparqlQuery($sparql);
 		
 		$this->_propertyValueCache = array(); 			
 		foreach ($result as $row) {
-			$propString = $row['0'];
+			$propString = $row['p']->getURI();
 			
 			if (isset($this->_propertyValueCache["$propString"])) {
-				if (is_array($this->_propertyValueCache["$propString"])) {
-		 			if ($row[2] == 'l') {
-		 				$this->_propertyValueCache["$propString"][] = $this->model->literalF($row[1], $row[3],
-		 						$row[4]);
-		 			} else if ($row[2] == 'b'){
-		 				$this->_propertyValueCache["$propString"][] = new BlankNode($row[1]);
-		 			} else {
-						$this->_propertyValueCache["$propString"][] = $this->model->resourceF($row[1]);
-					}
-		 		}
+		 		$this->_propertyValueCache["$propString"][] = $row['o'];
 		 	} else {
-		 		if ($row[2] == 'l') {
-		 			$this->_propertyValueCache["$propString"] = array($this->model->literalF($row[1], $row[3], $row[4]));
-		 		} else if ($row[2] == 'b') {
-		 			$this->_propertyValueCache["$propString"] = array(new BlankNode($row[1]));
-		 		} else {
-					$this->_propertyValueCache["$propString"] = array($this->model->resourceF($row[1], false));
-				}
+				$this->_propertyValueCache["$propString"] = array($row['o']);
 		 	}
 		 }
 	}
 	
 	protected function _fetchPropertySubjects() {
-		
-		$sql = 'SELECT DISTINCT predicate, subject, subject_is
-				FROM statements 
-				WHERE object = "' . $this->uri . '" AND modelID IN (' . $this->model->getModelIds() . ')';
-		 		 
-#echo $sql;
-		$result = $this->model->getStore()->sqlQuery($sql);
-		
-		if ($result === null) {
-			throw new Exception('Error in _fetchPropertySubjects() method: Could not fetch properties.');
+
+		$sparql = 	'SELECT ?s ?p  WHERE
+					{
+						?s  ?p <' . $this->uri . '> . ';
+						
+		$config = Zend_Registry::get('config');
+		if (isset($config->prefetchExlusionPropertiesObject)) {
+			foreach ($config->prefetchExlusionPropertiesObject->toArray() as $exclude) {
+				$sparql .= 'FILTER ( ?p != <' . $exclude . '> ) . ';
+			}
 		}
+		$sparql .= 	'}';
 		
+		$result = $this->model->sparqlQuery($sparql);
+				
 		$this->_propertySubjectCache = array(); 			
 		foreach ($result as $row) {
-			$propString = $row['0'];
+			$propString = $row['p']->getURI();
 			
 			if (isset($this->_propertySubjectCache["$propString"])) {
-				if (is_array($this->_propertySubjectCache["$propString"])) {
-		 			if ($row[2] == 'b') {
-		 				$this->_propertySubjectCache["$propString"][] = new BlankNode($row['1']);
-		 			} else {
-		 				$this->_propertySubjectCache["$propString"][] = $this->model->resourceF($row['1']);
-		 			}
-		 		}
+		 		$this->_propertySubjectCache["$propString"][] = $row['s'];
 		 	} else {
-		 		if ($row[2] == 'b') {
-		 			$this->_propertySubjectCache["$propString"] = array(new BlankNode($row['1']));
-		 		} else {
-		 			$this->_propertySubjectCache["$propString"] = array($this->model->resourceF($row['1'], false));
-		 		}
+				$this->_propertySubjectCache["$propString"] = array($row['s']);
 		 	}
 		 }
 	}
@@ -387,30 +378,32 @@ $this->properties = array();
 		return $this->getURI();
 	}
 	
+	/**
+	 * @see Erfurt_Rdfs_Resource  
+	 */
 	public function getTitle($language = null) {
 	
+		// handle the case that ow gives us a $language param 'none', which means no lang
+		if ($language === 'none') {
+			$language = null;
+		}
+	
 		$config = Zend_Registry::get('config');
+		
 		foreach ($config->titleProperties->toArray() as $title) {
 			// if language is set search for label with language tag
-			if ($language && ($ret = $this->getLiteralPropertyValue($title, $language))) {
-				$label = $ret->getLabel($language);
+			if (($language !== null) && ($ret = $this->getLiteralPropertyValue($title, $language))) {
+				return $ret->getLabel();
 			// else use anonymous labels (w/o lang tag)
 			} else if ($ret = $this->getLiteralPropertyValue($title)) {
-				$label = $ret->getLabel();
+				return $ret->getLabel();
 			// if still nothing found, try english labels
 			} else if ($ret = $this->getLiteralPropertyValue($title, 'en')) {
-				$label = $ret->getLabel('en');
-			}
-			if ($label) {
-				break;
+				return $ret->getLabel('en');
 			}
 		}
 		
-		if (!$label) {
-			$label = $this->getLocalName();
-		}
-		
-		return $label;
+		return $this->getLocalName();
 	}
 	
 	/**
@@ -607,35 +600,44 @@ $this->properties = array();
 		return $ret;
 	}
 	
+	/**
+	 * @see Erfurt_Rdfs_Resource
+	 */
 	public function listPropertiesUsedAsObject() {
-		
-		if ($this->_propertySubjectCache === null) {
-			$this->_fetchPropertySubjects();
+	
+		$config = Zend_Registry::get('config');
+		// at least one predicate is excluded from prefteching, so have a look in the db
+		if (isset($config->prefetchExlusionPropertiesSubject)) {
+			return $this->model->findPredicates(null, $this);
 		}
-		
-		$ret = array();
-		foreach ($this->_propertySubjectCache as $key => $value) {
-			$ret[] = $this->model->resourceF($key, false);
-		}
-		
-		return $ret;	
+		// it is save to return the prefetched properties
+		else {
+			if ($this->_propertySubjectCache === null) {
+				$this->_fetchPropertySubjects();
+			}
+
+			$ret = array();
+			foreach ($this->_propertySubjectCache as $key => $value) {
+				$ret[] = $this->model->resourceF($key, false);
+			}
+
+			return $ret;
+		}	
 	}
 	
 	public function listPropertyValues($property = null, $class = null) {
-		
-		#return $this->model->findNodes($this, $property, null, $class);
 		
 		if ($this->_propertyValueCache === null) {
 			$this->_fetchPropertyValues();
 		}
 		
 		$ret = array();
+		// for it is not sure that all property values are prefetched, we need to go the old way :(
 		if ($property === null) {
-			foreach ($this->_propertyValueCache as $prop_array) {
-// TODO make use of the $class param!!!
-				$ret = array_merge($ret, $prop_array);
-			}
-		} else if (isset($this->_propertyValueCache["$property"])) {
+			return $this->model->findNodes($this, $property, null, $class);
+		}
+		// this is the best case... we have a prefetched property, no db query required :) 
+		else if (isset($this->_propertyValueCache["$property"])) {
 			if ($class === null) {
 				$ret = $this->_propertyValueCache["$property"];
 			} else {
@@ -672,30 +674,30 @@ $this->properties = array();
 					}
 				}
 			}
+		}
+		// nothing found in prefetched cache... so ask the db :( 
+		else {
+			return $this->model->findNodes($this, $property, null, $class);
 		} 
 		
 		return $ret;
 	}
 	
-	public function listPropertyValuesObject($property, $class = null) {
-		
-		#return $this->model->findNodes(null, $property, $this, $class);
+	public function listPropertyValuesObject($property = null, $class = null) {
 		
 		if ($this->_propertySubjectCache === null) {
 			$this->_fetchPropertySubjects();
 		}
 		
 		$ret = array();
+		// for it is not sure that all property values are prefetched, we need to go the old way :(
 		if ($property === null) {
-			foreach ($this->_propertySubjectCache as $prop_array) {
-// TODO make use of the $class param!!!
-				$ret = array_merge($ret, $prop_array);
-			}
+			return $this->model->findNodes(null, $property, $this, $class);
 		} else {
 			if ($property instanceof Erfurt_Rdfs_Resource) {
 				$property = $property->getURI();
 			}
-			
+			// this is the best case... we have a prefetched property, no db query required :)
 			if (isset($this->_propertySubjectCache["$property"])) {
 				if ($class === null) {
 					$ret = $this->_propertySubjectCache["$property"];
@@ -733,6 +735,10 @@ $this->properties = array();
 						}
 					}
 				}
+			}
+			// nothing found in prefetched cache... so ask the db :( 
+			else {
+				return $this->model->findNodes(null, $property, $this, $class);
 			} 
 		}
 		

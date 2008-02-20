@@ -144,13 +144,14 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
             $arResultRow = array();
             foreach ($arResultVars as $strVar) {
 				$strVarName = (string)$strVar;
+				$strVarId = ltrim($strVar, '?$');
                 if (!isset($this->sg->arVarAssignments[$strVarName])) {
                     //variable is in select, but not in result (test: q-select-2)
-                    $arResultRow[$strVarName] = '';
+                    $arResultRow[$strVarId] = '';
                 } else {
                     $arVarSettings  = $this->sg->arVarAssignments[$strVarName];
                     $strMethod      = $this->arCreationMethods[$arVarSettings[1]];
-                    $arResultRow[$strVarName] = $this->$strMethod($dbRecordSet, $arVarSettings[0], $strVar);
+                    $arResultRow[$strVarId] = $this->$strMethod($dbRecordSet, $arVarSettings[0], $strVar);
                 }
             }
             $arResult[] = $arResultRow;
@@ -220,15 +221,16 @@ class Erfurt_Sparql_ResultRenderer_Default implements SparqlEngineDb_ResultRende
     *
     *   @return Resource   RDF triple predicate resource object
     */
-    protected function createPredicateFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVarName) {
-	
+    protected function createPredicateFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVar)
+    {
+        $strVarName = (string)$strVar;
         if ($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test
             return '';
         }
-        $predicate      = $this->createResource($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']]);
+        $predicate      = new Resource ($dbRecordSet->fields[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']]);
         return $predicate;
-    }
+    }//protected function createPredicateFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVarName)
 
     /**
     *   Creates an RDF object object

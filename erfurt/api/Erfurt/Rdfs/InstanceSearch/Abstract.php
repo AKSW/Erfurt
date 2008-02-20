@@ -16,9 +16,9 @@ abstract class Erfurt_Rdfs_InstanceSearch_Abstract {
 	var $classes;
 	var $properties;
 	
-	public function __construct(&$model, $searchString, $classes = array(), $properties = array(), $store = null) {
+	public function __construct($model, $searchString, $classes = array(), $properties = array(), $store = null) {
 		if ($model instanceof RDFSModel) {
-			$this->model     = &$model;
+			$this->model     = $model;
 			$this->store     = $model->getStore();
 			$this->allModels = false;
 		} else {

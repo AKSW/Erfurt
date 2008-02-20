@@ -81,16 +81,8 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 					EF_OWL_SYMMETRIC_PROPERTY=>EF_OWL_SYMMETRIC_PROPERTY,
 					EF_OWL_TRANSITIVE_PROPERTY=>EF_OWL_TRANSITIVE_PROPERTY)
 			);
-
-#debug
-#TODO remove the above if possible
-#if (Zend_Registry::isRegistered('owLog')) {
-#	Zend_Registry::get('owLog')->debug('vocabulary: ' . serialize($this->vocabulary));
-#}
-
-#debug
-$GLOBALS['EFModelConstruct']++;
 	}
+	
 	/**
 	 * Resource factory.
 	 *
@@ -98,7 +90,7 @@ $GLOBALS['EFModelConstruct']++;
 	 * @return Erfurt_Rdfs_Resource
 	 **/
 	public function resourceF($uri, $expandNS = true) {
-$GLOBALS['resourceFGeneralCount']++;
+
 		// iff $uri is already a Erfurt_Rdfs_Resource instance return it directly
 		if ($uri instanceof Erfurt_Rdfs_Resource) {
 			return $uri;
@@ -112,8 +104,6 @@ $GLOBALS['resourceFGeneralCount']++;
 				$r = new Erfurt_Rdfs_Resource_Default($uri, $this, false);
 				$this->_resourceCache["$uriString"] = $r;
 
-#debug
-$GLOBALS['resourceFCount']++;
 				return $r;
 			}
 		} else {
@@ -122,10 +112,8 @@ $GLOBALS['resourceFCount']++;
 				return $this->_resourceCache["$uri"];
 			} else {
 				$r = new Erfurt_Rdfs_Resource_Default($uri, $this, $expandNS);
-				#$GLOBALS['resourceFCount'].= $uri.'#'.$this->modelID.LINEFEED;
 				$this->_resourceCache["$uri"] = $r;
-#debug
-$GLOBALS['resourceFCount']++;
+
 				return $r;
 			}
 		}
@@ -139,8 +127,6 @@ $GLOBALS['resourceFCount']++;
 	 **/
 	function classF($uri, $expandNS = true) {
 
-#debug
-$GLOBALS['classFCount']++;
 		return new RDFSClass($uri, $this, $expandNS);
 	}
 	/**
@@ -151,8 +137,6 @@ $GLOBALS['classFCount']++;
 	 **/
 	function propertyF($uri, $expandNS = true) {
 
-#debug
-$GLOBALS['propertyFCount']++;
 		return new Erfurt_Rdfs_Property_Default($uri, $this, $expandNS);
 	}
 	
@@ -164,8 +148,6 @@ $GLOBALS['propertyFCount']++;
 	 **/
 	function instanceF($uri, $expandNS = true) {
 
-#debug
-$GLOBALS['instanceFCount']++;
 		return new Erfurt_Rdfs_Instance_Default($uri, $this, $expandNS);
 	}
 	

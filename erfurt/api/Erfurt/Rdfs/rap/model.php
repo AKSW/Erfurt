@@ -571,45 +571,145 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 * Currently all literal values are regexped ("$search") against the search string...
 	 * The result depends on the configuration made via the following parameters:
 	 * 
-	 * @param string $hierProps (later array) e.g owl:Class
+	 * @param string $hierClasses (later array) e.g owl:Class
 	 * @param string $subRelProps (later array) e.g. rdfs:subClassOf
 	 * @param string $instProps (later array) e.g. rdf:type
 	 * @param string/null $entryPoint An optional entry point... all resources after that point are returned; 
 	 * if no entry point is given owl:Thing is assumed alternatively all resources that have no $subRelProps statement
 	 * @param string/null $search An optional search string
+	 * @param boolean $doCount (default: false) Whether to do a (maybe slow) recursive count over instances or not
 	 * @return array Returns an associative array where the key is the uri of the current resource and the values is
 	 * an associative array, too. The value contains a 'uri' key containing again the uri and optionally a 'childs' key,
 	 * containing the childs in the same structure.
 	 */
-	public function resourceTree($hierProps, $subRelProps, $instProps, $entryPoint = null, $search = null) {
-		
+	public function resourceTree($hierClasses, $subRelProps, $instProps, $entryPoint = null, $search = null, 
+			$doCount = false) {
+
+// TODO implement limit
+	
+		// no search given: do not filter the result 
 		if ($search == null) {
-			$sparql = 'SELECT ?s ?par ?sub WHERE 	{ 
-												?s <' . $instProps . '> <' . $hierProps . '> . 
-												OPTIONAL { ?s <' . $subRelProps . '> ?par } .
-												OPTIONAL { ?sub <' . $subRelProps . '> ?s } 
-											}';
-											
-			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
-			return $this->_buildHierarchyRecursive($sparqlResult, $entryPoint);
-		} else {
-			$sparql = 'SELECT ?s WHERE 	{ 
-												?s <' . $instProps . '> <' . $hierProps . '> . 
-												?s ?p ?o .
-												FILTER (isLiteral(?o) && regex(?o, "' . $search . '", "i"))
-											}';
-			
-			$sparqlResult = $this->sparqlQueryAs($sparql, null, new Erfurt_Sparql_ResultRenderer_Plain());
-			
-			$result = array();
-			foreach ($sparqlResult as $row) {
-				$result[$row['s']]['uri'] = $row['s'];
+			//if no entry point is given: try to figure iut the TOP items
+			if ($entryPoint === null) {
+				// all items without subitems
+				$sparql1 = 'SELECT DISTINCT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses  .'> .
+								OPTIONAL {?s <' . $subRelProps . '> ?top} . 
+								OPTIONAL {?subc <' . $subRelProps . '> ?s} .
+								FILTER ( !bound(?top) ) .
+								FILTER ( !bound(?subc) ) .
+								FILTER ( isIRI(?s) ) .
+							}';
+				
+				// all items with subitems
+				$sparql2 = 'SELECT DISTINCT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses  .'> .
+								OPTIONAL {?s <' . $subRelProps . '> ?top} .
+								?subc <' . $subRelProps . '> ?s .
+								FILTER ( !bound(?top) ) .
+								FILTER ( isIRI(?s) ) .
+							}';					
 			}
+			// entry point is given, so we can use  simpler queries
+			else {
+				// all items without subitems
+				$sparql1 = 'SELECT DISTINCT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses  .'> .
+								?s <' . $subRelProps . '> <' . $entryPoint . '> .
+								OPTIONAL {?subc <' . $subRelProps . '> ?s} .
+								FILTER ( !bound(?subc) ) .
+								FILTER ( isIRI(?s) ) .
+							}';
+				
+				// all items with subitems
+				$sparql2 = 'SELECT DISTINCT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses  .'> .
+								?s <' . $subRelProps . '> <' . $entryPoint . '> .
+								?subc <' . $subRelProps . '> ?s .
+								FILTER ( isIRI(?s) ) .
+							}';
+			}
+		}
+		// search string is given...
+		else {
+			// all matching items without subitems
+			$sparql1 = 'SELECT ?s WHERE
+						{ 
+							?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
+							?s ?p ?o .
+							OPTIONAL {?subc <' . $subRelProps . '> ?s} .
+							FILTER ( isLiteral(?o) ) .
+							FILTER ( regex(?o, "' . $search . '", "i") ) .
+							FILTER ( !bound(?subc) ) .
+							FILTER ( isIRI(?s) ) .
+						}';
 			
-			return $result;
+			// all matching items with subitems
+			$sparql2 = 'SELECT ?s WHERE
+						{
+							?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
+							?s ?p ?o .
+							?subc <' . $subRelProps . '> ?s .
+							FILTER ( isLiteral(?o) ) .
+							FILTER ( regex(?o, "' . $search . '", "i") ) .
+							FILTER ( isIRI(?s) ) .
+						}';
 		}
 		
+		// ready to execute the two sparql queries...
+		$sparqlResult1 = $this->sparqlQueryAs($sparql1, null, new Erfurt_Sparql_ResultRenderer_Plain());
+		$sparqlResult2 = $this->sparqlQueryAs($sparql2, null, new Erfurt_Sparql_ResultRenderer_Plain());
+											
+		// generate the real result... fetch titles and eventuelly counts, merge the two sparql results and sort by
+		// title
+		$result = array();
+		foreach ($sparqlResult1 as $row) {
+			$r = $this->resourceF($row['s'], false);
+			$result[$row['s']]['iri'] = $row['s'];
+			$result[$row['s']]['title'] = $r->getTitle();
+			$result[$row['s']]['hasChildren'] = false;
+			
+			if ($doCount === true) {
+				try {
+					$count = $r->countPropertyValuesObjectRecursive($instProps, $subRelProps);
+				} catch (Erfurt_Exception $e) {
+					$count = 0;
+				}
+				
+				$result[$row['s']]['count'] = $count;
+			}
+		}
+		foreach ($sparqlResult2 as $row) {
+			$r = $this->resourceF($row['s'], false);
+			$result[$row['s']]['iri'] = $row['s'];
+			$result[$row['s']]['title'] = $r->getTitle();
+			$result[$row['s']]['hasChildren'] = true;
+			
+			if ($doCount === true) {
+				try {
+					$count = $r->countPropertyValuesObjectRecursive($instProps, $subRelProps);
+				} catch (Erfurt_Exception $e) {
+					$count = 0;
+				}
+				
+				$result[$row['s']]['count'] = $count;
+			}
+		}
+
+		// now sort it by title
+		usort($result, 'RDFSModel::cmp_by_title');
+
+		return $result;		
 	}
+	
+	private static function cmp_by_title($a, $b) {
+		return strcmp($a['title'], $b['title']);
+	}
+	
 	
 	protected function _buildHierarchyRecursive($sparqlResult, $entryPoint) {
 		
@@ -754,7 +854,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			foreach($this->rdqlQuery($q) as $res)
 				if($res['?x']) {
 					if(method_exists($res['?x'],'getLocalName')) {
-						$ret[$res['?x']->getLocalName()] = $this->instanceF($res['?x']->getURI());
+						$ret[$res['?x']->getLocalName()] = $this->instanceF($res['?x']->getURI(), false);
 					}
 				}
 		}
@@ -1566,7 +1666,7 @@ if (Zend_Registry::isRegistered('owLog')) {
 		$res=($uri instanceof Resource) ? $uri : $this->resourceF($uri);
 		$uri=$res->getURI();
 		foreach($this->vocabulary['Class'] as $class) {
-			$q="SELECT ?x WHERE (<".$uri.">,<rdf:type>,?x) (?x,<rdf:type>,<".$class->getURI().">)";
+			$q="SELECT ?x WHERE (<".$uri.">,<rdf:type>,?x) (?x,<rdf:type>,<".$class.">)";
 			$instance=$this->rdqlQuery($q);
 			if($instance[0]['?x'])
 				return $this->instanceF($uri);

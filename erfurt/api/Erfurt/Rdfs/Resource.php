@@ -18,6 +18,16 @@ interface Erfurt_Rdfs_Resource {
 	 */
 	public function addLabel($label, $language = '');
 	
+	/**
+	 * @throws Erfurt_Exception if no count is supported
+	 */
+	public function countPropertyValuesObject($prop);
+		
+	/**
+	 * @see Erfurt_Exception if no count is supported
+	 */
+	public function countPropertyValuesObjectRecursive($prop, $subRelProp);
+		
 	public function definingModels();
 	
 	/**
@@ -89,6 +99,18 @@ interface Erfurt_Rdfs_Resource {
 	public function isImported();
 	
 	/**
+	 * This method returns a human readable title for this resource.
+	 * 
+	 * The title properties are configured in erfurt.ini
+	 * 
+	 * @param string/null $language Whether to return a title in a specific language if available... if not a default
+	 * language is tried...
+	 * @return string Returns a human readable title for the resource... when no title is available a qname or a
+	 * localname is returned.
+	 */
+	public function getTitle($language = null);
+	
+	/**
 	 * Checks if this resource is of a specific type.
 	 *
 	 * @param RDFResource $type
@@ -156,6 +178,8 @@ interface Erfurt_Rdfs_Resource {
 	
 	public function listLiteralPropertyValuesPlain($property, $language = null, $datatype = null);
 	
+	public function listPropertiesUsedAsObject();
+	
 	/**
 	 * Returns an array of nodes (resources or literals) which are values
 	 * of the property $property for this resource.
@@ -166,7 +190,7 @@ interface Erfurt_Rdfs_Resource {
 	 */
 	public function listPropertyValues($property = null, $class = null);
 	
-	public function listPropertyValuesObject($property, $class = null);
+	public function listPropertyValuesObject($property = null, $class = null);
 	public function listPropertyValuesRegEx($property = null, $class = null);
 	public function listPropertyValuesSymmetric($property, $class = null);
 	public function listPropertyValuesTransitive($property, $class = null, $done = array());
