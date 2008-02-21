@@ -14,7 +14,7 @@ class Erfurt_Owl_Structured_HasValue extends Erfurt_Owl_Structured_Restriction {
 	}
 	
 	public function toManchesterSyntaxString () {
-		return "(" . $this->getOnProperty () . " has " . $this->fillerInstance->toManchesterSyntaxString () . ")" ;
+		return "(" . $this->getOnProperty () . " value " . $this->fillerInstance->toManchesterSyntaxString () . ")" ;
 	}
 	
 	public function generateRDF () {

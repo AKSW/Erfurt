@@ -1,10 +1,19 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the allValuesFrom OWL Constructor
  * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version 
+ **/
 class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_QuantifierRestriction {
-	//TODO check if allvaluesFrom is classExpr or instExpr in manchester.y
+
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/	
 	public function toManchesterSyntaxString () {
 		$returnString = '[' ;
 		$children = $this->getChildClasses () ;
@@ -18,6 +27,12 @@ class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_Quantifi
 		return "(" . $this->getOnProperty () . " only " . $returnString . ")" ;
 	}
 	
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		

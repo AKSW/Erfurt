@@ -1,7 +1,10 @@
 <?php
 /**
+ * Superclass for Erfurt Structured OWL Classes
  * 
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
+ * @version 
  */
 class Erfurt_Owl_Structured_StructuredClass {
 	private $childClasses = array ( ) ;
@@ -9,12 +12,23 @@ class Erfurt_Owl_Structured_StructuredClass {
 	private $firstChildBlankNode =null;
 	private $memmodel ;
 	
+	/**
+	 * Default constructor. Used by the subclasses to assign the URI value
+	 * @param string URI
+	 * 
+	 */
 	public function __construct ( $uri ) {
 		
 		//$this->childClasses = array();
 		$this->URI = $uri ;
 	}
 	
+	/**
+	 * Method for adding child classes to existing Structured Class
+	 * 
+	 * @param array or Erfurt_Owl_Structured_StructuredClass
+	 * 
+	 */	
 	public function addChildClass ( $structuredClass ) {
 		if (is_array ( $structuredClass )) {
 			$this->childClasses = array_merge ( $this->childClasses, $structuredClass ) ;
@@ -23,32 +37,70 @@ class Erfurt_Owl_Structured_StructuredClass {
 		}
 	}
 	/**
-	 * 	getter for Child Classes
+	 * Method for getter for Child Classes
 	 *
-	 * @return array
+	 * @return array of Child Classes
+	 * 
 	 */
 	public function getChildClasses () {
 		return $this->childClasses ;
 	}
 	
+	/**
+	 * returns the URI of the Structured Class
+	 * 
+	 * @return string URI
+	 * 
+	 */	
 	public function getURI () {
 		return $this->URI ;
 	}
 	
+	/**
+	 * sets the URI of the Structured Class
+	 * 
+	 * @param string URI
+	 * 
+	 */	
 	public function setURI ( $newURI ) {
 		$this->URI = $newURI ;
 	}
 	//TODO rename
+	/**
+	 * gets the URL prefix for the OWL Triples (Has to be renamed to match OWL 1.1)
+	 * 
+	 * @return string URL
+	 * 
+	 */	
 	public function getURLPrefix () {
 		return "http://www.w3.org/2002/07/owl#" ;
 	}
+
+	/**
+	 * gets the URL prefix for the RDF Triples
+	 * 
+	 * @return string URL
+	 * 
+	 */	
 	public function getRDFURL () {
 		return "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
 	}
+	/**
+	 * Helper method for generating the Manchester OWL Syntax string. Used by subclasses.
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 */	
 	public function __toString () {
 		return $this->toManchesterSyntaxString () ;
 	}
 	
+	/**
+	 * not used
+	 * 
+	 * @return string Error message
+	 * 
+	 */	
 	public function toManchesterSyntaxString () {
 		
 		return "Method not overwritten correctly" ;
@@ -60,9 +112,9 @@ class Erfurt_Owl_Structured_StructuredClass {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Method used by subclasses to generate RDF for included statements
 	 *
-	 * @return MemModel
+	 * @return MemModel of included child classes
 	 */
 	public function getChildrenRDF () {
 		if($this->firstChildBlankNode==null){
@@ -97,18 +149,18 @@ class Erfurt_Owl_Structured_StructuredClass {
 		return $this->getMemModel () ;
 	}
 	/**
-	 * Enter description here...
+	 * getter for the first defined BlankNode
 	 *
-	 * @return BlankNode
+	 * @return BlankNode of the first child
 	 */
 	public function getFirstChildBlankNode () {
 		return $this->firstChildBlankNode ;
 	}
 	
 	/**
-	 * Enter description here...
+	 * Generates or returns MemModel for this Structured Class
 	 *
-	 * @return MemModel
+	 * @return MemModel of the class
 	 */
 	public function getMemModel () {
 		if ($this->memmodel == null)
