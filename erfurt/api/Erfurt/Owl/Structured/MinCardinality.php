@@ -12,7 +12,7 @@ class Erfurt_Owl_Structured_MinCardinality extends Erfurt_Owl_Structured_Cardina
 	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
-		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "MinCardinality" ), $this->getCardinalityOWL () ) ;
+		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "minCardinality" ), $this->getCardinalityOWL () ) ;
 		$model->add ( $statement ) ;
 		return $model ;
 	}

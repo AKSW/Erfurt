@@ -32,7 +32,7 @@ class Erfurt_Owl_Structured_Restriction extends Erfurt_Owl_Structured_AnonymousC
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
 		$statement = new Statement ( $this->subject, $predicate, new Resource ( $this->getURLPrefix () . $this->getOWLType () ) ) ;
 		
-		$statement1 = new Statement ( $this->subject, new Resource ( $this->getURLPrefix () . "OnProperty" ), new Resource ( $this->getOnProperty () ) ) ;
+		$statement1 = new Statement ( $this->subject, new Resource ( $this->getURLPrefix () . "onProperty" ), new Resource ( $this->getOnProperty () ) ) ;
 		
 		$model->add ( $statement ) ;
 		$model->add ( $statement1 ) ;

@@ -21,18 +21,16 @@ class Erfurt_Owl_Structured_SomeValuesFrom extends Erfurt_Owl_Structured_Quantif
 	public function generateRDF () {
 		
 		$model = parent::generateRDF () ;
-		$this->getChildrenRDF();
-		/*$requiredString = '' ;
+		$rangeString = '' ;
 		$children = $this->getChildClasses () ;
 		foreach ( $children as $key => $value ) {
-			$requiredString .= $value->getURI () ;
+			$rangeString .= $value->getURI () ;
 			if ($key < count ( $children ) - 1) {
-				$requiredString .= ', ' ;
+				$rangeString .= ', ' ;
 			}
 		}
-		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "someValuesFrom" ), new Literal ( $requiredString ) ) ;
+		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "someValuesFrom" ), new Resource ( $rangeString ) ) ;
 		$model->add ( $statement ) ;
-		*/
 		return $model ;
 	}
 }

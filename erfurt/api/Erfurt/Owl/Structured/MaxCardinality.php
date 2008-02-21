@@ -12,7 +12,7 @@ class Erfurt_Owl_Structured_MaxCardinality extends Erfurt_Owl_Structured_Cardina
 	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
-		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "MaxCardinality" ), $this->getCardinalityOWL () ) ;
+		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "maxCardinality" ), $this->getCardinalityOWL () ) ;
 		$model->add ( $statement ) ;
 		return $model ;
 	}
