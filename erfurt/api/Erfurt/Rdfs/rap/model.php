@@ -1035,10 +1035,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		if(!($rest instanceof Resource) || $rest->getURI()==$GLOBALS['RDF_nil']->getURI())
 			return array();
-		if($class=='Class')
-			$class=$this->vclass;
+	
+		if ($class == 'Class')
+			$class='class';
 		else if($class=='Property')
-			$class=$this->property;
+			$class='property';
 
 		$sql="SELECT s1.object,s1.object_is,s3.object,s3.object_is,s4.object,s4.object_is
 				FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." s1
@@ -1651,7 +1652,7 @@ if (Zend_Registry::isRegistered('owLog')) {
 			  	s2.object='".$this->_dbId('RDFS_Resource')."' OR
 				(1=0 AND s2.object_is='r' AND s2.object NOT LIKE '".$this->baseURI."%')
 			  ORDER BY s1.subject";
-		$topclasses=$this->_convertRecordSetToNodeList($sql,$this->vclass,$start,$count,&$erg);
+		$topclasses=$this->_convertRecordSetToNodeList($sql,'class',$start,$count,&$erg);
 		return cache('listTopClassesImplicit'.$this->modelURI,$args,$topclasses);
  	}
 	function countClasses($includeImports=true) {
@@ -1718,7 +1719,7 @@ if (Zend_Registry::isRegistered('owLog')) {
         $sql .= 'GROUP BY s1.object
                  ORDER BY s1.object';
  
-        $topClasses = $this->_convertRecordSetToNodeList($sql, $this->vclass);
+        $topClasses = $this->_convertRecordSetToNodeList($sql, 'class');
         
         return cache('_listImplicitTopClasses'.$this->modelURI, $args, $topClasses);        
     }
@@ -1763,7 +1764,7 @@ if (Zend_Registry::isRegistered('owLog')) {
                   OR s2object = "' . $this->_dbId('OWL_Thing') . '"))
                   ORDER BY s1.subject';
 			
-        $topClasses = $this->_convertRecordSetToNodeList($sql, $this->vclass);
+        $topClasses = $this->_convertRecordSetToNodeList($sql, 'class');
         
 		
         if (!$emptyClasses) {

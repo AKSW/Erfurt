@@ -390,7 +390,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 #		return $this->listPropertyValues($GLOBALS['RDFS_subClassOf'],'Class'); # <- returns bNodes
 		$sql="SELECT object,object_is FROM ".$GLOBALS['RAP']['conf']['database']['tblStatements']." WHERE subject='".$this->getURI()."'
 			AND predicate='".EF_RDFS_SUBCLASSOF."' AND object_is='r' AND modelID IN (".$this->model->getModelIds().')';
-		return $this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),$this->model->vclass);
+		return $this->model->_convertRecordSetToNodeList($this->model->dbConn->execute($sql),'class');
 	}
 	
 	/**
