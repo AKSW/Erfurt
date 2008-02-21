@@ -20,9 +20,11 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	
 	var $instance;
 	
+// TODO remove direct use of $vocabulary outside of class!!!
+	public $vocabulary;
+	
 	
 	protected $importsIds;
-	protected $vocabulary;
 	protected $asResource;
 	
 	
