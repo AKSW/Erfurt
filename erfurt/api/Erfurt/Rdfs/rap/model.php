@@ -1788,16 +1788,24 @@ if (Zend_Registry::isRegistered('owLog')) {
 	 */
 	public function sparqlQuery($query, $renderer = null, $useAcl = true) {
 		
-		$args = func_get_args();
-		$c = new stmCache('sparqlQuery', $args, $this);
-		 	
-		$cVal = $c->get();	
-		if (null != $cVal) {
-			return $cVal;
+		// just use the stmCache iff renderer has no objects inside (plain), for dbConn must not be cached!!!
+		if ($renderer instanceof Erfurt_Sparql_ResultRenderer_Plain) {
+			$args = func_get_args();
+			$c = new stmCache('sparqlQuery', $args, $this);
+
+			$cVal = $c->get();	
+			if (null != $cVal) {
+				return $cVal;
+			}
 		}
 		
+		
+		
 		$result = $this->store->executeSparql($this, $query, null, $renderer, true, $useAcl);
-		$c->set($result);
+		
+		if ($renderer instanceof Erfurt_Sparql_ResultRenderer_Plain) {
+			$c->set($result);
+		}
 		
 		return $result;
 	}
