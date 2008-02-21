@@ -1033,7 +1033,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function getListAs($rest, $class = null) {
 		
-		if(!($rest instanceof Resource) || $rest->getURI()==$GLOBALS['RDF_nil']->getURI())
+		if(!($rest instanceof Resource) || $rest->getURI()==EF_RDF_NIL)
 			return array();
 	
 		if ($class == 'Class')
@@ -1113,7 +1113,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				$list=$this->getList($member,$class);
 				if($list)
 					$ret=array_merge($ret,$list);
-				else if($row[$i]!=$GLOBALS['RDF_nil']->getURI())
+				else if($row[$i]!=EF_RDF_NIL)
 					array_push($ret,$member);
 			}
 		}

@@ -293,7 +293,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		$ret=array();
 		if(!$superclasses=method_exists($this,'listSuperClassesInfered')?$this->listSuperClassesInfered():$this->listSuperClasses()) {
 			// get Properties at OWL_Thing
-			$ret=array('owl:Thing'=>$this->model->findNodes(NULL,EF_RDFS_DOMAIN,EF_OWL_THING,'Property'));
+			$ret=array('owl:Thing'=>$this->model->findNodes(null, EF_RDFS_DOMAIN, EF_OWL_THING, 'property'));
 			// TODO get properties with domain not defined
 		}
 		$done=array();

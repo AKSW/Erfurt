@@ -41,9 +41,9 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function isCardinalityRestriction() {
 		
-		return $this->hasPropertyValue('owl:maxCardinality') 
-					|| $this->hasPropertyValue('owl:minCardinality')
-					||$this->hasPropertyValue('owl:cardinality');
+		return $this->hasPropertyValue(EF_OWL_MAXCARDINALITY) 
+					|| $this->hasPropertyValue(EF_OWL_MINCARDINALITY)
+					||$this->hasPropertyValue(EF_OWL_CARDINALITY);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function isHasValueRestriction() {
 		
-		return $this->hasPropertyValue('owl:hasValue');
+		return $this->hasPropertyValue(EF_OWL_HASVALUE);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function isSomeValuesFromRestriction() {
 		
-		return $this->hasPropertyValue('owl:someValuesFrom');
+		return $this->hasPropertyValue(EF_OWL_SOMEVALUESFROM);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function isAllValuesFromRestriction() {
 		
-		return $this->hasPropertyValue('owl:allValuesFrom');
+		return $this->hasPropertyValue(EF_OWL_ALLVALUESFROM);
 	}
 	
 	/** 
@@ -83,7 +83,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function isIntersection() {
 		
-		return $this->hasPropertyValue('owl:intersectionOf');
+		return $this->hasPropertyValue(EF_OWL_INTERSECTIONOF);
 	}
 	
 	/** Returns an array containing all the classes that are
@@ -92,7 +92,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listEquivalentClasses() {
 		
-		return $this->listPropertyValues("owl:equivalentClass",'Class');
+		return $this->listPropertyValues(EF_OWL_EQUIVALENTCLASS, 'class');
 	}
 	
 	/**
@@ -103,7 +103,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listEquivalentClassesInfered() {
 		
-		return $this->listPropertyValuesSymmetric("owl:equivalentClass",'Class');
+		return $this->listPropertyValuesSymmetric(EF_OWL_EQUIVALENTCLASS, 'class');
 	}
 	
 	/** 
@@ -113,7 +113,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listDisjointWith() {
 		
-		return $this->listPropertyValues("owl:disjointWith");
+		return $this->listPropertyValues(EF_OWL_DISJOINTWITH);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listIntersectionOf() {
 		
-		return $this->model->getList(parray_shift($this->listPropertyValues("owl:intersectionOf")),'Class');
+		return $this->model->getList(parray_shift($this->listPropertyValues(EF_OWL_INTERSECTIONOF)), 'class');
 	}
 	
 	/**
@@ -133,7 +133,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listUnionOf() {
 		
-		return $this->model->getList(parray_shift($this->listPropertyValues("owl:unionOf")));
+		return $this->model->getList(parray_shift($this->listPropertyValues(EF_OWL_UNIONOF)));
 	}
 	
 	/** 
@@ -143,7 +143,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function listComplementOf() {
 		
-		return $this->listPropertyValues("owl:complementOf");
+		return $this->listPropertyValues(EF_OWL_COMPLEMENTOF);
 	}
 	
 	/** //TODO
@@ -152,7 +152,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function setEquivalentClasses($values) {
 		
-		return $this->setPropertyValues("owl:equivalentClass",$values);
+		return $this->setPropertyValues(EF_OWL_EQUIVALENTCLASS, $values);
 	}
 	
 	/** //TODO
@@ -160,7 +160,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function setDisjointWith($values) {
 		
-		return $this->setPropertyValues("owl:disjointWith",$values);
+		return $this->setPropertyValues(EF_OWL_DISJOINTWITH, $values);
 	}
 	
 	/** //TODO
@@ -169,7 +169,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	public function setIntersectionOf($values) {
 		
 		$list=$this->model->addList($values,false);
-		return $this->setPropertyValues("owl:intersectionOf",$list);
+		return $this->setPropertyValues(EF_OWL_INTERSECTIONOF, $list);
 	}
 	
 	/** //TODO
@@ -180,7 +180,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 		if($values==array_keys($this->listUnionOf()))
 			return;
 		$list=$this->model->addList($values,false);
-		return $this->setPropertyValues("owl:unionOf",$list);
+		return $this->setPropertyValues(EF_OWL_UNIONOF, $list);
 	}
 	
 	/** //TODO
@@ -188,7 +188,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 	 */
 	public function setComplementOf($values) {
 		
-		return $this->setPropertyValues("owl:complementOf",$values);
+		return $this->setPropertyValues(EF_OWL_COMPLEMENTOF, $values);
 	}
 
 	/**
@@ -376,7 +376,7 @@ class Erfurt_Owl_Class extends RDFSClass {
 		
 		$ret=array();
 		foreach($this->listLists() as $l)
-			if($i=$this->model->findNode(NULL,'owl:intersectionOf',$l,'OWLClass'))
+			if($i=$this->model->findNode(null, EF_OWL_INTERSECTIONOF, $l, 'class'))
 				$ret[]=$i;
 		return $ret;
 	}

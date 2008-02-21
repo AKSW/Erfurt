@@ -654,18 +654,17 @@ $this->properties = array();
 					if ($row instanceof Erfurt_Rdfs_Resource) {
 						switch ($class) {
 							case 'class':
-							case 'RDFSClass':
-							case 'Erfurt_Owl_Class':
+							case 'erfurt_owl_class':
 								$ret[] = $this->model->classF($row, false);
 								break;
 							case 'property':
-							case 'Erfurt_Rdfs_Property':
-							case 'Erfurt_Owl_Property':
+							case 'erfurt_rdfs_property':
+							case 'erfurt_owl_property':
 								$ret[] = $this->model->propertyF($row, false);
 								break;
 							case 'instance':
-							case 'Erfurt_Rdfs_Instance':
-							case 'Erfurt_Owl_Instance':
+							case 'erfurt_rdfs_instance':
+							case 'erfurt_owl_instance':
 								$ret[] = $this->model->instanceF($row, false);
 								break;
 							default:

@@ -39,6 +39,8 @@ define('EF_OWL_ONEOF', EF_OWL_NS.'oneOf');
 define('EF_OWL_THING', EF_OWL_NS.'Thing');
 define('EF_OWL_ONPROPERTY', EF_OWL_NS.'onProperty');
 define('EF_OWL_ALLDIFFERENT', EF_OWL_NS.'AllDifferent');
+define('EF_OWL_UNIONOF', EF_OWL_NS.'unionOf');
+define('EF_OWL_COMPLEMENTOF', EF_OWL_NS.'complementOf');
 	
 define('EF_RDF_TYPE', EF_RDF_NS.'type');
 define('EF_RDF_DESCRIPTION', EF_RDF_NS.'Description');
