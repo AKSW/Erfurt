@@ -94,7 +94,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function listSubClasses() {
 		
-		return $this->listPropertyValuesObject('rdfs:subClassOf','Class');
+		return $this->listPropertyValuesObject(EF_RDFS_SUBCLASSOF, 'class');
 	}
 	
 	/**
@@ -151,7 +151,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function setSubClasses($values) {
 		
-		return $this->setPropertyValuesObject('rdfs:subClassOf',$values);
+		return $this->setPropertyValuesObject(EF_RDFS_SUBCLASSOF, $values);
 	}
 	
 	/**
@@ -162,7 +162,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function isSubClassOf($class) {
 		
-		return $this->hasPropertyValue('rdfs:subClassOf',$class);
+		return $this->hasPropertyValue(EF_RDFS_SUBCLASSOF, $class);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function listSuperClasses() {
 		
-		return $this->listPropertyValues('rdfs:subClassOf','Class'); # <- returns bNodes
+		return $this->listPropertyValues(EF_RDFS_SUBCLASSOF, 'class'); # <- returns bNodes
 	}
 	
 	public function getSuperClass() {
@@ -239,9 +239,9 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		$valuesOld=array_keys($this->listSuperClasses());
 		$values=array_filter($values);
 		foreach(array_diff($valuesOld,$values) as $removed)
-			$this->model->remove($this,'rdfs:subClassOf',$removed);
+			$this->model->remove($this,EF_RDFS_SUBCLASSOF,$removed);
 		foreach(array_diff($values,$valuesOld) as $added)
-			$this->model->add($this,'rdfs:subClassOf',$added);
+			$this->model->add($this,EF_RDFS_SUBCLASSOF,$added);
 	}
 	
 	/**
@@ -251,7 +251,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 * @return array Array of RDFSProperty objects.
 	 **/
 	public function listDirectProperties() {
-		$ret=$this->model->findNodes(NULL,$GLOBALS['RDFS_domain'],$this,'Property');
+		$ret=$this->model->findNodes(null, EF_RDFS_DOMAIN, $this, 'property');
 		foreach($ret as $property)
 			$ret=array_merge($ret,$property->listSubProperties());
 		# TODO consider properties which have a union as domain
@@ -269,13 +269,13 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		
 		$propertyURIs=$this->model->vocabulary['Property'];
 		if(!$includeAnnotationProperties)
-			unset($propertyURIs[$this->model->_dbId('OWL_AnnotationProperty')]);
+			unset($propertyURIs[EF_OWL_ANNOTATION_PROPERTY]);
 		return $this->_listInheritedProperties(array_keys($propertyURIs));
 	}
 	
 	public function listInheritedAnnotationProperties() {
 		
-		return $this->_listInheritedProperties(array($this->model->_dbId('OWL_AnnotationProperty')));
+		return $this->_listInheritedProperties(array(EF_OWL_ANNOTATION_PROPERTY));
 	}
 	
 	/**
@@ -293,7 +293,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		$ret=array();
 		if(!$superclasses=method_exists($this,'listSuperClassesInfered')?$this->listSuperClassesInfered():$this->listSuperClasses()) {
 			// get Properties at OWL_Thing
-			$ret=array('owl:Thing'=>$this->model->findNodes(NULL,$GLOBALS['RDFS_domain'],$GLOBALS['OWL_Thing'],'Property'));
+			$ret=array('owl:Thing'=>$this->model->findNodes(NULL,EF_RDFS_DOMAIN,EF_OWL_THING,'Property'));
 			// TODO get properties with domain not defined
 		}
 		$done=array();
@@ -319,7 +319,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 	 **/
 	public function listProperties() {
 		
-		return array_merge($this->listDirectProperties(),$this->listInheritedProperties());
+		return array_merge($this->listDirectProperties(), $this->listInheritedProperties());
 	}
 	
 	/**
@@ -403,7 +403,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 			if(!$property=$this->model->getProperty($property))
 				return false;
 		if(!in_array($this,$property->listDomain()))
-			$this->model->add($property,$GLOBALS['RDFS_domain'],$this);
+			$this->model->add($property,EF_RDFS_DOMAIN,$this);
 	}
 	
 	/**
@@ -416,7 +416,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 		
 		if(!($property instanceof Erfurt_Rdfs_Property))
 			$property=$this->model->getProperty($property);
-		$stms=$this->model->find($property,$GLOBALS['RDFS_domain'],$this);
+		$stms=$this->model->find($property,EF_RDFS_DOMAIN,$this);
 		foreach($stms->triples as $stm)
 			$this->model->remove($stm);
 	}
@@ -591,7 +591,7 @@ abstract class Erfurt_Rdfs_Class_Abstract extends Erfurt_Rdfs_Resource_Default {
 
 		if(!($subclass instanceof RDFSClass))
 			$subclass=$this->model->addClass($subclass);
-		$this->model->add($subclass,'rdfs:subClassOf',$this);
+		$this->model->add($subclass,EF_RDFS_SUBCLASSOF,$this);
 		return $subclass;
 	}
 	

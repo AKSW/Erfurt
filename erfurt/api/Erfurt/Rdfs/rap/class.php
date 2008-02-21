@@ -332,7 +332,7 @@ class RDFSClass extends Erfurt_Rdfs_Class_Abstract {
 	public function listDirectProperties() {
 		
 		static $unionCache;
-		$ret=$this->model->findNodes(NULL,$GLOBALS['RDFS_domain'],$this,'Property');
+		$ret=$this->model->findNodes(null, EF_RDFS_DOMAIN, $this, 'property');
 		foreach($ret as $property)
 			$ret=array_merge($ret,$property->listSubProperties());
 		if(!$unionCache) {
