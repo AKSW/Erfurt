@@ -565,31 +565,72 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
     }
 
 	/**
-	 * Builds a tree containing resources in a hierarchical structure.
-	 * 
-	 * If a search string is given a flat array is returned, containing matching resources.
-	 * Currently all literal values are regexped ("$search") against the search string...
+	 * Builds a tree containing resources for a hierarchical structure.
+	 *
 	 * The result depends on the configuration made via the following parameters:
 	 * 
 	 * @param string $hierClasses (later array) e.g owl:Class
 	 * @param string $subRelProps (later array) e.g. rdfs:subClassOf
 	 * @param string $instProps (later array) e.g. rdf:type
-	 * @param string/null $entryPoint An optional entry point... all resources after that point are returned; 
-	 * if no entry point is given owl:Thing is assumed alternatively all resources that have no $subRelProps statement
-	 * @param string/null $search An optional search string
-	 * @param boolean $doCount (default: false) Whether to do a (maybe slow) recursive count over instances or not
-	 * @return array Returns an associative array where the key is the uri of the current resource and the values is
-	 * an associative array, too. The value contains a 'uri' key containing again the uri and optionally a 'childs' key,
-	 * containing the childs in the same structure.
+	 * @param array An optional array containing optional parameters as key-value-pairs. The following list is used:
+	 * 			
+	 * 		- 'entryPoint' 				=> 	(string) the iri of the entry point
+	 * 		- 'search' 					=> 	(string) a search string used for the regular expression; every literal will
+	 *  									match that contains the given string 
+	 * 		- 'doCount'					=>	(boolean) wheather to count instances or not (default is true)
+	 * 		- 'lookupChildrenOnSearch'	=>  (boolean) wheather to look for existing children on search or not
+	 * 										(default is false)
+	 * 
+	 * @return array Returns an associative array where the key is the iri of the current resource and the value is
+	 * an associative array, too. This array has the following (maybe optional) keys:
+	 * 
+	 * 		- 'iri'				=>	(string) the iri of the resource
+	 * 		- 'title'			=>	(string) a title for the resource (see getTitle method)
+	 * 		- 'count'			=>	(int) -1 if $doCount is false or backend does not support count (unknown);
+	 * 								a number greater or equal than 0 else
+	 * 		- 'hasChildren'		=>	(boolean) whether the resource has resources that are in a sub relation
+	 * 								(according to $subRelProps) with this resource or not (OPTIONAl, i.e. it is
+	 * 								possible that this key does not exist; check with isset)
 	 */
-	public function resourceTree($hierClasses, $subRelProps, $instProps, $entryPoint = null, $search = null, 
-			$doCount = false) {
+	public function resourceTree($hierClasses, $subRelProps, $instProps, $optionalParams = array()) {
 
 // TODO implement limit
-	
+		
+		// check for optional parameters
+		if (isset($optionalParams['entryPoint'])) {
+			$entryPoint = $optionalParams['entryPoint'];
+		} else {
+			$entryPoint = null;
+		}
+		
+		if (isset($optionalParams['search'])) {
+			// check if search string only conatins spaces
+			if (trim($optionalParams['search']) === '') {
+				$search = null;
+			} else {
+				$search = $optionalParams['search'];
+			}
+		} else {
+			$search = null;
+		}
+		
+		if (isset($optionalParams['doCount'])) {
+			$doCount = $optionalParams['doCount'];
+		} else {
+			// default is true
+			$doCount = true;
+		}
+		
+		if (isset($optionalParams['lookupChildrenOnSearch'])) {
+			$lookupChildrenOnSearch = $optionalParams['lookupChildrenOnSearch'];
+		} else {
+			// default is false
+			$lookupChildrenOnSearch = false;
+		}
+		
 		// no search given: do not filter the result 
-		if ($search == null) {
-			//if no entry point is given: try to figure iut the TOP items
+		if ($search === null) {
+			//if no entry point is given: try to figure out the TOP items
 			if ($entryPoint === null) {
 				// all items without subitems
 				$sparql1 = 'SELECT DISTINCT ?s WHERE
@@ -636,69 +677,107 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		}
 		// search string is given...
 		else {
-			// all matching items without subitems
-			$sparql1 = 'SELECT ?s WHERE
-						{ 
-							?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
-							?s ?p ?o .
-							OPTIONAL {?subc <' . $subRelProps . '> ?s} .
-							FILTER ( isLiteral(?o) ) .
-							FILTER ( regex(?o, "' . $search . '", "i") ) .
-							FILTER ( !bound(?subc) ) .
-							FILTER ( isIRI(?s) ) .
-						}';
-			
-			// all matching items with subitems
-			$sparql2 = 'SELECT ?s WHERE
-						{
-							?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
-							?s ?p ?o .
-							?subc <' . $subRelProps . '> ?s .
-							FILTER ( isLiteral(?o) ) .
-							FILTER ( regex(?o, "' . $search . '", "i") ) .
-							FILTER ( isIRI(?s) ) .
-						}';
+			if (!$lookupChildrenOnSearch) {
+				$sparql1 = 'SELECT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
+								?s ?p ?o .
+								FILTER ( isLiteral(?o) ) .
+								FILTER ( regex(?o, "' . $search . '", "i") ) .
+								FILTER ( isIRI(?s) ) .
+							}';
+			} else {
+				// all matching items without subitems
+				$sparql1 = 'SELECT ?s WHERE
+							{ 
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
+								?s ?p ?o .
+								OPTIONAL {?subc <' . $subRelProps . '> ?s} .
+								FILTER ( isLiteral(?o) ) .
+								FILTER ( regex(?o, "' . $search . '", "i") ) .
+								FILTER ( !bound(?subc) ) .
+								FILTER ( isIRI(?s) ) .
+							}';
+
+				// all matching items with subitems
+				$sparql2 = 'SELECT ?s WHERE
+							{
+								?s <' . EF_RDF_TYPE . '> <' . $hierClasses . '> . 
+								?s ?p ?o .
+								?subc <' . $subRelProps . '> ?s .
+								FILTER ( isLiteral(?o) ) .
+								FILTER ( regex(?o, "' . $search . '", "i") ) .
+								FILTER ( isIRI(?s) ) .
+							}';
+			}			
 		}
 		
-		// ready to execute the two sparql queries...
-		$sparqlResult1 = $this->sparqlQueryAs($sparql1, null, new Erfurt_Sparql_ResultRenderer_Plain());
-		$sparqlResult2 = $this->sparqlQueryAs($sparql2, null, new Erfurt_Sparql_ResultRenderer_Plain());
-											
+		// ready to execute the sparql queries...
+		try {
+			$sparqlResult1 = $this->sparqlQueryAs($sparql1, null, new Erfurt_Sparql_ResultRenderer_Plain());
+		} 
+		// catch e.g. wrong characters in search string (e.g. ***)
+		catch (Exception $e) {
+			return array();
+		}
+		
+		if ($search === null || $lookupChildrenOnSearch) {
+			try {
+				$sparqlResult2 = $this->sparqlQueryAs($sparql2, null, new Erfurt_Sparql_ResultRenderer_Plain());
+			} 
+			// catch e.g. wrong characters in search string (e.g. ***)
+			catch (Exception $e) {
+				return array();
+			}
+			
+		}
+		
 		// generate the real result... fetch titles and eventuelly counts, merge the two sparql results and sort by
 		// title
 		$result = array();
 		foreach ($sparqlResult1 as $row) {
+			$result[$row['s']] = array();
 			$r = $this->resourceF($row['s'], false);
 			$result[$row['s']]['iri'] = $row['s'];
 			$result[$row['s']]['title'] = $r->getTitle();
-			$result[$row['s']]['hasChildren'] = false;
 			
-			if ($doCount === true) {
+			if ($search === null || $lookupChildrenOnSearch) {
+				$result[$row['s']]['hasChildren'] = false;
+			}
+			
+			if ($doCount) {
 				try {
 					$count = $r->countPropertyValuesObjectRecursive($instProps, $subRelProps);
 				} catch (Erfurt_Exception $e) {
-					$count = 0;
+					$count = -1;
 				}
 				
 				$result[$row['s']]['count'] = $count;
+			} else {
+				$result[$row['s']]['count'] = -1;
 			}
 		}
-		foreach ($sparqlResult2 as $row) {
-			$r = $this->resourceF($row['s'], false);
-			$result[$row['s']]['iri'] = $row['s'];
-			$result[$row['s']]['title'] = $r->getTitle();
-			$result[$row['s']]['hasChildren'] = true;
-			
-			if ($doCount === true) {
-				try {
-					$count = $r->countPropertyValuesObjectRecursive($instProps, $subRelProps);
-				} catch (Erfurt_Exception $e) {
-					$count = 0;
+		if ($search === null || $lookupChildrenOnSearch) {
+			foreach ($sparqlResult2 as $row) {
+				$r = $this->resourceF($row['s'], false);
+				$result[$row['s']]['iri'] = $row['s'];
+				$result[$row['s']]['title'] = $r->getTitle();
+				$result[$row['s']]['hasChildren'] = true;
+
+				if ($doCount) {
+					try {
+						$count = $r->countPropertyValuesObjectRecursive($instProps, $subRelProps);
+					} catch (Erfurt_Exception $e) {
+						$count = -1;
+					}
+
+					$result[$row['s']]['count'] = $count;
+				} else {
+					$result[$row['s']]['count'] = -1;
 				}
-				
-				$result[$row['s']]['count'] = $count;
 			}
 		}
+		
 
 		// now sort it by title
 		usort($result, 'RDFSModel::cmp_by_title');
