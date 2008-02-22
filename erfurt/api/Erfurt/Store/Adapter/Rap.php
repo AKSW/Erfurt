@@ -463,12 +463,14 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		if ($useImports) {
 			
 			//Get imported models
+			$sqlmodelIDs = "";
 			foreach ($modelIDs as $ID) {
 				$sqlmodelIDs .= 'modelID = '.$ID . ' OR ';
 			}
 			$sqlQuery = 'SELECT object FROM statements WHERE ('.$sqlmodelIDs.'FALSE) AND predicate = \'http://www.w3.org/2002/07/owl#imports\'' ;
 			
 			// Get URIs of allowed models for user
+			$sqlModelUris = '';
 			foreach($this->sqlQuery($sqlQuery) as $m) {
 				//check on model based AC if it is allowed
 				$sqlModelUris = '';
