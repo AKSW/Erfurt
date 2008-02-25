@@ -86,6 +86,47 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	public function executeAdd() {}
 // TODO
 
+	public function executeCountSubjects(Model $model, Resource $predicate = null, Node $object = null, 
+						$distinct = true, $r = true, $b = true) {
+	
+		$modelIDs = array();
+		$modelIDs[] = $this->_getModelID($model->modelURI);
+
+		foreach ($model->listImports(true) as $mURI) {
+			$modelIDs[] = $this->_getModelID($mURI);
+		}
+
+		$sql = 'SELECT COUNT(';
+
+		if ($distinct === true) {
+			$sql .= 'DISTINCT ';
+		}
+
+		$sql .= 'subject, subject_is) FROM ' . 
+				$GLOBALS['RAP']['conf']['database']['tblStatements'] . 
+				' WHERE modelID IN (' . join(',', $modelIDs) . ') AND ';;
+
+		if ($object !== null) {
+			$sql .= 'object = "' . $object->getLabel() . '" AND ';
+							}
+
+		if ($predicate !== null) {
+			$sql .= 'predicate = "' . $predicate->getURI() . '" AND ';
+		}
+
+		$subjectIs = array();
+		if ($r === true) {
+			$subjectIs[] = '"r"';
+		}
+		if ($b === true) {
+			$subjectIs[] = '"b"';
+		}
+							
+		$sql .= 'subject_is IN (' . join(',', $subjectIs) . ')';
+
+		return $this->dbConn->getOne($sql);				
+	}
+
 	/**
 	 * @see Erfurt_Store_CountableInterface
 	 */
@@ -438,53 +479,40 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 		}
 		
 		$dataset = new DatasetMem();
-		
+		$modelIDs = array();
 		// Howto SPARQL'l if first parameter is an instance of an Object 'Model'
 		if (is_object($model)) {
-
 			$dataset->setDefaultGraph($model);
-			$modelIDs[] = $model->getModelID();
+			$modelIDs[] = $this->_getModelID($model->getModelURI());
 			
+			if ($useImports) {
+				$imports = $this->listImports($model->getModelURI());
+				foreach ($imports as $i) {
+					if ($this ->modelExists($i) && (!$useAcl || $this->aclCheck('view', $i))) {
+						$modelIDs[] = $this->_getModelID($i);
+					}
+				}
+			}
 		}
-		
 		// and Howto SPARQL'l if first parameter is an array
-		if (is_array($model)) {
+		else if (is_array($model)) {
 			foreach($model as $m) {
 				//check on model based AC if it is allowed
-				if ($this ->modelExists($m) && $this->aclCheck('view',$m) )
-					$sqlModelUris .= 'modelURI=\''.$m.'\' OR ';
+				if ($this ->modelExists($m) && (!$useAcl || $this->aclCheck('view', $m))) {
+					$modelIDs[] = $this->_getModelID($m);
+					
+					if ($useImports) {
+						$imports = $this->listImports($m);
+						foreach ($imports as $i) {
+							if ($this ->modelExists($i) && (!$useAcl || $this->aclCheck('view', $i))) {
+								$modelIDs[] = $this->_getModelID($i);
+							}
+						}
+					}
+				}
 			}
-			$sqlQuery = 'SELECT modelID FROM models WHERE '.$sqlModelUris.' FALSE ';
-			foreach ($this->sqlQuery($sqlQuery ) as $ID)
-				$modelIDs[] = $ID[0];
 		}
 		
-		// Load IDs of allowed import models
-		if ($useImports) {
-			
-			//Get imported models
-			$sqlmodelIDs = "";
-			foreach ($modelIDs as $ID) {
-				$sqlmodelIDs .= 'modelID = '.$ID . ' OR ';
-			}
-			$sqlQuery = 'SELECT object FROM statements WHERE ('.$sqlmodelIDs.'FALSE) AND predicate = \'http://www.w3.org/2002/07/owl#imports\'' ;
-			
-			// Get URIs of allowed models for user
-			$sqlModelUris = '';
-			foreach($this->sqlQuery($sqlQuery) as $m) {
-				//check on model based AC if it is allowed
-				$sqlModelUris = '';
-				if ($this ->modelExists($m[0]) && $this->aclCheck('view',$m[0]) )
-					$sqlModelUris .= 'modelURI=\''.$m[0].'\' OR ';
-			}
-			
-			//Now get the IDs
-			$sqlQuery = 'SELECT modelID FROM models WHERE '.$sqlModelUris.' FALSE ';
-			foreach ($this->sqlQuery($sqlQuery) as $ID) {
-				if (!in_array($ID[0],$modelIDs))
-					$modelIDs[] = $ID[0];
-			}
-		}
 
 		$engine = new SparqlEngineDb($this, $modelIDs );
 				
@@ -496,8 +524,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				$query = $parser->parse($query);
 		}
 		
-		$result = $engine->queryModel($dataset,$query,$renderer);
-		
+		$result = $engine->queryModel($dataset, $query, $renderer);
+
 		return $result;
 		
 	}
@@ -644,6 +672,18 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	/**
 	 * @see Erfurt_Store_MainInterface
 	 */
+	public function listImports($modelURI) {
+		
+		if (isset($this->_modelInfoCache["$modelURI"])) {
+			return $this->_modelInfoCache["$modelURI"]["imports"];
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @see Erfurt_Store_MainInterface
+	 */
 	public function listNamespaces($modelURI) {
 		
 		if (isset($this->_modelInfoCache["$modelURI"])) {
@@ -773,7 +813,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_SqlInterface
 	 */
 	public function sqlQuery($sql) {
-		
+	
 		$result = $this->dbConn->Execute($sql);
 		
 		if ($result != null) {
@@ -1101,10 +1141,11 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 */
 	private function _fetchModelInfos() {
 		
-		$sql = 'SELECT m.modelID, m.modelURI, m.baseURI, n.namespace, n.prefix
-				FROM models m
-				LEFT JOIN namespaces n
-				ON (m.modelID = n.modelID)';
+		$sql = 'SELECT m.modelID, m.modelURI, m.baseURI, n.namespace, n.prefix, s.object
+				FROM models m 
+				LEFT JOIN namespaces n ON (m.modelID = n.modelID) 
+				LEFT JOIN ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s ON (m.modelID = s.modelID AND m.modelURI = s.subject 
+				AND s.predicate = "' . EF_OWL_IMPORTS. '" AND s.object_is = "r")';
 	
 		$result = $this->sqlQuery($sql);
 		if ($result === null) {
@@ -1117,12 +1158,21 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 					$this->_modelInfoCache["$row[1]"]['modelURI'] = $row[1];
 					$this->_modelInfoCache["$row[1]"]['baseURI'] = $row[2];
 					$this->_modelInfoCache["$row[1]"]['namespaces'] = array();
+					$this->_modelInfoCache["$row[1]"]['imports'] = array();
 
-					if ($row[3] != '') {
+					if ($row[3] != '' && !isset($this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"])) {
 						$this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
 					}
+					if ($row[5] != '' && !isset($this->_modelInfoCache["$row[1]"]['imports']["$row[5]"])) {
+						$this->_modelInfoCache["$row[1]"]['imports']["$row[5]"] = $row[5];
+					}
 				} else {
-					$this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+					if ($row[3] != '' && !isset($this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"])) {
+						$this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+					}
+					if ($row[5] != '' && !isset($this->_modelInfoCache["$row[1]"]['imports']["$row[5]"])) {
+						$this->_modelInfoCache["$row[1]"]['imports']["$row[5]"] = $row[5];
+					}
 				}
 			}
 		}

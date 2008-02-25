@@ -60,6 +60,13 @@ interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 	public function isSetup();
 	
 	/**
+	 * Lists owl:imports uris
+	 * 
+	 * @return string[]/false
+	 */
+	public function listImports($modelURI);
+	
+	/**
 	 * Lists namespaces and the belonging prefixes for a given model... iff model exists.
 	 * 
 	 * @return string[]/false
