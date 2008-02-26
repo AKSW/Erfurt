@@ -1,8 +1,12 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the oneOf OWL Constructor
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_EnumeratedClass extends Erfurt_Owl_Structured_AnonymousClass {
 	private $oneOfInstances ;
 	
@@ -11,6 +15,12 @@ class Erfurt_Owl_Structured_EnumeratedClass extends Erfurt_Owl_Structured_Anonym
 		$this->oneOfInstances = $instancesArray ;
 	}
 	
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/	
 	public function toManchesterSyntaxString () {
 		$returnString = '{' ;
 		foreach ( $this->oneOfInstances as $key => $value ) {
@@ -22,6 +32,12 @@ class Erfurt_Owl_Structured_EnumeratedClass extends Erfurt_Owl_Structured_Anonym
 		return $returnString . '}' ;
 	}
 	
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		//TODO check if this is correct implementation
 		$model = $this->getMemModel();

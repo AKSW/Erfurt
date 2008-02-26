@@ -1,7 +1,11 @@
 <?php
 /**
+ * Superclass for Erfurt Structured OWL Classes related to the cardinality
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
+ * @version $Id$
  */
 class Erfurt_Owl_Structured_CardinalityBase extends Erfurt_Owl_Structured_Restriction {
 	private $cardinality ;

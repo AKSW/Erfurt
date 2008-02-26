@@ -1,8 +1,12 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of an anonymous class
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_AnonymousClass extends Erfurt_Owl_Structured_StructuredClass
 
 {
@@ -10,10 +14,11 @@ class Erfurt_Owl_Structured_AnonymousClass extends Erfurt_Owl_Structured_Structu
 	private $subject ;
 
 	/**
-	 * Enter description here...
-	 *
-	 * @return MemModel
-	 */
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = $this->getMemModel () ;
 		$blankNode = new BlankNode ( $model ) ;

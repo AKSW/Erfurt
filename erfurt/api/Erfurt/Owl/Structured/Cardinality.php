@@ -3,6 +3,7 @@
  * Erfurt Structured OWL implementation of the cardinality OWL Constructor
  * 
  *
+ * @author
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @version $Id$
  * @package owl
@@ -20,10 +21,11 @@ class Erfurt_Owl_Structured_Cardinality extends Erfurt_Owl_Structured_Cardinalit
 		return $this->getOnProperty () . " exactly " . $this->getCardinality () ;
 	}
 	/**
-	 * Generates MemModel
-	 *
-	 * @return MemModel
-	 **/
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		$statement = new Statement ( $this->getSubject (), new Resource ( $this->getURLPrefix () . "cardinality" ), $this->getCardinalityOWL () ) ;

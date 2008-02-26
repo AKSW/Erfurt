@@ -1,7 +1,11 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the complementOf OWL Constructor
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
+ * @version $Id$
  */
 class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_AnonymousClass 
 
@@ -12,6 +16,12 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		$this->addChildClass ( $complementClass ) ;
 	}
 	
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/
 	public function toManchesterSyntaxString () {
 		$returnString = '(' ;
 		$children = $this->getChildClasses () ;
@@ -21,11 +31,13 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		return "not " . $returnString . ")" ;
 	}
 	
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
-		
-		//TODO description in _:x owl:complementOf T(description) =? manchesterstring
-		
-
 		$model = $this->getMemModel();
 		$blank = new BlankNode ($model) ;
 		$predicate = new Resource ( $this->getRDFURL (), "type" ) ;
@@ -59,7 +71,9 @@ class Erfurt_Owl_Structured_ComplementClass extends Erfurt_Owl_Structured_Anonym
 		return $returnString . '</not>' ;
 	}
 
-	//TODO Finish this one!!!
+	// TODO Finish this one!!!
+	// Currently works only with two level of complement classes e.g. "not not class".
+	// possible solution: make it recursive
 	public function getFirstChildBlankNode(){
 		$children=$this->getChildClasses();
 		$child=$children[0];

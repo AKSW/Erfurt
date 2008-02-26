@@ -1,8 +1,12 @@
 <?php
 /**
+ * Superclass used by restriction classes
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_Restriction extends Erfurt_Owl_Structured_AnonymousClass {
 	
 	private $onProperty ;
@@ -24,6 +28,12 @@ class Erfurt_Owl_Structured_Restriction extends Erfurt_Owl_Structured_AnonymousC
 		return "Restriction" ;
 	}
 	
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		
 		$model = $this->getMemModel () ;

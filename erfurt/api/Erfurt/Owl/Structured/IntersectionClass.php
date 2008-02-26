@@ -1,10 +1,20 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the intersectionOf OWL Constructor
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_IntersectionClass extends Erfurt_Owl_Structured_AnonymousClass {
 
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/	
 	public function toManchesterSyntaxString () {
 		$returnString = '(' ;
 		$children = $this->getChildClasses () ;
@@ -17,6 +27,12 @@ class Erfurt_Owl_Structured_IntersectionClass extends Erfurt_Owl_Structured_Anon
 		return $returnString . ')' ;
 	}
 
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		$this->getChildrenRDF();

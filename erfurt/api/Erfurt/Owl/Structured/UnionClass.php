@@ -1,10 +1,20 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the unionOf OWL Constructor
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_UnionClass extends Erfurt_Owl_Structured_AnonymousClass {
 
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/	
 	public function toManchesterSyntaxString () {
 		$returnString = '(' ;
 		$children = $this->getChildClasses () ;
@@ -18,10 +28,11 @@ class Erfurt_Owl_Structured_UnionClass extends Erfurt_Owl_Structured_AnonymousCl
 	}
 
 	/**
-	 * Enter description here...
-	 *
-	 * @return MemModel
-	 */
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		$predicate = new Resource ( $this->getURLPrefix (), "unionOf" ) ;

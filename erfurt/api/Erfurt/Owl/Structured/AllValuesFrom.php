@@ -2,9 +2,10 @@
 /**
  * Erfurt Structured OWL implementation of the allValuesFrom OWL Constructor
  * 
+ * @author
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- * @version 
+ * @version $Id$
  **/
 class Erfurt_Owl_Structured_AllValuesFrom extends Erfurt_Owl_Structured_QuantifierRestriction {
 

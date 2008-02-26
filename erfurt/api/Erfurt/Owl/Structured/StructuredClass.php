@@ -2,9 +2,10 @@
 /**
  * Superclass for Erfurt Structured OWL Classes
  * 
+ * @author
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- * @version 
+ * @version $Id$
  */
 class Erfurt_Owl_Structured_StructuredClass {
 	private $childClasses = array ( ) ;
@@ -74,6 +75,7 @@ class Erfurt_Owl_Structured_StructuredClass {
 	 */	
 	public function getURLPrefix () {
 		return "http://www.w3.org/2002/07/owl#" ;
+//		return "http://www.w3.org/2006/12/owl11#" ;
 	}
 
 	/**

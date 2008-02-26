@@ -1,8 +1,12 @@
 <?php
 /**
+ * Erfurt Structured OWL implementation of the hasValue OWL Constructor
  * 
+ * @author
+ * @author Rolland Brunec <rollxx@rollxx.com>
  * @package owl
- */
+ * @version $Id$
+ **/
 class Erfurt_Owl_Structured_HasValue extends Erfurt_Owl_Structured_Restriction {
 	
 	private $fillerInstance ;
@@ -13,10 +17,22 @@ class Erfurt_Owl_Structured_HasValue extends Erfurt_Owl_Structured_Restriction {
 		$this->fillerInstance = $fillerInstance ;
 	}
 	
+	/**
+	 * Generates Manchester OWL Syntax string
+	 * 
+	 * @return string Manchester OWL Syntax output
+	 * 
+	 **/	
 	public function toManchesterSyntaxString () {
 		return "(" . $this->getOnProperty () . " value " . $this->fillerInstance->toManchesterSyntaxString () . ")" ;
 	}
 	
+	/**
+	 * Recursively generates the MemModel from the Structured Class
+	 * 
+	 * @return MemModel of the Structured Class
+	 * 
+   	 **/	
 	public function generateRDF () {
 		$model = parent::generateRDF () ;
 		$obj=new Resource($this->fillerInstance->getURI());
