@@ -3,7 +3,7 @@
  * 
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @package syntax
- * @version 
+ * @version $Id$
  */
 
 // PHP section
@@ -53,6 +53,7 @@ require_once 'Lexer.php';}
 	start ::= classExpr(A).{
 		print_r(A->generateRDF()->writeAsHtmlTable());}
 //		print_r(A->generateRDF()->writeAsHtml());}
+//		A->generateRDF();}
 //		print_r(A->toManchesterSyntaxString());}
 		
 	classExpr(A)::= LPAREN classExpr(B) RPAREN.{

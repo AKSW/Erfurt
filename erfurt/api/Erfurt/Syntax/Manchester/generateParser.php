@@ -4,7 +4,7 @@
  * 
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @package syntax
- * @version
+ * @version $Id$
  *
  */
 

@@ -1,7 +1,7 @@
 <html>
 <body>
 <form action="starter.php" method="post">String to parse: <input
-	type="text" name="manchesterstring" /> <input type="submit" /></form>
+	type="text" name="manchesterstring" /> <input name="click" type="submit" />
 <?php
 
 /**
@@ -9,14 +9,17 @@
  * 
  * @author Rolland Brunec <rollxx@rollxx.com>
  * @package syntax
- * @version 
+ * @version $Id$
  */
 
 error_reporting(E_STRICT);
 $debug=1;
 
 date_default_timezone_set('Europe/Berlin');
-$start = explode(' ',microtime());
+if($debug){
+	$start = explode(' ',microtime());
+	$start = $start[1] + $start[0];
+}
 require_once 'Parser.php';
 $x='';
 for ($i=1; $i < $argc; $i++) {
@@ -25,18 +28,22 @@ for ($i=1; $i < $argc; $i++) {
 if(!$_POST["manchesterstring"]=="" || !$x=="" ){
 	echo"you entered: ".($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x)."<br />";
 	$o= new OWLParser();
-	echo "output string = " . "<br />";
+	echo "output:" . "<br />";
 	$o->parseString($_POST["manchesterstring"]!=""?$_POST["manchesterstring"]:$x);
-
-	$end =  explode(' ',microtime() );
-	if($debug){
-		echo "<br />\nparsed in ";
-		print_r ($end[0]-$start[0]);
-		echo "s ";
-	}
+}
+if($debug){
+	$end = explode( ' ', microtime());
+	$end = $end[1] + $end[0];
+	
+	echo "<br />\nparsed in ";
+	print_r("<input
+		type=\"text\" name=\"timer\" value=\"");
+	print_r ($end-$start);
+	print_r("\"</>");
+	echo " s";
 }
 
 ?>
-
+</form>
 </body>
 </html>
