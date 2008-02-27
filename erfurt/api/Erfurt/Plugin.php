@@ -28,8 +28,8 @@ class Erfurt_Plugin {
         return;
     }
     
-    protected function _getRootdir() {
-        return $this->_pluginManager->getPluginRoot(get_class($this));
+    protected function _getPluginRootDir() {
+        return rtrim($this->_pluginManager->getPluginRoot(get_class($this)),DIRECTORY_SEPARATOR);
     }
 
 }
