@@ -38,7 +38,7 @@ class Erfurt_EventDispatcher {
  	 *
  	 * @access public
  	 */
-    public function trigger($eventname, $attribute) {
+    public function trigger($eventname, &$attribute) {
         
         # add current event to trace and include running id
         $this->eventTraceState[$eventname] = count($this->eventTraceState);
