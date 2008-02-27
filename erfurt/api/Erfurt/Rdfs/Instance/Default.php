@@ -87,11 +87,22 @@ class Erfurt_Rdfs_Instance_Default extends Erfurt_Rdfs_Resource_Default {
 	/**
 	 * Erfurt_Rdfs_Instance
 	 */
-	public function listPropertyValuesPlain($prop = '') {
+	public function listPropertyValuesPlain($prop = null) {
 		
+		if(null !== $prop) {
+			$p = '<' . $this->model->_dbId($prop) . '>';
+		} else {
+			$p = '?p';
+		}
+		
+		$sparql = 'SELECT ?p ?o WHERE {
+					<' . $this->getURI() . '> ' . $p . ' ?o. }';
+					
+		$sparqlResult = $this->model->sparqlQuery($sparql);
 		$ret = array();
-		foreach ($this->model->findNodes($this, $prop, null) as $val) {
-			$ret[] = ($val instanceof Resource) ? $val->getLocalName() : $val->getLabel();
+		
+		foreach ($sparqlResult as $row) {
+			$ret[$row['p']->getLocalName()] = $row['o']->getLabel();
 		}
 			
 		return $ret;
