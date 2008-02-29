@@ -99,6 +99,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function add($subj,$pred='',$obj='') {
 		
+		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
+		
+		$triggerParams = array('s'=>&$subj, 'p'=>&$pred, 'o'=>&$obj);
+		$eventDispatcher->trigger('RDFSModel_add_pre', $triggerParams);
+		
 		if (!$this->isEditable()) 
 			throw new Erfurt_Exception('no rights to extend this model', 1502);
 		
@@ -121,6 +126,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		} else
 			trigger_error('Addition of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
 		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
+		
+		
+		$triggerParams['success'] = &$success;
+		$eventDispatcher->trigger('RDFSModel_add_post', $triggerParams);
+		
 		return $success;
 	}
 	

@@ -78,7 +78,7 @@ class Erfurt_App_Default {
 		# init plugin manager 
 		$this->pluginManager = new Erfurt_PluginManager($this);
 		if ($config->plugins->erfurt && strlen($config->plugins->erfurt)>0) {
-    		$this->pluginManager->init(REAL_BASE . $this->config->plugins->erfurt); # Is absolute path correct for erfurt?
+    		$this->pluginManager->init(ERFURT_BASE . $config->plugins->erfurt); # Is absolute path correct for erfurt?
 		}
 		
 		$storeClass = 'Erfurt_Store_Adapter_'.ucfirst(($config->database->backend ? $config->database->backend : 'rap'));
