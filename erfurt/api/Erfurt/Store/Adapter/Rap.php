@@ -725,52 +725,89 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	/**
 	 * @see Erfurt_Store_DataInterface
 	 */
-	public function loadModel($modelURI,$file=NULL,$loadImports=false,$stream=false,$filetype=NULL) {
-		static $justLoaded;
-		$justLoaded[$modelURI]=true;
-		$file=$file?$file:$modelURI;
-		if($fp=fopen($file,'rb')) {
-			if($this->SysOnt) {
-				$head=fread($fp,2000);
-				fclose($fp);
-				preg_match_all('/xmlns:([^=]+)=[\'"]([^"\']+)[\'"]/im',$head,$matches);
-				$i=array_search($modelURI,$matches[2]);
-				$name = ($i!==false) ? $matches[1][$i] : $this->SysOnt->getUniqueResourceURI('Modelinstance');
-				$modelInst=$this->SysOnt->addInstance($name,'Model');
-				$modelInst->setPropertyValue('modelURI',$modelURI);
-				foreach($matches[1] as $key=>$val)
-					$modelInst->addPropertyValue('modelXMLNS',trim($val).':'.trim($matches[2][$key]));
-			}
-		} else
+	public function loadModel($modelURI, $file = null, $loadImports = false, $stream = false, $filetype = null) {
+				
+		$file = $file ? $file : $modelURI;
+		if (!($fp = fopen($file, 'rb'))) {
 			return false;
-		$model=$this->getNewModel($modelURI);
-		$model->dontCheckForDuplicatesOnAdd=true;
-		$model->logStart('Model created',$modelURI);
-		$model->logEnd();
-	 	$log=$this->logDisabled;
-		$model->logDisabled=true;
-		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
-			$this->dbConn->execute('ALTER TABLE statements DISABLE KEYS');
-	 	$model->load($file,$filetype,$stream);
-		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
-			$this->dbConn->execute('ALTER TABLE statements ENABLE KEYS');
-		$model=$this->getModel($modelURI);
-		if($modelInst) {
-			$type=$model->getType();
-			$modelInst->setPropertyValue('modelType',$type);
 		}
-		if($type=='OWL' && $loadImports)
+		
+		$model = $this->getNewModel($modelURI);
+		if (!$model) {
+			return false;
+		}
+		
+		$model->dontCheckForDuplicatesOnAdd = true;
+		$model->logStart('Model created', $modelURI);
+		$model->load($file, $filetype, $stream);
+		$model->logEnd();
+		
+		$this->_modelInfoCache = null;
+		$this->_fetchModelInfos();
+		unset($this->_modelCache["$modelURI"]);
+		
+		$model = $this->getModel($modelURI);
+		if (!$model) {
+			return false;
+		}
+		$type = $model->getType();
+		
+		if (($type === 'OWL') && $loadImports) {
 			foreach($model->listImports() as $import)
 				if($this->modelExists($import->getURI())) {
-					if(!$justLoaded[$import->getURI()])
-						trigger_error("Imported model \"".$import->getURI()."\" exists!\n",E_USER_WARNING);
+					continue;
 				} else {
-					pwlOutput("Loading imported model \"".$import->getURI()."\".\n");
-					$imp=$this->loadModel($import->getURI(),$import->getURI(),true,$stream);
-				}
-
-		$this->logDisabled=$log;
+					$this->loadModel($import->getURI(), $import->getURI(), true, $stream);
+				}			
+		}
+		
 		return $model;
+		
+		// static $justLoaded;
+		// 		$justLoaded[$modelURI]=true;
+		// 		$file=$file?$file:$modelURI;
+		// 		if($fp=fopen($file,'rb')) {
+		// 			if($this->SysOnt) {
+		// 				$head=fread($fp,2000);
+		// 				fclose($fp);
+		// 				preg_match_all('/xmlns:([^=]+)=[\'"]([^"\']+)[\'"]/im',$head,$matches);
+		// 				$i=array_search($modelURI,$matches[2]);
+		// 				$name = ($i!==false) ? $matches[1][$i] : $this->SysOnt->getUniqueResourceURI('Modelinstance');
+		// 				$modelInst=$this->SysOnt->addInstance($name,'Model');
+		// 				$modelInst->setPropertyValue('modelURI',$modelURI);
+		// 				foreach($matches[1] as $key=>$val)
+		// 					$modelInst->addPropertyValue('modelXMLNS',trim($val).':'.trim($matches[2][$key]));
+		// 			}
+		// 		} else
+		// 			return false;
+		// 		$model=$this->getNewModel($modelURI);
+		// 		$model->dontCheckForDuplicatesOnAdd=true;
+		// 		$model->logStart('Model created',$modelURI);
+		// 		$model->logEnd();
+		// 	 	$log=$this->logDisabled;
+		// 		$model->logDisabled=true;
+		// 		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
+		// 			$this->dbConn->execute('ALTER TABLE statements DISABLE KEYS');
+		// 	 	$model->load($file, $filetype, $stream);
+		// 		if(in_array(strtolower(Zend_Registry::get('config')->database->params->type), array('mysql','mysqli')))
+		// 			$this->dbConn->execute('ALTER TABLE statements ENABLE KEYS');
+		// 		$model=$this->getModel($modelURI);
+		// 		if($modelInst) {
+		// 			$type=$model->getType();
+		// 			$modelInst->setPropertyValue('modelType',$type);
+		// 		}
+		// 		if($type=='OWL' && $loadImports)
+		// 			foreach($model->listImports() as $import)
+		// 				if($this->modelExists($import->getURI())) {
+		// 					if(!$justLoaded[$import->getURI()])
+		// 						trigger_error("Imported model \"".$import->getURI()."\" exists!\n",E_USER_WARNING);
+		// 				} else {
+		// 					pwlOutput("Loading imported model \"".$import->getURI()."\".\n");
+		// 					$imp=$this->loadModel($import->getURI(),$import->getURI(),true,$stream);
+		// 				}
+		// 
+		// 		$this->logDisabled=$log;
+		// 		return $model;
 	}
 	
 	/**
