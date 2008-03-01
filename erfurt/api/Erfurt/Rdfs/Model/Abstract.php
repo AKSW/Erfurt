@@ -197,9 +197,20 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 * @return array Array of RDFResources
 	 */
 	public function listImports($asString = false) {
-		//TODO using dynamic import predicate defintion from config or so
-		return $this->findNodesAs($this->asResource, new Resource('http://www.w3.org/2002/07/owl#imports'), null,
-								  (($asString === true) ? 'string' : null));
+		
+		if ($asString === true) {
+			return $this->getStore()->listImports($this->modelURI);
+		} else {
+			$ret = array();
+			foreach ($this->getStore()->listImports($his->modelURI) as $importsURI) {
+				$ret[$importsURI] = $this->resourceF($importsURI, false);
+			} 
+			
+			return $ret;
+		}
+			
+		//return $this->findNodesAs($this->asResource, new Resource('http://www.w3.org/2002/07/owl#imports'), null,
+		//						  (($asString === true) ? 'string' : null));
 		//return $this->asResource->listPropertyValues($GLOBALS['OWL_imports']);
 	}
 	
@@ -616,7 +627,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	 */
 	public function addInstance($uri, $class) {
 		
-		$this->add($uri,EF_RDF_TYPE,$class);
+		$this->add($uri, EF_RDF_TYPE, $class);
 		return $this->instanceF($uri);
 	}
 	

@@ -634,6 +634,7 @@ $this->properties = array();
 		$ret = array();
 		// for it is not sure that all property values are prefetched, we need to go the old way :(
 		if ($property === null) {
+// TODO fix... this will return an array containing all properties not values :(
 			return $this->model->findNodes($this, $property, null, $class);
 		}
 		// this is the best case... we have a prefetched property, no db query required :) 

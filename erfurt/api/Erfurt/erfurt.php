@@ -53,19 +53,6 @@ if (!function_exists('__autoload')) {
 	}
 }
 
-# LOGGER
-$logDir = ERFURT_BASE . 'log/';
-if (is_writable($logDir)) {
-	$writer = new Zend_Log_Writer_Stream($logDir . 'erfurt.log');
-	$erfurtLog = new Zend_Log($writer);
-} else {
-	$writer = new Zend_Log_Writer_Null();
-	$erfurtLog = new Zend_Log($writer);
-}
-Zend_Registry::set('erfurtLog', $erfurtLog);
-$erfurtLog->info('Erfurt-Start: ' . @date('d.m.Y H:i:s'));
-
-
 # config
 $section = 'erfurt';
 $iniFiles = array(ERFURT_BASE . 'erfurt.ini');
@@ -77,6 +64,22 @@ if (Zend_Registry::isRegistered('config')) {
 }
 $config = new Erfurt_Config($iniFiles, $section, true);
 Zend_Registry::set('config', $config);
+
+# LOGGER
+$logDir = ERFURT_BASE . 'log/';
+if (is_writable($logDir) && ($config->erfurt->logging != 'false')) {
+	$levelFilter = new Zend_Log_Filter_Priority((int)$config->erfurt->logging, '<=');
+	
+	$writer = new Zend_Log_Writer_Stream($logDir . 'erfurt.log');
+	$erfurtLog = new Zend_Log($writer);
+	$erfurtLog->addFilter($levelFilter);
+} else {
+	$writer = new Zend_Log_Writer_Null();
+	$erfurtLog = new Zend_Log($writer);
+}
+Zend_Registry::set('erfurtLog', $erfurtLog);
+$erfurtLog->info('Erfurt-Start: ' . @date('d.m.Y H:i:s'));
+
 
 
 ### TAKEN FROM include.php

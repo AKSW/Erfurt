@@ -486,11 +486,9 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			$modelIDs[] = $this->_getModelID($model->getModelURI());
 			
 			if ($useImports) {
-				$imports = $this->listImports($model->getModelURI());
+				$imports = $this->listImports($model->getModelURI(), $useAcl);
 				foreach ($imports as $i) {
-					if ($this ->modelExists($i) && (!$useAcl || $this->aclCheck('view', $i))) {
-						$modelIDs[] = $this->_getModelID($i);
-					}
+					$modelIDs[] = $this->_getModelID($i);
 				}
 			}
 		}
@@ -502,18 +500,15 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 					$modelIDs[] = $this->_getModelID($m);
 					
 					if ($useImports) {
-						$imports = $this->listImports($m);
+						$imports = $this->listImports($m, $useAcl);
 						foreach ($imports as $i) {
-							if ($this ->modelExists($i) && (!$useAcl || $this->aclCheck('view', $i))) {
-								$modelIDs[] = $this->_getModelID($i);
-							}
+							$modelIDs[] = $this->_getModelID($i);	
 						}
 					}
 				}
 			}
 		}
 		
-
 		$engine = new SparqlEngineDb($this, $modelIDs );
 				
 		if ($renderer === null)	
@@ -672,10 +667,17 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	/**
 	 * @see Erfurt_Store_MainInterface
 	 */
-	public function listImports($modelURI) {
+	public function listImports($modelURI, $useAcl = true) {
 		
-		if (isset($this->_modelInfoCache["$modelURI"])) {
-			return $this->_modelInfoCache["$modelURI"]["imports"];
+		if (isset($this->_modelInfoCache[$modelURI])) {
+			$ret = array();
+			foreach ($this->_modelInfoCache[$modelURI]['imports'] as $importsURI) {
+				if ($this ->modelExists($importsURI) && (!$useAcl || $this->aclCheck('view', $importsURI))) {
+						$ret[] = $importsURI;
+				}
+			}
+			
+			return $ret;
 		} else {
 			return false;
 		}
@@ -1213,6 +1215,28 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				}
 			}
 		}
+		
+		// check for recursive owl:imports; also check for cylces!
+		do {
+			// indicated whether anything was changed in the array or not and whether loop needs to run again
+			$hasChanged = false;
+			
+			// test every model exists in the model table
+			foreach ($this->_modelInfoCache as $modelURI) {
+				foreach ($modelURI['imports'] as $importsURI) {
+					if (isset($this->_modelInfoCache[$importsURI])) {
+						foreach ($this->_modelInfoCache[$importsURI]['imports'] as $importsImportURI) {
+							if (!isset($modelURI['imports'][$importsImportURI]) && 
+								!($importsImportURI === $modelURI['modelURI'])) {
+									
+								$this->_modelInfoCache[$modelURI['modelURI']]['imports'][$importsImportURI] = $importsImportURI;
+								$hasChanged = true;
+							}
+						}
+					}
+				}
+			}
+		} while ($hasChanged === true);
 	}
 	
 	/*

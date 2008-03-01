@@ -99,16 +99,16 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	 */
 	public function add($subj,$pred='',$obj='') {
 		
-		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
-		
-		$triggerParams = array('s'=>&$subj, 'p'=>&$pred, 'o'=>&$obj);
-		$eventDispatcher->trigger('RDFSModel_add_pre', $triggerParams);
-		
 		if (!$this->isEditable()) 
 			throw new Erfurt_Exception('no rights to extend this model', 1502);
 		
 		Zend_Registry::set('cache', array());
 		$statement=!$obj?$subj:$this->_createStatement($subj,$pred,$obj);
+		
+		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
+		
+		$triggerParams = array('statement'=>&$statement);
+		$eventDispatcher->trigger('RDFSModel_add_pre', $triggerParams);
 		 
 		# sbac
 		if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
