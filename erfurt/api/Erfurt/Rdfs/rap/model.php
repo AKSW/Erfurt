@@ -456,8 +456,8 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			
 		// check whether classes are top classes
 		foreach ($sqlResult as $row) {
-			if (!$this->hasStatement($row, EF_RDFS_SUBLCASSOF, null) || 
-					$this->hasStatement($row, EF_RDFS_SUBLCASSOF, EF_OWL_THING)) {
+			if (!$this->hasStatement($row, EF_RDFS_SUBCLASSOF, null) ||
+					$this->hasStatement($row, EF_RDFS_SUBCLASSOF, EF_OWL_THING)) {
 				$tempClassArray[] = $this->classF($row[0]);
 			}
 		}
