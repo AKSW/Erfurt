@@ -89,20 +89,31 @@ class Erfurt_Rdfs_Instance_Default extends Erfurt_Rdfs_Resource_Default {
 	 */
 	public function listPropertyValuesPlain($prop = null) {
 		
-		if(null !== $prop) {
-			$p = '<' . $this->model->_dbId($prop) . '>';
-		} else {
-			$p = '?p';
-		}
-		
 		$sparql = 'SELECT ?p ?o WHERE {
-					<' . $this->getURI() . '> ' . $p . ' ?o. }';
+					<' . $this->getURI() . '> ?p ?o. ';
+					
+		if (null !== $prop) {
+			$sparql .= 'FILTER (?p = "' . $this->model->_dbId($prop) . '") }';
+		} else {
+			$sparql .= '}';
+		}
 					
 		$sparqlResult = $this->model->sparqlQuery($sparql);
 		$ret = array();
-		
+
 		foreach ($sparqlResult as $row) {
-			$ret[$row['p']->getLocalName()] = $row['o']->getLabel();
+			if (!isset($ret[$row['p']->getLocalName()])) {
+				$ret[$row['p']->getLocalName()] = $row['o']->getLabel();
+			} else {
+				if (!is_array($ret[$row['p']->getLocalName()])) {
+					$temp = $ret[$row['p']->getLocalName()];
+					$ret[$row['p']->getLocalName()] = array();
+					$ret[$row['p']->getLocalName()][] = $temp;
+					$ret[$row['p']->getLocalName()][] = $row['o']->getLabel();
+				} else {
+					$ret[$row['p']->getLocalName()][] = $row['o']->getLabel();
+				}
+			}
 		}
 			
 		return $ret;
