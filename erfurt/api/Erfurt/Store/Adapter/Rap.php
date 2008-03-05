@@ -854,7 +854,13 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	public function sqlQuery($sql) {
 	
 		$result = $this->dbConn->Execute($sql);
-		
+
+		if (get_class($result) == "ADORecordSet_empty")
+			return true;
+
+		if (get_class($result) == "ADORecordSet_mysql")
+			return $result;
+
 		if ($result != null) {
 			return $result->getArray();
 		} else {
