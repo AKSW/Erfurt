@@ -109,7 +109,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$triggerParams = array('statement'=>&$statement);
 		$eventDispatcher->trigger('RDFSModel_add_pre', $triggerParams);
-		 
+		
 		# sbac
 		if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
 			$affectedRows = $this->_addExt($statement);
@@ -196,6 +196,11 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		#}
 #print_r($statement->subj->toString().$statement->pred->toString().$statement->obj->toString());
 		
+		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
+		
+		$triggerParams = array('statement'=>&$statement);
+		$eventDispatcher->trigger('RDFSModel_remove_pre', $triggerParams);
+		
 		# sbac
 		if (($this->getStore()->getAc() !== null) && ($this->getStore()->getAc()->isEditSbac())) {
 			$affectedRows = $this->_removeExt($statement);
@@ -214,6 +219,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			
 			trigger_error('Deletion of statement <i>'.$statement->subj->getLabel().'->'.$statement->pred->getLabel().'->'.$statement->obj->getLabel().'</i> failed!',E_USER_WARNING);
 		#queryCacheExpire($this->modelID,$statement->subj,$statement->pred,$statement->obj);
+		
+		$triggerParams['success'] = &$success;
+		$eventDispatcher->trigger('RDFSModel_remove_post', $triggerParams);
+		
 		return $success;
 	}
 	
@@ -452,8 +461,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$sqlResult = $this->getStore()->sqlQuery($sql);
 		$tempClassArray = array(); // contains all classes that fit to the config given by the parameters
-		
-			
+				
 		// check whether classes are top classes
 		foreach ($sqlResult as $row) {
 			if (!$this->hasStatement($row, EF_RDFS_SUBCLASSOF, null) ||
@@ -461,7 +469,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				$tempClassArray[] = $this->classF($row[0]);
 			}
 		}
-		
+
 		// check for system classes iff $systemClasses = false
 		if ($systemClasses == false) {
 			$temp = $tempClassArray;
@@ -484,7 +492,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				}
 			}
 		}
-		
+			
 		// check for empty classes iff $emptyClasses = false
 		if ($emptyClasses == false) {
 			$temp = $tempClassArray;
@@ -510,7 +518,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 				}
 			}
 		}
-			
+		
 		// check for implicit classes iff $implicitClasses = false
 		if ($implicitClasses == false) {
 			$temp = $tempClassArray;
@@ -569,7 +577,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		foreach ($tempClassArray as $tempClass) {
 			$cacheVal[] = $tempClass->getURI();
 		}
-	 	
+	
 		$c->set($cacheVal, array('rdf:type', 'rdfs:subClassOf', 'rdfs:label'));
 		return $tempClassArray;
     }
