@@ -378,6 +378,26 @@ $this->properties = array();
 		return $this->getURI();
 	}
 	
+	public function getSuperElement($subRelProp) {
+
+		return $this->getPropertyValue($subRelProp);
+	}
+	
+	/**
+	 * @param mixed $subRelProp
+	 * @param array $ret
+	 */
+	public function getSuperElementPath($subRelProp, &$ret) {
+		
+		$ret[] = $this;
+
+		if ($r = $this->getSuperElement($subRelProp)) {
+			$r->getSuperElementPath($subRelProp, $ret);
+		}
+		
+		return;
+	}
+	
 	/**
 	 * @see Erfurt_Rdfs_Resource  
 	 */
@@ -404,6 +424,31 @@ $this->properties = array();
 		}
 		
 		return $this->getLocalName();
+	}
+	
+	public function getTitleWithTitleProperty($language = null) {
+		
+		// handle the case that ow gives us a $language param 'none', which means no lang
+		if ($language === 'none') {
+			$language = null;
+		}
+	
+		$config = Zend_Registry::get('config');
+		
+		foreach ($config->titleProperties->toArray() as $title) {
+			// if language is set search for label with language tag
+			if (($language !== null) && ($ret = $this->getLiteralPropertyValue($title, $language))) {
+				return array($title, $ret->getLabel());
+			// else use anonymous labels (w/o lang tag)
+			} else if ($ret = $this->getLiteralPropertyValue($title)) {
+				return array($title, $ret->getLabel());
+			// if still nothing found, try english labels
+			} else if ($ret = $this->getLiteralPropertyValue($title, 'en')) {
+				return array($title, $ret->getLabel('en'));
+			}
+		}
+		
+		return array('localname', $this->getLocalName());
 	}
 	
 	/**

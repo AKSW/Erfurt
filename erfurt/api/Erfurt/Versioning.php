@@ -15,6 +15,68 @@ class Erfurt_Versioning {
 		
 	}
 	
+	public function getLastModifiedForResource($r) {
+		
+		$filter = array(
+			'resource' 	=> $r->getURI(),
+			'model'		=> $this->model->getModelURI()
+		);
+		
+		
+		
+		$result = $this->listEntries($filter, 0, 1)->GetArray();
+		$result = $result[0];
+		
+		$retVal = array(
+			'user' 			=> $result[2],
+			'date'			=> $result[1],
+			'description'	=> $result[4]
+		);
+		
+		return $retVal;
+	}
+	
+	public function getFirstModifiedForResource($r) {
+		
+		$filter = array(
+			'resource' 	=> $r->getURI(),
+			'model'		=> $this->model->getModelURI()
+		);
+		
+		$result = $this->listEntries($filter)->GetArray();
+		$result = array_reverse($result);
+		$result = $result[0];
+		
+		$retVal = array(
+			'user' 			=> $result[2],
+			'date'			=> $result[1],
+			'description'	=> $result[4]
+		);
+		
+		return $retVal;
+	}
+	
+	public function getFullHistoryForResource($r) {
+		
+		$filter = array(
+			'resource' 	=> $r->getURI(),
+			'model'		=> $this->model->getModelURI()
+		);
+		
+		$result = $this->listEntries($filter)->GetArray();
+		$retVal = array();
+		
+		foreach ($result as $row) {
+			$retVal[] = array(
+				'user' 			=> $row[2],
+				'date'			=> $row[1],
+				'description'	=> $row[4]
+			);
+		}
+		
+		return $retVal;
+	}
+	
 	public function listEntries(Array $filter = array(), $offset = 0, $limit = 0, &$erg = 0) {
 		
 		$search = '';
@@ -50,7 +112,7 @@ class Erfurt_Versioning {
 				INNER JOIN log_action_descr lad ON (lad.id = descr_id)
 				WHERE model_id = ' . $this->model->getModelID() . ' AND ISNULL(parent_id)' . $search . $group . ' ORDER BY ef_date DESC';
 				
-		$result = $this->model->getStore()->getDbConn()->pageExecute($sql, $limit, ($offset/$limit+1));
+		$result = $this->model->getStore()->getDbConn()->pageExecute($sql, $limit, ($offset/($limit+1)));
 		$erg = (($result->_maxRecordCount) ? $result->_maxRecordCount : $result->_numOfRows);
 		return $result;
 	}

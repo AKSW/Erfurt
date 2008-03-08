@@ -1232,7 +1232,10 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 			$this->dbConn->execute("INSERT INTO log_action_descr VALUES (NULL,'$action');");
 			$descrId=$this->dbConn->Insert_ID();
 		}
-		$this->dbConn->execute("INSERT INTO log_actions VALUES (NULL,".(!empty($this->logActions[0])?$this->logActions[0]:'NULL').",{$this->modelID},'".(empty($_SESSION['PWL']['user'])?'':$_SESSION['PWL']['user'])."',".$this->dbConn->sysTimeStamp.",'$descrId','$subject','$details');");
+		
+		$user = Zend_Auth::getInstance()->getIdentity();
+		
+		$this->dbConn->execute("INSERT INTO log_actions VALUES (NULL,".(!empty($this->logActions[0])?$this->logActions[0]:'NULL').",{$this->modelID},'". $user['uri'] . "',".$this->dbConn->sysTimeStamp.",'$descrId','$subject','$details');");
 		$actionId=$this->dbConn->Insert_ID();
 		array_unshift($this->logActions,$actionId);
 		$this->dbConn->StartTrans();
