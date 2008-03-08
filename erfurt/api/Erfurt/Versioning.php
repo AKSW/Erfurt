@@ -46,14 +46,20 @@ class Erfurt_Versioning {
 		$result = $this->listEntries($filter)->GetArray();
 		$result = array_reverse($result);
 		$result = $result[0];
+
+		if ($result === null) {
+			return false;
+		} else {
+			$retVal = array(
+				'user' 			=> $result[2],
+				'date'			=> $result[1],
+				'description'	=> $result[4]
+			);
+
+			return $retVal;
+		}
+
 		
-		$retVal = array(
-			'user' 			=> $result[2],
-			'date'			=> $result[1],
-			'description'	=> $result[4]
-		);
-		
-		return $retVal;
 	}
 	
 	public function getFullHistoryForResource($r) {
