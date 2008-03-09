@@ -111,6 +111,65 @@ class Erfurt_Util {
 		}
 	}
 	
+	/**
+	 * Calculates the Difference between two timestamps
+	 *
+	 * @param string/int $start_timestamp
+	 * @param integer $end_timestamp
+	 * @param integer $unit (default 0)
+	 * @return string
+	 * @access public
+	 */
+	public static function dateDifference($start_timestamp, $end_timestamp = false, $unit = 0) {
+		
+		$days_seconds_star 	= (23 * 56 * 60) + 4.091; // Star Day
+		$days_seconds_sun 	= 24 * 60 * 60; // Sun Day
+		
+		if (is_int($start_timestamp)) {
+			if ($end_timestamp) {
+				$difference_seconds = $end_timestamp - $start_timestamp;
+			} else {
+				$end_timestamp = time();
+				$difference_seconds = $end_timestamp - $start_timestamp;
+			}
+		} else if (is_string($start_timestamp)) {
+			if ($end_timestamp) {
+				if ($t = strtotime($start_timestamt)) {
+						$difference_seconds = $end_timestamp - $t ;
+				} else {
+					throw new Exception('Error while converting time string.');
+				}
+			} else {
+				$end_timestamp = time();
+				if ($t = strtotime($start_timestamp)) {
+						$difference_seconds = $end_timestamp - $t;
+				} else {
+					throw new Exception('Error while converting time string.');
+				}
+			}
+		} else {
+			throw new Excepton('Error while converting time string.');
+		}
+
+		switch ($unit) {
+			case 3: // Days
+				$difference_days = round(($difference_seconds / $days_seconds_sun));
+				return 'approx. ' . $difference_days . ' Days';
+			case 2: // Hours
+				$difference_hours = round(($difference_seconds / 3600));
+				return 'approx. ' . $difference_hours . ' Hours';
+			case 1: // Minutes
+				$difference_minutes = round(($difference_seconds / 60));
+				return 'approx. ' . $difference_minutes . ' Minutes';
+			default: // Seconds
+				if ($difference_seconds > 1) {
+					return $difference_seconds . ' Seconds';
+				}
+				else {
+					return $difference_seconds . ' Second';
+				}
+		}
+	}
 }
 
 ?>
