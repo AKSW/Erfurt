@@ -108,6 +108,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
 		
 		$triggerParams = array('statement'=>&$statement);
+		$triggerParams['model'] = &$this;
 		$eventDispatcher->trigger('RDFSModel_add_pre', $triggerParams);
 		
 		# sbac
@@ -198,6 +199,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
 		
+		$triggerParams['model'] = &$this;
 		$triggerParams = array('statement'=>&$statement);
 		$eventDispatcher->trigger('RDFSModel_remove_pre', $triggerParams);
 		
@@ -613,7 +615,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 	public function resourceTree($hierClasses, $subRelProps, $instProps, $optionalParams = array()) {
 
 // TODO implement limit
-		
+
 		// check for optional parameters
 		if (isset($optionalParams['entryPoint'])) {
 			$entryPoint = $optionalParams['entryPoint'];
