@@ -199,8 +199,8 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 		$eventDispatcher = Zend_Registry::get('erfurt')->getEventDispatcher();
 		
-		$triggerParams['model'] = &$this;
 		$triggerParams = array('statement'=>&$statement);
+		$triggerParams['model'] = &$this;
 		$eventDispatcher->trigger('RDFSModel_remove_pre', $triggerParams);
 		
 		# sbac
