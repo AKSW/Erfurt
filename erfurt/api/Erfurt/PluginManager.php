@@ -137,7 +137,7 @@ class Erfurt_PluginManager {
     public function getPluginRoot($classname) {
         if (isset($this->_relationClassPlugin[$classname])) {
             $namespace = $this->_relationClassPlugin[$classname];
-            return dirname($namespace);
+            return $namespace;
         }
         else {
             return false;
@@ -150,7 +150,10 @@ class Erfurt_PluginManager {
 
         if (false !== include_once($classname.'.php')) {
             if (class_exists($classname,false)) {
-                eval('$this->_instances[$classname] = new '.$classname.'($this->_erfurt);');
+                $pluginRoot = $this->getPluginRoot($classname);
+                $config = new Zend_Config_Ini($pluginRoot.'/config.ini', 'private');
+                
+                eval('$this->_instances[$classname] = new '.$classname.'($this->_erfurt, $config);');
                 return true;
             }
             else {
@@ -183,7 +186,8 @@ class Erfurt_PluginManager {
         
         foreach ($plugins as $plugin) {
             # get plugin configuration from ini file
-            $pluginConfig = new Zend_Config_Ini($plugin.'.ini','general');
+            
+            $pluginConfig = new Zend_Config_Ini($plugin.'/config.ini', 'general');
             
             if ($pluginConfig->get('switch') == 'on') { # do for active plugins
 
@@ -191,7 +195,7 @@ class Erfurt_PluginManager {
                 $namespace = $plugin;
                 
                 # root folder for plugin
-                $pluginRoot = dirname($plugin) . '/';
+                $pluginRoot = $plugin . '/';
                 
                 # read plugin folders
                 $pluginFolders = array();
@@ -200,6 +204,7 @@ class Erfurt_PluginManager {
                     foreach ($tempPluginFolders as $folderKey => $folderValue) {
                         if ($realpath = realpath($pluginRoot.$folderValue))
                             $pluginFolders[$folderKey] = $realpath;
+                           
                     }
                     # save plugin folders with absolute path names
                     $this->_pluginFolders[$namespace] = array_unique($pluginFolders);
@@ -275,24 +280,21 @@ class Erfurt_PluginManager {
 
     private function _listPluginsFromFolder($folder, $plugins = array()) {
 
-        # run through folder and look for *.ini
-        # save absolute dir + filename (without .ini)
+        // run through folder and look for *.ini
+        // save absolute dir + filename (without .ini)
         
-        if (file_exists($folder) && is_dir($folder) && $fileHandler = opendir($folder)) {
-            # folder exists and can be opened
+        if (file_exists($folder) && is_dir($folder) && ($fileHandler = opendir($folder))) {
+            // folder exists and can be opened
             
             while (($file = readdir($fileHandler)) !== false) {
             
                 $concat = str_replace('//','/',$folder.'/'.$file);
             
-                # read dir item by item and check type
-                if (is_dir($concat) && $file != '.' && $file != '..') {
-                    # is folder
-                    $plugins = $this->_listPluginsFromFolder($concat,$plugins);
-                }
-                elseif (is_readable($concat) && substr($file,-4) == '.ini') {
-                    # is readable ini file
-                    $plugins[] = substr($concat,0,-4);
+                // read dir item by item and check type
+                if (is_dir($concat) && $file != '.' && $file != '..' && substr($file, 0, 1) != '.'
+                        && is_readable(str_replace('//', '/', ($concat.'/config.ini')))) {
+                    
+                    $plugins[] = $concat;
                 }
             }        
         }
