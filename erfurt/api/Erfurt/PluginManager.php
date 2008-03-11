@@ -151,8 +151,7 @@ class Erfurt_PluginManager {
         if (false !== include_once($classname.'.php')) {
             if (class_exists($classname,false)) {
                 $pluginRoot = $this->getPluginRoot($classname);
-                $config = new Zend_Config_Ini($pluginRoot.'/config.ini', 'private');
-                
+                $config = new Zend_Config_Ini($pluginRoot.'/config.ini');
                 eval('$this->_instances[$classname] = new '.$classname.'($this->_erfurt, $config);');
                 return true;
             }
