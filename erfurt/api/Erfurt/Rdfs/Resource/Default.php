@@ -125,6 +125,7 @@ $this->properties = array();
 		
 		if ($this->model->getStore() instanceof Erfurt_Store_CountableInterface) {
 			$count = $this->countPropertyValuesObject($prop);
+
 			foreach ($this->listPropertyValuesObject($subRelProp) as $subItem) {
 				$count += $subItem->countPropertyValuesObjectRecursive($prop, $subRelProp);
 			}
@@ -826,21 +827,22 @@ $this->properties = array();
 	public function remove() {
 		
 		// Remove the resource from RDF lists
-		if($ls=$this->model->findNode(null,$GLOBALS['RDF_first'],$this)) {
-			$le=$this->model->findNode($ls,$GLOBALS['RDF_rest'],null);
-			$this->model->remove($ls,$GLOBALS['RDF_first'],$this);
-			$this->model->remove($ls,$GLOBALS['RDF_rest'],$le);
-			if($le->getURI()!=$GLOBALS['RDF_nil']->getURI()) {
-				$this->model->replace(null,null,$ls,$le);
-				$this->model->replace($ls,null,null,$le);
+		if ($ls = $this->model->findNode(null, EF_RDF_FIRST, $this)) {
+			$le = $this->model->findNode($ls, EF_RDF_REST, null);
+			$this->model->remove($ls, EF_RDF_FIRST, $this);
+			$this->model->remove($ls, EF_RDF_REST, $le);
+			
+			if ($le->getURI() != EF_RDF_NIL) {
+				$this->model->replace(null, null, $ls, $le);
+				$this->model->replace($ls, null, null, $le);
 			} else {
-				if(!$this->model->findNode(null,$GLOBALS['RDF_rest'],$ls)) {
-					$bNode=$this->model->resourceF($ls->getLabel());
+				if (!$this->model->findNode(null, EF_RDF_REST, $ls)) {
+					$bNode = $this->model->resourceF($ls->getLabel());
 #$bNode->uri=$ls->getLabel();
 #print_r($bNode);
 #					$bNode->remove();
 				} else
-					$this->model->replace(null,null,$ls,$GLOBALS['RDF_nil']);
+					$this->model->replace(null,null,$ls,EF_RDF_NIL);
 			}
 		}
 
