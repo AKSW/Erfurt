@@ -974,16 +974,23 @@ $this->properties = array();
 			} else {
 				$vt = $this->model->resourceF($v);
 				$val[] = $vt->getLocalName() ? $vt->getLocalName() : $vt->getURI();
+                $val[] = $vt->getURI();
 			}
 		}
 		
+		$valuesOldPlain = array();
 		if ($valuesAreLiterals) {
 			$valuesOld = $this->listLiteralPropertyValues($property, $language, $datatype);
+			$valuesOldPlain = array_keys($valuesOld);
 		} else {
 			$valuesOld = $this->listPropertyValues($property);
+			foreach ($valuesOld as $value) {
+    		    $valuesOldPlain[] = $value->getURI();
+    		}
 		}
 		
-		$valuesOldPlain = array_keys($valuesOld);
+        // $valuesOldPlain = array_keys($valuesOld);
+		
 		$values = array_filter($val);
 		
 		if (array_diff($valuesOldPlain, $values) && array_diff($values, $valuesOldPlain)) {
