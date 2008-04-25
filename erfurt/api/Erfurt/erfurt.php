@@ -65,6 +65,13 @@ if (Zend_Registry::isRegistered('config')) {
 $config = new Erfurt_Config($iniFiles, $section, true);
 Zend_Registry::set('config', $config);
 
+if (isset($config->session->ns_identifier)) {
+    $sessionNsId = md5($config->session->ns_identifier);
+} else {
+    $sessionNsId = md5(REAL_BASE);
+}
+Zend_Registry::set('sessionNsId', $sessionNsId);
+
 # LOGGER
 $logDir = ERFURT_BASE . 'log/';
 if (is_writable($logDir) && ($config->erfurt->logging != 'false')) {

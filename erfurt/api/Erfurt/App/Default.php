@@ -131,13 +131,14 @@ class Erfurt_App_Default {
 		
 		// store config in session so that asynchronous requests
 		// have access to modified config data (by e.g. OntoWiki)
-		$session = new Zend_Session_Namespace('ERFURT');
+		$session = new Zend_Session_Namespace(('ERFURT' . Zend_Registry::get('sessionNsId')));
 		$session->config = clone $config;
 		
 		$this->ac = null;
 		
 		# set auth instance
 		$this->auth = Zend_Auth::getInstance();
+		$this->auth->setStorage(new Zend_Auth_Storage_Session(('Zend_Auth' . Zend_Registry::get('sessionNsId'))));
 		
 		# auth a special user
 		if ($username != '') {
