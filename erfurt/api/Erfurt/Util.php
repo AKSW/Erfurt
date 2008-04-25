@@ -122,6 +122,25 @@ class Erfurt_Util {
 	 */
 	public static function dateDifference($start_timestamp, $end_timestamp = false, $unit = 0) {
 		
+		if (Zend_Registry::isRegistered('strings')) {
+		    $strings = Zend_Registry::get('strings');
+		    
+		    $approxStr  = $strings->nicedate->approx;
+		    $daysStr    = $strings->nicedate->days;
+		    $hoursStr   = $strings->nicedate->hours;
+		    $minStr     = $strings->nicedate->min;
+		    $secStr     = $strings->nicedate->sec;
+		    $secsStr    = $strings->nicedate->secs;
+		} else {
+		    $approxStr  = 'approx.';
+		    $daysStr    = 'Days';
+		    $hoursStr   = 'Hours';
+		    $minStr     = 'Minutes';
+		    $secStr     = 'Second';
+		    $secsStr    = 'Seconds';
+		}
+		
+		
 		$days_seconds_star 	= (23 * 56 * 60) + 4.091; // Star Day
 		$days_seconds_sun 	= 24 * 60 * 60; // Sun Day
 		
@@ -154,19 +173,19 @@ class Erfurt_Util {
 		switch ($unit) {
 			case 3: // Days
 				$difference_days = round(($difference_seconds / $days_seconds_sun));
-				return 'approx. ' . $difference_days . ' Days';
+				return $approxStr . ' ' . $difference_days . ' ' . $daysStr;
 			case 2: // Hours
 				$difference_hours = round(($difference_seconds / 3600));
-				return 'approx. ' . $difference_hours . ' Hours';
+				return $approxStr . ' ' . $difference_hours . ' ' . $hoursStr;
 			case 1: // Minutes
 				$difference_minutes = round(($difference_seconds / 60));
-				return 'approx. ' . $difference_minutes . ' Minutes';
+				return $approxStr . ' ' . $difference_minutes . ' ' . $minStr;
 			default: // Seconds
 				if ($difference_seconds > 1) {
-					return $difference_seconds . ' Seconds';
+					return $difference_seconds . ' ' . $secsStr;
 				}
 				else {
-					return $difference_seconds . ' Second';
+					return $difference_seconds . ' ' . $secStr;
 				}
 		}
 	}
