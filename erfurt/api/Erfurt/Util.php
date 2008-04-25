@@ -125,19 +125,19 @@ class Erfurt_Util {
 		if (Zend_Registry::isRegistered('strings')) {
 		    $strings = Zend_Registry::get('strings');
 		    
-		    $approxStr  = $strings->nicedate->approx;
-		    $daysStr    = $strings->nicedate->days;
-		    $hoursStr   = $strings->nicedate->hours;
-		    $minStr     = $strings->nicedate->min;
-		    $secStr     = $strings->nicedate->sec;
 		    $secsStr    = $strings->nicedate->secs;
+		    $minStr     = $strings->nicedate->min;
+		    $minsStr    = $strings->nicedate->mins;
+		    $hourStr    = $strings->nicedate->hour;
+		    $hoursStr   = $strings->nicedate->hours;
+		    $daysStr    = $strings->nicedate->days;
 		} else {
-		    $approxStr  = 'approx.';
-		    $daysStr    = 'Days';
-		    $hoursStr   = 'Hours';
-		    $minStr     = 'Minutes';
-		    $secStr     = 'Second';
-		    $secsStr    = 'Seconds';
+		    $secsStr    = 'moments ago';
+		    $minStr     = 'approx. 1 minute ago';
+		    $minsStr    = 'approx. %d minutes ago';
+		    $hourStr    = 'approx. 1 hour ago';
+		    $hoursStr   = 'approx. %d hours ago';
+		    $daysStr    = 'approx. %d days ago';
 		}
 		
 		
@@ -169,24 +169,33 @@ class Erfurt_Util {
 		} else {
 			throw new Excepton('Error while converting time string.');
 		}
-
-		switch ($unit) {
-			case 3: // Days
-				$difference_days = round(($difference_seconds / $days_seconds_sun));
-				return $approxStr . ' ' . $difference_days . ' ' . $daysStr;
-			case 2: // Hours
-				$difference_hours = round(($difference_seconds / 3600));
-				return $approxStr . ' ' . $difference_hours . ' ' . $hoursStr;
-			case 1: // Minutes
-				$difference_minutes = round(($difference_seconds / 60));
-				return $approxStr . ' ' . $difference_minutes . ' ' . $minStr;
-			default: // Seconds
-				if ($difference_seconds > 1) {
-					return $difference_seconds . ' ' . $secsStr;
-				}
-				else {
-					return $difference_seconds . ' ' . $secStr;
-				}
+		
+		// show e.g. 'moments ago' if time is less than one minute
+		if ($difference_seconds < 60) {
+		    return $secsStr;
+		} else {
+		    $difference_minutes = round(($difference_seconds / 60));
+		    
+		    // show e.g. 'approx. x minutes ago' if time is less than one hour
+		    if ($difference_minutes == 1) {
+		        return $minStr;
+		    } else if ($difference_minutes < 60) {
+		        return sprintf($minsStr, $difference_minutes);
+		    } else {
+		        $difference_hours = round(($difference_seconds / 3600));
+		        
+		        // show e.g. 'approx. x hours
+		        if ($difference_hours == 1) {
+		            return $hourStr;
+		        } else if ($difference_hours <= 48) {
+		            return sprintf($hoursStr, $difference_hours);
+		        } else {
+		            $difference_days = round(($difference_seconds / $days_seconds_sun));
+		            
+		            // else return e.g. 'approx. x days ago'
+		            return sprintf($daysStr, $difference_days);
+		        }
+		    }
 		}
 	}
 }
