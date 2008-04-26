@@ -202,18 +202,18 @@ class Erfurt_App_Default {
 		#$_ET['store']->dbConn->debug=true;
 		
 		// initialise active model
-		if(!empty($_REQUEST['model']))
-			$_SESSION['_ETS']['model'] = $_REQUEST['model'];
-		if(!empty($_SESSION['_ETS']['model']))
-			$GLOBALS['_ET']['rdfsmodel'] = $this->getStore()->getModel($_SESSION['_ETS']['model']);
+		#if(!empty($_REQUEST['model']))
+		#	$_SESSION['_ETS']['model'] = $_REQUEST['model'];
+		#if(!empty($_SESSION['_ETS']['model']))
+		#	$GLOBALS['_ET']['rdfsmodel'] = $this->getStore()->getModel($_SESSION['_ETS']['model']);
 		#ob_end_clean();
 		
 		// load model specific sysont
 		
-		if(!empty($this->getStore()->SysOnt) && $modelClass = $this->getStore()->SysOnt->getClass('Model'))
-			if($inst = $modelClass->findInstance(array('modelURI' => $GLOBALS['_ET']['rdfsmodel']['rdfsmodel']->modelURI)))
-				if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
-					$GLOBALS['_POWL']['SysOnt'] = $this->getStore()->SysOnt;
+		#if(!empty($this->getStore()->SysOnt) && $modelClass = $this->getStore()->SysOnt->getClass('Model'))
+	#		if($inst = $modelClass->findInstance(array('modelURI' => $GLOBALS['_ET']['rdfsmodel']['rdfsmodel']->modelURI)))
+	#			if($sysont = $inst->getPropertyValuePlain('modelSysOntURI'))
+	#				$GLOBALS['_POWL']['SysOnt'] = $this->getStore()->SysOnt;
 					
 		
 	}

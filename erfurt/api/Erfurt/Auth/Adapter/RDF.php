@@ -122,7 +122,7 @@ class Erfurt_Auth_Adapter_RDF implements Zend_Auth_Adapter_Interface
 			$result['identity']['email'] = $this->_users[$userUri]['userEmail'];
 			
 			# TODO: POWL HACK
-			$_SESSION['PWL']['user']= $this->_username;
+			//$_SESSION['PWL']['user']= $this->_username;
 		}
 
 		if (Zend_Registry::isRegistered('erfurtLog')) {

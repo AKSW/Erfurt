@@ -985,7 +985,7 @@ $this->properties = array();
 		} else {
 			$valuesOld = $this->listPropertyValues($property);
 			foreach ($valuesOld as $value) {
-    		    $valuesOldPlain[] = $value->getURI();
+    		    $valuesOldPlain[] = $value->getLabel();
     		}
 		}
 		
