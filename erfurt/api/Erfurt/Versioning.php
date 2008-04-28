@@ -117,8 +117,13 @@ class Erfurt_Versioning {
 			   'INNER JOIN models ON (model_id = modelID)
 				INNER JOIN log_action_descr lad ON (lad.id = descr_id)
 				WHERE model_id = ' . $this->model->getModelID() . ' AND ISNULL(parent_id)' . $search . $group . ' ORDER BY ef_date DESC';
+		
+		if (!($limit && $offset)) {
+		    $result = $this->model->getStore()->getDbConn()->Execute($sql);
+		} else {
+		    $result = $this->model->getStore()->getDbConn()->pageExecute($sql, $limit, ($offset/($limit+1)));
+		}
 				
-		$result = $this->model->getStore()->getDbConn()->pageExecute($sql, $limit, ($offset/($limit+1)));
 		$erg = (($result->_maxRecordCount) ? $result->_maxRecordCount : $result->_numOfRows);
 		return $result;
 	}
