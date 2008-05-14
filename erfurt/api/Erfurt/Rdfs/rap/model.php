@@ -800,7 +800,7 @@ class RDFSModel extends Erfurt_Rdfs_Model_Abstract {
 		
 
 		// now sort it by title
-		usort($result, 'RDFSModel::cmp_by_title');
+		usort($result, array('RDFSModel', 'cmp_by_title'));
 
 		return $result;		
 	}
