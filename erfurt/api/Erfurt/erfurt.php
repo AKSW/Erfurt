@@ -68,7 +68,7 @@ Zend_Registry::set('config', $config);
 if (isset($config->session->ns_identifier)) {
     $sessionNsId = md5($config->session->ns_identifier);
 } else {
-    $sessionNsId = md5('REAL_BASE');
+    $sessionNsId = md5(REAL_BASE);
 }
 Zend_Registry::set('sessionNsId', $sessionNsId);
 
