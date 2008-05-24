@@ -1,12 +1,9 @@
 <?php
 
 require_once '../../../../erfurt.php';
-
-$session = new Zend_Session_Namespace('ERFURT');
+$session = new Zend_Session_Namespace('ERFURT' . md5($config->session->ns_identifier));
 if (isset($session->config)) {
-	$erfurt = new Erfurt_App_Default($session->config);
-} else {
-	$erfurt = new Erfurt_App_Default();
+    $erfurt = new Erfurt_App_Default($session->config);
 }
 
 $model = $erfurt->getStore()->getModel($_REQUEST['modelUri']);

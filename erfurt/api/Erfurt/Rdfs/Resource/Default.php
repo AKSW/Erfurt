@@ -934,6 +934,23 @@ $this->properties = array();
 		
 		$this->setPropertyValues($property, $value);
 	}
+	
+	
+	public function savePropertyValues($property, $values = array(), $language = null, $datatype = null, $newLang = null, $newDtype = null) {
+	    if (!is_array($values) || 
+	        array_key_exists('type', $values) || array_key_exists('value', $values) || 
+	        array_key_exists('uri', $values) || array_key_exists('lang', $values)) {
+	        
+	        $values = array($values);
+	    }
+	    
+	    // remove empty values
+	    $values = array_filter($values);
+	    
+	    if (!($property instanceof Erfurt_Rdfs_Property)) {
+			$property = $this->model->propertyF($property);
+		}
+	}
 
 	public function setPropertyValues($property, $values = array(), $language = null, $datatype = null, $newLang = null,
 	 		$newDtype = null) {
@@ -966,7 +983,8 @@ $this->properties = array();
 					$vt = $this->model->literalF($v['value'], $v['lang'] != 'Lang' ? $v['lang'] : null, $v['dtype']);
 					$obj = $val[] = $this->model->getLiteralId($vt);
 				} else if ($v['type'] != 'literal' && $v['uri']) {
-					$val[] = $this->model->resourceF($v['uri']);
+				    $r = $this->model->resourceF($v['uri']);
+					$val[] = $r->getURI();
 				}
 			} else if ($valuesAreLiterals) {
 				$vt = $this->model->literalF($v, $newLang ? $newLang : $language, $newDtype ? $newDtype : $datatype);
@@ -979,23 +997,20 @@ $this->properties = array();
 		}
 		
 		$valuesOldPlain = array();
-		if ($valuesAreLiterals) {
-			$valuesOld = $this->listLiteralPropertyValues($property, $language, $datatype);
-			$valuesOldPlain = array_keys($valuesOld);
-		} else {
-			$valuesOld = $this->listPropertyValues($property);
-			foreach ($valuesOld as $value) {
-    		    $valuesOldPlain[] = $value->getLabel();
-    		}
+		$valuesOld = $this->listPropertyValues($property);
+		foreach ($valuesOld as $key => $value) {
+		    if ($value instanceof Erfurt_Rdfs_Resource) {
+		        $valuesOldPlain[] = $value->getUri();
+		    } else {
+		        $valuesOldPlain[] = $key;
+		    }
 		}
-		
-        // $valuesOldPlain = array_keys($valuesOld);
 		
 		$values = array_filter($val);
 		
-		if (array_diff($valuesOldPlain, $values) && array_diff($values, $valuesOldPlain)) {
-			$this->model->logStart('Property values changed.', $property->getLocalName());
-		}
+        if (array_diff($valuesOldPlain, $values) && array_diff($values, $valuesOldPlain)) {
+            $this->model->logStart('Property values changed.', $property->getLocalName());
+        }
 		
 		foreach (array_diff($valuesOldPlain, $values) as $removed) {
 			if (($valuesOld[$removed] instanceof BlankNode) || (method_exists($valuesOld[$removed], 'isBlankNode') &&
@@ -1006,15 +1021,15 @@ $this->properties = array();
 				}
 				$valuesOld[$removed]->remove();
 			} else {
-				$this->model->remove($this, $property, $removed);
+                $this->model->remove($this, $property, $removed);
 			}
 		}
 		
-		foreach (array_diff($values, $valuesOldPlain) as $added) {
-			$this->model->add($this, $property, $added);
-		}
+        foreach (array_diff($values, $valuesOldPlain) as $added) {
+                    $this->model->add($this, $property, $added);
+        }
 		
-		$this->model->logEnd();
+        $this->model->logEnd();
 	}
 	
 	public function setPropertyValuesObject($property, $values = array()) {
