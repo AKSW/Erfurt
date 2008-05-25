@@ -96,12 +96,20 @@ class Erfurt_App_Default {
 			# TODO: remove sysont
 			$defaultStore->init();
 		} catch (Erfurt_Exception $e) {
-			if ($e->getCode() == 1) {
-				
+			if ($e->getCode() == 2702) {
 				$msg = $e->getMessage() . '<br/>' . 
 				       'Database Setup: OntoWiki tables created<br />';
 				$defaultStore->createTables($config->database->type);
 				
+				if ($throwExceptions) {
+					header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+					throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+				}
+				
+				echo $msg . '<br /><b>Please reload now (the next step will last a few seconds)</b>';
+				exit();
+			} else if ($e->getCode() == 2704) {
+			    $msg = 'Database Setup: Database schema migrated<br />';
 				if ($throwExceptions) {
 					header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
 					throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
