@@ -49,7 +49,7 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 		if ($model instanceof Model) {
 			$model = $model->getModelURI();
 		}
-			
+		
 		# ow user
 		if ($this->checkAc()) {
 			if ($this->ac->isModelAllowed('view', $model)) {
@@ -57,7 +57,11 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 			} else {
 				return false;
 			}  
+		}	
 		
+		return false;
+		
+		/*
 		# OLD POWL STUFF => TODO: remove old powl ac
 		} elseif($_SESSION['PWL']['user']=='Admin' || Zend_Registry::get('config')->deactivateLogin)
 		# powl-admin and mode without login can use all models
@@ -78,6 +82,7 @@ abstract class Erfurt_Store_Abstract extends DBStore implements Erfurt_Store_Mai
 			return in_array($model,$user->listPropertyValuesPlain('userModelsEdit'))?true:false;
 		else
 			return $this->aclCompute($_SESSION['PWL']['user'],$accessType,$model,$property,$class,$instance);
+		*/
 	}
 	
 	/**

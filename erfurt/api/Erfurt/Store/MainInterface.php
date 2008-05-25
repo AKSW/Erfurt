@@ -66,6 +66,14 @@ interface Erfurt_Store_MainInterface extends Erfurt_Store_DataInterface {
 	 */
 	public function listImports($modelURI);
 	
+	/*
+	 * Returns a list containing all model ids for the given model (model id for the model and all owl:imports models).
+	 * 
+	 * @param Model $m The model, where to look for the ids.
+	 * @return int[] Returns a list of model ids.
+	 */
+	public function listModelIDs(Model $m = null);
+	
 	/**
 	 * Lists namespaces and the belonging prefixes for a given model... iff model exists.
 	 * 

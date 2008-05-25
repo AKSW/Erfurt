@@ -232,7 +232,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				FROM ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' WHERE ';
 				
 		if ($m !== null) {
-			$sql .= 'modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND ';
+			$sql .= 'modelID IN (' . join(',', $this->listModelIDs($m)) . ') AND ';
 		}	
 				
 		if ($s !== null) {
@@ -400,8 +400,8 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 				LEFT JOIN ' . $GLOBALS['RAP']['conf']['database']['tblStatements'] . ' s2
 				ON (s1.subject = s2.subject AND s1.subject_is = s2.subject_is AND s2.predicate = "' . EF_RDF_TYPE . '"
 				AND s2.object = "' . $sType->getLabel() . '"
-				AND s2.modelID IN (' . join(',', $this->_listModelIDs($m)) . '))
-				WHERE s1.modelID IN (' . join(',', $this->_listModelIDs($m)) . ') AND
+				AND s2.modelID IN (' . join(',', $this->listModelIDs($m)) . '))
+				WHERE s1.modelID IN (' . join(',', $this->listModelIDs($m)) . ') AND
 				s2.subject IS NOT NULL AND s1.subject_is IN (' . join(',', $subjectIs) . ') AND ';
 		
 		if ($p !== null) {
@@ -668,7 +668,7 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 	 * @see Erfurt_Store_MainInterface
 	 */
 	public function listImports($modelURI, $useAcl = true) {
-		
+	    
 		if (isset($this->_modelInfoCache[$modelURI])) {
 			$ret = array();
 			foreach ($this->_modelInfoCache[$modelURI]['imports'] as $importsURI) {
@@ -680,6 +680,29 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			return $ret;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * @see Erfurt_Store_MainInterface
+	 */
+	public function listModelIDs(Model $m = null) {
+		
+		if ($m === null) {
+			return array();
+		}
+		
+		if (isset($this->_modelInfoCache[$m->getModelURI()])) {
+		    $modelIDs = array();
+    		$modelIDs[] = $this->_getModelID($m->modelURI);
+
+    		foreach ($m->listImports(true) as $mURI) {
+    			$modelIDs[] = $this->_getModelID($mURI);
+    		}
+
+    		return $modelIDs;
+		} else {
+		    return false;
 		}
 	}
 	
@@ -1259,27 +1282,5 @@ class Erfurt_Store_Adapter_Rap extends Erfurt_Store_Abstract
 			return false;
 		}
 	}
-	
-	/*
-	 * Returns a list containing all model ids for the given model (model id for the model and all owl:imports models).
-	 * 
-	 * @param Model $m The model, where to look for the ids.
-	 * @return int[] Returns a list of model ids.
-	 */
-	private function _listModelIDs(Model $m = null) {
-		
-		if ($m === null) {
-			return array();
-		}
-		
-		$modelIDs = array();
-		$modelIDs[] = $this->_getModelID($m->modelURI);
-		
-		foreach ($m->listImports(true) as $mURI) {
-			$modelIDs[] = $this->_getModelID($mURI);
-		}
-		
-		return $modelIDs;
-	}	
 }
 ?>

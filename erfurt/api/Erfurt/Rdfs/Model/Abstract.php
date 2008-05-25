@@ -205,7 +205,7 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 			foreach ($this->getStore()->listImports($his->modelURI) as $importsURI) {
 				$ret[$importsURI] = $this->resourceF($importsURI, false);
 			} 
-			
+		
 			return $ret;
 		}
 			
@@ -216,19 +216,13 @@ abstract class Erfurt_Rdfs_Model_Abstract extends DbModel {
 	
 	public function listModelIds() {
 		
-		if ($this->importsIds === null) {
-			$this->importsIds = array();
-			
-			$sql = 'SELECT modelID FROM models 
-					WHERE modelURI IN ("' . join('", "', $this->listImports(true)). '")';
-
-			$result = $this->store->sqlQuery($sql);
-			foreach ($result as $row) {
-				$this->importsIds[] = $row[0];
-			}
-		}
+		$retVal = $this->store->listModelIds($this);
 		
-		return array_merge($this->importsIds, array($this->modelID));
+		if ($retVal) {
+		    return $retVal;
+		} else {
+		    return $this->modelID;
+		}
 	}
 	
 	public function getModelIds() {
