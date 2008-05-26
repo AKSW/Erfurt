@@ -1,0 +1,544 @@
+<?php
+/**
+ * Erfurt application class
+ *
+ * @package app
+ */
+class Erfurt_App {
+    
+    const EF_MIN_PHP_VERSION = '5.2.0';
+    
+    /**
+     * the instance which is returned
+     * 
+     * @var Erfurt_App
+     */ 
+    private static $_instance = false;
+    
+    /**
+     * @var
+     */
+    private $_config = false;
+    
+    /**
+     * @var Erfurt_EventDispatcher event dispatcher
+     */
+    private $_ed = false;
+    
+    /**
+     * @var object for plugin manager
+     */
+    private $_pluginManager = false;
+    
+    private $_store = false;
+    
+    /**
+     * @var object auth instance
+     */
+    private $_auth = false;
+    
+    private $_authAdapter = false;
+    
+    private $_sysOntModel = false;
+    
+    /**
+     * @var object instance of model-object
+     */
+    private $_acModel = false;
+    
+    /**
+     * @var object instance of ac-object
+     */
+    private $_ac = false;
+    
+    private $_cache = false;
+    private $_cacheBackend = false;
+    
+    /** @var Zend_Log */
+    private $_log = false;
+    
+    /**
+     * constructor
+     *
+     * @param object configuration parameters
+     */
+    private function __construct() {
+                
+        if (!version_compare(phpversion(), self::EF_MIN_PHP_VERSION, '>=')) {
+            throw new Exception('Erfurt requires at least PHP Version ' . self::EF_MIN_PHP_VERSION);
+        }
+        
+        define('EF_BASE', substr(__FILE__, 0, -7));
+        
+        // update the include path, such that libraries like e.g. Zend are available        
+        $include_path  = get_include_path() . PATH_SEPARATOR;
+        $include_path .= EF_BASE . 'libraries/' . PATH_SEPARATOR;
+        set_include_path($include_path);
+        
+// TODO better way for vocabs?!
+        // include the vocabulary file
+        require_once EF_BASE . 'include/vocabulary.php';
+
+// TODO do that in a better way!
+        $GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
+        
+// TODO source out from here            
+        // check for new installation
+        //$this->_checkNewInstallation($config);
+    }
+    
+    /** singleton pattern makes clone unavailable */
+    private function __clone()
+    {}
+    
+    /**
+     * @throws Erfurt_Exception
+     */ 
+    public function getSysOntModel() {
+        
+        if (!$this->_sysOntModel) {
+            $config = $this->getConfig();
+            $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
+        }
+        
+        return $this->_sysOntModel;
+    }
+    
+    /**
+     * returns ac instance
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function getAcModel() {
+        
+        if (!$this->_acModel) {
+            $config = $this->getConfig();
+            $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
+        }
+        
+        return $this->_acModel;
+    }
+    
+    /**
+     * returns ac instance
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function getAc() {
+        
+        if (!$this->_ac) {
+// TODO remove default action conf
+            #$defaultActionConf = include(EF_INCLUDE_DIR . '/include/actions.ini.php');
+            require_once 'Erfurt/Ac/Default.php';
+            $this->_ac = new Erfurt_Ac_Default();
+        }
+        
+        return $this->_ac;
+    }
+    
+    /**
+     * singleton
+     */
+    public static function getInstance() {
+        
+        if (self::$_instance === false) {
+            self::$_instance = new Erfurt_App();
+        }
+        
+        return self::$_instance;
+    }
+    
+    public static function start(Zend_Config $config = null) 
+    {   
+        $inst = self::getInstance();
+        $inst->loadConfig($config);
+        
+        // check for debugging mode
+        $config = $inst->getConfig();   
+        if ($config->debug == true) {
+            error_reporting(E_ALL | E_STRICT);
+            define('_EFDEBUG', 1);
+// TODO handle timezone settings
+            date_default_timezone_set('Europe/Berlin');
+            $config->efloglevel = 7;
+        }
+        
+        return $inst;
+    }
+    
+    public function loadConfig(Zend_Config $config = null) {
+        
+        // load the config with erfurt.ini
+        require_once 'Zend/Config/Ini.php';
+        $this->_config = new Zend_Config_Ini((EF_BASE . 'config/erfurt.ini'), 'erfurt', true);
+
+        // merge with injected config iff given
+        if (null !== $config) {
+            $this->_config->merge($config);
+        }
+    }
+    
+    /**
+     * @throws Erfurt_Exception
+     */
+    public function getConfig() {
+        
+        if (!$this->_config) {
+// TODO error code
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('config not loaded');
+        } else {
+            return $this->_config;
+        }
+    }
+    
+    /**
+     * @throws Erfurt_Exception
+     * @throws Erfurt_Exception
+     */
+    public function getLog() {
+        
+        if (!$this->_log) {
+            $config = $this->getConfig();
+                
+            if ($config->efloglevel != false) {
+                $logDir = EF_BASE . 'logs/'; 
+                    
+                if (!is_writable($logDir)) {
+                    require_once 'Zend/Log/Writer/Null.php';
+                    $logWriter = new Zend_Log_Writer_Null();
+                } else {
+                    require_once 'Zend/Log/Writer/Stream.php';
+                    $logWriter = new Zend_Log_Writer_Stream($logDir . 'erfurt.log');    
+                }
+            } else {
+                require_once 'Zend/Log/Writer/Null.php';
+                $logWriter = new Zend_Log_Writer_Null();
+            }
+                
+            require_once 'Zend/Log.php';
+            $this->_log = new Zend_Log($logWriter);
+            $this->_log->debug('Erfurt_App: logger initialized');       
+        }
+        
+        return $this->_log;
+    }
+    
+    /**
+     * returns the event dispatcher
+     */
+    public function getEventDispatcher() {
+        
+        if (!$this->_ed) {
+            $this->_ed = new Erfurt_EventDispatcher($this);
+        }
+        
+        return $this->_ed;
+    }
+    
+    /**
+     * returns the plugin manager
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function getPluginManager() {
+        
+        if (!$this->_pluginManager) {
+            $config = $this->getConfig();
+            $this->_pluginManager = new Erfurt_PluginManager($this);
+            if ($config->plugins->erfurt && (strlen($config->plugins->erfurt) > 0)) {
+// TODO remove constant?!
+                $this->_pluginManager->init(REAL_BASE . $this->config->plugins->erfurt);
+            }
+        }
+    
+        return $this->pluginManager;
+    }
+    
+    /**
+     * returns the store instance as configured in config
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function getStore() 
+    {
+        if ($this->_store === false) {
+            $config = $this->getConfig();
+            
+            // schema must be set, else throw an exception
+            if (isset($config->store->backend)) {
+                $backend = strtolower($config->store->backend);
+            } else {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Backend must be set in configuration.');
+            }
+            
+            // check configured backend and if not set set it as empty (e.g. virtuoso needs no special backend)
+            if (isset($config->store->schema)) {
+                $schema = $config->store->schema;
+            } else {
+                $schema = null;
+            }
+            
+            // fetch backend specific options from config
+            $backendOptions = $config->store->get($backend)->toArray();
+        
+            require_once 'Erfurt/Store.php';
+            $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+        }
+        
+        return $this->_store;
+    }
+    
+    /**
+         * check for new erfurt installation and sets the system ontologies
+         */
+    private function _checkNewInstallation(Zend_Config $config) {
+        /**
+         * check for ontowiki system ontologies
+         */
+        if (!$this->store[$this->defaultStore]->modelExists($config->sysont->schema, false)) {
+            $msg = 'Database Setup: Checking for Ontowiki SysOnt Schema ... no schema found.<br />';
+            
+            $m = $this->store[$this->defaultStore]->getNewModel($config->sysont->schema, '', 'RDFS', false);
+            $m->dontCheckForDuplicatesOnAdd = true;
+            $this->store[$this->defaultStore]->dbConn->StartTrans();
+            $m->load(ERFURT_BASE . 'SysOnt.rdf', NULL, true);
+            $this->store[$this->defaultStore]->dbConn->CompleteTrans();
+            
+            $msg .= 'Database Setup: Ontowiki SysOnt schema created.<br />';
+            
+            if ($this->throwExceptions) {
+                header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+                throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+            } else {
+                echo $msg . '<br /><b>Please reload now.</b>';
+            }
+            
+            exit();
+        }
+        if (!$this->store[$this->defaultStore]->modelExists($config->sysont->model, false)) {
+            $msg = 'Database Setup: Checking for Ontowiki SysOnt model ... no model found.<br />';
+            
+            $m = $this->store[$this->defaultStore]->getNewModel($config->sysont->model, '', 'RDFS', false);
+            $m->dontCheckForDuplicatesOnAdd = true;
+            $this->store[$this->defaultStore]->dbConn->StartTrans();
+            $m->load(ERFURT_BASE . 'SysOntLocal.rdf', NULL, true);
+            $this->store[$this->defaultStore]->dbConn->CompleteTrans();
+            
+            $msg .= 'Database Setup: Ontowiki SysOnt model created<br />';
+            
+            if ($this->throwExceptions) {
+                header('Refresh: 3; url=' . $_SERVER['REQUEST_URI']);
+                throw new Erfurt_Exception($msg . '<br />Refreshing in 3 seconds.');
+            } else {
+                echo $msg . '<br /><b>Please reload now.</b>';
+            }
+            
+            exit();
+        }
+    }
+    
+    
+    /**
+     * authtenticate user
+     * 
+     * authenticate a user to the store
+     * 
+     */
+    public function authenticate($username = 'Anonymous', $password = '')
+    {    
+        // Set up the authentication adapter
+        require_once 'Erfurt/Auth/Adapter/Rdf.php';
+        $adapter = new Erfurt_Auth_Adapter_Rdf($this->getAcModel(), $username, $password);
+        
+        // Attempt authentication, saving the result
+        $result = $this->getAuth()->authenticate($adapter);
+
+        if (!$result->isValid()) {
+            $this->getAuth()->clearIdentity();
+        }
+        
+        return $result;
+    }
+
+    public function getAuth()
+    {    
+        if (!$this->_auth) {
+            require_once 'Zend/Auth.php';
+            $this->_auth = Zend_Auth::getInstance();
+            
+            // TODO: this seems to not work
+            // require_once 'Zend/Auth/Storage/Session.php';
+            // $this->_auth->setStorage(new Zend_Auth_Storage_Session('Erfurt_Auth'));
+        }
+        
+        return $this->_auth;
+    }
+    
+    public function getCache() 
+    {    
+        if (!$this->_cache) {
+            $config = $this->getConfig();
+            if (!isset($config->cache->lifetime) || ($config->cache->lifetime == -1)) {
+                $lifetime = null;
+            } else {
+                $lifetime = $config->cache->lifetime;
+            }
+        
+            $frontendOptions = array(
+                'lifetime' => $lifetime,
+                'automatic_serialization' => true
+            );
+        
+            require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
+            require_once 'Erfurt/Cache/Frontend/AutoId.php';
+            $this->_cache = new Erfurt_Cache_Frontend_AutoId($frontendOptions);
+            
+            $backend = $this->getCacheBackend();
+            $this->_cache->setBackend($backend);
+        }
+        
+        return $this->_cache;
+    }
+    
+    /**
+     * @throws Erfurt_Exception if cache type is not set
+     * @throws Erfurt_Exception if cache type is not supported
+     * @throws Erfurt_Exception if cache params are not set seperatly and backend does not work with cache backend.
+     */
+    public function getCacheBackend() 
+    {    
+        if (!$this->_cacheBackend) {
+            $config = $this->getConfig();
+            
+            if (!isset($config->cache->enable) || !(boolean)$config->cache->enable) {
+                require_once 'Erfurt/Cache/Backend/Null.php';
+                
+                $this->_cacheBackend = new Erfurt_Cache_Backend_Null();
+            } 
+            // cache is enabled
+            else {
+                // check for the cache type and throw an exception if cache type is not set
+                if (!isset($config->cache->type)) {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception('Cache type is not set in config.'); 
+                } else {
+                    // check the type an whether type is supported
+                    switch (strtolower($config->cache->type)) {
+                        case 'mysqli':
+                            if (isset($config->cache->mysqli->host)) {
+                                $dbHost = $config->cache->mysqli->host;
+                            } else if ($config->database->backend == strtolower('mysqli')) {
+                                $dbHost = $config->database->host;
+                            } else {
+                                require_once 'Erfurt/Exception.php';
+                                throw new Erfurt_Exception('Cache parameters must be set seperatly or backend must be mysql in order to use the default database settings.');
+                            }
+                            
+                            if (isset($config->cache->mysqli->username)) {
+                                $dbUser = $config->cache->mysqli->username;
+                            } else {
+                                $dbUser = $config->database->username;
+                            }
+                            
+                            if (isset($config->cache->mysqli->password)) {
+                                $dbPassword = $config->cache->mysqli->password;
+                            } else {
+                                $dbPassword = $config->database->password;
+                            }
+                            
+                            if (isset($config->cache->mysqli->dbname)) {
+                                $dbName = $config->cache->mysqli->dbname;
+                            } else {
+                                $dbName = $config->database->dbname;
+                            }
+                            
+                            $backendOptions = array(
+                                'host'      => $dbHost,
+                                'username'  => $dbUser,
+                                'password'  => $dbPassword,
+                                'dbname'    => $dbName
+                            );
+                            
+                            require_once 'Erfurt/Cache/Backend/Mysqli.php';
+                            $this->_cacheBackend = new Erfurt_Cache_Backend_Mysqli($backendOptions);
+                            break;
+                        case 'sqlite':
+                            if (isset($config->cache->sqlite->dbname)) {
+                                $backendOptions = array(
+                                    'cache_db_complete_path' => EF_BASE . 'tmp/' .$config->cache->sqlite->dbname
+                                );
+                            } else {
+                                require_once 'Erfurt/Exception.php';
+                                throw new Erfurt_Exception('Cache database filename must be set for sqlite cache backend');
+                            }
+                            
+                            require_once 'Zend/Cache/Backend/Sqlite.php';
+                            $this->_cacheBackend = new Zend_Cache_Backend_Sqlite($backendOptions);
+                            
+                            break;
+                        default: 
+                            require_once 'Erfurt/Exception.php';
+                            throw new Erfurt_Exception('Cache type is not supported.');
+                    }
+                }
+            }
+        }
+        
+        return $this->_cacheBackend;
+    }
+    
+    /**
+     * Convenience shortcut for Ac_Default::isActionAllowed()
+     */
+    public function isActionAllowed($actionSpec)
+    {
+        return $this->getAc()->isActionAllowed($actionSpec);
+    }
+    
+    /**
+     * Convenience shortcut for Ac_Default::getActionConfig()
+     */
+    public function getActionConfig($actionSpec)
+    {
+        return $this->getAc()->getActionConfig($actionSpec);
+    }
+    
+    /**
+     * Convenience shortcut for Auth_Adapter_Rdf::getUsers()
+     */
+    public function getUsers()
+    {
+        // TODO: do it in a better way
+        require_once 'Erfurt/Auth/Adapter/Rdf.php';
+        $tempAdapter = new Erfurt_Auth_Adapter_Rdf($this->getAcModel(), '', '');
+        
+        return $tempAdapter->getUsers();
+    }
+    
+    /**
+     * Adds a new user to the store
+     *
+     * @todo Make robust
+     */
+    public function addUser($username, $password, $email, $userGroupUri = null)
+    {
+        $acModelUri = $this->getAcModel()->getModelIri();
+        $userUri    = $acModelUri . urlencode($username);
+        $store      = $this->getStore();
+        
+        $store->addStatement($acModelUri, $userUri, EF_RDF_TYPE, $this->_config->ac->user->class);
+        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->name, '"' . $username . '"^^<' . EF_XSD_NS . 'string>', array('object_type' => Erfurt_Store::TYPE_LITERAL));
+        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->mail, 'mailto:' . $email);
+        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->pass, sha1($password));
+        
+        if ($userGroupUri) {
+            $store->addStatement($acModelUri, $userGroupUri, $this->_config->ac->group->membership, $userUri);
+        }
+        
+        return true;
+    }
+}
+
+?>

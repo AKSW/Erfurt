@@ -1,0 +1,163 @@
+[erfurt]
+;------------------------------------;
+; System Ontology/Config URIs        ;
+;------------------------------------;
+; System configuration ontology
+sysOnt.schemaUri      = "http://ns.ontowiki.net/SysOnt/"
+sysOnt.schemaLocation = "http://powl.svn.sourceforge.net/viewvc/*checkout*/powl/trunk/erfurt/api/Erfurt/SysOnt.rdf"
+
+; System configuration model (local)
+sysOnt.modelUri      = "http://localhost/OntoWiki/Config/"
+sysOnt.modelLocation = "http://powl.svn.sourceforge.net/viewvc/*checkout*/powl/trunk/erfurt/api/Erfurt/SysOntLocal.rdf"
+
+;--------------------------------------------------------;
+; Public dir relative to Erfurt base dir,                ;
+; Plug-in and widget directories relative to public dir. ;
+;--------------------------------------------------------;
+publicDir = "public/"
+pluginDir = "public/plugins/"
+widgetDir = "public/plugins/widgets/"
+
+
+;------------------------------------;
+; Access Contol Schema Configuration ;
+;------------------------------------;
+; Some schema elements can be configured here ... (some not)
+; Note: If you change these values, you have to change your access control model too!
+
+; Access Control Configuration model
+ac.modelUri      = "http://localhost/OntoWiki/Config/"
+
+; Schema URIs which define properties and classes for auth. and registration
+ac.user.class         = "http://xmlns.com/foaf/0.1/Agent"
+ac.user.name          = "http://xmlns.com/foaf/0.1/nick"
+ac.user.pass          = "http://ns.ontowiki.net/SysOnt/userPassword"
+ac.user.mail          = "http://xmlns.com/foaf/0.1/mbox"
+ac.user.superAdmin    = "http://ns.ontowiki.net/SysOnt/SuperAdmin"
+ac.user.anonymousUser = "http://ns.ontowiki.net/SysOnt/Anonymous"
+
+; Schema URIs which define properties and classes for grouping
+ac.group.class        = "http://xmlns.com/foaf/0.1/Group"
+ac.group.membership   = "http://xmlns.com/foaf/0.1/member"
+ac.group.subgroup     = "http://ns.ontowiki.net/SysOnt/subGroup"
+
+; Schema URIs which define Model Class and Model Access Control Relations
+ac.models.class       = "http://ns.ontowiki.net/SysOnt/Model"
+ac.models.grantEdit   = "http://ns.ontowiki.net/SysOnt/grantModelEdit"
+ac.models.grantView   = "http://ns.ontowiki.net/SysOnt/grantModelView"
+ac.models.denyEdit    = "http://ns.ontowiki.net/SysOnt/denyModelEdit"
+ac.models.denyView    = "http://ns.ontowiki.net/SysOnt/denyModelView"
+ac.models.anyModel    = "http://ns.ontowiki.net/SysOnt/AnyModel"
+
+; Schema URIs which define Action Class and Action Access Control Relations
+ac.action.class       = "http://ns.ontowiki.net/SysOnt/Action"
+ac.action.deny        = "http://ns.ontowiki.net/SysOnt/denyAccess"
+ac.action.grant       = "http://ns.ontowiki.net/SysOnt/grantAccess"
+ac.action.anyAction   = "http://ns.ontowiki.net/SysOnt/AnyAction"
+ac.action.login       = "http://ns.ontowiki.net/SysOnt/Login"
+
+
+;-----------------------;
+; Miscellenous settings ;
+;-----------------------;
+; Enables debugging output
+debug           = true
+
+;;
+; Enables logging up to a certain level. The log/ folder
+; needs to be writable. To disable logging at all set this
+; option to false.
+;
+; The following log levels are supported:
+; 0: Emergency: system is unusable
+; 1: Alert: action must be taken immediately
+; 2: Critical: critical conditions
+; 3: Error: error conditions
+; 4: Warning: warning conditions
+; 5: Notice: normal but significant condition
+; 6: Informational: informational messages
+; 7: Debug: debug messages
+;;
+efloglevel = false
+
+deactivateLogin = false
+
+;------------------------------;
+; Database connection settings ;
+;------------------------------;
+store.backend   = virtuoso          ; adodb, mysqli, virtuoso, redland 
+;store.schema    = rap              ; adodb, mysqli: rap | empty else
+
+;store.mysqli.host       = localhost
+;store.mysqli.username   = powl
+;store.mysqli.password   = powl
+;store.mysqli.dbname     = ow_workshop
+
+;store.backend.adodb.dbtype
+;store.backend.adodb.host
+;store.backend.adodb.username
+;store.backend.adodb.password
+;store.backend.adodb.dbname
+;store.backend.adodb.tableprefix
+
+store.virtuoso.dsn          = vos505
+store.virtuoso.username     = dba
+store.virtuoso.password     = dba
+
+;store.redland.dbname    = ef_stable     ; must support contexts;
+;store.redland.bdb_dir   = "/tmp"        ; must be writable
+
+
+
+
+; test: do we need those?
+;SysOntModelURI = "http://localhost/OntoWiki/Config/"
+;SysOntSchemaURI = "http://ns.ontowiki.net/SysOnt/"
+
+;---------------------------------------;
+; Enable Sparql-Endpoint                ;
+;---------------------------------------;
+endpoint.http = false
+
+;------------------------------------------------------------;
+; Properties to be used to generate the title of an instance ;
+;------------------------------------------------------------;
+titleProperties.label       = "http://www.w3.org/2000/01/rdf-schema#label"
+titleProperties.dctitle     = "http://purl.org/dc/elements/1.1/title"
+titleProperties.pn          = "http://senselab.med.yale.edu/property_plain_name"
+titleProperties.displayName = "http://purl.org/net/ldap#displayName"
+titleProperties.cn          = "http://purl.org/net/ldap#cn"
+titleProperties.uid         = "http://purl.org/net/ldap#uid"
+titleProperties.title       = "http://swrc.ontoware.org/ontology#title"
+titleProperties.name        = "http://swrc.ontoware.org/ontology#name"
+titleProperties.eventTitle  = "http://swrc.ontoware.org/ontology#eventTitle"
+
+;-------------------------------------------------------------;
+; Properties to be excluded from pre-fetching property values ;
+;-------------------------------------------------------------;
+;prefetchExlusionPropertiesSubject.rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" 
+;prefetchExlusionPropertiesSubject.rdfs_label = "http://www.w3.org/2000/01/rdf-schema#label" 
+
+;---------------------------------------------------------------;
+; Properties to be excluded from pre-fetching property subjects ;
+;---------------------------------------------------------------;
+prefetchExlusionPropertiesObject.rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+
+
+;-----------------------------------------------------------------------------;
+;-----------------------------------------------------------------------------;
+;------- NEW erfurt.ini ------------------------------------------------------;
+
+
+;-----------------------------------------------------------------------------;
+; caching properties                                                          ;
+;-----------------------------------------------------------------------------;
+cache.enable                            = 1                     ; clear the cache if you switch from 0 to 1!
+cache.lifetime                          = -1
+cache.type                              = sqlite                ; mysqli, sqlite
+;cache.mysqli.host                      = localhost             ; mysqli only
+;cache.mysqli.username                  = <USERNAME>            ; mysqli only
+;cache.mysqli.password                  = <PASSWORD>            ; mysqli only
+;cache.mysqli.dbname                    = <DB_NAME>             ; mysqli only
+cache.sqlite.dbname                     = ef_cache.sqlitedb     ; sqlite only
+
