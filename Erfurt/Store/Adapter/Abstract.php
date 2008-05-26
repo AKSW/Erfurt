@@ -9,7 +9,7 @@
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Abstract.php 79 2008-04-10 13:58:01Z pfrischmuth $
+ * @version    $Id$
  */
 abstract class Erfurt_Store_Adapter_Abstract
 {

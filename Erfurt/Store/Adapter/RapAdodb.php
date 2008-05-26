@@ -16,7 +16,7 @@ require_once 'adodb5/adodb.inc.php';
  * @author Sören Auer <soeren@auer.cx>
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2004 - 2007
- * @version $Id: Rap.php 1913 2008-02-25 11:04:13Z p_frischmuth $
+ * @version $Id$
  */
 class Erfurt_Store_Adapter_RapAdodb extends Erfurt_Store_Abstract 
 		implements Erfurt_Store_SparqlInterface, Erfurt_Store_SqlInterface, Erfurt_Store_CountableInterface {

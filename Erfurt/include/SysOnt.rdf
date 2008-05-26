@@ -19,7 +19,7 @@
   <owl:Ontology rdf:about=""
                 rdfs:label="OntoWiki System Ontology">
     <rdfs:comment>This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
-    <owl:versionInfo>$Id: SysOnt.rdf 1631 2007-11-13 14:54:28Z p_frischmuth $</owl:versionInfo>
+    <owl:versionInfo>$Id$</owl:versionInfo>
   </owl:Ontology>
 
 <!-- Classes -->

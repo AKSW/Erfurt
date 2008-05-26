@@ -9,7 +9,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: RapMysqli.php 99 2008-05-16 11:19:09Z norman.heino $
+ * @version    $Id$
  */
 class Erfurt_Store_Adapter_RapMysqli implements Erfurt_Store_Adapter_Interface 
 {

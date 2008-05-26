@@ -8,7 +8,7 @@ require_once 'Erfurt/App.php';
   *
   * @package ac
   * @author Stefan Berger <berger@intersolut.de>
-  * @version $Id: $
+  * @version $Id$
   */
 class Erfurt_Ac_Default {
 	

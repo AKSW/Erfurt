@@ -12,7 +12,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Virtuoso.php 103 2008-05-18 10:28:06Z norman.heino $
+ * @version    $Id$
  */
 class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 {
