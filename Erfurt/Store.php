@@ -16,6 +16,8 @@ class Erfurt_Store
     const TYPE_IRI       = 2;
     const TYPE_BLANKNODE = 3;
     
+    const COUNT_NOT_SUPPORTED = -1;
+    
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
@@ -151,6 +153,24 @@ class Erfurt_Store
         
         $this->addStatement($modelIri, $s, $p, $o, $options);
     }
+    
+    /**
+     * Counts all statements that match the SPARQL graph pattern $whereSpec.
+     *
+     * @param string $graphUri
+     * @param string $whereSpec
+     */
+    public function countWhereMatches($graphUri, $whereSpec)
+	{
+	    // TODO: owl:imports
+	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
+	        if ($this->_checkAc($graphUri)) {
+                return $this->_backendAdapter->countWhereMatches($graphUri, $whereSpec);
+	        }
+	    }
+	    
+	    return self::COUNT_NOT_SUPPORTED;
+	}
     
     /**
      * 

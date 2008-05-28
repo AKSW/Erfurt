@@ -1,4 +1,5 @@
 <?php
+require_once 'Erfurt/Sparql/SimpleQuery.php';
 require_once 'Erfurt/Store/Adapter/Interface.php';
 
 /**
@@ -34,7 +35,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     
     /** @var array */
     private $_titleProperties = array(
-        EF_RDFS_LABEL, 
+        'http://www.w3.org/2000/01/rdf-schema#label', 
         'http://purl.org/dc/elements/1.1/title'
     );
     
@@ -59,6 +60,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         if (null == $this->_connection) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Unable to connect to Virtuoso Universal Server via ODBC: ' . $this->_getLastError());
+        }
+        
+        // load title properties for model titles
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
         }
     }
     
@@ -89,19 +96,36 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 		                         $predicate, 
 		                         $object, 
 		                         $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
-	{
+	{	    
+	    if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
+	        $object = "<$object>";
+	    }
 	    // TODO: support blanknodes as subject
 	    $insertQuery = '
 	        INSERT INTO GRAPH <' . $modelUri . '> {
-	            <' . $subject . '> 
-	            <' . $predicate . '> ' . 
-	            ($options['object_type'] == Erfurt_Store::TYPE_IRI ? '<' : '') . $object . ($options['object_type'] == Erfurt_Store::TYPE_IRI ? '>' : '') . '
+	            <' . $subject . '> <' . $predicate . '> ' . $object . '
 	        }';
 	    
 	    $this->_execSparql($insertQuery);
 	}
+	
+	public function countWhereMatches($graphUri, $whereSpec)
+	{
+	    $query = new Erfurt_Sparql_SimpleQuery();
+	    $query->setProloguePart("SELECT COUNT(*)")
+	          ->addFrom($graphUri)
+	          ->setWherePart($whereSpec);
+	    
+	    if ($result = $this->sparqlQuery($query)) {
+	        $count = (int) $result[0]['callret-0'];
+	        
+	        return $count;
+	    }
+	    
+	    return 0;
+	}
     
-    public function deleteMatchingStatements($modelUri, $subject, $predicate, $object)
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
         if ($subject) {
             $subjectMatch = "AND S = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $subject . "')";
@@ -115,7 +139,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         
         $deleteSql = "
             DELETE FROM DB.DBA.RDF_QUAD
-            WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $modelUri . "')
+            WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $graphUri . "')
             " . $subjectMatch . " 
             " . $predicateMatch . " 
             " . $objectMatch . "            
@@ -145,7 +169,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
             $titleProperty = '{?graph <' . $titleProperty . '> ?graphLabel}';
         }
         
-        // This optimised query yields a union of graph IRIs with an d without a label.
+        // This optimised query yields a union of graph IRIs with and without a label.
         // Graphs w/ labels appear twice in the result set!
         $modelSparql = '
             SELECT DISTINCT ?graph' . ($withLabel ? ', ?graphLabel' : '') . '
