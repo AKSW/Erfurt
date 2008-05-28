@@ -15,25 +15,34 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param string $object (IRI, blank node or literal)
+     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
+     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
+     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
+     * the object of the statement is a literal.
      * 
-     * @throws Erfurt_Exception Throws an exception if $predicate is a blank node or if adding of statements fails.
+     * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
 	public function addStatement($modelIri, 
 	                             $subject, 
 	                             $predicate, 
 	                             $object, 
-	                             $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI));
+	                             $options = array(
+	                                 'subject_type' => Erfurt_Store::TYPE_IRI, 
+	                                 'object_type' => Erfurt_Store::TYPE_IRI));
 	
 	/**
-	 * 
-	 * @param string $modelIri
-	 * @param mixed $subject (Erfurt_Rdf_Resource or null)
-	 * @param mixed $predicate (Erfurt_Rdf_Resource (IRI, no blank node) or null)
-	 * @param mixed $object (Erfurt_Rdf_Node or null)
-	 * 
-	 * @throws Erfurt_Exception
-	 */
-	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object);
+     * 
+     * @param string $modelIri
+     * @param mixed $subject (string or null)
+     * @param mixed $predicate (string or null)
+     * @param mixed $object (string or null)
+     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
+     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
+     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype'.
+     * 
+     * @throws Erfurt_Exception
+     */
+	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options = array());
 	
 	/**
 	 * @param string $modelIri The Iri, which identifies the model.

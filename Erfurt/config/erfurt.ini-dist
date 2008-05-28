@@ -85,8 +85,15 @@ deactivateLogin = false
 ;------------------------------;
 ; Database connection settings ;
 ;------------------------------;
-store.backend   = virtuoso          ; adodb, mysqli, virtuoso, redland 
-;store.schema    = rap              ; adodb, mysqli: rap | empty else
+store.backend   = zenddb          ; adodb, mysqli, virtuoso, redland, zenddb
+store.schema    = rap              ; adodb, mysqli: rap | empty else
+
+store.zenddb.adapter    = mysqli    ; one of: 'mysqli', 'db2', 'oracle', 'pdo_ibm', 'pdo_mssql', 'pdo_mysql', 'pdo_oci',
+                                    ; 'pdo_pgsql', 'pdo_sqlite'
+store.zenddb.host       = localhost
+store.zenddb.username   = powl
+store.zenddb.password   = powl
+store.zenddb.dbname     = ow_workshop
 
 ;store.mysqli.host       = localhost
 ;store.mysqli.username   = powl
@@ -100,9 +107,9 @@ store.backend   = virtuoso          ; adodb, mysqli, virtuoso, redland
 ;store.backend.adodb.dbname
 ;store.backend.adodb.tableprefix
 
-store.virtuoso.dsn          = vos505
-store.virtuoso.username     = dba
-store.virtuoso.password     = dba
+;store.virtuoso.dsn          = vos505
+;store.virtuoso.username     = dba
+;store.virtuoso.password     = dba
 
 ;store.redland.dbname    = ef_stable     ; must support contexts;
 ;store.redland.bdb_dir   = "/tmp"        ; must be writable
