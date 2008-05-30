@@ -39,6 +39,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         'http://purl.org/dc/elements/1.1/title'
     );
     
+    private $_models = false;
+    
+    /** 
+     * An array of languages used in the store 
+     */
+    private $_languages = array();
+    
+    /**
+     * An array of languages appearing in
+     * each model.
+     */
+    private $_modelLanguages = array();
+    
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -66,6 +79,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
+        }
+        
+        $result = $this->_execSql('SELECT DISTINCT rl_id FROM DB.DBA.RDF_LANGUAGE');
+        while (odbc_fetch_row($result)) {
+            $this->_languages[] = odbc_result($result, 1);
         }
     }
     
@@ -137,12 +155,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
             $objectMatch = "AND O = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $object . "')";
         }
         
+        // TODO: do not write to DB.DBA.RDF_QUAD directly (http://docs.openlinksw.com/virtuoso/rdfdatarepresentation.html)
         $deleteSql = "
             DELETE FROM DB.DBA.RDF_QUAD
             WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $graphUri . "')
             " . $subjectMatch . " 
             " . $predicateMatch . " 
-            " . $objectMatch . "            
+            " . $objectMatch . "
         ";
         
         $this->_execSql($deleteSql);
@@ -161,62 +180,64 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getAvailableModels($withLabel = false) {
-        $modelArray = array();
-        
-        // construct triple patterns
-        foreach ($this->_titleProperties as &$titleProperty) {
-            $titleProperty = '{?graph <' . $titleProperty . '> ?graphLabel}';
-        }
-        
-        // This optimised query yields a union of graph IRIs with and without a label.
-        // Graphs w/ labels appear twice in the result set!
-        $modelSparql = '
-            SELECT DISTINCT ?graph' . ($withLabel ? ', ?graphLabel' : '') . '
-            WHERE {
-                GRAPH ?graph {
-                    {?s ?p ?o.}' . ($withLabel ? ' UNION {' . implode(' UNION ', $this->_titleProperties) . '}' : '') . '
-                }
-            }
-        ';
-        
-        $result = $this->_execSparql($modelSparql);
-        
-        while (odbc_fetch_row($result)) {
-            $graphUri = odbc_result($result, 1);
-            if ($withLabel) {
-                $graphLabel = odbc_result($result, 2);
-            }
+    public function getAvailableModels($withTitle = false) {        
+        if (!$this->_models) {
+            $this->_models = array();
             
-            if (!in_array($graphUri, $this->_virtuosoSpecialModels)) {
-                if (!$withLabel) {
-                    $modelArray[$graphUri] = array(
-                        'modelIri' => $graphUri
-                    );
-                } else {
-                    if (array_key_exists($graphUri, $modelArray)) {
-                        // model already in array, set label but don't overwrite
-                        if (!array_key_exists('label', $modelArray[$graphUri])) {
-                            $modelArray[$graphUri]['label'] = $graphLabel;
+            if ($withTitle) {
+                $select = '';
+                $where  = array();
+                $order  = '';
+                
+                $where[] = ' {GRAPH ?graph {?graph <' . EF_RDF_TYPE . '> ?o.}}';
+                foreach ($this->_titleProperties as $key => $uri) {
+                    $select .= ' ?graph' . $key;
+                    $where[] = ' {GRAPH ?graph {OPTIONAL {?graph <' . $uri . '> ?graph' . $key . '}}}';
+                    $order   = ' ?graph' . $key . $order;
+                }
+                $query   = 'SELECT ?graph' . $select . ' WHERE {' . implode(' UNION ', $where) . '} ORDER BY' . $order;
+                // var_dump((string) $query);
+                
+                $result = $this->_execSparql($query);
+                while (odbc_fetch_row($result)) {
+                    $graph = odbc_result($result, 1);
+                    if (!in_array($graph, $this->_virtuosoSpecialModels)) {
+                        if (!array_key_exists($graph, $this->_models)) {
+                            $this->_models[$graph] = array('modelIri' => $graph);
                         }
-                    } else {
-                        $modelArray[$graphUri] = array('modelIri' => $graphUri);
-                        
-                        if ($graphLabel) {
-                            $modelArray[$graphUri]['label'] = $graphLabel;
+                        for ($i = 2; $i <= odbc_num_fields($result); ++$i) {
+                            $title = odbc_result($result, $i);
+                            // echo $title;exit;
+                            if (!empty($title) && !array_key_exists('label', $this->_models[$graph])) {
+                                $this->_models[$graph]['label'] = $title;
+                                break;
+                            }
                         }
                     }
                 }
             }
+            
+            // TODO: this slower method must be used for graphs that do not contain statements
+            // about themselves
+            // $graphSql = 'SELECT DISTINCT ID_TO_IRI(G) FROM DB.DBA.RDF_QUAD';
+            // $result = $this->_execSql($graphSql);
+            // 
+            // while (odbc_fetch_row($result)) {
+            //     $graph = odbc_result($result, 1);
+            //     if (!in_array($graph, $this->_virtuosoSpecialModels)) {
+            //         if (!array_key_exists($graph, $this->_models)) {
+            //             $this->_models[$graph] = array('modelIri' => $graph);
+            //         }
+            //     }
+            // }
         }
-        
-        return $modelArray;
+        // var_dump($this->_models);
+        return $this->_models;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function getModel($modelUri) 
-    {        
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
+    {
         $owlQuery = new Erfurt_Sparql_SimpleQuery();
         $owlQuery->setProloguePart('ASK ')
                  ->setWherePart('WHERE {
@@ -234,8 +255,30 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
             require_once 'Erfurt/Rdfs/Model.php';
             $model = new Erfurt_Rdfs_Model($modelUri, 'TODO');
         }
-                
+        
         return $model;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getModelLanguages($modelUri)
+    {
+        if (!array_key_exists($modelUri, $this->_modelLanguages)) {
+            $this->_modelLanguages[$modelUri] = array();
+            
+            $query = new Erfurt_Sparql_SimpleQuery();
+            $query->setProloguePart('ASK')
+                  ->addFrom($modelUri);
+            
+            foreach ($this->_languages as $language) {
+                $query->setWherePart('WHERE {?s ?p ?o. FILTER (lang(?o) = "' . $language . '")}');
+                var_dump((string) $query);
+                if ($this->sparqlAsk($query)) {
+                    array_push($this->_modelLanguages[$modelUri], $lang);
+                }
+            }
+        }
+        
+        return $this->_modelLanguages[$modelUri];
     }
     
     /** @see Erfurt_Store_Adapter_Interface */ 
