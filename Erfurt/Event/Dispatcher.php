@@ -12,6 +12,9 @@
  */
 class Erfurt_Event_Dispatcher
 {
+    /** @var Zend_Logger */
+    protected $_logger = null;
+    
     /** @var Erfurt_Event_Dispatcher */
     private static $_instance = null;
     
@@ -43,6 +46,8 @@ class Erfurt_Event_Dispatcher
      * be set: 
      * - class_name: the name of the handler class
      * - include_path: path where the class' implementation file can be found
+     * - method_name: optional. specifies the method that handles the event.
+     *                Same as the event name by default.
      *
      * @param string $eventName
      * @param object|array $handler
@@ -58,6 +63,7 @@ class Erfurt_Event_Dispatcher
         if (is_object($handler)) {
             // simply store handling object
             $this->_registeredEvents[$eventName][] = $handler;
+            $this->_logger->info(get_class($handler) . " registered for event '$eventName'");
         } else if (is_array($handler)) {
             // or check mandatory parameters
             if (!array_key_exists('class_name', $handler)) {
@@ -72,6 +78,7 @@ class Erfurt_Event_Dispatcher
             
             // and add handler class info
             $this->_registeredEvents[$eventName][] = $handler;
+            $this->_logger->info($handler['class_name'] . " registered for event '$eventName'");
         }
         // var_dump($this->_registeredEvents);
     }
@@ -85,7 +92,6 @@ class Erfurt_Event_Dispatcher
     {
         $arguments = func_get_args();
         array_shift($arguments);
-        
         
         // init with original value or null
         // if (isset($arguments[0])) {
@@ -113,16 +119,22 @@ class Erfurt_Event_Dispatcher
                 }
                 
                 if (is_object($handlerObject)) {
+                    // use event name as handler method if not specified otherwise
+                    if (array_key_exists('method_name', $handler)) {
+                        $handlerMethod = $handler['method_name'];
+                    } else {
+                        $handlerMethod = $eventName;
+                    }
                     // let's see if it handles the event
                     if (method_exists($handlerObject, $eventName)) {
                         // invoke event method
-                        $refectionMethod = new ReflectionMethod(get_class($handlerObject), $eventName);
-                        if ($tempResult = $refectionMethod->invokeArgs($handlerObject, $arguments)) {
+                        $reflectionMethod = new ReflectionMethod(get_class($handlerObject), $handlerMethod);
+                        if ($tempResult = $reflectionMethod->invokeArgs($handlerObject, $arguments)) {
                             $result = $tempResult;
                         }
                     }
                 } else {
-                    // TODO: throw exception?
+                    // TODO: throw exception or log error?
                 }
             }
         }
@@ -133,7 +145,10 @@ class Erfurt_Event_Dispatcher
     /**
      * Constructor
      */
-    private function __construct() {}
+    private function __construct()
+    {
+        $this->_logger = Erfurt_App::getInstance()->getLog();
+    }
     
     /**
      * Returns a previously created instance of a handler class or 

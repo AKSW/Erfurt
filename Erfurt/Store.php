@@ -488,8 +488,8 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
 
     /**
-     * Checks whehter 'view' or 'edit' is allowed on a certain model. The additional $useAc param
-     * makes it easy to handle whether to check access control or not. Just pass this parameter through.
+     * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param
+     * makes it easy to disable access control for internal usage.
      * 
      * @param string $modelIri The Iri, which identifies the model.
      * @param string $accessType Supported access types are 'view' and 'edit'.
@@ -518,18 +518,26 @@ class Erfurt_Store
         $logger         = Erfurt_App::getInstance()->getLog();
         $sysOntSchema   = $config->sysOnt->schemaUri;
         $schemaLocation = $config->sysOnt->schemaLocation;
+        $schemaPath     = EF_BASE . $config->sysOnt->schemaPath;
         $sysOntModel    = $config->sysOnt->modelUri;
         $modelLocation  = $config->sysOnt->modelLocation;
+        $modelPath      = EF_BASE . $config->sysOnt->modelPath;
         
         // check for system ontology
         if (!$this->_backendAdapter->isModelAvailable($sysOntSchema)) {
             $logger->info('System schema model not found. Loading model ...');
             
-            // load SysOnt
-            $test = $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdf', 'url');
+            if (is_readable($schemaPath)) {
+                // load SysOnt from file
+                $test = $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdf', 'file');
+            } else {
+                // load SysOnt from Web
+                $test = $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdf', 'url');
+            }
+            
             if (!$test instanceof Erfurt_Rdf_Model) {
                 require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Unable to load System Ontology schema from URL: <' . $schemaLocation . '>');
+                throw new Erfurt_Exception('Unable to load System Ontology schema.');
             }
             
             $logger->info('System schema successfully loaded.');
@@ -539,11 +547,17 @@ class Erfurt_Store
         if (!$this->_backendAdapter->isModelAvailable($sysOntModel)) {
             $logger->info('System configuration model not found. Loading model ...');
             
-            // load SysOnt Model
-            $test = $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdf', 'url');
+            if (is_readable($modelPath)) {
+                // // load SysOnt Model from file
+                $test = $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdf', 'file');
+            } else {
+                // // load SysOnt Model from Web
+                $test = $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdf', 'url');
+            }
+            
             if (!$test instanceof Erfurt_Rdf_Model) {
                 require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Unable to load System Ontology model from URL: <' . $modelLocation . '>');
+                throw new Erfurt_Exception('Unable to load System Ontology model.');
             }
             
             $logger->info('System schema successfully loaded.');

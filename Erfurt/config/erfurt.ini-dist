@@ -4,11 +4,13 @@
 ;------------------------------------;
 ; System configuration ontology
 sysOnt.schemaUri      = "http://ns.ontowiki.net/SysOnt/"
-sysOnt.schemaLocation = "http://powl.svn.sourceforge.net/viewvc/*checkout*/powl/trunk/erfurt/api/Erfurt/SysOnt.rdf"
+sysOnt.schemaLocation = "http://ontowiki.googlecode.com/svn/trunk/erfurt/src/Erfurt/include/SysOnt.rdf"
+sysOnt.schemaPath     = "include/SysOnt.rdf"
 
 ; System configuration model (local)
 sysOnt.modelUri      = "http://localhost/OntoWiki/Config/"
-sysOnt.modelLocation = "http://powl.svn.sourceforge.net/viewvc/*checkout*/powl/trunk/erfurt/api/Erfurt/SysOntLocal.rdf"
+sysOnt.modelLocation = "http://ontowiki.googlecode.com/svn/trunk/erfurt/src/Erfurt/include/SysOntLocal.rdf"
+sysOnt.modelPath     = "include/SysOntLocal.rdf"
 
 ;--------------------------------------------------------;
 ; Public dir relative to Erfurt base dir,                ;

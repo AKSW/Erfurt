@@ -80,11 +80,11 @@ class Erfurt_Plugin_Manager
             return;
         }
         
-        if (is_array($pluginConfig['events'])) {
+        if (array_key_exists('events', $pluginConfig) and is_array($pluginConfig['events'])) {
             foreach ($pluginConfig['events'] as $event) {
                 if (is_array($event)) {
                     // TODO: allow trigger method that differs from event name
-                } else {
+                } else if (is_string($event)) {
                     $pluginSpec = array(
                         'class_name'   => ucfirst($pluginName), 
                         'include_path' => $pluginPath
