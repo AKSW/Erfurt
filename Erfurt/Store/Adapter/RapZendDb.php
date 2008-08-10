@@ -22,6 +22,12 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     
     private $_dbConn = false;
     
+    /** @var array */
+    private $_titleProperties = array(
+        'http://www.w3.org/2000/01/rdf-schema#label', 
+        'http://purl.org/dc/elements/1.1/title'
+    );
+    
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -47,7 +53,8 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
             'host'      => $host,
             'username'  => $username,
             'password'  => $password,
-            'dbname'    => $dbname
+            'dbname'    => $dbname,
+            'profiler'  => true
         );
         
         switch (strtolower($adapter)) {
@@ -97,14 +104,16 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
             $this->_dbConn->getConnection();
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
+            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Could not connect to database.', -1);
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
+            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
         }
         
         // we want indexed results
-        $this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
+        //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
                 
         try {
             // try to fetch model and namespace infos... if all tables are present this should not lead to an error.
@@ -119,11 +128,18 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
                 throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.', -1);
             }   
         }
+        
+        // load title properties for model titles
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
+        }
     }
     
     public function __destruct() 
-    {    
-        $this->_dbConn->closeConnection();
+    {   
+        //var_dump($this->_dbConn);exit;
+        //$this->_dbConn->closeConnection();
     }
     
     // ------------------------------------------------------------------------
@@ -248,10 +264,12 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
                 
             if ($withTitle === true) {
 // TODO add title here
-                $m['title'] = 'NOT IMPLEMENTED YET.';
+                if (isset($mInfo['title'])) {
+                    $m['label'] = $mInfo['title'];
+                }
             }
                 
-            $models[] = $m;   
+            $models[$mInfo['modelIri']] = $m;   
         }
         
         return $models;
@@ -311,16 +329,16 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-	public function getSupportedExportFormats()
-	{
-	    return array('xml', 'n3', 'nt');
-	}
-	
-	/** @see Erfurt_Store_Adapter_Interface */
-	public function getSupportedImportFormats()
-	{
-	    return array('xml', 'n3', 'nt');
-	}
+    public function getSupportedExportFormats()
+    {
+        return array('xml', 'n3', 'nt');
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getSupportedImportFormats()
+    {
+        return array('xml', 'n3', 'nt');
+    }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($modelIri, $data, $type, $locator)
@@ -346,7 +364,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery(Erfurt_Sparql_SimpleQuery $query, $resultform = 'plain') 
-    {   return array();
+    {
         require_once 'Erfurt/Sparql/EngineDb/Adapter/RapZendDb.php';
         $engine = new Erfurt_Sparql_EngineDb_Adapter_RapZendDb($this->_dbConn, $this->_modelInfoCache);
                 
@@ -355,6 +373,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         $query = $parser->parse((string)$query);        
                 
         $result = $engine->queryModel($query, $resultform);
+        //var_dump($this->_dbConn->getProfiler());exit;
         
         return $result;   
     }
@@ -457,21 +476,64 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         if ($cachedVal) {
             $this->_modelInfoCache = $cachedVal;
         } else {
-            $sql = 'SELECT m.modelID, m.modelURI, m.baseURI, n.namespace, n.prefix, s.object,
-                    (SELECT count(*) as is_owl_ontology 
-                     FROM statements s2 
-                     WHERE s2.modelID = m.modelID AND s2.subject = m.modelURI AND s2.subject_is = "r" 
-                     AND s2.predicate = "' . EF_RDF_TYPE . '" AND s2.object = "' . EF_OWL_ONTOLOGY . '"
-                     AND s2.object_is = "r")
-                FROM models m 
-                LEFT JOIN namespaces n ON (m.modelID = n.modelID) 
-                LEFT JOIN statements s ON (m.modelID = s.modelID AND m.modelURI = s.subject 
-                AND s.predicate = "' . EF_OWL_IMPORTS. '" AND s.object_is = "r")';
-        
-    
-            $result = $this->_dbConn->query($sql);
+            $sql = 'SELECT m.modelID, m.modelURI, m.baseURI, n.namespace, n.prefix, s.object, s3.object AS title, 
+                        (SELECT count(*) 
+                        FROM statements s2 
+                        WHERE s2.modelID = m.modelID 
+                        AND s2.subject = m.modelURI 
+                        AND s2.subject_is = "r" 
+                        AND s2.predicate = "' . EF_RDF_TYPE . '" 
+                        AND s2.object = "' . EF_OWL_ONTOLOGY . '" 
+                        AND s2.object_is = "r") as is_owl_ontology 
+                    FROM models m 
+                    LEFT JOIN namespaces n ON (m.modelID = n.modelID) 
+                    LEFT JOIN statements s ON (m.modelID = s.modelID 
+                        AND m.modelURI = s.subject 
+                        AND s.predicate = "' . EF_OWL_IMPORTS. '" 
+                        AND s.object_is = "r") 
+                    LEFT JOIN statements s3 ON (m.modelID = s3.modelID 
+                        AND m.modelURI = s3.subject 
+                        AND s3.subject_is = "r" 
+                        AND s3.object_is = "l" 
+                        AND (';
             
-            //var_dump($result->fetchAll());exit;
+            for ($i=0; $i<count($this->_titleProperties); ++$i) {
+                $sql .= 's3.predicate = "' . $this->_titleProperties[$i] . '"';
+                
+                if ($i < count($this->_titleProperties)-1) {
+                    $sql .= ' OR ';
+                }
+            }
+            
+            $sql .= '))';
+                        
+            // $countSelect = $this->_dbConn->select();
+            //             
+            //             $countWhereCondition = 's2.modelID = m.modelID AND s2.subject = m.modelURI AND s2.subject_is = `r`' .
+            //                                     ' AND s2.predicate = `' . EF_RDF_TYPE . '` AND s2.object = `' . EF_OWL_ONTOLOGY .
+            //                                     '` AND s2.object_is = `r`';
+            //             
+            //             $countSelect
+            //                 ->from(array('s2' => 'statements'), array('count(*)'))
+            //                 ->where($countWhereCondition);
+            //             
+            //             $select = $this->_dbConn->select();
+            // 
+            //             $sJoinCondition = 'm.modelID = s.modelID AND m.modelURI = s.subject AND s.predicate = `' . 
+            //                                 EF_OWL_IMPORTS . '` AND s.object_is = `r`';
+            //             
+            //             $select
+            //                 ->from(array('m' => 'models'), array('modelID', 'modelURI', 'baseURI'))
+            //                 ->joinLeft(array('n' => 'namespaces'), 'm.modelID = n.modelID', array('namespace', 'prefix'));
+            //                 //->joinLeft(array('s' => 'statements'), $sJoinCondition, array('object'));
+    
+   
+    
+            //$result = $select->query();
+            //var_dump((string)$select);exit;
+            //var_dump($select->query()->fetchAll());exit;
+            
+            $result = $this->_dbConn->query($sql);
             
             if ($result === false) {
                 require_once 'Erfurt/Exception.php';
@@ -481,35 +543,48 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
                 
                 $rowSet = $result->fetchAll();
                 foreach ($rowSet as $row) {
-                    if (!isset($this->_modelInfoCache["$row[1]"])) {
-                        $this->_modelInfoCache["$row[1]"]['modelId'] = $row[0];
-                        $this->_modelInfoCache["$row[1]"]['modelIri'] = $row[1];
-                        $this->_modelInfoCache["$row[1]"]['baseIri'] = $row[2];
-                        $this->_modelInfoCache["$row[1]"]['namespaces'] = array();
-                        $this->_modelInfoCache["$row[1]"]['imports'] = array();
+                    if (!isset($this->_modelInfoCache[$row['modelURI']])) {
+                        $this->_modelInfoCache[$row['modelURI']]['modelId']      = $row['modelID'];
+                        $this->_modelInfoCache[$row['modelURI']]['modelIri']     = $row['modelURI'];
+                        $this->_modelInfoCache[$row['modelURI']]['baseIri']      = $row['baseURI'];
+                        $this->_modelInfoCache[$row['modelURI']]['namespaces']   = array();
+                        $this->_modelInfoCache[$row['modelURI']]['imports']      = array();
                     
                         // set the type of the model
-                        if ($row[6] > 0) {
-                            $this->_modelInfoCache["$row[1]"]['type'] = 'owl';
+                        if ($row['is_owl_ontology'] > 0) {
+                            $this->_modelInfoCache[$row['modelURI']]['type'] = 'owl';
                         } else {
-                            $this->_modelInfoCache["$row[1]"]['type'] = 'rdfs';
+                            $this->_modelInfoCache[$row['modelURI']]['type'] = 'rdfs';
                         }
 
-                        if ($row[3] !== null && !isset($this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"])) {
-                            $this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+                        if ($row['namespace'] !== null &&
+                                !isset($this->_modelInfoCache[$row['modelURI']]['namespaces'][$row['namespace']])) {
+                            
+                            $this->_modelInfoCache[$row['modelURI']]['namespaces'][$row['namespace']] = $row['prefix'];
                         }
-                        if ($row[5] !== null && !isset($this->_modelInfoCache["$row[1]"]['imports']["$row[5]"])) {
-                            $this->_modelInfoCache["$row[1]"]['imports']["$row[5]"] = $row[5];
+                        if ($row['object'] !== null &&
+                         !isset($this->_modelInfoCache[$row['modelURI']]['imports'][$row['object']])) {
+                            $this->_modelInfoCache[$row['modelURI']]['imports'][$row['object']] = $row['object'];
+                        }
+                        
+                        if ($row['title'] !== null) {
+                            $this->_modelInfoCache[$row['modelURI']]['title'] = $row['title'];
                         }
                     } else {
-                        if ($row[3] !== null && !isset($this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"])) {
-                            $this->_modelInfoCache["$row[1]"]['namespaces']["$row[3]"] = $row[4];
+                        if ($row['namespace'] !== null &&
+                                !isset($this->_modelInfoCache[$row['modelURI']]['namespaces'][$row['namespace']])) {
+                            
+                            $this->_modelInfoCache[$row['modelURI']]['namespaces'][$row['namespace']] = $row['prefix'];
                         }
-                        if ($row[5] !== null && !isset($this->_modelInfoCache["$row[1]"]['imports']["$row[5]"])) {
-                            $this->_modelInfoCache["$row[1]"]['imports']["$row[5]"] = $row[5];
+                        if ($row['object'] !== null &&
+                                !isset($this->_modelInfoCache[$row['modelURI']]['imports'][$row['object']])) {
+                            
+                            $this->_modelInfoCache[$row['modelURI']]['imports'][$row['object']] = $row['object'];
                         }
                     }
                 }
+                
+                //var_dump($this->_modelInfoCache);exit;
                 
                 // build the transitive closure for owl:imports
                 // check for recursive owl:imports; also check for cylces!
@@ -553,7 +628,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
      * @return boolean Returns true if all tables are present.
      */
     private function _isSetup() 
-    {    
+    {    return true;
         $result = $this->_dbConn->query('SHOW TABLES');
         
         // something went wrong... missing database?!

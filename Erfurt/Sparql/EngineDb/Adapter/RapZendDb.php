@@ -103,8 +103,8 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
     *   @return array/string  array of triple arrays, or XML. Format depends on
     *                                   $resultform parameter.
     */
-    public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') {
-	
+    public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') 
+    {
         $this->query   = $query;
         #$this->dataset = $dataset;
 
@@ -134,8 +134,8 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             return $this->returnResult($vartable, $resultform);
         }
 
-
         $arSqls = $this->sg->createSql();
+
         $this->ts->setData($this->sg);
 
         return
@@ -163,8 +163,8 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
     */
     public function prepare(Dataset $dataset, Query $query)
     {
-        require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/PreparedStatement.php';
-        require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/Preparator.php';
+        //require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/PreparedStatement.php';
+        //require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/Preparator.php';
 
         $this->query   = $query;
         $this->dataset = $dataset;
@@ -262,7 +262,7 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             $nLimit  = null;
             $nSql    = 0;
         } else {
-            $offsetter = new Erfurt_Sparql_EngineDb_Offsetter_Adapter_Mysqli($this->dbConn, $this->query);
+            $offsetter = new Erfurt_Sparql_EngineDb_Offsetter_Adapter_RapZendDb($this->dbConn, $this->query);
             list($nSql, $nOffset) = $offsetter->determineOffset($arSqls);
             $nLimit    = $arSM['limit'];
         }
@@ -278,9 +278,11 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
                 $nCurrentLimit = null;
             }
 
-            $this->dbConn->setFetchMode(Zend_Db::FETCH_ASSOC);
+            //$this->dbConn->setFetchMode(Zend_Db::FETCH_ASSOC);
             $dbResult = $this->queryDb($arSql, $nOffset, $nCurrentLimit)->fetchAll();
-            $this->dbConn->setFetchMode(Zend_Db::FETCH_NUM);
+            
+            //var_dump($dbResult);exit;
+            //$this->dbConn->setFetchMode(Zend_Db::FETCH_NUM);
             
             $nCount     += count($dbResult);
             $arResults[] = $dbResult;
@@ -319,10 +321,12 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             return array();
         }
 
+
+
         #if (isset($GLOBALS['debugSparql']) && $GLOBALS['debugSparql']) {
         #    echo 'SQL query: ' . $strSql . "\n";
         #}
-
+        
         if ($nLimit === null && $nOffset == 0) {
             $ret = $this->dbConn->query($strSql);
         } else if ($nLimit === null) {
@@ -336,10 +340,10 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             //$ret = $this->dbConn->sqlQueryLimit($strSql, $nLimit, $nOffset, 'assoc');
             $ret = $this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
             
-			
 
         }
-        
+//var_dump($ret);
+//Erfurt_App::getInstance()->getLog()->debug(array_pop(array_values(array_pop($ret))));
         return $ret;
     }//function queryDb($sql)
 

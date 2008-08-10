@@ -822,7 +822,7 @@ var_dump($tree);
 *   Objects of this class can transparently be used in strings since
 *   its __toString() returns the value.
 */
-class SparqlEngineDb_FilterGenerator_Value
+class Erfurt_Sparql_EngineDb_FilterGenerator_Value
 {
     public $value = null;
     public $type  = null;

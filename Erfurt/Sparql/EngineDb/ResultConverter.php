@@ -46,7 +46,7 @@ class Erfurt_Sparql_EngineDb_ResultConverter
         }
 
         if ($resultform === false) {
-            $resultform = 'Default';
+            $resultform = 'Plain';
         } else if ($resultform == 'xml') {
             //kept for BC reasons
             $resultform = 'XML';
@@ -54,7 +54,7 @@ class Erfurt_Sparql_EngineDb_ResultConverter
 
         if ($strClass = self::loadClass($resultform)) {
             $rrObj = new $strClass();
-            if ($rrObj instanceof SparqlEngineDb_ResultRenderer) {
+            if ($rrObj instanceof Erfurt_Sparql_EngineDb_ResultRenderer) {
                 return $rrObj->convertFromDbResults(
                     $arRecordSets,
                     $engine->getQuery(),
@@ -90,20 +90,20 @@ class Erfurt_Sparql_EngineDb_ResultConverter
 
         //RAP style, shortcut notation
         $strFile = 'SparqlEngineDb/ResultRenderer/' . $strClass . '.php';
-        @include_once RDFAPI_INCLUDE_DIR . 'sparql/' . $strFile;
+        include_once RDFAPI_INCLUDE_DIR . 'sparql/' . $strFile;
         if (class_exists('SparqlEngineDb_ResultRenderer_' . $strClass, false)) {
             return 'SparqlEngineDb_ResultRenderer_' . $strClass;
         }
 
         //RAP style
         $strFile = str_replace('_', '/', $strClass) . '.php';
-        @include_once RDFAPI_INCLUDE_DIR . 'sparql/' . $strFile;
+        include_once RDFAPI_INCLUDE_DIR . 'sparql/' . $strFile;
         if (class_exists($strClass, false)) {
             return $strClass;
         }
 
         //PEAR style
-        @include_once $strFile;
+        include_once $strFile;
         if (class_exists($strClass, false)) {
             return $strClass;
         }

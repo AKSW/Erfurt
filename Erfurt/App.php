@@ -73,7 +73,7 @@ class Erfurt_App {
         // update the include path, such that libraries like e.g. Zend are available        
         $include_path  = get_include_path() . PATH_SEPARATOR;
         $include_path .= EF_BASE . 'libraries/' . PATH_SEPARATOR;
-        set_include_path($include_path);
+        //set_include_path($include_path);
         
 // TODO better way for vocabs?!
         // include the vocabulary file
@@ -203,7 +203,7 @@ class Erfurt_App {
                 
             if ($config->efloglevel != false) {
                 $logDir = EF_BASE . 'logs/'; 
-                    
+                
                 if (!is_writable($logDir)) {
                     require_once 'Zend/Log/Writer/Null.php';
                     $logWriter = new Zend_Log_Writer_Null();
@@ -347,7 +347,7 @@ class Erfurt_App {
      * 
      */
     public function authenticate($username = 'Anonymous', $password = '')
-    {    
+    {
         // Set up the authentication adapter
         require_once 'Erfurt/Auth/Adapter/Rdf.php';
         $adapter = new Erfurt_Auth_Adapter_Rdf($this->getAcModel(), $username, $password);

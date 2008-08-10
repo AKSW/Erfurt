@@ -9,18 +9,18 @@ require_once 'Erfurt/Sparql/EngineDb/ResultRenderer.php';
 *
 *   @package sparql
 */
-class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sparql_EngineDb_ResultRenderer {
-
+class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sparql_EngineDb_ResultRenderer 
+{
     /**
-    *   Defines the methods needed to create the types
-    *   in $arVarAssignments.
-    *   Key is the type (e.g. "s" for subject), and
-    *   value the method's name.
-    *
-    *   @see $arVarAssignments
-    *
-    *   @var array
-    */
+     *   Defines the methods needed to create the types
+     *   in $arVarAssignments.
+     *   Key is the type (e.g. "s" for subject), and
+     *   value the method's name.
+     *
+     *   @see $arVarAssignments
+     *
+     *   @var array
+     */
     protected $arCreationMethods = array(
         's' => 'createSubjectFromDbRecordSetPart',
         'p' => 'createPredicateFromDbRecordSetPart',
@@ -143,15 +143,15 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
 
         //work around bug in adodb:
         // ADORecordSet_empty does not implement php5 iterators
-        if (count($result) <= 0) {
-            return array();
-        }
+        //if (count($result) === 0) {
+        //    return array();
+        //}
 
         foreach ($result as $row) {
             $arResultRow = array();
             foreach ($arResultVars as $strVar) {
                 $strVarName = (string)$strVar;
-				$strVarId = ltrim($strVar, '?$');
+                $strVarId = ltrim($strVar, '?$');
                 if (!isset($this->sg->arVarAssignments[$strVarName])) {
                     //variable is in select, but not in result (test: q-select-2)
                     $arResultRow[$strVarId] = '';
@@ -205,10 +205,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
     {
         $strVarName = (string)$strVar;
         
-        if (!isset($this->sg->arVarAssignments[$strVarName]['sql_value'])) {
-            return '';
-        }
-        
         if ($row[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test
             return '';
@@ -220,8 +216,10 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
         ) {
             return $this->createResource($row[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']]);
         } else {
+            
             return $this->createBlankNode($row[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']]);
         }
+        
         return $subject;
     }//protected function createSubjectFromDbRecordSetPart(ADORecordSet $dbRecordSet, $strVarBase, $strVar)
 
@@ -242,9 +240,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
     {
         $strVarName = (string)$strVar;
         
-        if (!isset($this->sg->arVarAssignments[$strVarName]['sql_value'])) {
-            return '';
-        }
+        
         
         if ($row[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test
@@ -269,10 +265,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
     protected function createObjectFromDbRecordSetPart($row, $strVarBase, $strVar)
     {
         $strVarName = (string)$strVar;
-        
-        if (!isset($this->sg->arVarAssignments[$strVarName]['sql_value'])) {
-            return '';
-        }
         
         if ($row[$strVarBase . '.' . $this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
             //FIXME: should be NULL, but doesn't pass test

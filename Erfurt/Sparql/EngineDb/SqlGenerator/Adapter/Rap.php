@@ -148,7 +148,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     */
     function createSql()
     {
-#var_dump($this->query);
         $arSelect   = array();
         $arFrom     = array();
         $arWhere    = array();
@@ -195,6 +194,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                             $graphPattern,
                             $arResultVars
                         );
+                        
                     ++$this->nTableId;
                     ++$this->nTriplePatternCount;
                     ++$this->nUnionTriplePatternCount;

@@ -62,7 +62,12 @@ class Erfurt_Store
             $schemaName = '';
         }
         
-        $backendName = ucfirst($backend);
+        if ($backend === 'zenddb') {
+            $backendName = 'ZendDb';
+        } else {
+            $backendName = ucfirst($backend);
+        }
+        
         
         $fileName   = 'Store/Adapter/' . $schemaName . $backendName . '.php';
         $className  = 'Erfurt_Store_Adapter_' . $schemaName . $backendName;
@@ -98,6 +103,10 @@ class Erfurt_Store
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param string $object (IRI, blank node or literal)
+     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
+     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
+     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
+     * the object of the statement is a literal.
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
@@ -175,16 +184,19 @@ class Erfurt_Store
     /**
      * 
      * @param string $modelIri
-     * @param mixed $subject (Erfurt_Rdf_Resource or null)
-     * @param mixed $predicate (Erfurt_Rdf_Resource (IRI, no blank node) or null)
-     * @param mixed $object (Erfurt_Rdf_Node or null)
+     * @param mixed $subject (string or null)
+     * @param mixed $predicate (string or null)
+     * @param mixed $object (string or null)
+     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
+     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
+     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype'.
      * 
      * @throws Erfurt_Exception
      */
-    public function deleteMatchingStatements($modelIri, $subject, $predicate, $object)
+    public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options = array())
     {
         if ($this->_checkAc($modelIri, 'edit')) {
-            return $this->_backendAdapter->deleteMatchingStatements($modelIri, $subject, $predicate, $object);
+            return $this->_backendAdapter->deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options);
         }
     }
     

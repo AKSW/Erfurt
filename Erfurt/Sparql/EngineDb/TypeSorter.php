@@ -222,10 +222,10 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 . ' as "' . $strSparqlVar . '-type"';
         }
 
-        $oldmode  = $this->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
+        //$oldmode  = $this->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
         $sql      = 'SELECT DISTINCT ' . implode(', ', $arSel) . ' ' . $strFrom . $strWhere;
-        $arResult = $this->dbConn->execute($sql);
-        $this->dbConn->SetFetchMode($oldmode);
+        $arResult = $this->dbConn->query($sql)->fetchAll();
+        //$this->dbConn->SetFetchMode($oldmode);
 
         if ($arResult === false) {
             throw new SparqlEngineDb_SqlGeneratorException(
@@ -442,7 +442,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         if ($str === null) {
             return ' IS NULL';
         } else {
-            return ' = ' . $this->dbConn->qstr($str) . '';
+            return ' = ' . $this->dbConn->quote($str) . '';
         }
     }//protected function getStringNullComparison($str)
 

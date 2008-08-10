@@ -9,7 +9,7 @@ require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
 *
 *   @package sparql
 */
-class Erfurt_Sparql_EngineDb_Offsetter_Adapter_ZendDb
+class Erfurt_Sparql_EngineDb_Offsetter_Adapter_RapZendDb
 {
     public function __construct($dbConn, Erfurt_Sparql_Query $query)
     {
@@ -80,7 +80,7 @@ class Erfurt_Sparql_EngineDb_Offsetter_Adapter_ZendDb
     *   @return string  SQL command to be appended to a query, to limit
     *                   the number of result rows returned.
     */
-    public static function getLimitSql(Query $query, ADOConnection $dbConn)
+    public static function getLimitSql(Query $query, $dbConn)
     {
         $arSM = $query->getSolutionModifier();
         if ($arSM['limit'] === null && $arSM['offset'] === null) {
