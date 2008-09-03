@@ -276,6 +276,17 @@ class Erfurt_Store
     }
     
     /**
+     * Returns the class name of the currently used backend.
+     *
+     * @return string
+     */
+    public function getBackendName() {
+        $name = get_class($this->_backendAdapter);
+        
+        return substr($name, strrpos($name, '_') + 1);
+    }
+    
+    /**
      * Returns the db connection username
      *
      * @return string
