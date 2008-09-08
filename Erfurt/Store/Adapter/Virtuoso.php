@@ -109,12 +109,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($modelUri, 
-		                         $subject, 
-		                         $predicate, 
-		                         $object, 
-		                         $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
-	{	    
+    public function addStatement($modelUri, $subject, $predicate, $object, $options = array())
+	{
+	    $defaultOptions = array(
+	        'subject_type' => Erfurt_Store::TYPE_IRI, 
+	        'object_type'  => Erfurt_Store::TYPE_IRI
+	    );
+	    $options = array_merge($defaultOptions, $options);
+	    
 	    if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
 	        $object = "<$object>";
 	    }
@@ -145,32 +147,49 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
-        if ($subject) {
-            $subjectMatch = "AND S = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $subject . "')";
-        }
-        if ($predicate) {
-            $predicateMatch = "AND P = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $predicate . "')";
-        }
-        if ($object) {
-            $objectMatch = "AND O = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $object . "')";
-        }
+        // if ($subject) {
+        //     $subjectMatch = "AND S = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $subject . "')";
+        // }
+        // if ($predicate) {
+        //     $predicateMatch = "AND P = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $predicate . "')";
+        // }
+        // if ($object) {
+        //     $objectMatch = "AND O = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $object . "')";
+        // }
+        // 
+        // // TODO: do not write to DB.DBA.RDF_QUAD directly (http://docs.openlinksw.com/virtuoso/rdfdatarepresentation.html)
+        // $deleteSql = "
+        //     DELETE FROM DB.DBA.RDF_QUAD
+        //     WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $graphUri . "')
+        //     " . $subjectMatch . " 
+        //     " . $predicateMatch . " 
+        //     " . $objectMatch . "
+        // ";
+        // 
+        // $this->_execSql($deleteSql);
         
-        // TODO: do not write to DB.DBA.RDF_QUAD directly (http://docs.openlinksw.com/virtuoso/rdfdatarepresentation.html)
-        $deleteSql = "
-            DELETE FROM DB.DBA.RDF_QUAD
-            WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $graphUri . "')
-            " . $subjectMatch . " 
-            " . $predicateMatch . " 
-            " . $objectMatch . "
-        ";
+        $subjectSpec   = $subject   ? '<' . $subject . '>'   : '?s';
+        $predicateSpec = $predicate ? '<' . $predicate . '>' : '?p';
+        $objectSpec    = $object    ? '<' . $object . '>'    : '?o';
         
-        $this->_execSql($deleteSql);
+        $deleteSparql = '
+            DELETE FROM GRAPH <' . $graphUri . '> {' . $subjectSpec . ' ' . $predicateSpec . ' ' . $objectSpec . '.}
+            WHERE {
+                GRAPH <' . $graphUri . '> {' . $subjectSpec . ' ' . $predicateSpec . ' ' . $objectSpec . '.}
+            }
+        ';
+        
+        return $this->_execSparql($deleteSparql);
     }
     
     /** @see Erfurt_Store_DataInterface */
     public function deleteModel($modelUri) 
     {
-        $this->_execSparql('DROP GRAPH <' . $modelUri . '>');
+        // $this->_execSparql('DROP GRAPH <' . $modelUri . '>');
+        return $this->_execSparql("
+            DELETE FROM GRAPH <$modelUri> {?s ?p ?o.}
+                WHERE {GRAPH <$modelUri> {?s ?p ?o.}}
+        ");
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
