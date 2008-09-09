@@ -1,4 +1,5 @@
 <?php
+
 class Erfurt_Rdf_Model {
 
     protected $_modelIri    = false;
@@ -7,8 +8,13 @@ class Erfurt_Rdf_Model {
     
     public function __construct($modelIri, $baseIri) 
     {   
-        $this->_modelIri    = $modelIri;
-        $this->_baseIri     = $baseIri;
+        $this->_modelIri = $modelIri;
+        $this->_baseIri  = $baseIri;
+    }
+    
+    public function __toString()
+    {
+        return $this->_modelIri;
     }
     
     public function getModelIri() 
@@ -26,25 +32,24 @@ class Erfurt_Rdf_Model {
         return $this->_baseIri;
     }
     
-    public function setEditable($e) {
-        
-        $this->_isEditable = $e;
+    public function setEditable($editableFlag)
+    {
+        $this->_isEditable = $editableFlag;
     }
     
-    public function sparqlQueryWithPlainResult($query) {
-        
+    public function sparqlQueryWithPlainResult($query)
+    {    
         return $this->getStore()->executeSparql($this, $query);
     }
     
-    public function getStore() {
-        
+    public function getStore()
+    {    
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
     }
     
-    public function addStatement($subject, $predicate, $object, $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type'  => Erfurt_Store::TYPE_IRI))
-    {
+    public function addStatement($subject, $predicate, $object, $options)
+    {   
         $this->getStore()->addStatement($this->getUri(), $subject, $predicate, $object, $options);
     }
 }
-?>
