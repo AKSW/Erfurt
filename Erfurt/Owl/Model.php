@@ -20,7 +20,7 @@ class Erfurt_Owl_Model extends Erfurt_Rdfs_Model
      * @param string $baseIri
      * @param array $imports
      */
-    public function __construct($modelIri, $baseIri, array $imports = array())
+    public function __construct($modelIri, $baseIri = null, array $imports = array())
     {
         parent::__construct($modelIri, $baseIri);
         
