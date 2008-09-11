@@ -266,13 +266,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         if ($this->sparqlAsk($owlQuery, $modelUri)) {
             // assume owl model
             require_once 'Erfurt/Owl/Model.php';
-            $model = new Erfurt_Owl_Model($modelUri, 'TODO');
+            $model = new Erfurt_Owl_Model($modelUri);
         // TODO: set owl:imports cache
         // TODO: base URIs
         } else {
             // instantiate RDFS model
             require_once 'Erfurt/Rdfs/Model.php';
-            $model = new Erfurt_Rdfs_Model($modelUri, 'TODO');
+            $model = new Erfurt_Rdfs_Model($modelUri);
         }
         
         return $model;

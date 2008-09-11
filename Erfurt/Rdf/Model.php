@@ -74,6 +74,17 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Returns a string representing the model instance. For convenience
+     * reasons this is in fact the model IRI.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getModelIri();
+    }
+    
+    /**
      * Adds a statements to this model
      *
      * @param string $subject
@@ -157,12 +168,5 @@ class Erfurt_Rdf_Model
     {    
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
-    }
-    
-    // kept for compatibility reason
-    // TODO: remove
-    public function __toString()
-    {
-        return $this->_modelIri;
     }
 }
