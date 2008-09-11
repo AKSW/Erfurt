@@ -51,8 +51,8 @@ class Erfurt_Rdf_Model
     );
     
     /**
-    * An array of properties used in this model to express
-    * a resource's human-readable representation.
+     * An array of properties used in this model to express
+     * a resource's human-readable representation.
      * @var array
      * @todo remove hard-coded mock title properties
      */
