@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Represents a basic RDF graph and some functional that goes beyond RDF.
+ * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
  * @package    rdf
  * @author     Philipp Frischmuth
