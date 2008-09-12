@@ -40,6 +40,16 @@ class Erfurt_Owl_Model extends Erfurt_Rdfs_Model
         
         return $this->_imports;
     }
+    
+    /**
+     * Resource factory method
+     *
+     * @return Erfurt_Owl_Resource
+     */
+    public function getResource($resourceIri)
+    {
+        return parent::getResource($resourceIri);
+    }
 }
 
 

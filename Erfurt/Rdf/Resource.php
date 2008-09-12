@@ -1,99 +1,115 @@
 <?php
+
 require_once 'Erfurt/Rdf/Node.php';
 
-class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node {
-	
-	protected $_namespace = false;
-	protected $_localName = false;
-	
-	protected function __construct($namespace, $localName) {
-		
-		$this->_namespace = $namespace;
-		$this->_localName = $localName;
-	}
-	
-	public static function initWithNamespaceAndLocalName($namespace, $localName) {
-		
-		return new Erfurt_Rdf_Resource($namespace, $localName);
-	}
-	
-	public static function initWithIri($uri) {
-		
-		return new Erfurt_Rdf_Resource(false, $uri);
-	}
-	
-	/**
-	 * @throws Erfurt_Exception
-	 */ 
-	public static function initWithQName($qname) {
-		
-	}
-	
-	public static function initWithBlankNodeId($id) {
-		
-		return new Erfurt_Rdf_Resource('_', $id);
-	}
-	
-	/**
-	 * @throws Erfurt_Exception
-	 */
-	public function getUri() {
-		
-		// check whether the localname contains the full uri (namespace = false)
-		if (!$this->_namespace) {
-			return $this->_localName;
-		}
-		// check whether this is a blank node (localname = '_')
-		else if ($this->isBlankNode()) {
-// TODO code
-			require_once 'Erfurt/Exception.php';
-			throw new Erfurt_Exception('resource is a blank node; use getId or getLabel instead');	
-		}	
-		// else return the concatenation of namespace and localname	
-		else {
-			return ($this->_namespace . $this->_localName);
-		}	
-	}
-	
-	/**
-	 * @throws Erfurt_Exception
-	 */
-	public function getId() {
-		
-		if (!$this->isBlankNode()) {
-// TODO code
-			require_once 'Erfurt/Exception.php';
-			throw new Erfurt_Exception('resource is not a blank node, use getUri or getLabel instead');
-		} else {
-			return ($this->_namespace . ':' . $this->_localName);
-		}
-	}
-	
-	public function getLabel() {
-		
-		$label = null;
-		try {
-			// this will fail iff this is a blanknode
-			$label = $this->getUri();
-		} catch (Exception $e) {
-			$label = $this->getId();
-		}
-		
-		return $label;
-	}
-	
-	public function isBlankNode() {
-		
-		if ($this->_namespace === '_') {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public function isUri() {
-		
-		return !$this->isBlankNode();
-	}
+/**
+ * Represents a basic RDF resource.
+ *
+ * @package    rdf
+ * @author     Philipp Frischmuth
+ * @author     Norman Heino <norman.heino@gmail.com>
+ * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version    $Id$
+ */
+class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
+{
+    /**
+     * The mode to which this resource belongs.
+     * @var Erfurt_Rdf_Model
+     */
+    protected $_model = null;
+    
+    /**
+     * The name of the resource (either a IRI or a local name)
+     * @var string
+     */
+    protected $_name = null;
+    
+    /**
+     * The namespace this resource's IRI is contained in.
+     * @var string
+     */
+    protected $_namespace = null;
+    
+    /**
+     * A namespace prefix.
+     * @var string
+     */
+    protected $_prefix = null;
+    
+    /**
+     * Delimiter between namespace prefix and local name.
+     * @var string
+     */
+    protected $_qualifiedNameDelimiter = ':';
+    
+    /**
+     * Constructor
+     *
+     * @param string $iri
+     * @param Erfurt_Rdf_Model $model
+     */
+    public function __construct($iri, Erfurt_Rdf_Model $model)
+    {
+        $this->_model = $model;
+        $namespaces   = $this->_model->getNamespaces();
+        $matches      = array();
+        
+        // parse namespace/local part
+        preg_match('/^(.+[#\/])(.+[^#\/])$/', $iri, $matches);
+        
+        $flag = false;
+        
+        if (count($matches) >= 3) {
+            // match namespace
+            if (array_key_exists($matches[1], $namespaces)) {
+                $flag = true;
+                $this->_namespace = $matches[1];
+                $this->_name      = $matches[2];
+                $this->_prefix    = $namespaces[$this->_namespace];
+            }
+        }
+        
+        // no namespace found/matched
+        if (!$flag) {
+            $this->_name = $iri;
+        }
+    }
+    
+    /**
+     * Returns a string representation of this resource.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getIri();
+    }
+    
+    /**
+     * Returns the resource's IRI
+     *
+     * @return string
+     */
+    public function getIri()
+    {
+        return $this->_namespace . $this->_name;
+    }
+    
+    /**
+     * Returns a qualified name for the resource or null.
+     *
+     * @return string|null
+     */
+    public function getQualifiedName()
+    {
+        if ($this->_prefix) {
+            $qName = $this->_prefix 
+                   . $this->_qualifiedNameDelimiter
+                   . $this->_name;
+            
+            return $qName;
+        }
+    }
 }
-?>

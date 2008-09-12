@@ -137,6 +137,17 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Resource factory method
+     *
+     * @return Erfurt_Rdf_Resource
+     */
+    public function getResource($resourceIri)
+    {
+        require_once 'Erfurt/Rdf/Resource.php';
+        return new Erfurt_Rdf_Resource($resourceIri, $this);
+    }
+    
+    /**
      * Returns an array of properties used in this model to express
      * a resource's human-readable representation.
      *
