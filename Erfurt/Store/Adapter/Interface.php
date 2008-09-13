@@ -142,7 +142,7 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $askSparql
      * @param boolean $useAc Whether to check for access control.
      */
-	public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query);
+	public function sparqlAsk($query);
 	
 	/**
      * @param string $query A string containing a sparql query
@@ -156,7 +156,7 @@ interface Erfurt_Store_Adapter_Interface
      * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $query, $resultform = 'plain');
+    public function sparqlQuery($query, $resultform = 'plain');
 }
 
 ?>

@@ -257,11 +257,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     /** @see Erfurt_Store_Adapter_Interface */
     public function getModel($modelUri) 
     {
-        $owlQuery = new Erfurt_Sparql_SimpleQuery();
-        $owlQuery->setProloguePart('ASK ')
-                 ->setWherePart('WHERE {
-                     GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}
-                 }');
+        $owlQuery = '
+            ASK WHERE {
+                GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}
+            }';
         
         if ($this->sparqlAsk($owlQuery, $modelUri)) {
             // assume owl model
@@ -284,13 +283,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         if (!array_key_exists($modelUri, $this->_modelLanguages)) {
             $this->_modelLanguages[$modelUri] = array();
             
-            $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setProloguePart('ASK')
-                  ->addFrom($modelUri);
-            
             foreach ($this->_languages as $language) {
-                $query->setWherePart('WHERE {?s ?p ?o. FILTER (lang(?o) = "' . $language . '")}');
-                var_dump((string) $query);
+                $query = 'ASK FROM <' . $modelUri . '> WHERE {?s ?p ?o. FILTER (lang(?o) = "' . $language . '")}';
+                
                 if ($this->sparqlAsk($query)) {
                     array_push($this->_modelLanguages[$modelUri], $lang);
                 }
@@ -374,16 +369,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
      * @param string $modelUri
      * @param string $saprqlAsk
      */
-    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $queryObject)
+    public function sparqlAsk($query)
     {
         // load owl:imports
-        foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
-                $queryObject->addFrom($importedGraphUri);
-            }
-        }
+        // foreach ($queryObject->getFrom() as $fromGraphUri) {
+        //     foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
+        //         $queryObject->addFrom($importedGraphUri);
+        //     }
+        // }
         
-        $result = $this->_execSparql((string) $queryObject);
+        $result = $this->_execSparql($query);
         
         if (odbc_result($result, 1) == '1') {
             return true;
@@ -393,20 +388,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $resultform = 'plain') 
+    public function sparqlQuery($query, $resultform = 'plain') 
     {    
         $resultArray    = array();
         $resultRow      = array();
         $resultRowNamed = array();
         
         // load owl:imports
-        foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
-                $queryObject->addFrom($importedGraphUri);
-            }
-        }
+        // foreach ($queryObject->getFrom() as $fromGraphUri) {
+        //     foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
+        //         $queryObject->addFrom($importedGraphUri);
+        //     }
+        // }
         
-        $result = $this->_execSparql((string) $queryObject);
+        $result = $this->_execSparql($query);
         
         // get number of fields (columns)
         $numFields = odbc_num_fields($result);

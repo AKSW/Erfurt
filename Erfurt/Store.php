@@ -1,10 +1,11 @@
 <?php
 /**
- * @package    store
- * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @package   store
+ * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author    Norman Heino <norman.heino@gmail.com>
+ * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version   $Id$
  */
 class Erfurt_Store
 {   
@@ -22,15 +23,54 @@ class Erfurt_Store
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * Username of the super user who gets unrestricted access
+     * @var string
+     */
     protected $_dbUser = null;
+    
+    /**
+     * Password of the super user who gets unrestricted access
+     * @var string
+     */
     protected $_dbPass = null;
     
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
     
-    private $_backendAdapter = null;
+    /**
+     * Access control instance
+     * @var Erfurt_Ac_Default
+     */
     private $_ac = null;
+    
+    /**
+     * The name of the backend adapter instance in use.
+     * @var string
+     */
+    private $_backendName = null;
+    
+    /**
+     * The backend adapter instance in use.
+     * @var Erfurt_Store_Backend_Adapter_Interface
+     */
+    private $_backendAdapter = null;
+    
+    /**
+     * Caching array for imported model IRIs.
+     * Format: array(<model IRI> => array(<imported IRI>, ...))
+     * @var array
+     */
+    private $_importedModels = array();
+    
+    /**
+     * Optional methods a backend adapter can implement
+     * @var array
+     */
+    private $_optionalMethods = array(
+        'countWhereMatches'
+    );
     
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -39,9 +79,9 @@ class Erfurt_Store
     /**
      * Constructor method.
      * 
-     * @var string $backend virtuoso, mysqli, adodb, redland
-     * @var array $backendOptions
-     * @var string/null $schema rap 
+     * @param string $backend virtuoso, mysqli, adodb, redland
+     * @param array $backendOptions
+     * @param string/null $schema rap 
      * 
      * @throws Erfurt_Exception Throws an exception if store is not supported or store does not implement the store     
      * adapter interface.
@@ -63,32 +103,47 @@ class Erfurt_Store
         }
         
         if ($backend === 'zenddb') {
-            $backendName = 'ZendDb';
+            $this->_backendName = 'ZendDb';
         } else {
-            $backendName = ucfirst($backend);
+            $this->_backendName = ucfirst($backend);
         }
         
+        $fileName   = 'Store/Adapter/' 
+                    . $schemaName 
+                    . $this->_backendName 
+                    . '.php';
         
-        $fileName   = 'Store/Adapter/' . $schemaName . $backendName . '.php';
-        $className  = 'Erfurt_Store_Adapter_' . $schemaName . $backendName;
+        $className  = 'Erfurt_Store_Adapter_' 
+                    . $schemaName 
+                    . $this->_backendName;
         
+        // import backend adapter file
         if (is_readable((EF_BASE . $fileName))) {
             require_once $fileName;
         } else {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Backend (with schema) is not supported, for file was not found.');
+            $msg = "Backend '$this->_backendName' " 
+                 . ($schema ? "with schema '$schemaName'" : "") 
+                 . " not supported. No suitable backend adapter found.";
+            throw new Erfurt_Exception($msg);
         }
         
+        // check class exsitence
         if (!class_exists($className)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Backend (with schema) is not supported, for class was not found.');
+            $msg = "Backend '$this->_backendName' " 
+                 . ($schema ? "with schema '$schemaName'" : "") 
+                 . " not supported. No suitable backend adapter class found.";
+            throw new Erfurt_Exception($msg);
         }
         
+        // instantiate backend adapter
         $this->_backendAdapter = new $className($backendOptions);
         
+        // check interface conformance
         if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Adpater class does not implement Erfurt_Store_Adapter_Interface.');
+            throw new Erfurt_Exception('Adpater class must implement Erfurt_Store_Adapter_Interface.');
         }
         
         $this->_checkSetup();
@@ -110,9 +165,15 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-    public function addStatement($modelIri, $subject, $predicate, $object, 
-            $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type'  => Erfurt_Store::TYPE_IRI))
+    public function addStatement($modelIri, $subject, $predicate, $object, $options = array())
     {
+        $defaults = array(
+            'subject_type' => Erfurt_Store::TYPE_IRI, 
+            'object_type'  => Erfurt_Store::TYPE_IRI
+        );
+        
+        $options = array_merge($defaults, $options);
+        
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
             require_once 'Erfurt/Exception.php';
@@ -137,20 +198,22 @@ class Erfurt_Store
      * @throws Erfurt_Exception Throws an exception if predicate $p is a blank node or if addition of statements
      * fails.
      */
-    public function addStatementFromObjects($modelIri, Erfurt_Rdf_Resource $subject, Erfurt_Rdf_Resource $predicate, 
-            Erfurt_Rdf_Node $object)
+    public function addStatementFromObjects($modelIri, 
+                                            Erfurt_Rdf_Resource $subject, 
+                                            Erfurt_Rdf_Resource $predicate, 
+                                            Erfurt_Rdf_Node $object)
     {
         if ($predicate->isBlankNode()) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Predicate must not be a blank node.');
         }
         
+        // TODO: why getting labels here?
         $s = $subject->getLabel();
         $p = $predicate->getLabel();
         $o = $object->getLabel();
         
         $options = array();
-        
         $options['subject_type'] = ($subject->isBlankNode()) ? self::TYPE_BLANKNODE : self::TYPE_IRI;
         $options['object_type'] = ($object instanceof Erfurt_Rdf_Literal) ? self::TYPE_LITERAL : 
                         ($object->isBlankNode()) ? self::TYPE_BLANKNODE : self::TYPE_IRI;
@@ -178,6 +241,7 @@ class Erfurt_Store
 	        }
 	    }
 	    
+	    // TODO: is it better to throw an exception in this case?
 	    return self::COUNT_NOT_SUPPORTED;
 	}
     
@@ -211,19 +275,19 @@ class Erfurt_Store
         // check whether model is available
         if (!$this->isModelAvailable($modelIri, $useAc)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Model is not available and therefore not removable.');
+            throw new Erfurt_Exception("Model <$modelIri> is not available and therefore not removable.");
         }
         
         // check whether model editing is allowed
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('No permissions to delete the model.');
+            throw new Erfurt_Exception("No permissions to delete model <$modelIri>.");
         }
         
         // delete model
         $this->_backendAdapter->deleteModel($modelIri);
         
-        // remove statements about deleted model from SysOnt
+        // remove any statements about deleted model from SysOnt
         $acModelUri = Erfurt_App::getInstance()->getAcModel()->getUri();
         $this->_backendAdapter->deleteMatchingStatements($acModelUri, null, null, $modelIri);
     }
@@ -244,13 +308,13 @@ class Erfurt_Store
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Model is not available and therefore not removable.');
+            throw new Erfurt_Exception("Model <$modelIri> cannot be exported. Model is not available.");
         }
         
         if (in_array($serializationType, $this->_backendAdapter->getSupportedExportFormats())) {
             $this->_backendAdapter->exportRdf($modelIri, $serializationType, $filename);
         } else {
-            throw new Exception('Not implemented yet.');
+            throw new Exception("Serialization format '$serializationType' not supported by backend.");
         }
     }
     
@@ -264,15 +328,17 @@ class Erfurt_Store
      */
     public function getAvailableModels($withTitle = false)
     {
+        // backend adapter returns all models
         $models = $this->_backendAdapter->getAvailableModels($withTitle);
-        $result = array();
-        foreach ($models as $m) {
-            if ($this->_checkAc($m['modelIri'])) {
-                $result[] = $m;
+        
+        // filter for access control
+        foreach ($models as $key => $model) {
+            if (!$this->_checkAc($model['modelIri'])) {
+                unset($models[$key]);
             }
         }
         
-        return $result;
+        return $models;
     }
     
     /**
@@ -281,9 +347,7 @@ class Erfurt_Store
      * @return string
      */
     public function getBackendName() {
-        $name = get_class($this->_backendAdapter);
-        
-        return substr($name, strrpos($name, '_') + 1);
+        return $this->_backendName;
     }
     
     /**
@@ -319,22 +383,24 @@ class Erfurt_Store
         // check whether model exists and is visible
         if (!$this->isModelAvailable($modelIri, $useAc)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Model is not available.');
+            throw new Erfurt_Exception("Model <$modelIri> is not available.");
         }
         
-        $m = $this->_backendAdapter->getModel($modelIri);
+        $modelInstance = $this->_backendAdapter->getModel($modelIri);
         
         // check for edit possibility
         if ($this->_checkAc($modelIri, 'edit', $useAc)) {
-            $m->setEditable(true);
+            $modelInstance->setEditable(true);
         } else {
-            $m->setEditable(false);
+            $modelInstance->setEditable(false);
         }
         
-        return $m;
+        return $modelInstance;
     }
     
     /**
+     * Creates a new empty model instance with IRI $modelIri.
+      *
      * @param string $modelIri
      * @param string $baseIri
      * @param string $type
@@ -357,12 +423,17 @@ class Erfurt_Store
                 throw new Erfurt_Exception('Failed creating the model.');
             }   
         }
-            
-// TODO check whether user is allowed to create a new model
+        
+        // TODO: check whether user is allowed to create a new model
         
         return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
     }
     
+    /**
+     * Returns an array of serialization formats that can be imported.
+     *
+     * @return array
+     */
     public function getSupportedImportFormats()
     {
         // TODO: check import plug-ins
@@ -411,9 +482,9 @@ class Erfurt_Store
     {
         if ($this->_backendAdapter->isModelAvailable($modelIri) && $this->_checkAc($modelIri, 'view', $useAc)) {
             return true;
-        } else {
-            return false;
         }
+        
+        return false;
     }
     
     /**
@@ -425,85 +496,56 @@ class Erfurt_Store
      */
     public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query, $useAc = true)
     {
-        if ($useAc) {
-            $from      = $query->getFrom();
-            $fromNamed = $query->getFromNamed();
-            
-            $fromAllowed      = array();
-            $fromNamedAllowed = array();
-            
-            if ((count($from) == 0) && (count($fromNamed) == 0)) {
-                $availableModels = $this->getAvailableModels();
-                foreach ($availableModels as $m) {
-                    $fromAllowed[] = $m['modelIri'];
-                }
-            } else {
-                foreach ($from as $f) {
-                    if ($this->_checkAc($f, 'view', $useAc)) {
-                        $fromAllowed[] = $f;
-                    }
-                }
-                foreach ($fromNamed as $fN) {
-                    if ($this->_checkAc($fN, 'view', $useAc)) {
-                        $fromNamedAllowed[] = $fN;
-                    }
-                }
+        // add owl:imports
+        foreach ($queryObject->getFrom() as $fromGraphUri) {
+            foreach ($this->_getImportedModels($fromGraphUri) as $importedGraphUri) {
+                $queryObject->addFrom($importedGraphUri);
             }
-            
-            $query->setFrom($fromAllowed)
-                  ->setFromNamed($fromNamedAllowed);
         }
         
-        return $this->_backendAdapter->sparqlAsk($query);
+        if ($useAc) {
+            $query->setFrom($this->_filterModels($query->getFrom()));
+            
+            // from named only if it was set
+            $fromNamed = $query->getFromNamed();
+            if (count($fromNamed)) {
+                $query->setFromNamed($this->_filterModels($fromNamed));
+            }
+        }
+        
+        return $this->_backendAdapter->sparqlAsk((string) $query);
     }
     
     /**
-     * @param string $query A string containing a sparql query
-     * @param string $resultform Currently supported are: 'plain' and 'xml'
+     * @param Erfurt_Sparql_SimpleQuery $queryObject
+     * @param string $resultFormat Currently supported are: 'plain' and 'xml'
      * @param boolean $useAc Whether to check for access control or not.
      * 
      * @throws Erfurt_Exception Throws an exception if query is no string.
      * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $query, $resultform = 'plain', $useAc = true)
+    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $resultFormat = 'plain', $useAc = true)
     {
-        // if we use ac, check all from iris whether allowed or not and remove forbidden ones
-        if ($useAc === true) {
-            $from = $query->getFrom();
-            $fromNamed = $query->getFromNamed();
-            
-            $fromAllowed = array();
-            $fromNamedAllowed = array();
-            
-            // if $from and $fromNamed are both empty, this could mean neither from nor
-            // from named was specified in any way... so ask all available models
-            if ((count($from) === 0) && (count($fromNamed) === 0)) {
-                $availableModels = $this->getAvailableModels();
-                
-                foreach ($availableModels as $m) {
-                    $fromAllowed[] = $m['modelIri'];
-                }
-            } else {
-                foreach ($from as $f) {
-                    if ($this->_checkAc($f, 'view', $useAc)) {
-                        $fromAllowed[] = $f;
-                    }
-                }
-                
-                foreach ($fromNamed as $fN) {
-                    if ($this->_checkAc($fN, 'view', $useAc)) {
-                        $fromNamedAllowed[] = $fN;
-                    }
-                }
+        // add owl:imports
+        foreach ($queryObject->getFrom() as $fromGraphUri) {
+            foreach ($this->_getImportedModels($fromGraphUri) as $importedGraphUri) {
+                $queryObject->addFrom($importedGraphUri);
             }
-            
-            // finally update the query with the from and from named iris
-            $query->setFrom($fromAllowed);
-            $query->setFromNamed($fromNamedAllowed);
         }
         
-        return $this->_backendAdapter->sparqlQuery($query, $resultform);
+        // if using accesss control, filter FROM (NAMED) for allowed models
+        if ($useAc) {
+            $queryObject->setFrom($this->_filterModels($queryObject->getFrom()));
+            
+            // from named only if it was set
+            $fromNamed = $queryObject->getFromNamed();
+            if (count($fromNamed)) {
+                $queryObject->setFromNamed($this->_filterModels($fromNamed));
+            }
+        }
+        
+        return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
     }
     
     // ------------------------------------------------------------------------
@@ -520,7 +562,7 @@ class Erfurt_Store
      * 
      * @return boolean Returns whether view as the case may be edit is allowed for the model or not.
      */
-    protected function _checkAc($modelIri, $accessType = 'view', $useAc = true)
+    private function _checkAc($modelIri, $accessType = 'view', $useAc = true)
     {
         // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
         if ($useAc === false) {
@@ -535,7 +577,11 @@ class Erfurt_Store
         }
     }
     
-    protected function _checkSetup()
+    /**
+     * Checks whether the store has been set up yet and imports system 
+     * ontologies if necessary.
+     */
+    private function _checkSetup()
     {
         $config         = Erfurt_App::getInstance()->getConfig();
         $logger         = Erfurt_App::getInstance()->getLog();
@@ -552,13 +598,13 @@ class Erfurt_Store
             
             if (is_readable($schemaPath)) {
                 // load SysOnt from file
-                $test = $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdf', 'file');
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdf', 'file');
             } else {
                 // load SysOnt from Web
-                $test = $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdf', 'url');
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdf', 'url');
             }
             
-            if (!$test instanceof Erfurt_Rdf_Model) {
+            if (!$this->isModelAvailable($sysOntSchema, false)) {
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Unable to load System Ontology schema.');
             }
@@ -572,13 +618,13 @@ class Erfurt_Store
             
             if (is_readable($modelPath)) {
                 // // load SysOnt Model from file
-                $test = $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdf', 'file');
+                $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdf', 'file');
             } else {
                 // // load SysOnt Model from Web
-                $test = $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdf', 'url');
+                $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdf', 'url');
             }
             
-            if (!$test instanceof Erfurt_Rdf_Model) {
+            if (!$this->isModelAvailable($sysOntModel, false)) {
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Unable to load System Ontology model.');
             }
@@ -586,6 +632,71 @@ class Erfurt_Store
             $logger->info('System schema successfully loaded.');
         }
     }
+    
+    /**
+     * Filters a list of model IRIs according to ACL constraints of the current agent.
+     *
+     * @param array $modelIris
+     */
+    private function _filterModels(array $modelIris)
+    {
+        $allowedModels = array();
+        foreach ($this->getAvailableModels(true) as $key => $model) {
+            $allowedModels[] = $model['modelIri'];
+        }
+        
+        $modelIrisFiltered = array();
+        if (count($modelIris)) {
+            $modelIrisFiltered = array_intersect($modelIris, $allowedModels);
+        } else {
+            $modelIrisFiltered = $allowedModels;
+        }
+        
+        return $modelIrisFiltered;
+    }
+    
+    /**
+     * Recursively gets owl:imported model IRIs starting with $modelIri as root.
+     *
+     * @param string $modelIri
+     */
+    private function _getImportedModels($modelIri)
+    {
+        if (!array_key_exists($modelIri, $this->_importedModels)) {
+            $models = array();
+            $result = array(
+                // mock first result
+                array('o' => $modelIri)
+            );
+
+            do {
+                $from    = '';
+                $filter   = array();
+                foreach ($result as $row) {
+                    $from    .= ' FROM <' . $row['o'] . '>' . "\n";
+                    $filter[] = 'str(?model) = <' . $row['o'] . '>';
+
+                    // ensure no model is added twice
+                    if (!array_key_exists($row['o'], $models)) {
+                        $models[$row['o']] = $row['o'];
+                    }
+                }
+                $query = '
+                    SELECT ?o' . 
+                    $from . '
+                    WHERE {
+                        ?model <' . EF_OWL_NS . 'imports> ?o. 
+                        FILTER (' . implode(' || ', $filter) . ')
+                    }';
+            } while ($result = $this->_backendAdapter->sparqlQuery($query));
+            
+            // unset root node
+            unset($models[$modelIri]);
+            // cache result
+            $this->_importedModels[$modelIri] = array_keys($models);
+        }
+        
+        return $this->_importedModels[$modelIri];
+    }
 }
 
-?>

@@ -281,7 +281,10 @@ class Erfurt_App {
             }
             
             // fetch backend specific options from config
-            $backendOptions = $config->store->get($backend)->toArray();
+            $backendOptions = array();
+            if ($backendConfig = $config->store->get($backend)) {
+                $backendOptions = $backendConfig->toArray();
+            }
         
             require_once 'Erfurt/Store.php';
             $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);

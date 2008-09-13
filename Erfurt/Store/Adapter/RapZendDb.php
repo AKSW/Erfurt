@@ -357,13 +357,13 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query)
+    public function sparqlAsk($query)
     {
         
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $query, $resultform = 'plain') 
+    public function sparqlQuery($query, $resultform = 'plain') 
     {
         require_once 'Erfurt/Sparql/EngineDb/Adapter/RapZendDb.php';
         $engine = new Erfurt_Sparql_EngineDb_Adapter_RapZendDb($this->_dbConn, $this->_modelInfoCache);
