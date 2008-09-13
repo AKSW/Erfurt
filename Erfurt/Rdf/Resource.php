@@ -50,10 +50,10 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      * @param string $iri
      * @param Erfurt_Rdf_Model $model
      */
-    public function __construct($iri, Erfurt_Rdf_Model $model)
+    public function __construct($iri, Erfurt_Rdf_Model $model = null)
     {
         $this->_model = $model;
-        $namespaces   = $this->_model->getNamespaces();
+        $namespaces   = $this->_model ? $this->_model->getNamespaces() : array();
         $matches      = array();
         
         // parse namespace/local part
@@ -87,6 +87,8 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $this->getIri();
     }
     
+    // public static function initWith
+    
     /**
      * Returns the resource's IRI
      *
@@ -111,5 +113,29 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
             
             return $qName;
         }
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    public static function initWithIri($iri)
+    {
+        $resource = new self($iri);
+        return $resource;
+    }
+    
+    public static function initWithNamespaceAndLocalname($namespace, $local)
+    {
+        $resource = new self($namespace . $local);
+        return $resource;
+    }
+    
+    public function isBlankNode()
+    {
+        return false;
+    }
+    
+    public function getUri()
+    {
+        return $this->getIri();
     }
 }
