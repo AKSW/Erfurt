@@ -72,6 +72,12 @@ class Erfurt_Store
         'countWhereMatches'
     );
     
+    /**
+     * Number of queries committed
+     * @var int
+     */
+    private static $_queryCount = 0;
+    
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -399,6 +405,16 @@ class Erfurt_Store
     }
     
     /**
+     * Returns the number fo queries committed.
+     *
+     * @return int
+     */
+    public function getQueryCount()
+    {
+        return self::$_queryCount;
+    }
+    
+    /**
      * Creates a new empty model instance with IRI $modelIri.
       *
      * @param string $modelIri
@@ -496,9 +512,11 @@ class Erfurt_Store
      */
     public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query, $useAc = true)
     {
+        self::$_queryCount++;
+        
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportedModels($fromGraphUri) as $importedGraphUri) {
+            foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
                 $queryObject->addFrom($importedGraphUri);
             }
         }
@@ -527,9 +545,11 @@ class Erfurt_Store
      */
     public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $resultFormat = 'plain', $useAc = true)
     {
+        self::$_queryCount++;
+        
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportedModels($fromGraphUri) as $importedGraphUri) {
+            foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
                 $queryObject->addFrom($importedGraphUri);
             }
         }
@@ -660,7 +680,7 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-    private function _getImportedModels($modelIri)
+    private function _getImportsClosure($modelIri)
     {
         if (!array_key_exists($modelIri, $this->_importedModels)) {
             $models = array();
