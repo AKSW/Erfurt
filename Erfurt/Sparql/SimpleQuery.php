@@ -136,5 +136,66 @@ class Erfurt_Sparql_SimpleQuery {
         
         return $queryString;
     }
+    
+    /**
+     * Objective-C style constructor
+     *
+     * @param 
+     */
+    public static function initWithString($queryString)
+    {
+        $parts = array(
+            'prologue'   => array(), 
+            'from'       => array(), 
+            'from_named' => array(), 
+            'where'      => array(), 
+            'order'      => array(), 
+            'limit'      => array(), 
+            'offset'     => array()
+        );
+
+        $tokens = array(
+            'prologue'   => '/(BASE.*)?(PREFIX.*)*SELECT\s+(DISTINCT\s+)?(\?\w+\s+|\*)+/si',  
+            'from'       => '/FROM\s+<(.+?)>/i', 
+            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
+            'where'      => '/WHERE\s+\{.*\}/si', 
+            'order'      => '/ORDER\s+BY\s+(.+)/i', 
+            'limit'      => '/LIMIT\s+(\d+)/i', 
+            'offset'     => '/OFFSET\s+(\d+)/i'
+        );
+
+        foreach ($tokens as $key => $pattern) {
+            preg_match_all($pattern, $queryString, $parts[$key]);
+        }
+
+        $queryObject = new self();
+        $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
+
+        if (isset($parts['from'][1][0])) {
+            $queryObject->setFrom($parts['from'][1]);
+        }
+
+        if (isset($parts['from_named'][1][0])) {
+            $queryObject->setFromNamed($parts['from_named'][1]);
+        }
+
+        if (isset($parts['where'][0][0])) {
+            $queryObject->setWherePart($parts['where'][0][0]);
+        }
+
+        if (isset($parts['order'][1][0])) {
+            $queryObject->setOrderClause($parts['order'][1][0]);
+        }
+
+        if (isset($parts['limit'][1][0])) {
+            $queryObject->setLimit($parts['limit'][1][0]);
+        }
+
+        if (isset($parts['offset'][1][0])) {
+            $queryObject->setOffset($parts['offset'][1][0]);
+        }
+
+        return $queryObject;
+    }
 }
-?>
+

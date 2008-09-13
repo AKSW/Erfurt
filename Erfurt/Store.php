@@ -522,7 +522,16 @@ class Erfurt_Store
         }
         
         if ($useAc) {
-            $query->setFrom($this->_filterModels($query->getFrom()));
+            $modelsFiltered = $this->_filterModels($queryObject->getFrom());
+            
+            // query contained a non-allowed non-existent model
+            if (empty($modelsFiltered)) {
+                return;
+                // require_once 'Erfurt/Exception.php';
+                // throw new Erfurt_Exception('Query could not be executed.');
+            }
+            
+            $queryObject->setFrom($modelsFiltered);
             
             // from named only if it was set
             $fromNamed = $query->getFromNamed();
@@ -556,7 +565,16 @@ class Erfurt_Store
         
         // if using accesss control, filter FROM (NAMED) for allowed models
         if ($useAc) {
-            $queryObject->setFrom($this->_filterModels($queryObject->getFrom()));
+            $modelsFiltered = $this->_filterModels($queryObject->getFrom());
+            
+            // query contained a non-allowed non-existent model
+            if (empty($modelsFiltered)) {
+                return;
+                // require_once 'Erfurt/Exception.php';
+                // throw new Erfurt_Exception('Query could not be executed.');
+            }
+            
+            $queryObject->setFrom($modelsFiltered);
             
             // from named only if it was set
             $fromNamed = $queryObject->getFromNamed();
