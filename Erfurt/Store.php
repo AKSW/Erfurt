@@ -19,6 +19,8 @@ class Erfurt_Store
     
     const COUNT_NOT_SUPPORTED = -1;
     
+    const MAX_ITERATIONS = 100;
+    
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
@@ -238,12 +240,12 @@ class Erfurt_Store
      * @param string $graphUri
      * @param string $whereSpec
      */
-    public function countWhereMatches($graphUri, $whereSpec)
-	{
-	    // TODO: owl:imports
+    public function countWhereMatches($graphIri, $countSpec, $whereSpec)
+	{	    
 	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
 	        if ($this->_checkAc($graphUri)) {
-                return $this->_backendAdapter->countWhereMatches($graphUri, $whereSpec);
+	            $graphIris = $this->_getImportsClosure($graphIri);
+                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
 	        }
 	    }
 	    
@@ -443,6 +445,30 @@ class Erfurt_Store
         // TODO: check whether user is allowed to create a new model
         
         return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
+    }
+    
+    /**
+     * Calculates the transitive closure for a given property and a set of starting nodes.
+     *
+     * The inverse mode (which is enabled by default) can be used to calculate the 
+     * rdfs:subClassOf closure of a set of starting classes.
+     * By default this method uses a private SPARQL implementation to actually query and 
+     * calculate the closure. Adapters can (and should!) provide their own implementation.
+     *
+     * @param string $propertyIri The property's IRI for which hte closure should be calculated
+     * @param array $startResources An array of resources as starting nodes
+     * @param boolean $inverse Denotes whether the property is inverse, i.e. ?child ?property ?parent
+     * @param int $maxDepth The maximum number of iteration steps
+     */ 
+    public function getTransitiveClosure($modelIri, $property, array $startResources, $inverse = true, $maxDepth = self::MAX_ITERATIONS)
+    {
+        if (method_exists($this->_backendAdapter, 'getTransitiveClosure')) {
+            $closure = $this->_backendAdapter->getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth);
+	    } else {
+	        $closure = $this->_getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth);
+	    }
+	    
+	    return $closure;
     }
     
     /**
@@ -735,6 +761,45 @@ class Erfurt_Store
         }
         
         return $this->_importedModels[$modelIri];
+    }
+    
+    /**
+     * Calculates the transitive closure for a given property and a set of starting nodes.
+     *
+     * @see getTransitiveClosure
+     */
+    private function _getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth)
+    {
+        $closure = array();
+        $classes = $startResources;
+        $i       = 0;
+        
+        while (++$i <= $maxDepth) {
+            $where = $inverse ? '?child <' . $property . '> ?parent.' : '?parent <' . $property . '> ?child.';
+            
+            $subSparql = 'SELECT ?parent ?child FROM <' . $modelIri . '>
+                WHERE {
+                    ' . $where . '
+                    FILTER (str(?parent) = <' . implode('> || str(?parent) = <', $classes) . '>)' . PHP_EOL . '
+                }';
+
+            if (count($result = $this->_backendAdapter->sparqlQuery($subSparql)) < 1) {
+                break;
+            }
+            
+            $classes = array();
+            foreach ($result as $row) {
+                $key = $inverse ? $row['child'] : $row['parent'];
+                $closure[$key] = array(
+                    'node'   => $inverse ? $row['child'] : $row['parent'], 
+                    'parent' => $inverse ? $row['parent'] : $row['child'], 
+                    'depth'  => $i
+                );
+                $classes[] = $row['child'];
+            }
+        }
+        
+        return $closure;
     }
 }
 

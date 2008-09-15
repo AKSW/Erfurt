@@ -87,8 +87,6 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $this->getIri();
     }
     
-    // public static function initWith
-    
     /**
      * Returns the resource's IRI
      *

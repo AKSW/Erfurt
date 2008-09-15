@@ -129,11 +129,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    $this->_execSparql($insertQuery);
 	}
 	
-	public function countWhereMatches($graphUri, $whereSpec)
+	public function countWhereMatches($graphIris, $countSpec, $whereSpec)
 	{
 	    $query = new Erfurt_Sparql_SimpleQuery();
-	    $query->setProloguePart("SELECT COUNT(*)")
-	          ->addFrom($graphUri)
+	    $query->setProloguePart("SELECT COUNT DISTINCT $countSpec")
+	          ->setFrom($graphIris)
 	          ->setWherePart($whereSpec);
 	    
 	    if ($result = $this->sparqlQuery($query)) {
