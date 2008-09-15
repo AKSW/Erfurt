@@ -24,7 +24,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     *   @example
     *   array(
     *       '?person' => array('t1', 's'),
-    '       '?p'      => array('t1', 'p'),
+    *       '?p'      => array('t1', 'p'),
     *       '?mbox'   => array('t2', 'o')
     *   )
     *   Would express that variable ?person is the subject

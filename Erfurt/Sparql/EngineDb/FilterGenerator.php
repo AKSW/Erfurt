@@ -143,7 +143,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function createValue($tree, $bDumbParent)
     {
         $strValue = stripslashes($tree['value']);
-        if (SparqlVariable::isVariable($strValue)) {
+        if (Erfurt_Sparql_Variable::isVariable($strValue)) {
             if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$strValue])) {
                 throw new SparqlEngineDb_SqlGeneratorException(
                     'Unknown variable in filter: ' . $strValue
@@ -781,7 +781,7 @@ var_dump($tree);
     {
         return $tree['type'] == 'value'
          && $tree['type']['quoted'] === false
-         && !SparqlVariable::isVariable($tree['value']);
+         && !Erfurt_Sparql_Variable::isVariable($tree['value']);
     }//protected function isValueButNotVariableNorString($tree)
 
 
