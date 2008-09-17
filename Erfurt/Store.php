@@ -243,8 +243,8 @@ class Erfurt_Store
     public function countWhereMatches($graphIri, $countSpec, $whereSpec)
 	{	    
 	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
-	        if ($this->_checkAc($graphUri)) {
-	            $graphIris = $this->_getImportsClosure($graphIri);
+	        if ($this->_checkAc($graphIri)) {
+	            $graphIris = array_merge($this->_getImportsClosure($graphIri), array($graphIri));
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
 	        }
 	    }
@@ -296,8 +296,8 @@ class Erfurt_Store
         $this->_backendAdapter->deleteModel($modelIri);
         
         // remove any statements about deleted model from SysOnt
-        $acModelUri = Erfurt_App::getInstance()->getAcModel()->getUri();
-        $this->_backendAdapter->deleteMatchingStatements($acModelUri, null, null, $modelIri);
+        $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
+        $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
     }
     
     /**
@@ -536,7 +536,7 @@ class Erfurt_Store
      * @param string $askSparql
      * @param boolean $useAc Whether to check for access control.
      */
-    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query, $useAc = true)
+    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $queryObject, $useAc = true)
     {
         self::$_queryCount++;
         
@@ -560,13 +560,13 @@ class Erfurt_Store
             $queryObject->setFrom($modelsFiltered);
             
             // from named only if it was set
-            $fromNamed = $query->getFromNamed();
+            $fromNamed = $queryObject->getFromNamed();
             if (count($fromNamed)) {
-                $query->setFromNamed($this->_filterModels($fromNamed));
+                $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
         
-        return $this->_backendAdapter->sparqlAsk((string) $query);
+        return $this->_backendAdapter->sparqlAsk((string) $queryObject);
     }
     
     /**
@@ -789,8 +789,8 @@ class Erfurt_Store
             
             $classes = array();
             foreach ($result as $row) {
-                $key = $inverse ? $row['child'] : $row['parent'];
-                $closure[$key] = array(
+                // $key = $inverse ? $row['child'] : $row['parent'];
+                $closure[$row['child']] = array(
                     'node'   => $inverse ? $row['child'] : $row['parent'], 
                     'parent' => $inverse ? $row['parent'] : $row['child'], 
                     'depth'  => $i
