@@ -270,49 +270,52 @@ class Erfurt_Rdf_Model
      * @return stdClass a RDF/JSON object
      */
     private function _getStatementsDiff(stdClass $statementsObject1, stdClass $statementsObject2)
-    {
-        // we start with a clone of object 1
-        // TODO: don't mess with the original 
-        // $statementsObject1's predicates
-        $difference = clone $statementsObject1;
+    {        
+        $difference = new stdClass();
         
         // check for each subject if it is found in object 2
         // if it is not, continue immediately
-        foreach ($difference as $subject => $predicates) {
-            if (!isset($subject, $statementsObject2)) {
+        foreach ($statementsObject1 as $subject => $predicates) {
+            if (!isset($statementsObject2->$subject)) {
+                $difference->$subject = clone $statementsObject1->$subject;
                 continue;
             }
             
             // check for each predicate if it is found in the current 
             // subject's predicates of object 2, if it is not, continue immediately
             foreach ($predicates as $predicate => $objects) {
-                if (!isset($predicate, $statementsObject2->$subject)) {
+                if (!isset($statementsObject2->$subject->$predicate)) {
+                    $difference->$subject->$predicate = clone $statementsObject1->$subject->$predicate;
                     continue;
                 }
                 
                 // for each object we have to check if it exists in object 2
                 // (subject and predicate are identical up here)
                 foreach ($objects as $key => $object) {
+                    $found = false;
                     foreach ($statementsObject2->$subject->$predicate as $object2) {
                         if ($object->type == $object2->type && $object->value == $object2->value) {
-                            // remove identical objects from the difference
-                            unset($difference->$subject->{$predicate}[$key]);
-                            
-                            // remove empty predicates
-                            if (count($difference->$subject->$predicate) == 0) {
-                                unset($difference->$subject->$predicate);
-                            }
-                            
-                            // remove empty subjects
-                            if (count((array) $difference->$subject) == 0) {
-                                unset($difference->$subject);
-                            }
+                            $found = true;
                         }
+                    }
+                    
+                    if (!$found) {
+                        // object doesn't exist, so add it
+                        if (!isset($difference->$subject)) {
+                            $difference->$subject = new stdClass();
+                        }
+                        
+                        if (!isset($difference->$subject->$predicate)) {
+                            $difference->$subject->$predicate = array();
+                        }
+                        
+                        $currentObject = $statementsObject1->$subject->$predicate;
+                        array_push($difference->$subject->$predicate, clone $currentObject[$key]);
                     }
                 }
             }
         }
-
+        
         return $difference;
     }
     

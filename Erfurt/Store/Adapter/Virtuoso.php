@@ -129,6 +129,42 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    $this->_execSparql($insertQuery);
 	}
 	
+	public function addMultipleStatements($graphIri, $statements)
+	{	    
+	    $triples = '';
+	    if (is_object($statements)) {
+	        foreach ($statements as $subject) {
+	            foreach ($subject as $predicate) {
+	                foreach ($predicate as $object) {
+                        $triples .= '<' . $subject . '> <' . $predicate . '> ';
+                        
+                        switch ($object->type) {
+                            case 'uri':
+                                $triples .= '<' . $object->value . '>';
+                                break;
+                            case 'literal':
+                                $triples .= '"' . $object->value . '"';
+                                if (isset($object->lang)) {
+                                    $triples .= '@' . $object->lang;
+                                } else if (isset($object->datatype)) {
+                                    $triples .= '^^<' . $object->datatype . '>';
+                                }
+                                break;
+                        }
+                        
+                        $triples .= '.' . PHP_EOL;
+	                }
+	            }
+	        }
+	    } else if (is_array($statements)) {
+            // TODO: array
+	    }
+	    
+	    $insertQuery = 'INSERT INTO GRAPH <' . $graphIri . '> {' . $triples . '}';
+	    
+	    return $this->_execSparql($insertQuery);
+	}
+	
 	public function countWhereMatches($graphIris, $countSpec, $whereSpec)
 	{
 	    $query = new Erfurt_Sparql_SimpleQuery();
@@ -146,28 +182,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	}
     
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
-    {
-        // if ($subject) {
-        //     $subjectMatch = "AND S = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $subject . "')";
-        // }
-        // if ($predicate) {
-        //     $predicateMatch = "AND P = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $predicate . "')";
-        // }
-        // if ($object) {
-        //     $objectMatch = "AND O = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $object . "')";
-        // }
-        // 
-        // // TODO: do not write to DB.DBA.RDF_QUAD directly (http://docs.openlinksw.com/virtuoso/rdfdatarepresentation.html)
-        // $deleteSql = "
-        //     DELETE FROM DB.DBA.RDF_QUAD
-        //     WHERE G = DB.DBA.RDF_MAKE_IID_OF_QNAME('" . $graphUri . "')
-        //     " . $subjectMatch . " 
-        //     " . $predicateMatch . " 
-        //     " . $objectMatch . "
-        // ";
-        // 
-        // $this->_execSql($deleteSql);
-        
+    {        
         $subjectSpec   = $subject   ? '<' . $subject . '>'   : '?s';
         $predicateSpec = $predicate ? '<' . $predicate . '>' : '?p';
         $objectSpec    = $object    ? '<' . $object . '>'    : '?o';
@@ -252,6 +267,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         }
         // var_dump($this->_models);
         return $this->_models;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getBlankNodePrefix()
+    {
+        return 'nodeID://';
     }
     
     /** @see Erfurt_Store_Adapter_Interface */

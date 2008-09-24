@@ -738,7 +738,7 @@ class Erfurt_Store
                 $filter   = array();
                 foreach ($result as $row) {
                     $from    .= ' FROM <' . $row['o'] . '>' . "\n";
-                    $filter[] = 'str(?model) = <' . $row['o'] . '>';
+                    $filter[] = 'sameTerm(?model, <' . $row['o'] . '>)';
 
                     // ensure no model is added twice
                     if (!array_key_exists($row['o'], $models)) {
@@ -774,13 +774,21 @@ class Erfurt_Store
         $classes = $startResources;
         $i       = 0;
         
+        $from = '';
+        foreach ($this->_getImportsClosure($modelIri) as $import) {
+            $from .= 'FROM <' . $import . '>' . PHP_EOL;
+        }
+        
         while (++$i <= $maxDepth) {
             $where = $inverse ? '?child <' . $property . '> ?parent.' : '?parent <' . $property . '> ?child.';
             
-            $subSparql = 'SELECT ?parent ?child FROM <' . $modelIri . '>
+            $subSparql = 'SELECT ?parent ?child 
+                FROM <' . $modelIri . '>' . PHP_EOL . $from . '
                 WHERE {
                     ' . $where . '
-                    FILTER (str(?parent) = <' . implode('> || str(?parent) = <', $classes) . '>)' . PHP_EOL . '
+                    FILTER (
+                        sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
+                    )
                 }';
 
             if (count($result = $this->_backendAdapter->sparqlQuery($subSparql)) < 1) {

@@ -68,12 +68,12 @@ class Erfurt_App {
             throw new Exception('Erfurt requires at least PHP Version ' . self::EF_MIN_PHP_VERSION);
         }
         
-        define('EF_BASE', substr(__FILE__, 0, -7));
+        define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
         
         // update the include path, such that libraries like e.g. Zend are available        
         $include_path  = get_include_path() . PATH_SEPARATOR;
         $include_path .= EF_BASE . 'libraries/' . PATH_SEPARATOR;
-        //set_include_path($include_path);
+        set_include_path($include_path);
         
 // TODO better way for vocabs?!
         // include the vocabulary file

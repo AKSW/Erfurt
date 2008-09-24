@@ -73,6 +73,13 @@ interface Erfurt_Store_Adapter_Interface
 	 *                                         will not be set.
 	 */
 	public function getAvailableModels($withTitle = false);
+	
+	/**
+	 * Returns the prefix used by the store to identify blank nodes.
+	 *
+	 * @return string
+	 */
+    public function getBlankNodePrefix();
 
 	/**
 	 * @param string $modelIri The IRI, which identifies the model.
