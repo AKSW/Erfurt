@@ -112,14 +112,13 @@ class Erfurt_Rdf_Model
     /**
      * Adds multiple statements to this model.
      *
-     * Accepts a plain object (an instance of stdClass) that has statements
-     * as nested properties. This object is exactly what you get when you json_decode 
-     * a RDF/JSON string ({@link http://n2.talis.com/wiki/RDF_JSON_Specification}).
-     * Note, that we do not use the RDF/PHP specification.
+     * Accepts an associative array of statement subjects. The format of the 
+     * array must conform to Talis' RDF/PHP specification 
+     * ({@link http://n2.talis.com/wiki/RDF_PHP_Specification}).
      *
      * @param stdClass $statements
      */
-    public function addMultipleStatements(stdClass $statements)
+    public function addMultipleStatements(array $statements)
     {
         $this->getStore()->addMultipleStatements($this->_modelIri, $statements);
         
@@ -139,13 +138,13 @@ class Erfurt_Rdf_Model
     }
     
     /**
-     * Deletes all statements contained in the RDF/JSON object from this model.
+     * Deletes all statements contained in the associative array from this model.
      *
      * @param string $subject
      * @param string $predicate
      * @param string $object
      */
-    public function deleteMultipleStatements(stdClass $statements)
+    public function deleteMultipleStatements(array $statements)
     {
         $this->getStore()->deleteMultipleStatements($this->_modelIri, $statements);
     }
@@ -235,7 +234,7 @@ class Erfurt_Rdf_Model
     }
     
     /**
-     * Updates this model if the mutual difference of 2 RDF/JSON objects.
+     * Updates this model if the mutual difference of 2 RDF/PHP arrays.
      *
      * Added statements are those that are found in $changed but not in $original, 
      * removed statements are found in $original but not in $changed.
@@ -243,7 +242,7 @@ class Erfurt_Rdf_Model
      * @param stdClass statementsObject1
      * @param stdClass statementsObject2
      */
-    public function updateWithMutualDifference(stdClass $original, stdClass $changed)
+    public function updateWithMutualDifference(array $original, array $changed)
     {
         $addedStatements   = $this->_getStatementsDiff($changed, $original);
         $removedStatements = $this->_getStatementsDiff($original, $changed);
@@ -259,7 +258,7 @@ class Erfurt_Rdf_Model
     // ------------------------------------------------------------------------
     
     /**
-     * Calculates the difference of two RDF/JSON objects.
+     * Calculates the difference of two RDF/PHP arrays.
      *
      * The difference will contain any statement in the first object that
      * is not contained in the second object.
@@ -269,48 +268,50 @@ class Erfurt_Rdf_Model
      *
      * @return stdClass a RDF/JSON object
      */
-    private function _getStatementsDiff(stdClass $statementsObject1, stdClass $statementsObject2)
-    {        
-        $difference = new stdClass();
+    private function _getStatementsDiff(array $statementsObject1, array $statementsObject2)
+    {
+        $difference = array();
         
         // check for each subject if it is found in object 2
         // if it is not, continue immediately
-        foreach ($statementsObject1 as $subject => $predicates) {
-            if (!isset($statementsObject2->$subject)) {
-                $difference->$subject = clone $statementsObject1->$subject;
+        foreach ($statementsObject1 as $subject => $predicatesArray) {
+            if (!array_key_exists($subject, $statementsObject2)) {
+                $difference[$subject] = $statementsObject1[$subject];
                 continue;
             }
             
             // check for each predicate if it is found in the current 
             // subject's predicates of object 2, if it is not, continue immediately
-            foreach ($predicates as $predicate => $objects) {
-                if (!isset($statementsObject2->$subject->$predicate)) {
-                    $difference->$subject->$predicate = clone $statementsObject1->$subject->$predicate;
+            foreach ($predicatesArray as $predicate => $objectsArray) {
+                if (!array_key_exists($predicate, $statementsObject2[$subject])) {
+                    $difference[$subject][$predicate] = $statementsObject1[$subject][$predicate];
                     continue;
                 }
                 
                 // for each object we have to check if it exists in object 2
                 // (subject and predicate are identical up here)
-                foreach ($objects as $key => $object) {
+                foreach ($objectsArray as $key => $object) {
                     $found = false;
-                    foreach ($statementsObject2->$subject->$predicate as $object2) {
-                        if ($object->type == $object2->type && $object->value == $object2->value) {
+                    foreach ($statementsObject2[$subject][$predicate] as $object2) {
+                        if ($object['type'] == $object2['type'] && $object['value'] == $object2['value']) {
                             $found = true;
                         }
                     }
                     
+                    // if object hasn't been found, add it
                     if (!$found) {
-                        // object doesn't exist, so add it
-                        if (!isset($difference->$subject)) {
-                            $difference->$subject = new stdClass();
+                        if (!array_key_exists($subject, $difference)) {
+                            $difference[$subject] = array();
                         }
                         
-                        if (!isset($difference->$subject->$predicate)) {
-                            $difference->$subject->$predicate = array();
+                        if (!array_key_exists($predicate, $difference[$subject])) {
+                            $difference[$subject][$predicate] = array();
                         }
                         
-                        $currentObject = $statementsObject1->$subject->$predicate;
-                        array_push($difference->$subject->$predicate, clone $currentObject[$key]);
+                        array_push(
+                            $difference[$subject][$predicate], 
+                            $statementsObject1[$subject][$predicate][$key]
+                        );
                     }
                 }
             }

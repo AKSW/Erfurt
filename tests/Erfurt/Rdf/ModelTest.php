@@ -58,12 +58,12 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = new stdClass();
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array();
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
@@ -77,12 +77,12 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = new stdClass();
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array();
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
@@ -96,12 +96,12 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = new stdClass();
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array();
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
@@ -109,11 +109,11 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         // test 1
         $model->updateWithMutualDifference($statements1, $statements2);
         $this->assertEquals($statements2, $this->_storeStub->addMultipleStatements);
-        $this->assertEquals(new stdClass, $this->_storeStub->deleteMultipleStatements);
+        $this->assertEquals(array(), $this->_storeStub->deleteMultipleStatements);
         
         // test 2
         $model->updateWithMutualDifference($statements2, $statements1);
-        $this->assertEquals(new stdClass, $this->_storeStub->addMultipleStatements);
+        $this->assertEquals(array(), $this->_storeStub->addMultipleStatements);
         $this->assertEquals($statements2, $this->_storeStub->deleteMultipleStatements);
     }
     
@@ -122,27 +122,27 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1')
+                    array('type' => 'uri', 'value' => 'object1')
                 )
             )
         );
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
         
-        $s1only = (object) array();
-        $s2only = (object) array(
-            'subject' => (object) array(
+        $s1only = array();
+        $s2only = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
@@ -163,38 +163,38 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'same', 'value' => 'same_object'), 
-                    (object) array('type' => 'literal', 'value' => 'object1'), 
-                    (object) array('type' => 'uri', 'value' => 'object2')
+                    array('type' => 'same', 'value' => 'same_object'), 
+                    array('type' => 'literal', 'value' => 'object1'), 
+                    array('type' => 'uri', 'value' => 'object2')
                 )
             )
         );
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2'), 
-                    (object) array('type' => 'same', 'value' => 'same_object') 
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2'), 
+                    array('type' => 'same', 'value' => 'same_object') 
                 )
             )
         );
         
-        $s1only = (object) array(
-            'subject' => (object) array(
+        $s1only = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'literal', 'value' => 'object1'), 
-                    (object) array('type' => 'uri', 'value' => 'object2')
+                    array('type' => 'literal', 'value' => 'object1'), 
+                    array('type' => 'uri', 'value' => 'object2')
                 )
             )
         );
-        $s2only = (object) array(
-            'subject' => (object) array(
+        $s2only = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'uri', 'value' => 'object1'), 
-                    (object) array('type' => 'literal', 'value' => 'object2')
+                    array('type' => 'uri', 'value' => 'object1'), 
+                    array('type' => 'literal', 'value' => 'object2')
                 )
             )
         );
@@ -215,38 +215,38 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $model = $this->_getMockedModel();
         
         // prepare data
-        $statements1 = (object) array(
-            'subject' => (object) array(
+        $statements1 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'same', 'value' => 'same_object'), 
-                    (object) array('type' => 'literal', 'value' => 'literal1'), 
-                    (object) array('type' => 'uri', 'value' => 'uri1')
+                    array('type' => 'same', 'value' => 'same_object'), 
+                    array('type' => 'literal', 'value' => 'literal1'), 
+                    array('type' => 'uri', 'value' => 'uri1')
                 )
             )
         );
-        $statements2 = (object) array(
-            'subject' => (object) array(
+        $statements2 = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'same', 'value' => 'same_object'), 
-                    (object) array('type' => 'literal', 'value' => 'literal2'), 
-                    (object) array('type' => 'uri', 'value' => 'uri2')
+                    array('type' => 'same', 'value' => 'same_object'), 
+                    array('type' => 'literal', 'value' => 'literal2'), 
+                    array('type' => 'uri', 'value' => 'uri2')
                 )
             )
         );
         
-        $s1only = (object) array(
-            'subject' => (object) array(
+        $s1only = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'literal', 'value' => 'literal1'), 
-                    (object) array('type' => 'uri', 'value' => 'uri1')
+                    array('type' => 'literal', 'value' => 'literal1'), 
+                    array('type' => 'uri', 'value' => 'uri1')
                 )
             )
         );
-        $s2only = (object) array(
-            'subject' => (object) array(
+        $s2only = array(
+            'subject' => array(
                 'predicate' => array(
-                    (object) array('type' => 'literal', 'value' => 'literal2'), 
-                    (object) array('type' => 'uri', 'value' => 'uri2')
+                    array('type' => 'literal', 'value' => 'literal2'), 
+                    array('type' => 'uri', 'value' => 'uri2')
                 )
             )
         );
