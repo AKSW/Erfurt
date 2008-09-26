@@ -10,6 +10,14 @@
  */
 interface Erfurt_Store_Adapter_Interface
 {
+    /**
+     * Adds statements in an array to the graph specified by $graphIri.
+     *
+     * @param string $graphIri
+     * @param array  $statementsArray
+     */
+    public function addMultipleStatements($graphIri, array $statementsArray);
+    
 	/**
      * @param string $modelIri
      * @param string $subject (IRI or blank node)
@@ -43,6 +51,14 @@ interface Erfurt_Store_Adapter_Interface
      * @throws Erfurt_Exception
      */
 	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options = array());
+	
+    /**
+     * Deletes statements in an array from the graph specified by $graphIri.
+     *
+     * @param string $graphIri
+     * @param array  $statementsArray
+     */
+    public function deleteMultipleStatements($graphIri, array $statementsArray);
 	
 	/**
 	 * @param string $modelIri The Iri, which identifies the model.

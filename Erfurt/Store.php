@@ -162,6 +162,32 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
     
     /**
+     * Adds statements in an array to the graph specified by $graphIri.
+     *
+     * @param string $graphIri
+     * @param array  $statementsArray
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function addMultipleStatements($graphIri, array $statementsArray)
+    {
+        // check whether model is available
+        if (!$this->isModelAvailable($graphIri)) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Model is not available.');
+        }
+        
+        // check whether model is editable
+        if (!$this->_checkAc($graphIri, 'edit')) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('No permissions to edit model.');
+        }
+        
+        $this->_backendAdapter->addMultipleStatements($graphIri, $statementsArray);
+    }
+    
+    /**
+     * Adds a statement to the graph specified by $modelIri.
      * @param string $modelIri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
@@ -206,10 +232,7 @@ class Erfurt_Store
      * @throws Erfurt_Exception Throws an exception if predicate $p is a blank node or if addition of statements
      * fails.
      */
-    public function addStatementFromObjects($modelIri, 
-                                            Erfurt_Rdf_Resource $subject, 
-                                            Erfurt_Rdf_Resource $predicate, 
-                                            Erfurt_Rdf_Node $object)
+    public function addStatementFromObjects($modelIri, Erfurt_Rdf_Resource $subject, Erfurt_Rdf_Resource $predicate, Erfurt_Rdf_Node $object)
     {
         if ($predicate->isBlankNode()) {
             require_once 'Erfurt/Exception.php';
@@ -254,11 +277,12 @@ class Erfurt_Store
 	}
     
     /**
-     * 
+     * Deletes all statements that match the triple pattern specified.
+     *
      * @param string $modelIri
-     * @param mixed $subject (string or null)
-     * @param mixed $predicate (string or null)
-     * @param mixed $object (string or null)
+     * @param mixed triple pattern $subject (string or null)
+     * @param mixed triple pattern $predicate (string or null)
+     * @param mixed triple pattern $object (string or null)
      * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
      * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
      * two keys the options array can contain two keys 'literal_language' and 'literal_datatype'.
@@ -270,6 +294,31 @@ class Erfurt_Store
         if ($this->_checkAc($modelIri, 'edit')) {
             return $this->_backendAdapter->deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options);
         }
+    }
+    
+    /**
+     * Deletes statements in an array from the graph specified by $graphIri.
+     *
+     * @param string $graphIri
+     * @param array  $statementsArray
+     * 
+     * @throws Erfurt_Exception
+     */
+    public function deleteMultipleStatements($graphIri, array $statementsArray)
+    {
+        // check whether model is available
+        if (!$this->isModelAvailable($graphIri)) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Model is not available.');
+        }
+        
+        // check whether model is editable
+        if (!$this->_checkAc($graphIri, 'edit')) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('No permissions to edit model.');
+        }
+        
+        $this->_backendAdapter->deleteMultipleStatements($graphIri, $statementsArray);
     }
     
     /**

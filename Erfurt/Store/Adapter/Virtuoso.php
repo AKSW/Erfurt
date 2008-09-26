@@ -109,6 +109,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
+	public function addMultipleStatements($graphIri, array $statementsArray)
+	{   
+	    $insertQuery = 'INSERT INTO GRAPH <' . $graphIri . '> {' . $this->_buildGraphPatterns($statementsArray) . '}';
+	    
+	    return $this->_execSparql($insertQuery);
+	}
+	
+    /** @see Erfurt_Store_Adapter_Interface */
     public function addStatement($modelUri, $subject, $predicate, $object, $options = array())
 	{
 	    $defaultOptions = array(
@@ -129,42 +137,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    $this->_execSparql($insertQuery);
 	}
 	
-	public function addMultipleStatements($graphIri, $statements)
-	{	    
-	    $triples = '';
-	    if (is_object($statements)) {
-	        foreach ($statements as $subject) {
-	            foreach ($subject as $predicate) {
-	                foreach ($predicate as $object) {
-                        $triples .= '<' . $subject . '> <' . $predicate . '> ';
-                        
-                        switch ($object->type) {
-                            case 'uri':
-                                $triples .= '<' . $object->value . '>';
-                                break;
-                            case 'literal':
-                                $triples .= '"' . $object->value . '"';
-                                if (isset($object->lang)) {
-                                    $triples .= '@' . $object->lang;
-                                } else if (isset($object->datatype)) {
-                                    $triples .= '^^<' . $object->datatype . '>';
-                                }
-                                break;
-                        }
-                        
-                        $triples .= '.' . PHP_EOL;
-	                }
-	            }
-	        }
-	    } else if (is_array($statements)) {
-            // TODO: array
-	    }
-	    
-	    $insertQuery = 'INSERT INTO GRAPH <' . $graphIri . '> {' . $triples . '}';
-	    
-	    return $this->_execSparql($insertQuery);
-	}
-	
 	public function countWhereMatches($graphIris, $countSpec, $whereSpec)
 	{
 	    $query = new Erfurt_Sparql_SimpleQuery();
@@ -181,6 +153,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    return 0;
 	}
     
+    /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {        
         $subjectSpec   = $subject   ? '<' . $subject . '>'   : '?s';
@@ -197,7 +170,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         return $this->_execSparql($deleteSparql);
     }
     
-    /** @see Erfurt_Store_DataInterface */
+    /** @see Erfurt_Store_Adapter_Interface */
     public function deleteModel($modelUri) 
     {
         // $this->_execSparql('DROP GRAPH <' . $modelUri . '>');
@@ -206,6 +179,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
                 WHERE {GRAPH <$modelUri> {?s ?p ?o.}}
         ");
     }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function deleteMultipleStatements($graphIri, array $statementsArray)
+	{
+	    $deleteSparql = '
+            DELETE FROM GRAPH <' . $graphIri . '> {
+                ' . $this->_buildGraphPatterns($statementsArray) . '
+            }
+        ';
+        
+	    return $this->_execSparql($deleteSparql);
+	}
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($modelUri, $serializationType = 'xml', $filename = false)
@@ -458,23 +443,42 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     // ------------------------------------------------------------------------
     
     /**
-     * Executes a SQL statement and returns an ODBC result identifier.
+     * Builds a sparql graph pattern from an array of statements.
      *
-     * @param  string $sqlQuery
-     * @return ODBC result identifier
-     * @throws Erfurt_Exception
+     * @param $statementsArray an array of statements in RDF/PHP structure.
+     *
+     * @return string
      */
-    private function _execSql($sqlQuery) 
+    private function _buildGraphPatterns(array $statementsArray)
     {
-        $result = @odbc_exec($this->_connection, $sqlQuery);
-        
-        if (null == $result) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('SQL Error: ' . $this->_getLastError());
+        $triples = '';
+        foreach ($statementsArray as $subject => $predicateArray) {
+            foreach ($predicateArray as $predicate => $objectsArray) {
+                foreach ($objectsArray as $object) {
+                    $triples .= '<' . $subject . '> <' . $predicate . '> ';
+                    
+                    switch ($object['type']) {
+                        case 'uri':
+                            $triples .= '<' . $object['value'] . '>';
+                            break;
+                        case 'literal':
+                            $triples .= '"' . $object['value'] . '"';
+                            if (array_key_exists('lang', $object)) {
+                                $triples .= '@' . $object['lang'];
+                            } else if (array_key_exists('datatype', $object)) {
+                                $triples .= '^^<' . $object['datatype'] . '>';
+                            }
+                            break;
+                    }
+                    
+                    $triples .= '.' . PHP_EOL;
+                }
+            }
         }
         
-        return $result;
+        return $triples;
     }
+    
     
     /**
      * Executes a SPARQL query and returns an ODBC result identifier.
@@ -505,13 +509,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     }
     
     /**
-     * Returns the last ODBC error message and number.
+     * Executes a SQL statement and returns an ODBC result identifier.
      *
-     * @return string
+     * @param  string $sqlQuery
+     * @return ODBC result identifier
+     * @throws Erfurt_Exception
      */
-    private function _getLastError() 
+    private function _execSql($sqlQuery) 
     {
-        return odbc_errormsg() . ' (' . odbc_error() . ')';
+        $result = @odbc_exec($this->_connection, $sqlQuery);
+        
+        if (null == $result) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('SQL Error: ' . $this->_getLastError());
+        }
+        
+        return $result;
     }
     
     private function _getImportedGraphs($graphUri)
@@ -532,6 +545,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         }
         
         return $imports;
+    }
+    
+    /**
+     * Returns the last ODBC error message and number.
+     *
+     * @return string
+     */
+    private function _getLastError() 
+    {
+        return odbc_errormsg() . ' (' . odbc_error() . ')';
     }
     
     /**
