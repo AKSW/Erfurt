@@ -147,6 +147,64 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
+    public function addMultipleStatements($graphIri, array $statementsArray)
+    {
+        $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
+        
+        $this->_dbConn->beginTransaction();
+        try {
+            foreach ($statementsArray as $subject => $predicatesArray) {
+                foreach ($predicatesArray as $predicate => $objectsArray) {
+                    foreach ($objectsArray as $object) {
+                        // check whether the subject is a blank node
+                        if (substr($subject, 0, 2) === '_:') {
+                            $subject = substr($subject, 2);
+                            $subjectIs = 'b';
+                        } else {
+                            $subjectIs = 'r';
+                        }
+
+                        // check the type of the object
+                        if ($object['type'] === 'uri') {
+                            $objectIs = 'r';
+                            $lang = '';
+                            $dType = '';
+                        } else if ($object['type'] === 'bnode') {
+                            $objectIs = 'b';
+                            $lang = '';
+                            $dType = '';
+                        } else {
+                            $objectIs = 'l';
+                            $lang = isset($object['lang']) ? $object['lang'] : '';
+                            $dType = isset($object['datatype']) ? $object['datatype'] : '';
+                        }
+
+                        $data = array(
+                            'modelID'       => $modelId,
+                            'subject'       => $subject,
+                            'predicate'     => $predicate,
+                            'object'        => $object['value'],
+                            'subject_is'    => $subjectIs,
+                            'object_is'     => $objectIs,
+                            'l_language'    => $lang,
+                            'l_datatype'    => $dType
+                        );
+
+                        $this->_dbConn->insert('statements', $data);
+                    }
+                }
+            }
+            
+            // if everything went ok... commit the changes to the database
+            $this->_dbConn->commit();
+        } catch (Exception $e) {
+            // something went wrong... rollback
+            $this->_dbConn->rollback();
+            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
     public function addStatement($modelIri, $subject, $predicate, $object, 
             $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
     {
@@ -230,6 +288,56 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
+    public function deleteMultipleStatements($graphIri, array $statementsArray)
+    {
+        $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
+        
+        $this->_dbConn->beginTransaction();
+        try {
+            foreach ($statementsArray as $subject => $predicatesArray) {
+                foreach ($predicatesArray as $predicate => $objectsArray) {
+                    foreach ($objectsArray as $object) {
+                        $whereString = 'modelID = ' . $modelId . ' ';
+                        
+                        // check whether the subject is a blank node
+                        if (substr($subject, 0, 2) === '_:') {
+                            $subject = substr($subject, 2);
+                            $whereString .= 'AND subject_is = "b" ';
+                        } else {
+                            $whereString .= 'AND subject_is = "r" ';
+                        }
+
+                        // check the type of the object
+                        if ($object['type'] === 'uri') {
+                            $whereString .= 'AND object_is = "r" ';
+                        } else if ($object['type'] === 'bnode') {
+                            $whereString .= 'AND object_is = "b" ';
+                        } else {
+                            $whereString .= 'AND object_is = "l" ';
+                            $whereString .= isset($object['lang']) ? 'AND l_language ="' . $object['lang'] . '" ' : '';
+                            $whereString .= isset($object['datatype']) ? 'AND l_datatype ="' . $object['datatype'] . 
+                                            '" ' : '';
+                        }
+
+                        $whereString .= 'AND subject = "' . $subject . '" ';
+                        $whereString .= 'AND predicate = "' . $predicate . '" ';
+                        $whereString .= 'AND object = "' . $object . '" ';
+                        
+                        $this->_dbConn->delete('statements', $whereString);
+                    }
+                }
+            }
+            
+            // if everything went ok... commit the changes to the database
+            $this->_dbConn->commit();
+        } catch (Exception $e) {
+            // something went wrong... rollback
+            $this->_dbConn->rollback();
+            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
     public function deleteModel($modelIri) 
     {
         $whereString = 'modelID = ' . $this->_modelInfoCache[$modelIri]['modelId'];
@@ -273,6 +381,12 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         }
         
         return $models;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getBlankNodePrefix() 
+    {
+        return 'bNode';
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
