@@ -143,15 +143,21 @@ class Erfurt_Sparql_Parser {
     public static function tokenize($queryString) {
 	
         $queryString  = trim($queryString);
+
         $specialChars = array(' ', "\t", "\r", "\n", ',', '\\', '(', ')','{','}','"',"'",';','[',']');
         $len          = strlen($queryString);
         $tokens       = array('');
         $n            = 0;
 
         for ($i = 0; $i < $len; ++$i) {
+            // check whether the $i.-character is not a special char
             if (!in_array($queryString{$i}, $specialChars)) {
                 $tokens[$n] .= $queryString{$i};
             } else {
+                if (($n > 0) && ($tokens[($n-1)] == ' ') && ($queryString{$i} == ' ') && ($tokens[$n] == '')) {
+                    continue;
+                }
+                
                 if ($tokens[$n] != '') {
                     ++$n;
                     if (!isset($tokens[$n])) {
@@ -181,11 +187,12 @@ class Erfurt_Sparql_Parser {
                     ++$i;
                     continue;
                 }
+                
                 $tokens[$n] = $queryString{$i};
                 $tokens[++$n] = '';
             }
         }
-//var_dump($tokens);
+#var_dump($tokens);
         return $tokens;
     }
 
@@ -734,7 +741,7 @@ class Erfurt_Sparql_Parser {
                 case "optional":
                     $this->_fastForward();
                     $this->parseGraphPattern($pattern->getId(),false);
-                    $cont = false;
+                    //$cont = false;
                     break;
                 case "union":
                     $this->_fastForward();

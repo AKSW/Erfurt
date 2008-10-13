@@ -317,6 +317,22 @@ var_dump($tree);
             }
         }
 
+        // HACK: xsd:string needs special care... literals without datatype are xsd:strings (see sparql spec)
+        if ($tree['type'] == 'equation' && $tree['operator'] == '=' && $tree['operand1']['type'] == 'function' &&
+                $tree['operand1']['name'] == 'datatype' && $tree['operand2']['type'] == 'value' &&
+                $tree['operand2']['value'] = '<http://www.w3.org/2001/XMLSchema#string>') {
+                    
+            return  $strIsNull 
+                        . '('
+                            . $val1
+                            . ' = ' 
+                            . $val2
+                            . ' OR '
+                            . $val1
+                            . ' = ""'
+                        . ')';
+        }
+
         //I don't check the operator since it is already checked in the parser
         return $strIsNull . '('
             . '('

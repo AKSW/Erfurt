@@ -485,7 +485,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();
         $query = $parser->parse((string)$query);        
-                
+#var_dump($query);
         $result = $engine->queryModel($query, $resultform);
         //var_dump($this->_dbConn->getProfiler());exit;
         

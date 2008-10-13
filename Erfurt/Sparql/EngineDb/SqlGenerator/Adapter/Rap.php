@@ -214,6 +214,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 ++$this->nUnionCount;
             }
             $arConstraints = $graphPattern->getConstraints();
+#var_dump($arConstraints);
             if ($arConstraints != null) {
                 foreach ($arConstraints as $constraint) {
                     $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]

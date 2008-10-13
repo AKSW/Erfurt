@@ -321,8 +321,7 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             return array();
         }
 
-
-
+#var_dump($arSql);
         #if (isset($GLOBALS['debugSparql']) && $GLOBALS['debugSparql']) {
         #    echo 'SQL query: ' . $strSql . "\n";
         #}
@@ -342,7 +341,7 @@ class Erfurt_Sparql_EngineDb_Adapter_RapZendDb {
             
 
         }
-//var_dump($ret);
+#echo '<pre>' . $strSql . '</pre>';
 //Erfurt_App::getInstance()->getLog()->debug(array_pop(array_values(array_pop($ret))));
         return $ret;
     }//function queryDb($sql)
