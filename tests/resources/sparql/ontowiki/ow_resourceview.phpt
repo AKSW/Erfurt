@@ -1,6 +1,10 @@
 return array(
     'name'              => 'ask-02.rq',
     'group'             => 'RAP Ask Test Cases',
+    'result_form'       => 'select distinct',
+    'result_vars'       => array('?predicate', '?predicate0', '?objectResource0', '?predicate1', '?objectResource1',
+            '?objectResource', '?objectLiteralstring', '?objectLiteralboolean', '?objectLiteralinteger',
+            '?objectLiteraldate', '?objectLiteralanyURI'),
     'query'             => 'SELECT DISTINCT ?predicate ?predicate0 ?objectResource0 ?predicate1 ?objectResource1 ?objectResource 
                     ?objectLiteralstring ?objectLiteralboolean ?objectLiteralinteger ?objectLiteraldate ?objectLiteralanyURI
     FROM <http://3ba.se/conferences/>

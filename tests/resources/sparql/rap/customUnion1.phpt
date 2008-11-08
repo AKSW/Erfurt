@@ -1,6 +1,7 @@
 return array(
     'name'              => 'customUnion1.rq',
     'group'             => 'RAP Union Test Cases',
+    'result_form'       => 'select',
     'query'             => 'PREFIX dc10:  <http://purl.org/dc/elements/1.0/>
                             PREFIX dc11:  <http://purl.org/dc/elements/1.1/>
                             PREFIX test:  <http://test/> 

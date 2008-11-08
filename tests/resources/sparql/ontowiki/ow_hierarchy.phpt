@@ -1,6 +1,9 @@
 return array(
     'name'              => 'ask-02.rq',
     'group'             => 'RAP Ask Test Cases',
+    'result_form'       => 'select distinct',
+    'result_vars'       => array('?classUri', '?sub', '?subsub', '?subsubsub', '?classUri0', '?classUri1', '?sub0',
+                            '?sub1', '?subsub0', '?subsub1'),
     'query'             => 'SELECT DISTINCT ?classUri ?sub ?subsub ?subsubsub ?classUri0 ?classUri1 ?sub0 ?sub1 ?subsub0 ?subsub1
     FROM <http://3ba.se/conferences/>
     WHERE {

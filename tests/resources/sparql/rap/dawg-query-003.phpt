@@ -1,6 +1,7 @@
 return array(
     'name'              => 'ask-02.rq',
     'group'             => 'RAP Ask Test Cases',
+    'result_form'       => 'select',
     'query'             => '# Get names and mboxes, each of which may be optional.
 
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>

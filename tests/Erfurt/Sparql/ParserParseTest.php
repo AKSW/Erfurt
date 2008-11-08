@@ -75,24 +75,55 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
             $parser = new Erfurt_Sparql_Parser();
             
             try {
-                $parser->parse($query['query']);
+                $queryObject = $parser->parse($query['query']);
             } catch (Exception $e) {
-                $msg =  'No.: ' . $i . PHP_EOL .
-                        'Group: ' . $query['group'] . PHP_EOL .
-                        'Filename: ' . $query['file_name'] . PHP_EOL .
-                        'Name: ' . $query['name'] . PHP_EOL .
-                        'Query: ' . $query['query'] . PHP_EOL .
-                        'Error: ' . $e->getMessage();
-                
-                $result->addFailure($this, new PHPUnit_Framework_AssertionFailedError($msg), time());
+                $result->addFailure($this, 
+                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
+                continue;
             } 
             
-            
-            
+            try {
+                if (isset($query['result_form'])) {
+                    PHPUnit_Framework_Assert::assertEquals($query['result_form'], $queryObject->getResultForm());
+                }
+                if (isset($query['result_vars'])) {
+                    foreach ($queryObject->getResultVars() as $i=>$resultVar) {
+                        PHPUnit_Framework_Assert::assertEquals($query['result_vars'][$i],
+                                $resultVar->getVariable());
+                    }
+                    
+                    
+                }
+            } catch (PHPUnit_Framework_AssertionFailedError $e) {
+                $result->addFailure($this, 
+                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
+            } catch (Exception $e) {
+                $result->addError($this, 
+                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
+            }
         }
         
         $result->endTest($this, time());
         
         return $result;
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    protected function _createErrorMsg($i, $query, $e) 
+    {
+        $msg =  'No.: ' . $i . PHP_EOL .
+                'Group: ' . $query['group'] . PHP_EOL .
+                'Filename: ' . $query['file_name'] . PHP_EOL .
+                'Name: ' . $query['name'] . PHP_EOL;
+                #'Query: ' . $query['query'] . PHP_EOL;
+                
+        if ($e instanceof PHPUnit_Framework_AssertionFailedError) {
+            $msg .= 'Error: ' . $e->getDescription();
+        } else {
+            $msg .= 'Error: ' . $e->getMessage();
+        }
+                
+        return $msg;
     }
 }

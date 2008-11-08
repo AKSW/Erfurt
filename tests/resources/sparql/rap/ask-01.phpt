@@ -3,6 +3,7 @@ return array(
     'group'             => 'RAP Ask Test Cases',
     'query'             => 'PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                             ASK { ?person foaf:name ?name . }',
+    'result_form'       => 'ask',
     'test_syntax'       => true,
     'syntax_success'    => true,
     'test_result'       => true,
