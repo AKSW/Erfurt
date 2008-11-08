@@ -144,55 +144,37 @@ class Erfurt_Sparql_Parser {
 	
         $queryString  = trim($queryString);
 
-        $specialChars = array(' ', "\t", "\r", "\n", ',', '\\', '(', ')','{','}','"',"'",';','[',']');
+        $removeableSpecialChars = array(' ', "\t", "\r", "\n");
+        $specialChars = array(',', '\\', '(', ')', '{', '}', '"', "'", ';', '[', ']');
         $len          = strlen($queryString);
         $tokens       = array('');
         $n            = 0;
-
-        for ($i = 0; $i < $len; ++$i) {
-            // check whether the $i.-character is not a special char
-            if (!in_array($queryString{$i}, $specialChars)) {
-                $tokens[$n] .= $queryString{$i};
-            } else {
-                if (($n > 0) && ($tokens[($n-1)] == ' ') && ($queryString{$i} == ' ') && ($tokens[$n] == '')) {
-                    continue;
+        
+        for ($i=0; $i < $len; ++$i) {
+            if (in_array($queryString{$i}, $removeableSpecialChars)) {
+                
+                if (isset($tokens[$n])) {
+                    $n++;
                 }
                 
-                if ($tokens[$n] != '') {
-                    ++$n;
-                    if (!isset($tokens[$n])) {
-                        $tokens[$n] = '';
-                    }
-                }
-                if ($queryString{$i} == "'" && $n > 1
-                  && $tokens[$n - 2] == "'" && $tokens[$n - 1] == "'"
-                ) {
-                    //special ''' quotation
-                    $tokens[$n - 2] = "'''";
-                    $tokens[$n - 1] = '';
-                    unset($tokens[$n]);
-                    --$n;
-                    continue;
-                } else if ($queryString{$i} == '"' && $n > 1
-                  && $tokens[$n - 2] == '"' && $tokens[$n - 1] == '"'
-                ) {
-                    //special """ quotation
-                    $tokens[$n - 2] = '"""';
-                    $tokens[$n - 1] = '';
-                    unset($tokens[$n]);
-                    --$n;
-                    continue;
-                } else if ($queryString{$i} == '\\') {
-                    $tokens[$n] .= substr($queryString, $i, 2);
-                    ++$i;
-                    continue;
-                }
-                
+                continue;
+            } else if (in_array($queryString{$i}, $specialChars)) {
+                if (isset($tokens[$n])) {
+                    $n++;
+                } 
                 $tokens[$n] = $queryString{$i};
-                $tokens[++$n] = '';
+                $n++;
+            } else {
+                if (!isset($tokens[$n])) {
+                    $tokens[$n] = '';
+                }
+                $tokens[$n] .= $queryString{$i};
             }
+            
+                
         }
-#var_dump($tokens);
+        
+#var_dump($tokens);exit;
         return $tokens;
     }
 
@@ -205,9 +187,10 @@ class Erfurt_Sparql_Parser {
     * @param  String $queryString
     * @return String The uncommented query string
     */
-    protected function uncomment($queryString)
+    public function uncomment($queryString)
     {
         $regex ="/((\"[^\"]*\")|(\'[^\']*\')|(\<[^\>]*\>))|(#.*)/";
+        
         return preg_replace($regex,'\1',$queryString);
     }
 
@@ -603,9 +586,9 @@ class Erfurt_Sparql_Parser {
     protected function _fastForward()
     {
         next($this->tokens);
-        while(current($this->tokens)==" "|current($this->tokens)==chr(10)|current($this->tokens)==chr(13)|current($this->tokens)==chr(9)){
-            next($this->tokens);
-        }
+        #while(current($this->tokens)==" " | current($this->tokens)==chr(10) | current($this->tokens)==chr(13) | current($this->tokens)==chr(9)){
+        #    next($this->tokens);
+        #}
     }//protected function _fastForward()
 
 
@@ -618,10 +601,10 @@ class Erfurt_Sparql_Parser {
     protected function _rewind()
     {
         prev($this->tokens);
-        while(current($this->tokens)==" "|current($this->tokens)==chr(10)|current($this->tokens)==chr(13)|current($this->tokens)==chr(9)){
-            prev($this->tokens);
-        }
-        return;
+        #while(current($this->tokens)==" "|current($this->tokens)==chr(10)|current($this->tokens)==chr(13)|current($this->tokens)==chr(9)){
+        #    prev($this->tokens);
+        #}
+        #return;
     }//protected function _rewind()
 
 
@@ -1480,7 +1463,7 @@ class Erfurt_Sparql_Parser {
             default:
                 prev($this->tokens);
 				require_once 'Erfurt/Rdf/Literal.php';
-                $node = Erfurt_Rdf_Literal::initWithLlabel(substr($node, $nSubstrLength, -$nSubstrLength));
+                $node = Erfurt_Rdf_Literal::initWithLabel(substr($node, $nSubstrLength, -$nSubstrLength));
                 break;
 
         }

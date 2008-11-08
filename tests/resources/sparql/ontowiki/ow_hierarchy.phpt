@@ -1,0 +1,33 @@
+return array(
+    'name'              => 'ask-02.rq',
+    'group'             => 'RAP Ask Test Cases',
+    'query'             => 'SELECT DISTINCT ?classUri ?sub ?subsub ?subsubsub ?classUri0 ?classUri1 ?sub0 ?sub1 ?subsub0 ?subsub1
+    FROM <http://3ba.se/conferences/>
+    WHERE {
+        {?classUri a <http://www.w3.org/2000/01/rdf-schema#Class>}
+        UNION
+        {?classUri a <http://www.w3.org/2002/07/owl#Class>} 
+        UNION {?instance a ?classUri.} 
+        UNION {?subtype <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?classUri.}
+        OPTIONAL {?classUri <http://www.w3.org/2000/01/rdf-schema#label> ?classUri0.}
+        OPTIONAL {?classUri <http://purl.org/dc/elements/1.1/title> ?classUri1.} 
+            FILTER (isURI(?classUri))
+            FILTER (regex(str(?super), "^http://www.w3.org/2002/07/owl#") || !bound(?super)) 
+            OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?classUri. 
+                OPTIONAL {?subsub <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?sub.
+                    OPTIONAL {?subsubsub <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?subsub}
+                    OPTIONAL {?subsub <http://www.w3.org/2000/01/rdf-schema#label> ?subsub0.}
+                    OPTIONAL {?subsub <http://purl.org/dc/elements/1.1/title> ?subsub1.}
+                }                
+                OPTIONAL {?sub <http://www.w3.org/2000/01/rdf-schema#label> ?sub0.}
+                OPTIONAL {?sub <http://purl.org/dc/elements/1.1/title> ?sub1.}
+            }
+            OPTIONAL {?classUri <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?super. 
+                FILTER(isUri(?super))
+            }
+            FILTER (!regex(str(?classUri), "^http://www.w3.org/1999/02/22-rdf-syntax-ns#")) 
+            FILTER (!regex(str(?classUri), "^http://www.w3.org/2000/01/rdf-schema#")) 
+            FILTER (!regex(str(?classUri), "^http://www.w3.org/2002/07/owl#"))
+    }'
+);
+
