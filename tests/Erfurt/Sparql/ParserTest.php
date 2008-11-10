@@ -31,7 +31,7 @@ class Erfurt_Sparql_ParserTest extends PHPUnit_Framework_TestCase
                         ## bla bla
                         ### bla bla bla';
                          
-        $this->assertEquals('', trim($this->_parser->uncomment($queryString)));
+        $this->assertEquals('', trim(Erfurt_Sparql_Parser::uncomment($queryString)));
     }
 }
 
