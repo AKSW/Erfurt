@@ -245,16 +245,16 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         
         // determine the rows, which should be deleted by the given parameters
         if ($subject !== null) {
-            $whereString .= ' AND subject = "' . $this->_dbConn->quote($subject) . '"';
+            $whereString .= ' AND subject = ' . $this->_dbConn->quote($subject);
         }
         if ($predicate !== null) {
-            $whereString .= ' AND predicate = "' . $this->_dbConn->quote($predicate) . '"';
+            $whereString .= ' AND predicate = ' . $this->_dbConn->quote($predicate);
         }
         if ($object !== null) {
-            $whereString .= ' AND object = "' . $this->_dbConn->quote($object) . '"';
+            $whereString .= ' AND object = ' . $this->_dbConn->quote($object);
         }
         if (isset($options['subject_type'])) {
-            switch ($subject_type) {
+            switch ($options['subject_type']) {
                 case Erfurt_Store::TYPE_IRI:
                     $whereString .= ' AND subject_is = "r"';
                     break;
@@ -264,11 +264,11 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
             }
         }
         if (isset($options['object_type'])) {
-            switch ($subject_type) {
+            switch ($options['object_type']) {
                 case Erfurt_Store::TYPE_IRI:
                     $whereString .= ' AND object_is = "r"';
                     break;
-                case Erfurt_Store::TYPE_BLANKNODE:
+                case Erfurt_Store::TYPE_LITERAL:
                     $whereString .= ' AND object_is = "l"';
                     break;
                 case Erfurt_Store::TYPE_BLANKNODE:

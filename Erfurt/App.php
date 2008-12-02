@@ -163,6 +163,9 @@ class Erfurt_App {
             $config->efloglevel = 7;
         }
         
+// TODO handle session start before output
+        $inst->getAuth()->hasIdentity();
+        
         return $inst;
     }
     

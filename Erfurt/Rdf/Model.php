@@ -134,7 +134,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteStatement($subject, $predicate, $object)
     {
-        $this->getStore()->deleteStatement($this->_modelIri, $subject, $predicate, $object);
+        $this->getStore()->deleteMatchingStatements($this->_modelIri, $subject, $predicate, $object);
     }
     
     /**
@@ -159,9 +159,10 @@ class Erfurt_Rdf_Model
      * @param string|null $predicateSpec
      * @param string|null $objectSpec
      */
-    public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec)
+    public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, $options = array())
     {
-        $this->getStore()->deleteMatchingStatements($this->_modelIri, $subjectSpec, $predicateSpec, $objectSpec);
+        $this->getStore()->deleteMatchingStatements($this->_modelIri, $subjectSpec, $predicateSpec, $objectSpec,
+                                $options);
     }
     
     /**
@@ -324,7 +325,11 @@ class Erfurt_Rdf_Model
     
     public function sparqlQueryWithPlainResult($query)
     {    
-        return $this->getStore()->executeSparql($this, $query);
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($query);
+        $queryObject->addFrom($this->_modelIri);
+        
+        return $this->getStore()->sparqlQuery($queryObject);
     }
     
     public function getStore()
