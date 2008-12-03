@@ -102,7 +102,7 @@ class Erfurt_Rdf_Model
      * @param string $object
      * @param array $options
      */
-    public function addStatement($subject, $predicate, $object, $options)
+    public function addStatement($subject, $predicate, $object, $options = array())
     {   
         $this->getStore()->addStatement($this->_modelIri, $subject, $predicate, $object, $options);
         

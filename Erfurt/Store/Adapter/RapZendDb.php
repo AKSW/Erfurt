@@ -210,12 +210,20 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
     {
         $modelId = $this->_modelInfoCache[$modelIri]['modelId'];
         $subjectType = ($options['subject_type'] === Erfurt_Store::TYPE_IRI) ? 'r' : 'b';
-        $objectType = ($options['object_type'] === Erfurt_Store::TYPE_IRI) ? 'r' :
-                            ($options['object_type'] === Erfurt_Store::TYPE_LITERAL) ? 'l' : 'b';
-        
+        $objectType = ($options['object_type'] === Erfurt_Store::TYPE_IRI) ? 'r' : 
+                        (($options['object_type'] === Erfurt_Store::TYPE_LITERAL) ? 'l' : 'b');
+       
         if ($objectType === 'l') {
+            // check for language in object string
+            if (strpos($object, '^^') !== false) {
+                $dType = substr(strstr($object, '^^'), 3, -1);
+                $object = substr($object, 1, strpos($object, '^^')-2);
+            } else {
+                $dType = '';
+            }
+            
             $lang = (isset($options['literal_language'])) ? $options['literal_language'] : '';
-            $dType = (isset($options['literal_datatype'])) ? $options['literal_datatype'] : '';
+            $dType = (isset($options['literal_datatype'])) ? $options['literal_datatype'] : $dType;
         } else {
             $lang = '';
             $dType = '';
@@ -351,7 +359,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         require_once 'Erfurt/App.php';
         $cache = Erfurt_App::getInstance()->getCache();
         $tags =  array('model_info', $this->_modelInfoCache[$modelIri]['modelId']);
-        $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
+        #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
         $this->_fetchModelInfos();
     }
     
