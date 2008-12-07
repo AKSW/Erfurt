@@ -209,7 +209,7 @@ class Erfurt_Store
         $options = array_merge($defaults, $options);
         
         // check whether model is available
-        if (!$this->isModelAvailable($modelIri)) {
+        if ($useAcl && !$this->isModelAvailable($modelIri)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Model is not available.');
         }
