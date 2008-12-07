@@ -199,7 +199,7 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-    public function addStatement($modelIri, $subject, $predicate, $object, $options = array())
+    public function addStatement($modelIri, $subject, $predicate, $object, $options = array(), $useAcl = true)
     {
         $defaults = array(
             'subject_type' => Erfurt_Store::TYPE_IRI, 
@@ -215,7 +215,7 @@ class Erfurt_Store
         }
         
         // check whether model is editable
-        if (!$this->_checkAc($modelIri, 'edit')) {
+        if ($useAcl && !$this->_checkAc($modelIri, 'edit')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('No permissions to edit model.');
         }

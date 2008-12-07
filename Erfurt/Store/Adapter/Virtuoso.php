@@ -111,14 +111,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     /** @see Erfurt_Store_Adapter_Interface */
 	public function addMultipleStatements($graphIri, array $statementsArray)
 	{   
-	    $insertQuery = 'INSERT INTO GRAPH <' . $graphIri . '> {' . $this->_buildGraphPatterns($statementsArray) . '}';
+	    $insertSparql = '
+	        INSERT INTO GRAPH <' . $graphIri . '> {
+	            ' . $this->_buildGraphPattern($statementsArray) . '
+	        }';
 	    
-	    return $this->_execSparql($insertQuery);
+	    return $this->_execSparql($insertSparql);
 	}
 	
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($modelUri, $subject, $predicate, $object, $options = array())
+    public function addStatement($graphIri, $subject, $predicate, $object, $options = array())
 	{
+	    // handle defaults
 	    $defaultOptions = array(
 	        'subject_type' => Erfurt_Store::TYPE_IRI, 
 	        'object_type'  => Erfurt_Store::TYPE_IRI
@@ -126,15 +130,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    $options = array_merge($defaultOptions, $options);
 	    
 	    if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
-	        $object = "<$object>";
+	        // make IRI object
+	        $object = '<' . $object . '>';
+	    } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
+	        // make literal object
+	        // TODO: datatype/language
+	        $object = '"' . $object . '"';
 	    }
-	    // TODO: support blanknodes as subject
-	    $insertQuery = '
-	        INSERT INTO GRAPH <' . $modelUri . '> {
+	    
+	    // TODO: support blank nodes as subject
+	    $insertSparql = '
+	        INSERT INTO GRAPH <' . $graphIri . '> {
 	            <' . $subject . '> <' . $predicate . '> ' . $object . '
 	        }';
 	    
-	    $this->_execSparql($insertQuery);
+	    $this->_execSparql($insertSparql);
 	}
 	
 	public function countWhereMatches($graphIris, $countSpec, $whereSpec)
@@ -171,12 +181,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteModel($modelUri) 
+    public function deleteModel($graphIri) 
     {
-        // $this->_execSparql('DROP GRAPH <' . $modelUri . '>');
+        // $this->_execSparql('DROP GRAPH <' . $graphIri . '>');
         return $this->_execSparql("
-            DELETE FROM GRAPH <$modelUri> {?s ?p ?o.}
-                WHERE {GRAPH <$modelUri> {?s ?p ?o.}}
+            DELETE FROM GRAPH <$graphIri> {?s ?p ?o.}
+                WHERE {GRAPH <$graphIri> {?s ?p ?o.}}
         ");
     }
     
@@ -185,15 +195,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	{
 	    $deleteSparql = '
             DELETE FROM GRAPH <' . $graphIri . '> {
-                ' . $this->_buildGraphPatterns($statementsArray) . '
+                ' . $this->_buildGraphPattern($statementsArray, true) . '
             }
         ';
-        
+        // var_dump($deleteSparql);exit;
 	    return $this->_execSparql($deleteSparql);
 	}
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function exportRdf($modelUri, $serializationType = 'xml', $filename = false)
+    public function exportRdf($graphIri, $serializationType = 'xml', $filename = false)
     {
         throw new Exception('Not implemented yet.');
     }
@@ -261,66 +271,66 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getModel($modelUri) 
+    public function getModel($graphIri) 
     {
         $owlQuery = '
             ASK WHERE {
-                GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}
+                GRAPH <' . $graphIri . '> {<' . $graphIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}
             }';
         
-        if ($this->sparqlAsk($owlQuery, $modelUri)) {
+        if ($this->sparqlAsk($owlQuery, $graphIri)) {
             // assume owl model
             require_once 'Erfurt/Owl/Model.php';
-            $model = new Erfurt_Owl_Model($modelUri);
+            $model = new Erfurt_Owl_Model($graphIri);
         // TODO: set owl:imports cache
         // TODO: base URIs
         } else {
             // instantiate RDFS model
             require_once 'Erfurt/Rdfs/Model.php';
-            $model = new Erfurt_Rdfs_Model($modelUri);
+            $model = new Erfurt_Rdfs_Model($graphIri);
         }
         
         return $model;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getModelLanguages($modelUri)
+    public function getModelLanguages($graphIri)
     {
-        if (!array_key_exists($modelUri, $this->_modelLanguages)) {
-            $this->_modelLanguages[$modelUri] = array();
+        if (!array_key_exists($graphIri, $this->_modelLanguages)) {
+            $this->_modelLanguages[$graphIri] = array();
             
             foreach ($this->_languages as $language) {
-                $query = 'ASK FROM <' . $modelUri . '> WHERE {?s ?p ?o. FILTER (lang(?o) = "' . $language . '")}';
+                $query = 'ASK FROM <' . $graphIri . '> WHERE {?s ?p ?o. FILTER (lang(?o) = "' . $language . '")}';
                 
                 if ($this->sparqlAsk($query)) {
-                    array_push($this->_modelLanguages[$modelUri], $lang);
+                    array_push($this->_modelLanguages[$graphIri], $lang);
                 }
             }
         }
         
-        return $this->_modelLanguages[$modelUri];
+        return $this->_modelLanguages[$graphIri];
     }
     
     /** @see Erfurt_Store_Adapter_Interface */ 
-    public function getNewModel($modelUri, $baseUri = '', $type = 'rdfs') 
+    public function getNewModel($graphIri, $baseUri = '', $type = 'rdfs') 
     {
-        if ($this->isModelAvailable($modelUri, false)) {
+        if ($this->isModelAvailable($graphIri, false)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception("A model with the IRI '$modelUri' already exists.");
+            throw new Erfurt_Exception("A model with the IRI '$graphIri' already exists.");
         }
         
         // TODO: set base uris
         if (strtolower($type) == 'owl') {
             // add statement (?model rdf:type owl:Ontology)
-            $owlInsert = 'INSERT INTO GRAPH <' . $modelUri . '> {<' . $modelUri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}';
+            $owlInsert = 'INSERT INTO GRAPH <' . $graphIri . '> {<' . $graphIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}';
             $this->_execSparql($owlInsert);
 
             require_once 'Erfurt/Owl/Model.php';
-            $model = new Erfurt_Owl_Model($modelUri);
+            $model = new Erfurt_Owl_Model($graphIri);
         } else {
             // nothing to insert
             require_once 'Erfurt/Rdfs/Model.php';
-            $model = new Erfurt_Rdfs_Model($modelUri);
+            $model = new Erfurt_Rdfs_Model($graphIri);
         }
         
         return $model;
@@ -343,23 +353,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	}
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function importRdf($modelUri, $data, $type, $locator)
+    public function importRdf($graphIri, $data, $type, $locator)
     {
         if ($locator == 'file' && is_readable($data)) {
-            return $this->_importStatementsFromFile($data, $type, $modelUri);
+            return $this->_importStatementsFromFile($data, $type, $graphIri);
         } else if ($locator == 'url') {
-            return $this->_importStatementsFromUrl($data, $type, $modelUri);
+            return $this->_importStatementsFromUrl($data, $type, $graphIri);
         } else {
             // not supported
         }
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function isModelAvailable($modelUri, $useAc = true) 
+    public function isModelAvailable($graphIri, $useAc = true) 
     {
-        if (is_string($modelUri)) {
+        if (is_string($graphIri)) {
             // check if graph exists in database
-            $result = $this->_execSparql('ASK WHERE {GRAPH <' . $modelUri . '> {?s ?p ?o.}}');
+            $result = $this->_execSparql('ASK WHERE {GRAPH <' . $graphIri . '> {?s ?p ?o.}}');
             
             if (odbc_result($result, 1)) {
                 return true;
@@ -372,7 +382,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
     /**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
-     * @param string $modelUri
+     * @param string $graphIri
      * @param string $saprqlAsk
      */
     public function sparqlAsk($query)
@@ -449,7 +459,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
      *
      * @return string
      */
-    private function _buildGraphPatterns(array $statementsArray)
+    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false)
     {
         $triples = '';
         foreach ($statementsArray as $subject => $predicateArray) {
@@ -463,10 +473,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
                             break;
                         case 'literal':
                             $triples .= '"' . $object['value'] . '"';
-                            if (array_key_exists('lang', $object)) {
-                                $triples .= '@' . $object['lang'];
-                            } else if (array_key_exists('datatype', $object)) {
+                            
+                            if (array_key_exists('datatype', $object)) {
                                 $triples .= '^^<' . $object['datatype'] . '>';
+                                
+                                if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
+                                    // add string triple w/o datatype
+                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . '"' . $object['value'] . '"';
+                                }
+                            } else if (array_key_exists('lang', $object)) {
+                                $triples .= '@' . $object['lang'];
                             }
                             break;
                     }
@@ -500,7 +516,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         
         $result = @odbc_exec($this->_connection, $virtuosoPl);
         
-        if (null == $result) {
+        if (false === $result) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . $sparqlQuery);
         }
