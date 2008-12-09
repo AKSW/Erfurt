@@ -140,7 +140,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	        if (array_key_exists('literal_language', $options)) {
 	            $object .= '@' . $options['literal_language'];
 	        } else if (array_key_exists('literal_datatype', $options)) {
-	            $object .= '^^' . $options['literal_datatype'];
+	            $object .= '^^<' . $options['literal_datatype'] . '>';
 	        }
 	    }
 	    
