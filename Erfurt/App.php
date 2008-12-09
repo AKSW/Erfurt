@@ -530,17 +530,19 @@ class Erfurt_App {
      */
     public function addUser($username, $password, $email, $userGroupUri = null)
     {
-        $acModelUri = $this->getAcModel()->getModelIri();
-        $userUri    = $acModelUri . urlencode($username);
-        $store      = $this->getStore();
+        $acModel = $this->getAcModel();
+        $userUri = $acModel->getModelIri() . urlencode($username);
         
-        $store->addStatement($acModelUri, $userUri, EF_RDF_TYPE, $this->_config->ac->user->class);
-        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->name, '"' . $username . '"^^<' . EF_XSD_NS . 'string>', array('object_type' => Erfurt_Store::TYPE_LITERAL));
-        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->mail, 'mailto:' . $email);
-        $store->addStatement($acModelUri, $userUri, $this->_config->ac->user->pass, sha1($password));
+        $acModel->addStatement($userUri, EF_RDF_TYPE, $this->_config->ac->user->class, array(), false);
+        $acModel->addStatement(
+            $userUri, $this->_config->ac->user->name, $username, array(
+                'object_type' => Erfurt_Store::TYPE_LITERAL, 'literal_datatype' => EF_XSD_NS . 'string'
+            ), false);
+        $acModel->addStatement($userUri, $this->_config->ac->user->mail, 'mailto:' . $email, array(), false);
+        $acModel->addStatement($userUri, $this->_config->ac->user->pass, sha1($password), array(), false);
         
         if ($userGroupUri) {
-            $store->addStatement($acModelUri, $userGroupUri, $this->_config->ac->group->membership, $userUri);
+            $acModel->addStatement($userGroupUri, $this->_config->ac->group->membership, $userUri, array(), false);
         }
         
         return true;
