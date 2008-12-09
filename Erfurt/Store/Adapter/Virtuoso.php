@@ -136,6 +136,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	        // make literal object
 	        // TODO: datatype/language
 	        $object = '"' . $object . '"';
+	        
+	        if (array_key_exists('literal_language', $options)) {
+	            $object .= '@' . $options['literal_language'];
+	        } else if (array_key_exists('literal_datatype', $options)) {
+	            $object .= '^^' . $options['literal_datatype'];
+	        }
 	    }
 	    
 	    // TODO: support blank nodes as subject
