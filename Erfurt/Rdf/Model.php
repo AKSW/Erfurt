@@ -224,6 +224,17 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Returns whether the current agent has edit privileges
+     * on this model instance.
+     *
+     * @return bool
+     */
+    public function isEditable()
+    {
+        return $this->_isEditable;
+    }
+    
+    /**
      * Sets this model's editable flag.
      *
      * @param boolean $editableFlag
