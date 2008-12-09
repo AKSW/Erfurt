@@ -126,6 +126,17 @@ class Erfurt_Rdf_Model
         return $this;
     }
     
+    public function createResourceUri($spec = '')
+    {
+        $prefix = $this->getBaseUri()
+                . $spec;
+        
+        // TODO: check uniqueness
+        $prefix .= uniqid();
+        
+        return $prefix;
+    }
+    
     /**
      * Deletes the statement denoted by subject, predicate, object.
      *
