@@ -128,7 +128,7 @@ class Erfurt_Rdf_Model
     
     public function createResourceUri($spec = '')
     {
-        $prefix = $this->getBaseUri()
+        $prefix = $this->getBaseIri()
                 . $spec;
         
         // TODO: check uniqueness
