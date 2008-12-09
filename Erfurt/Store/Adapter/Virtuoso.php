@@ -133,10 +133,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	        // make IRI object
 	        $object = '<' . $object . '>';
 	    } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
-	        // make literal object
-	        // TODO: datatype/language
-	        $object = '"' . $object . '"';
-	        
+	        // make secure literal object
+	        $object = '"' . addslashes($object) . '"';
+	        // datatype/language
 	        if (array_key_exists('literal_language', $options)) {
 	            $object .= '@' . $options['literal_language'];
 	        } else if (array_key_exists('literal_datatype', $options)) {
