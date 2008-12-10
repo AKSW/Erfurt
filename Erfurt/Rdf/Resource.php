@@ -15,7 +15,7 @@ require_once 'Erfurt/Rdf/Node.php';
 class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 {
     /**
-     * The mode to which this resource belongs.
+     * The model to which this resource belongs.
      * @var Erfurt_Rdf_Model
      */
     protected $_model = null;
@@ -43,6 +43,11 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      * @var string
      */
     protected $_qualifiedNameDelimiter = ':';
+    
+    /**
+     * Human-readable representation of this resource.
+     */
+    protected $_title = null;
     
     /**
      * Constructor
@@ -111,6 +116,58 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
             
             return $qName;
         }
+    }
+    
+    /**
+     * Returns a human-readable representation of this resource or false
+     * if no suitable value has been found.
+     *
+     * @return string|false
+     */
+    public function getTitle()
+    {
+        if (null === $this->_title) {
+            if ($this->_model) {
+                $select = '';
+                $where = array();
+                
+                // query for all title props
+                foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
+                    $select .= ' ?' . $key;
+                    $where[] = ' OPTIONAL {<' . $this->getIri() . '> <' . $titleProp . '> ?' . $key . '}' . PHP_EOL;
+                }
+                $titleQuery = '
+                    SELECT ' . $select . ' 
+                    FROM <' . $this->_model->getModelIri() . '> 
+                    WHERE {
+                        ' . implode(' ', $where) . '
+                    }';
+                
+                // build query object
+                include_once 'Erfurt/Sparql/SimpleQuery.php';
+                $query = Erfurt_Sparql_SimpleQuery::initWithString($titleQuery);
+                $store = $this->_model->getStore();
+                
+                // check all title props for values
+                if ($result = $store->sparqlQuery($query)) {
+                    foreach ($result as $row) {
+                        foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
+                            if (!empty($row[$key])) {
+                                $this->_title = $row[$key];
+                                break(2);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // still empty?
+            if (empty($this->_title)) {
+                $this->_title = false;
+            }
+        }
+        
+        return $this->_title;
     }
     
     // ------------------------------------------------------------------------
