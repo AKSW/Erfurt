@@ -134,13 +134,13 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 // query for all title props
                 foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
                     $select .= ' ?' . $key;
-                    $where[] = ' OPTIONAL {<' . $this->getIri() . '> <' . $titleProp . '> ?' . $key . '}' . PHP_EOL;
+                    $where[] = ' {<' . $this->getIri() . '> <' . $titleProp . '> ?' . $key . '}' . PHP_EOL;
                 }
                 $titleQuery = '
                     SELECT ' . $select . ' 
                     FROM <' . $this->_model->getModelIri() . '> 
                     WHERE {
-                        ' . implode(' ', $where) . '
+                        ' . implode(' UNION ', $where) . '
                     }';
                 
                 // build query object

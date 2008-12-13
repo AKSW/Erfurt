@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Erfurt/Event.php';
+
 /**
  * Erfurt event dispatcher.
  *
@@ -12,16 +14,29 @@
  */
 class Erfurt_Event_Dispatcher
 {
-    /** @var Zend_Logger */
+    /** 
+     * @var string 
+     */
+    const INIT_VALUE = '__init_value';
+    
+    /** 
+     * @var Zend_Logger 
+     */
     protected $_logger = null;
     
-    /** @var Erfurt_Event_Dispatcher */
+    /** 
+     * @var Erfurt_Event_Dispatcher 
+     */
     private static $_instance = null;
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private $_handlerInstances = array();
     
-    /** @var array */
+    /** 
+     * @var array 
+     */
     private $_registeredEvents = array();
     
     /**
@@ -87,18 +102,12 @@ class Erfurt_Event_Dispatcher
      * Triggers the specified event, thereby invoking all registered observers.
      *
      * @param string $eventName
+     * @param event parameters
      */
-    public function trigger($eventName)
+    public function trigger(Erfurt_Event $event)
     {
-        $arguments = func_get_args();
-        array_shift($arguments);
-        
-        // init with original value or null
-        // if (isset($arguments[0])) {
-        //     $result = $arguments[0];
-        // } else {
-            $result = null;
-        // }
+        $eventName = $event->getName();
+        $result = self::INIT_VALUE;
         
         if (array_key_exists($eventName, $this->_registeredEvents)) {
             foreach ($this->_registeredEvents[$eventName] as $handler) {
@@ -129,7 +138,7 @@ class Erfurt_Event_Dispatcher
                     if (method_exists($handlerObject, $eventName)) {
                         // invoke event method
                         $reflectionMethod = new ReflectionMethod(get_class($handlerObject), $handlerMethod);
-                        if ($tempResult = $reflectionMethod->invokeArgs($handlerObject, $arguments)) {
+                        if ($tempResult = $reflectionMethod->invoke($handlerObject, $event)) {
                             $result = $tempResult;
                         }
                     }
@@ -137,6 +146,15 @@ class Erfurt_Event_Dispatcher
                     // TODO: throw exception or log error?
                 }
             }
+        }
+        
+        // check whether event has been handled 
+        // and set handled flag and default value
+        if ($result != self::INIT_VALUE) {
+            $event->setHandled(true);
+        } else {
+            $result = $event->getDefault();
+            $event->setHandled(false);
         }
         
         return $result;
