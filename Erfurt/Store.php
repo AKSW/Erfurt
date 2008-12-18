@@ -169,21 +169,29 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception
      */
-    public function addMultipleStatements($graphIri, array $statementsArray)
+    public function addMultipleStatements($graphUri, array $statementsArray)
     {
         // check whether model is available
-        if (!$this->isModelAvailable($graphIri)) {
+        if (!$this->isModelAvailable($graphUri)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Model is not available.');
         }
         
         // check whether model is editable
-        if (!$this->_checkAc($graphIri, 'edit')) {
+        if (!$this->_checkAc($graphUri, 'edit')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-        $this->_backendAdapter->addMultipleStatements($graphIri, $statementsArray);
+        $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
+        
+        require_once 'Erfurt/Event/Dispatcher.php';
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onAddMultipleStatements');
+        $event->graphUri   = $graphUri; 
+        $event->statements = $statementsArray;
+        
+        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
     }
     
     /**
@@ -199,7 +207,7 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-    public function addStatement($modelIri, $subject, $predicate, $object, $options = array(), $useAcl = true)
+    public function addStatement($graphUri, $subject, $predicate, $object, $options = array(), $useAcl = true)
     {
         $defaults = array(
             'subject_type' => Erfurt_Store::TYPE_IRI, 
@@ -221,8 +229,18 @@ class Erfurt_Store
         }
         
         $this->_backendAdapter->addStatement($modelIri, $subject, $predicate, $object, $options);
+        
+        require_once 'Erfurt/Event/Dispatcher.php';
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onAddStatement');
+        $event->graphUri   = $graphUri; 
+        $event->subject = $subject;
+        $event->predicate = $predicate;
+        $event->object = $object;
+        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
     }
     
+// TODO Remove the following method... not necessary...
     /**
      * @param string $modelIri
      * @param Erfurt_Rdf_Resource $subject (IRI or blank node)
@@ -289,10 +307,22 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception
      */
-    public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
         if ($this->_checkAc($modelIri, 'edit')) {
-            return $this->_backendAdapter->deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options);
+            $retVal =  $this->_backendAdapter->deleteMatchingStatements(
+                $graphUri, $subject, $predicate, $object, $options);
+
+            require_once 'Erfurt/Event/Dispatcher.php';
+            require_once 'Erfurt/Event.php';
+            $event = new Erfurt_Event('onDeleteMatchingStatements');
+            $event->graphUri   = $graphUri; 
+            $event->subject = $subject;
+            $event->predicate = $predicate;
+            $event->object = $object;
+            Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+
+            return $retVal;
         }
     }
     
@@ -304,21 +334,28 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception
      */
-    public function deleteMultipleStatements($graphIri, array $statementsArray)
+    public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
         // check whether model is available
-        if (!$this->isModelAvailable($graphIri)) {
+        if (!$this->isModelAvailable($graphUri)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Model is not available.');
         }
         
         // check whether model is editable
-        if (!$this->_checkAc($graphIri, 'edit')) {
+        if (!$this->_checkAc($graphUri, 'edit')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-        $this->_backendAdapter->deleteMultipleStatements($graphIri, $statementsArray);
+        $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
+        
+        require_once 'Erfurt/Event/Dispatcher.php';
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onDeleteMultipleStatements');
+        $event->graphUri   = $graphUri; 
+        $event->statements = $statementsArray;
+        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
     }
     
     /**
