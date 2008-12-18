@@ -293,6 +293,21 @@ class Erfurt_Store
 	    // TODO: is it better to throw an exception in this case?
 	    return self::COUNT_NOT_SUPPORTED;
 	}
+	
+	/**
+     * Creates the table specified by $tableSpec according to backend-specific 
+     * create table statement.
+     *
+     * @param array $tableSpec An associative array of SQL column names and columnd specs.
+     */
+	public function createTable(array $tableSpec)
+	{
+	    if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
+	        return $this->_backendAdapter->createTable($tableSpec);
+	    }
+	    
+	    // TODO: use default SQL store
+	}
     
     /**
      * Deletes all statements that match the triple pattern specified.
@@ -616,6 +631,18 @@ class Erfurt_Store
     }
     
     /**
+     * Returns the ID for the last insert statement.
+     */
+    public function lastInsertId()
+    {
+        if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
+	        return $this->_backendAdapter->lastInsertId();
+	    }
+	    
+	    // TODO: use default SQL store
+    }
+    
+    /**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
      * @param string $modelIri
@@ -696,6 +723,22 @@ class Erfurt_Store
         }
         
         return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
+    }
+    
+    /**
+     * Executes a SQL query with a SQL-capable backend.
+     *
+     * @param string $sqlQuery A string containing the SQL query to be executed.
+     *
+     * @return array
+     */
+    public function sqlQuery($sqlQuery)
+    {
+        if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
+	        return $this->_backendAdapter->sqlQuery($sqlQuery);
+	    }
+	    
+	    // TODO: use default SQL store
     }
     
     // ------------------------------------------------------------------------
