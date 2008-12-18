@@ -325,19 +325,26 @@ class Erfurt_Store
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
         if ($this->_checkAc($modelIri, 'edit')) {
-            $retVal =  $this->_backendAdapter->deleteMatchingStatements(
+            try {
+                $retVal =  $this->_backendAdapter->deleteMatchingStatements(
                 $graphUri, $subject, $predicate, $object, $options);
-
-            require_once 'Erfurt/Event/Dispatcher.php';
-            require_once 'Erfurt/Event.php';
-            $event = new Erfurt_Event('onDeleteMatchingStatements');
-            $event->graphUri   = $graphUri; 
-            $event->subject = $subject;
-            $event->predicate = $predicate;
-            $event->object = $object;
-            Erfurt_Event_Dispatcher::getInstance()->trigger($event);
-
-            return $retVal;
+                
+                require_once 'Erfurt/Event/Dispatcher.php';
+                require_once 'Erfurt/Event.php';
+                $event = new Erfurt_Event('onDeleteMatchingStatements');
+                $event->graphUri   = $graphUri; 
+                $event->statements = $retVal;
+                Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+            } catch (Erfurt_Store_Adapter_Exception $e) {
+// TODO Create a exception for too many matching values
+                // In this case we log without storing the payload. No rollback supported for such actions.
+                require_once 'Erfurt/Event/Dispatcher.php';
+                require_once 'Erfurt/Event.php';
+                $event = new Erfurt_Event('onDeleteMatchingStatements');
+                $event->graphUri = $graphUri; 
+                $event->resource = $subject; 
+                Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+            }
         }
     }
     
