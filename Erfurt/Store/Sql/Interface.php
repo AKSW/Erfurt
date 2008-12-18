@@ -21,6 +21,11 @@ interface Erfurt_Store_Sql_Interface
     public function createTable(array $tableSpec);
     
     /**
+     * Returns the ID for the last insert statement.
+     */
+    public function lastInsertId();
+    
+    /**
      * Executes a SQL query with a SQL-capable backend.
      *
      * @param string $sqlQuery A string containing the SQL query to be executed.

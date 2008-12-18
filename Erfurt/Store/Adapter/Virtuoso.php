@@ -1,6 +1,7 @@
 <?php
 require_once 'Erfurt/Sparql/SimpleQuery.php';
 require_once 'Erfurt/Store/Adapter/Interface.php';
+require_once 'Erfurt/Store/Sql/Interface.php';
 
 /**
  * Erfurt RDF Store – Virtuoso Adapter
@@ -15,7 +16,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
+class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
@@ -166,6 +167,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
 	    }
 	    
 	    return 0;
+	}
+	
+	/** @see Erfurt_Store_Sql_Interface */
+	public function createTable($tableName, array $columns)
+	{
+	    $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
+	    foreach ($tableSpec as $columnName => $columnSpec) {
+	        $createTable .= PHP_EOL
+	                     .  " $columnName "
+	                     .  str_ireplace('AUTO_INCREMENT', 'IDENTITY', $columnSpec); // Virtuoso-specific
+	    }
+	    $createTable .= PHP_EOL
+	                 .  ')';
+	    
+	    return $this->sqlQuery($createTable);
 	}
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -384,6 +400,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         return false;
     }
     
+    /** @see Erfurt_Store_Sql_Interface */
+    public function lastInsertId()
+    {
+        if ($result = $this->sqlQuery('SELECT IDENTITY_VALUE()')) {
+            return $result[0][0];
+        }
+    }
+    
     /**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
@@ -449,6 +473,27 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface
         }
         
         // print_r($resultArray);
+        
+        return $resultArray;
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function sqlQuery($sqlQuery)
+    {
+        $result         = $this->_execSql($sqlQuery);
+        $resultArray    = array();
+        $resultRow      = array();
+        $resultRowNamed = array();
+        
+        while (odbc_fetch_into($result, $resultRow)) {
+            for ($i = 0; $i < $numFields; ++$i) {
+                $colName = odbc_field_name($result, $i + 1);
+                $resultRowNamed[$colName] = $resultRow[$i];
+            }
+            
+            // add row to result array
+            array_push($resultArray, $resultRowNamed);
+        }
         
         return $resultArray;
     }
