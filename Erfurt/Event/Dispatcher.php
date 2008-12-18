@@ -96,6 +96,8 @@ class Erfurt_Event_Dispatcher
             $this->_logger->info($handler['class_name'] . " registered for event '$eventName'");
         }
         // var_dump($this->_registeredEvents);
+        
+        return $this;
     }
     
     /**
