@@ -70,14 +70,15 @@ class Erfurt_Versioning
      *
      *
      */
-    public function endAction($actionSpec)
+    public function endAction()
     {
         // no action to end?
         if (null === $this->_currentAction) {
-            // throw exception
+// TODO throw exception
+            throw new Exception();
         }
         
-        $this->_currentAction = $actionSpec;
+        $this->_currentAction = null;
     }
     
     /**
@@ -85,7 +86,9 @@ class Erfurt_Versioning
      */
     public function getLastModifiedForResource($resourceUri, $graphUri)
     {
-        return $this->getHistoryForResource($resourceUri, $graphUri)[0];
+        $history = $this->getHistoryForResource($resourceUri, $graphUri);
+        
+        return $history[0];
     }
     
     public function getHistoryForModel($graphUri, $page = 1)
@@ -130,6 +133,26 @@ class Erfurt_Versioning
         return $result;
     }
     
+    /**
+     * Returns whether an action is currently running or not.
+     * 
+     * @return bool Returns true iff an action is currently started, else false.
+     */
+    public function isActionStarted()
+    {
+        return (null !== $this->_currentAction);
+    }
+    
+    /**
+     * Returns whether versioning is currently enabled or not.
+     * 
+     * @return bool Returns true iff versioning is enabled, false else.
+     */
+    public function isVersioningEnabled()
+    {
+        return (bool) $this->_versioningEnabled;
+    }
+    
     public function setLimit($limit)
     {
         $this->_limit = (int) $limit;
@@ -138,7 +161,9 @@ class Erfurt_Versioning
     public function onAddStatement(Erfurt_Event $event)
     {
         $payloadId = $this->_execAddPayload($event->statement);
-        $this->_execAddAction($event->graphUri, array_keys($event->statement)[0], self::STATEMENT_ADDED, $payloadId);
+        $resourceArray = array_keys($event->statement);
+        $resource = $resourceArray[0];
+        $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, $payloadId);
     }
     
     public function onAddMultipleStatements(Erfurt_Event $event)
@@ -152,7 +177,7 @@ class Erfurt_Versioning
     {
         $graphUri = $event->graphUri;
         
-        if (isset($event->statements) {
+        if (isset($event->statements)) {
             $this->execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
         } else {
             // In this case, we have no payload. Just add a action without a payload (no rollback possible).
@@ -213,7 +238,8 @@ class Erfurt_Versioning
     {
         // action already running?
         if (null !== $this->_currentAction) {
-            // throw exception
+// TODO throw exception
+            throw new Exception();
         }
         
         $this->_currentAction = $actionSpec;
