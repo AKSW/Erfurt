@@ -1,5 +1,6 @@
 <?php
 require_once 'Erfurt/Store/Adapter/Interface.php';
+require_once 'Erfurt/Store/Sql/Interface.php';
 
 /**
  * Erfurt RDF Store - Adapter for the {@link http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/ RAP} schema with Zend_Db
@@ -11,7 +12,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id: $
  */
-class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface 
+class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
@@ -242,6 +243,14 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         
         // add the statement to the database
         $this->_dbConn->insert('statements', $data);
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function createTable($tableName, array $columns) 
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTableMysqli($tableName, $columns);
+        }	    
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -478,6 +487,18 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         }
     }
     
+    /** @see Erfurt_Store_Sql_Interface */
+    public function lastInsertId()
+    {
+        return $this->_dbConn->lastInsertId();
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function listTables()
+    {
+        return $this->_dbConn->listTable();
+    }
+    
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlAsk($query)
     {
@@ -500,9 +521,41 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface
         return $result;   
     }
     
+    /** @see Erfurt_Store_Sql_Interface */
+    public function sqlQuery($sqlQuery)
+    {
+        return $this->_dbConn->fetchAssoc($sqlQuery);
+    }
+    
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
+    
+    /**
+     * For Zend_Db does not abstract SQL statements that can't be prepared, we need to do this by hand
+     * for each supported db server, which can be used with the ZendDb adapter.
+     */
+    private function _createTableMysqli($tableName, array $columns)
+    {
+        $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
+        
+	    foreach ($columns as $columnName => $columnSpec) {
+	        $createTable .= PHP_EOL
+	                     .  '`' . $columnName . '`'
+	                     .  $columnSpec
+	    }
+	    $createTable .= PHP_EOL
+	                 .  ')';
+	    
+	    $success = $this->_dbConn->getConnection()->query($createTable);
+	    
+	    if (!$success) {
+// TODO dedicated exception
+	        throw new Exception('Could not create database table with name ' . $tableName . '.');
+	    } else {
+	        return $success;
+	    }
+    }
     
     /**
      * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.

@@ -47,6 +47,8 @@ class Erfurt_Versioning
     
     public function __construct()
     {
+        $this->_initialize();
+        
         // register for events
         require_once 'Erfurt/Event/Dispatcher.php';
         $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
@@ -320,6 +322,37 @@ class Erfurt_Versioning
         $app = Erfurt_App::getInstance();
         return $app->getAuth();
     }
+    
+    private function _initialize()
+    {
+        if(!($this->_getStore() instanceof Erfurt_Store_Sql_Interface)) {
+            throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
+        }
+        
+        $existingTableNames = $this->_getStore->listTables();
+        
+        if (!in_array('erfurt_versioning_actions', $existingTableNames)) {
+            $columnSpec = array(
+                'id'          => 'INT PRIMARY KEY',
+                'model'       => 'VARCHAR(255) NOT NULL',
+                'user'        => 'VARCHAR(255) NOT NULL',
+                'resource'    => 'VARCHAR(255)',
+                'tstamp'      => 'TIMESTAMP NOT NULL',
+                'action_type' => 'INT NOT NULL',
+                'parent'      => 'INT DEFAULT NULL',
+                'payload_id'  => 'INT NOT NULL'
+            );
+            
+            $this->_getStore()->createTable('erfurt_versioning_actions', $columnSpec);
+        }
+        
+        if (!in_array('erfurt_versioning_payloads', $existingTableNames)) {
+            $columnSpec = array(
+                'id'             => 'INT PRIMARY KEY',
+                'statement_hash' => 'LONGTEXT'
+            );
+            
+            $this->_getStore()->createTable('erfurt_versioning_payloads', $columnSpec);
+        }        
+    }
 }
-
-
