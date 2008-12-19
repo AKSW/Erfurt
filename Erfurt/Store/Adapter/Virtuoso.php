@@ -409,6 +409,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
     }
     
+    /** @see Erfurt_Store_Sql_Interface */
+    public function listTables()
+    {
+        $tablesArray = array();
+        
+        $tablesSql = 'select name_part(KEY_TABLE, 2) as TABLE_NAME NVARCHAR(128)
+        from DB.DBA.SYS_KEYS 
+        where __any_grants(KEY_TABLE) and KEY_IS_MAIN = 1 and KEY_MIGRATE_TO is null 
+        order by TABLE_NAME';
+        
+        if ($result = $this->_execSql($tablesSql)) {
+            $tablesArray = $this->_odbcResultToArray($result, false, false);
+        }
+        
+        return $tablesArray;
+    }
+    
     /**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
@@ -416,14 +433,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $saprqlAsk
      */
     public function sparqlAsk($query)
-    {
-        // load owl:imports
-        // foreach ($queryObject->getFrom() as $fromGraphUri) {
-        //     foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
-        //         $queryObject->addFrom($importedGraphUri);
-        //     }
-        // }
-        
+    {        
         $result = $this->_execSparql($query);
         
         if (odbc_result($result, 1) == '1') {
@@ -436,44 +446,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $resultform = 'plain') 
     {    
-        $resultArray    = array();
-        $resultRow      = array();
-        $resultRowNamed = array();
+        $resultArray = array();
         
-        // load owl:imports
-        // foreach ($queryObject->getFrom() as $fromGraphUri) {
-        //     foreach ($this->_getImportedGraphs($fromGraphUri) as $importedGraphUri) {
-        //         $queryObject->addFrom($importedGraphUri);
-        //     }
-        // }
-        
-        $result = $this->_execSparql($query);
-        
-        // get number of fields (columns)
-        $numFields = odbc_num_fields($result);
-        
-        // if we have more results
-        // fetch result row into array
-        while (odbc_fetch_into($result, $resultRow)) {
-            // copy column names to array indices
-            
-            for ($i = 0; $i < $numFields; ++$i) {
-                $colName = odbc_field_name($result, $i + 1);
-                
-                // check for instantiation options
-                // if ($classes[$colName]) {
-                //  $className = $classes[$colName];
-                //  $resultRowNamed[$colName] = new $className($resultRow[$i], $model, false);
-                // } else {
-                    $resultRowNamed[$colName] = $resultRow[$i];
-                // }
-            }
-            
-            // add row to result array
-            array_push($resultArray, $resultRowNamed);
+        if ($result = $this->_execSparql($query)) {
+            $resultArray = $this->_odbcResultToArray($result);
         }
-        
-        // print_r($resultArray);
         
         return $resultArray;
     }
@@ -481,19 +458,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Sql_Interface */
     public function sqlQuery($sqlQuery)
     {
-        $result         = $this->_execSql($sqlQuery);
-        $resultArray    = array();
-        $resultRow      = array();
-        $resultRowNamed = array();
+        $resultArray = array();
         
-        while (odbc_fetch_into($result, $resultRow)) {
-            for ($i = 0; $i < $numFields; ++$i) {
-                $colName = odbc_field_name($result, $i + 1);
-                $resultRowNamed[$colName] = $resultRow[$i];
-            }
-            
-            // add row to result array
-            array_push($resultArray, $resultRowNamed);
+        if ($result = $this->_execSql($sqlQuery)) {
+            $resultArray = $this->_odbcResultToArray($result);
         }
         
         return $resultArray;
@@ -546,6 +514,48 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $triples;
     }
     
+    /**
+     * Converts an ODBC result to an array.
+     *
+     * @param boolean $columnsAsKeys If true, column names are used as indices.
+     * @param boolean $rowsAsArrays If false and only 1 column is selected 
+     *        the first field in each row is directly pushed into the result array.
+     *
+     * @return array
+     */
+    private function _odbcResultToArray($odbcResult, $columnsAsKeys = true, $rowsAsArrays = true)
+    {
+        $result         = $odbcResult;
+        $resultArray    = array();
+        $resultRow      = array();
+        $resultRowNamed = array();
+        
+        // get number of fields (columns)
+        $numFields = odbc_num_fields($result);
+        
+        while (odbc_fetch_into($result, $resultRow)) {
+            if ($numFields == 1 && !$rowsAsArrays) {
+                // add first row field to result array
+                array_push($resultArray, $resultRow[0]);
+            } else {
+                // copy column names to array indices
+                for ($i = 0; $i < $numFields; ++$i) {
+                    if ($columnsAsKeys) {
+                        $colName = odbc_field_name($result, $i + 1);
+                        $resultRowNamed[$colName] = $resultRow[$i];
+                    } else {
+                        $resultRowNamed[] = $resultRow[$i];
+                    }
+                }
+                
+                // add row to result array
+                array_push($resultArray, $resultRowNamed);
+            }
+        }
+        
+        return $resultArray;
+    }
+    
     
     /**
      * Executes a SPARQL query and returns an ODBC result identifier.
@@ -592,26 +602,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         return $result;
-    }
-    
-    private function _getImportedGraphs($graphUri)
-    {
-        $imports = array();
-        $query = '
-            SELECT ?o
-            FROM <' . $graphUri . '>
-            WHERE {
-                <' . $graphUri . '> <' . EF_OWL_NS . 'imports> ?o.
-            }';
-        
-        // TODO: cache results
-        if ($result = $this->_execSparql($query)) {
-            while (odbc_fetch_row($result)) {
-                $imports[] = odbc_result($result, 'o');
-            }
-        }
-        
-        return $imports;
     }
     
     /**

@@ -20,6 +20,11 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame('Erfurt_Store_Adapter_Virtuoso', get_class($this->fixture));
     }
+    
+    public function testListTables()
+    {
+        $this->assertEquals(true, in_array('RDF_QUAD', $this->fixture->listTables()));
+    }
 }
 
 
