@@ -210,59 +210,176 @@ class Erfurt_VersioningTest extends PHPUnit_Framework_TestCase
         try {
             $this->_object->setLimit(0);
             
-            fail();
+            $this->fail();
         } catch (Exception $e) {
             // If we are here everything is fine.
         }
     }
 
-    /**
-     * @todo Implement testOnAddStatement().
-     */
-    public function testOnAddStatement() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testOnAddStatement() 
+    {
+        // We need a mocked versioning object here.
+        $this->_object = $this->_getMockedVersioning();
+        
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onAddStatement');
+        $event->graphUri = 'http://example.org/';
+        $event->statement = array('http://example.org/resource1/' => array(
+            'http://example.org/property1/' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Value1'
+                    )
+            )
+        ));
+        
+        try {
+            $this->_object->onAddStatement($event);
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 
-    /**
-     * @todo Implement testOnAddMultipleStatements().
-     */
-    public function testOnAddMultipleStatements() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testOnAddMultipleStatements() 
+    {
+        // We need a mocked versioning object here.
+        $this->_object = $this->_getMockedVersioning();
+        
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onAddMultipleStatements');
+        $event->graphUri = 'http://example.org/';
+        $event->statements = array('http://example.org/resource1/' => array(
+            'http://example.org/property1/' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Value1'
+                    )
+            )
+        ),
+        'http://example.org/resource2/' => array(
+            'http://example.org/property2/' => array(
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object/'
+                    )
+            )
+        ));
+        
+        try {
+            $this->_object->onAddMultipleStatements($event);
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 
-    /**
-     * @todo Implement testOnDeleteMatchingStatements().
-     */
-    public function testOnDeleteMatchingStatements() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testOnDeleteMatchingStatements() 
+    {
+        // We need a mocked versioning object here.
+        $this->_object = $this->_getMockedVersioning();
+        
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onDeleteMatchingStatements');
+        $event->graphUri = 'http://example.org/';
+        $event->resource = 'http://example.org/resource1/';
+        
+        // First try method without a payload (happens on really large sets of matching statements).
+        try {
+            $this->_object->onDeleteMatchingStatements($event);
+        } catch (Exception $e) {
+            $this->fail();
+        }
+        
+        unset($event->resource);
+        $event->statements = array('http://example.org/resource1/' => array(
+            'http://example.org/property1/' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Value1'
+                    )
+            )
+        ),
+        'http://example.org/resource2/' => array(
+            'http://example.org/property2/' => array(
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object/'
+                    )
+            )
+        ));
+        
+        // Not try the same with a payload.
+        try {
+            $this->_object->onDeleteMatchingStatements($event);
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 
-    /**
-     * @todo Implement testOnDeleteMultipleStatements().
-     */
-    public function testOnDeleteMultipleStatements() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testOnDeleteMultipleStatements()
+    {
+        // We need a mocked versioning object here.
+        $this->_object = $this->_getMockedVersioning();
+        
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onDeleteMultipleStatements');
+        $event->graphUri = 'http://example.org/';
+        
+        $event->statements = array('http://example.org/resource1/' => array(
+            'http://example.org/property1/' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Value1'
+                    )
+            )
+        ),
+        'http://example.org/resource2/' => array(
+            'http://example.org/property2/' => array(
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object/'
+                    )
+            )
+        ));
+        
+        try {
+            $this->_object->onDeleteMultipleStatements($event);
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 
-    /**
-     * @todo Implement testRollbackAction().
-     */
-    public function testRollbackAction() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testRollbackAction() 
+    {
+        // We need a mocked versioning object here.
+        $this->_object = $this->_getMockedVersioning();
+        
+        // First we try to rollback an existing action with stored payload. This should work.
+        $this->_object->rollbackAction(1); // Add action
+        $this->_object->rollbackAction(2); // Delete action
+        
+        // Now we try the cases that should not work.
+        try {
+            $this->_object->rollbackAction(3); // No payload for given payload id.
+            
+            $this->fail();
+        } catch (Exception $e) {
+            // Everything went fine...
+        }
+        
+        try {
+            $this->_object->rollbackAction(4); // Payload id is null.
+            
+            $this->fail();
+        } catch (Exception $e) {
+            // Everything went fine...
+        }
+        
+        try {
+            $this->_object->rollbackAction(5); // No action with that id.
+            
+            $this->fail();
+        } catch (Exception $e) {
+            // Everything went fine...
+        }
     }
 }

@@ -185,7 +185,7 @@ class Erfurt_Versioning
         $graphUri = $event->graphUri;
         
         if (isset($event->statements)) {
-            $this->execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+            $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
         } else {
             // In this case, we have no payload. Just add a action without a payload (no rollback possible).
             $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
@@ -196,17 +196,17 @@ class Erfurt_Versioning
     {
         $graphUri = $event->graphUri;
         
-        $this->execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+        $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
     }
     
     public function rollbackAction($actionId) 
     {
-        $actionsSql = 'SELECT action_type, payload_id FROM ef_versioning_actions WHERE action_id = ' . 
-                       ((int)$action_id);
+        $actionsSql = 'SELECT action_type, payload_id FROM ef_versioning_actions WHERE id = ' . 
+                       ((int)$actionId);
                        
         $result = $this->_getStore()->sqlQuery($actionsSql);
         
-        if ((count($result) === 0) || ($result[0]['payload_id'] === null)) {
+        if ((count($result) !== 1) || ($result[0]['payload_id'] === null)) {
 // TODO dedicated exception
             throw new Exception('No rollback possible');
         } else {
@@ -252,7 +252,7 @@ class Erfurt_Versioning
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
         $user = $this->_getAuth()->getIdentity();
-        $userUri = $user['userUri'];
+        $userUri = $user['uri'];
         
         $actionsSql = 'INSERT INTO ef_versioning_actions (model, user, resource, tstamp, action_type, parent';
         
@@ -280,7 +280,7 @@ class Erfurt_Versioning
                         serialize($payload) . ')';
                         
         $this->_getStore()->sqlQuery($payloadsSql);
-        $payloadId = $store->lastInsertId();
+        $payloadId = $this->_getStore()->lastInsertId();
         
         return $payloadId;
     }
