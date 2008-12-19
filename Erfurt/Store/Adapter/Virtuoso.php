@@ -410,14 +410,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Sql_Interface */
-    public function listTables()
+    public function listTables($prefix = '')
     {
         $tablesArray = array();
+        $prefix = trim($prefix);
         
         $tablesSql = 'select name_part(KEY_TABLE, 2) as TABLE_NAME NVARCHAR(128)
         from DB.DBA.SYS_KEYS 
-        where __any_grants(KEY_TABLE) and KEY_IS_MAIN = 1 and KEY_MIGRATE_TO is null 
-        order by TABLE_NAME';
+        where __any_grants(KEY_TABLE) and KEY_IS_MAIN = 1 and KEY_MIGRATE_TO is null';
+        
+        if (!empty($prefix)) {
+            $tablesSql .= ' and TABLE_NAME like "' . $prefix . '%"';
+        }
+        
+        $tablesSql .= ' order by TABLE_NAME';
         
         if ($result = $this->_execSql($tablesSql)) {
             $tablesArray = $this->_odbcResultToArray($result, false, false);

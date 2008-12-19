@@ -650,6 +650,22 @@ class Erfurt_Store
     }
     
     /**
+     * Returns an array of SQL tables available in the store.
+     *
+     * @param string $prefix An optional table prefix to filter table names.
+     *
+     * @return array|null
+     */
+    public function listTables($prefix = '')
+    {
+        if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
+	        return $this->_backendAdapter->listTables($prefix);
+	    }
+	    
+	    // TODO: use default SQL store
+    }
+    
+    /**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
      * @param string $modelIri

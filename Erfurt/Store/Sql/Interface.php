@@ -29,11 +29,13 @@ interface Erfurt_Store_Sql_Interface
     public function lastInsertId();
     
     /**
-     * Returns an array containing all tables existing in the database.
-     * 
+     * Returns an array of SQL tables available in the store.
+     *
+     * @param string $prefix An optional table prefix to filter table names.
+     *
      * @return array
      */
-    public function listTables();
+    public function listTables($prefix = '');
     
     /**
      * Executes a SQL query with a SQL-capable backend.
