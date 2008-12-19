@@ -44,6 +44,7 @@ class Erfurt_Versioning
     
     protected $_limit = 10;
     
+    
     public function __construct()
     {
         // register for events
@@ -52,7 +53,7 @@ class Erfurt_Versioning
         $eventDispatcher->register('onAddStatement', $this)
                         ->register('onAddMultipleStatements', $this)
                         ->register('onDeleteMatchingStatements', $this)
-                        ->register('onDeleteMultipleStatements', $this);
+                        ->register('onDeleteMultipleStatements', $this);   
     }
     
     /**
@@ -91,46 +92,45 @@ class Erfurt_Versioning
         return $history[0];
     }
     
-    public function getHistoryForModel($graphUri, $page = 1)
+    public function getHistoryForGraph($graphUri, $page = 1)
     {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        
         $sql = 'SELECT id, user, resource, tstamp, action_type FROM ef_versioning_actions WHERE
                 model = `' . $graphUri . '` 
-                ORDER BY tstamp DESC';
+                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ($page*$this->getLimit()-$this->getLimit());
                 
-        $result = $store->sqlQuery($sql);
+        $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
     }
     
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
-    {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        
+    {   
         $sql = 'SELECT id, user, tstamp, action_type FROM ef_versioning_actions WHERE
                 model = `' . $graphUri . '` AND resource = `' . $resourceUri . '`
-                ORDER BY tstamp DESC';
+                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ($page*$this->getLimit()-$this->getLimit());
                 
-        $result = $store->sqlQuery($sql);
+        $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
     }
     
     public function getHistoryForUser($userUri, $page = 1)
     {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        
         $sql = 'SELECT id, resource, tstamp, action_type FROM ef_versioning_actions WHERE
                 user = `' . $userUri . '` 
-                ORDER BY tstamp DESC';
+                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ($page*$this->getLimit()-$this->getLimit());
                 
-        $result = $store->sqlQuery($sql);
+        $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
+    }
+    
+    public function getLimit()
+    {
+        return $this->_limit;
     }
     
     /**
@@ -155,6 +155,13 @@ class Erfurt_Versioning
     
     public function setLimit($limit)
     {
+        if ($limit <= 0) {
+// TODO dedicated exception
+            // Limit always has to be greater than zero. One result row should be the minimum, for
+            // zero means no result exists.
+            throw new Exception();
+        }
+        
         $this->_limit = (int) $limit;
     }
     
@@ -194,13 +201,10 @@ class Erfurt_Versioning
     
     public function rollbackAction($actionId) 
     {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        
         $actionsSql = 'SELECT action_type, payload_id FROM ef_versioning_actions WHERE action_id = ' . 
                        ((int)$action_id);
                        
-        $result = $store->sqlQuery($actionsSql);
+        $result = $this->_getStore()->sqlQuery($actionsSql);
         
         if ((count($result) === 0) || ($result[0]['payload_id'] === null)) {
 // TODO dedicated exception
@@ -211,7 +215,7 @@ class Erfurt_Versioning
             $payloadsSql = 'SELECT statements_hash FROM ef_versioning_payloads WHERE id = ' .
                            ((int)$result[0]['payload_id']);
                            
-            $payloadResult = $store->sqlQuery($payloadsSql);
+            $payloadResult = $this->_getStore()->sqlQuery($payloadsSql);
             
             if (count($payloadResult) !== 1) {
 // TODO dedicated exception
@@ -221,9 +225,9 @@ class Erfurt_Versioning
             $payload = unserialize($payloadResult[0]['statements_hash']);
             
             if ($type === self::STATEMENT_ADDED) {
-                $store->deleteMultipleStatements($payload);
+                $this->_getStore()->deleteMultipleStatements($payload);
             } else if ($type === self::STATEMENT_REMOVED) {
-                $store->addMultipleStatements($payload);
+                $this->_getStore()->addMultipleStatements($payload);
             }
         }
     }
@@ -247,9 +251,7 @@ class Erfurt_Versioning
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        $user = $app->getAuth()->getIdentity();
+        $user = $this->_getAuth()->getIdentity();
         $userUri = $user['userUri'];
         
         $actionsSql = 'INSERT INTO ef_versioning_actions (model, user, resource, tstamp, action_type, parent';
@@ -269,18 +271,15 @@ class Erfurt_Versioning
            $actionsSql .= ')';
         }               
                        
-        $store->sqlQuery($actionsSql);
+        $this->_getStore()->sqlQuery($actionsSql);
     }
     
     private function _execAddPayload($payload)
     {
-        $app = Erfurt_App::getInstance();
-        $store = $app->getStore();
-        
         $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (' .
                         serialize($payload) . ')';
                         
-        $store->sqlQuery($payloadsSql);
+        $this->_getStore()->sqlQuery($payloadsSql);
         $payloadId = $store->lastInsertId();
         
         return $payloadId;
@@ -298,6 +297,28 @@ class Erfurt_Versioning
                 }
             }
         }
+    }
+    
+    /**
+     * This method is public only for unit testing purposes in order to allow stubbing of the store object.
+     * It should never be called directly. A direct call of this method will not do any harm, for the object is
+     * just reset.
+     */
+    public function _getStore()
+    {
+        $app = Erfurt_App::getInstance();
+        return $app->getStore();
+    }
+    
+    /**
+     * This method is public only for unit testing purposes in order to allow stubbing of the auth object.
+     * It should never be called directly. A direct call of this method will not do any harm, for the object is
+     * just reset.
+     */
+    public function _getAuth()
+    {
+        $app = Erfurt_App::getInstance();
+        return $app->getAuth();
     }
 }
 
