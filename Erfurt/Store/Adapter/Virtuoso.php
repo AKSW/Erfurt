@@ -643,6 +643,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $importFunc = 'TTLP';
                 break;
             case 'rdf': // RDF-XML
+            case 'rdfxml':
             default:    // unknown defaults to RDF-XML
                 $importFunc = 'RDF_LOAD_RDFXML';
                 break;
@@ -681,6 +682,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $importFunc = 'TTLP';
                 break;
             case 'rdf': // RDF-XML
+            case 'rdfxml':
             default:    // unknown defaults to RDF-XML
                 $importFunc = 'RDF_LOAD_RDFXML';
                 break;

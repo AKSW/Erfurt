@@ -814,10 +814,10 @@ class Erfurt_Store
             
             if (is_readable($schemaPath)) {
                 // load SysOnt from file
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdf', 'file');
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdfxml', 'file');
             } else {
                 // load SysOnt from Web
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdf', 'url');
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', 'url');
             }
             
             if (!$this->isModelAvailable($sysOntSchema, false)) {

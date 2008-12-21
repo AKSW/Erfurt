@@ -4,54 +4,49 @@
  *
  * @package app
  */
-class Erfurt_App {
-    
+class Erfurt_App 
+{   
+    /** constant that contains the minimum supported php version */ 
     const EF_MIN_PHP_VERSION = '5.2.0';
     
     /**
-     * the instance which is returned
-     * 
+     * The singleton instance of this class which is returned on request.
+     *
      * @var Erfurt_App
      */ 
     private static $_instance = false;
     
-    /**
-     * @var
-     */
+    /** @var */
     private $_config = false;
     
-    /**
-     * @var Erfurt_EventDispatcher event dispatcher
-     */
+    /** @var Erfurt_EventDispatcher event dispatcher */
     private $_ed = false;
     
-    /**
-     * @var object for plugin manager
-     */
+    /** @var object for plugin manager */
     private $_pluginManager = false;
     
+    /** @var */
     private $_store = false;
     
-    /**
-     * @var object auth instance
-     */
+    /** @var object auth instance */
     private $_auth = false;
     
+    /** @var */
     private $_authAdapter = false;
     
+    /** @var */
     private $_sysOntModel = false;
     
-    /**
-     * @var object instance of model-object
-     */
+    /** @var object instance of model-object */
     private $_acModel = false;
     
-    /**
-     * @var object instance of ac-object
-     */
+    /** @var object instance of ac-object */
     private $_ac = false;
     
+    /** @var */
     private $_cache = false;
+    
+    /** @var */
     private $_cacheBackend = false;
     
     /** @var Zend_Log */
@@ -143,6 +138,7 @@ class Erfurt_App {
         
         if (self::$_instance === false) {
             self::$_instance = new Erfurt_App();
+// TODO auto start the app?
         }
         
         return self::$_instance;

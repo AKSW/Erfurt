@@ -124,7 +124,8 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             // for db connection is already established (in constructor)... so let's check for tables
             require_once 'Erfurt/Exception.php';
             if (!$this->_isSetup()) {
-                throw new Erfurt_Exception('Store: Database environment not initialized.', -1);
+                $this->_createTables();
+                #throw new Erfurt_Exception('Store: Database environment not initialized.', -1);
             } else {
                 throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.', -1);
             }   
@@ -462,19 +463,23 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedExportFormats()
     {
-        return array('xml', 'n3', 'nt');
+        //return array('xml', 'n3', 'nt');
+        return array();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedImportFormats()
     {
-        return array('xml', 'n3', 'nt');
+        //return array('xml', 'n3', 'nt');
+        return array();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function importRdf($modelIri, $data, $type, $locator)
+    public function importRdf($modelUri, $data, $type, $locator)
     {
-        throw new Exception('Not implemented yet.');
+        if (!in_array($type, $this->getSupportedImportFormats())) {
+            throw new Exception('Import format not supported by backend.');
+        }        
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -494,9 +499,9 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     }
     
     /** @see Erfurt_Store_Sql_Interface */
-    public function listTables()
+    public function listTables($prefix = '')
     {
-        return $this->_dbConn->listTable();
+        return $this->_dbConn->listTables();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -542,7 +547,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
 	    foreach ($columns as $columnName => $columnSpec) {
 	        $createTable .= PHP_EOL
 	                     .  '`' . $columnName . '`'
-	                     .  $columnSpec
+	                     .  $columnSpec;
 	    }
 	    $createTable .= PHP_EOL
 	                 .  ')';
@@ -560,27 +565,41 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     /**
      * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.
      */
-    private function _createTables() 
+    private function _createTables()
     {
-
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTablesMysqli();
+        }
+    }
+    
+    private function _createTablesMysqli() 
+    {
+        // Create models table.
         $sql = 'CREATE TABLE IF NOT EXISTS models (
-                    modelID     INT UNSIGNED        AUTO_INCREMENT,
-                    modelIri    VARCHAR(255)        COLLATE ascii_bin           NOT NULL, 
-                    baseIri     VARCHAR(255)        COLLATE ascii_bin           NOT NULL        DEFAULT "",
+                    modelID  INT UNSIGNED AUTO_INCREMENT,
+                    modelURI VARCHAR(255) COLLATE ascii_bin NOT NULL, 
+                    baseURI  VARCHAR(255) COLLATE ascii_bin NOT NULL DEFAULT "",
                     PRIMARY KEY (modelID),
-                    UNIQUE KEY m_modelIri_idx (modelIri))
-                ENGINE = MyISAM     DEFAULT CHARSET = ascii;
-                
-                CREATE TABLE IF NOT EXISTS statements (
-                    id          INT UNSIGNED        AUTO_INCREMENT,
-                    modelID     INT UNSIGNED                                    NOT NULL,
-                    subject     VARCHAR(255)        COLLATE ascii_bin           NOT NULL,
-                    predicate   VARCHAR(255)        COLLATE ascii_bin           NOT NULL,
-                    object      LONGTEXT            COLLATE utf8_bin,
-                    l_language  CHAR(2)             COLLATE ascii_general_ci    DEFAULT "",
-                    l_datatype  VARCHAR(255)        COLLATE ascii_bin           DEFAULT "",
-                    subject_is  ENUM("r","b")       COLLATE ascii_general_ci    NOT NULL,
-                    object_is   ENUM("r","b","l")   COLLATE ascii_general_ci    NOT NULL,
+                    UNIQUE KEY m_modelURI_idx (modelURI))
+                ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            throw new Exception('Store: Creation of models table failed.');
+        }
+        
+        $sql = 'CREATE TABLE IF NOT EXISTS statements (
+                    id         INT UNSIGNED AUTO_INCREMENT,
+                    modelID    INT UNSIGNED NOT NULL,
+                    subject    VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                    predicate  VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                    object     LONGTEXT COLLATE utf8_bin,
+                    l_language CHAR(2) COLLATE ascii_general_ci DEFAULT "",
+                    l_datatype VARCHAR(255) COLLATE ascii_bin DEFAULT "",
+                    subject_is ENUM("r","b") COLLATE ascii_general_ci NOT NULL,
+                    object_is  ENUM("r","b","l") COLLATE ascii_general_ci NOT NULL,
                     PRIMARY KEY (id),
                     KEY s_modelID_idx (modelID),
                     KEY s_subject_idx (subject),
@@ -598,43 +617,28 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                     KEY s_llang_idx (l_language),
                     KEY s_ldtype_idx (l_datatype),
                     FULLTEXT KEY s_object_ft_idx (object)) 
-                ENGINE = MyISAM     DEFAULT CHARSET = ascii;
+                ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            throw new Exception('Store: Creation of statements table failed.');
+        }
                 
-                CREATE TABLE IF NOT EXISTS namespaces (
-                    modelID     INT UNSIGNED                                    NOT NULL,
-                    namespace   VARCHAR(255)                                    NOT NULL,
-                    prefix      VARCHAR(255)                                    NOT NULL,
+        $sql = 'CREATE TABLE IF NOT EXISTS namespaces (
+                    modelID   INT UNSIGNED NOT NULL,
+                    namespace VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                    prefix    VARCHAR(255) COLLATE ascii_bin NOT NULL,
                     PRIMARY KEY (modelID, namespace),
                     KEY n_modelID_idx (modelID)) 
-                ENGINE = MyISAM     DEFAULT CHARSET = ascii;';
+                ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
-        $result = $this->_dbConn->multi_query($sql);
-        $errorCount = 0;
-        $errorMsg = array();
-        
-        do {
-            var_dump($result);
-            if ($result === false) {
-                $errorCount++;
-                
-                $errorMsg[] = $result->error;
-            }
-        } while ($result = $this->_dbConn->next_result());
-        
-        var_dump($errorMsg);exit;
-        
-        if ($errorCount > 0) {
-            require_once 'Erfurt/Exception.php';
-            if (defined('_EFDEBUG')) {
-                $exceptionStr = 'DB initialization failed: ' . $errorCount . ' errors.' . PHP_EOL;
-                foreach ($errorMsg as $msg) {
-                    $exceptionStr .= '- ' . $msg . PHP_EOL;
-                }
-                
-                throw new Erfurt_Exception($exceptionStr);
-            } else {
-                throw new Erfurt_Exception('DB initialization failed.');
-            }
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            throw new Exception('Store: Creation of namespaces table failed.');
         }
     }
     
@@ -708,7 +712,13 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             //var_dump((string)$select);exit;
             //var_dump($select->query()->fetchAll());exit;
             
-            $result = $this->_dbConn->query($sql);
+            try {
+                $result = $this->_dbConn->query($sql);
+            } catch (Exception $e) {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+            }
+            
             
             if ($result === false) {
                 require_once 'Erfurt/Exception.php';
@@ -803,25 +813,21 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
      * @return boolean Returns true if all tables are present.
      */
     private function _isSetup() 
-    {    return true;
-        $result = $this->_dbConn->query('SHOW TABLES');
+    {    
+        $existingTables = $this->listTables();
         
-        // something went wrong... missing database?!
-        if ($result === false) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('could not show tables... is db avaiable?');
-        } else if (count($result) < 3) {
-            // currently we have 9 tables
-            return false;
-        } else {
-            if (!in_array('models', $result) ||
-                !in_array('namespaces', $result) ||
-                !in_array('statements', $result)) {
+        if (is_array($existingTables)) {
+            if (!in_array('models', $existingTables) ||
+                !in_array('namespaces', $existingTables) ||
+                !in_array('statements', $existingTables)) {
             
                 return false;
             } else {
                 return true;
             }
+        } else {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('could not show tables... is db avaiable?');
         }
     }
 }
