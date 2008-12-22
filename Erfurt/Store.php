@@ -640,6 +640,17 @@ class Erfurt_Store
     }
     
     /**
+     * Returns an array of serialization formats that can be exported.
+     *
+     * @return array
+     */
+    public function getSupportedExportFormats()
+    {
+        // TODO: check import plug-ins
+        return $this->_backendAdapter->getSupportedExportFormats();
+    }
+    
+    /**
      * Returns an array of serialization formats that can be imported.
      *
      * @return array
