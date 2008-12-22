@@ -108,7 +108,7 @@ class Erfurt_Ac_Default {
      * initialisation of models, uris and rights
      * 
      */
-    private function init()
+    public function init()
     {   
         $app =  Erfurt_App::getInstance();
         $this->_log = $app->getLog();   
