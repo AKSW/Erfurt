@@ -3,6 +3,7 @@
  * Erfurt application class
  *
  * @package app
+ * @version $Id$
  */
 class Erfurt_App 
 {   
@@ -75,7 +76,7 @@ class Erfurt_App
         require_once EF_BASE . 'include/vocabulary.php';
 
 // TODO do that in a better way!
-        $GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
+        //$GLOBALS['RAP']['conf']['database']['tblStatements'] = 'statements';
         
 // TODO source out from here            
         // check for new installation
@@ -144,6 +145,9 @@ class Erfurt_App
         return self::$_instance;
     }
     
+    /**
+     * @throws Erfurt_Exception Throws an exception if the connection to the backend server fails.
+     */
     public static function start(Zend_Config $config = null) 
     {   
         $inst = self::getInstance();
@@ -161,6 +165,9 @@ class Erfurt_App
         
 // TODO handle session start before output
         $inst->getAuth()->hasIdentity();
+        
+        // Access the store in order to test the database connection.
+        $inst->getStore();
         
         return $inst;
     }
@@ -287,6 +294,9 @@ class Erfurt_App
         
             require_once 'Erfurt/Store.php';
             $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+            
+            // check whether setup is aready done and if not initialize the environment
+            $this->_store->checkSetup();
         }
         
         return $this->_store;

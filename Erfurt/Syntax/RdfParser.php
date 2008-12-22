@@ -8,9 +8,9 @@
  */
 class Erfurt_Syntax_RdfParser
 {   
-    const PARAM_IS_LOCATION_URL = 10;
-    const PARAM_IS_FILENAME     = 20;
-    const PARAM_IS_DATA         = 30;
+    const LOCATOR_URL        = 10;
+    const LOCATOR_FILE       = 20;
+    const LOCATOR_DATASTRING = 30;
     
     protected $_parserAdapter = null;
     
@@ -37,7 +37,7 @@ class Erfurt_Syntax_RdfParser
      */
     public function parse($dataPointer, $pointerType)
     {
-        if ($pointerType === self::PARAM_IS_LOCATION_URL) {
+        if ($pointerType === self::LOCATOR_URL) {
             $fileHandle = fopen($dataPointer, 'r');
             
             if ($fileHandle === false) {
@@ -48,7 +48,7 @@ class Erfurt_Syntax_RdfParser
             
             // Close the file handle resource.
             fclose($fileHandle);            
-        } else if ($pointerType === self::PARAM_IS_FILENAME) {
+        } else if ($pointerType === self::LOCATOR_FILE) {
             $fileHandle = fopen($dataPointer, 'r');
             
             if ($fileHandle === false) {
@@ -59,7 +59,7 @@ class Erfurt_Syntax_RdfParser
             
             // Close the file handle resource.
             fclose($fileHandle);
-        } else if ($pointerType === self::PARAM_IS_DATA) {
+        } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataString($dataPointer);
         } else {
             throw new Exception('Type of data pointer not valid.');
@@ -68,32 +68,32 @@ class Erfurt_Syntax_RdfParser
         return $result;
     }
     
-    public function parseToStore($dataPointer, $pointerType)
+    public function parseToStore($dataPointer, $pointerType, $modelUri)
     {
-        if ($pointerType === self::PARAM_IS_LOCATION_URL) {
+        if ($pointerType === self::LOCATOR_URL) {
             $fileHandle = fopen($dataPointer, 'r');
             
             if ($fileHandle === false) {
                 throw new Exception('Could not locate data with url: ' . $dataPointer);
             }
             
-            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle);
+            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle, $modelUri);
             
             // Close the file handle resource.
             fclose($fileHandle);            
-        } else if ($pointerType === self::PARAM_IS_FILENAME) {
+        } else if ($pointerType === self::LOCATOR_FILE) {
             $fileHandle = fopen($dataPointer, 'r');
             
             if ($fileHandle === false) {
                 throw new Exception('Could not locate file with filename: ' . $dataPointer);
             }
             
-            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle);
+            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle, $modelUri);
             
             // Close the file handle resource.
             fclose($fileHandle);
-        } else if ($pointerType === self::PARAM_IS_DATA) {
-            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer);
+        } else if ($pointerType === self::LOCATOR_DATASTRING) {
+            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri);
         } else {
             throw new Exception('Type of data pointer not valid.');
         }

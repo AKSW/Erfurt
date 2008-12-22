@@ -10,7 +10,7 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: $
+ * @version    $Id$
  */
 class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
@@ -116,6 +116,12 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
         // we want indexed results
         //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
                 
+        // load title properties for model titles
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
+        }
+        
         try {
             // try to fetch model and namespace infos... if all tables are present this should not lead to an error.
             $this->_fetchModelInfos();
@@ -129,12 +135,6 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             } else {
                 throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.', -1);
             }   
-        }
-        
-        // load title properties for model titles
-        $config = Erfurt_App::getInstance()->getConfig();
-        if (isset($config->properties->title)) {
-            $this->_titleProperties = $config->properties->title->toArray();
         }
     }
     
@@ -471,15 +471,22 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     public function getSupportedImportFormats()
     {
         //return array('xml', 'n3', 'nt');
-        return array();
+        return array('rdfxml');
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($modelUri, $data, $type, $locator)
     {
-        if (!in_array($type, $this->getSupportedImportFormats())) {
-            throw new Exception('Import format not supported by backend.');
-        }        
+        require_once 'Erfurt/Syntax/RdfParser.php';
+        $parser = new Erfurt_Syntax_RdfParser();        
+        $parser->initializeWithFormat($type);
+        
+// TODO use constant for locator type
+        if ($locator === 'uri') {
+            $parser->parseToStore($data, Erfurt_Syntax_RdfParser::LOCATOR_URI, $modelUri);
+        } else if ($locator === 'file') {
+            $parser->parseToStore($data, Erfurt_Syntax_RdfParser::LOCATOR_FILE, $modelUri);
+        }
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -676,7 +683,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                         AND s3.object_is = "l" 
                         AND (';
             
-            for ($i=0; $i<count($this->_titleProperties); ++$i) {
+            for ($i=1; $i<count($this->_titleProperties); ++$i) {
                 $sql .= 's3.predicate = "' . $this->_titleProperties[$i] . '"';
                 
                 if ($i < count($this->_titleProperties)-1) {

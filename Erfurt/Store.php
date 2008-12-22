@@ -153,8 +153,6 @@ class Erfurt_Store
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Adpater class must implement Erfurt_Store_Adapter_Interface.');
         }
-        
-        $this->_checkSetup();
     }
     
     // ------------------------------------------------------------------------
@@ -273,6 +271,68 @@ class Erfurt_Store
         }
         
         $this->addStatement($modelIri, $s, $p, $o, $options);
+    }
+    
+    /**
+     * Checks whether the store has been set up yet and imports system 
+     * ontologies if necessary.
+     */
+    public function checkSetup()
+    {
+        $config         = Erfurt_App::getInstance()->getConfig();
+        $logger         = Erfurt_App::getInstance()->getLog();
+        $sysOntSchema   = $config->sysOnt->schemaUri;
+        $schemaLocation = $config->sysOnt->schemaLocation;
+        $schemaPath     = EF_BASE . $config->sysOnt->schemaPath;
+        $sysOntModel    = $config->sysOnt->modelUri;
+        $modelLocation  = $config->sysOnt->modelLocation;
+        $modelPath      = EF_BASE . $config->sysOnt->modelPath;
+        
+        // check for system ontology
+        if (!$this->_backendAdapter->isModelAvailable($sysOntSchema)) {
+            $logger->info('System schema model not found. Loading model ...');
+            
+            //$this->_backendAdapter->getNewModel($sysOntSchema);
+            
+            if (is_readable($schemaPath)) {
+                // load SysOnt from file
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdfxml', 'file');
+            } else {
+                // load SysOnt from Web
+                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', 'url');
+            }
+            
+            if (!$this->isModelAvailable($sysOntSchema, false)) {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Unable to load System Ontology schema.');
+            }
+            
+            $logger->info('System schema successfully loaded.');
+        }
+
+        // check for system configuration model
+        if (!$this->_backendAdapter->isModelAvailable($sysOntModel)) {
+            $logger->info('System configuration model not found. Loading model ...');
+            
+            $this->_backendAdapter->getNewModel($sysOntModel);
+            
+            if (is_readable($modelPath)) {
+                // // load SysOnt Model from file
+                $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdfxml', 'file');
+            } else {
+                // // load SysOnt Model from Web
+                $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdfxml', 'url');
+            }
+            
+            if (!$this->isModelAvailable($sysOntModel, false)) {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Unable to load System Ontology model.');
+            }
+            
+            $logger->info('System schema successfully loaded.');
+        }
+        
+        return true;
     }
     
     /**
@@ -790,62 +850,6 @@ class Erfurt_Store
             }
             
             return $this->_ac->isModelAllowed($accessType, $modelIri);
-        }
-    }
-    
-    /**
-     * Checks whether the store has been set up yet and imports system 
-     * ontologies if necessary.
-     */
-    private function _checkSetup()
-    {
-        $config         = Erfurt_App::getInstance()->getConfig();
-        $logger         = Erfurt_App::getInstance()->getLog();
-        $sysOntSchema   = $config->sysOnt->schemaUri;
-        $schemaLocation = $config->sysOnt->schemaLocation;
-        $schemaPath     = EF_BASE . $config->sysOnt->schemaPath;
-        $sysOntModel    = $config->sysOnt->modelUri;
-        $modelLocation  = $config->sysOnt->modelLocation;
-        $modelPath      = EF_BASE . $config->sysOnt->modelPath;
-        
-        // check for system ontology
-        if (!$this->_backendAdapter->isModelAvailable($sysOntSchema)) {
-            $logger->info('System schema model not found. Loading model ...');
-            
-            if (is_readable($schemaPath)) {
-                // load SysOnt from file
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdfxml', 'file');
-            } else {
-                // load SysOnt from Web
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', 'url');
-            }
-            
-            if (!$this->isModelAvailable($sysOntSchema, false)) {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Unable to load System Ontology schema.');
-            }
-            
-            $logger->info('System schema successfully loaded.');
-        }
-        
-        // check for system configuration model
-        if (!$this->_backendAdapter->isModelAvailable($sysOntModel)) {
-            $logger->info('System configuration model not found. Loading model ...');
-            
-            if (is_readable($modelPath)) {
-                // // load SysOnt Model from file
-                $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdf', 'file');
-            } else {
-                // // load SysOnt Model from Web
-                $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdf', 'url');
-            }
-            
-            if (!$this->isModelAvailable($sysOntModel, false)) {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Unable to load System Ontology model.');
-            }
-            
-            $logger->info('System schema successfully loaded.');
         }
     }
     
