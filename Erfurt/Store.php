@@ -194,7 +194,7 @@ class Erfurt_Store
     
     /**
      * Adds a statement to the graph specified by $modelIri.
-     * @param string $modelIri
+     * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param string $object (IRI, blank node or literal)
@@ -215,18 +215,18 @@ class Erfurt_Store
         $options = array_merge($defaults, $options);
         
         // check whether model is available
-        if ($useAcl && !$this->isModelAvailable($modelIri)) {
+        if ($useAcl && !$this->isModelAvailable($graphUri)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Model is not available.');
         }
         
         // check whether model is editable
-        if ($useAcl && !$this->_checkAc($modelIri, 'edit')) {
+        if ($useAcl && !$this->_checkAc($graphUri, 'edit')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-        $this->_backendAdapter->addStatement($modelIri, $subject, $predicate, $object, $options);
+        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
         
         require_once 'Erfurt/Event/Dispatcher.php';
         require_once 'Erfurt/Event.php';
@@ -506,7 +506,7 @@ class Erfurt_Store
     {
         // backend adapter returns all models
         $models = $this->_backendAdapter->getAvailableModels($withTitle);
-        
+    
         // filter for access control
         foreach ($models as $key => $model) {
             if (!$this->_checkAc($model['modelIri'])) {

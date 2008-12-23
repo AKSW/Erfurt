@@ -128,7 +128,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             } 
         }
         
-        Erfurt_App::getInstance()->getAc()->init();
+        //Erfurt_App::getInstance()->getAc()->init();
     
         return $authResult;
     }

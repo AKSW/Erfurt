@@ -361,7 +361,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
 	public function getSupportedExportFormats()
 	{
-	    
+	    return array();
 	}
 	
 	/** @see Erfurt_Store_Adapter_Interface */
