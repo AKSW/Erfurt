@@ -97,7 +97,7 @@ class Erfurt_Ac_Default {
      */
     public function __construct() {
         
-        $this->init();
+        $this->_init();
     }
     
     // ------------------------------------------------------------------------
@@ -105,11 +105,44 @@ class Erfurt_Ac_Default {
     // ------------------------------------------------------------------------
     
     /**
+     * Checks whether the user has changed and re-initializes if neccessary. 
+     */
+    private function _checkUserChanged()
+    {
+        $auth = Erfurt_App::getInstance()->getAuth();
+        
+        if ($auth->hasIdentity()) {
+            $currentUser = $auth->getIdentity();
+            
+            if ($currentUser['uri'] !== $this->_user['uri']) {
+                $this->_init();
+            }
+        } else {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('no valid user given', 1103);
+        }
+        
+        
+    }
+    
+    /**
      * initialisation of models, uris and rights
      * 
      */
-    public function init()
+    private function _init()
     {   
+        $this->_userRights = array(
+            'userAnyModelViewAllowed' => false,
+            'userAnyModelEditAllowed' => false,
+            'userAnyActionAllowed'    => false,
+            'grantAccess'             => array(),
+            'denyAccess'              => array(),
+            'grantModelView'          => array(),
+            'denyModelView'           => array(),
+            'grantModelEdit'          => array(),
+            'denyModelEdit'           => array()
+        );
+        
         $app =  Erfurt_App::getInstance();
         $this->_log = $app->getLog();   
         $this->_config = $app->getConfig();
@@ -349,6 +382,8 @@ class Erfurt_Ac_Default {
      */
     public function isModelAllowed($type, $modelUri) {
 
+        $this->_checkUserChanged();
+
         $type = strtolower($type);
         
         // type = view; check whether allowed
@@ -398,6 +433,8 @@ class Erfurt_Ac_Default {
      */
     public function isAnyModelAllowed($type = 'view') {
         
+        $this->_checkUserChanged();
+        
         $type = strtolower($type);
         
         if ($type === 'view') {
@@ -438,6 +475,8 @@ class Erfurt_Ac_Default {
      */
     public function getAllowedModels($type = 'view') {
         
+        $this->_checkUserChanged();
+        
         $type = strtolower($type);
         
         // not supported type?
@@ -467,6 +506,8 @@ class Erfurt_Ac_Default {
      * @return array list of denied models
      */
     public function getDeniedModels($type = 'view') {
+        
+        $this->_checkUserChanged();
         
         $type = strtolower($type);
         
@@ -527,6 +568,8 @@ class Erfurt_Ac_Default {
      */
     public function getAllowedActions() {
         
+        $this->_checkUserChanged();
+        
         $ret = array();
         
         // filter denied actions
@@ -548,6 +591,8 @@ class Erfurt_Ac_Default {
      */
     public function getDeniedActions() {
         
+        $this->_checkUserChanged();
+        
         return $this->_userRights['denyAccess']; 
     }
     
@@ -557,6 +602,8 @@ class Erfurt_Ac_Default {
      * @return bool allowed or denied
      */
     public function isAnyActionAllowed() {
+        
+        $this->_checkUserChanged();
         
         return $this->_userRights['userAnyActionAllowed'];
     }
@@ -568,6 +615,8 @@ class Erfurt_Ac_Default {
      * @return bool allowed or denied
      * */
     public function isActionAllowed($action) {
+
+        $this->_checkUserChanged();
 
         $actionUri = $this->_uris['sysOntUri'] . $action;
         
@@ -594,6 +643,8 @@ class Erfurt_Ac_Default {
      * @throws Erfurt_Exception if addition of statements fails
      */
     public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') {
+        
+        $this->_checkUserChanged();
         
         // is type supported?
         if (!in_array($type, array('view', 'edit'))) {
