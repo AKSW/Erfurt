@@ -131,26 +131,62 @@ class Erfurt_Sparql_Parser
         
         for ($i=0; $i<$len; ++$i) {
             if (in_array($queryString{$i}, $removeableSpecialChars)) {        
-                if (isset($tokens[$n])) {
+                if (isset($tokens[$n]) && $tokens[$n] !== '') {
                     $n++;
                 }
                 
                 continue;
             } else if (in_array($queryString{$i}, $specialChars)) {
-                if (isset($tokens[$n])) {
-                    $n++;
+                if (isset($tokens[$n]) && ($tokens[$n] !== '')) {
+                    $tokens[++$n] = '';
                 } 
 
-                $tokens[$n++] = $queryString{$i};
+                // In case we have a \ in the string we add the following char to the current token.
+                // In that case it doesn't matter what type of char the following one is!
+                if ($queryString[$i] === '\\') {
+                    // Escaped chars do not need a new token.
+                    $n--;
+                    
+                    $tokens[$n] .= $queryString[$i] .  $queryString[++$i];
+                    
+                    // In case we have added \u we will also add the next 4 digits.
+                    if ($queryString[$i] === 'u') {
+                        $tokens[$n] .= $queryString[++$i] . $queryString[++$i]. $queryString[++$i]. $queryString[++$i];
+                    }
+                    
+                    $n++;
+                } 
+                // Sparql supports literals that are written as """...""" in order to support quotation inside
+                // the literal.
+                else if (($queryString[$i] === '"') && ($i<($len-2)) && ($queryString[($i+1)] === '"') &&
+                        ($queryString[($i+2)] === '"')) {
+                    $tokens[$n++] = $queryString[$i] .  $queryString[++$i] . $queryString[++$i];
+                } 
+                // Sparql supports literals that are written as '''...''' in order to support quotation inside
+                // the literal.
+                else if (($queryString[$i] === "'") && ($i<($len-2)) && ($queryString[($i+1)] === "'") &&
+                        ($queryString[($i+2)] === "'")) {
+                    $tokens[$n++] = $queryString[$i] .  $queryString[++$i] . $queryString[++$i];
+                } else {
+                    $tokens[$n++] = $queryString[$i];
+                }
             } else {
                 if (!isset($tokens[$n])) {
                     $tokens[$n] = '';
+                }
+                
+                // Iris written as <><><> can be written without whitespace, so we need to test for this.
+                // If yes, we need to start a new token.
+                if ((substr($tokens[$n], 0, 1) === '<') && ($queryString[$i] === '>')) {
+                    $tokens[$n++] .= $queryString[$i];
+                    continue;
                 }
                 
                 $tokens[$n] .= $queryString{$i};
             }
         }
         
+#var_dump($tokens);
         return $tokens;
     }
 
@@ -364,7 +400,10 @@ class Erfurt_Sparql_Parser
         while(strtolower(current($this->_tokens))!='from'& strtolower(current($this->_tokens))!='where'){
             $this->_fastForward();
             if($this->varCheck(current($this->_tokens))|$this->iriCheck(current($this->_tokens))){
-                $this->_query->addResultVar(current($this->_tokens));
+                require_once 'Erfurt/Sparql/QueryResultVariable.php';
+                $var = new Erfurt_Sparql_QueryResultVariable(current($this->_tokens));
+                
+                $this->_query->addResultVar($var);
                 if(!$this->_query->getResultForm())
                     $this->_query->setResultForm('describe');
             }
@@ -448,13 +487,16 @@ class Erfurt_Sparql_Parser
     * @return void
     * @throws SparqlParserException
     */
-    protected function _parseWhere(){
+    protected function _parseWhere()
+    {    
         $this->_fastForward();
-        if(current($this->_tokens)=="{"){
+        
+        if (current($this->_tokens) == '{') {
             $this->parseGraphPattern();
         } else {
             require_once 'Erfurt/Sparql/ParserException.php';
-            throw new Erfurt_Sparql_ParserException("Unable to parse WHERE part. '{' expected in Query. ",null,key($this->_tokens));
+            throw new Erfurt_Sparql_ParserException('Unable to parse WHERE part. "{" expected in Query. ', null,
+                key($this->_tokens));
         }
     }
 
@@ -540,7 +582,9 @@ class Erfurt_Sparql_Parser
     protected function literalCheck($token)
     {
         $pattern = "/^[\"\'].*$/";
-        if (preg_match($pattern,$token) > 0) {
+        if (preg_match($pattern, $token) > 0) {
+            return true;
+        } else if (is_numeric($token)) {
             return true;
         }
         return false;
@@ -591,11 +635,11 @@ class Erfurt_Sparql_Parser
     *                               pattern with the given id
     * @return void
     */
-    protected function parseGraphPattern(
-      $optional = false, $union    = false, $graph = false,
-      $constr   = false, $external = false, $subpattern = false
-    ){
+    protected function parseGraphPattern($optional = false, $union = false, $graph = false, $constr = false, 
+        $external = false, $subpattern = false) 
+    {
         $pattern = $this->_query->getNewPattern($constr);
+        
         if (is_int($optional)) {
             $pattern->setOptional($optional);
         } else {
@@ -636,7 +680,20 @@ class Erfurt_Sparql_Parser
                     );
                     $this->_fastForward();
                     break;
-                case ".":
+                case '.':
+                case ';':
+                    // Check whether the previous token is {, for this is not allowed.
+                    $this->_rewind();
+                    if (current($this->_tokens) === '{') {
+                        require_once 'Erfurt/Sparql/ParserException.php';
+                        throw new Erfurt_Sparql_ParserException(
+                            'A dot/semicolon must not follow a { directly.',
+                            null,
+                            key($this->_tokens)
+                        );
+                    }
+                    $this->_fastForward();
+                    
                     $this->_fastForward();
                     break;
                 case "{":
@@ -675,6 +732,7 @@ class Erfurt_Sparql_Parser
         $prev     = false;
         $prevPred = false;
         $cont     = true;
+        $needsDot = false;
         $sub      = "";
         $pre      = "";
         $tmp      = "";
@@ -692,6 +750,7 @@ class Erfurt_Sparql_Parser
                     $this->_fastForward();
                     break;
                 case "optional":
+                    $needsDot = false;
                     $this->_fastForward();
                     $this->parseGraphPattern($pattern->getId(),false);
                     //$cont = false;
@@ -703,17 +762,50 @@ class Erfurt_Sparql_Parser
                     );
                     break;
                 case ";":
+                    // Check whether the previous token is a dot too, for this is not allowed.
+                    $this->_rewind();
+                    if (current($this->_tokens) === '.') {
+                        require_once 'Erfurt/Sparql/ParserException.php';
+                        throw new Erfurt_Sparql_ParserException(
+                            'A semicolon must not follow a dot directly.',
+                            null,
+                            key($this->_tokens)
+                        );
+                    }
+                    $this->_fastForward();
+                
                     $prev = true;
+                    $needsDot = false;
                     $this->_fastForward();
                     break;
                 case ".":
+                    // Check whether the previous token is a dot too, for this is not allowed.
+                    $this->_rewind();
+                    if (current($this->_tokens) === '.') {
+                        require_once 'Erfurt/Sparql/ParserException.php';
+                        throw new Erfurt_Sparql_ParserException(
+                            'A dot must not follow a dot directly.',
+                            null,
+                            key($this->_tokens)
+                        );
+                    }
+                    $this->_fastForward();
+                    
                     $prev = false;
+                    $needsDot = false;
                     $this->_fastForward();
                     break;
                 case "graph":
                     $this->parseGraph();
                     break;
                 case ",":
+                    require_once 'Erfurt/Sparql/ParserException.php';
+                    throw new Erfurt_Sparql_ParserException(
+                        'A comma is not allowed directly after a triple.',
+                        null,
+                        key($this->_tokens)
+                    );
+                
                     $prev     = true;
                     $prevPred = true;
                     $this->_fastForward();
@@ -730,11 +822,13 @@ class Erfurt_Sparql_Parser
                     );
                     break;
                 case "[":
+                    $needsDot = false;
                     $prev = true;
                     $tmp  = $this->parseNode($this->_query->getBlanknodeLabel());
                     $this->_fastForward();
                     break;
                 case "]":
+                    $needsDot = false;
                     $prev = true;
                     $this->_fastForward();
                     break;
@@ -748,6 +842,15 @@ class Erfurt_Sparql_Parser
                     $pattern->open = false;
                     break;
                 default:
+                    if ($needsDot === true) {
+                        require_once 'Erfurt/Sparql/ParserException.php';
+                        throw new Erfurt_Sparql_ParserException(
+                            'Two triple pattern need to be seperated by a dot.',
+                            null,
+                            key($this->_tokens)
+                        );
+                    }
+                
                     if ($prev) {
                         $sub = $tmp;
                     } else {
@@ -766,6 +869,11 @@ class Erfurt_Sparql_Parser
                         $tmp  = $this->parseNode($this->_query->getBlanknodeLabel());
                         $prev = true;
                         $obj = $tmp;
+                        
+                        require_once 'Erfurt/Sparql/QueryTriple.php';
+                        $trp[] = new Erfurt_Sparql_QueryTriple($sub, $pre, $obj);
+                        $this->_fastForward();
+                        continue;
                     } else if (current($this->_tokens)=="(") {
                         $obj = $this->parseCollection($trp);
                     } else {
@@ -774,6 +882,7 @@ class Erfurt_Sparql_Parser
                     
                     require_once 'Erfurt/Sparql/QueryTriple.php';
                     $trp[] = new Erfurt_Sparql_QueryTriple($sub, $pre, $obj);
+                    $needsDot = true;
                     $this->_fastForward();
                     break;
 
@@ -1037,7 +1146,7 @@ class Erfurt_Sparql_Parser
                 $part = array();
             }
         }
-
+        
         if (!isset($tree['type']) && $bParameter) {
             return $part;
         } else if (isset($tree['type']) && $tree['type'] == 'equation'
@@ -1053,6 +1162,9 @@ class Erfurt_Sparql_Parser
             }
             return $part[0];
         }
+
+
+        
 
         return $tree;
     }//protected function parseConstraintTree($nLevel = 0, $bParameter = false)
@@ -1237,7 +1349,7 @@ class Erfurt_Sparql_Parser
                 default:
                 break;
             }
-        }while(next($this->_tokens));
+        } while(next($this->_tokens));
     }
 
     /**
@@ -1258,6 +1370,16 @@ class Erfurt_Sparql_Parser
                 $this->_fastForward();
                 if($this->varCheck(current($this->_tokens))){
                     $val['val'] = current($this->_tokens);
+                } else if ($this->iriCheck(current($this->_tokens)) || $this->qnameCheck(current($this->_tokens)) ||
+                        in_array(current($this->_tokens), $this->_sops)) {
+                    $fName = current($this->_tokens);
+                    
+                    do {
+                        $this->_fastForward();
+                        $fName .= current($this->_tokens);
+                    } while (current($this->_tokens) != ')');
+                    
+                    $val['val'] = $fName;
                 } else {
                     require_once 'Erfurt/Sparql/ParserException.php';
                     throw new Erfurt_Sparql_ParserException("Variable expected in ORDER BY clause. ",null,key($this->_tokens));
@@ -1276,6 +1398,16 @@ class Erfurt_Sparql_Parser
                 $this->_fastForward();
                 if($this->varCheck(current($this->_tokens))){
                     $val['val'] = current($this->_tokens);
+                } else if ($this->iriCheck(current($this->_tokens)) || $this->qnameCheck(current($this->_tokens)) ||
+                            in_array(current($this->_tokens), $this->_sops)) {
+                    $fName = current($this->_tokens);
+
+                    do {
+                        $this->_fastForward();
+                        $fName .= current($this->_tokens);
+                    } while (current($this->_tokens) != ')');
+
+                    $val['val'] = $fName;
                 } else {
                     require_once 'Erfurt/Sparql/ParserException.php';
                     throw new Erfurt_Sparql_ParserException("Variable expected in ORDER BY clause. ",null,key($this->_tokens));
@@ -1289,10 +1421,25 @@ class Erfurt_Sparql_Parser
                 $val['type'] = 'asc';
                 $this->_fastForward();
                 break;
+                case ')':
+                    $this->_fastForward();
+                    break;
+                case '(':
+                    $this->_fastForward();
                 default:
                 if($this->varCheck(current($this->_tokens))){
                     $val['val'] = current($this->_tokens);
                     $val['type'] = 'asc';
+                } else if ($this->iriCheck(current($this->_tokens)) || $this->qnameCheck(current($this->_tokens)) ||
+                            in_array(current($this->_tokens), self::$_sops)) {
+                    $fName = current($this->_tokens);
+
+                    do {
+                        $this->_fastForward();
+                        $fName .= current($this->_tokens);
+                    } while (current($this->_tokens) != ')');
+
+                    $val['val'] = $fName;
                 } else {
                     require_once 'Erfurt/Sparql/ParserException.php';
                     throw new Erfurt_Sparql_ParserException("Variable expected in ORDER BY clause.", null, key($this->_tokens));
@@ -1322,6 +1469,7 @@ class Erfurt_Sparql_Parser
         } else {
             $node = current($this->_tokens);
         }
+        
         if ($node{strlen($node)-1} == '.') {
             $node = substr($node,0,-1);
         }
@@ -1337,7 +1485,7 @@ class Erfurt_Sparql_Parser
             $node = '?' . substr($this->_query->getBlanknodeLabel(), 1);
             $this->_query->addUsedVar($node);
             $this->_fastForward();
-            if(current($this->_tokens)!=']') {
+            if(current($this->_tokens) != ']') {
                 prev($this->_tokens);
             }
             return $node;
@@ -1358,12 +1506,18 @@ class Erfurt_Sparql_Parser
             $node = Erfurt_Rdf_Resource::initWithIri($node);
             return $node;
         } else if ($this->literalCheck($node)) {
-            $ch     = substr($node, 0, 1);
-            $chLong = str_repeat($ch, 3);
-            if (substr($node, 0, 3) == $chLong) {
-                $ch = $chLong;
+            if ((substr($node, 0, 1) === '"') || (substr($node, 0, 1) === "'")) {
+                $ch     = substr($node, 0, 1);
+                $chLong = str_repeat($ch, 3);
+                if (substr($node, 0, 3) == $chLong) {
+                    $ch = $chLong;
+                }
+                $this->parseLiteral($node, $ch);
+            } else {
+                $this->parseLiteral($node, null);
             }
-            $this->parseLiteral($node, $ch);
+            
+            
         } else if ($this->varCheck($node)) {
             $pos = strpos($node,'.');
             if ($pos) {
@@ -1451,11 +1605,26 @@ class Erfurt_Sparql_Parser
     */
     protected function parseLiteral(&$node, $sep)
     {
-        do {
-            next($this->_tokens);
-            $node = $node.current($this->_tokens);
-        } while (current($this->_tokens) != $sep);
-        $this->checkDtypeLang($node, strlen($sep));
+        if ($sep !== null) {
+            do {
+                next($this->_tokens);
+                $node = $node . current($this->_tokens);
+            } while (current($this->_tokens) != $sep);
+            $this->checkDtypeLang($node, strlen($sep));
+        } else {
+            $datatype = '';
+            if (strpos($node, '.') !== false) {
+                $datatype = EF_XSD_NS . 'integer';
+            } else {
+                $datatype = EF_XSD_NS . 'decimal';
+            }
+            
+            require_once 'Erfurt/Rdf/Literal.php';
+            $node = Erfurt_Rdf_Literal::initWithLabel($node);
+            $node->setDatatype($datatype);
+        }
+        
+        
     }//protected function parseLiteral(&$node, $sep)
 
 
@@ -1518,15 +1687,56 @@ class Erfurt_Sparql_Parser
         $firstLabel = $this->parseNode($tmpLabel);
         $this->_fastForward();
         $i = 0;
+        
+        require_once 'Erfurt/Rdf/Resource.php';
+        $rdfRest    = Erfurt_Rdf_Resource::initWithNamespaceAndLocalName(EF_RDF_NS, 'rest');
+        $rdfFirst   = Erfurt_Rdf_Resource::initWithNamespaceAndLocalName(EF_RDF_NS, 'first');
+        $rdfNil     = Erfurt_Rdf_Resource::initWithNamespaceAndLocalName(EF_RDF_NS, 'nil');
+        
+        
         require_once 'Erfurt/Sparql/QueryTriple.php';
-        while (current($this->_tokens)!=")") {
-            if($i>0)
-            $trp[] = new QueryTriple($this->parseNode($tmpLabel),new Resource("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"),$this->parseNode($tmpLabel = $this->_query->getBlanknodeLabel()));
-            $trp[] = new QueryTriple($this->parseNode($tmpLabel),new Resource("http://www.w3.org/1999/02/22-rdf-syntax-ns#first"),$this->parseNode());
+        while (current($this->_tokens) != ')') {
+            if ($i>0) {
+                $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfRest, 
+                                $this->parseNode($tmpLabel = $this->_query->getBlanknodeLabel()));
+            }
+            
+            if (current($this->_tokens) == '(') {
+                $listNode = $this->parseCollection($trp);
+                
+                $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfFirst, $listNode);
+            } else if (current($this->_tokens) == '[') {
+                $this->_fastForward();
+                if (current($this->_tokens) == ']') {
+                    $this->_rewind();
+                    $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfFirst, $this->parseNode());
+                } else {
+                    $this->_rewind();
+                    
+                    $sNode = $this->parseNode();
+                    $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfFirst, $sNode);
+
+                    $this->_fastForward();
+                    $p =  $this->parseNode();
+
+                    $this->_fastForward();
+                    $o = $this->parseNode();
+
+                    $trp[] = new Erfurt_Sparql_QueryTriple($sNode, $p, $o);
+                    $this->_fastForward();
+                }
+                
+                
+                                        
+            } else {
+                $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfFirst, $this->parseNode());
+            }
+            
+            
             $this->_fastForward();
             $i++;
         }
-        $trp[] = new QueryTriple($this->parseNode($tmpLabel),new Resource("http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"),new Resource("http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"));
+        $trp[] = new Erfurt_Sparql_QueryTriple($this->parseNode($tmpLabel), $rdfRest, $rdfNil);
         return $firstLabel;
     }//protected function parseCollection(&$trp)
 

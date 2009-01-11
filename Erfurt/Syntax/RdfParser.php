@@ -4,7 +4,7 @@
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id:$
+ * @version   $Id$
  */
 class Erfurt_Syntax_RdfParser
 {   
@@ -14,6 +14,14 @@ class Erfurt_Syntax_RdfParser
     
     protected $_parserAdapter = null;
     
+    public static function rdfParserWithFormat($format)
+    {
+        $parser = new Erfurt_Syntax_RdfParser();
+        $parser->initializeWithFormat($format);
+        
+        return $parser;
+    }
+    
     public function initializeWithFormat($format)
     {
         $format = strtolower($format);
@@ -22,12 +30,24 @@ class Erfurt_Syntax_RdfParser
             case 'rdfxml':
             case 'xml':
             case 'rdf':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
-                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
+                require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
+                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
+                #require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
+                #$this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
+                break;
+            case 'turtle':
+            case 'ttl':
+                require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
+                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
                 break;
             default:
                 throw new Exception('Format not supported');
         }        
+    }
+    
+    public function reset()
+    {
+        $this->_parserAdapter->reset();
     }
     
     /**
@@ -62,7 +82,11 @@ class Erfurt_Syntax_RdfParser
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataString($dataPointer);
         } else {
-            throw new Exception('Type of data pointer not valid.');
+            try {
+                $result = $this->_parserAdapter->parse($dataPointer);
+            } catch (Exception $e) {
+                throw new Exception('Type of data pointer not valid.');
+            }
         }
         
         return $result;
