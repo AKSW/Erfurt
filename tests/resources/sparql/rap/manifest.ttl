@@ -1,0 +1,689 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <http://www.w3.org/2001/sw/DataAccess/tests/data-r2/syntax-sparql1/manifest#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+@prefix dawgt:   <http://www.w3.org/2001/sw/DataAccess/tests/test-dawg#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "RAP SPARQL tests." ;
+    mf:entries ( :ask-01 :ask-02 :bound1 :count-01 :count-02 :customUnion1 :customUnion2 :dawg-query-001
+        :dawg-query-002 :dawg-query-003 :dawg-query-004 :dawg-tp-01 :dawg-tp-02 :dawg-tp-03 :dawg-tp-04 :ex2-1a
+        :ex2-2a :ex2-3a :ex2-4a :ex3 :ex11_0 :ex11_1 :ex11.2.3.1_0 :ex11.2.3.1_1 :ex11.2.3.2_0 :ex11.2.3.2_1
+        :ex11.2.3.3_0 :ex11.2.3.4_0 :ex11.2.3.5_0 :ex11.2.3.6_0 :ex11.2.3.7_0 :expr-1 :expr-2 :expr-3 :graphset1
+        :graphset2 :graphset3 :graphset4 :LimitOff_1 :LimitOff_2 :LimitOff_3 :q-base-prefix-1 :q-base-prefix-2
+        :q-base-prefix-3 :q-base-prefix-4 :q-base-prefix-5 :q-blank-1 :q-construct-1 :q-construct-2 :q-datatype-1
+        :q-langMatches-1 :q-langMatches-2 :q-langMatches-3 :q-langMatches-4 :q-opt-1 :q-opt-2 :q-reif-1 :q-reif-2
+        :q-select-1 :q-select-2 :q-select-3 :q-str-1 :q-str-2 :q-str-3 :q-str-4 :q-uri-1 :query-01 :query-bev-1
+        :query-bev-2 :query-bev-3 :query-bev-4 :query-bev-5 :query-bev-6 :query-eq-1 :query-eq-2 :query-eq-3
+        :query-eq-4 :query-eq-5 :query-eq-graph-1 :query-eq-graph-2 :query-eq-graph-3 :query-eq-graph-4
+        :query-eq2-1 :query-sort-1 :query-sort-2 :query-sort-3 :query-sort-4 :query-sort-5 :query-sort-6
+        :query-sort-datetime :query-survey-1 :regex-query-001 :regex-query-002 :regex-query-003 :test-0-01 :test-0-02
+        :test-0-03 :test-0-04 :test-1-01 :test-1-02 :test-1-03 :test-1-04 :test-1-05 :test-1-06 :test-1-07 :test-1-08
+        :test-1-09 :test-1-10 :test-2-01 :test-2-02 :test-2-03 :test-2-04 :test-2-05 :test-2-06 :test-2-07 :test-2-08
+        :test-2-09 :test-2-10 :test-3-01 :test-3-02 :test-3-03 :test-3-04 :test-3-05 :test-3-06 :test-3-07 :test-4-01
+        :test-4-02 :test-4-03 :test-4-04 :test-4-05 :test-4-06 :test-4-07 :test-5-01 :test-5-02 :test-5-03 :test-5-04 
+        :test-6-01 :test-6-02 :test-6-03 :test-6-04 :test-7-01 :test-7-02 :test-7-03 :test-7-04 :test-9-01 :test-9-02
+        :test-B-01 :test-B-02 :test-B-03 :test-B-04 :test-B-05 :test-B-06 :test-B-07 :test-B-08 :test-B-09 :test-B-10
+        :test-B-11 :test-B-12 :test-B-13 :test-B-15 :test-B-16 :test-B-17 :test-B-18 :test-B-19 :test-B-20 ).
+
+:ask-01 mf:name "ask-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ask-01.rq> .
+     
+:ask-02 mf:name "ask-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ask-02.rq> .
+
+:bound1 mf:name "bound1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <bound1.rq> .
+         
+:count-01 mf:name "count-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <count-01.rq> .
+
+:count-02 mf:name "count-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <count-02.rq> .
+
+:customUnion1 mf:name "customUnion1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <customUnion1.rq> .
+    
+:customUnion2 mf:name "customUnion2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <customUnion2.rq> .
+    
+:dawg-query-001 mf:name "dawg-query-001.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-query-001.rq> .  
+  
+:dawg-query-002 mf:name "dawg-query-002.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-query-002.rq> .  
+ 
+:dawg-query-003 mf:name "dawg-query-003.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-query-003.rq> .
+
+:dawg-query-004 mf:name "dawg-query-004.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-query-004.rq> .
+
+:dawg-tp-01 mf:name "dawg-tp-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-tp-01.rq> .
+
+:dawg-tp-02 mf:name "dawg-tp-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-tp-02.rq> .
+          
+:dawg-tp-03 mf:name "dawg-tp-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-tp-03.rq> .
+             
+:dawg-tp-04 mf:name "dawg-tp-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <dawg-tp-04.rq> .
+                        
+:ex2-1a mf:name "ex2-1a.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex2-1a.rq> .     
+         
+:ex2-2a mf:name "ex2-2a.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex2-2a.rq> .
+
+:ex2-3a mf:name "ex2-3a.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex2-3a.rq> .
+
+:ex2-4a mf:name "ex2-4a.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex2-4a.rq> .
+ 
+:ex3 mf:name "ex3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ask-01.rq> .
+         
+:ex11_0 mf:name "ex11_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11_0.rq> .
+         
+:ex11_1 mf:name "ex11_1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11_1.rq> .
+         
+:ex11.2.3.1_0 mf:name "ex11.2.3.1_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.1_0.rq> .
+         
+:ex11.2.3.1_1.rq  mf:name   "ex11.2.3.1_1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ex11.2.3.1_1.rq> .
+         
+:ex11.2.3.2_0 mf:name "ex11.2.3.2_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.2_0.rq> .
+
+:ex11.2.3.2_1 mf:name "ex11.2.3.2_1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.2_1.rq> .
+
+:ex11.2.3.3_0 mf:name "ex11.2.3.3_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.3_0.rq> .
+
+:ex11.2.3.4_0 mf:name "ex11.2.3.4_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.4_0.rq> .
+
+:ex11.2.3.5_0 mf:name "ex11.2.3.5_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.5_0.rq> .
+
+:ex11.2.3.6_0 mf:name "ex11.2.3.6_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.6_0.rq> .
+
+:ex11.2.3.7_0 mf:name "ex11.2.3.7_0.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.7_0.rq> .
+
+:expr-1 mf:name "expr-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <ex11.2.3.1_1.rq> .
+
+:expr-2 mf:name "expr-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <expr-2.rq> .
+
+:expr-3.rq mf:name "expr-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <expr-3.rq> .
+              
+:graphset1 mf:name "graphset1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <graphset1.rq> .
+
+:graphset2 mf:name "graphset2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <graphset2.rq> .
+
+:graphset3 mf:name "graphset3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <graphset3.rq> .
+
+:graphset4 mf:name "graphset4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <graphset4.rq> .
+
+:LimitOff_1 mf:name "LimitOff_1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <LimitOff_1.rq> .
+
+:LimitOff_2 mf:name "LimitOff_2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <LimitOff_2.rq> .
+
+:LimitOff_3 mf:name "LimitOff_3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <LimitOff_3.rq> .
+
+:q-base-prefix-1 mf:name "q-base-prefix-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-base-prefix-1.rq> .
+
+:q-base-prefix-2 mf:name "q-base-prefix-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-base-prefix-2.rq> .
+
+:q-base-prefix-3 mf:name "q-base-prefix-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-base-prefix-3.rq> .
+         
+:q-base-prefix-4 mf:name "q-base-prefix-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-base-prefix-4.rq> .
+
+:q-base-prefix-5 mf:name "q-base-prefix-5.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-base-prefix-5.rq> .         
+
+:q-blank-1 mf:name "q-blank-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-blank-1.rq> .
+
+:q-construct-1 mf:name "q-construct-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-construct-1.rq> .
+
+:q-construct-2 mf:name "q-construct-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-construct-2.rq> .
+
+:q-datatype-1 mf:name "q-datatype-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-datatype-1.rq> .
+
+:q-langMatches-1 mf:name "q-langMatches-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-langMatches-1.rq> .
+
+:q-langMatches-2 mf:name "q-langMatches-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-langMatches-2.rq> .
+
+:q-langMatches-3 mf:name "q-langMatches-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-langMatches-3.rq> .
+
+:q-langMatches-4 mf:name "q-langMatches-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-langMatches-4.rq> .         
+          
+:q-opt-1 mf:name "q-opt-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-opt-1.rq> .
+
+:q-opt-2 mf:name "q-opt-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-opt-2.rq> .
+
+:q-reif-1 mf:name "q-reif-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-reif-1.rq> .
+
+:q-reif-2 mf:name "q-reif-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-reif-2.rq> .
+
+:q-select-1 mf:name "q-select-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-select-1.rq> .
+
+:q-select-2 mf:name "q-select-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-select-2.rq> .
+
+:q-select-3 mf:name "q-select-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-select-3.rq> .
+
+:q-str-1 mf:name "q-str-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-str-1.rq> .
+
+:q-str-2 mf:name "q-str-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-str-2.rq> .
+
+:q-str-3 mf:name "q-str-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-str-3.rq> .
+                  
+:q-str-4 mf:name "q-str-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-str-4.rq> .
+
+:q-uri-1 mf:name "q-uri-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <q-uri-1.rq> .
+
+:query-01 mf:name "query-01.rq" ;
+rdf:type mf:NegativeSyntaxTest ;
+mf:action <query-01.rq> .
+
+:query-bev-1 mf:name "query-bev-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-1.rq> .
+
+:query-bev-2 mf:name "query-bev-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-2.rq> .
+
+:query-bev-3 mf:name "query-bev-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-3.rq> .
+
+:query-bev-4 mf:name "query-bev-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-4.rq> .
+
+:query-bev-5 mf:name "query-bev-5.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-5.rq> .
+
+:query-bev-6 mf:name "query-bev-6.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-bev-6.rq> .
+
+:query-eq-1 mf:name "query-eq-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-1.rq> .         
+         
+:query-eq-2 mf:name "query-eq-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-2.rq> .
+
+:query-eq-3 mf:name "query-eq-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-3.rq> .
+
+:query-eq-4 mf:name "query-eq-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-4.rq> .
+
+:query-eq-5 mf:name "query-eq-5.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-5.rq> .
+
+:query-eq-graph-1 mf:name "query-eq-graph-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-graph-1.rq> .
+
+:query-eq-graph-2 mf:name "query-eq-graph-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-graph-2.rq> .
+
+:query-eq-graph-3 mf:name "query-eq-graph-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-graph-3.rq> .
+
+:query-eq-graph-4 mf:name "query-eq-graph-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq-graph-4.rq> .
+
+:query-eq2-1 mf:name "query-eq2-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-eq2-1.rq> .
+
+:query-sort-1 mf:name "query-sort-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-1.rq> .
+
+:query-sort-2 mf:name "query-sort-2.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-2.rq> .
+
+:query-sort-3 mf:name "query-sort-3.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-3.rq> .
+
+:query-sort-4 mf:name "query-sort-4.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-4.rq> .
+
+:query-sort-5 mf:name "query-sort-5.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-5.rq> .
+
+:query-sort-6 mf:name "query-sort-6.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-6.rq> .
+
+:query-sort-datetime mf:name "query-sort-datetime.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-sort-datetime.rq> .
+
+:query-survey-1 mf:name "query-survey-1.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <query-survey-1.rq> .
+
+:regex-query-001 mf:name "regex-query-001.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <regex-query-001.rq> . 
+
+:regex-query-002 mf:name "regex-query-002.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <regex-query-002.rq> .
+
+:regex-query-003 mf:name "regex-query-003.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <regex-query-003.rq> .                     
+         
+:test-0-01 mf:name "test-0-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-0-01.rq> .
+
+:test-0-02 mf:name "test-0-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-0-02.rq> .
+
+:test-0-03 mf:name "test-0-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-0-03.rq> .
+
+:test-0-04 mf:name "test-0-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-0-04.rq> .
+
+:test-1-01 mf:name "test-1-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-01.rq> .
+
+:test-1-02 mf:name "test-1-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-02.rq> .
+
+:test-1-03 mf:name "test-1-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-03.rq> .
+
+:test-1-04 mf:name "test-1-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-04.rq> .
+
+:test-1-05 mf:name "test-1-05.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-05.rq> .
+
+:test-1-06 mf:name "test-1-06.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-06.rq> .       
+
+:test-1-07 mf:name "test-1-07.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-07.rq> .
+
+:test-1-08 mf:name "test-1-08.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-08.rq> .
+
+:test-1-09 mf:name "test-1-09.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-09.rq> .
+
+:test-1-10 mf:name "test-1-10.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-1-10.rq> .
+
+:test-2-01 mf:name "test-2-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-01.rq> .
+
+:test-2-02 mf:name "test-2-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-02.rq> .
+
+:test-2-03 mf:name "test-2-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-03.rq> .
+
+:test-2-04 mf:name "test-2-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-04.rq> .
+
+:test-2-05 mf:name "test-2-05.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-05.rq> .
+
+:test-2-06 mf:name "test-2-06.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-06.rq> .
+
+:test-2-07 mf:name "test-2-07.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-07.rq> .
+
+:test-2-08 mf:name "test-2-08.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-08.rq> .
+
+:test-2-09 mf:name "test-2-09.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-09.rq> .
+
+:test-2-10 mf:name "test-2-10.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-2-10.rq> .
+
+:test-3-01 mf:name "test-3-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-01.rq> .
+
+:test-3-02 mf:name "test-3-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-02.rq> .
+
+:test-3-03 mf:name "test-3-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-03.rq> .
+
+:test-3-04 mf:name "test-3-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-04.rq> .
+
+:test-3-05 mf:name "test-3-05.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-05.rq> .
+
+:test-3-06 mf:name "test-3-06.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-06.rq> .  
+
+:test-3-07 mf:name "test-3-07.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-3-07.rq> .
+
+:test-4-01 mf:name "test-4-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-01.rq> .
+
+:test-4-02 mf:name "test-4-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-02.rq> .
+
+:test-4-03 mf:name "test-4-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-03.rq> .
+
+:test-4-04 mf:name "test-4-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-04.rq> .
+
+:test-4-05 mf:name "test-4-05.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-05.rq> .
+
+:test-4-06 mf:name "test-4-06.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-06.rq> .
+
+:test-4-07 mf:name "test-4-07.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-4-07.rq> .
+
+:test-5-01 mf:name "test-5-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-5-01.rq> .
+
+:test-5-02 mf:name "test-5-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-5-02.rq> .
+
+:test-5-03 mf:name "test-5-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-5-03.rq> .
+
+:test-5-04 mf:name "test-5-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-5-04.rq> .
+
+:test-6-01 mf:name "test-6-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-6-01.rq> .
+
+:test-6-02 mf:name "test-6-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-6-02.rq> .
+
+:test-6-03 mf:name "test-6-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-6-03.rq> .
+
+:test-6-04 mf:name "test-6-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-6-04.rq> .
+
+:test-7-01 mf:name "test-7-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-7-01.rq> .
+
+:test-7-02 mf:name "test-7-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-7-02.rq> .
+
+:test-7-03 mf:name "test-7-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-7-03.rq> .
+
+:test-7-04 mf:name "test-7-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-7-04.rq> .
+
+:test-9-01 mf:name "test-9-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-9-01.rq> .
+
+:test-9-02 mf:name "test-9-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-9-02.rq> .
+
+:test-B-01 mf:name "test-B-01.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-01.rq> .
+
+:test-B-02 mf:name "test-B-02.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-02.rq> .
+
+:test-B-03 mf:name "test-B-03.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-03.rq> .
+
+:test-B-04 mf:name "test-B-04.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-04.rq> .
+
+:test-B-05 mf:name "test-B-05.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-05.rq> .
+
+:test-B-06 mf:name "test-B-06.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-06.rq> .
+
+:test-B-07 mf:name "test-B-07.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-07.rq> .
+
+:test-B-08 mf:name "test-B-08.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-08.rq> .
+
+:test-B-09 mf:name "test-B-09.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-09.rq> .
+
+:test-B-10 mf:name "test-B-10.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-10.rq> .
+
+:test-B-11 mf:name "test-B-11.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-11.rq> .
+
+:test-B-12 mf:name "test-B-12.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-12.rq> .
+
+:test-B-13 mf:name "test-B-13.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-13.rq> .
+
+:test-B-15 mf:name "test-B-15.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-15.rq> .
+
+:test-B-16 mf:name "test-B-16.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-16.rq> .
+
+:test-B-17 mf:name "test-B-17.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-17.rq> .
+
+:test-B-18 mf:name "test-B-18.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-18.rq> .
+
+:test-B-19 mf:name "test-B-19.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-19.rq> .
+
+:test-B-20 mf:name "test-B-20.rq" ;
+rdf:type mf:PositiveSyntaxTest ;
+mf:action <test-B-20.rq> .
+             

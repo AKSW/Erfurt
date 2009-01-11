@@ -7,55 +7,100 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
 {
     const RAP_TEST_DIR = 'resources/sparql/rap/';
     const OW_TEST_DIR = 'resources/sparql/ontowiki/';
-    const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data_r2/';
+    const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
     protected $_sparqlQueries = array();
     protected $disabledQueries = array(); // TODO
     
     public function __construct()
     {
-// TODO put the following code into a private method... duplicate stuff :(
-        $i = 0;
-        // 1. collect the rap test queries... this are all correct queries... so they should get parsed
-        if ($dirHandle = opendir(self::RAP_TEST_DIR)) {
-            while (false !== ($fileName = readdir($dirHandle))) {
-                if (($fileName !== '.') && ($fileName !== '..') && (substr($fileName, -4) === 'phpt')) {
-                    $fileString = file_get_contents(self::RAP_TEST_DIR . $fileName);
-                    
-                    $currentQuery = eval($fileString);
-                    
-                    if (!isset($currentQuery['test_syntax']) || $currentQuery['test_syntax'] !== false) {
-                        $this->_sparqlQueries[$i] = $currentQuery;
-                        $this->_sparqlQueries[$i]['file_name'] = self::RAP_TEST_DIR . $fileName;
-                        
-                        ++$i;
-                    }
-                }
-            }
-            closedir($dirHandle);
-        }
+        // 1. ow tests 
+        $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl');
         
-        // 2. collect the ow test queries...
-        if ($dirHandle = opendir(self::OW_TEST_DIR)) {
-            while (false !== ($fileName = readdir($dirHandle))) {
-                if (($fileName !== '.') && ($fileName !== '..') && (substr($fileName, -4) === 'phpt')) {
-                    $fileString = file_get_contents(self::OW_TEST_DIR . $fileName);
-                    
-                    $currentQuery = eval($fileString);
-                    
-                    if (!isset($currentQuery['test_syntax']) || $currentQuery['test_syntax'] !== false) {
-                        $this->_sparqlQueries[$i] = $currentQuery;
-                        $this->_sparqlQueries[$i]['file_name'] = self::OW_TEST_DIR . $fileName;
-                        
-                        ++$i;
-                    }
-                }
-            }
-            closedir($dirHandle);
-        }
+        // 2. rap tests
+        $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl');
+    
+        // 3. dawg2
+        require_once 'Erfurt/Syntax/RdfParser.php';
+        $parser = new Erfurt_Syntax_RdfParser();
+        $parser->initializeWithFormat('turtle');
         
-        // 3. collect all rq files from the dawg test cases... use the manifest.ttl files to determine, whether
-        // quries are positive or negative
+        $result = $parser->parse(self::DAWG_DATA_DIR . 'manifest-syntax.ttl', null);
+        $keys = array_keys($result);
+        $subject = $keys[0];
+        $base = $subject;
+        $predicate = 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#include';
+        $object = $result["$subject"]["$predicate"][0]['value'];
+        
+        while (true) {
+            $p = EF_RDF_NS . 'first';
+            $filename = $result["$object"]["$p"][0]['value'];
+            
+            $filename = self::DAWG_DATA_DIR . substr($filename, strlen($base)+1);
+            
+            $this->_importFromManifest($filename);
+            
+            $p = EF_RDF_NS . 'rest';
+            $nil = EF_RDF_NS . 'nil';
+            if ($result["$object"]["$p"][0]['value'] === $nil) {
+                break;
+            } else {
+                $object = $result["$object"]["$p"][0]['value'];
+            }
+        }   
+    }
+    
+    protected function _importFromManifest($filename)
+    {
+        require_once 'Erfurt/Syntax/RdfParser.php';
+        $parser = new Erfurt_Syntax_RdfParser();
+        $parser->initializeWithFormat('turtle');
+        
+        $manifestResult = $parser->parse($filename, null);
+        $mfAction = 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#action';
+        
+        // file auslesen...
+        foreach ($manifestResult as $s=>$pArray) {
+            if (isset($pArray[EF_RDF_TYPE]) && 
+                $pArray[EF_RDF_TYPE][0]['value'] ===
+                 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#PositiveSyntaxTest') {
+                
+                $queryFileName = substr($filename, 0, strrpos($filename, '/')) .
+                                substr($pArray["$mfAction"][0]['value'], 
+                                strrpos($pArray["$mfAction"][0]['value'], '/'));
+                                
+                     
+                $queryArray = array();
+                $queryArray['name']     = $s;
+                $queryArray['group']    = 'Positive syntax tests';
+                $queryArray['type']     = 'positive';
+                
+                $handle = fopen($queryFileName, "r");
+                $queryArray['query']    = fread($handle, filesize($queryFileName));
+                fclose($handle);
+                array_push($this->_sparqlQueries, $queryArray);
+            } else if (isset($pArray[EF_RDF_TYPE]) &&
+                    $pArray[EF_RDF_TYPE][0]['value'] ===
+                    'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#NegativeSyntaxTest') {
+                
+                $queryFileName = substr($filename, 0, strrpos($filename, '/')) .
+                                substr($pArray["$mfAction"][0]['value'], 
+                                strrpos($pArray["$mfAction"][0]['value'], '/'));
+
+
+                $queryArray = array();
+                $queryArray['name']     = $s;
+                $queryArray['group']    = 'Negative syntax tests';
+                $queryArray['type']     = 'negative';
+
+                $handle = fopen($queryFileName, "r");
+                $queryArray['query']    = fread($handle, filesize($queryFileName));
+                fclose($handle);
+                array_push($this->_sparqlQueries, $queryArray);
+            } else {
+                continue;
+            }
+        }
     }
     
     public function count()
@@ -76,31 +121,20 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
             
             try {
                 $queryObject = $parser->parse($query['query']);
+                
+                // If query type is negative, we should not reach this code...
+                if ($query['type'] === 'negative') {
+                    $e = new Exception('Query parsing should fail.');
+                    $result->addFailure($this, 
+                        new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
+                }
             } catch (Exception $e) {
-                $result->addFailure($this, 
-                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
-                continue;
+                if ($query['type'] === 'positive') {
+                    $result->addFailure($this, 
+                        new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
+                    
+                } 
             } 
-            
-            try {
-                if (isset($query['result_form'])) {
-                    PHPUnit_Framework_Assert::assertEquals($query['result_form'], $queryObject->getResultForm());
-                }
-                if (isset($query['result_vars'])) {
-                    foreach ($queryObject->getResultVars() as $i=>$resultVar) {
-                        PHPUnit_Framework_Assert::assertEquals($query['result_vars'][$i],
-                                $resultVar->getVariable());
-                    }
-                    
-                    
-                }
-            } catch (PHPUnit_Framework_AssertionFailedError $e) {
-                $result->addFailure($this, 
-                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
-            } catch (Exception $e) {
-                $result->addError($this, 
-                    new PHPUnit_Framework_AssertionFailedError($this->_createErrorMsg($i, $query, $e)), time());
-            }
         }
         
         $result->endTest($this, time());
@@ -114,7 +148,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
     {
         $msg =  'No.: ' . $i . PHP_EOL .
                 'Group: ' . $query['group'] . PHP_EOL .
-                'Filename: ' . $query['file_name'] . PHP_EOL .
+                #'Filename: ' . $query['file_name'] . PHP_EOL .
                 'Name: ' . $query['name'] . PHP_EOL;
                 #'Query: ' . $query['query'] . PHP_EOL;
                 

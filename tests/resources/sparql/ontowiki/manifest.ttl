@@ -1,0 +1,18 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <http://www.w3.org/2001/sw/DataAccess/tests/data-r2/syntax-sparql1/manifest#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+@prefix dawgt:   <http://www.w3.org/2001/sw/DataAccess/tests/test-dawg#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "OntoWiki SPARQL tests." ;
+    mf:entries ( :ow_hierarchy :ow_resourceview ).
+
+:ow_hierarchy  mf:name  "ow_hierarchy.rq" ;
+         rdf:type   mf:PositiveSyntaxTest ;
+         mf:action  <ow_hierarchy.rq> .
+	 
+:ow_resourceview  mf:name  "ow_resourceview.rq" ;
+         rdf:type   mf:PositiveSyntaxTest ;
+         mf:action  <ow_resourceview.rq> .
