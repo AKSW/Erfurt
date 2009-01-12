@@ -68,12 +68,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $username   = $adapterOptions['username'];
         $password   = $adapterOptions['password'];
         
+        if (!function_exists('odbc_connect')) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Virtuoso adapter requires PHP ODBC extension to be loaded.');
+            exit;
+        }
+        
         // try to connect
         $this->_connection = @odbc_connect($dsn, $username, $password);
         
         if (null == $this->_connection) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Unable to connect to Virtuoso Universal Server via ODBC: ' . $this->_getLastError());
+            exit;
         }
         
         // load title properties for model titles
