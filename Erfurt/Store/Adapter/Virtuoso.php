@@ -660,6 +660,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             throw new Erfurt_Exception('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . $sparqlQuery);
         }
         
+        if ($this->_longRead) {
+            odbc_longreadlen($result, 16348);
+            $this->_longRead = false;
+        }
+        
         return $result;
     }
     
