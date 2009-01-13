@@ -47,6 +47,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private $_languages = array();
     
+    private $_longRead = false;
+    
     /**
      * An array of languages appearing in
      * each model.
@@ -180,14 +182,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 	/** @see Erfurt_Store_Sql_Interface */
 	public function createTable($tableName, array $columns)
 	{
-	    $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
-	    foreach ($tableSpec as $columnName => $columnSpec) {
-	        $createTable .= PHP_EOL
-	                     .  " $columnName "
-	                     .  str_ireplace('AUTO_INCREMENT', 'IDENTITY', $columnSpec); // Virtuoso-specific
+	    $colSpecs = array();
+	    
+	    // Virtuoso-specific replacings
+	    $replace = array(
+	        'AUTO_INCREMENT' => 'IDENTITY', 
+	        'LONGTEXT'       => 'LONG VARCHAR'
+	    );
+	    
+	    foreach ($columns as $columnName => $columnSpec) {
+	        $colSpecs[] = PHP_EOL
+	                    .  " $columnName "
+	                    .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
 	    }
-	    $createTable .= PHP_EOL
-	                 .  ')';
+	    
+	    $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
 	    
 	    return $this->sqlQuery($createTable);
 	}
@@ -234,7 +243,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($graphIri, $serializationType = 'xml', $filename = false)
     {
-        throw new Exception('Not implemented yet.');
+        switch ($serializationType) {
+            case 'ttl':
+                $exportFunc = 'RDF_TRIPLES_TO_TTL';
+                break;
+            case 'xml':
+                $exportFunc = 'RDF_TRIPLES_TO_RDF_XML_TEXT';
+                break;
+        }
+        
+        
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -368,7 +386,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
 	public function getSupportedExportFormats()
 	{
-	    return array();
+	    return array(
+	        'ttl'  => 'Turtle',  
+            'rdf' => 'RDF/XML'
+	    );
 	}
 	
 	/** @see Erfurt_Store_Adapter_Interface */
@@ -427,7 +448,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         where __any_grants(KEY_TABLE) and KEY_IS_MAIN = 1 and KEY_MIGRATE_TO is null';
         
         if (!empty($prefix)) {
-            $tablesSql .= ' and TABLE_NAME like "' . $prefix . '%"';
+            $tablesSql .= ' and name_part(KEY_TABLE, 2) like \'' . $prefix . '%\'';
         }
         
         $tablesSql .= ' order by TABLE_NAME';
@@ -461,8 +482,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {    
         $resultArray = array();
         
+        if ($resultform == 'xml') {
+            $this->_longRead = true;
+            $query = ' define output:format "RDF/XML" '
+                   .  $query;
+        }
+        
         if ($result = $this->_execSparql($query)) {
             $resultArray = $this->_odbcResultToArray($result);
+        }
+        
+        if ($resultform == 'xml') {
+            return $resultArray[0]['callret-0'];
         }
         
         return $resultArray;
@@ -471,6 +502,38 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Sql_Interface */
     public function sqlQuery($sqlQuery)
     {
+        $selectAdd = '';
+        
+        $parts = array(
+            'limit' => '', 
+            'offset' => ''
+        );
+        
+        $tokens = array(
+            'limit'  => '/LIMIT\s+(\d+)/i', 
+            'offset' => '/OFFSET\s+(\d+)/i'
+        );
+        
+        foreach ($tokens as $key => $pattern) {
+            preg_match_all($pattern, $sqlQuery, $parts[$key]);
+        }
+        
+        if (isset($parts['limit'][1][0])) {
+            $selectAdd .= 'TOP ' . $parts['limit'][1][0];
+            
+            if (isset($parts['offset'][1][0]) && ((int) $parts['offset'][1][0] > 0)) {
+                $selectAdd .= ', ' . $parts['offset'][1][0];
+            }
+        }
+        
+        $replacings = array(
+            '/SELECT/i'         => 'SELECT ' . $selectAdd, 
+            '/LIMIT\s+(\d+)/i'  => '', 
+            '/OFFSET\s+(\d+)/i' => ''
+        );
+        
+        $sqlQuery = preg_replace(array_keys($replacings), array_values($replacings), $sqlQuery);
+        
         $resultArray = array();
         
         if ($result = $this->_execSql($sqlQuery)) {
@@ -588,6 +651,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         
+        // $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        
         $result = @odbc_exec($this->_connection, $virtuosoPl);
         
         if (false === $result) {
@@ -608,6 +673,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     private function _execSql($sqlQuery) 
     {
         $result = @odbc_exec($this->_connection, $sqlQuery);
+        
+        if ($this->_longRead) {
+            odbc_longreadlen($result, 0);
+            $this->_longRead = false;
+        }
         
         if (null == $result) {
             require_once 'Erfurt/Exception.php';
