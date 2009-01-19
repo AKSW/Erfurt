@@ -111,6 +111,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends PHPUnit_Framework_TestC
 
         </rdf:RDF>';
         
-        $this->_object->parseFromDataString($data);
+        //$this->_object->parseFromDataString($data);
     }
 }
