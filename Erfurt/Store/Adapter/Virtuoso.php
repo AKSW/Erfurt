@@ -712,12 +712,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $baseUri The base IRI
      */
     private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = '') 
-    {
-        if ($type == 'auto') {
-            $pathInfo = pathinfo($file);
-            $type     = $pathInfo['extension'];
-        }
-        
+    {        
         // check type parameter
         switch (strtolower($type)) {
             case 'n3':  // N3

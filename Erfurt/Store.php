@@ -683,14 +683,53 @@ class Erfurt_Store
             throw new Erfurt_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
         
+        if ($type == 'auto') {
+            // detect file type
+            if ($locator == 'file' && is_readable($data)) {
+                $pathInfo = pathinfo($data);
+                $type     = array_key_exists('extension', $pathInfo) ? $pathInfo['extension'] : '';
+            } 
+            
+            if ($locator == 'url') {
+                $flag = false;
+                // try content-type
+                $headers = get_headers($data, 1);
+                if (array_key_exists('Content-Type', $headers)) {
+                    switch (strtolower($headers['Content-Type'])) {
+                        case 'application/rdf+xml':
+                            $type = 'rdf';
+                            $flag = true;
+                            break;
+                        case 'text/rdf+n3':
+                            $type = 'n3';
+                            $flag = true;
+                            break;
+                    }
+                } 
+                
+                // try file name
+                if (!$flag) {
+                    switch (strtolower(strrchr($data, '.'))) {
+                        case '.rdf':
+                            $type = 'rdf';
+                            break;
+                        case '.n3':
+                            $type = 'rdf';
+                            break;
+                    }
+                }
+            }
+        }
+        
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
-            return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
-        } else if ($type == 'auto') {
-            // TODO: check format
             return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
         } else {
             // TODO: look for plugins
         }
+        
+        // should not be reached
+        require_once 'Erfurt/Exception.php';
+        throw new Erfurt_Exception('Could not import RDF data. Format not recognized.');
     }
     
     /**
