@@ -466,6 +466,7 @@ class Erfurt_Store
         // remove any statements about deleted model from SysOnt
         $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
         $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
+        $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
     }
     
     /**
