@@ -132,6 +132,12 @@ class Erfurt_Sparql_Parser
         for ($i=0; $i<$len; ++$i) {
             if (in_array($queryString{$i}, $removeableSpecialChars)) {        
                 if (isset($tokens[$n]) && $tokens[$n] !== '') {
+                    if ((strlen($tokens[$n]) >= 2) && ($tokens[$n][strlen($tokens[$n])-1] === '.') 
+                            && !is_numeric(substr($tokens[$n], 0, strlen($tokens[$n])-1))) {
+                        $tokens[$n] = substr($tokens[$n], 0, strlen($tokens[$n])-1);
+                        $tokens[++$n] = '.';
+                    }
+                    
                     $n++;
                 }
                 
@@ -139,7 +145,8 @@ class Erfurt_Sparql_Parser
             } else if (in_array($queryString{$i}, $specialChars)) {
                 if (isset($tokens[$n]) && ($tokens[$n] !== '')) {
                     // Check whether trailing char is a dot.
-                    if ((strlen($tokens[$n])) > 2 && ($tokens[$n][strlen($tokens[$n])-1] === '.')) {
+                    if ((strlen($tokens[$n]) >= 2) && ($tokens[$n][strlen($tokens[$n])-1] === '.') 
+                            && !is_numeric(substr($tokens[$n], 0, strlen($tokens[$n])-1))) {
                         $tokens[$n] = substr($tokens[$n], 0, strlen($tokens[$n])-1);
                         $tokens[++$n] = '.';
                     }
@@ -187,7 +194,7 @@ class Erfurt_Sparql_Parser
                     $tokens[$n++] .= $queryString[$i];
                     continue;
                 }
-                
+                 
                 $tokens[$n] .= $queryString{$i};
             }
         }
