@@ -486,14 +486,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $this->_longRead = true;
             $query = ' define output:format "RDF/XML" '
                    .  $query;
+        } else if ($resultform == 'n3') {
+            $query = ' define output:format "TTL" '
+                   .  $query;
         }
         
         if ($result = $this->_execSparql($query)) {
             $resultArray = $this->_odbcResultToArray($result);
         }
         
-        if ($resultform == 'xml') {
-            return $resultArray[0]['callret-0'];
+        if ($resultform == 'xml' or $resultform == 'n3') {
+            $result = null;
+            if (is_array($resultArray)) {
+                foreach ($resultArray[0] as $field) {
+                    $result = $field;
+                }
+            }
+            
+            return $field;
         }
         
         return $resultArray;
