@@ -22,7 +22,7 @@ class Erfurt_Versioning_StoreStub
                         'payload_id'  => 1
                     )
                 );
-            } else if (substr($sql, (strpos($sql, 'id = ')+5)) == 3) { // Shuld fail
+            } else if (substr($sql, (strpos($sql, 'id = ')+5)) == 3) { // Should fail
                 return array(
                     array(
                         'action_type' => 20,
@@ -90,6 +90,11 @@ class Erfurt_Versioning_StoreStub
     public function deleteMultipleStatements($statements)
     {
         // We assume this works while testing.
+    }
+    
+    public function isSqlSupported()
+    {
+        return true;
     }
 }
 

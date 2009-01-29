@@ -97,7 +97,7 @@ class Erfurt_Versioning
     public function getHistoryForGraph($graphUri, $page = 1)
     {
         $sql = 'SELECT id, user, resource, tstamp, action_type FROM ef_versioning_actions WHERE
-                model = `' . $graphUri . '` 
+                model = "' . $graphUri . '"
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
@@ -109,10 +109,10 @@ class Erfurt_Versioning
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
         $sql = 'SELECT id, user, tstamp, action_type FROM ef_versioning_actions WHERE
-                model = `' . $graphUri . '` AND resource = `' . $resourceUri . '`
+                model = "' . $graphUri . '" AND resource = "' . $resourceUri . '"
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
-                
+               
         $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
@@ -121,7 +121,7 @@ class Erfurt_Versioning
     public function getHistoryForUser($userUri, $page = 1)
     {
         $sql = 'SELECT id, resource, tstamp, action_type FROM ef_versioning_actions WHERE
-                user = `' . $userUri . '` 
+                user = "' . $userUri . '"
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
@@ -325,13 +325,13 @@ class Erfurt_Versioning
     
     private function _initialize()
     {
-        if(!($this->_getStore() instanceof Erfurt_Store_Sql_Interface)) {
+        if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
         }
         
-        $existingTableNames = $this->_getStore->listTables();
+        $existingTableNames = $this->_getStore()->listTables();
         
-        if (!in_array('erfurt_versioning_actions', $existingTableNames)) {
+        if (!in_array('ef_versioning_actions', $existingTableNames)) {
             $columnSpec = array(
                 'id'          => 'INT PRIMARY KEY',
                 'model'       => 'VARCHAR(255) NOT NULL',
@@ -343,16 +343,16 @@ class Erfurt_Versioning
                 'payload_id'  => 'INT NOT NULL'
             );
             
-            $this->_getStore()->createTable('erfurt_versioning_actions', $columnSpec);
+            $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
         }
         
-        if (!in_array('erfurt_versioning_payloads', $existingTableNames)) {
+        if (!in_array('ef_versioning_payloads', $existingTableNames)) {
             $columnSpec = array(
                 'id'             => 'INT PRIMARY KEY',
                 'statement_hash' => 'LONGTEXT'
             );
             
-            $this->_getStore()->createTable('erfurt_versioning_payloads', $columnSpec);
+            $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
         }        
     }
 }

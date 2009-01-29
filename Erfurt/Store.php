@@ -360,10 +360,10 @@ class Erfurt_Store
      *
      * @param array $tableSpec An associative array of SQL column names and columnd specs.
      */
-	public function createTable(array $tableSpec)
+	public function createTable($tableName, array $columns)
 	{
 	    if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-	        return $this->_backendAdapter->createTable($tableSpec);
+	        return $this->_backendAdapter->createTable($tableName, $columns);
 	    }
 	    
 	    // TODO: use default SQL store
@@ -746,6 +746,11 @@ class Erfurt_Store
         }
         
         return false;
+    }
+    
+    public function isSqlSupported()
+    {
+        return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
     
     /**

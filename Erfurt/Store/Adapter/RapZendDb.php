@@ -551,14 +551,16 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     {
         $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
         
+        $i = 0;
 	    foreach ($columns as $columnName => $columnSpec) {
 	        $createTable .= PHP_EOL
-	                     .  '`' . $columnName . '`'
-	                     .  $columnSpec;
+	                     .  '`' . $columnName . '` '
+	                     .  $columnSpec . (($i < count($columns)-1) ? ',' : '');
+	        ++$i;
 	    }
 	    $createTable .= PHP_EOL
 	                 .  ')';
-	    
+#var_dump($createTable);exit;	    
 	    $success = $this->_dbConn->getConnection()->query($createTable);
 	    
 	    if (!$success) {

@@ -138,6 +138,12 @@ class Erfurt_Sparql_Parser
                 continue;
             } else if (in_array($queryString{$i}, $specialChars)) {
                 if (isset($tokens[$n]) && ($tokens[$n] !== '')) {
+                    // Check whether trailing char is a dot.
+                    if ((strlen($tokens[$n])) > 2 && ($tokens[$n][strlen($tokens[$n])-1] === '.')) {
+                        $tokens[$n] = substr($tokens[$n], 0, strlen($tokens[$n])-1);
+                        $tokens[++$n] = '.';
+                    }
+                    
                     $tokens[++$n] = '';
                 } 
 
@@ -186,7 +192,7 @@ class Erfurt_Sparql_Parser
             }
         }
         
-#var_dump($tokens);
+#var_dump($tokens);exit;
         return $tokens;
     }
 
@@ -291,6 +297,7 @@ class Erfurt_Sparql_Parser
         } else {
             $msg = current($this->_tokens);
             $msg = preg_replace('/</', '&lt;', $msg);
+#var_dump($this->_tokens);exit;
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException(
                 "IRI expected",
@@ -444,6 +451,7 @@ class Erfurt_Sparql_Parser
             } else if ($this->varCheck(current($this->_tokens))) {
                 $this->_query->addFrom(current($this->_tokens));
             } else {
+#var_dump($this->_tokens);exit;
                 require_once 'Erfurt/Sparql/ParserException.php';
                 throw new Erfurt_Sparql_ParserException("Variable, Iri or qname expected in FROM ",null,key($this->_tokens));
             }
@@ -494,6 +502,7 @@ class Erfurt_Sparql_Parser
         if (current($this->_tokens) == '{') {
             $this->parseGraphPattern();
         } else {
+#var_dump($this->_tokens);exit;
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Unable to parse WHERE part. "{" expected in Query. ', null,
                 key($this->_tokens));
@@ -843,6 +852,7 @@ class Erfurt_Sparql_Parser
                     break;
                 default:
                     if ($needsDot === true) {
+#var_dump($this->_tokens);exit;
                         require_once 'Erfurt/Sparql/ParserException.php';
                         throw new Erfurt_Sparql_ParserException(
                             'Two triple pattern need to be seperated by a dot.',
@@ -1543,6 +1553,7 @@ class Erfurt_Sparql_Parser
             }
             return $this->parseNode($node);
         } else {
+#var_dump($this->_tokens);exit;
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException(
                 '"' . $node . '" is neither a valid rdf- node nor a variable.',
