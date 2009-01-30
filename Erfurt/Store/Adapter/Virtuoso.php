@@ -183,7 +183,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 	public function createTable($tableName, array $columns)
 	{
 	    $colSpecs = array();
-	    
+
 	    // Virtuoso-specific replacings
 	    $replace = array(
 	        'AUTO_INCREMENT' => 'IDENTITY', 
@@ -192,12 +192,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 	    
 	    foreach ($columns as $columnName => $columnSpec) {
 	        $colSpecs[] = PHP_EOL
-	                    .  " $columnName "
+	                    .  ' "' . $columnName . '" '
 	                    .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
 	    }
 	    
 	    $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
-	    
+#var_dump($createTable);exit;	    
 	    return $this->sqlQuery($createTable);
 	}
     
@@ -618,7 +618,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         // get number of fields (columns)
         $numFields = odbc_num_fields($result);
-        
+
+        if ($numFields === 0) {
+            return $resultArray;
+        }        
+       
         while (odbc_fetch_into($result, $resultRow)) {
             if ($numFields == 1 && !$rowsAsArrays) {
                 // add first row field to result array
@@ -693,7 +697,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             odbc_longreadlen($result, 0);
             $this->_longRead = false;
         }
-        
+  
         if (null == $result) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('SQL Error: ' . $this->_getLastError());

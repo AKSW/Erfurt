@@ -5,7 +5,7 @@
  * CREATE TABLE ef_versioning_actions(
  *   id             INT NOT NULL, 
  *   model          VARCHAR(255) NOT NULL, 
- *   user           VARCHAR(255) NOT NULL,
+ *   user        VARCHAR(255) NOT NULL,
  *   resource       VARCHAR(255), 
  *   tstamp         TIMESTAMP NOT NULL, 
  *   action_type    INT NOT NULL, 
@@ -97,7 +97,7 @@ class Erfurt_Versioning
     public function getHistoryForGraph($graphUri, $page = 1)
     {
         $sql = 'SELECT id, user, resource, tstamp, action_type FROM ef_versioning_actions WHERE
-                model = "' . $graphUri . '"
+                model = \'' . $graphUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
@@ -109,10 +109,10 @@ class Erfurt_Versioning
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
         $sql = 'SELECT id, user, tstamp, action_type FROM ef_versioning_actions WHERE
-                model = "' . $graphUri . '" AND resource = "' . $resourceUri . '"
+                model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
-               
+           
         $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
@@ -121,7 +121,7 @@ class Erfurt_Versioning
     public function getHistoryForUser($userUri, $page = 1)
     {
         $sql = 'SELECT id, resource, tstamp, action_type FROM ef_versioning_actions WHERE
-                user = "' . $userUri . '"
+                user = \'' . $userUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
@@ -335,7 +335,7 @@ class Erfurt_Versioning
             $columnSpec = array(
                 'id'          => 'INT PRIMARY KEY',
                 'model'       => 'VARCHAR(255) NOT NULL',
-                'user'        => 'VARCHAR(255) NOT NULL',
+                'user'     => 'VARCHAR(255) NOT NULL',
                 'resource'    => 'VARCHAR(255)',
                 'tstamp'      => 'TIMESTAMP NOT NULL',
                 'action_type' => 'INT NOT NULL',
