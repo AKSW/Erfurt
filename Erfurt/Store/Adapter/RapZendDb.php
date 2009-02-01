@@ -469,23 +469,13 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedImportFormats()
     {
-        //return array('xml', 'n3', 'nt');
-        return array('rdfxml');
+        return array();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($modelUri, $data, $type, $locator)
     {
-        require_once 'Erfurt/Syntax/RdfParser.php';
-        $parser = new Erfurt_Syntax_RdfParser();        
-        $parser->initializeWithFormat($type);
-        
-// TODO use constant for locator type
-        if ($locator === 'uri') {
-            $parser->parseToStore($data, Erfurt_Syntax_RdfParser::LOCATOR_URI, $modelUri);
-        } else if ($locator === 'file') {
-            $parser->parseToStore($data, Erfurt_Syntax_RdfParser::LOCATOR_FILE, $modelUri);
-        }
+        // Nothing to do here, for this backend has no own import functionality.
     }
     
     /** @see Erfurt_Store_Adapter_Interface */

@@ -668,8 +668,13 @@ class Erfurt_Store
      */
     public function getSupportedImportFormats()
     {
-        // TODO: check import plug-ins
-        return $this->_backendAdapter->getSupportedImportFormats();
+        $supportedFormats = array(
+            'rdfxml'    => 'RDF/XML',
+            'n3'        => 'Notation 3',
+            'rdfjson'   => 'RDF/JSON (Talis)'
+        );
+        
+        return array_merge($supportedFormats, $this->_backendAdapter->getSupportedImportFormats());
     }
     
     /**
@@ -735,7 +740,9 @@ class Erfurt_Store
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
         } else {
-            // TODO: look for plugins
+            require_once 'Erfurt/Syntax/RdfParser.php';
+            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
+            return $parser->parseToStore($data, $locator, $modelIri);
         }
         
         // should not be reached

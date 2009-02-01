@@ -231,7 +231,7 @@ class Erfurt_Ac_Default {
      * @return array
      */
     private function _getUserModelRights($userURI) {
-        
+   
         $this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
         
         $userRights = $this->_userRights;
@@ -260,10 +260,12 @@ class Erfurt_Ac_Default {
         $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
         $sparqlQuery->setProloguePart('SELECT ?s ?p ?o');
         
-        $wherePart = 'WHERE { ?s ?p ?o . <' . $this->_user['uri'] . '> ?p ?o }';
+        $wherePart = 'WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <' . $this->_user['uri'] . '>))}';
+        #$wherePart = 'WHERE { ?s ?p ?o . <' . $this->_user['uri'] . '> ?p ?o }'; wrong sparql?!
         $sparqlQuery->setWherePart($wherePart);
-            
+
         if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
+            
             $this->_filterAccess($result, $userRights);
         }
         

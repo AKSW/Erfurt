@@ -395,7 +395,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 	    return array(
 	        'n3'  => 'N3', 
 	        'nt'  => 'N-Triple', 
-	        'rdf' => 'RDF/XML'
+	        'rdfxml' => 'RDF/XML'
 	    );
 	}
     

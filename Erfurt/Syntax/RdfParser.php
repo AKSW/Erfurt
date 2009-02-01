@@ -37,11 +37,20 @@ class Erfurt_Syntax_RdfParser
                 break;
             case 'turtle':
             case 'ttl':
+            case 'n3':
+            case 'nt':
+            case 'ntriple':
+            case 'rdfn3':
                 require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
                 break;
+            case 'json':
+            case 'rdfjson':
+                require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
+                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
+                break;
             default:
-                throw new Exception('Format not supported');
+                throw new Exception("Format '$format' not supported");
         }        
     }
     
@@ -58,35 +67,13 @@ class Erfurt_Syntax_RdfParser
     public function parse($dataPointer, $pointerType)
     {
         if ($pointerType === self::LOCATOR_URL) {
-            $fileHandle = fopen($dataPointer, 'r');
-            
-            if ($fileHandle === false) {
-                throw new Exception('Could not locate data with url: ' . $dataPointer);
-            }
-            
-            $result = $this->_parserAdapter->parseFromFileHandle($fileHandle);
-            
-            // Close the file handle resource.
-            fclose($fileHandle);            
+            $result = $this->_parserAdapter->parseFromUrl($dataPointer);       
         } else if ($pointerType === self::LOCATOR_FILE) {
-            $fileHandle = fopen($dataPointer, 'r');
-            
-            if ($fileHandle === false) {
-                throw new Exception('Could not locate file with filename: ' . $dataPointer);
-            }
-            
-            $result = $this->_parserAdapter->parseFromFileHandle($fileHandle);
-            
-            // Close the file handle resource.
-            fclose($fileHandle);
+            $result = $this->_parserAdapter->parseFromFilename($dataPointer);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataString($dataPointer);
         } else {
-            try {
-                $result = $this->_parserAdapter->parse($dataPointer);
-            } catch (Exception $e) {
-                throw new Exception('Type of data pointer not valid.');
-            }
+            throw new Exception('Type of data pointer not valid.');
         }
         
         return $result;
@@ -95,31 +82,15 @@ class Erfurt_Syntax_RdfParser
     public function parseToStore($dataPointer, $pointerType, $modelUri)
     {
         if ($pointerType === self::LOCATOR_URL) {
-            $fileHandle = fopen($dataPointer, 'r');
-            
-            if ($fileHandle === false) {
-                throw new Exception('Could not locate data with url: ' . $dataPointer);
-            }
-            
-            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle, $modelUri);
-            
-            // Close the file handle resource.
-            fclose($fileHandle);            
+            $result = $this->_parserAdapter->parseFromUrlToStore($dataPointer, $modelUri);       
         } else if ($pointerType === self::LOCATOR_FILE) {
-            $fileHandle = fopen($dataPointer, 'r');
-            
-            if ($fileHandle === false) {
-                throw new Exception('Could not locate file with filename: ' . $dataPointer);
-            }
-            
-            $this->_parserAdapter->parseFromFileHandleToStore($fileHandle, $modelUri);
-            
-            // Close the file handle resource.
-            fclose($fileHandle);
+            $result = $this->_parserAdapter->parseFromFilenameToStore($dataPointer, $modelUri);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri);
         } else {
             throw new Exception('Type of data pointer not valid.');
         }
+        
+        return $result;
     }
 }

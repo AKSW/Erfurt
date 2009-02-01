@@ -25,7 +25,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
         
-        $result = $parser->parse(self::DAWG_DATA_DIR . 'manifest-syntax.ttl', null);
+        $result = $parser->parse(self::DAWG_DATA_DIR . 'manifest-syntax.ttl', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         $keys = array_keys($result);
         $subject = $keys[0];
         $base = $subject;
@@ -56,7 +56,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
         
-        $manifestResult = $parser->parse($filename, null);
+        $manifestResult = $parser->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         $mfAction = 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#action';
         
         // file auslesen...

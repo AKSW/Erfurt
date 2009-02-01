@@ -1,6 +1,9 @@
 <?php
 require_once 'test_base.php';
 
+require_once 'Erfurt/Syntax/RdfParserTest.php';
+require_once 'Erfurt/Syntax/RdfParser/Adapter/ArcTest.php';
+require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJsonTest.php';
 require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXmlTest.php';
 
 require_once 'Erfurt/Syntax/RdfSerializerTest.php';
@@ -14,6 +17,9 @@ class Erfurt_Syntax_TestSuite extends PHPUnit_Framework_TestSuite
         $suite = new Erfurt_Syntax_TestSuite('Erfurt syntax package tests');
         
         // Parser tests
+        $suite->addTestSuite('Erfurt_Syntax_RdfParserTest');
+        $suite->addTestSuite('Erfurt_Syntax_RdfParser_Adapter_ArcTest');
+        $suite->addTestSuite('Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest');
         $suite->addTestSuite('Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest');
         
         // Serializer tests

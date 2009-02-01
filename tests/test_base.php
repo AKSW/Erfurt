@@ -30,6 +30,7 @@ set_include_path($includePath);
 
 require_once 'Erfurt/App.php';
 $erfurt = Erfurt_App::start();
+$erfurt->authenticate();
 
 // PHPUnit
 require_once 'PHPUnit/Framework.php';
