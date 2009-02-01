@@ -50,13 +50,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Arc implements Erfurt_Syntax_RdfSerial
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER !isLiteral(?o) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
+        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (!isLiteral(?o)) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
+        
         $result1 = $store->sparqlQuery($sparql, 'plain', false);
         
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER isLiteral(?o) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
+        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (isLiteral(?o)) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
         $result2 =$store->sparqlQuery($sparql, 'plain', false);
         
         foreach ($result1 as $stm) {
@@ -129,13 +130,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Arc implements Erfurt_Syntax_RdfSerial
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER !isLiteral(?o) }');
+        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (!isLiteral(?o)) }');
+        
         $result1 = $store->sparqlQuery($sparql, 'plain', false);
         
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER isLiteral(?o) }');
+        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (isLiteral(?o)) }');
         $result2 =$store->sparqlQuery($sparql, 'plain', false);
         
         foreach ($result1 as $stm) {
