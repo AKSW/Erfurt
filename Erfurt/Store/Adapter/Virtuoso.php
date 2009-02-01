@@ -402,9 +402,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($graphIri, $data, $type, $locator)
     {
-        if ($locator == 'file' && is_readable($data)) {
+        require_once 'Erfurt/Syntax/RdfParser.php';
+        
+        if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
             return $this->_importStatementsFromFile($data, $type, $graphIri);
-        } else if ($locator == 'url') {
+        } else if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
             return $this->_importStatementsFromUrl($data, $type, $graphIri);
         } else {
             // not supported

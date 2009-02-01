@@ -692,21 +692,21 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception 
      */
-    public function importRdf($modelIri, $data, $type = 'auto', $locator = 'file')
+    public function importRdf($modelIri, $data, $type = 'auto', $locator = Erfurt_Syntax_RdfParser::LOCATOR_FILE)
     {
         if (!$this->_checkAc($modelIri, 'edit')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
         
-        if ($type == 'auto') {
+        if ($type === 'auto') {
             // detect file type
-            if ($locator == 'file' && is_readable($data)) {
+            if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
                 $pathInfo = pathinfo($data);
                 $type     = array_key_exists('extension', $pathInfo) ? $pathInfo['extension'] : '';
             } 
             
-            if ($locator == 'url') {
+            if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
                 $flag = false;
                 // try content-type
                 $headers = get_headers($data, 1);
@@ -718,6 +718,10 @@ class Erfurt_Store
                             break;
                         case 'text/rdf+n3':
                             $type = 'n3';
+                            $flag = true;
+                            break;
+                        case 'application/json':
+                            $type = 'rdfjson';
                             $flag = true;
                             break;
                     }
