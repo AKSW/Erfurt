@@ -482,6 +482,8 @@ class Erfurt_Store
      */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
     {
+        $serializationType = strtolower($serializationType);
+        
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
             require_once 'Erfurt/Exception.php';
@@ -489,9 +491,12 @@ class Erfurt_Store
         }
         
         if (in_array($serializationType, $this->_backendAdapter->getSupportedExportFormats())) {
-            $this->_backendAdapter->exportRdf($modelIri, $serializationType, $filename);
+            return $this->_backendAdapter->exportRdf($modelIri, $serializationType, $filename);
         } else {
-            throw new Exception("Serialization format '$serializationType' not supported by backend.");
+            require_once 'Erfurt/Syntax/RdfSerializer.php';
+            $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($serializationType);
+            
+            return $serializer->serializeGraphToString($modelIri);
         }
     }
     
@@ -647,8 +652,13 @@ class Erfurt_Store
      */
     public function getSupportedExportFormats()
     {
-        // TODO: check import plug-ins
-        return $this->_backendAdapter->getSupportedExportFormats();
+        $supportedFormats = array(
+            'rdfxml'    => 'RDF/XML',
+            'n3'        => 'Notation 3',
+            'rdfjson'   => 'RDF/JSON (Talis)'
+        );
+        
+        return array_merge($supportedFormats, $this->_backendAdapter->getSupportedExportFormats());
     }
     
     /**

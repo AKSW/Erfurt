@@ -297,8 +297,8 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
     */
     protected function constructGraph($arVartable, $constructPattern)
     {
-        $resultGraph = new MemModel();
-
+        $resultGraph = array();
+        
         if (!$arVartable) {
             return $resultGraph;
         }
@@ -311,6 +311,15 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
                 $sub  = $triple->getSubject();
                 $pred = $triple->getPredicate();
                 $obj  = $triple->getObject();
+                
+                if (!isset($resultGraph["$sub"])) {
+                    $resultGraph["$sub"] = array();
+                }
+                
+                if (!isset($resultGraph["$sub"]["$pred"])) {
+                    $resultGraph["$sub"]["$pred"] = array();
+                }
+                
 
                 if (is_string($sub)  && $sub{1} == '_') {
                     $sub  = new BlankNode("_bN".$bnode);
@@ -360,7 +369,16 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
 
     protected function createLiteral($value, $language, $datatype)
     {
-        return $value;
+        $retVal = $value;
+        
+        if ((null !== $language) && ($language !== '')) {
+            $retVal .= '@' . $language;
+            
+        } else if ((null !== $datatype) && ($datatype !== '')) {
+            $retVal .= '^^' . $datatype;
+        }
+        
+        return $retVal;
     }//protected function createLiteral($value, $language, $datatype)
 
 }//class SparqlEngineDb_ResultRenderer_PlainText implements SparqlEngineDb_ResultRenderer
