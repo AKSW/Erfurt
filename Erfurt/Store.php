@@ -713,7 +713,7 @@ class Erfurt_Store
                 if (array_key_exists('Content-Type', $headers)) {
                     switch (strtolower($headers['Content-Type'])) {
                         case 'application/rdf+xml':
-                            $type = 'rdf';
+                            $type = 'rdfxml';
                             $flag = true;
                             break;
                         case 'text/rdf+n3':
@@ -731,15 +731,17 @@ class Erfurt_Store
                 if (!$flag) {
                     switch (strtolower(strrchr($data, '.'))) {
                         case '.rdf':
-                            $type = 'rdf';
+                            $type = 'rdfxml';
                             break;
                         case '.n3':
-                            $type = 'rdf';
+                            $type = 'rdfxml';
                             break;
                     }
                 }
             }
         }
+        
+        
         
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
