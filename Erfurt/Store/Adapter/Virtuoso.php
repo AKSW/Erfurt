@@ -119,11 +119,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-	public function addMultipleStatements($graphIri, array $statementsArray)
+	public function addMultipleStatements($graphIri, array $statementsArray, $options = array())
 	{   
+        $escapeLiteral = TRUE;
+        if (isset ($options['escapeLiteral'])){
+            $escapeLiteral = $options['escapeLiteral'];
+        }
+
 	    $insertSparql = '
 	        INSERT INTO GRAPH <' . $graphIri . '> {
-	            ' . $this->_buildGraphPattern($statementsArray) . '
+	            ' . $this->_buildGraphPattern($statementsArray, false , $escapeLiteral) . '
 	        }';
 	    
 	    return $this->_execSparql($insertSparql);
@@ -138,13 +143,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 	        'object_type'  => Erfurt_Store::TYPE_IRI
 	    );
 	    $options = array_merge($defaultOptions, $options);
-	    
+   
 	    if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
 	        // make IRI object
 	        $object = '<' . $object . '>';
 	    } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
-	        // make secure literal object
-	        $object = '"' . addslashes($object) . '"';
+	        // make secure literal object 
+
+            if (isset($options['escapeLiteral']) && $options['escapeLiteral'] == FALSE ){
+            } else { 
+                if (array_key_exists('literal_datatype', $options)) {
+                    $object = $this->escapeLiteral($object, $options['literal_datatype'] );
+                } else {
+                    $object = $this->escapeLiteral($object);
+                }
+            }
+
+	        $object = '"' . $object . '"';          
 	        // datatype/language
 	        if (array_key_exists('literal_language', $options)) {
 	            $object .= '@' . $options['literal_language'];
@@ -563,7 +578,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      *
      * @return string
      */
-    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false)
+    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiteral = TRUE)
     {
         $triples = '';
         foreach ($statementsArray as $subject => $predicateArray) {
@@ -576,6 +591,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                             $triples .= '<' . $object['value'] . '>';
                             break;
                         case 'literal':
+                            if ($escapeLiteral == TRUE ){
+                                if (array_key_exists('datatype', $object)) {
+                                    $this->escapeLiteral($object['value'], $object['datatype'] );
+                                } else {
+                                    $this->escapeLiteral($object['value']);
+                                }
+                            }
+
+
+
                             $triples .= '"' . $object['value'] . '"';
                             
                             if (array_key_exists('datatype', $object)) {
@@ -784,5 +809,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // TODO: owl:imports
             return $this->getModel($graphUri);
         }
+    }
+
+    /**
+     * escapes characters for given literal to avoid virtuoso specific problems while adding statements
+     *
+     * @param string $literal
+     * @param string $datatype : default: http://www.w3.org/2001/XMLSchema#string
+     * @return string $literal
+     *
+     * @todo 
+     */ 
+    public function escapeLiteral($literal, $datatype = "http://www.w3.org/2001/XMLSchema#string")
+    {
+        switch ($datatype) {
+            case "http://www.w3.org/2001/XMLSchema#string" :
+                $literal = addslashes($literal);
+                $search  = array("\n", "\r");
+                $replace = array('\\\n', '\\\r' );
+                $literal = str_replace($search, $replace, $literal);
+                break;
+            case "http://www.w3.org/2001/XMLSchema#boolean" :
+                $search  = array('0', '1');
+                $replace = array( 'FALSE', 'TRUE' );
+                $literal = str_replace($search, $replace, $literal);            
+                break;
+        }
+        return $literal;
     }
 }

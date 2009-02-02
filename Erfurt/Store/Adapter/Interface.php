@@ -15,8 +15,9 @@ interface Erfurt_Store_Adapter_Interface
      *
      * @param string $graphIri
      * @param array  $statementsArray
+     * @param array  $options ("escapeLiteral" => FALSE/TRUE) to disable automatical escaping characters 
      */
-    public function addMultipleStatements($graphIri, array $statementsArray);
+    public function addMultipleStatements($graphIri, array $statementsArray, $options = array());
     
 	/**
      * @param string $modelIri
@@ -26,7 +27,8 @@ interface Erfurt_Store_Adapter_Interface
      * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
      * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
      * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
-     * the object of the statement is a literal.
+     * the object of the statement is a literal. Furthermore it is possible to disable automatic escaping special
+     * characters (like \n) whith the option: "escapeLiteral" and the possible values FALSE and TRUE.
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
