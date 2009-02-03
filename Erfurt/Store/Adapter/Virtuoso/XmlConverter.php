@@ -64,50 +64,50 @@ class Erfurt_Store_Adapter_Virtuoso_XmlConverter
             $row = array();
             foreach ($node->childNodes as $binding) {
                 $attrKey    = $binding->getAttributeNodeNS($this->_namespaces['rs'], 'name');
-                $nodeValue	= $binding->firstChild;
-				$dataKey	= $attrKey->value;
-				
-				if (!in_array($dataKey, $vars)) {
-				    array_push($vars, $dataKey);
-				}
-				
-				$attributes = array();
-				foreach ($nodeValue->attributes as $attribute) {
-				    $attributes[$attribute->name] = $attribute->value;
-				}
-				
-				switch (true) {
-				    case array_key_exists('resource', $attributes):
-				        $row[$dataKey] = array(
-        			        'value'    => $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'resource')->value, 
-        			        'type'     => 'uri'
-        			    );
-				    break;
-				    case array_key_exists('nodeID', $attributes):
-				        $row[$dataKey] = array(
-        			        'value'    => $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'nodeID')->value, 
-        			        'type'     => 'bnode'
-        			    );
-				    break;
-				    default:
-				        // literal
-				        $lang     = $nodeValue->getAttributeNodeNS($this->_namespaces['xml'], 'lang');
-    				    $datatype = $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'datatype');
-    				    
-    				    $row[$dataKey] = array(
-        			        'value'    => trim($nodeValue->textContent), 
-        			        'type'     => $datatype ? 'typed-literal' : 'literal'
-        			    );
-        			    
-        			    if ($datatype) {
-        			        $row[$dataKey]['datatype'] = (string) $datatype->value;
-        			    }
-        			    
-        			    if ($lang) {
-        			        $row[$dataKey]['xml:lang'] = (string) $lang->value;
-        			    }
-				    break;
-				}
+                $nodeValue  = $binding->firstChild;
+                $dataKey    = $attrKey->value;
+                
+                if (!in_array($dataKey, $vars)) {
+                    array_push($vars, $dataKey);
+                }
+                
+                $attributes = array();
+                foreach ($nodeValue->attributes as $attribute) {
+                    $attributes[$attribute->name] = $attribute->value;
+                }
+                
+                switch (true) {
+                    case array_key_exists('resource', $attributes):
+                        $row[$dataKey] = array(
+                            'value'    => $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'resource')->value, 
+                            'type'     => 'uri'
+                        );
+                    break;
+                    case array_key_exists('nodeID', $attributes):
+                        $row[$dataKey] = array(
+                            'value'    => $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'nodeID')->value, 
+                            'type'     => 'bnode'
+                        );
+                    break;
+                    default:
+                        // literal
+                        $lang     = $nodeValue->getAttributeNodeNS($this->_namespaces['xml'], 'lang');
+                        $datatype = $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'datatype');
+                        
+                        $row[$dataKey] = array(
+                            'value'    => trim($nodeValue->textContent), 
+                            'type'     => $datatype ? 'typed-literal' : 'literal'
+                        );
+                        
+                        if ($datatype) {
+                            $row[$dataKey]['datatype'] = (string) $datatype->value;
+                        }
+                        
+                        if ($lang) {
+                            $row[$dataKey]['xml:lang'] = (string) $lang->value;
+                        }
+                    break;
+                }
             }
             
             // add row
