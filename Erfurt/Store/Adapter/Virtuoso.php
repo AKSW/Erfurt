@@ -593,9 +593,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         case 'literal':
                             if ($escapeLiteral == TRUE ){
                                 if (array_key_exists('datatype', $object)) {
-                                    $this->escapeLiteral($object['value'], $object['datatype'] );
+                                    $object['value'] = $this->escapeLiteral($object['value'], $object['datatype'] );
                                 } else {
-                                    $this->escapeLiteral($object['value']);
+                                    $object['value'] = $this->escapeLiteral($object['value']);
                                 }
                             }
 
@@ -831,7 +831,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             case "http://www.w3.org/2001/XMLSchema#boolean" :
                 $search  = array('0', '1');
-                $replace = array( 'FALSE', 'TRUE' );
+                $replace = array( 'false', 'true' );
                 $literal = str_replace($search, $replace, $literal);            
                 break;
         }

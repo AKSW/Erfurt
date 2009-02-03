@@ -45,13 +45,16 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected ,$this->fixture->escapeLiteral($literal));
 
         $literal = '0';
-        $expected = 'FALSE';
+        $expected = 'false';
         $this->assertEquals($expected ,$this->fixture->escapeLiteral($literal, "http://www.w3.org/2001/XMLSchema#boolean"));
 
         $literal = '1';
-        $expected = 'TRUE';
+        $expected = 'true';
         $this->assertEquals($expected ,$this->fixture->escapeLiteral($literal, "http://www.w3.org/2001/XMLSchema#boolean"));
+    }
 
+    public function testAddStatements()
+    {
         $graphIri = "http://phpUnitTest.de/" ;
         $subject = 'http://phpUnitTest.de/LiteralTest';
         $predicate = 'http://phpUnitTest.de/escapeTheLiteral';
@@ -70,7 +73,30 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testAddMultipleStatements()
+    {
+        $graphIri = "http://phpUnitTest.de/" ;
+        $subject = 'http://phpUnitTest.de/LiteralTest';
+        $predicate = 'http://phpUnitTest.de/escapeTheLiteralString';
+        $statementsArray[$subject][$predicate][0]['type'] = "literal" ;
+        $statementsArray[$subject][$predicate][0]['datatype'] = "http://www.w3.org/2001/XMLSchema#string";
+        $statementsArray[$subject][$predicate][0]['value'] = "Test \n \r ";
+ 
+        $graphIri = "http://phpUnitTest.de/" ;
+        $subject = 'http://phpUnitTest.de/LiteralTest';
+        $predicate = 'http://phpUnitTest.de/escapeTheLiteralBoolean';
+        $statementsArray[$subject][$predicate][0]['type'] = "literal" ;
+        $statementsArray[$subject][$predicate][0]['datatype'] = "http://www.w3.org/2001/XMLSchema#boolean";
+        $statementsArray[$subject][$predicate][0]['value'] = "0";
+        $this->fixture->addMultipleStatements($graphIri, $statementsArray);
+
+    }
+
+
 }
+
+
+
 
 
 
