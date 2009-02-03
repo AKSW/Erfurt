@@ -492,35 +492,51 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlQuery($query, $resultform = 'plain') 
+    public function sparqlQuery($query, $resultFormat = 'plain') 
     {    
-        $resultArray = array();
+        $result      = array();
+        $json_encode = false;
         
-        if ($resultform == 'xml') {
+        if ($resultFormat == 'json') {
+            $json_encode  = true;
+            $resultFormat = 'extended';
+        }
+        
+        if ($resultFormat == 'xml' or $resultFormat == 'extended') {
             $this->_longRead = true;
             $query = ' define output:format "RDF/XML" '
                    .  $query;
-        } else if ($resultform == 'n3') {
+        } else if ($resultFormat == 'n3') {
             $query = ' define output:format "TTL" '
                    .  $query;
         }
         
         if ($result = $this->_execSparql($query)) {
-            $resultArray = $this->_odbcResultToArray($result);
+            $result = $this->_odbcResultToArray($result);
         }
         
-        if ($resultform == 'xml' or $resultform == 'n3') {
-            $result = null;
-            if (is_array($resultArray)) {
-                foreach ($resultArray[0] as $field) {
+        if ($resultFormat == 'xml' or $resultFormat == 'n3' or $resultFormat == 'extended') {
+            if (is_array($result)) {
+                // sould be only one row
+                foreach ($result[0] as $field) {
                     $result = $field;
                 }
             }
-            
-            return $field;
         }
         
-        return $resultArray;
+        // create extended format
+        if ($resultFormat == 'extended') {
+            require_once 'Erfurt/Store/Adapter/Virtuoso/XmlConverter.php';
+            $conv   = new Erfurt_Store_Adapter_Virtuoso_XmlConverter();
+            $result = $conv->toArray($result);
+            
+        }
+        
+        if ($json_encode) {
+            $result = json_encode($result);
+        }
+        
+        return $result;
     }
     
     /** @see Erfurt_Store_Sql_Interface */
