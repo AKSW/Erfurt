@@ -199,7 +199,7 @@ class Erfurt_Sparql_Parser
             }
         }
         
-#var_dump($tokens);exit;
+#var_dump($tokens);
         return $tokens;
     }
 
@@ -491,6 +491,11 @@ class Erfurt_Sparql_Parser
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException("Unable to parse CONSTRUCT part. '{' expected. ",null,key($this->_tokens));
         }
+        
+        if (strtolower(current($this->_tokens)) === 'from') {
+            $this->_parseFrom();
+        }
+        
         $this->_parseWhere();
         $this->_parseModifier();
     }
@@ -505,10 +510,11 @@ class Erfurt_Sparql_Parser
     protected function _parseWhere()
     {    
         $this->_fastForward();
-        
+      
         if (current($this->_tokens) == '{') {
             $this->parseGraphPattern();
         } else {
+#var_dump(current($this->_tokens));exit;
 #var_dump($this->_tokens);exit;
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Unable to parse WHERE part. "{" expected in Query. ', null,

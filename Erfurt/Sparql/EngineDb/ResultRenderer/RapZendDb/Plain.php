@@ -293,7 +293,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
     *
     * @param  array         $arVartable       A table containing the result vars and their bindings
     * @param  GraphPattern  $constructPattern The CONSTRUCT pattern
-    * @return MemModel      The result graph which matches the CONSTRUCT pattern
+    * @return 
     */
     protected function constructGraph($arVartable, $constructPattern)
     {
@@ -308,9 +308,13 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
         $bnode = 0;
         foreach ($arVartable as $value) {
             foreach ($tp as $triple) {
-                $sub  = $triple->getSubject();
-                $pred = $triple->getPredicate();
-                $obj  = $triple->getObject();
+                $subVar  = substr($triple->getSubject(), 1);
+                $predVar = substr($triple->getPredicate(), 1);
+                $objVar  = substr($triple->getObject(), 1);
+                
+                $sub    = $value["$subVar"];
+                $pred   = $value["$predVar"];
+                $obj    = $value["$objVar"];
                 
                 if (!isset($resultGraph["$sub"])) {
                     $resultGraph["$sub"] = array();
@@ -320,35 +324,36 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
                     $resultGraph["$sub"]["$pred"] = array();
                 }
                 
-
-                if (is_string($sub)  && $sub{1} == '_') {
-                    $sub  = new BlankNode("_bN".$bnode);
-                }
-                if (is_string($pred) && $pred{1} == '_') {
-                    $pred = new BlankNode("_bN".$bnode);
-                }
-                if (is_string($obj)  && $obj{1} == '_') {
-                    $obj  = new BlankNode("_bN".$bnode);
-                }
-
-
-                if (is_string($sub)) {
-                    $sub  = $value[$sub];
-                }
-                if (is_string($pred)) {
-                    $pred = $value[$pred];
-                }
-                if (is_string($obj)) {
-                    $obj  = $value[$obj];
-                }
-
-                if ($sub !== "" && $pred !== "" && $obj !== "") {
-                    $resultGraph->add(new Statement($sub,$pred,$obj));
-                }
-            }
-            $bnode++;
+                $resultGraph["$sub"]["$pred"][] = $obj;
+            }  
         }
-        return $resultGraph;
+        
+        $resultGraphString = '';
+        
+        foreach ($resultGraph as $s => $predArray) {
+            $resultGraphString .= '<' . $s . '> ';
+            $i = 0;
+            foreach ($predArray as $p => $objArray) {
+                foreach ($objArray as $o) {
+                    $resultGraphString .= '<' . $p . '> ';
+                    
+                    if (substr($o, 0, 1) === '"') {
+                        $resultGraphString .= $o . ' ';
+                    } else {
+                        $resultGraphString .= '<' . $o . '> ';
+                    } 
+                    
+                    if ($i < count($predArray)-1) {
+                        $resultGraphString .= '; ' . PHP_EOL . '        ';
+                    } else {
+                        $resultGraphString .= '. ' . PHP_EOL;
+                    }
+                }
+                $i++;
+            }
+        }
+        
+        return $resultGraphString;
     }//protected function constructGraph($arVartable, $constructPattern)
 
 
@@ -369,7 +374,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Plain implements Erfurt_Sp
 
     protected function createLiteral($value, $language, $datatype)
     {
-        $retVal = $value;
+        $retVal = '"' . $value . '"';
         
         if ((null !== $language) && ($language !== '')) {
             $retVal .= '@' . $language;
