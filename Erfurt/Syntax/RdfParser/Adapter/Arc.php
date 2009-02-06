@@ -62,41 +62,38 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
         return $this->_parser->getSimpleIndex(0);
     }
     
-    public function parseFromDataStringToStore($dataString, $graphUri)
+    public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true)
     {
         $this->_parser->parse('', $dataString);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
              
         $triples = $this->_parser->getSimpleIndex(0);
-        $model->addMultipleStatements($triples);
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
     }
     
-    public function parseFromFilenameToStore($filename, $graphUri)
+    public function parseFromFilenameToStore($filename, $graphUri, $useAc = true)
     {
         $this->_parser->parse($filename);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
              
         $triples = $this->_parser->getSimpleIndex(0);
-        $model->addMultipleStatements($triples);
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
     }
     
-    public function parseFromUrlToStore($url, $graphUri)
+    public function parseFromUrlToStore($url, $graphUri, $useAc = true)
     {
         $this->_parser->parse($url);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
              
         $triples = $this->_parser->getSimpleIndex(0);
-        $model->addMultipleStatements($triples);
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
         

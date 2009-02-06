@@ -167,16 +167,16 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception
      */
-    public function addMultipleStatements($graphUri, array $statementsArray)
+    public function addMultipleStatements($graphUri, array $statementsArray, $useAc = true)
     {
         // check whether model is available
-        if (!$this->isModelAvailable($graphUri)) {
+        if (!$this->isModelAvailable($graphUri, $useAc)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Model is not available.');
         }
         
         // check whether model is editable
-        if (!$this->_checkAc($graphUri, 'edit')) {
+        if (!$this->_checkAc($graphUri, 'edit', $useAc)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('No permissions to edit model.');
         }
@@ -289,17 +289,17 @@ class Erfurt_Store
         $modelPath      = EF_BASE . $config->sysOnt->modelPath;
         
         // check for system ontology
-        if (!$this->_backendAdapter->isModelAvailable($sysOntSchema)) {
+        if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
             
-            //$this->_backendAdapter->getNewModel($sysOntSchema);
-            
+            $this->getNewModel($sysOntSchema, '', 'owl', false);
+            require_once 'Erfurt/Syntax/RdfParser.php';
             if (is_readable($schemaPath)) {
                 // load SysOnt from file
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaPath, 'rdfxml', 'file');
+                $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
             } else {
                 // load SysOnt from Web
-                $this->_backendAdapter->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', 'url');
+                $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
             }
             
             if (!$this->isModelAvailable($sysOntSchema, false)) {
@@ -311,17 +311,19 @@ class Erfurt_Store
         }
 
         // check for system configuration model
-        if (!$this->_backendAdapter->isModelAvailable($sysOntModel)) {
+        if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
             
-            $this->_backendAdapter->getNewModel($sysOntModel);
-            
+            $this->getNewModel($sysOntModel, '', 'owl', false);
+            require_once 'Erfurt/Syntax/RdfParser.php';
             if (is_readable($modelPath)) {
                 // // load SysOnt Model from file
-                $this->_backendAdapter->importRdf($sysOntModel, $modelPath, 'rdfxml', 'file');
+                $this->importRdf($sysOntModel, $modelPath, 'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
             } else {
                 // // load SysOnt Model from Web
-                $this->_backendAdapter->importRdf($sysOntModel, $modelLocation, 'rdfxml', 'url');
+                $this->importRdf($sysOntModel, $modelLocation, 'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
             }
             
             if (!$this->isModelAvailable($sysOntModel, false)) {
@@ -692,9 +694,10 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception 
      */
-    public function importRdf($modelIri, $data, $type = 'auto', $locator = Erfurt_Syntax_RdfParser::LOCATOR_FILE)
+    public function importRdf($modelIri, $data, $type = 'auto', $locator = Erfurt_Syntax_RdfParser::LOCATOR_FILE, 
+            $useAc = true)
     {
-        if (!$this->_checkAc($modelIri, 'edit')) {
+        if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
@@ -748,7 +751,7 @@ class Erfurt_Store
         } else {
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
-            return $parser->parseToStore($data, $locator, $modelIri);
+            return $parser->parseToStore($data, $locator, $modelIri, $useAc);
         }
         
         // should not be reached

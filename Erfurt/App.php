@@ -305,10 +305,9 @@ class Erfurt_App
     /**
          * check for new erfurt installation and sets the system ontologies
          */
-    private function _checkNewInstallation(Zend_Config $config) {
-        /**
-         * check for ontowiki system ontologies
-         */
+    /*private function _checkNewInstallation(Zend_Config $config) {
+
+        // check for ontowiki system ontologies
         if (!$this->store[$this->defaultStore]->modelExists($config->sysont->schema, false)) {
             $msg = 'Database Setup: Checking for Ontowiki SysOnt Schema ... no schema found.<br />';
             
@@ -349,7 +348,7 @@ class Erfurt_App
             
             exit();
         }
-    }
+    }*/
     
     
     /**

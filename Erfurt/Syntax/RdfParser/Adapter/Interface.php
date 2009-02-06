@@ -12,9 +12,9 @@ interface Erfurt_Syntax_RdfParser_Adapter_Interface
     public function parseFromFilename($filename);
     public function parseFromUrl($url);
     
-    public function parseFromDataStringToStore($dataString, $graphUri);
-    public function parseFromFilenameToStore($filename, $graphUri);
-    public function parseFromUrlToStore($filename, $graphUri);
+    public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true);
+    public function parseFromFilenameToStore($filename, $graphUri, $useAc = true);
+    public function parseFromUrlToStore($filename, $graphUri, $useAc = true);
     
     public function reset();
 }

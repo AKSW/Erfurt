@@ -149,7 +149,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addMultipleStatements($graphIri, array $statementsArray)
+    public function addMultipleStatements($graphIri, array $statementsArray, $options = array())
     {
         $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
         

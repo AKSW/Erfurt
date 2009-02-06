@@ -79,14 +79,14 @@ class Erfurt_Syntax_RdfParser
         return $result;
     }
     
-    public function parseToStore($dataPointer, $pointerType, $modelUri)
+    public function parseToStore($dataPointer, $pointerType, $modelUri, $useAc = true)
     {
         if ($pointerType === self::LOCATOR_URL) {
-            $result = $this->_parserAdapter->parseFromUrlToStore($dataPointer, $modelUri);       
+            $result = $this->_parserAdapter->parseFromUrlToStore($dataPointer, $modelUri, $useAc);       
         } else if ($pointerType === self::LOCATOR_FILE) {
-            $result = $this->_parserAdapter->parseFromFilenameToStore($dataPointer, $modelUri);
+            $result = $this->_parserAdapter->parseFromFilenameToStore($dataPointer, $modelUri, $useAc);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
-            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri);
+            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri, $useAc);
         } else {
             throw new Exception('Type of data pointer not valid.');
         }

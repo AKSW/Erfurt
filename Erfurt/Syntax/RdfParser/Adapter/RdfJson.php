@@ -41,38 +41,35 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
         return $this->parseFromDataString($dataString);
     }
     
-    public function parseFromDataStringToStore($dataString, $graphUri)
+    public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true)
     {
         $triples = $this->parseFromDataString($dataString);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
-             
-        $model->addMultipleStatements($triples);
+        
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
     }
     
-    public function parseFromFilenameToStore($filename, $graphUri)
+    public function parseFromFilenameToStore($filename, $graphUri, $useAc = true)
     {
         $triples = $this->parseFromFilename($filename);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
              
-        $model->addMultipleStatements($triples);
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
     }
     
-    public function parseFromUrlToStore($url, $graphUri)
+    public function parseFromUrlToStore($url, $graphUri, $useAc = true)
     {
         $triples = $this->parseFromUrl($url);
         
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModel($graphUri, false);   
              
-        $model->addMultipleStatements($triples);
+        $store->addMultipleStatements($graphUri, $triples, $useAc);
         
         return true;
     }
