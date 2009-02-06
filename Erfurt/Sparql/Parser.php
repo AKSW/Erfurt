@@ -473,6 +473,7 @@ class Erfurt_Sparql_Parser
                 throw new Erfurt_Sparql_ParserException("Variable, Iri or qname expected in FROM NAMED ",null,key($this->_tokens));
             }
         }
+        $this->_fastForward();
     }
 
 
@@ -492,9 +493,15 @@ class Erfurt_Sparql_Parser
             throw new Erfurt_Sparql_ParserException("Unable to parse CONSTRUCT part. '{' expected. ",null,key($this->_tokens));
         }
         
-        if (strtolower(current($this->_tokens)) === 'from') {
-            $this->_parseFrom();
+        while (true) {
+            if (strtolower(current($this->_tokens)) === 'from') {
+                $this->_parseFrom();
+            } else {
+                $this->_rewind();
+                break;
+            }
         }
+        
         
         $this->_parseWhere();
         $this->_parseModifier();
