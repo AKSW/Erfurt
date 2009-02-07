@@ -386,7 +386,7 @@ class Erfurt_Store
      */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
-        if ($this->_checkAc($modelIri, 'edit')) {
+        if ($this->_checkAc($graphUri, 'edit')) {
             try {
                 $retVal =  $this->_backendAdapter->deleteMatchingStatements(
                 $graphUri, $subject, $predicate, $object, $options);
@@ -887,6 +887,7 @@ class Erfurt_Store
             }
         }
         
+        // TODO: check if adapter supports requested result format
         return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
     }
     

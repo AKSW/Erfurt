@@ -119,39 +119,39 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-	public function addMultipleStatements($graphIri, array $statementsArray, $options = array())
-	{   
-        $escapeLiteral = TRUE;
-        if (isset ($options['escapeLiteral'])){
-            $escapeLiteral = $options['escapeLiteral'];
-        }
+    public function addMultipleStatements($graphIri, array $statementsArray, $options = array())
+    {
+        // handle defaults
+        $defaultOptions = array(
+            'escape_literals' => true
+        );
+        $options = array_merge($defaultOptions, $options);
 
-	    $insertSparql = '
-	        INSERT INTO GRAPH <' . $graphIri . '> {
-	            ' . $this->_buildGraphPattern($statementsArray, false , $escapeLiteral) . '
-	        }';
-	    
-	    return $this->_execSparql($insertSparql);
-	}
-	
+        $insertSparql = '
+            INSERT INTO GRAPH <' . $graphIri . '> {
+                ' . $this->_buildGraphPattern($statementsArray, false , $options['escape_literals']) . '
+            }';
+        
+        return $this->_execSparql($insertSparql);
+    }
+    
     /** @see Erfurt_Store_Adapter_Interface */
     public function addStatement($graphIri, $subject, $predicate, $object, $options = array())
-	{
-	    // handle defaults
-	    $defaultOptions = array(
-	        'subject_type' => Erfurt_Store::TYPE_IRI, 
-	        'object_type'  => Erfurt_Store::TYPE_IRI
-	    );
-	    $options = array_merge($defaultOptions, $options);
+    {
+        // handle defaults
+        $defaultOptions = array(
+            'subject_type' => Erfurt_Store::TYPE_IRI, 
+            'object_type'  => Erfurt_Store::TYPE_IRI
+        );
+        $options = array_merge($defaultOptions, $options);
    
-	    if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
-	        // make IRI object
-	        $object = '<' . $object . '>';
-	    } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
-	        // make secure literal object 
+        if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
+            // make IRI object
+            $object = '<' . $object . '>';
+        } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
+            // make secure literal object 
 
-            if (isset($options['escapeLiteral']) && $options['escapeLiteral'] == FALSE ){
-            } else { 
+            if (!$options['escape_literals']) {
                 if (array_key_exists('literal_datatype', $options)) {
                     $object = $this->escapeLiteral($object, $options['literal_datatype'] );
                 } else {
@@ -159,62 +159,62 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 }
             }
 
-	        $object = '"' . $object . '"';          
-	        // datatype/language
-	        if (array_key_exists('literal_language', $options)) {
-	            $object .= '@' . $options['literal_language'];
-	        } else if (array_key_exists('literal_datatype', $options)) {
-	            $object .= '^^<' . $options['literal_datatype'] . '>';
-	        }
-	    }
-	    
-	    // TODO: support blank nodes as subject
-	    $insertSparql = '
-	        INSERT INTO GRAPH <' . $graphIri . '> {
-	            <' . $subject . '> <' . $predicate . '> ' . $object . '
-	        }';
-	    
-	    $this->_execSparql($insertSparql);
-	}
-	
-	/** @see Erfurt_Store_Adapter_Interface */
-	public function countWhereMatches($graphIris, $countSpec, $whereSpec)
-	{
-	    $query = new Erfurt_Sparql_SimpleQuery();
-	    $query->setProloguePart("SELECT COUNT DISTINCT $countSpec")
-	          ->setFrom($graphIris)
-	          ->setWherePart($whereSpec);
-	    
-	    if ($result = $this->sparqlQuery($query)) {
-	        $count = (int) $result[0]['callret-0'];
-	        
-	        return $count;
-	    }
-	    
-	    return 0;
-	}
-	
-	/** @see Erfurt_Store_Sql_Interface */
-	public function createTable($tableName, array $columns)
-	{
-	    $colSpecs = array();
+            $object = '"' . $object . '"';          
+            // datatype/language
+            if (array_key_exists('literal_language', $options)) {
+                $object .= '@' . $options['literal_language'];
+            } else if (array_key_exists('literal_datatype', $options)) {
+                $object .= '^^<' . $options['literal_datatype'] . '>';
+            }
+        }
+        
+        // TODO: support blank nodes as subject
+        $insertSparql = '
+            INSERT INTO GRAPH <' . $graphIri . '> {
+                <' . $subject . '> <' . $predicate . '> ' . $object . '
+            }';
+        
+        $this->_execSparql($insertSparql);
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function countWhereMatches($graphIris, $countSpec, $whereSpec)
+    {
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart("SELECT COUNT DISTINCT $countSpec")
+              ->setFrom($graphIris)
+              ->setWherePart($whereSpec);
+        
+        if ($result = $this->sparqlQuery($query)) {
+            $count = (int) $result[0]['callret-0'];
+            
+            return $count;
+        }
+        
+        return 0;
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function createTable($tableName, array $columns)
+    {
+        $colSpecs = array();
 
-	    // Virtuoso-specific replacings
-	    $replace = array(
-	        'AUTO_INCREMENT' => 'IDENTITY', 
-	        'LONGTEXT'       => 'LONG VARCHAR'
-	    );
-	    
-	    foreach ($columns as $columnName => $columnSpec) {
-	        $colSpecs[] = PHP_EOL
-	                    .  ' "' . $columnName . '" '
-	                    .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
-	    }
-	    
-	    $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
-#var_dump($createTable);exit;	    
-	    return $this->sqlQuery($createTable);
-	}
+        // Virtuoso-specific replacings
+        $replace = array(
+            'AUTO_INCREMENT' => 'IDENTITY', 
+            'LONGTEXT'       => 'LONG VARCHAR'
+        );
+        
+        foreach ($columns as $columnName => $columnSpec) {
+            $colSpecs[] = PHP_EOL
+                        .  ' "' . $columnName . '" '
+                        .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
+        }
+        
+        $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
+#var_dump($createTable);exit;       
+        return $this->sqlQuery($createTable);
+    }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
@@ -245,15 +245,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
-	{
-	    $deleteSparql = '
+    {
+        $deleteSparql = '
             DELETE FROM GRAPH <' . $graphIri . '> {
                 ' . $this->_buildGraphPattern($statementsArray, true) . '
             }
         ';
         // var_dump($deleteSparql);exit;
-	    return $this->_execSparql($deleteSparql);
-	}
+        return $this->_execSparql($deleteSparql);
+    }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($graphIri, $serializationType = 'xml', $filename = false)
@@ -399,24 +399,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-	public function getSupportedExportFormats()
-	{
-	    return array();
-	}
-	
-	/** @see Erfurt_Store_Adapter_Interface */
-	public function getSupportedImportFormats()
-	{
-	    return array(
-	        'n3'  => 'N3', 
-	        'nt'  => 'N-Triple', 
-	        'rdfxml' => 'RDF/XML'
-	    );
-	}
+    public function getSupportedExportFormats()
+    {
+        return array();
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getSupportedImportFormats()
+    {
+        return array(
+            'n3'     => 'N3', 
+            'nt'     => 'N-Triple', 
+            'rdfxml' => 'RDF/XML'
+        );
+    }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($graphIri, $data, $type, $locator)
-    {
+    {        
         require_once 'Erfurt/Syntax/RdfParser.php';
         
         if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
@@ -594,7 +594,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      *
      * @return string
      */
-    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiteral = TRUE)
+    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiteral = true)
     {
         $triples = '';
         foreach ($statementsArray as $subject => $predicateArray) {
@@ -607,7 +607,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                             $triples .= '<' . $object['value'] . '>';
                             break;
                         case 'literal':
-                            if ($escapeLiteral == TRUE ){
+                            if ($escapeLiteral == true) {
                                 if (array_key_exists('datatype', $object)) {
                                     $object['value'] = $this->escapeLiteral($object['value'], $object['datatype'] );
                                 } else {
@@ -839,18 +839,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function escapeLiteral($literal, $datatype = "http://www.w3.org/2001/XMLSchema#string")
     {
         switch ($datatype) {
-            case "http://www.w3.org/2001/XMLSchema#string" :
+            case "http://www.w3.org/2001/XMLSchema#string":
                 $literal = addslashes($literal);
                 $search  = array("\n", "\r");
                 $replace = array('\\\n', '\\\r' );
                 $literal = str_replace($search, $replace, $literal);
                 break;
-            case "http://www.w3.org/2001/XMLSchema#boolean" :
+            case "http://www.w3.org/2001/XMLSchema#boolean":
                 $search  = array('0', '1');
                 $replace = array( 'false', 'true' );
                 $literal = str_replace($search, $replace, $literal);            
                 break;
         }
+        
         return $literal;
     }
 }

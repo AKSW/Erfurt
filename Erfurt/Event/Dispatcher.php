@@ -152,7 +152,7 @@ class Erfurt_Event_Dispatcher
         
         // check whether event has been handled 
         // and set handled flag and default value
-        if ($result != self::INIT_VALUE) {
+        if ($result !== self::INIT_VALUE) {
             $event->setHandled(true);
         } else {
             $result = $event->getDefault();
