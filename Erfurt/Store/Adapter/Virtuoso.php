@@ -126,7 +126,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             'escape_literals' => true
         );
         $options = array_merge($defaultOptions, $options);
-
         $insertSparql = '
             INSERT INTO GRAPH <' . $graphIri . '> {
                 ' . $this->_buildGraphPattern($statementsArray, false , $options['escape_literals']) . '
@@ -140,18 +139,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // handle defaults
         $defaultOptions = array(
+			'escape_literals' => true,
             'subject_type' => Erfurt_Store::TYPE_IRI, 
             'object_type'  => Erfurt_Store::TYPE_IRI
         );
         $options = array_merge($defaultOptions, $options);
-   
         if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
             // make IRI object
             $object = '<' . $object . '>';
         } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
             // make secure literal object 
-
-            if (!$options['escape_literals']) {
+            #$object = '"' . $object . '"';          
+            if ($options['escape_literals']) {
                 if (array_key_exists('literal_datatype', $options)) {
                     $object = $this->escapeLiteral($object, $options['literal_datatype'] );
                 } else {
@@ -159,7 +158,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 }
             }
 
-            $object = '"' . $object . '"';          
+
             // datatype/language
             if (array_key_exists('literal_language', $options)) {
                 $object .= '@' . $options['literal_language'];
@@ -617,14 +616,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
 
 
-                            $triples .= '"' . $object['value'] . '"';
+                            $triples .= $object['value'] ;
                             
                             if (array_key_exists('datatype', $object)) {
                                 $triples .= '^^<' . $object['datatype'] . '>';
                                 
                                 if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
                                     // add string triple w/o datatype
-                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . '"' . $object['value'] . '"';
+                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
                                 }
                             } else if (array_key_exists('lang', $object)) {
                                 $triples .= '@' . $object['lang'];
@@ -844,13 +843,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $search  = array("\n", "\r");
                 $replace = array('\\\n', '\\\r' );
                 $literal = str_replace($search, $replace, $literal);
+				#$literal = strip_tags($literal);
+				$literal = '"""'.$literal.' """';
                 break;
             case "http://www.w3.org/2001/XMLSchema#boolean":
                 $search  = array('0', '1');
                 $replace = array( 'false', 'true' );
-                $literal = str_replace($search, $replace, $literal);            
+                $literal = str_replace($search, $replace, $literal);
+                $literal = '"""'.$literal.'"""';            
                 break;
-        }
+            default:
+                $literal = '"""'.$literal.'"""'; 
+                break;
+		}
         
         return $literal;
     }
