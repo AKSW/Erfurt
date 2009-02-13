@@ -174,10 +174,15 @@ class Erfurt_App
     
     public function loadConfig(Zend_Config $config = null) {
         
-        // load the config with erfurt.ini
+        // load the default erfurt config
         require_once 'Zend/Config/Ini.php';
-        $this->_config = new Zend_Config_Ini((EF_BASE . 'config/erfurt.ini'), 'erfurt', true);
+        $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
 
+		// load user config iff available
+		if (is_readable((EF_BASE . 'config.ini'))) {
+			$this->_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
+		}
+	
         // merge with injected config iff given
         if (null !== $config) {
             $this->_config->merge($config);
