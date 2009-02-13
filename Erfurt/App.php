@@ -74,7 +74,7 @@ class Erfurt_App
         set_include_path($include_path);
         
 		// Check whethe Zend is loaded with the right version.
-		if (!version_compare(Zend_Version::VERSION, self:EF_MIN_ZEND_VERSION, '>=')) {
+		if (!version_compare(Zend_Version::VERSION, self::EF_MIN_ZEND_VERSION, '>=')) {
 			require_once 'Erfurt/Exception.php';
 			throw new Erfurt_Exception('Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION);
 		}
