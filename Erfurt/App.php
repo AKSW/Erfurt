@@ -8,7 +8,8 @@
 class Erfurt_App 
 {   
     /** constant that contains the minimum supported php version */ 
-    const EF_MIN_PHP_VERSION = '5.2.0';
+    const EF_MIN_PHP_VERSION  = '5.2.0';
+	const EF_MIN_ZEND_VERSION = '1.5.0';
     
     /**
      * The singleton instance of this class which is returned on request.
@@ -61,7 +62,8 @@ class Erfurt_App
     private function __construct() {
                 
         if (!version_compare(phpversion(), self::EF_MIN_PHP_VERSION, '>=')) {
-            throw new Exception('Erfurt requires at least PHP Version ' . self::EF_MIN_PHP_VERSION);
+            require_once 'Erfurt/Exception.php';
+			throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
         }
         
         define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
@@ -71,6 +73,13 @@ class Erfurt_App
         $include_path .= EF_BASE . 'libraries/' . PATH_SEPARATOR;
         set_include_path($include_path);
         
+		// Check whethe Zend is loaded with the right version.
+		if (!version_compare(Zend_Version::VERSION, self:EF_MIN_ZEND_VERSION, '>=')) {
+			require_once 'Erfurt/Exception.php';
+			throw new Erfurt_Exception('Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION);
+		}
+
+
 // TODO better way for vocabs?!
         // include the vocabulary file
         require_once EF_BASE . 'include/vocabulary.php';
