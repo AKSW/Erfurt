@@ -606,13 +606,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                             $triples .= $object['value'] ;
                             
                             if (array_key_exists('datatype', $object)) {
-                                $triples .= '^^<' . $object['datatype'] . '>';
-                                
-                                // FIXME:
-                                // if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
-                                //     // add string triple w/o datatype
-                                //     $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
-                                // }
+                                if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
+                                    // add string triple w/o datatype
+                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
+                                } else {
+                                    $triples .= '^^<' . $object['datatype'] . '>';
+                                }
                             } else if (array_key_exists('lang', $object)) {
                                 $triples .= '@' . $object['lang'];
                             }
