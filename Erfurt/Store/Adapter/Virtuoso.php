@@ -139,9 +139,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // handle defaults
         $defaultOptions = array(
-			'escape_literals' => true,
-            'subject_type' => Erfurt_Store::TYPE_IRI, 
-            'object_type'  => Erfurt_Store::TYPE_IRI
+            'subject_type'    => Erfurt_Store::TYPE_IRI, 
+            'object_type'     => Erfurt_Store::TYPE_IRI, 
+            'escape_literals' => true
         );
         $options = array_merge($defaultOptions, $options);
         if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
@@ -149,22 +149,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $object = '<' . $object . '>';
         } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
             // make secure literal object 
-            #$object = '"' . $object . '"';          
-            if ($options['escape_literals']) {
-                if (array_key_exists('literal_datatype', $options)) {
-                    $object = $this->escapeLiteral($object, $options['literal_datatype'] );
-                } else {
-                    $object = $this->escapeLiteral($object);
-                }
-            }
-
-
-            // datatype/language
-            if (array_key_exists('literal_language', $options)) {
-                $object .= '@' . $options['literal_language'];
-            } else if (array_key_exists('literal_datatype', $options)) {
-                $object .= '^^<' . $options['literal_datatype'] . '>';
-            }
+            $object = $this->_buildLiteralString($object, $options['literal_datatype']);        
+        }
+        
+        // datatype/language
+        if (array_key_exists('literal_language', $options)) {
+            $object .= '@' . $options['literal_language'];
+        } else if (array_key_exists('literal_datatype', $options)) {
+            $object .= '^^<' . $options['literal_datatype'] . '>';
         }
         
         // TODO: support blank nodes as subject
@@ -211,7 +203,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
-#var_dump($createTable);exit;       
+        #var_dump($createTable);exit;       
         return $this->sqlQuery($createTable);
     }
     
@@ -593,7 +585,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      *
      * @return string
      */
-    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiteral = true)
+    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiterals = true)
     {
         $triples = '';
         foreach ($statementsArray as $subject => $predicateArray) {
@@ -606,25 +598,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                             $triples .= '<' . $object['value'] . '>';
                             break;
                         case 'literal':
-                            if ($escapeLiteral == true) {
-                                if (array_key_exists('datatype', $object)) {
-                                    $object['value'] = $this->escapeLiteral($object['value'], $object['datatype'] );
-                                } else {
-                                    $object['value'] = $this->escapeLiteral($object['value']);
-                                }
-                            }
-
-
-
+                            $object['value'] = $this->_buildLiteralString(
+                                $object['value'], 
+                                isset($object['datatype']) ? $object['datatype'] : null
+                            );
+                            
                             $triples .= $object['value'] ;
                             
                             if (array_key_exists('datatype', $object)) {
                                 $triples .= '^^<' . $object['datatype'] . '>';
                                 
-                                if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
-                                    // add string triple w/o datatype
-                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
-                                }
+                                // FIXME:
+                                // if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
+                                //     // add string triple w/o datatype
+                                //     $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
+                                // }
                             } else if (array_key_exists('lang', $object)) {
                                 $triples .= '@' . $object['lang'];
                             }
@@ -635,8 +623,38 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 }
             }
         }
+        #var_dump($triples);exit;
         
         return $triples;
+    }
+    
+    /**
+     * Builds an SPARQL-compatible literal string with long literals if necessary.
+     */
+    private function _buildLiteralString($literal, $datatype = 'http://www.w3.org/2001/XMLSchema#string')
+    {
+        $longLiteral = false;
+        
+        switch ($datatype) {
+            case 'http://www.w3.org/2001/XMLSchema#boolean':
+                $search  = array('0', '1');
+                $replace = array('true', 'false');
+                $literal = str_replace($search, $replace, $literal);
+            break;
+            case 'http://www.w3.org/2001/XMLSchema#string':
+            case '':
+            case null:
+                if (strpos($literal, "\n") !== false) {
+                    $longLiteral = true;
+                }
+            break;
+        }
+        
+        $literal = ($longLiteral ? '"""' : '"') 
+                 . $literal 
+                 . ($longLiteral ? '"""' : '"');
+        
+        return $literal;
     }
     
     /**
@@ -824,39 +842,5 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // TODO: owl:imports
             return $this->getModel($graphUri);
         }
-    }
-
-    /**
-     * escapes characters for given literal to avoid virtuoso specific problems while adding statements
-     *
-     * @param string $literal
-     * @param string $datatype : default: http://www.w3.org/2001/XMLSchema#string
-     * @return string $literal
-     *
-     * @todo 
-     */ 
-    public function escapeLiteral($literal, $datatype = "http://www.w3.org/2001/XMLSchema#string")
-    {
-        switch ($datatype) {
-            case "http://www.w3.org/2001/XMLSchema#string":
-                $literal = addslashes($literal);
-                $search  = array("\n", "\r");
-                $replace = array('\\\n', '\\\r' );
-                $literal = str_replace($search, $replace, $literal);
-				#$literal = strip_tags($literal);
-				$literal = '"""'.$literal.' """';
-                break;
-            case "http://www.w3.org/2001/XMLSchema#boolean":
-                $search  = array('0', '1');
-                $replace = array( 'false', 'true' );
-                $literal = str_replace($search, $replace, $literal);
-                $literal = '"""'.$literal.'"""';            
-                break;
-            default:
-                $literal = '"""'.$literal.'"""'; 
-                break;
-		}
-        
-        return $literal;
     }
 }

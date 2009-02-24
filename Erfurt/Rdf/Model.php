@@ -54,6 +54,12 @@ class Erfurt_Rdf_Model
     );
     
     /**
+     * The model's title property value
+     * @var string
+     */
+    protected $_title = null;
+    
+    /**
      * An array of properties used in this model to express
      * a resource's human-readable representation.
      * @var array
@@ -126,6 +132,13 @@ class Erfurt_Rdf_Model
         return $this;
     }
     
+    /**
+     * Creates a unique resource URI with the model's base URI as namespace and
+     * a unique ID starting with $spec.
+     *
+     * @param string $spec
+     * @return string
+     */
     public function createResourceUri($spec = '')
     {
         $prefix = $this->getBaseIri()
@@ -224,6 +237,51 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Returns the model's title property value.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {        
+        if (null === $this->_title) {
+            $titleProperties = $this->getTitleProperties();
+
+            $select = '';
+            $where  = array();
+            
+            if (!empty($titleProperties)) {
+                foreach ($titleProperties as $key => $uri) {
+                    $select .= ' ?' . $key;
+                    $where[] = '{?s <' . $uri . '> ' . '?' . $key . '.}';
+                }
+                
+                require_once 'Erfurt/Sparql/SimpleQuery.php';
+                $query = Erfurt_Sparql_SimpleQuery::initWithString(
+                    'SELECT ' . $select . '
+                    WHERE {
+                        ' . implode(' UNION ', $where) . '
+                        FILTER (sameTerm(?s, <' . $this->getModelIri() . '>))
+                    }'
+                );
+                
+                if ($result = $this->getStore()->sparqlQuery($query)) {
+                    if (is_array($result) && is_array($result[0])) {
+                        foreach ($titleProperties as $key => $uri) {
+                            if (!empty($result[0][$key])) {
+                                $this->_title = $result[0][$key];
+                            }
+                            
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $this->_title;
+    }
+    
+    /**
      * Returns an array of properties used in this model to express
      * a resource's human-readable representation.
      *
@@ -270,6 +328,10 @@ class Erfurt_Rdf_Model
     {
         $addedStatements   = $this->_getStatementsDiff($changed, $original);
         $removedStatements = $this->_getStatementsDiff($original, $changed);        
+        
+        // var_dump('added: ', $addedStatements);
+        // var_dump('removed: ', $removedStatements);
+        // exit;
         
         $this->addMultipleStatements($addedStatements);
         $this->deleteMultipleStatements($removedStatements);
