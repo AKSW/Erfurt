@@ -283,10 +283,10 @@ class Erfurt_Store
         $logger         = Erfurt_App::getInstance()->getLog();
         $sysOntSchema   = $config->sysOnt->schemaUri;
         $schemaLocation = $config->sysOnt->schemaLocation;
-        $schemaPath     = EF_BASE . $config->sysOnt->schemaPath;
+        $schemaPath     = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysOnt->schemaPath);
         $sysOntModel    = $config->sysOnt->modelUri;
         $modelLocation  = $config->sysOnt->modelLocation;
-        $modelPath      = EF_BASE . $config->sysOnt->modelPath;
+        $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysOnt->modelPath);
         
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
