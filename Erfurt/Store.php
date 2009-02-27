@@ -292,7 +292,7 @@ class Erfurt_Store
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
             
-            $this->getNewModel($sysOntSchema, '', 'owl', false);
+            // $this->getNewModel($sysOntSchema, '', 'owl', false);
             require_once 'Erfurt/Syntax/RdfParser.php';
             if (is_readable($schemaPath)) {
                 // load SysOnt from file
@@ -314,7 +314,7 @@ class Erfurt_Store
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
             
-            $this->getNewModel($sysOntModel, '', 'owl', false);
+            // $this->getNewModel($sysOntModel, '', 'owl', false);
             require_once 'Erfurt/Syntax/RdfParser.php';
             if (is_readable($modelPath)) {
                 // // load SysOnt Model from file
