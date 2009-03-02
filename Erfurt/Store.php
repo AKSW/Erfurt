@@ -503,6 +503,54 @@ class Erfurt_Store
     }
     
     /**
+     * Searches resources that have literal property values matching $stringSpec.
+     *
+     * @param string $stringSpec The string pattern to be matched
+     * @param string|array $graphUris One or more graph URIs to be searched
+     * @param array option array
+     */
+    public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
+    {
+        $stringSpec = (string) $stringSpec;
+        $graphUris  = (array) $graphUris;
+        
+        $options = array_merge(array(
+            'case_sensitive'    => false, 
+            'filter_classes'    => false, 
+            'filter_properties' => false
+        ), $options);
+        
+        // execute backend-specific search
+        if (method_exists($this->_backendAdapter, 'findResourcesWithPropertyValue')) {
+            return $this->_backendAdapter->findResourcesWithPropertyValue($stringSpec, $graphUris, $options);
+        }
+        
+        // generic SPARQL search
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $query = new Erfurt_Sparql_SimpleQuery();
+
+        foreach ($graphUris as $graphUri) {
+            $query->addFrom($graphUri);
+        }
+
+        $query->setProloguePart('SELECT DISTINCT ?s');
+        $query->setWherePart('WHERE {
+            ?s ?p ?o.
+            ' . ($options['filter_properties'] ? '?ss ?s ?oo.' : '') . '
+            FILTER (regex(?o, "' . $stringSpec . '"' . ($options['case_sensitive'] ? '' : ', "i"') . '))
+        }');
+
+        $resources = array();
+        if ($results = $this->sparqlQuery($query)) {
+            foreach ($results as $row) {
+                array_push($resources, $row['s']);
+            }
+        }
+
+        return $resources;
+    }
+    
+    /**
      * @param boolean $withTitle Whether to return a human readable title for each available model.
      * @return array Returns an indexed array containing an associative array for each row. Each result row has
      * the following keys:  - 'modelIri'    => Contains the Iri of the model.

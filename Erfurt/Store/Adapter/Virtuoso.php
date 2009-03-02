@@ -633,25 +633,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     private function _buildLiteralString($literal, $datatype = 'http://www.w3.org/2001/XMLSchema#string')
     {
         $longLiteral = false;
+        $quoteChar   = (strpos('"', $literal) !== false) ? "'" : '"';
         
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
                 $search  = array('0', '1');
-                $replace = array('true', 'false');
+                $replace = array('false', 'true');
                 $literal = str_replace($search, $replace, $literal);
             break;
             case 'http://www.w3.org/2001/XMLSchema#string':
             case '':
             case null:
-                if (strpos($literal, "\n") !== false) {
+                $literal = addslashes($literal);
+                
+                /** 
+                 * Check for characters not allowed in a short literal
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 */
+                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $literal) !== false) {
                     $longLiteral = true;
                 }
             break;
         }
         
-        $literal = ($longLiteral ? '"""' : '"') 
+        $literal = $quoteChar . ($longLiteral ? $quoteChar . $quoteChar : '')
                  . $literal 
-                 . ($longLiteral ? '"""' : '"');
+                 . $quoteChar . ($longLiteral ? $quoteChar . $quoteChar : '');
         
         return $literal;
     }
