@@ -261,6 +261,27 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
     }
     
+    /** @see Erfurt_Store */
+    public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options)
+    {
+        $query  = 'SELECT DISTINCT ?s ';
+        $query .= 'FROM <' . implode($graphUris, '>' . PHP_EOL . 'FROM <') . '> ';
+        $query .= 'WHERE {
+            ?s ?p ?o.
+            ' . ($options['filter_properties'] ? '?ss ?s ?oo.' : '') . '
+            FILTER (bif:contains(?o, "' . $stringSpec . '"))
+        }'; // TODO: wildcard usage
+        
+        $resources = array();
+        if ($results = $this->sparqlQuery($query)) {
+            foreach ($results as $row) {
+                array_push($resources, $row['s']);
+            }
+        }
+        
+        return $resources;
+    }
+    
     /** @see Erfurt_Store_Adapter_Interface */
     public function getAvailableModels($withTitle = false) {        
         if (!$this->_models) {

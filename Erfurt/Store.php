@@ -522,6 +522,7 @@ class Erfurt_Store
         
         // execute backend-specific search
         if (method_exists($this->_backendAdapter, 'findResourcesWithPropertyValue')) {
+            // TODO: add owl:imports'ed graphs
             return $this->_backendAdapter->findResourcesWithPropertyValue($stringSpec, $graphUris, $options);
         }
         
