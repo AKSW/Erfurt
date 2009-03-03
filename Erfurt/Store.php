@@ -292,19 +292,29 @@ class Erfurt_Store
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
             
-            // $this->getNewModel($sysOntSchema, '', 'owl', false);
+            $this->getNewModel($sysOntSchema, '', 'owl', false);
             require_once 'Erfurt/Syntax/RdfParser.php';
-            if (is_readable($schemaPath)) {
-                // load SysOnt from file
-                $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
-            } else {
-                // load SysOnt from Web
-                $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
+            try {
+                if (is_readable($schemaPath)) {
+                    // load SysOnt from file
+                    $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE,
+                            false);
+                } else {
+                    // load SysOnt from Web
+                    $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL,
+                            false);
+                }
+            } catch (Erfurt_Exception $e) {
+                // Delete the model, for the import failed.
+                $this->deleteModel($sysOntSchema, false);
+                
+                require_once 'Erfurt/StoreException.php';
+                throw new Erfurt_StoreException("Import of '$sysOntSchema' failed.");
             }
             
             if (!$this->isModelAvailable($sysOntSchema, false)) {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Unable to load System Ontology schema.');
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
             
             $logger->info('System schema successfully loaded.');
@@ -314,16 +324,23 @@ class Erfurt_Store
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
             
-            // $this->getNewModel($sysOntModel, '', 'owl', false);
+            $this->getNewModel($sysOntModel, '', 'owl', false);
             require_once 'Erfurt/Syntax/RdfParser.php';
-            if (is_readable($modelPath)) {
-                // // load SysOnt Model from file
-                $this->importRdf($sysOntModel, $modelPath, 'rdfxml',
-                        Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
-            } else {
-                // // load SysOnt Model from Web
-                $this->importRdf($sysOntModel, $modelLocation, 'rdfxml',
-                        Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
+            try {
+                if (is_readable($modelPath)) {
+                    // // load SysOnt Model from file
+                    $this->importRdf($sysOntModel, $modelPath, 'rdfxml',
+                            Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
+                } else {
+                    // // load SysOnt Model from Web
+                    $this->importRdf($sysOntModel, $modelLocation, 'rdfxml',
+                            Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
+                }
+            } catch (Erfurt_Exception $e) {
+                // Delete the model, for the import failed.
+                $this->deleteModel($sysOntSchema, false);
+                require_once 'Erfurt/StoreException.php';
+                throw new Erfurt_StoreException("Import of '$sysOntModel>' failed.");
             }
             
             if (!$this->isModelAvailable($sysOntModel, false)) {
@@ -466,9 +483,11 @@ class Erfurt_Store
         $this->_backendAdapter->deleteModel($modelIri);
         
         // remove any statements about deleted model from SysOnt
-        $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
-        $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
-        $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+        if (Erfurt_App::getInstance()->getAcModel() !== false) {
+            $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
+            $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
+            $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+        }
     }
     
     /**
@@ -616,7 +635,7 @@ class Erfurt_Store
         // check whether model exists and is visible
         if (!$this->isModelAvailable($modelIri, $useAc)) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception("Model <$modelIri> is not available.");
+            throw new Exception("Model <$modelIri> is not available.");
         }
         
         $modelInstance = $this->_backendAdapter->getModel($modelIri);
@@ -747,8 +766,8 @@ class Erfurt_Store
             $useAc = true)
     {
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception("Import failed. Model <$modelIri> not found or not writable.");
+            require_once 'Erfurt/StoreException.php';
+            throw new Erfurt_StoreException("Import failed. Model <$modelIri> not found or not writable.");
         }
         
         if ($type === 'auto') {
@@ -794,7 +813,6 @@ class Erfurt_Store
         }
         
         
-        
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
         } else {
@@ -802,10 +820,6 @@ class Erfurt_Store
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             return $parser->parseToStore($data, $locator, $modelIri, $useAc);
         }
-        
-        // should not be reached
-        require_once 'Erfurt/Exception.php';
-        throw new Erfurt_Exception('Could not import RDF data. Format not recognized.');
     }
     
     /**

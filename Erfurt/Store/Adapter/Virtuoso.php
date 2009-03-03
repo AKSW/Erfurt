@@ -436,7 +436,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         } else if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
             return $this->_importStatementsFromUrl($data, $type, $graphIri);
         } else {
-            // not supported
+            require_once 'Erfurt/StoreException.php';
+            throw new Erfurt_StoreException("Locator: '$loactor' is not supported by Virtuoso.");
         }
     }
     

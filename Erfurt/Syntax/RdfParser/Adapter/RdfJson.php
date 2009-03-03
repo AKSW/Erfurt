@@ -13,13 +13,26 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
 {    
     
     public function parseFromDataString($dataString)
-    {        
-        return json_decode($dataString, true);
+    {    
+        $result = json_decode($dataString, true);
+        
+        if ($result === null) {
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException('Decoding of JSON failed.');
+        }
+        
+        return $result;
     }
     
     public function parseFromFilename($filename) 
     {
         $handle = fopen($filename, 'r');
+        
+        if ($handle === false) {
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
+        }
+        
         $dataString = fread($handle, filesize($filename));
         fclose($handle);
         
@@ -30,6 +43,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
     {
         
         $handle = fopen($url, 'r');
+        
+        if ($handle === false) {
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException("Failed to open file at url '$url'");
+        }
+        
         $dataString = '';
         
         while(!feof($handle)) {

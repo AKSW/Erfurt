@@ -19,7 +19,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     
     public function __construct($format = 'rdfxml')
     {
-        error_reporting(E_ALL | ~E_STRICT);
+        if (defined('_EFDEBUG')) {
+            error_reporting(E_ALL | ~E_STRICT);
+        }
         
         $this->_format = $format;
         
@@ -36,7 +38,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     
     public function __destruct()
     {
-        if (defined(_EFDEBUG)) {
+        if (defined('_EFDEBUG')) {
             error_reporting(E_ALL | E_STRICT);
         }
     }
@@ -45,12 +47,18 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     {
         $this->_parser->parse('', $dataString);
         
+        $this->_testErrors();
+        $this->_testWarnings();
+        
         return $this->_parser->getSimpleIndex(0);
     }
     
     public function parseFromFilename($filename) 
     {
         $this->_parser->parse($filename);
+        
+        $this->_testErrors();
+        $this->_testWarnings();
         
         return $this->_parser->getSimpleIndex(0);
     }
@@ -59,12 +67,18 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     {
         $this->_parser->parse($url);
         
+        $this->_testErrors();
+        $this->_testWarnings();
+        
         return $this->_parser->getSimpleIndex(0);
     }
     
     public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true)
     {
         $this->_parser->parse('', $dataString);
+        
+        $this->_testErrors();
+        $this->_testWarnings();
         
         $store = Erfurt_App::getInstance()->getStore();
              
@@ -78,6 +92,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     {
         $this->_parser->parse($filename);
         
+        $this->_testErrors();
+        $this->_testWarnings();
+        
         $store = Erfurt_App::getInstance()->getStore();
              
         $triples = $this->_parser->getSimpleIndex(0);
@@ -89,6 +106,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     public function parseFromUrlToStore($url, $graphUri, $useAc = true)
     {
         $this->_parser->parse($url);
+        
+        $this->_testErrors();
+        $this->_testWarnings();
         
         $store = Erfurt_App::getInstance()->getStore();
              
@@ -109,6 +129,38 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
                 $this->_parser = ARC2::getTurtleParser();
                 break;
             default:
+        }
+    }
+    
+    protected function _testErrors()
+    {
+        $errors = $this->_parser->getErrors();
+
+        if (count($errors) > 0) {
+            $errorString = '';
+            
+            foreach ($errors as $e) {
+                $errorString .= $e . PHP_EOL;
+            }
+            
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException($errorString);
+        }
+    }
+    
+    protected function _testWarnings()
+    {
+        $warnings = $this->_parser->getWarnings();
+
+        if (count($warnings) > 0) {
+            $warningString = '';
+            
+            foreach ($warnings as $w) {
+                $warningString .= $w . PHP_EOL;
+            }
+            
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException($warningString);
         }
     }
 }

@@ -104,7 +104,10 @@ class Erfurt_App
         
         if (!$this->_sysOntModel) {
             $config = $this->getConfig();
-            $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
+            
+            if ($this->getStore()->isModelAvailable($config->sysOnt->modelUri, false)) {
+                $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
+            }
         }
         
         return $this->_sysOntModel;
@@ -119,7 +122,11 @@ class Erfurt_App
         
         if (!$this->_acModel) {
             $config = $this->getConfig();
-            $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
+            
+            if ($this->getStore()->isModelAvailable($config->ac->modelUri, false)) {
+                $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
+            }
+            
         }
         
         return $this->_acModel;
@@ -172,12 +179,12 @@ class Erfurt_App
             date_default_timezone_set('Europe/Berlin');
             $config->efloglevel = 7;
         }
+                
+        // Access the store in order to test the database connection.
+        $inst->getStore();
         
 // TODO handle session start before output
         $inst->getAuth()->hasIdentity();
-        
-        // Access the store in order to test the database connection.
-        $inst->getStore();
         
         return $inst;
     }
