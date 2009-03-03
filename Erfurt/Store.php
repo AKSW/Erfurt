@@ -530,6 +530,10 @@ class Erfurt_Store
      */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
     {
+        if (empty($graphUris)) {
+            $graphUris = array_keys($this->getAvailableModels(true));
+        }
+        
         $stringSpec = (string) $stringSpec;
         $graphUris  = (array) $graphUris;
         
