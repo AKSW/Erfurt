@@ -650,12 +650,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /**
-     * Builds an SPARQL-compatible literal string with long literals if necessary.
+     * Builds a SPARQL-compatible literal string with long literals if necessary.
      */
     private function _buildLiteralString($literal, $datatype = 'http://www.w3.org/2001/XMLSchema#string')
     {
         $longLiteral = false;
-        $quoteChar   = (strpos('"', $literal) !== false) ? "'" : '"';
+        $literal     = (string) $literal;
+        $quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
         
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
