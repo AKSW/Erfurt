@@ -149,7 +149,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $object = '<' . $object . '>';
         } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
             // make secure literal object 
-            $object = $this->_buildLiteralString($object, $options['literal_datatype'] ? $options['literal_datatype'] : null);        
+            $object = $this->_buildLiteralString($object, (isset($options['literal_datatype'])) ? $options['literal_datatype'] : null);        
         }
         
         // datatype/language
