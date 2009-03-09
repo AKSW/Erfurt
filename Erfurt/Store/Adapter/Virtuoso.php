@@ -431,13 +431,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {        
         require_once 'Erfurt/Syntax/RdfParser.php';
         
+        $func = null;
         if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
-            return $this->_importStatementsFromFile($data, $type, $graphIri);
+            $func = '_importStatementsFromFile';
         } else if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
-            return $this->_importStatementsFromUrl($data, $type, $graphIri);
+            $func = '_importStatementsFromUrl';
         } else {
-            require_once 'Erfurt/StoreException.php';
-            throw new Erfurt_StoreException("Locator: '$loactor' is not supported by Virtuoso.");
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception("Locator '$loactor' is not supported by Virtuoso.");
+        }
+        
+        if ($func) {
+            return $this->$func($data, $type, $graphIri);
         }
     }
     
@@ -783,10 +788,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             odbc_longreadlen($result, 0);
             $this->_longRead = false;
         }
-  
-        if (null == $result) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('SQL Error: ' . $this->_getLastError());
+        
+        if (false === $result) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('SQL Error: ' . $this->_getLastError());
         }
         
         return $result;
@@ -799,7 +804,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _getLastError() 
     {
-        return odbc_errormsg() . ' (' . odbc_error() . ')';
+        return odbc_errormsg($this->_connection) . ' (' . odbc_error($this->_connection) . ')';
+    }
+    
+    /**
+     * Checks whether an error occured during the last operation.
+     *
+     * @return boolean True if an error occured, false otherwise
+     */
+    private function _hasError()
+    {
+        $error = odbc_error($this->_connection);
+        if (!empty($error)) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**
@@ -829,9 +849,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // import using internal Virtuoso/PL function
         $importSql = sprintf("CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", $importFunc, $file, $baseUri, $graphUri);
         
-        if ($this->_execSql($importSql)) {
-            // TODO: owl:imports
-            return $this->getModel($graphUri);
+        try {
+            if ($res = $this->_execSql($importSql)) {
+                var_dump($res);exit;
+                // TODO: owl:imports
+                return $this->getModel($graphUri);
+            }
+        } catch (Erfurt_Store_Adapter_Exception $e) {
+            throw new Erfurt_Store_Adapter_Exception('Error importing statements: ' . $e->getMessage());
         }
     }
     
@@ -867,9 +892,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         $importSql = sprintf("CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')", $importFunc, $url, $baseUri, $graphUri);
         
-        if ($this->_execSql($importSql)) {
-            // TODO: owl:imports
-            return $this->getModel($graphUri);
+        try {
+            if ($this->_execSql($importSql)) {
+                // TODO: owl:imports
+                return $this->getModel($graphUri);
+            }
+        } catch (Erfurt_Store_Adapter_Exception $e) {
+            throw new Erfurt_Store_Adapter_Exception('Error importing statements: ' . $e->getMessage());
         }
     }
 }

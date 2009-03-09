@@ -308,8 +308,8 @@ class Erfurt_Store
                 // Delete the model, for the import failed.
                 $this->deleteModel($sysOntSchema, false);
                 
-                require_once 'Erfurt/StoreException.php';
-                throw new Erfurt_StoreException("Import of '$sysOntSchema' failed.");
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed.");
             }
             
             if (!$this->isModelAvailable($sysOntSchema, false)) {
@@ -339,8 +339,8 @@ class Erfurt_Store
             } catch (Erfurt_Exception $e) {
                 // Delete the model, for the import failed.
                 $this->deleteModel($sysOntSchema, false);
-                require_once 'Erfurt/StoreException.php';
-                throw new Erfurt_StoreException("Import of '$sysOntModel>' failed.");
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed.");
             }
             
             if (!$this->isModelAvailable($sysOntModel, false)) {
@@ -770,8 +770,8 @@ class Erfurt_Store
             $useAc = true)
     {
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
-            require_once 'Erfurt/StoreException.php';
-            throw new Erfurt_StoreException("Import failed. Model <$modelIri> not found or not writable.");
+            require_once 'Erfurt/Store/Exception.php';
+            throw new Erfurt_Store_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
         
         if ($type === 'auto') {
