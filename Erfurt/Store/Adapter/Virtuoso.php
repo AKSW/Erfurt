@@ -661,7 +661,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $longLiteral = false;
         $literal     = (string) $literal;
-        $quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
+        #$quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
+        $quoteChar   = '"';
+        if (substr($literal, -1,1 ) == '"')
+            $literal = $literal." "; 
         
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
@@ -766,7 +769,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         if ($this->_longRead) {
-            odbc_longreadlen($result, 16348);
+            odbc_longreadlen($result, 100000000);
             $this->_longRead = false;
         }
         
