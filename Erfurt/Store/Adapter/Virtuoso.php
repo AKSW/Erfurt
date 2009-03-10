@@ -138,18 +138,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function addStatement($graphIri, $subject, $predicate, $object, $options = array())
     {
         // handle defaults
-        $options = array_merge(array(
+        $defaultOptions = array(
             'subject_type'    => Erfurt_Store::TYPE_IRI, 
             'object_type'     => Erfurt_Store::TYPE_IRI, 
             'escape_literals' => true
-        ), $options);
-        
+        );
+        $options = array_merge($defaultOptions, $options);
         if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
             // make IRI object
             $object = '<' . $object . '>';
         } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
             // make secure literal object 
-            $object = $this->_buildLiteralString($object, (isset($options['literal_datatype'])) ? $options['literal_datatype'] : null);        
+            $object = $this->_buildLiteralString($object, $options['literal_datatype']);        
         }
         
         // datatype/language
@@ -165,7 +165,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
             }';
         
-        return $this->_execSparql($insertSparql);
+        $this->_execSparql($insertSparql);
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -465,7 +465,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function lastInsertId()
     {
         if ($result = $this->sqlQuery('SELECT IDENTITY_VALUE()')) {
-            return $result[0][0];
+            return $result[0]['callret'];
         }
     }
     
@@ -672,7 +672,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             case 'http://www.w3.org/2001/XMLSchema#string':
             case '':
             case null:
-                $literal = addcslashes($literal, $quoteChar);
+                $literal = addslashes($literal);
                 
                 /** 
                  * Check for characters not allowed in a short literal
@@ -737,6 +737,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $resultArray;
     }
     
+    
     /**
      * Executes a SPARQL query and returns an ODBC result identifier.
      *
@@ -753,11 +754,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $graphUri = '\'' . $graphUri . '\'';
         }
         
-        // escape characters that delimit the query within the query
-        $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
-        
-        // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
+        
+        // $virtuosoPl = 'SPARQL ' . $sparqlQuery;
         
         $result = @odbc_exec($this->_connection, $virtuosoPl);
         
@@ -767,7 +766,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         if ($this->_longRead) {
-            odbc_longreadlen($result, 100000000);
+            odbc_longreadlen($result, 16348);
             $this->_longRead = false;
         }
         
@@ -852,6 +851,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         try {
             if ($res = $this->_execSql($importSql)) {
+                var_dump($res);exit;
                 // TODO: owl:imports
                 return $this->getModel($graphUri);
             }
