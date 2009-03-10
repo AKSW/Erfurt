@@ -1,5 +1,4 @@
 <?php
-
 require_once 'test_base.php';
 require_once 'Erfurt/Store/Adapter/Virtuoso.php';
 
@@ -14,7 +13,6 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
     
     public function setUp()
     {
-
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($this->_options);
     }
     
@@ -27,44 +25,98 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
     {
         $this->assertEquals(true, in_array('RDF_QUAD', $this->fixture->listTables()));
     }
-
-
-    public function testAddStatement()
+    
+    public function testAddStatementWithUriObject()
     {
-        $graphIri = "http://phpUnitTest.de/" ;
-        $subject = 'http://phpUnitTest.de/LiteralTest';
-        $predicate = 'http://phpUnitTest.de/escapeTheLiteral';
-
-        $object = "Testing \n";
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = "Testing \r";
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = 'Testing "';
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = "Testing '";
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = 'Testing \"';
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = "Testing \"";
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
-        $object = "Testing \'";
-        $options = array("object_type" => 1 );
-        $this->assertEquals(NULL , $this->fixture->addStatement($graphIri, $subject, $predicate, $object, $options));
-
+        $g = 'http://example.com/';
+        $s = 'http://example.com/';
+        $p = 'http://example.com/property1';
+        $o = 'http:/example.com/resource1';
+        
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o));
     }
-
+    
+    public function testAddStatementsWithLiteralObject()
+    {
+        $g = 'http://example.com/';
+        $s = 'http://example.com/';
+        $p = 'http://example.com/property1';
+        
+        require_once 'Erfurt/Store.php';
+        $options = array('object_type' => Erfurt_Store::TYPE_LITERAL);
+        
+        // short literal
+        $o = 'short literal';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // short literal containing double quote
+        $o = 'short "literal"';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // short literal containing escaped double quote
+        $o = 'short \"literal\"';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // short literal containing single quote
+        $o = "short 'literal'";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // short literal containing escaped single quote
+        $o = "short \'literal\'";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // long literal 1
+        $o = "long \n literal 1";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // long literal 2
+        $o = "long
+        literal 2";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // long literal 3
+        $o = "long \r\n literal 2";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        
+        // boolean literal with numerical representation
+        $o  = '1';
+        $p2 = 'http://example.com/booleanProperty1';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p2, $o, array_merge(
+            $options, 
+            array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean'))));
+        
+        // boolean literal with string representation
+        $o  = 'true';
+        $p2 = 'http://example.com/booleanProperty2';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p2, $o, array_merge(
+            $options, 
+            array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean'))));
+        
+        
+        // Vakantijeland tests
+        
+        // vakantijeland string 1 (unescaped)
+        $o = 'verhuisd onder ? dak, nu "Apeldoorns Museum"';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // vakantijeland string 1 (escaped) -- Virtuoso will remove escaping
+        $o = 'verhuisd onder ? dak, nu \"Apeldoorns Museum\"';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // vakantijeland string 2
+        $o = "per persoon: 113.45 &euro;<br/>CJP: 0 &euro;";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // vakantijeland string 3
+        $o = "van.reekum";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // vakantijeland string 4
+        $o = "http://www.apeldoorn.org/vanreekum/";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+    }
+    
     public function testAddMultipleStatements()
     {
         $graphIri = "http://phpUnitTest.de/" ;
@@ -84,27 +136,15 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
         #$statementsArray[$subject][$predicate][0]['value'] = "0";
         $this->fixture->addMultipleStatements($graphIri, $statementsArray);
 
-
-
-
-#"""Museum"""
-#"""verhuisd onder ? dak, nu \"Apeldoorns Museum\""""
-#"""Een huis vol spraakmakende, vaak een beetje tegendraadse hedendaagse beeldende kunst. Wisselende exposities.""". 
-#"""per persoon: 113.45 &euro;<br/>CJP: 0 &euro;"""
-#"""Van Reekum Museum"""
-#"""van.reekum"""
-#"""http://www.apeldoorn.org/vanreekum/"""
-#"""Van Reekum Museum"""@nl
-#"""true"""^^<http://www.w3.org/2001/XMLSchema#boolean>
-
-
+        #"""Museum"""
+        #"""verhuisd onder ? dak, nu \"Apeldoorns Museum\""""
+        #"""Een huis vol spraakmakende, vaak een beetje tegendraadse hedendaagse beeldende kunst. Wisselende exposities.""". 
+        #"""per persoon: 113.45 &euro;<br/>CJP: 0 &euro;"""
+        #"""Van Reekum Museum"""
+        #"""van.reekum"""
+        #"""http://www.apeldoorn.org/vanreekum/"""
+        #"""Van Reekum Museum"""@nl
+        #"""true"""^^<http://www.w3.org/2001/XMLSchema#boolean>
     }
-
-
 }
-
-
-
-
-
 

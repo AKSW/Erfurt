@@ -206,13 +206,11 @@ class Erfurt_Store
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
     public function addStatement($graphUri, $subject, $predicate, $object, $options = array(), $useAcl = true)
-    {
-        $defaults = array(
+    {        
+        $options = array_merge(array(
             'subject_type' => Erfurt_Store::TYPE_IRI, 
             'object_type'  => Erfurt_Store::TYPE_IRI
-        );
-        
-        $options = array_merge($defaults, $options);
+        ), $options);
         
         // check whether model is available
         if ($useAcl && !$this->isModelAvailable($graphUri)) {
@@ -226,7 +224,7 @@ class Erfurt_Store
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
+       return $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
         
         require_once 'Erfurt/Event/Dispatcher.php';
         require_once 'Erfurt/Event.php';

@@ -138,12 +138,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function addStatement($graphIri, $subject, $predicate, $object, $options = array())
     {
         // handle defaults
-        $defaultOptions = array(
+        $options = array_merge(array(
             'subject_type'    => Erfurt_Store::TYPE_IRI, 
             'object_type'     => Erfurt_Store::TYPE_IRI, 
             'escape_literals' => true
-        );
-        $options = array_merge($defaultOptions, $options);
+        ), $options);
+        
         if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
             // make IRI object
             $object = '<' . $object . '>';
@@ -165,7 +165,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
             }';
         
-        $this->_execSparql($insertSparql);
+        return $this->_execSparql($insertSparql);
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -661,10 +661,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $longLiteral = false;
         $literal     = (string) $literal;
-        #$quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
-        $quoteChar   = '"';
-        if (substr($literal, -1,1 ) == '"')
-            $literal = $literal." "; 
+        $quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
         
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
@@ -675,7 +672,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             case 'http://www.w3.org/2001/XMLSchema#string':
             case '':
             case null:
-                $literal = addslashes($literal);
+                $literal = addcslashes($literal, $quoteChar);
                 
                 /** 
                  * Check for characters not allowed in a short literal
@@ -740,7 +737,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $resultArray;
     }
     
-    
     /**
      * Executes a SPARQL query and returns an ODBC result identifier.
      *
@@ -757,9 +753,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $graphUri = '\'' . $graphUri . '\'';
         }
         
-        $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
+        // escape characters that delimit the query within the query
+        $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
         
-        // $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        // build Virtuoso/PL query
+        $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         
         $result = @odbc_exec($this->_connection, $virtuosoPl);
         
@@ -854,7 +852,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         try {
             if ($res = $this->_execSql($importSql)) {
-                var_dump($res);exit;
                 // TODO: owl:imports
                 return $this->getModel($graphUri);
             }
