@@ -78,6 +78,18 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
         $o = "long \r\n literal 2";
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
         
+        // Unix path literal
+        $o = '/usr/local/bin/virtuoso-t';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // Windows path literal
+        $o = "C:\\\\Programme\\\\Conficker\\\\FormatHardDrive.exe";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // Windows path literal
+        $o = '"C:\\\\Program Files\\\\Conficker\\\\FormatHardDrive.exe"';
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
         
         // boolean literal with numerical representation
         $o  = '1';
@@ -94,26 +106,30 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
             array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean'))));
         
         
-        // Vakantijeland tests
+        // Vakantieland tests
         
-        // vakantijeland string 1 (unescaped)
+        // vakantieland string 1 (unescaped)
         $o = 'verhuisd onder ? dak, nu "Apeldoorns Museum"';
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
         
-        // vakantijeland string 1 (escaped) -- Virtuoso will remove escaping
+        // vakantieland string 1 (escaped) -- Virtuoso will remove escaping
         $o = 'verhuisd onder ? dak, nu \"Apeldoorns Museum\"';
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
         
-        // vakantijeland string 2
+        // vakantieland string 2
         $o = "per persoon: 113.45 &euro;<br/>CJP: 0 &euro;";
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
         
-        // vakantijeland string 3
+        // vakantieland string 3
         $o = "van.reekum";
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
         
-        // vakantijeland string 4
+        // vakantieland string 4
         $o = "http://www.apeldoorn.org/vanreekum/";
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
+        
+        // vakantieland string 5
+        $o = '"In de Tinnen Wonderwereld" is niet langer wegens het overlijden van E. Spandauw (5-10-2000), de oprichter en uitbater van het museum. http://members.tripod.com/~tingieten/';
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
     }
     
