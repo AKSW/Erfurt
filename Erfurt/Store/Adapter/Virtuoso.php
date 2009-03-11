@@ -269,7 +269,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $query .= 'WHERE {
             ?s ?p ?o.
             ' . ($options['filter_properties'] ? '?ss ?s ?oo.' : '') . '
-            FILTER (bif:contains(?o, \\\'"' . $stringSpec . '*"\\\'))
+            FILTER (bif:contains(?o, \'"' . $stringSpec . '*"\'))
         }';
         
         $resources = array();

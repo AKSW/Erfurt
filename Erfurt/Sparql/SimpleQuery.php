@@ -82,7 +82,11 @@ class Erfurt_Sparql_SimpleQuery {
     
     public function setWherePart($whereString)
     {
-        $this->_wherePart = $whereString;
+        if (stripos($whereString, 'where') !== false) {
+            $this->_wherePart = $whereString;
+        } else {
+            $this->_wherePart = ' WHERE ' . $whereString;
+        }
         
         return $this;
     }
@@ -169,7 +173,9 @@ class Erfurt_Sparql_SimpleQuery {
         }
 
         $queryObject = new self();
-        $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
+        if (isset($parts['prologue'][0][0])) {
+            $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
+        }
 
         if (isset($parts['from'][1][0])) {
             $queryObject->setFrom($parts['from'][1]);
