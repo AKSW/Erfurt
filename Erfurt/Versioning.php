@@ -3,9 +3,9 @@
 /*
  * database tables:
  * CREATE TABLE ef_versioning_actions(
- *   id             INT NOT NULL, 
+ *   id             INT NOT NULL AUTO_INCREMENT, 
  *   model          VARCHAR(255) NOT NULL, 
- *   user        VARCHAR(255) NOT NULL,
+ *   useruri        VARCHAR(255) NOT NULL,
  *   resource       VARCHAR(255), 
  *   tstamp         TIMESTAMP NOT NULL, 
  *   action_type    INT NOT NULL, 
@@ -14,7 +14,7 @@
  * );
  * 
  * CREATE TABLE ef_versioning_payloads(
- *   id                 INT NOT NULL PRIMARY KEY, 
+ *   id                 INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
  *   statement_hash     LONGTEXT
  * );
  *
@@ -96,7 +96,7 @@ class Erfurt_Versioning
     
     public function getHistoryForGraph($graphUri, $page = 1)
     {
-        $sql = 'SELECT id, user, resource, tstamp, action_type FROM ef_versioning_actions WHERE
+        $sql = 'SELECT id, useruri, resource, tstamp, action_type FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
@@ -108,7 +108,7 @@ class Erfurt_Versioning
     
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
-        $sql = 'SELECT id, user, tstamp, action_type FROM ef_versioning_actions WHERE
+        $sql = 'SELECT id, useruri, tstamp, action_type FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
@@ -121,7 +121,7 @@ class Erfurt_Versioning
     public function getHistoryForUser($userUri, $page = 1)
     {
         $sql = 'SELECT id, resource, tstamp, action_type FROM ef_versioning_actions WHERE
-                user = \'' . $userUri . '\'
+                useruri = \'' . $userUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
@@ -256,7 +256,7 @@ class Erfurt_Versioning
         $user = $this->_getAuth()->getIdentity();
         $userUri = $user['uri'];
         
-        $actionsSql = 'INSERT INTO ef_versioning_actions (model, user, resource, tstamp, action_type, parent';
+        $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent';
         
         if (null !== $payloadId) {
             $actionsSql .= ', payload_id)';
@@ -264,7 +264,7 @@ class Erfurt_Versioning
             $actionsSql .= ')';
         }
         
-        $actionsSql .= 'VALUES (' . $graphUri . ', ' . $userUri . ', ' . $resource . ', ' . date('c') . ', ' . 
+        $actionsSql .= ' VALUES (\'' . $graphUri . '\', \'' . $userUri . '\', \'' . $resource . '\', \'' . date('c') . '\', ' . 
                        $actionType . ', NULL';
                        
         if (null !== $payloadId) {
@@ -272,14 +272,14 @@ class Erfurt_Versioning
         } else {
            $actionsSql .= ')';
         }               
-                       
+
         $this->_getStore()->sqlQuery($actionsSql);
     }
     
     private function _execAddPayload($payload)
     {
-        $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (' .
-                        serialize($payload) . ')';
+        $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (\'' .
+                        serialize($payload) . '\')';
                         
         $this->_getStore()->sqlQuery($payloadsSql);
         $payloadId = $this->_getStore()->lastInsertId();
@@ -333,9 +333,9 @@ class Erfurt_Versioning
         
         if (!in_array('ef_versioning_actions', $existingTableNames)) {
             $columnSpec = array(
-                'id'          => 'INT PRIMARY KEY',
+                'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
                 'model'       => 'VARCHAR(255) NOT NULL',
-                'user'     => 'VARCHAR(255) NOT NULL',
+                'useruri'     => 'VARCHAR(255) NOT NULL',
                 'resource'    => 'VARCHAR(255)',
                 'tstamp'      => 'TIMESTAMP NOT NULL',
                 'action_type' => 'INT NOT NULL',
@@ -348,7 +348,7 @@ class Erfurt_Versioning
         
         if (!in_array('ef_versioning_payloads', $existingTableNames)) {
             $columnSpec = array(
-                'id'             => 'INT PRIMARY KEY',
+                'id'             => 'INT PRIMARY KEY AUTO_INCREMENT',
                 'statement_hash' => 'LONGTEXT'
             );
             
