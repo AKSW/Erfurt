@@ -465,7 +465,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function lastInsertId()
     {
         if ($result = $this->sqlQuery('SELECT IDENTITY_VALUE()')) {
-            return $result[0][0];
+            return current(current($result));
         }
     }
     
@@ -792,7 +792,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         if (false === $result) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception('SQL Error: ' . $this->_getLastError());
+            throw new Erfurt_Store_Adapter_Exception('SQL Error: ' . $this->_getLastError() . ' ' .
+            $sqlQuery);
         }
         
         return $result;

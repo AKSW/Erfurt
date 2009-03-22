@@ -44,7 +44,10 @@ class Erfurt_Versioning
     
     protected $_limit = 10;
     
-    
+    /**
+     * Constructor registers with Erfurt_Event_Dispatcher
+     * and adds triggers for operations on statements (add/del)
+     */
     public function __construct()
     {
         $this->_initialize();
@@ -96,7 +99,8 @@ class Erfurt_Versioning
     
     public function getHistoryForGraph($graphUri, $page = 1)
     {
-        $sql = 'SELECT id, useruri, resource, tstamp, action_type FROM ef_versioning_actions WHERE
+        $sql = 'SELECT id, useruri, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+               'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
@@ -108,7 +112,8 @@ class Erfurt_Versioning
     
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
-        $sql = 'SELECT id, useruri, tstamp, action_type FROM ef_versioning_actions WHERE
+        $sql = 'SELECT id, useruri, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+               'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
@@ -120,7 +125,8 @@ class Erfurt_Versioning
     
     public function getHistoryForUser($userUri, $page = 1)
     {
-        $sql = 'SELECT id, resource, tstamp, action_type FROM ef_versioning_actions WHERE
+        $sql = 'SELECT id, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+               'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
@@ -169,67 +175,125 @@ class Erfurt_Versioning
     
     public function onAddStatement(Erfurt_Event $event)
     {
-        $payloadId = $this->_execAddPayload($event->statement);
-        $resourceArray = array_keys($event->statement);
-        $resource = $resourceArray[0];
-        $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, $payloadId);
+        if ($this->isVersioningEnabled()) {
+            $payloadId = $this->_execAddPayload($event->statement);
+            $resourceArray = array_keys($event->statement);
+            $resource = $resourceArray[0];
+            $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, $payloadId);
+        } else {
+            // do nothing
+        }
     }
     
     public function onAddMultipleStatements(Erfurt_Event $event)
     {
-        $graphUri = $event->graphUri;
+        if ($this->isVersioningEnabled()) {
+            $graphUri = $event->graphUri;
         
-        $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
+            $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
+        } else {
+            // do nothing
+        }
     }
     
     public function onDeleteMatchingStatements(Erfurt_Event $event)
     {
-        $graphUri = $event->graphUri;
+        if ($this->isversioningEnabled()) {
+            $graphUri = $event->graphUri;
         
-        if (isset($event->statements)) {
-            $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+            if (isset($event->statements)) {
+                $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+            } else {
+                // In this case, we have no payload. Just add a action without a payload (no rollback possible).
+                $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
+            }
         } else {
-            // In this case, we have no payload. Just add a action without a payload (no rollback possible).
-            $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
+            // do nothing
         }
     }
     
     public function onDeleteMultipleStatements(Erfurt_Event $event)
     {
-        $graphUri = $event->graphUri;
+        if($this->isVersioningEnabled()) {
+            $graphUri = $event->graphUri;
         
-        $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+            $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
+        } else {
+            // do nothing
+        }
     }
     
+
+    /**
+     *  Restores a change made to the store directly identified by an actionid inside
+     *  'ef_versioning_actions'. Action-IDs could be aquired via methods 
+     *  @see getHistoryForGraph()
+     *  @see getHistoryForResource()
+     *  @see getHistoryForUser()
+     *
+     *  @param integer $actionid identifies the action to restore
+     *  @return boolean true if everythings goes fine false otherwise
+     */
     public function rollbackAction($actionId) 
     {
-        $actionsSql = 'SELECT action_type, payload_id FROM ef_versioning_actions WHERE id = ' . 
+        $actionsSql = 'SELECT action_type, payload_id, model FROM ef_versioning_actions WHERE id = ' . 
                        ((int)$actionId);
                        
         $result = $this->_getStore()->sqlQuery($actionsSql);
         
         if ((count($result) !== 1) || ($result[0]['payload_id'] === null)) {
-// TODO dedicated exception
-            throw new Exception('No rollback possible');
+
+            $dedicatedException = 'No valid entry in ef_versioning_actions for action ID';
+            throw new Exception('No rollback possible (' .  $dedicatedException . ')');
+
+            return false;
+
         } else {
+
             $type = (int) $result[0]['action_type'];
+            $modelUri = $result[0]['model'];
+            $payloadID = (int) $result[0]['payload_id'];
             
-            $payloadsSql = 'SELECT statements_hash FROM ef_versioning_payloads WHERE id = ' .
-                           ((int)$result[0]['payload_id']);
+            $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
+                           $payloadID;
                            
             $payloadResult = $this->_getStore()->sqlQuery($payloadsSql);
             
             if (count($payloadResult) !== 1) {
-// TODO dedicated exception
-                throw new Exception('No rollback possible');
-            }
+
+                $dedicatedException = 'No valid entry in ef_versioning_payloads for payload ID';
+                throw new Exception('No rollback possible (' . $dedicatedException . ')');
+
+                return false;
+
+            } else {
                 
-            $payload = unserialize($payloadResult[0]['statements_hash']);
+                $payload = unserialize($payloadResult[0]['statement_hash']);
             
-            if ($type === self::STATEMENT_ADDED) {
-                $this->_getStore()->deleteMultipleStatements($payload);
-            } else if ($type === self::STATEMENT_REMOVED) {
-                $this->_getStore()->addMultipleStatements($payload);
+                // disable versioning while restoring data
+                $this->enableVersioning(false);
+
+                if ($type === self::STATEMENT_ADDED) {
+                    $this->_getStore()->deleteMultipleStatements($modelUri, $payload);
+                } else if ($type === self::STATEMENT_REMOVED) {
+                    $this->_getStore()->addMultipleStatements($modelUri, $payload);
+                }
+
+                // remove history records that were rolled back
+                $actionsSql = 'DELETE FROM ef_versioning_actions WHERE id = ' . 
+                           ((int)$actionId);
+
+                $this->_getStore()->sqlQuery($actionsSql);
+
+                $payloadsSql = 'DELETE FROM ef_versioning_payloads WHERE id = ' .
+                               $payloadID;
+
+                $this->_getStore()->sqlQuery($payloadsSql);
+
+                // enable versioning again
+                $this->enableVersioning(true);
+
+                return true;
             }
         }
     }
@@ -292,9 +356,10 @@ class Erfurt_Versioning
         foreach ($statements as $s => $poArray) {
             foreach ($poArray as $p => $oArray) {
                 foreach ($oArray as $i => $oSpec) {
-                    $statement = array($s => array($p => array(array($oSpec))));
+                    $statement = array($s => array($p => array($oSpec)));
                     
                     $payloadId = $this->_execAddPayload($statement);
+
                     $this->_execAddAction($graphUri, $s, $actionType, $payloadId);
                 }
             }
