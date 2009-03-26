@@ -1,10 +1,5 @@
 <?php
-require_once 'Erfurt/Sparql/Variable.php';
-require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
-require_once 'Erfurt/Sparql/EngineDb/FilterGenerator.php';
-require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
 require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
-
 
 /**
 *   Creates sql statements from a Query object
@@ -14,8 +9,41 @@ require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
 *
 *   @package sparql
 */
-class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_EngineDb_SqlGenerator
+class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_EngineDb_SqlGenerator
 {
+    public $arTableColumnNames = array(
+        's' => array(
+            'value' => 's',
+            'is'    => 'st'
+        ),
+        'p' => array(
+            'value' => 'p'
+        ),
+        'o' => array(
+            'value' => 'o',
+            'is'    => 'ot'
+        ),
+        'datatype' => array(
+            'value' => 'od',
+            'empty' => 'IS NULL',
+            'not_empty' => 'IS NOT NULL'
+        ),
+        'language' => array(
+            'value' => 'ol',
+            'empty' => 'IS NULL',
+            'not_empty' => 'IS NOT NULL'
+        )
+    );
+    
+    public $arTypeValues = array(
+        'r' => '0',
+        'b' => '1',
+        'l' => '2'
+    );
+    
+    public $strColEmpty = 'IS NULL';
+    public $strColNotEmpty = 'IS NOT NULL';
+       
     public $query = null;
 
     /**
@@ -113,7 +141,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     /**
     *   Name of the statements table
     */
-    protected $tblStatements = 'statements';
+    protected $tblStatements = 'ef_stmt';
 
 
 
@@ -135,25 +163,24 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         }
     }
 
-
-
     /**
-    *   Creates an SQL query string from the given Sparql query object.
-    *
-    *   @internal uses $query variable
-    *
-    *   @return array       Array of arrays of SQL query string parts: select, from and where
-    *
-    *   @throws Erfurt_Sparql_EngineDb_SqlGeneratorException   If there is no variable in the result set.
-    */
-    function createSql()
+     *   Creates an SQL query string from the given Sparql query object.
+     *
+     *   @internal uses $query variable
+     *
+     *   @return array       Array of arrays of SQL query string parts: select, from and where
+     *
+     *   @throws Erfurt_Sparql_EngineDb_SqlGeneratorException   If there is no variable in the result set.
+     */
+    public function createSql()
     {
         $arSelect   = array();
         $arFrom     = array();
         $arWhere    = array();
 
         $strResultForm = $this->query->getResultForm();
-        $filterGen     = new Erfurt_Sparql_EngineDb_FilterGenerator($this);
+        require_once 'Erfurt/Sparql/EngineDb/FilterGenerator.php';
+        $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator($this);
         switch ($strResultForm) {
             case 'construct':
                 $arResultVars = $this->query->getConstructPatternVariables();
@@ -173,6 +200,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             if ($graphPattern->isEmpty()) {
                 continue;
             }
+            
             if ($graphPattern->getUnion() !== null) {
                 ++$this->nUnionCount;
                 $this->nTableId                 = 0;
@@ -180,6 +208,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 $this->nGraphPatternCount = 0;
                 $this->arUnionVarAssignments[$this->nUnionCount] = array();
             }
+            
+            if ($graphPattern->getOptional() !== null) {
+                continue;
+            }
+            
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
             if ($arTriplePattern != null) {
@@ -202,6 +235,31 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             }
             ++$this->nGraphPatternCount;
 
+            foreach ($this->query->getResultPart() as $optionalPattern) {
+                if ($optionalPattern->getOptional() === $graphPattern->patternId) {
+                    $this->nTriplePatternCount = 0;
+                    $arTriplePattern = $optionalPattern->getTriplePatterns();
+                    if ($arTriplePattern != null) {
+                        foreach ($arTriplePattern as $triplePattern) {
+                            list (
+                                $arSelect[$this->nUnionCount][],
+                                $arFrom  [$this->nUnionCount][],
+                                $arWhere [$this->nUnionCount][]
+                            ) =
+                                $this->getTripleSql(
+                                    $triplePattern,
+                                    $optionalPattern,
+                                    $arResultVars
+                                );
+
+                            ++$this->nTableId;
+                            ++$this->nTriplePatternCount;
+                            ++$this->nUnionTriplePatternCount;
+                        }
+                    }
+                    ++$this->nGraphPatternCount;
+                }
+            }
         }
 
         //constraints extra. needed, since OPTIONAL parts are put after
@@ -214,7 +272,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 ++$this->nUnionCount;
             }
             $arConstraints = $graphPattern->getConstraints();
-#var_dump($arConstraints);
+
             if ($arConstraints != null) {
                 foreach ($arConstraints as $constraint) {
                     $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
@@ -241,13 +299,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                     $strSelectType = $strResultForm;
                 }
                 foreach ($arSelect as $nUnionCount => $arSelectPart) {
-                    $arSelectPart = self::removeNull($arSelectPart);
+                    $arSelectPart = $this->removeNull($arSelectPart);
                     if (count($arSelectPart) == 0
                     || (count($arSelectPart) == 1 && $arSelectPart[0] == '')) {
                         //test "test-1-07" suggests we return no rows in this case
                         //throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('No variable that could be returned.');
                     } else {
-                        $arStrSelect[$nUnionCount] = strtoupper($strSelectType) . ' ' . implode(', '   , $arSelectPart);
+                        $arStrSelect[$nUnionCount] = strtoupper($strSelectType) . ' ' . implode(','   , $arSelectPart);
                     }
                 }
                 break;
@@ -258,7 +316,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 break;
 
             default:
-                throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Unsupported query type "' . $strResultForm . '"');
+                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
+                    'Unsupported query type "' . $strResultForm . '"');
                 break;
         }
 
@@ -266,12 +326,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         foreach ($arStrSelect as $nUnionCount => $arSelectPart) {
             $arSqls[] = array(
                 'select'    => $arStrSelect[$nUnionCount],
-                'from'      => ' FROM '  . implode(' '    , self::removeNull($arFrom[$nUnionCount])),
-                'where'     => ' WHERE ' . self::fixWhere(
-                            implode(' '  , self::removeNull($arWhere[$nUnionCount]))
+                'from'      => ' FROM '  . implode(' '    , $this->removeNull($arFrom[$nUnionCount])),
+                'where'     => ' WHERE ' . $this->fixWhere(
+                            implode(' '  , $this->removeNull($arWhere[$nUnionCount]))
                 )
             );
         }
+        
+
+        
         return $arSqls;
     }//function createSql()
 
@@ -304,95 +367,116 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         $arRefVars      = array();
         $strTablePrefix = 't' . $this->nTableId;
 
+        require_once 'Erfurt/Sparql/Variable.php';
+
         /**
         *   SELECT part
         *   We do select only the columns we need for variables
         */
+        
+        require_once 'Erfurt/Sparql/Variable.php';
+        
         if (Erfurt_Sparql_Variable::isVariable($subject)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$subject])) {
                 //already selected -> add equality check
                 $bWhereEqualitySubject = true;
                 $this->arUsedVarTypes[$subject]['s'] = true;
             } else {
-                if (isset($this->arVarAssignments[$subject][0])) {
-                    $strTablePrefix = $this->arVarAssignments[$subject][0];
+                #if (isset($this->arVarAssignments[$subject][0])) {
+                #    $strTablePrefix = $this->arVarAssignments[$subject][0];
+                #}
+                if (!isset($this->arVarAssignments[$subject])) {
+                    $this->arVarAssignments[$subject] = array($strTablePrefix, 's');
                 }
-                $this->arVarAssignments[$subject] = array($strTablePrefix, 's');
+                
+                #$this->arVarAssignments[$subject] = array($strTablePrefix, 's');
+                $this->arVarAssignments[$subject][1] = 's';
                 $this->arUnionVarAssignments[$this->nUnionCount][$subject] = array($strTablePrefix, 's');
                 $this->arUsedVarTypes[$subject]['s'] = true;
-                if (self::isResultVar($subject, $arResultVars)) {
+
+                if ($this->isResultVar($subject, $arResultVars)) {
                     //new variable that needs to be selected
                     $arSelect[$subject] = $this->createVariableSelectArray(
                         's', $subject, $strTablePrefix
                     );
+
                     if (isset($this->arUsedVarAssignments[$subject])) {
-                        $arRefVars[$subject] = $strTablePrefix . '.subject';
+                        $arRefVars[$subject] = $strTablePrefix . '.s';
                     } else {
-                        $this->arUsedVarAssignments[$subject] = $strTablePrefix . '.subject';
+                        $this->arUsedVarAssignments[$subject] = $strTablePrefix . '.s';
                     }
                 }
             }
         }
-
+        
         if (Erfurt_Sparql_Variable::isVariable($predicate)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$predicate])) {
                 //already selected -> add equality check
                 $bWhereEqualityPredicate = true;
                 $this->arUsedVarTypes[$predicate]['p'] = true;
             } else {
-                if (isset($this->arVarAssignments[$predicate][0])) {
-                    $strTablePrefix = $this->arVarAssignments[$predicate][0];
+                #if (isset($this->arVarAssignments[$predicate][0])) {
+                #    $strTablePrefix = $this->arVarAssignments[$predicate][0];
+                #}
+                if (!isset($this->arVarAssignments[$predicate])) {
+                    $this->arVarAssignments[$predicate] = array($strTablePrefix, 'p');
                 }
-                $this->arVarAssignments[$predicate] = array($strTablePrefix, 'p');
+                
+                #$this->arVarAssignments[$predicate] = array($strTablePrefix, 'p');
+                $this->arVarAssignments[$predicate][1] = 'p';
                 $this->arUnionVarAssignments[$this->nUnionCount][$predicate] = array($strTablePrefix, 'p');
                 $this->arUsedVarTypes[$predicate]['p'] = true;
-                if (self::isResultVar($predicate, $arResultVars)) {
+                if ($this->isResultVar($predicate, $arResultVars)) {
                     $arSelect[$predicate] = $this->createVariableSelectArray(
                         'p', $predicate, $strTablePrefix
                     );
                     if (isset($this->arUsedVarAssignments[$predicate])) {
-                        $arRefVars[$predicate] = $strTablePrefix . '.predicate';
+                        $arRefVars[$predicate] = $strTablePrefix . '.p';
                     } else {
-                        $this->arUsedVarAssignments[$predicate] = $strTablePrefix . '.predicate';
+                        $this->arUsedVarAssignments[$predicate] = $strTablePrefix . '.p';
                     }
                 }
             }
         }
-
+        
         if (Erfurt_Sparql_Variable::isVariable($object)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$object])) {
                 //already selected -> add equality check
                 $bWhereEqualityObject = true;
                 $this->arUsedVarTypes[$object]['o'] = true;
             } else {
-                if (isset($this->arVarAssignments[$object][0])) {
-                    $strTablePrefix = $this->arVarAssignments[$object][0];
+                #if (isset($this->arVarAssignments[$object][0])) {
+                #    $strTablePrefix = $this->arVarAssignments[$object][0];
+                #}
+                if (!isset($this->arVarAssignments[$object])) {
+                    $this->arVarAssignments[$object] = array($strTablePrefix, 'o');
                 }
-                $this->arVarAssignments[$object] = array($strTablePrefix, 'o');
+                
+                $this->arVarAssignments[$object][1] = 'o';
                 $this->arUnionVarAssignments[$this->nUnionCount][$object] = array($strTablePrefix, 'o');
                 $this->arUsedVarTypes[$object]['o'] = true;
-                if (self::isResultVar($object, $arResultVars)) {
+                if ($this->isResultVar($object, $arResultVars)) {
                     $arSelect[$object] = $this->createVariableSelectArray(
                         'o', $object, $strTablePrefix
                     );
                     if (isset($this->arUsedVarAssignments[$object])) {
-                        $arRefVars[$object] = $strTablePrefix . '.object';
+                        $arRefVars[$object] = $strTablePrefix . '.o';
                     } else {
-                        $this->arUsedVarAssignments[$object] = $strTablePrefix . '.object';
+                        $this->arUsedVarAssignments[$object] = $strTablePrefix . '.o';
                     }
                 }
                 if (isset($this->query->varLanguages[$object])
                  && $this->query->varLanguages[$object] !== null
                 ) {
                     $strWhereEquality .=
-                        ' AND ' . $strTablePrefix . '.l_language = "'
+                        ' AND ' . $strTablePrefix . '.ol="'
                         . addslashes($this->query->varLanguages[$object]) . '"';
                 }
                 if (isset($this->query->varDatatypes[$object])
                  && $this->query->varDatatypes[$object] !== null
                 ) {
                     $strWhereEquality .=
-                        ' AND ' . $strTablePrefix . '.l_datatype = "'
+                        ' AND ' . $strTablePrefix . '.ol="'
                         . addslashes($this->query->varDatatypes[$object]) . '"';
                 }
             }
@@ -402,19 +486,19 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         * WhereEquality - needs to be done now because strTablePrefix may change
         */
         if ($bWhereEqualitySubject) {
-            $strWhereEquality .= ' AND ' . self::getSqlEqualityCondition(
+            $strWhereEquality .= ' AND ' . $this->getSqlEqualityCondition(
                             array($strTablePrefix, 's'),
                             $this->arVarAssignments[$subject]
                         );
         }
         if ($bWhereEqualityPredicate) {
-            $strWhereEquality .= ' AND ' . self::getSqlEqualityCondition(
+            $strWhereEquality .= ' AND ' . $this->getSqlEqualityCondition(
                             array($strTablePrefix, 'p'),
                             $this->arVarAssignments[$predicate]
                         );
         }
         if ($bWhereEqualityObject) {
-            $strWhereEquality .= ' AND ' . self::getSqlEqualityCondition(
+            $strWhereEquality .= ' AND ' . $this->getSqlEqualityCondition(
                             array($strTablePrefix, 'o'),
                             $this->arVarAssignments[$object]
                         );
@@ -431,30 +515,32 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             //normal join
             if (count($this->arModelIds) == 1) {
                 $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
-                            . ' ON t0.modelID = ' . $strTablePrefix . '.modelID';
+                            . ' ON t0.g=' . $strTablePrefix . '.g';
             } else if (count($this->arModelIds) > 1) {
                 $arIDs     = array();
                 foreach ($this->arModelIds as $nId) {
-                    $arIDs[] = $strTablePrefix . '.modelID = ' . intval($nId);
+                    $arIDs[] = $strTablePrefix . '.g=' . intval($nId);
                 }
                 $strFrom  = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
                           . ' ON (' . implode(' OR ', $arIDs) . ')';
             } else {
                 $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
-                            . ' ON t0.modelID = ' . $strTablePrefix . '.modelID';
+                            . ' ON t0.g=' . $strTablePrefix . '.g';
             }
 
             foreach ($arRefVars as $strRefVar => $strSqlVar) {
-                $strFrom .= ' AND ' . $this->arUsedVarAssignments[$strRefVar] . ' = ' . $strSqlVar;
-            }
 
+                $strFrom .= ' AND ' . $this->arUsedVarAssignments[$strRefVar] . '=' . $strSqlVar;
+            }
+            
             if ($graphPattern->getOptional() !== null) {
-                $strFrom .=  $this->getSqlCondition($subject  , $strTablePrefix, 'subject')
-                           . $this->getSqlCondition($predicate, $strTablePrefix, 'predicate')
-                           . $this->getSqlCondition($object   , $strTablePrefix, 'object')
+                $strFrom .=  $this->getSqlCondition($subject  , $strTablePrefix, 's')
+                           . $this->getSqlCondition($predicate, $strTablePrefix, 'p')
+                           . $this->getSqlCondition($object   , $strTablePrefix, 'o')
                            . $strWhereEquality;
             }
         }
+
 
 
         /**
@@ -462,11 +548,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         */
         if ($this->nUnionTriplePatternCount == 0) {
             if (count($this->arModelIds) == 1) {
-                $strWhere  = $strTablePrefix . '.modelID = ' . intval(reset($this->arModelIds));
+                $strWhere  = $strTablePrefix . '.g=' . intval(reset($this->arModelIds));
             } else if (count($this->arModelIds) > 1) {
                 $arIDs     = array();
                 foreach ($this->arModelIds as $nId) {
-                    $arIDs[] = $strTablePrefix . '.modelID = ' . intval($nId);
+                    $arIDs[] = $strTablePrefix . '.g=' . intval($nId);
                 }
                 $strWhere  = '(' . implode(' OR ', $arIDs) . ')';
             } else {
@@ -475,9 +561,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             }
         }
         if ($graphPattern->getOptional() === null || $this->nGraphPatternCount == 0) {
-            $strWhere .=  $this->getSqlCondition($subject  , $strTablePrefix, 'subject')
-                        . $this->getSqlCondition($predicate, $strTablePrefix, 'predicate')
-                        . $this->getSqlCondition($object   , $strTablePrefix, 'object')
+            $strWhere .=  $this->getSqlCondition($subject  , $strTablePrefix, 's')
+                        . $this->getSqlCondition($predicate, $strTablePrefix, 'p')
+                        . $this->getSqlCondition($object   , $strTablePrefix, 'o')
                         . $strWhereEquality;
         }
 
@@ -501,29 +587,33 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             if ($func != null) {
                 if ($func == 'datatype') {
                     if ($chType != 'o') {
+                        require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                         throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                             'datatype() works on objects only'
                         );
                     }
                     return array(
-                        $strTablePrefix . '.l_datatype as "' . $strTablePrefix . '.' . $this->getSqlVariableNameValue($var) . '"',
-                        '"r"' .                      ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameIs($var) . '"',
-                        '""' .                       ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameLanguage($var) . '"',
-                        '""' .                       ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameDatatype($var) . '"',
+                        $strTablePrefix . '.od as ' . $this->getSqlVariableNameValue($var),
+                        $strTablePrefix . '.od_r as ' . $this->getSqlVariableNameRef($var),
+                        '0 as ' . $this->getSqlVariableNameIs($var),
+                        'NULL as ' . $this->getSqlVariableNameLanguage($var),
+                        'NULL as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else if ($func == 'lang') {
                     if ($chType != 'o') {
+                        require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                         throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                             'lang() works on objects only'
                         );
                     }
                     return array(
-                        $strTablePrefix . '.l_language as "' . $strTablePrefix . '.' . $this->getSqlVariableNameValue($var) . '"',
-                        '"l"' .                      ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameIs($var) . '"',
-                        '""' .                       ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameLanguage($var) . '"',
-                        '""' .                       ' as "' . $strTablePrefix . '.' . $this->getSqlVariableNameDatatype($var) . '"',
+                        $strTablePrefix . '.ol as ' . $this->getSqlVariableNameValue($var),
+                        '2 as ' . $this->getSqlVariableNameIs($var),
+                        'NULL as ' . $this->getSqlVariableNameLanguage($var),
+                        'NULL as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else {
+                    require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                     throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported function for select "' . $func . '"'
                     );
@@ -534,21 +624,26 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
         switch ($chType) {
             case 's':
                 return array(
-                    $strTablePrefix . '.subject as "'    . $strTablePrefix . '.' . $this->getSqlVariableNameValue($varname) . '"',
-                    $strTablePrefix . '.subject_is as "' . $strTablePrefix . '.' . $this->getSqlVariableNameIs($varname) . '"'
+                    $strTablePrefix . '.s as ' . $this->getSqlVariableNameValue($varname),
+                    $strTablePrefix . '.st as ' . $this->getSqlVariableNameIs($varname),
+                    $strTablePrefix . '.s_r as ' . $this->getSqlVariableNameRef($varname)
                 );
             case 'p':
                 return array(
-                    $strTablePrefix . '.predicate as "' . $strTablePrefix . '.' . $this->getSqlVariableNameValue($varname) . '"'
+                    $strTablePrefix . '.p as ' . $this->getSqlVariableNameValue($varname),
+                    $strTablePrefix . '.p_r as ' . $this->getSqlVariableNameRef($varname)
                 );
             case 'o':
                 return array(
-                    $strTablePrefix . '.object as "'     . $strTablePrefix . '.' . $this->getSqlVariableNameValue($varname) . '"',
-                    $strTablePrefix . '.object_is as "'  . $strTablePrefix . '.' . $this->getSqlVariableNameIs($varname) . '"',
-                    $strTablePrefix . '.l_language as "' . $strTablePrefix . '.' . $this->getSqlVariableNameLanguage($varname) . '"',
-                    $strTablePrefix . '.l_datatype as "' . $strTablePrefix . '.' . $this->getSqlVariableNameDatatype($varname) . '"',
+                    $strTablePrefix . '.o as ' . $this->getSqlVariableNameValue($varname),
+                    $strTablePrefix . '.ot as ' . $this->getSqlVariableNameIs($varname),
+                    $strTablePrefix . '.o_r as ' . $this->getSqlVariableNameRef($varname)
+                    #$strTablePrefix . '.ol as ' . $this->getSqlVariableNameLanguage($varname),
+                    #$strTablePrefix . '.od as ' . $this->getSqlVariableNameDatatype($varname),
+                    #$strTablePrefix . '.od_r as ' . $this->getSqlVariableNameDatatypeRef($varname)
                 );
             default:
+                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unknown sentence type "' . $chType . "', one of (s,p,o) expected"
                 );
@@ -577,6 +672,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     */
     protected function createEqualSelects($arSelect)
     {
+
         $arNewSelect = array();
         if (count($arSelect) == 1) {
             if ($arSelect[0] == array(array())) {
@@ -587,10 +683,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             foreach ($arSelect[0] as $arTripleVars) {
                 $ar = array();
                 foreach ($arTripleVars as $arVarParts) {
-                    $ar[] = implode(', ', $arVarParts);
+                    $ar[] = implode(',', $arVarParts);
                 }
                 if (count($ar) > 0) {
-                    $arNewSelect[0][] = implode(', ', $ar);
+                    $arNewSelect[0][] = implode(',', $ar);
                 }
             }
             return $arNewSelect;
@@ -625,35 +721,45 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 if ($nCount == 0) {
                     //nothing of this variable in this union part
                     $ar[] = 'NULL as '
-                        . '"' . $this->arVarAssignments[$strVar][0] . '.' . $this->arVarAssignments[$strVar]['sql_value'] . '"';
+                        . $this->arVarAssignments[$strVar]['sql_value'];
                 }
                 if ((
                     isset($this->arUsedVarTypes[$strVar]['o'])
                     || isset($this->arUsedVarTypes[$strVar]['s'])
                     ) && $nCount < 2
                 ) {
-                    //it's a subject or object, but we don't want the type
+                    if (isset($this->arVarAssignments[$strVar]['sql_is'])) {
+                        //it's a subject or object, but we don't want the type
+                        $ar[] = 'NULL as '
+                            . $this->arVarAssignments[$strVar]['sql_is'];
+                    }
+                    
                     $ar[] = 'NULL as '
-                        . '"' . $this->arVarAssignments[$strVar][0] . '.' . $this->arVarAssignments[$strVar]['sql_is'] . '"';
+                        . $this->arVarAssignments[$strVar]['sql_ref'];
+                    
                 }
                 if (isset($this->arUsedVarTypes[$strVar]['o']) && $nCount < 4) {
                     //it's a subject or object, but we don't want the type
-                    if (isset($this->arVarAssignments[$strVar]['sql_lang'])) {
-                        $strColLanguage = $this->arVarAssignments[$strVar]['sql_lang'];
-                    } else {
-                        $strColLanguage = 'dummyLang';
-                    }
-                    if (isset($this->arVarAssignments[$strVar]['sql_type'])) {
-                        $strColDatatype = $this->arVarAssignments[$strVar]['sql_type'];
-                    } else {
-                        $strColDatatype = 'dummyType';
-                    }
-                    $ar[] = 'NULL as '
-                        . '"' . $this->arVarAssignments[$strVar][0] . '.' . $strColLanguage . '"';
-                    $ar[] = 'NULL as '
-                        . '"' . $this->arVarAssignments[$strVar][0] . '.' . $strColDatatype . '"';
+                    #if (isset($this->arVarAssignments[$strVar]['sql_lang'])) {
+                    #    $strColLanguage = $this->arVarAssignments[$strVar]['sql_lang'];
+                    #} else {
+                    #    $strColLanguage = 'dL';
+                    #}
+                    #if (isset($this->arVarAssignments[$strVar]['sql_type'])) {
+                    #    $strColDatatype = $this->arVarAssignments[$strVar]['sql_type'];
+                    #    $strColDatatypeRef = $this->arVarAssignments[$strVar]['sql_dt_ref'];
+                    #} else {
+                    #    $strColDatatype = 'dD';
+                    #    $strColDatatypeRef = 'dDR';
+                    #}
+                    #$ar[] = 'NULL as '
+                    #    . $strColLanguage;
+                    #$ar[] = 'NULL as '
+                    #    . $strColDatatype;
+                    #$ar[] = 'NULL as '
+                    #    . $strColDatatypeRef;
                 }
-                $ars[] = implode(', ', $ar);
+                $ars[] = implode(',', $ar);
             }
             $arNewSelect[$nUnionCount] = $ars;
         }
@@ -683,6 +789,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     */
     function getSqlCondition($bject, $strTablePrefix, $strType)
     {
+        require_once 'Erfurt/Sparql/Variable.php';
         if (is_string($bject)) {
             if (Erfurt_Sparql_Variable::isVariable($bject)) {
                 //variable?
@@ -697,29 +804,30 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 $value = $this->_qstr($bject);
             }
             //literal
-            return ' AND ' . $strTablePrefix . '.' . $strType . ' = ' . $value;
+            return ' AND ' . $strTablePrefix . '.' . $strType . '=' . $value;
         }
 
         if ($bject instanceof Erfurt_Rdf_Resource && $bject->isBlankNode()) {
             //Blank node
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'FIXME: Querying for blank nodes not supported'
             );
 
         } else if ($bject instanceof Erfurt_Rdf_Resource) {
             //Resource
-            $r = ' AND ' . $strTablePrefix . '.' . $strType . ' = '
+            $r = ' AND ' . $strTablePrefix . '.' . $strType . '='
                 . $this->_qstr($bject->getUri());
-            if ($strType !== 'predicate') {
-                $r .= ' AND ' . $strTablePrefix . '.' . $strType . '_is ='
-                . ' "r"';
-            }
+            if ($strType !== 'p') {
+                $r .= ' AND ' . $strTablePrefix . '.' . $strType . 't=0';
+            } 
+            
             return $r;
 
         } else if ($bject instanceof Erfurt_Rdf_Literal) {
             //Literal
             //I'm doubling Filter code here, but what the hell
-            $strColDatatype = $strTablePrefix . '.l_datatype';
+            $strColDatatype = $strTablePrefix . '.od';
             if ($bject->getDatatype() == 'http://www.w3.org/2001/XMLSchema#integer'
              || $bject->getdatatype() == 'http://www.w3.org/2001/XMLSchema#double'
             ) {
@@ -729,34 +837,37 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
                 $strVariable = $strTablePrefix . '.' . $strType;
                 $strValue    = $this->_qstr($bject->getLabel());
             }
-            $r = ' AND ' . $strVariable . ' = ' . $strValue;
-            if ($strType !== 'predicate') {
-                $r .= ' AND ' . $strTablePrefix . '.' . $strType . '_is ='
-                . ' "l"';
+            $r = ' AND ' . $strVariable . '=' . $strValue;
+            if ($strType !== 'p') {
+                $r .= ' AND ' . $strTablePrefix . '.' . $strType . 't=2';
             }
 
-            if ($strType == 'object') {
+            if ($strType == 'o') {
                 if ($bject->getDatatype() == '' || $bject->getDatatype() == 'http://www.w3.org/2001/XMLSchema#string') {
                     //string
                     $r .= ' AND ('
-                        . $strColDatatype . ' = ""'
-                        . ' OR ' . $strColDatatype . ' = "http://www.w3.org/2001/XMLSchema#string"'
+                        . $strColDatatype . ' IS NULL'
+                        . ' OR ' . $strColDatatype . '="http://www.w3.org/2001/XMLSchema#string"'
                         . ')';
                 } else {
-                    $r .= ' AND ' . $strColDatatype . ' = "'
+                    $r .= ' AND ' . $strColDatatype . '="'
                         . $bject->getDatatype()
                         . '"';
                 }
             }
 
             if ($bject->getLanguage() !== false) {
-                $strColLanguage = $strTablePrefix . '.l_language';
-                $r .= ' AND ' . $strColLanguage . ' = '
+                $strColLanguage = $strTablePrefix . '.ol';
+                $r .= ' AND ' . $strColLanguage . '='
                    . $this->_qstr($bject->getLanguage());
+            } else {
+                $strColLanguage = $strTablePrefix . '.ol';
+                $r .= ' AND ' . $strColLanguage . ' IS NULL';
             }
             return $r;
 
         } else {
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Unsupported sentence part: ' . get_class($bject)
             );
@@ -775,7 +886,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     *   @param array    $arOld  array($strTablePrefix, $strType = s|p|o)
     *   @return string
     */
-    protected static function getSqlEqualityCondition($arNew, $arOld)
+    protected function getSqlEqualityCondition($arNew, $arOld)
     {
         $chTypeNew         = $arNew[1]; $chTypeOld         = $arOld[1];
         $strTablePrefixNew = $arNew[0]; $strTablePrefixOld = $arOld[0];
@@ -784,32 +895,35 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
             //just check value
             //FIXME: it might be I need to check for resource type in object and subject
             return
-                  $strTablePrefixNew . '.' . self::$arTableColumnNames[$chTypeNew]['value']
-                . ' = '
-                . $strTablePrefixOld . '.' . self::$arTableColumnNames[$chTypeOld]['value']
+                  $strTablePrefixNew . '.' . $this->arTableColumnNames[$chTypeNew]['value']
+                . '='
+                . $strTablePrefixOld . '.' . $this->arTableColumnNames[$chTypeOld]['value']
                 ;
         } else if ($chTypeNew == 's' || $chTypeOld == 's') {
             //check value and type
             return
-                  $strTablePrefixNew . '.' . self::$arTableColumnNames[$chTypeNew]['value']
-                . ' = '
-                . $strTablePrefixOld . '.' . self::$arTableColumnNames[$chTypeOld]['value']
+                  $strTablePrefixNew . '.' . $this->arTableColumnNames[$chTypeNew]['value']
+                . '='
+                . $strTablePrefixOld . '.' . $this->arTableColumnNames[$chTypeOld]['value']
                 . ' AND '
-                . $strTablePrefixNew . '.' . self::$arTableColumnNames[$chTypeNew]['is']
-                . ' = '
-                . $strTablePrefixOld . '.' . self::$arTableColumnNames[$chTypeOld]['is']
+                . $strTablePrefixNew . '.' . $this->arTableColumnNames[$chTypeNew]['is']
+                . '='
+                . $strTablePrefixOld . '.' . $this->arTableColumnNames[$chTypeOld]['is']
                 ;
         } else {
             //two objects -> check everything
             return
-                  $strTablePrefixNew . '.object = '     . $strTablePrefixOld . '.object'
+                  $strTablePrefixNew . '.o=' . $strTablePrefixOld . '.o'
                 . ' AND '
-                . $strTablePrefixNew . '.object_is = '  . $strTablePrefixOld . '.object_is'
-                . ' AND '
-                . $strTablePrefixNew . '.l_language = ' . $strTablePrefixOld . '.l_language'
-                . ' AND '
-                . $strTablePrefixNew . '.l_datatype = ' . $strTablePrefixOld . '.l_datatype'
-                ;
+                . $strTablePrefixNew . '.ot='  . $strTablePrefixOld . '.ot'
+                . ' AND ('
+                . $strTablePrefixNew . '.ol=' . $strTablePrefixOld . '.ol'
+                . ' OR ('
+                . $strTablePrefixNew . '.ol IS NULL AND ' . $strTablePrefixOld . '.ol IS NULL))'
+                . ' AND ('
+                . $strTablePrefixNew . '.od=' . $strTablePrefixOld . '.od'
+                . ' OR ('
+                . $strTablePrefixNew . '.od IS NULL AND ' . $strTablePrefixOld . '.od IS NULL))';
         }
     }//protected static function getSqlEqualityCondition($arNew, $arOld)
 
@@ -824,7 +938,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     *   @param array    $arResultVars   Array with result variables
     *   @return boolean     true if it is a result variable
     */
-    protected static function isResultVar($strVar, &$arResultVars)
+    protected function isResultVar($strVar, &$arResultVars)
     {
         foreach ($arResultVars as $var) {
             if ($var == '*') {
@@ -909,7 +1023,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     *   @param array $array     Some array
     *   @return array $array without the NULL values.
     */
-    protected static function removeNull($array)
+    protected function removeNull($array)
     {
         foreach ($array as $key => &$value) {
             if ($value === null) {
@@ -936,18 +1050,14 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
 
 
 
-    protected function getSqlVariableName($var)
+    protected function getSqlVariableName($var, $suffix = '')
     {
         $strSparqlVar = (string)$var;
-        if (!isset($this->arVarAssignments[$strSparqlVar]['sqlname'])) {
-            if (preg_match('/[a-zA-Z0-9]+/', substr($strSparqlVar, 1))) {
-                $strName = 'v_' . substr($strSparqlVar, 1);
-            } else {
-                $strName = 'va_' . $this->nSqlVariableNameCount++;
-            }
-            $this->arVarAssignments[$strSparqlVar]['sqlname'] = $strName;
+        if (!isset($this->arVarAssignments[$strSparqlVar][('sqlname'.$suffix)])) {
+            $strName = 'v' . $this->nSqlVariableNameCount++;
+            $this->arVarAssignments[$strSparqlVar][('sqlname'.$suffix)] = $strName;
         }
-        return $this->arVarAssignments[$strSparqlVar]['sqlname'];
+        return $this->arVarAssignments[$strSparqlVar][('sqlname'.$suffix)];
     }//protected function getSqlVariableName($var)
 
 
@@ -955,8 +1065,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     protected function getSqlVariableNameValue($var)
     {
         $strSparqlVar = (string)$var;
-        $this->arVarAssignments[$strSparqlVar]['sql_value'] =
-            'value_' . $this->getSqlVariableName($var);
+        $this->arVarAssignments[$strSparqlVar]['sql_value'] = $this->getSqlVariableName($var, 'value');
         return $this->arVarAssignments[$strSparqlVar]['sql_value'];
     }//protected function getSqlVariableNameValue($var)
 
@@ -965,8 +1074,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     protected function getSqlVariableNameIs($var)
     {
         $strSparqlVar = (string)$var;
-        $this->arVarAssignments[$strSparqlVar]['sql_is'] =
-            'is_' . $this->getSqlVariableName($var);
+        $this->arVarAssignments[$strSparqlVar]['sql_is'] = $this->getSqlVariableName($var, 'is');
         return $this->arVarAssignments[$strSparqlVar]['sql_is'];
     }//protected function getSqlVariableNameIs($var)
 
@@ -975,8 +1083,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     protected function getSqlVariableNameLanguage($var)
     {
         $strSparqlVar = (string)$var;
-        $this->arVarAssignments[$strSparqlVar]['sql_lang'] =
-            'lang_' . $this->getSqlVariableName($var);
+        $this->arVarAssignments[$strSparqlVar]['sql_lang'] = $this->getSqlVariableName($var, 'lang');
         return $this->arVarAssignments[$strSparqlVar]['sql_lang'];
     }//protected function getSqlVariableNameLanguage($var)
 
@@ -985,17 +1092,27 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Rap extends Erfurt_Sparql_Engi
     protected function getSqlVariableNameDatatype($var)
     {
         $strSparqlVar = (string)$var;
-        $this->arVarAssignments[$strSparqlVar]['sql_type'] =
-            'type_' . $this->getSqlVariableName($var);
+        $this->arVarAssignments[$strSparqlVar]['sql_type'] = $this->getSqlVariableName($var, 'dt');
         return $this->arVarAssignments[$strSparqlVar]['sql_type'];
     }//protected function getSqlVariableNameDatatype($var)
+    
+    protected function getSqlVariableNameDatatypeRef($var)
+    {
+        $strSparqlVar = (string)$var;
+        $this->arVarAssignments[$strSparqlVar]['sql_dt_ref'] = $this->getSqlVariableName($var, 'dt_ref');
+        return $this->arVarAssignments[$strSparqlVar]['sql_dt_ref'];
+    }//protected function getSqlVariableNameDatatype($var)
 
+    protected function getSqlVariableNameRef($var)
+    {
+        $strSparqlVar = (string)$var;
+        $this->arVarAssignments[$strSparqlVar]['sql_ref'] = $this->getSqlVariableName($var, 'ref');
+        return $this->arVarAssignments[$strSparqlVar]['sql_ref'];
+    }
 
 
     public function setStatementsTable($tblStatements)
     {
         $this->tblStatements = $tblStatements;
     }//public function setStatementsTable($tblStatements)
-
-}//class SparqlEngineDb_SqlGenerator
-?>
+}

@@ -162,6 +162,17 @@ class Erfurt_App
         return self::$_instance;
     }
     
+    public function getTempDir()
+    {
+        $tmpDir = EF_BASE . 'tmp/';
+        
+        if (is_readable($tmpDir) && is_writable($tmpDir)) {
+            return $tmpDir;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * @throws Erfurt_Exception Throws an exception if the connection to the backend server fails.
      */
@@ -174,14 +185,28 @@ class Erfurt_App
         $config = $inst->getConfig();   
         if ($config->debug == true) {
             error_reporting(E_ALL | E_STRICT);
-            define('_EFDEBUG', 1);
+            if (!defined('_EFDEBUG')) {
+                define('_EFDEBUG', 1);
+            }
 // TODO handle timezone settings
             date_default_timezone_set('Europe/Berlin');
             $config->efloglevel = 7;
         }
                 
-        // Access the store in order to test the database connection.
-        $inst->getStore();
+        try {
+            // Access the store in order to test the database connection.
+            $inst->getStore();
+        } catch (Erfurt_Store_Adapter_Exception $e) {
+            if ($e->getCode() === 10) {
+                // In this case the db environment was not initialized... It should be initialized now.
+                // Do nothing.
+            } else {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception($e->getMessage(), -1);
+            }
+        } 
+        
+        $inst->getStore()->checkSetup();
         
 // TODO handle session start before output
         $inst->getAuth()->hasIdentity();
@@ -190,7 +215,7 @@ class Erfurt_App
     }
     
     public function loadConfig(Zend_Config $config = null) {
-        
+       
         // load the default erfurt config
         require_once 'Zend/Config/Ini.php';
         $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
@@ -225,11 +250,11 @@ class Erfurt_App
      * @throws Erfurt_Exception
      */
     public function getLog() {
-        
+ 
         if (!$this->_log) {
             $config = $this->getConfig();
-                
-            if ($config->efloglevel != false) {
+        
+            if ((boolean)$config->efloglevel != false) {
                 $logDir = EF_BASE . 'logs/'; 
                 
                 if (!is_writable($logDir)) {
@@ -316,9 +341,6 @@ class Erfurt_App
         
             require_once 'Erfurt/Store.php';
             $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
-            
-            // check whether setup is aready done and if not initialize the environment
-            $this->_store->checkSetup();
         }
         
         return $this->_store;

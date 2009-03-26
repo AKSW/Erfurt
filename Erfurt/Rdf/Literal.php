@@ -4,8 +4,8 @@ require_once 'Erfurt/Rdf/Node.php';
 class Erfurt_Rdf_Literal extends Erfurt_Rdf_Node {
 	
 	protected $_label = false;
-	protected $_lang = '';
-	protected $_datatype = '';
+	protected $_lang = false;
+	protected $_datatype = false;
 	
 	protected function __construct($label) {
 		

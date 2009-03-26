@@ -1,0 +1,1374 @@
+<?php
+require_once 'Erfurt/Store/Adapter/Interface.php';
+require_once 'Erfurt/Store/Sql/Interface.php';
+
+/**
+ * Erfurt RDF Store - Adapter for the {@link http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/ RAP} schema (modified) with 
+ * Zend_Db database abstraction layer.
+ * 
+ * @package    store
+ * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version    $Id: RapZendDb.php 2532 2009-02-06 08:15:41Z pfrischmuth $
+ */
+class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
+{
+    // ------------------------------------------------------------------------
+    // --- Private properties -------------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    private $_modelCache = array();
+    private $_modelInfoCache = false;
+    
+    private $_dbConn = false;
+    
+    /** @var array */
+    private $_titleProperties = array(
+        'http://www.w3.org/2000/01/rdf-schema#label', 
+        'http://purl.org/dc/elements/1.1/title'
+    );
+    
+    // ------------------------------------------------------------------------
+    // --- Magic methods ------------------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Constructor
+     * 
+     * @param array $adapterOptions This adapter class needs the following parameters:
+     *                  - 'host'
+     *                  - 'username'
+     *                  - 'password'                  
+     *                  - 'dbname'
+     */
+    public function __construct($adapterOptions = array()) 
+    {
+        $adapter    = $adapterOptions['adapter'];
+        $host       = $adapterOptions['host'];
+        $username   = $adapterOptions['username'];
+        $password   = $adapterOptions['password'];
+        $dbname     = $adapterOptions['dbname'];
+        
+        $adapterOptions = array(
+            'host'      => $host,
+            'username'  => $username,
+            'password'  => $password,
+            'dbname'    => $dbname,
+            'profiler'  => true
+        );
+        
+        switch (strtolower($adapter)) {
+            case 'mysqli':
+                require_once 'Zend/Db/Adapter/Mysqli.php';
+                $this->_dbConn = new Zend_Db_Adapter_Mysqli($adapterOptions);
+                break;
+            case 'db2':
+                require_once 'Zend/Db/Adapter/Db2.php';
+                $this->_dbConn = new Zend_Db_Adapter_Db2($adapterOptions);
+                break;
+            case 'oracle':
+                require_once 'Zend/Db/Adapter/Oracle.php';
+                $this->_dbConn = new Zend_Db_Adapter_Oracle($adapterOptions);
+                break;
+            case 'pdo_ibm':
+                require_once 'Zend/Db/Adapter/Pdo/Ibm.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Ibm($adapterOptions);
+                break;
+            case 'pdo_mssql':
+                require_once 'Zend/Db/Adapter/Pdo/Mssql.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Mssql($adapterOptions);
+                break;
+            case 'pdo_mysql':
+                require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($adapterOptions);
+                break;
+            case 'pdo_oci':
+                require_once 'Zend/Db/Adapter/Pdo/Oci.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Oci($adapterOptions);
+                break;
+            case 'pdo_pgsql':
+                require_once 'Zend/Db/Adapter/Pdo/Pqsql.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Pgsql($adapterOptions);
+                break;
+            case 'pdo_sqlite':
+                require_once 'Zend/Db/Adapter/Pdo/Sqlite.php';
+                $this->_dbConn = new Zend_Db_Adapter_Pdo_Sqlite($adapterOptions);
+                break;
+            default:
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Given database adapter is not supported by Zend_Db', -1);
+        }
+        
+        try {
+            // try to initialize the connection
+            $this->_dbConn->getConnection();
+        } catch (Zend_Db_Adapter_Exception $e) {
+            // maybe wrong login credentials or db-server not running?!
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Could not connect to database.', -1);
+        } catch (Zend_Exception $e) {
+            // maybe a needed php extension is not loaded?!
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
+        }
+        
+        // we want indexed results
+        //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
+                
+        // load title properties for model titles
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
+        }
+        
+        try {
+            // try to fetch model and namespace infos... if all tables are present this should not lead to an error.
+            $this->_fetchModelInfos();
+        } catch (Erfurt_Exception $e) {
+            // error while fetching model and namespace infos... should only be the case if the tables aren't present,
+            // for db connection is already established (in constructor)... so let's check for tables
+            if (!$this->_isSetup()) {
+                $this->_createTables();
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception('Database environment was not initialized.', 10);
+            } else {
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.', -1);
+            }   
+        }
+    }
+    
+    public function __destruct() 
+    {   
+        //var_dump($this->_dbConn);exit;
+        //$this->_dbConn->closeConnection();
+    }
+    
+    // ------------------------------------------------------------------------
+    // --- Public methods (derived from Erfurt_Store_Adapter_Abstract) --------
+    // ------------------------------------------------------------------------
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function addMultipleStatements($graphUri, array $statementsArray, $options = array())
+    {
+        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        
+        $this->_dbConn->beginTransaction();
+        
+        $counter = 0;
+        foreach ($statementsArray as $subject => $predicatesArray) {
+            foreach ($predicatesArray as $predicate => $objectsArray) {
+                foreach ($objectsArray as $object) {
+                    // check whether the subject is a blank node
+                    if (substr($subject, 0, 2) === '_:') {
+                        $subject = substr($subject, 2);
+                        $subjectIs = '1';
+                    } else {
+                        $subjectIs = '0';
+                    }
+
+                    // check the type of the object
+                    if ($object['type'] === 'uri') {
+                        $objectIs = '0';
+                        $lang = false;
+                        $dType = false;
+                    } else if ($object['type'] === 'bnode') {
+                        $objectIs = '1';
+                        $lang = false;
+                        $dType = false;
+                    } else {
+                        $objectIs = '2';
+                        $lang = isset($object['lang']) ? $object['lang'] : false;
+                        $dType = isset($object['datatype']) ? $object['datatype'] : false;
+                    }
+                    
+                    $sRef = false;
+                    if (strlen($subject) > $this->_getSchemaRefThreshold()) {
+                        $subjectHash = md5($subject);
+                        
+                        try {
+                            $sRef = $this->_insertValueInto('ef_uri', $graphId, $subject, $subjectHash);
+                        } catch (Erfurt_Store_Adapter_Exception $e) {
+                            $this->rollback();
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
+                            throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+                        }
+                        
+                        $subject = $subjectHash;
+                    }
+                    
+                    $pRef = false;
+                    if (strlen($predicate) > $this->_getSchemaRefThreshold()) {
+                        $predicateHash = md5($predicate);
+                        
+                        try {
+                            $pRef = $this->_insertValueInto('ef_uri', $graphId, $predicate, $predicateHash);
+                        } catch (Erfurt_Store_Adapter_Exception $e) {
+                            $this->rollback();
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
+                            throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+                        }
+                        
+                        $predicate = $predicateHash;
+                    }
+                    
+                    $oRef = false;
+                    if (strlen($object['value']) > $this->_getSchemaRefThreshold()) {
+                        $objectHash = md5($object['value']);
+                        
+                        if ($object['type'] === 'literal') {
+                            $tableName = 'ef_lit';
+                        } else {
+                            $tableName = 'ef_uri';
+                        }
+                        
+                        try {
+                            $oRef = $this->_insertValueInto($tableName, $graphId, $object['value'], $objectHash);
+                        } catch (Erfurt_Store_Adapter_Exception $e) {
+                            $this->rollback();
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
+                            throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+                        }
+                        
+                        $object['value'] = $objectHash;
+                    }
+                    
+                    $data = array(
+                        'g'     => $graphId,
+                        's'     => $subject,
+                        'p'     => $predicate,
+                        'o'     => $object['value'],
+                        'st'    => $subjectIs,
+                        'ot'    => $objectIs
+                    );
+                    
+                    if ($sRef !== false) {
+                        $data['s_r'] = $sRef;
+                    }
+                    if ($pRef !== false) {
+                        $data['p_r'] = $pRef;
+                    }
+                    if ($oRef !== false) {
+                        $data['o_r'] = $oRef;
+                    }
+                    if ($lang !== false) {
+                        $data['ol'] = $lang;
+                    }
+                    if ($dType !== false) {
+                        if (strlen($dType) > $this->_getSchemaRefThreshold()) {
+                            $dTypeHash = md5($dType);
+                            
+                            try {
+                                $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
+                            } catch (Erfurt_Store_Adapter_Exception $e) {
+                                $this->rollback();
+                                require_once 'Erfurt/Store/Adapter/Exception.php';
+                                throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+                            }
+                            
+                            $data['od']   = $dTypeHash;
+                            $data['od_r'] = $dtRef;
+                            
+                        } else {
+                            $data['od'] = $dType;
+                        }
+                    }
+
+                    try {
+                        $this->_dbConn->insert('ef_stmt', $data);
+                        $counter++;
+                    } catch (Exception $e) {
+                        if ($this->_getNormalizedErrorCode() === 1000) {
+                            continue;
+                        } else {
+                            $this->_dbConn->rollback();
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
+                            throw new Erfurt_Store_Adapter_Exception('Bulk insertion of statements failed: ' .
+                                            $this->_dbConn->getConnection()->error);
+                        } 
+                    }    
+                }
+            }
+        }
+            
+        // if everything went ok... commit the changes to the database
+        $this->_dbConn->commit();
+        
+        if ($counter > 100) {
+            $this->_optimizeTables();
+        }
+    }
+    
+    protected function _getNormalizedErrorCode() 
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            switch($this->_dbConn->getConnection()->errno) {
+                case 1062: 
+                    // duplicate entry
+                    return 1000;
+            }
+        } else {
+            return -1;
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function addStatement($graphUri, $subject, $predicate, $object, 
+            $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
+    {
+        if ($options['subject_type'] === Erfurt_Store::TYPE_BLANKNODE) {
+            if (substr($subject, 0, 2) !== '_:') {
+                $subject = '_:' . $subject;
+            }
+            
+        }
+        if ($options['object_type'] === Erfurt_Store:: TYPE_BLANKNODE) {
+            if (substr($object, 0, 2) !== '_:') {
+                $object = '_:' . $object;
+            }
+        } 
+        
+        $statementArray = array();
+        $statementArray["$subject"] = array();
+        $statementArray["$subject"]["$predicate"] = array();
+        $statementArray["$subject"]["$predicate"][] = array(
+            'value' => $object
+        );
+        
+        if ($options['object_type'] === Erfurt_Store:: TYPE_BLANKNODE) {
+            $statementArray["$subject"]["$predicate"][0]['type'] = 'bnode';
+        } else if ($options['object_type'] === Erfurt_Store:: TYPE_LITERAL) {
+            $statementArray["$subject"]["$predicate"][0]['type'] = 'literal';
+        } else {
+            $statementArray["$subject"]["$predicate"][0]['type'] = 'uri';
+        }
+        
+        if (isset($options['literal_language'])) {
+            $statementArray["$subject"]["$predicate"][0]['lang'] = $options['literal_language'];
+        }
+        if (isset($options['literal_datatype'])) {
+            $statementArray["$subject"]["$predicate"][0]['datatype'] = $options['literal_datatype'];
+        }
+        
+        try {
+            $this->addMultipleStatements($graphUri, $statementArray);
+        } catch (Erfurt_Store_Adapter_Exception $e) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Insertion of statement failed:' . 
+                            $e->getMessage());
+        }
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function createTable($tableName, array $columns) 
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTableMysql($tableName, $columns);
+        }	    
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
+    {
+        $modelId = $this->_modelInfoCache[$graphUri]['modelId'];
+        
+        if ($subject !== null && strlen($subject) > $this->_getSchemaRefThreshold()) {
+            $subject = md5($subject);
+        } 
+        
+        if ($predicate !== null && strlen($predicate) > $this->_getSchemaRefThreshold()) {
+            $predicate = md5($predicate);
+        } 
+        
+        if ($object !== null && strlen($object) > $this->_getSchemaRefThreshold()) {
+            $object = md5($object);
+        } 
+        
+        $whereString = '1';
+        
+        // determine the rows, which should be deleted by the given parameters
+        if ($subject !== null) {
+            $whereString .= " AND s = '$subject'";
+        }
+        if ($predicate !== null) {
+            $whereString .= " AND p = '$predicate'";
+        }
+        if ($object !== null) {
+            $whereString .= " AND o = '$object'";
+        }
+        if (isset($options['subject_type'])) {
+            switch ($options['subject_type']) {
+                case Erfurt_Store::TYPE_IRI:
+                    $whereString .= ' AND st = 0';
+                    break;
+                case Erfurt_Store::TYPE_BLANKNODE:
+                    $whereString .= ' AND st = 1';
+                    break;
+            }
+        }
+        if (isset($options['object_type'])) {
+            switch ($options['object_type']) {
+                case Erfurt_Store::TYPE_IRI:
+                    $whereString .= ' AND ot = 0';
+                    break;
+                case Erfurt_Store::TYPE_LITERAL:
+                    $whereString .= ' AND ot = 2';
+                    break;
+                case Erfurt_Store::TYPE_BLANKNODE:
+                    $whereString .= ' AND ot = 1';
+                    break;
+            }
+        }
+        if (isset($options['literal_language'])) {
+            $whereString .= ' AND ol = "' . $options['literal_language'] . '"';
+        }
+        if (isset($options['literal_datatype'])) {
+            if (strlen($options['literal_datatype']) > $this->_getSchemaRefThreshold()) {
+                $whereString .= ' AND od = "' . md5($options['literal_datatype']) . '"';
+            } else {
+                $whereString .= ' AND od = "' . $options['literal_datatype'] . '"';
+            }
+        }
+        
+        // remove the specified statements from the database
+        $this->_dbConn->delete('ef_stmt', $whereString);   
+        
+        // Clean up ef_uri and ef_lit table
+        $this->_cleanUpValueTables($graphUri);
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function deleteMultipleStatements($graphUri, array $statementsArray)
+    {
+// TODO
+throw new Exception('Not implemented yet.');
+        $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
+        
+        $this->_dbConn->beginTransaction();
+        try {
+            foreach ($statementsArray as $subject => $predicatesArray) {
+                foreach ($predicatesArray as $predicate => $objectsArray) {
+                    foreach ($objectsArray as $object) {
+                        $whereString = 'modelID = ' . $modelId . ' ';
+                        
+                        // check whether the subject is a blank node
+                        if (substr($subject, 0, 2) === '_:') {
+                            $subject = substr($subject, 2);
+                            $whereString .= 'AND subject_is = "b" ';
+                        } else {
+                            $whereString .= 'AND subject_is = "r" ';
+                        }
+
+                        // check the type of the object
+                        if ($object['type'] === 'uri') {
+                            $whereString .= 'AND object_is = "r" ';
+                        } else if ($object['type'] === 'bnode') {
+                            $whereString .= 'AND object_is = "b" ';
+                        } else {
+                            $whereString .= 'AND object_is = "l" ';
+                            $whereString .= isset($object['lang']) ? 'AND l_language ="' . $object['lang'] . '" ' : '';
+                            $whereString .= isset($object['datatype']) ? 'AND l_datatype ="' . $object['datatype'] . 
+                                            '" ' : '';
+                        }
+
+                        $whereString .= 'AND subject = "' . $subject . '" ';
+                        $whereString .= 'AND predicate = "' . $predicate . '" ';
+                        $whereString .= 'AND object = "' . $object . '" ';
+                        
+                        $this->_dbConn->delete('statements', $whereString);
+                    }
+                }
+            }
+            
+            // if everything went ok... commit the changes to the database
+            $this->_dbConn->commit();
+        } catch (Exception $e) {
+            // something went wrong... rollback
+            $this->_dbConn->rollback();
+            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function deleteModel($graphUri) 
+    {
+        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        
+        // remove all rows with the specified modelID from the models, statements and namespaces tables
+        $this->_dbConn->delete('ef_graph', "id = $graphId");
+        $this->_dbConn->delete('ef_stmt', "g = $graphId");
+        $this->_dbConn->delete('ef_ns', "g = $graphId");
+        $this->_dbConn->delete('ef_uri', "g = $graphId");
+        $this->_dbConn->delete('ef_lit', "g = $graphId");
+        
+        // invalidate the cache and fetch model infos again
+        require_once 'Erfurt/App.php';
+        $cache = Erfurt_App::getInstance()->getCache();
+        $tags =  array('model_info', $this->_modelInfoCache[$modelIri]['modelId']);
+        #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
+        $this->_fetchModelInfos();
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function exportRdf($modelIri, $serializationType = 'xml', $filename = false)
+    {
+        throw new Exception('Not implemented yet.');
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getAvailableModels($withTitle = false) 
+    {    
+        $models = array();
+        foreach ($this->_modelInfoCache as $mInfo) {
+            $m = array(
+                'modelIri'  => $mInfo['modelIri'],
+            );
+                
+            if ($withTitle === true) {
+// TODO add title here
+                if (isset($mInfo['title'])) {
+                    $m['label'] = $mInfo['title'];
+                }
+            }
+                
+            $models[$mInfo['modelIri']] = $m;   
+        }
+        
+        return $models;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getBlankNodePrefix() 
+    {
+        return 'bNode';
+    }
+    
+    
+    /**
+     * Recursively gets owl:imported model IRIs starting with $modelIri as root.
+     *
+     * @param string $modelIri
+     */
+    public function getImportsClosure($modelIri) 
+    {
+        if (isset($this->_modelInfoCache["$modelIri"]['imports'])) {
+            return $this->_modelInfoCache["$modelIri"]['imports'];
+        } else {
+            return array();
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getModel($modelIri) 
+    {
+        // if model is already in cache return the cached value
+        if (isset($this->_modelCache[$modelIri])) {
+            return $this->_modelCache[$modelIri];
+        }
+
+        // choose the right type for the model instance and instanciate it
+        if ($this->_modelInfoCache[$modelIri]['type'] === 'owl') {
+            require_once 'Erfurt/Owl/Model.php';
+            $m = new Erfurt_Owl_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+        } else if ($this->_modelInfoCache[$modelIri]['type'] === 'rdfs') {
+            require_once 'Erfurt/Rdfs/Model.php';
+            $m = new Erfurt_Rdfs_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+        } else {
+            require_once 'Erfurt/Rdf/Model.php';
+            $m = new Erfurt_Rdf_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+        }
+        
+        $this->_modelCache[$modelIri] = $m;
+        return $m;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */ 
+    public function getNewModel($graphUri, $baseUri = '', $type = 'owl') 
+    {    
+        $data = array(
+            'uri'  => $graphUri,
+            'base'   => $baseUri
+        );
+
+        // insert the new model into the database
+        $this->_dbConn->insert('ef_graph', $data);
+        $graphId = $this->lastInsertId();
+        
+        $uriRef = false;
+        if (strlen($graphUri) > $this->_getSchemaRefThreshold()) {
+            $uriHash = md5($uri);
+            
+            $uriData = array(
+                'g'     => $graphid,
+                'v'     => $uri,
+                'vh'    => $uriHash);
+            
+            $uriRef = $this->_insertValueInto('ef_uri', $uriData);
+            
+            $updateData = array(
+                'uri'       => $uriHash,
+                'uri_r'     => $uriRef);
+            
+            $this->_dbConn->update('ef_graph', $updateData, "id = graphId");
+        }
+        
+        $baseRef = false;
+        if (strlen($baseUri) > $this->_getSchemaRefThreshold()) {
+            $baseHash = md5($baseUri);
+            
+            $baseData = array(
+                'g'     => $graphid,
+                'v'     => $baseUri,
+                'vh'    => $baseHash);
+            
+            $baseRef = $this->_insertValueInto('ef_uri', $baseData);
+            
+            $updateData = array(
+                'base'       => $baseHash,
+                'base_r'     => $baseRef);
+            
+            $this->_dbConn->update('ef_graph', $updateData, "id = graphId");
+        }
+        
+        // invalidate the cache and fetch model infos again
+        require_once 'Erfurt/App.php';
+        $cache = Erfurt_App::getInstance()->getCache();
+        $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
+        $this->_fetchModelInfos();
+        
+        if ($type === 'owl') {
+            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, EF_OWL_ONTOLOGY);
+        }
+        
+        // instanciate the model
+        $m = $this->getModel($graphUri);
+            
+        return $m;
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getSupportedExportFormats()
+    {
+        return array();
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function getSupportedImportFormats()
+    {
+        $app = Erfurt_App::getInstance();
+        
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTempDir() !== false) {
+            return array('rdfxml' => 'RDF/XML');
+        } else {
+            return array();
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function importRdf($modelUri, $data, $type, $locator)
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            require_once 'Erfurt/Syntax/RdfParser.php';
+            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
+            $parsedArray = $parser->parse($data, $locator, $modelUri, false);
+            
+            $modelId = $this->_modelInfoCache["$modelUri"]['modelId']; 
+            
+            // create file
+            $tmpDir     = Erfurt_App::getInstance()->getTempDir();
+            $filename   = $tmpDir . 'import' . md5((string)time()) . '.csv';
+            $fileHandle = fopen($filename, 'w');
+            
+            $count = 0;
+            $longStatements = array();
+            foreach ($parsedArray as $s => $pArray) {
+                if (substr($s, 0, 1) === '_') {
+                    $sType = '1';
+                } else {
+                    $sType = '0';
+                }
+                
+                foreach ($pArray as $p => $oArray) {
+                    foreach ($oArray as $o) {
+                        // to long values need to be put in a different table, so we can't bulk insert these
+                        // values, for they need a foreign key
+                        if (strlen($s) > $this->_getSchemaRefThreshold() || 
+                            strlen($p) > $this->_getSchemaRefThreshold() || 
+                            strlen($o['value']) > $this->_getSchemaRefThreshold() || 
+                            (isset($o['datatype']) && strlen($o['datatype']) > $this->_getSchemaRefThreshold())) {
+                            $longStatements[] = array(
+                                's' => $s,
+                                'p' => $p,
+                                'o' => $o
+                            );
+                            continue;
+                        }
+                        
+                        if ($o['type'] === 'literal') {
+                            $oType = '2';
+                        } else if ($o['type'] === 'bnode') {
+                            $oType = '1';
+                        } else {
+                            $oType = '0';
+                        }
+                                                    
+                        $lineString = $modelId . ';' . $s . ';' . $p . ';' . $o['value'] . ';';
+                        $lineString .= "\N;\N;\N;";
+                        
+                        $lineString .=  $sType . ';' . $oType . ';';
+                        
+                        if (isset($o['lang'])) {
+                            $lineString .= $o['lang'];
+                        } else {
+                            $lineString .= "\N";
+                        }
+                        
+                        $lineString .= ';';
+                        
+                        if (isset($o['datatype'])) {
+                            $lineString .= $o['datatype'] . ";\N";
+                        } else {
+                            $lineString .= "\N;\N";
+                        }
+                        
+                        $lineString .= PHP_EOL;
+                        
+                        $count++;
+                        fputs($fileHandle, $lineString);
+                        
+                    }
+                }
+            }
+      
+            fclose($fileHandle);
+        
+            if ($count > 10000) {
+                $this->_dbConn->getConnection()->query('ALTER TABLE ef_stmt DISABLE KEYS');
+            }
+        
+            $sql = "LOAD DATA INFILE '$filename' IGNORE INTO TABLE ef_stmt
+                    FIELDS TERMINATED BY ';'
+                    (g, s, p, o, s_r, p_r, o_r, st, ot, ol, od, od_r);";
+            
+            $this->_dbConn->getConnection()->query('START TRANSACTION;');   
+            $this->_dbConn->getConnection()->query($sql);
+            $this->_dbConn->getConnection()->query('COMMIT');
+            
+            // Delete the temp file
+            unlink($filename);
+            
+            // Now add the long-value-statements
+            foreach($longStatements as $stm) {
+                $sId = false;
+                $pId = false;
+                $oId = false;
+                $dtId = false;
+                
+                $s = $stm['s'];
+                $p = $stm['p'];
+                $o = $stm['o']['value'];
+                
+                if (strlen($s) > $this->_getSchemaRefThreshold()) {
+                    $sHash = md5($s);
+                    
+                    $sId = $this->_insertValueInto('ef_uri', $modelId, $s, $sHash); 
+                    $s = $sHash;
+                }
+                if (strlen($p) > $this->_getSchemaRefThreshold()) {
+                    $pHash = md5($p);
+                    
+                    $pId = $this->_insertValueInto('ef_uri', $modelId, $p, $pHash);
+                    $p = $pHash;
+                }
+                if (strlen($o) > $this->_getSchemaRefThreshold()) {
+                    $oHash = md5($o);
+                    
+                    if ($stm['o']['type'] === 'literal') {
+                        $oId = $this->_insertValueInto('ef_lit', $modelId, $o, $oHash); 
+                    } else {
+                        $oId = $this->_insertValueInto('ef_uri', $modelId, $o, $oHash); 
+                    }
+                    
+                    $o = $oHash;
+                }
+                if (isset($stm['o']['datatype']) && strlen($stm['o']['datatype']) > $this->_getSchemaRefThreshold()) {
+                    $oDtHash = md5($stm['o']['datatype']);
+                    
+                    $dtId = $this->_insertValueInto('ef_uri', $modelId, $stm['o']['datatype'], $oDtHash);
+                    
+                    $oDt = $oDtHash; 
+                }
+                    
+                $sql = "INSERT INTO ef_stmt 
+                        (g,s,p,o,s_r,p_r,o_r,st,ot,ol,od,od_r) 
+                        VALUES ($modelId,'$s','$p','$o',";
+            
+                if ($sId !== false) {
+                    $sql .= $sId . ',';
+                } else {
+                    $sql .= "\N,";
+                }
+                
+                if ($pId !== false) {
+                    $sql .= $pId . ',';
+                } else {
+                    $sql .= "\N,";
+                }
+                
+                if ($oId !== false) {
+                    $sql .= $oId . ',';
+                } else {
+                    $sql .= "\N,";
+                }
+                
+                if (substr($stm['s'], 0, 2) === '_:') {
+                    $sql .= '1,';
+                } else {
+                    $sql .= '0,';
+                }
+                
+                if ($stm['o']['type'] === 'literal') {
+                    $sql .= '2,';
+                } else if ($stm['o']['type'] === 'uri') {
+                    $sql .= '0,';
+                } else {
+                    $sql .= '1,';
+                }
+                
+                if (isset($stm['o']['lang'])) {
+                    $sql .= '"' . $stm['o']['lang'] . '",';
+                } else {
+                    $sql .= "\N,";
+                }
+                
+                if (isset($stm['o']['datatype'])) { 
+                    if ($dtId !== false) {
+                        $sql .= '"' . $oDt . '",' . $dtId . ')';
+                    } else {
+                        $sql .= '"' . $stm['o']['datatype'] . '",' . "\N)";
+                    }
+                } else {
+                    $sql .= "\N,\N)";
+                }
+                
+                $this->_dbConn->getConnection()->query($sql);
+            }
+            
+            if ($count > 10000) {
+                 $this->_dbConn->getConnection()->query('ALTER TABLE ef_stmt ENABLE KEYS');
+            }
+            
+            $this->_optimizeTables();
+        } else {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('CSV import not supported for this database server.');
+        }   
+    }
+        
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function isModelAvailable($modelIri) 
+    {
+        if (isset($this->_modelInfoCache[$modelIri])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function lastInsertId()
+    {
+        return $this->_dbConn->lastInsertId();
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function listTables($prefix = '')
+    {
+        return $this->_dbConn->listTables();
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function sparqlAsk($query)
+    {
+// TODO   
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function sparqlQuery($query, $resultform = 'plain') 
+    {
+        #$logger = Erfurt_App::getInstance()->getLog();
+        #$debugText = 'Sparql Query (';
+        #$stack = xdebug_get_function_stack();
+        #$key = count ($stack)-2;
+        #$debugText .= $stack[$key]['file'] . $stack[$key]['line'];
+        #$debugText .= '): ' . (string)$query;
+        #$logger->debug($debugText);
+        
+        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
+        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_modelInfoCache);
+                
+        require_once 'Erfurt/Sparql/Parser.php';
+        $parser = new Erfurt_Sparql_Parser();        
+
+        $query = $parser->parse((string)$query);        
+
+        $result = $engine->queryModel($query, $resultform);
+   
+        return $result;   
+    }
+    
+    /** @see Erfurt_Store_Sql_Interface */
+    public function sqlQuery($sqlQuery)
+    {
+        return $this->_dbConn->fetchAll($sqlQuery);
+    }
+    
+    // ------------------------------------------------------------------------
+    // --- Private methods ----------------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    /**
+     * For Zend_Db does not abstract SQL statements that can't be prepared, we need to do this by hand
+     * for each supported db server, which can be used with the ZendDb adapter.
+     */
+    private function _createTableMysql($tableName, array $columns)
+    {
+        $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
+        
+        $i = 0;
+	    foreach ($columns as $columnName => $columnSpec) {
+	        $createTable .= PHP_EOL
+	                     .  '`' . $columnName . '` '
+	                     .  $columnSpec . (($i < count($columns)-1) ? ',' : '');
+	        ++$i;
+	    }
+	    $createTable .= PHP_EOL
+	                 .  ')';
+
+	    $success = $this->_dbConn->getConnection()->query($createTable);
+	    
+	    if (!$success) {
+// TODO dedicated exception
+	        throw new Exception('Could not create database table with name ' . $tableName . '.');
+	    } else {
+	        return $success;
+	    }
+    }
+    
+    /**
+     * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.
+     */
+    private function _createTables()
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTablesMysql();
+        }
+    }
+    
+    /**
+     * This internal function creates the table structure for MySQL databases.
+     */
+    private function _createTablesMysql() 
+    {
+        // Create ef_info table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
+                    id          TINYINT(1) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                    schema_id   VARCHAR(10) COLLATE ascii_bin NOT NULL
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_info" failed:' . 
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Insert id of the current schema into the ef_info table.
+        $sql = 'INSERT INTO ef_info (schema_id) VALUES ("1.0")';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Insertion of "schema_id" into "ef_info" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Create ef_graph table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
+        	        id			TINYINT(1) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        uri			VARCHAR(150) COLLATE ascii_bin NOT NULL,
+        	        uri_r	    INT UNSIGNED DEFAULT NULL,					
+        	        base		VARCHAR(150) COLLATE ascii_bin NOT NULL,
+        	        base_r	INT UNSIGNED DEFAULT NULL,
+        	        UNIQUE unique_graph (uri)							
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_graph" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Create ef_stmt table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
+            	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            	    g	    TINYINT(1) UNSIGNED NOT NULL,               # foreign key to ef_graph
+            	    s		VARCHAR(150) COLLATE ascii_bin NOT NULL,    # subject or subject hash
+            	    p		VARCHAR(150) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
+            	    o		VARCHAR(150) COLLATE utf8_bin NOT NULL,     # object or object hash
+            	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
+            	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
+            	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
+            	    ol 		VARCHAR(10) COLLATE ascii_bin DEFAULT NULL,
+            	    od 	    VARCHAR(150) COLLATE ascii_bin DEFAULT NULL,
+            	    od_r 	INT UNSIGNED DEFAULT NULL,
+            	    UNIQUE  unique_stmt (g, s, p, o, s_r, p_r, o_r, st, ot, ol, od, od_r),
+            	    INDEX 	idx_gpo	(g, p, o),
+            	    INDEX   idx_gsp (g, s, p),
+            	    INDEX   idx_gspo (g, s, p, o), # TODO needed?
+            	    INDEX   idx_gs (g, s),
+            	    INDEX   idx_gp (g, p),
+            	    INDEX   idx_go (g, o)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_stmt" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+
+
+        // Create ef_ns table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
+        	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	    TINYINT(1) UNSIGNED NOT NULL,
+        	        ns		VARCHAR(150) COLLATE ascii_bin NOT NULL,
+        	        ns_r	INT UNSIGNED DEFAULT NULL,					
+        	        prefix	VARCHAR(255) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_ns (g, ns, ns_r, prefix)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+             require_once 'Erfurt/Store/Adapter/Exception.php';
+             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_ns" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Create ef_uri table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	TINYINT(1) UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE ascii_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_uri (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_uri" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+
+
+        // Create ef_lit table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_lit (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	TINYINT(1) UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE utf8_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_lit (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_lit" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }   
+    }
+    
+    protected function _getSchemaRefThreshold()
+    {
+        return 150;
+    }
+    
+    protected function _optimizeTables()
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_stmt');
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_uri');
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_lit');
+        } else {
+            // not supported yet.
+        }
+    }
+    
+    protected function _cleanUpValueTables($graphUri)
+    {
+        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        
+        $sql = "SELECT l.id as id, count(l.id)
+                FROM ef_lit l
+                JOIN ef_stmt s ON s.g = $graphId AND s.ot = 2 AND s.o_r = l.id
+                WHERE l.g = $graphId
+                GROUP BY l.id";
+        
+        $idArray = array();
+        foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
+            $idArray[] = $row['id'];
+        }
+        
+        if (count($idArray) > 0) {
+            $ids = implode (',', $idArray);
+            $whereString = "g = $graphId AND id NOT IN ($ids)";
+            $this->_dbConn->delete('ef_lit', $whereString);
+        }
+        
+        $sql = "SELECT u.id as id, count(u.id)
+                FROM ef_uri u
+                JOIN ef_stmt s ON s.g = $graphId AND (s.s_r = u.id OR s.p_r = u.id OR s.od_r = u.id OR 
+                (s.ot IN (0, 1) AND s.o_r = u.id))
+                WHERE u.g = $graphId
+                GROUP BY u.id";
+        
+        $idArray = array();
+        foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
+            $idArray[] = $row['id'];
+        }
+
+        if (count($idArray) > 0) {
+            $ids = implode (',', $idArray);
+            $whereString = "g = $graphId AND id NOT IN ($ids)";
+            $this->_dbConn->delete('ef_uri', $whereString);
+        }
+    }
+        
+    
+    
+    protected function _insertValueInto($tableName, $graphId, $value, $valueHash)
+    {
+        $data = array(
+            'g'     => $graphId,
+            'v'     => $value,
+            'vh'    => $valueHash
+        );
+        
+        try {
+            $this->_dbConn->insert($tableName, $data);
+        } catch (Exception $e) {
+            if ($this->_getNormalizedErrorCode() !== 1000) {
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception("Insertion of value into $tableName failed: " .
+                                $this->_dbConn->getConnection()->error);
+            }
+        }
+        
+        $sql = "SELECT id FROM $tableName WHERE vh = '$valueHash'"; 
+        $result = $this->_dbConn->fetchRow($sql);
+        
+        if (!$result) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Fetching of uri id failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        $id = $result['id'];
+        
+        return $id;
+    }
+    
+    /**
+     * 
+     * @throws Erfurt_Exception
+     */
+    private function _fetchModelInfos() 
+    {   
+        require_once 'Erfurt/App.php';
+        $cache = Erfurt_App::getInstance()->getCache();
+        $id = $cache->makeId($this, '_fetchModelInfos', array());
+        $cachedVal = $cache->load($id);
+        if ($cachedVal) {
+            $this->_modelInfoCache = $cachedVal;
+        } else {
+            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, n.ns, n.ns_r, n.prefix, s.o, s3.o AS title, u.v, l.v,
+                        (SELECT count(*) 
+                        FROM ef_stmt s2 
+                        WHERE s2.g = g.id 
+                        AND s2.s = g.uri 
+                        AND s2.st = 0 
+                        AND s2.p = "' . EF_RDF_TYPE . '" 
+                        AND s2.o = "' . EF_OWL_ONTOLOGY . '" 
+                        AND s2.ot = 0) as is_owl_ontology 
+                    FROM ef_graph g 
+                    LEFT JOIN ef_ns n ON (g.id = n.g) 
+                    LEFT JOIN ef_stmt s ON (g.id = s.g
+                        AND g.uri = s.s 
+                        AND s.p = "' . EF_OWL_IMPORTS. '" 
+                        AND s.ot = 0) 
+                    LEFT JOIN ef_stmt s3 ON (g.id = s3.g 
+                        AND g.uri = s3.s
+                        AND s3.st = 0 
+                        AND s3.ot = 2 
+                        AND (';
+            
+            for ($i=1; $i<count($this->_titleProperties); ++$i) {
+                $sql .= 's3.p = "' . $this->_titleProperties[$i] . '"';
+                
+                if ($i < count($this->_titleProperties)-1) {
+                    $sql .= ' OR ';
+                }
+            }
+            
+            $sql .= '))
+                LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = n.ns_r OR u.id = s.o_r)
+                LEFT JOIN ef_lit l ON (l.id = s3.o_r)';
+                        
+            try {
+                $result = $this->_dbConn->query($sql);
+            } catch (Exception $e) {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+            }
+            
+            
+            if ($result === false) {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+            } else {
+                $this->_modelInfoCache = array();
+                
+                $rowSet = $result->fetchAll();
+                #var_dump($rowSet);exit;
+                foreach ($rowSet as $row) {
+                    if (!isset($this->_modelInfoCache[$row['uri']])) {
+                        $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
+                        $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
+                        $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
+                        $this->_modelInfoCache[$row['uri']]['namespaces']   = array();
+                        $this->_modelInfoCache[$row['uri']]['imports']      = array();
+                    
+                        // set the type of the model
+                        if ($row['is_owl_ontology'] > 0) {
+                            $this->_modelInfoCache[$row['uri']]['type'] = 'owl';
+                        } else {
+                            $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
+                        }
+
+                        if ($row['ns'] !== null &&
+                                !isset($this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']])) {
+                            
+                            $this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']] = $row['prefix'];
+                        }
+                        if ($row['o'] !== null &&
+                         !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+                            $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
+                        }
+                        
+                        if ($row['title'] !== null) {
+                            $this->_modelInfoCache[$row['uri']]['title'] = $row['title'];
+                        }
+                    } else {
+                        if ($row['ns'] !== null &&
+                                !isset($this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']])) {
+                            
+                            $this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']] = $row['prefix'];
+                        }
+                        if ($row['o'] !== null &&
+                                !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+                            
+                            $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
+                        }
+                    }
+                }
+                
+                //var_dump($this->_modelInfoCache);exit;
+                
+                // build the transitive closure for owl:imports
+                // check for recursive owl:imports; also check for cylces!
+                do {
+                    // indicated whether anything was changed in the array or not and whether loop needs to run again
+                    $hasChanged = false;
+            
+                    // test every model exists in the model table
+                    foreach ($this->_modelInfoCache as $modelIri) {
+                        // only owl models can import other models
+                        if ($modelIri['type'] !== 'owl') {
+                            continue;
+                        }
+                        foreach ($modelIri['imports'] as $importsIri) {
+                            if (isset($this->_modelInfoCache[$importsIri])) {
+                                foreach ($this->_modelInfoCache[$importsIri]['imports'] as $importsImportIri) {
+                                    if (!isset($modelIri['imports'][$importsImportIri]) && 
+                                            !($importsImportIri === $modelIri['modelIri'])) {
+                                    
+                                        $this->_modelInfoCache[$modelIri['modelIri']]
+                                                    ['imports'][$importsImportIri] = $importsImportIri;
+                                        $hasChanged = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while ($hasChanged === true);
+            }
+            
+            $cache->save($this->_modelInfoCache, $id, array('model_info'));
+        }
+    }
+    
+    /**
+     * Checks whether all needed database table for the adapter are present.
+     * 
+     * Currently we need three tables: 'models', 'statements' and 'namespaces'
+     * 
+     * @throws Erfurt_Exception
+     * @return boolean Returns true if all tables are present.
+     */
+    private function _isSetup() 
+    {    
+        $existingTables = $this->listTables();
+        
+        if (is_array($existingTables)) {
+            if (!in_array('ef_info', $existingTables) ||
+                !in_array('ef_graph', $existingTables) ||
+                !in_array('ef_ns', $existingTables) ||
+                !in_array('ef_stmt', $existingTables) ||
+                !in_array('ef_uri', $existingTables) ||
+                !in_array('ef_lit', $existingTables)) {
+            
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
+        }
+    }
+}
+?>

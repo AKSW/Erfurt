@@ -55,6 +55,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private $_modelLanguages = array();
     
+    /**
+     * Caching array for imported model IRIs.
+     * Format: array(<model IRI> => array(<imported IRI>, ...))
+     * @var array
+     */
+    private $_importedModels = array();
+    
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -342,6 +349,50 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getBlankNodePrefix()
     {
         return 'nodeID://';
+    }
+    
+    /**
+     * Recursively gets owl:imported model IRIs starting with $modelIri as root.
+     *
+     * @param string $modelIri
+     */
+    public function getImportsClosure($modelIri)
+    {
+        if (!array_key_exists($modelIri, $this->_importedModels)) {
+            $models = array();
+            $result = array(
+                // mock first result
+                array('o' => $modelIri)
+            );
+
+            do {
+                $from    = '';
+                $filter   = array();
+                foreach ($result as $row) {
+                    $from    .= ' FROM <' . $row['o'] . '>' . "\n";
+                    $filter[] = 'sameTerm(?model, <' . $row['o'] . '>)';
+
+                    // ensure no model is added twice
+                    if (!array_key_exists($row['o'], $models)) {
+                        $models[$row['o']] = $row['o'];
+                    }
+                }
+                $query = '
+                    SELECT ?o' . 
+                    $from . '
+                    WHERE {
+                        ?model <' . EF_OWL_NS . 'imports> ?o. 
+                        FILTER (' . implode(' || ', $filter) . ')
+                    }';
+            } while ($result = $this->sparqlQuery($query));
+            
+            // unset root node
+            unset($models[$modelIri]);
+            // cache result
+            $this->_importedModels[$modelIri] = array_keys($models);
+        }
+        
+        return $this->_importedModels[$modelIri];
     }
     
     /** @see Erfurt_Store_Adapter_Interface */

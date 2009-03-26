@@ -41,6 +41,4 @@ class Erfurt_Sparql_EngineDb_SqlMerger
         return 'SELECT (' . implode(') + (', $ar) . ') as count';
     }//public static function getCount(Query $query, $arSqls, $strAdditional = '')
 
-}//class SparqlEngineDb_SqlMerger
-
-?>
+}

@@ -60,13 +60,6 @@ class Erfurt_Store
     private $_backendAdapter = null;
     
     /**
-     * Caching array for imported model IRIs.
-     * Format: array(<model IRI> => array(<imported IRI>, ...))
-     * @var array
-     */
-    private $_importedModels = array();
-    
-    /**
      * Optional methods a backend adapter can implement
      * @var array
      */
@@ -286,6 +279,8 @@ class Erfurt_Store
         $modelLocation  = $config->sysOnt->modelLocation;
         $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysOnt->modelPath);
         
+        $returnValue = true;
+        
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
@@ -316,6 +311,7 @@ class Erfurt_Store
             }
             
             $logger->info('System schema successfully loaded.');
+            $returnValue = false;
         }
 
         // check for system configuration model
@@ -346,7 +342,14 @@ class Erfurt_Store
                 throw new Erfurt_Exception('Unable to load System Ontology model.');
             }
             
+            
             $logger->info('System schema successfully loaded.');
+            $returnValue = false;
+        }
+        
+        if ($returnValue === false) {
+            require_once 'Erfurt/Store/Exception.php';
+            throw new Erfurt_Store_Exception('One or more system models imported.', 20);
         }
         
         return true;
@@ -688,7 +691,7 @@ class Erfurt_Store
             }   
         }
         
-        // TODO: check whether user is allowed to create a new model
+// TODO: check whether user is allowed to create a new model
         
         return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
     }
@@ -924,7 +927,7 @@ class Erfurt_Store
     public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $resultFormat = 'plain', $useAc = true)
     {
         self::$_queryCount++;
-        
+         
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
             foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
@@ -951,7 +954,7 @@ class Erfurt_Store
                 $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
-        
+#var_dump((string)$queryObject);exit;          
         // TODO: check if adapter supports requested result format
         return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
     }
@@ -1030,41 +1033,7 @@ class Erfurt_Store
      */
     private function _getImportsClosure($modelIri)
     {
-        if (!array_key_exists($modelIri, $this->_importedModels)) {
-            $models = array();
-            $result = array(
-                // mock first result
-                array('o' => $modelIri)
-            );
-
-            do {
-                $from    = '';
-                $filter   = array();
-                foreach ($result as $row) {
-                    $from    .= ' FROM <' . $row['o'] . '>' . "\n";
-                    $filter[] = 'sameTerm(?model, <' . $row['o'] . '>)';
-
-                    // ensure no model is added twice
-                    if (!array_key_exists($row['o'], $models)) {
-                        $models[$row['o']] = $row['o'];
-                    }
-                }
-                $query = '
-                    SELECT ?o' . 
-                    $from . '
-                    WHERE {
-                        ?model <' . EF_OWL_NS . 'imports> ?o. 
-                        FILTER (' . implode(' || ', $filter) . ')
-                    }';
-            } while ($result = $this->_backendAdapter->sparqlQuery($query));
-            
-            // unset root node
-            unset($models[$modelIri]);
-            // cache result
-            $this->_importedModels[$modelIri] = array_keys($models);
-        }
-        
-        return $this->_importedModels[$modelIri];
+        return $this->_backendAdapter->getImportsClosure($modelIri);
     }
     
     /**

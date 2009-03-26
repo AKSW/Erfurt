@@ -1,93 +1,92 @@
 <?php
+require_once 'Erfurt/Sparql/Query.php';
+
+/**
+ * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
+ * It was modified and extended in order to fit into Erfurt.
+ *
+ * @package sparql
+ * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @license http://www.gnu.org/licenses/lgpl.html LGPL
+ * @version	$Id$
+ */
 class Erfurt_Sparql_QueryResultVariable
 {
-    public $variable = null;
-    public $datatype = null;
-    public $language = null;
-    public $alias    = null;
-    public $func     = null;
+    // ------------------------------------------------------------------------
+    // --- Protected properties -----------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    protected $_variable = null;
+    protected $_datatype = null;
+    protected $_language = null;
+    protected $_alias    = null;
+    protected $_func     = null;
 
+    // ------------------------------------------------------------------------
+    // --- Magic methods ------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     public function __construct($variable)
     {
-        $this->variable = $variable;
-        $this->language = Erfurt_Sparql_Query::getLanguageTag($variable);
+        $this->_variable = $variable;
+        $this->_language = Erfurt_Sparql_Query::getLanguageTag($variable);
     }
-
-
-
-    public function setAlias($alias)
-    {
-        $this->alias = $alias;
-    }
-
-
-
-    public function setFunc($func)
-    {
-        $this->func = $func;
-    }
-
-
-
-    public function setDatatype($datatype)
-    {
-        $this->datatype = $datatype;
-    }
-
-
-
-    public function getId()
-    {
-        //FIXME
-        return $this->variable;
-    }
-
-
-
-    public function getFunc()
-    {
-        return $this->func;
-    }
-
-
-
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-
-
-    public function getDatatype()
-    {
-        return $this->datatype;
-    }
-
-
-
-    public function getName()
-    {
-        if ($this->alias !== null) {
-            return $this->alias;
-        }
-        //FIXME: support for nested(functions())
-        return $this->variable;
-    }
-
-
-
-    public function getVariable()
-    {
-        return $this->variable;
-    }
-
-
-
+    
     public function __toString()
     {
         return $this->getName();
     }
 
-}//class Query_ResultVariable
-?>
+    // ------------------------------------------------------------------------
+    // --- Public methods -----------------------------------------------------
+    // ------------------------------------------------------------------------
+
+    public function getDatatype()
+    {
+        return $this->_datatype;
+    }
+    
+    public function getFunc()
+    {
+        return $this->_func;
+    }
+
+    public function getId()
+    {
+        return $this->_variable;
+    }
+    
+    public function getLanguage()
+    {
+        return $this->_language;
+    }
+    
+    public function getName()
+    {
+        if (null !== $this->_alias) {
+            return $this->_alias;
+        }
+        
+        return $this->_variable;
+    }
+    
+    public function getVariable()
+    {
+        return $this->_variable;
+    }
+
+    public function setAlias($alias)
+    {
+        $this->_alias = $alias;
+    }
+    
+    public function setDatatype($datatype)
+    {
+        $this->_datatype = $datatype;
+    }
+
+    public function setFunc($func)
+    {
+        $this->_func = $func;
+    }
+}

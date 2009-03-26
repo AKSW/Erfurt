@@ -1,125 +1,129 @@
 <?php
-// ---------------------------------------------
-// Class: QueryTriple
-// ---------------------------------------------
-
 /**
-* Represents a query triple with subject, predicate and object.
-*
-* @author   Tobias Gauss <tobias.gauss@web.de>
-* @version	$Id$
-* @license http://www.gnu.org/licenses/lgpl.html LGPL
-*
-* @package sparql
-*/
+ * Represents a query triple with subject, predicate and object.
+ *
+ * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
+ * It was modified and extended in order to fit into Erfurt.
+ *
+ * @package sparql
+ * @author Tobias Gauss <tobias.gauss@web.de>
+ * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @license http://www.gnu.org/licenses/lgpl.html LGPL
+ * @version	$Id$
+ */
 class Erfurt_Sparql_QueryTriple
 {
+    // ------------------------------------------------------------------------
+    // --- Protected properties -----------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    /**
+     * The QueryTriples Subject. Can be a BlankNode or Resource, string in
+     * case of a variable
+     *
+     * @var Node/string
+     */
+    protected $_subject;
 
     /**
-    * The QueryTriples Subject.
-    * Can be a BlankNode or Resource, string in
-    * case of a variable
-    * @var Node/string
-    */
-    protected $subject;
+     * The QueryTriples Predicate. Normally only a Resource, string in case of a variable
+     * 
+     *@var Node/string
+     */
+    protected $_predicate;
 
     /**
-    * The QueryTriples Predicate.
-    * Normally only a Resource, string in
-    * case of a variable
-    * @var Node/string
-    */
-    protected $predicate;
+     * The QueryTriples Object. Can be BlankNode, Resource or Literal, string in case of a variable.
+     *
+     * @var Node/string
+     */
+    protected $_object;
 
-    /**
-    * The QueryTriples Object.
-    * Can be BlankNode, Resource or Literal, string in
-    * case of a variable
-    * @var Node/string
-    */
-    protected $object;
-
-
-
-    /**
-    * Constructor
-    *
-    * @param Node $sub  Subject
-    * @param Node $pred Predicate
-    * @param Node $ob   Object
-    */
-    public function __construct($sub, $pred, $ob)
+    // ------------------------------------------------------------------------
+    // --- Magic methods ------------------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    public function __clone()
     {
-        $this->subject   = $sub;
-        $this->predicate = $pred;
-        $this->object    = $ob;
+        if (is_object($this->_subject)) {
+		    $this->_subject = clone $this->_subject;
+		}
+		if (is_object($this->_predicate)) {
+		    $this->_predicate = clone $this->_predicate;
+		}
+		if (is_object($this->_object)) {
+		    $this->_object = clone $this->_object;
+		}
     }
 
     /**
-    * Returns the Triples Subject.
-    *
-    * @return Node
-    */
-    public function getSubject()
+     * Constructor
+     *
+     * @param Erfurt_Rdf_Resource/string $subject Subject
+     * @param Erfurt_Rdf_Resource/string $predicate Predicate
+     * @param Erfurt_Rdf_Node/string $object Object
+     */
+    public function __construct($subject, $predicate, $object)
     {
-        return $this->subject;
+        $this->_subject   = $subject;
+        $this->_predicate = $predicate;
+        $this->_object    = $object;
     }
 
-    /**
-    * Returns the Triples Predicate.
-    *
-    * @return Node
-    */
-    public function getPredicate()
-    {
-        return $this->predicate;
-    }
+    // ------------------------------------------------------------------------
+    // --- Public methods -----------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
-    * Returns the Triples Object.
-    *
-    * @return Node
-    */
+     * Returns the Triples Object.
+     *
+     * @return Erfurt_Rdf_Node/string
+     */
     public function getObject()
     {
-        return $this->object;
+        return $this->_object;
     }
 
-
-
     /**
-    *   Returns an array of all variables in this triple.
-    *
-    *   @return array   Array of variable names
-    */
+     * Returns the Triples Predicate.
+     *
+     * @return Erfurt_Rdf_Resource/string
+     */
+    public function getPredicate()
+    {
+        return $this->_predicate;
+    }
+    
+    /**
+     * Returns the Triples Subject.
+     *
+     * @return Erfurt_Rdf_Resource/string
+     */
+    public function getSubject()
+    {
+        return $this->_subject;
+    }
+    
+    /**
+     *   Returns an array of all variables in this triple.
+     *
+     *   @return array Array of variable names.
+     */
     public function getVariables()
     {
         $arVars = array();
 		
 		require_once 'Erfurt/Sparql/Variable.php';
-        foreach (array('subject', 'predicate', 'object') as $strVar) {
-            if (Erfurt_Sparql_Variable::isVariable($this->$strVar)) {
-                $arVars[] = $this->$strVar;
-            }
-        }
-
+		if (Erfurt_Sparql_Variable::isVariable($this->_subject)) {
+		    $arVars[] = $this->_subject;
+		}
+		if (Erfurt_Sparql_Variable::isVariable($this->_predicate)) {
+		    $arVars[] = $this->_predicate;
+		}
+		if (Erfurt_Sparql_Variable::isVariable($this->_object)) {
+		    $arVars[] = $this->_object;
+		}
+		
         return $arVars;
-    }//public function getVariables()
-
-    public function __toString() {
-        
     }
-
-    public function __clone()
-    {
-        foreach (array('subject', 'predicate', 'object') as $strVar) {
-            if (is_object($this->$strVar)) {
-                $this->$strVar = clone $this->$strVar;
-            }
-        }
-    }//public function __clone()
-
-}//class QueryTriple extends Object
-
-// end class: QueryTriple.php
-?>
+}

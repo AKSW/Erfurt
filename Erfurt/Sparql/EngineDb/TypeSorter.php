@@ -15,10 +15,10 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     *   @var array
     */
     public static $arTypeNumbers = array(
-        null    => 0,//empty
-        'b'     => 1,//blank
-        'r'     => 2,//resource
-        'l'     => 3,//literal
+        null    => 0, //empty
+        1     => 1, //blank
+        0     => 2, //resource
+        2     => 3, //literal
     );
 
     /**
@@ -34,14 +34,16 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         'http://www.w3.org/2001/XMLSchema#date'     => 'CHAR',
     );
 
+    protected $_engine;
+    protected $_query;
+    
+    protected $_sg;
 
-
-    public function __construct(Erfurt_Sparql_Query $query, $dbConn)
+    public function __construct(Erfurt_Sparql_Query $query, $engine)
     {
-        $this->dbConn  	= $dbConn;
-        $this->query    = $query;
+        $this->_engine = $engine;
+        $this->_query = $query;
     }
-
 
     /**
     *   Needs to be executed before getOrderifiedSqls and willBeDataDependent
@@ -53,6 +55,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $this->arUsedVarTypes       = $sg->getUsedVarTypes();
         $this->arUsedVarAssignments = $sg->getUsedVarAssignments();
         $this->arVarAssignments     = $sg->getVarAssignments();
+        $this->_sg = $sg;
     }//public function setData(SparqlEngineDb_SqlGenerator $sg)
 
 
@@ -93,7 +96,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $strFrom   = $arSqls[0]['from'];
         $strWhere  = $arSqls[0]['where'];
 
-        $strResultForm = $this->query->getResultForm();
+        $strResultForm = $this->_query->getResultForm();
         if ($strResultForm == 'ask' || $strResultForm == 'count') {
             return array(
                 $arSqls
@@ -101,8 +104,10 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         }
 
         $arSpecial = $this->getSpecialOrderVariables();
+
         if (count($arSpecial) == 0) {
             $strOrder = $this->getSqlOrderBy();
+
             foreach ($arSqls as &$arSql) {
                 $arSql['order'] = $strOrder;
             }
@@ -142,7 +147,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     */
     public function willBeDataDependent()
     {
-        $strResultForm = $this->query->getResultForm();
+        $strResultForm = $this->_query->getResultForm();
         return !(
             $strResultForm == 'ask' || $strResultForm == 'count'
             || count($this->getSpecialOrderVariables()) == 0
@@ -160,7 +165,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     */
     protected function getSpecialOrderVariables()
     {
-        $arSM = $this->query->getSolutionModifier();
+        $arSM = $this->_query->getSolutionModifier();
         if ($arSM['order by'] === null) {
             return array();
         }
@@ -211,26 +216,31 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     {
         $arSel = array();
         foreach ($arSpecialVars as $strSparqlVar) {
-            if ($this->arVarAssignments[$strSparqlVar][1] == 'o') {
-                $arSel[] = $this->arVarAssignments[$strSparqlVar][0] . '.l_datatype'
+            if (!isset($this->arVarAssignments[$strSparqlVar])) {
+                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Variable "' . $strSparqlVar . '" not selected.');
+            }
+            
+            if ($this->arVarAssignments[$strSparqlVar][1] === 'o') {
+                $arSel[] = $this->arVarAssignments[$strSparqlVar][0] . '.' .
+                    $this->_sg->arTableColumnNames['datatype']['value'] 
                     . ' as "' . $strSparqlVar . '-datatype"';
             }
-            $strTypeCol = $this->arVarAssignments[$strSparqlVar][1] == 'o'
-                ? 'object_is' : 'subject_is';
+            $strTypeCol = $this->arVarAssignments[$strSparqlVar][1] === 'o'
+                ? $this->_sg->arTableColumnNames['o']['is'] : $this->_sg->arTableColumnNames['s']['is'];
             $this->arVarAssignments[$strSparqlVar][2] = $strTypeCol;
             $arSel[] = $this->arVarAssignments[$strSparqlVar][0] . '.' . $strTypeCol
                 . ' as "' . $strSparqlVar . '-type"';
         }
 
-        //$oldmode  = $this->dbConn->SetFetchMode(ADODB_FETCH_ASSOC);
-        $sql      = 'SELECT DISTINCT ' . implode(', ', $arSel) . ' ' . $strFrom . $strWhere;
-        $arResult = $this->dbConn->query($sql)->fetchAll();
-        //$this->dbConn->SetFetchMode($oldmode);
+        
+        $sql      = 'SELECT DISTINCT ' . implode(',', $arSel) . ' ' . $strFrom . $strWhere;
+        $arResult = $this->_engine->sqlQuery($sql);
+
 
         if ($arResult === false) {
-            throw new SparqlEngineDb_SqlGeneratorException(
-                'Error reading typesets: ' . $sql
-            );
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Error reading typesets: ' . $sql);
         }
 
         $arTypes = array();
@@ -238,12 +248,18 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             $nLine = count($arTypes);
             foreach ($arRow as $key => $value) {
                 list($strSparqlVar, $strType) = explode('-', $key);
+                
+                if ($value === null) {
+                    $value = 'http://www.w3.org/2001/XMLSchema#string';
+                }
+                
                 $arTypes[$nLine][$strSparqlVar][$strType] = $value;
             }
         }
-
+        $arTypes = array_unique($arTypes);
+        
         return $arTypes;
-    }//protected function getTypeSets($arSpecialVars, $strFrom, $strWhere)
+    }
 
 
 
@@ -256,7 +272,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     */
     protected function orderTypeSets($arTypes)
     {
-        $arSM = $this->query->getSolutionModifier();
+        $arSM = $this->_query->getSolutionModifier();
         if ($arSM['order by'] !== null) {
             $this->arDirection = array();
             foreach ($arSM['order by'] as $arVar) {
@@ -356,7 +372,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     */
     function getSqlOrderBy($arTypeSet = array())
     {
-        $arSM = $this->query->getSolutionModifier();
+        $arSM = $this->_query->getSolutionModifier();
         if ($arSM['order by'] === null) {
             return '';
         }
@@ -366,15 +382,21 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             $strSparqlVar = $arVar['val'];
             if (isset($this->arUsedVarAssignments[$strSparqlVar])) {
                 if (!isset($arTypeSet[$strSparqlVar]['datatype'])
-                  || $arTypeSet[$strSparqlVar]['datatype'] == '') {
+                  || $arTypeSet[$strSparqlVar]['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
                     $sqlOrder[] = $this->arUsedVarAssignments[$strSparqlVar] . ' ' . strtoupper($arVar['type']);
                 } else {
+                    
                     $sqlOrder[] = self::getCastMethod(
                         $arTypeSet[$strSparqlVar]['datatype'],
                         $this->arUsedVarAssignments[$strSparqlVar]
                     ) . ' ' . strtoupper($arVar['type']);
                 }
             }
+        }
+
+        if (count($sqlOrder) === 0) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
 
         return ' ORDER BY ' . implode(', ', $sqlOrder);
@@ -420,15 +442,24 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 . $this->getStringNullComparison($arType['type']);
             //check datatype
             if (isset($arType['datatype'])) {
-                $strWhereTypes .= ' AND ' . $this->arVarAssignments[$strSparqlVar][0]
-                    . '.l_datatype '
-                    . $this->getStringNullComparison($arType['datatype']);
+                if ($arType['datatype'] === 'http://www.w3.org/2001/XMLSchema#string') {
+                    $strWhereTypes .= ' AND (' . $this->arVarAssignments[$strSparqlVar][0]
+                        . '.' . $this->_sg->arTableColumnNames['datatype']['value']
+                        . $this->getStringNullComparison($arType['datatype']);
+                    
+                    $strWhereTypes .= ' OR ' . $this->arVarAssignments[$strSparqlVar][0]
+                        . '.' . $this->_sg->arTableColumnNames['datatype']['value']
+                        . ' IS NULL)';
+                
+                } else {
+                    $strWhereTypes .= ' AND ' . $this->arVarAssignments[$strSparqlVar][0]
+                        . '.' . $this->_sg->arTableColumnNames['datatype']['value']
+                        . $this->getStringNullComparison($arType['datatype']);
+                }
             }
         }
         return $strWhereTypes;
-    }//protected function getTypesetWhereClause($arTypeSet)
-
-
+    }
 
     /**
     *   Returns the correct sql string comparison method.
@@ -441,10 +472,11 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     {
         if ($str === null) {
             return ' IS NULL';
+        } else if (is_int($str)) {
+            return "=$str";
         } else {
-            return ' = ' . $this->dbConn->quote($str) . '';
+            return "='$str'";
         }
     }//protected function getStringNullComparison($str)
 
-}//class SparqlEngineDb_TypeSorter
-?>
+}

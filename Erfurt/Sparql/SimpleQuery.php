@@ -1,5 +1,20 @@
 <?php
-class Erfurt_Sparql_SimpleQuery {
+/**
+ * This class models a SPARQL query that can be used within an application in order to make
+ * it easier e.g. to set different parts of a query independently.
+ *
+ * @package    sparql
+ * @author     Norman Heino <norman.heino@gmail.com>
+ * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version    $Id$
+ */
+class Erfurt_Sparql_SimpleQuery 
+{    
+    // ------------------------------------------------------------------------
+    // --- Protected properties -----------------------------------------------
+    // ------------------------------------------------------------------------
     
     /** @var string */
     protected $_prologuePart = null;
@@ -22,105 +37,19 @@ class Erfurt_Sparql_SimpleQuery {
     /** @var int */
     protected $_offset = null;
     
-    public function resetInstance()
-    {
-        $this->_prologuePart = null;
-        $this->_from         = array();
-        $this->_fromNamed    = array();
-        $this->_wherePart    = null;
-        $this->_orderClause  = null;
-        $this->_limit        = null;
-        $this->_offset       = null;
-        
-        return $this;
-    }
-        
-    public function setProloguePart($prologueString) 
-    {
-        $this->_prologuePart = $prologueString;
-        
-        return $this;
-    }
-    
-    public function addFrom($iri) 
-    {
-        $this->_from[] = $iri;
-        
-        return $this;
-    }
-    
-    public function addFromNamed($iri)
-    {
-        $this->_fromNamed[] = $iri;
-        
-        return $this;
-    }
-    
-    public function getFrom()
-    {
-        return $this->_from;
-    }
-    
-    public function getFromNamed()
-    {
-        return $this->_fromNamed;
-    }
-    
-    public function setFrom($newFromArray)
-    {
-        $this->_from = $newFromArray;
-        
-        return $this;
-    }
-    
-    public function setFromNamed($newFromNamedArray)
-    {
-        $this->_fromNamed = $newFromNamedArray;
-        
-        return $this;
-    }
-    
-    public function setWherePart($whereString)
-    {
-        if (stripos($whereString, 'where') !== false) {
-            $this->_wherePart = $whereString;
-        } else {
-            $this->_wherePart = ' WHERE ' . $whereString;
-        }
-        
-        return $this;
-    }
-    
-    public function setOrderClause($orderString) 
-    {
-        $this->_orderClause = $orderString;
-        
-        return $this;
-    }
-    
-    public function setLimit($limit)
-    {
-        $this->_limit = $limit;
-        
-        return $this;
-    }
-    
-    public function setOffset($offset)
-    {
-        $this->_offset = $offset;
-        
-        return $this;
-    }
+    // ------------------------------------------------------------------------
+    // --- Magic methods ------------------------------------------------------
+    // ------------------------------------------------------------------------
     
     public function __toString() 
     {
         $queryString = $this->_prologuePart . PHP_EOL;
         
-        foreach ($this->_from as $from) {
+        foreach (array_unique($this->_from) as $from) {
             $queryString .= 'FROM <' . $from . '>' . PHP_EOL;
         }
         
-        foreach ($this->_fromNamed as $fromNamed) {
+        foreach (array_unique($this->_fromNamed) as $fromNamed) {
             $queryString .= 'FROM NAMED <' . $fromNamed . '>' . PHP_EOL;
         }
         
@@ -141,10 +70,14 @@ class Erfurt_Sparql_SimpleQuery {
         return $queryString;
     }
     
+    // ------------------------------------------------------------------------
+    // --- Static methods -----------------------------------------------------
+    // ------------------------------------------------------------------------
+    
     /**
      * Objective-C style constructor
      *
-     * @param 
+     * @param string $queryString
      */
     public static function initWithString($queryString)
     {
@@ -159,10 +92,10 @@ class Erfurt_Sparql_SimpleQuery {
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*)?(PREFIX.*)*SELECT\s+(DISTINCT\s+)?(\?\w+\s+|\*)+/si',  
+            'prologue'   => '/(BASE.*)?(PREFIX.*)*(ASK|COUNT|(SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
             'from'       => '/FROM\s+<(.+?)>/i', 
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
-            'where'      => '/WHERE\s+\{.*\}/si', 
+            'where'      => '/(WHERE\s+)?\{.*\}/si', 
             'order'      => '/ORDER\s+BY\s+(.+)/i', 
             'limit'      => '/LIMIT\s+(\d+)/i', 
             'offset'     => '/OFFSET\s+(\d+)/i'
@@ -203,5 +136,97 @@ class Erfurt_Sparql_SimpleQuery {
 
         return $queryObject;
     }
+    
+    // ------------------------------------------------------------------------
+    // --- Public methods -----------------------------------------------------
+    // ------------------------------------------------------------------------
+    
+    public function addFrom($iri) 
+    {
+        $this->_from[] = $iri;
+        
+        return $this;
+    }
+    
+    public function addFromNamed($iri)
+    {
+        $this->_fromNamed[] = $iri;
+        
+        return $this;
+    }
+    
+    public function getFrom()
+    {
+        return $this->_from;
+    }
+    
+    public function getFromNamed()
+    {
+        return $this->_fromNamed;
+    }
+    
+    public function resetInstance()
+    {
+        $this->_prologuePart = null;
+        $this->_from         = array();
+        $this->_fromNamed    = array();
+        $this->_wherePart    = null;
+        $this->_orderClause  = null;
+        $this->_limit        = null;
+        $this->_offset       = null;
+        
+        return $this;
+    }
+    
+    public function setFrom($newFromArray)
+    {
+        $this->_from = $newFromArray;
+        
+        return $this;
+    }
+    
+    public function setFromNamed($newFromNamedArray)
+    {
+        $this->_fromNamed = $newFromNamedArray;
+        
+        return $this;
+    }
+    
+    public function setLimit($limit)
+    {
+        $this->_limit = $limit;
+        
+        return $this;
+    }
+    
+    public function setOffset($offset)
+    {
+       $this->_offset = $offset;
+       return $this;
+    }
+        
+    public function setOrderClause($orderString) 
+    {
+        $this->_orderClause = $orderString;
+        
+        return $this;
+    }
+    
+    public function setProloguePart($prologueString) 
+    {
+        $this->_prologuePart = $prologueString;
+        
+        return $this;
+    }
+     
+    public function setWherePart($whereString)
+    {
+        if (stripos($whereString, 'where') !== false) {
+            $this->_wherePart = $whereString;
+        } else {
+            $this->_wherePart = $whereString;
+        }
+        
+        return $this;
+    }
 }
-

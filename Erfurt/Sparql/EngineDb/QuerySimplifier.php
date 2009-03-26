@@ -1,5 +1,4 @@
 <?php
-
 /**
 *   Simplifies ("flattens") Query objects that have graph
 *   patterns which are subpatterns of other patterns.
@@ -23,8 +22,8 @@
 *   @author Christian Weiske <cweiske@cweiske.de>
 *   @license http://www.gnu.org/licenses/lgpl.html LGPL
 */
-class Erfurt_Sparql_EngineDb_QuerySimplifier {
-
+class Erfurt_Sparql_EngineDb_QuerySimplifier 
+{
     /**
     *   Simplify the query by flattening out subqueries.
     *   Modifies the passed query object directly.
@@ -33,6 +32,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
 	
         $arPatterns = $query->getResultPart();
         self::dropEmpty($arPatterns);
+       
         $arPlan     = $this->createPlan($arPatterns);
         if (count($arPlan) == 0) {
             $query->setResultPart($arPatterns);
@@ -41,7 +41,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
 
         $this->executePlan($arPatterns, $arPlan);
         $query->setResultPart($arPatterns);
-    }//public function simplify(Query $query)
+    }
 
 
 
@@ -62,49 +62,174 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
         $arPlan    = array();
 
         foreach ($arNumbers as $nId => $nPatternCount) {
-            $nParent = $arPatterns[$nId]->getSubpatternOf();
+            $nParent = $arPatterns[$nId]->getSubpatternOf();   
             $arPlan[$nParent][$nId] = true;
         }
-
+        
         return $arPlan;
-    }//protected function createPlan(&$arPatterns)
+    }
 
 
 
     /**
-    *   Executes the plan
-    *
-    *   @param array $arPatterns  Array of GraphPatterns
-    *   @param array $arPlan      Plan array as returned by createPlan()
-    */
+     *   Executes the plan
+     *
+     *   @param array $arPatterns  Array of GraphPatterns
+     *   @param array $arPlan      Plan array as returned by createPlan()
+     */
     protected function executePlan(&$arPatterns, &$arPlan)
     {
+        $id = count($arPatterns)+1;
         foreach ($arPlan as $nParent => $arChildren) {
-            $base        = $arPatterns[$nParent];
-            $grandParent = $base->getSubpatternOf();
-            $nNextId     = $nParent;
+            $base           = $arPatterns[$nParent];
+            #$grandParent    = $base->getSubpatternOf();
+            $nNextId        = $nParent;
+            $oldConstraints = $base->getConstraints();
+            
+            // collect all optionals for the current element
+            $optionalIds = $this->_getOptionalIds($arPatterns, $nParent);
+
             foreach ($arChildren as $nChild => $null) {
-                $new = clone $base;
-                $new->addTriplePatterns($arPatterns[$nChild]->getTriplePatterns());
-                $new->addConstraints(   $arPatterns[$nChild]->getConstraints());
-                $new->setId($nNextId);
-                if ($nParent != $nNextId) {
-                    $new->setUnion($nParent);
+                #$new = clone $base;
+                #$new->addTriplePatterns($arPatterns[$nChild]->getTriplePatterns());
+                #$new->addConstraints($arPatterns[$nChild]->getConstraints());
+                
+                $arPatterns[$nChild]->addTriplePatterns($base->getTriplePatterns());
+                    
+                // Catch all used vars from child pattern.
+                $usedVars = array();
+                foreach ($arPatterns[$nChild]->getTriplePatterns() as $tp) {
+                    if (is_string($tp->getSubject())) {
+                        $usedVars[] = $tp->getSubject();
+                    }
+                    if (is_string($tp->getPredicate())) {
+                        $usedVars[] = $tp->getPredicate();
+                    }
+                    if (is_string($tp->getObject())) {
+                        $usedVars[] = $tp->getObject();
+                    }
                 }
-                $arPatterns[$nNextId] = $new;
-
-                if ($grandParent !== null) {
-                    //dynamically adjust plan
-                    $arPlan[$grandParent][$nNextId] = true;
+                $usedVars = array_unique($usedVars);
+                
+                $neededConstraints = array();
+                foreach ($base->getConstraints() as $c) {
+                    $needed = false;
+                    $tempVars = $c->getUsedVars();
+         
+                    // Emmpty graph patterns need special attention... just reach trough the filters...
+                    // they will be handled in the children patterns...
+                    if (count($usedVars) === 0) {
+                        $needed = true;
+                    } else {
+                        foreach ($tempVars as $var) {
+                            if (in_array($var, $usedVars, true)) {
+                                $needed = true;
+                                break;
+                            }
+                        }
+                    }
+         
+                    if ($needed === true) {
+                        $neededConstraints[] = $c;
+                    }
+                    
+                   
                 }
-
-                $nNextId = $nChild;
+                $arPatterns[$nChild]->addConstraints($neededConstraints);
+                
+                // Get the current optionals for the child and put the id at the end of optionalIds
+                $removableOpts = array();
+                foreach ($arPatterns as $nId3 => &$opPattern) {
+                    if ($opPattern->getOptional() === $arPatterns[$nChild]->patternId) {
+                        $removableOpts[] = $opPattern->patternId;
+                    }
+                }
+                $removableOpts = array_unique($removableOpts);
+            
+            
+                // Create a new optional pattern for each optional pattern of the parent
+                foreach ($optionalIds as $oId) {
+                    $newOpt = clone $arPatterns[$oId];
+                    $newOpt->setOptional($arPatterns[$nChild]->patternId);
+                    
+                    while (true) {
+                        if (array_key_exists($id, $arPatterns)) {
+                            $id++;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    $newOpt->patternId = $id;
+                    $arPatterns[$id] = $newOpt;
+                }
+                
+                foreach ($removableOpts as $oId) {
+                    $newOpt = clone $arPatterns[$oId];
+                    $newOpt->setOptional($arPatterns[$nChild]->patternId);
+                    
+                    while (true) {
+                        if (array_key_exists($id, $arPatterns)) {
+                            $id++;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    $newOpt->patternId = $id;
+                    $arPatterns[$id] = $newOpt;
+                    
+                    unset($arPatterns[$oId]);
+                } 
             }
-            //last one is not not needed anymore
-            unset($arPatterns[$nNextId]);
+            
+            unset($arPatterns[$nParent]);
+        } 
+   
+        // Reset all subpatternOf and optional attributes (remove not existing ones).
+        foreach ($arPatterns as $nId => &$pattern) {
+            $nParentId = $pattern->getSubpatternOf();
+            $nOptionalId = $pattern->getOptional();
+            
+            if ($nParentId !== null && !isset($arPatterns[$nParentId])) {
+                $pattern->setSubpatternOf(null);
+            }
+            if ($nOptionalId !== null && !isset($arPatterns[$nOptionalId])) {
+                unset($arPatterns[$pattern->patternId]);
+            }
         }
-    }//protected function executePlan(&$arPatterns, &$arPlan)
+        
+        // Connect all pattern (that are not optional patterns) with a union
+        $lastId = null;
+        foreach ($arPatterns as $nId => &$pattern) {
+            if ($pattern->getOptional() === null) {
+                if ($lastId !== null) {
+                    $pattern->setUnion($lastId);
+                    $lastId = $pattern->patternId;
+                } else {
+                    $lastId = $pattern->patternId;
+                }
+            }
+        }
+    }
 
+    protected function _getOptionalIds(&$arPatterns, $nTestId, $recursive = true)
+    {
+        $result = array();
+        foreach ($arPatterns as $nId => &$pattern) {
+            if ($pattern->getOptional() === $nTestId) {
+                $result[] = $pattern->patternId;
+            }
+        }
+        
+        if ($recursive === true) {
+            foreach ($result as $tempId) {
+                $result = array_merge($result, $this->_getOptionalIds($arPatterns, $tempId, true));
+            }
+        }
+     
+        return $result;
+    }
 
 
     /**
@@ -122,12 +247,14 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
         $arNumbers = array();
         foreach ($arPatterns as $nId => &$pattern) {
             $nParent = $pattern->getSubpatternOf();
+            
             if ($nParent !== null) {
                 $arNumbers[$nId] = $arNumbers[$nParent] + 1;
             } else {
                 $arNumbers[$nId] = 0;
             }
         }
+
         //remove the not so interesting ones
         foreach ($arNumbers as $nId => $nNumber) {
             if ($nNumber == 0) {
@@ -135,10 +262,9 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
             }
         }
 
-        arsort($arNumbers);
-
+        asort($arNumbers);
         return $arNumbers;
-    }//protected function getNumbers(&$arPatterns)
+    }
 
 
 
@@ -149,20 +275,35 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier {
     protected static function dropEmpty(&$arPatterns)
     {
         foreach ($arPatterns as $nId => &$pattern) {
-            if ($pattern->isEmpty()) {
-                unset($arPatterns[$nId]);
+            if ($pattern->isEmpty()) {   
+                foreach ($arPatterns as $nId2 => &$pattern2) {
+                    if ($pattern2->getSubpatternOf() === $pattern->patternId) {
+                       $pattern2->setSubpatternOf($pattern->getSubpatternOf());
+                    }
+                    if ($pattern2->getUnion() === $pattern->patternId) {
+                        $pattern2->setUnion($pattern->getUnion());
+                    }
+                }
+                
+                unset($arPatterns[$nId]);    
             }
         }
-
+        
         foreach ($arPatterns as $nId => &$pattern) {
             $nParent = $pattern->getSubpatternOf();
             if (!isset($arPatterns[$nParent])) {
                 $arPatterns[$nId]->setSubpatternOf(null);
             }
+            
+            $nUnion = $pattern->getUnion();
+            if (!isset($arPatterns[$nUnion])) {
+                $arPatterns[$nId]->setUnion(null);
+            }
+            
+            $nOptional = $pattern->getOptional();
+            if (!isset($arPatterns[$nOptional])) {
+                $arPatterns[$nId]->setOptional(null);
+            }
         }
-        //FIXME: continued indexes?
-    }//protected static function dropEmpty(&$arPatterns)
-
-}//class SparqlEngineDb_QuerySimplifier
-
-?>
+    }
+}

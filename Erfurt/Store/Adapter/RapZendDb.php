@@ -154,55 +154,73 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
         $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
         
         $this->_dbConn->beginTransaction();
-        try {
-            foreach ($statementsArray as $subject => $predicatesArray) {
-                foreach ($predicatesArray as $predicate => $objectsArray) {
-                    foreach ($objectsArray as $object) {
-                        // check whether the subject is a blank node
-                        if (substr($subject, 0, 2) === '_:') {
-                            $subject = substr($subject, 2);
-                            $subjectIs = 'b';
-                        } else {
-                            $subjectIs = 'r';
-                        }
-
-                        // check the type of the object
-                        if ($object['type'] === 'uri') {
-                            $objectIs = 'r';
-                            $lang = '';
-                            $dType = '';
-                        } else if ($object['type'] === 'bnode') {
-                            $objectIs = 'b';
-                            $lang = '';
-                            $dType = '';
-                        } else {
-                            $objectIs = 'l';
-                            $lang = isset($object['lang']) ? $object['lang'] : '';
-                            $dType = isset($object['datatype']) ? $object['datatype'] : '';
-                        }
-
-                        $data = array(
-                            'modelID'       => $modelId,
-                            'subject'       => $subject,
-                            'predicate'     => $predicate,
-                            'object'        => $object['value'],
-                            'subject_is'    => $subjectIs,
-                            'object_is'     => $objectIs,
-                            'l_language'    => $lang,
-                            'l_datatype'    => $dType
-                        );
-
-                        $this->_dbConn->insert('statements', $data);
+        
+        foreach ($statementsArray as $subject => $predicatesArray) {
+            foreach ($predicatesArray as $predicate => $objectsArray) {
+                foreach ($objectsArray as $object) {
+                    // check whether the subject is a blank node
+                    if (substr($subject, 0, 2) === '_:') {
+                        $subject = substr($subject, 2);
+                        $subjectIs = 'b';
+                    } else {
+                        $subjectIs = 'r';
                     }
+
+                    // check the type of the object
+                    if ($object['type'] === 'uri') {
+                        $objectIs = 'r';
+                        $lang = '';
+                        $dType = '';
+                    } else if ($object['type'] === 'bnode') {
+                        $objectIs = 'b';
+                        $lang = '';
+                        $dType = '';
+                    } else {
+                        $objectIs = 'l';
+                        $lang = isset($object['lang']) ? $object['lang'] : '';
+                        $dType = isset($object['datatype']) ? $object['datatype'] : '';
+                    }
+
+                    $data = array(
+                        'modelID'       => $modelId,
+                        'subject'       => $subject,
+                        'predicate'     => $predicate,
+                        'object'        => $object['value'],
+                        'object_hash'   => md5($object['value']),
+                        'subject_is'    => $subjectIs,
+                        'object_is'     => $objectIs,
+                        'l_language'    => $lang,
+                        'l_datatype'    => $dType
+                    );
+
+                    try {
+                        $this->_dbConn->insert('statements', $data);
+                    } catch (Exception $e) {
+                        if ($this->_getNormalizedErrorCode() === 1000) {
+                            continue;
+                        } else {
+                            $this->_dbConn->rollback();
+                            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+                        } 
+                    }    
                 }
             }
+        }
             
-            // if everything went ok... commit the changes to the database
-            $this->_dbConn->commit();
-        } catch (Exception $e) {
-            // something went wrong... rollback
-            $this->_dbConn->rollback();
-            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+        // if everything went ok... commit the changes to the database
+        $this->_dbConn->commit();
+    }
+    
+    protected function _getNormalizedErrorCode() 
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            switch($this->_dbConn->getConnection()->errno) {
+                case 1062: 
+                    // duplicate entry
+                    return 1000;
+            }
+        } else {
+            return -1;
         }
     }
     
@@ -236,6 +254,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             'subject'       => $subject,
             'predicate'     => $predicate,
             'object'        => $object,
+            'object_hash'   => md5($object),
             'subject_is'    => $subjectType,
             'object_is'     => $objectType,
             'l_language'    => $lang,
@@ -469,13 +488,94 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedImportFormats()
     {
-        return array();
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return array('rdfxml' => 'RDF/XML');
+        } else {
+            return array();
+        }
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($modelUri, $data, $type, $locator)
     {
-        // Nothing to do here, for this backend has no own import functionality.
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            require_once 'Erfurt/Syntax/RdfParser.php';
+            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
+            $parsedArray = $parser->parse($data, $locator, $modelUri, false);
+            
+            $modelId = $this->_modelInfoCache["$modelUri"]['modelId']; 
+            
+            // create file
+            $filename   =  '/Users/philipp/Sites/ontowiki_1_0/ontowiki/src/libraries/Erfurt/tmp/import.csv';
+            $fileHandle = fopen($filename, 'w');
+            
+            $count = 0;
+            foreach ($parsedArray as $s => $pArray) {
+                if (substr($s, 0, 1) === '_') {
+                    $sType = 'b';
+                } else {
+                    $sType = 'r';
+                }
+                
+                foreach ($pArray as $p => $oArray) {
+                    foreach ($oArray as $o) {
+                        if ($o['type'] === 'literal') {
+                            $oType = 'l';
+                        } else if ($o['type'] === 'bnode') {
+                            $oType = 'b';
+                        } else {
+                            $oType = 'r';
+                        }
+                                                    
+                        $lineString = $modelId . ';' . $s . ';' . $p . ';' . $o['value'] . ';' .
+                            md5($o['value']) . ';';
+                        
+                        if (isset($o['lang'])) {
+                            $lineString .= $o['lang'];
+                        } else {
+                            $lineString .= '';
+                        }
+                        
+                        $lineString .= ';';
+                        
+                        if (isset($o['datatype'])) {
+                            $lineString .= $o['datatype'];
+                        } else {
+                            $lineString .= '';
+                        }
+                        
+                        $lineString .= ';' . $sType . ';' . $oType . PHP_EOL;
+                        
+                        $count++;
+                        fputs($fileHandle, $lineString);
+                        
+                    }
+                }
+            }
+      
+            fclose($fileHandle);
+        
+            if ($count > 10000) {
+                $this->_dbConn->getConnection()->query('ALTER TABLE statements DISABLE KEYS');
+            }
+        
+            $sql = "LOAD DATA INFILE '$filename' IGNORE INTO TABLE statements
+                    FIELDS TERMINATED BY ';'
+                    (modelID, subject, predicate, object, object_hash, l_language, l_datatype, subject_is, object_is);";
+            
+            $this->_dbConn->getConnection()->query('START TRANSACTION;');   
+            $this->_dbConn->getConnection()->query($sql);
+            $this->_dbConn->getConnection()->query('COMMIT');
+            
+            if ($count > 10000) {
+                 $this->_dbConn->getConnection()->query('ALTER TABLE statements ENABLE KEYS');
+            }
+            
+            unlink($filename);
+        } else {
+            // Nothing to do here, for this backend has no own import functionality.
+        }
+        
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -588,17 +688,20 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             throw new Exception('Store: Creation of models table failed.');
         }
         
-        $sql = 'CREATE TABLE IF NOT EXISTS statements (
-                    id         INT UNSIGNED AUTO_INCREMENT,
-                    modelID    INT UNSIGNED NOT NULL,
-                    subject    VARCHAR(255) COLLATE ascii_bin NOT NULL,
-                    predicate  VARCHAR(255) COLLATE ascii_bin NOT NULL,
-                    object     LONGTEXT COLLATE utf8_bin,
-                    l_language CHAR(2) COLLATE ascii_general_ci DEFAULT "",
-                    l_datatype VARCHAR(255) COLLATE ascii_bin DEFAULT "",
-                    subject_is ENUM("r","b") COLLATE ascii_general_ci NOT NULL,
-                    object_is  ENUM("r","b","l") COLLATE ascii_general_ci NOT NULL,
+        /*$sql = 'CREATE TABLE IF NOT EXISTS statements (
+                    id          INT UNSIGNED AUTO_INCREMENT,
+                    modelID     INT UNSIGNED NOT NULL,
+                    subject     VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                    predicate   VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                    object      LONGTEXT COLLATE utf8_bin,
+                    object_hash CHAR(32) COLLATE ascii_general_ci NOT NULL,
+                    l_language  CHAR(2) COLLATE ascii_general_ci DEFAULT "",
+                    l_datatype  VARCHAR(255) COLLATE ascii_bin DEFAULT "",
+                    subject_is  ENUM("r","b") COLLATE ascii_general_ci NOT NULL,
+                    object_is   ENUM("r","b","l") COLLATE ascii_general_ci NOT NULL,
                     PRIMARY KEY (id),
+                    UNIQUE unique_statement (modelID, subject, predicate, object_hash, l_language, l_datatype,
+                           subject_is, object_is),
                     KEY s_modelID_idx (modelID),
                     KEY s_subject_idx (subject),
                     KEY s_predicate_idx (predicate),
@@ -615,13 +718,45 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                     KEY s_llang_idx (l_language),
                     KEY s_ldtype_idx (l_datatype),
                     FULLTEXT KEY s_object_ft_idx (object)) 
-                ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+                ENGINE = MyISAM DEFAULT CHARSET = ascii;';*/
+        
+            $sql = 'CREATE TABLE IF NOT EXISTS statements (
+                        id          INT UNSIGNED AUTO_INCREMENT,
+                        modelID     INT UNSIGNED NOT NULL,
+                        subject     VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                        predicate   VARCHAR(255) COLLATE ascii_bin NOT NULL,
+                        object      LONGTEXT COLLATE utf8_bin,
+                        object_hash CHAR(32) COLLATE ascii_general_ci NOT NULL,
+                        l_language  CHAR(2) COLLATE ascii_general_ci DEFAULT "",
+                        l_datatype  VARCHAR(255) COLLATE ascii_bin DEFAULT "",
+                        subject_is  ENUM("r","b") COLLATE ascii_general_ci NOT NULL,
+                        object_is   ENUM("r","b","l") COLLATE ascii_general_ci NOT NULL,
+                        PRIMARY KEY (id),
+                        UNIQUE unique_statement (modelID, subject, predicate, object_hash, l_language, l_datatype,
+                               subject_is, object_is),
+                        #KEY s_modelID_idx (modelID),
+                        #KEY s_subject_idx (subject),
+                        #KEY s_predicate_idx (predicate),
+                        #KEY s_object_idx (object(333)),
+                        #KEY s_sub_pred_idx (subject, predicate),
+                        #KEY s_pred_obj_idx (predicate, object(248)),
+                        #KEY s_sub_obj_idx (subject, object(248)),
+                        #KEY s_subjectis_idx (subject_is),
+                        #KEY s_objectis_idx (object_is),
+                        #KEY s_sub_subis_idx (subject, subject_is))
+                        #KEY s_obj_objis_idx (object(333), object_is),
+                        #KEY s_obj_objis_lang_idx (object(332), object_is, l_language),
+                        #KEY s_obj_objis_dt_idx (object(248), object_is, l_datatype),
+                        #KEY s_llang_idx (l_language),
+                        #KEY s_ldtype_idx (l_datatype),
+                        #FULLTEXT KEY s_object_ft_idx (object)) 
+                    ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
         $success = false;
         $success = $this->_dbConn->getConnection()->query($sql);
 
         if (!$success) {
-            throw new Exception('Store: Creation of statements table failed.');
+            throw new Exception('Store: Creation of statements table failed: '.$this->_dbConn->getConnection()->error);
         }
                 
         $sql = 'CREATE TABLE IF NOT EXISTS namespaces (
@@ -683,7 +818,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
             }
             
             $sql .= '))';
-                        
+            
             // $countSelect = $this->_dbConn->select();
             //             
             //             $countWhereCondition = 's2.modelID = m.modelID AND s2.subject = m.modelURI AND s2.subject_is = `r`' .

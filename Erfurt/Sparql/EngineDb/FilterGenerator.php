@@ -1,14 +1,12 @@
 <?php
-require_once 'Erfurt/Sparql/Variable.php';
-
 /**
-*   Generates SQL from Sparql FILTER parts
-*
-*   @author Christian Weiske <cweiske@cweiske.de>
-*   @license http://www.gnu.org/licenses/lgpl.html LGPL
-*
-*   @package sparql
-*/
+ *   Generates SQL from Sparql FILTER parts
+ *
+ *   @author Christian Weiske <cweiske@cweiske.de>
+ *   @license http://www.gnu.org/licenses/lgpl.html LGPL
+ *
+ *   @package sparql
+ */
 class Erfurt_Sparql_EngineDb_FilterGenerator
 {
     /**
@@ -96,11 +94,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         return ' AND ' . $this->createTreeSql($tree, null);
     }//public function createFilterSql($tree)
 
-
-
-    /**
-    *
-    */
     protected function createTreeSql($tree, $parent)
     {
         switch ($tree['type']) {
@@ -120,8 +113,8 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 $sql = $this->createFunction($tree);
                 break;
             default:
-                //var_dump($tree);
-                throw new SparqlEngineDb_SqlGeneratorException('Unsupported tree type: ' . $tree['type']);
+                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Unsupported tree type: ' . $tree['type']);
                 break;
         }
 
@@ -130,7 +123,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         }
 
         return $sql;
-    }//protected function createTreeSql($tree, $strParentType)
+    }
 
 
 
@@ -142,10 +135,13 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     */
     protected function createValue($tree, $bDumbParent)
     {
+        require_once 'Erfurt/Sparql/Variable.php';
+        
         $strValue = stripslashes($tree['value']);
         if (Erfurt_Sparql_Variable::isVariable($strValue)) {
             if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$strValue])) {
-                throw new SparqlEngineDb_SqlGeneratorException(
+                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unknown variable in filter: ' . $strValue
                 );
             }
@@ -156,8 +152,8 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 //convert datetime to datetime if necessary
                 return self::mkVal(
                     '(CASE'
-                    . ' WHEN ' . $this->getDatatypeCol($tree) . ' = "' . self::$typeXsdBoolean . '"'
-                        . ' THEN IF(LOWER(' . $this->getValueCol($tree) . ') = "true", TRUE, FALSE)'
+                    . ' WHEN ' . $this->getDatatypeCol($tree) . '="' . self::$typeXsdBoolean . '"'
+                        . ' THEN IF(LOWER(' . $this->getValueCol($tree) . ')="true", TRUE, FALSE)'
                     . ' ELSE ' . $this->getValueCol($tree)
                     . ' END)',
                     self::$typeVariable
@@ -180,8 +176,8 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 if ($strValue[0] == '<' && substr($strValue, -1) == '>') {
                     $strValue = substr($strValue, 1, -1);
                 } else {
-var_dump($tree);
-                    throw new SparqlEngineDb_SqlGeneratorException(
+                    require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                    throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unexpected value "' . $strValue . '" (expected datatype)'
                     );
                 }
@@ -201,7 +197,8 @@ var_dump($tree);
                     );
 
                 default:
-                    throw new SparqlEngineDb_SqlGeneratorException(
+                    require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+                    throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported datatype "' . $tree['datatype']
                     );
             }
@@ -220,24 +217,26 @@ var_dump($tree);
         list($strTable, $chType) = $this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['value']];
         if (!$this->isObject($tree)) {
             //Maybe needs a fix
-            $strSqlCol = SparqlEngineDb_SqlGenerator::$arTableColumnNames[$chType]['value'];
+            $strSqlCol = $this->sg->$arTableColumnNames[$chType]['value'];
             return self::mkVal(
-                $strTable . '.' . $strSqlCol . ' != ""',
+                $strTable . '.' . $strSqlCol . ' ' . $this->sg->strColNotEmpty,
                 self::$typeXsdBoolean
             );
         }
 
-        $cType  = $strTable . '.l_datatype';
-        $cValue = $strTable . '.object';
+        $cType  = $strTable . '.' . $this->sg->$arTableColumnNames['datatype']['value'];
+        $cTypeEmpty = $this->sg->$arTableColumnNames['datatype']['empty'];
+        $cTypeNotEmpty = $this->sg->$arTableColumnNames['datatype']['not_empty'];
+        $cValue = $strTable . '.' . $this->sg->$arTableColumnNames['o']['value'];
         $xsd    = 'http://www.w3.org/2001/XMLSchema';
 
         return self::mkVal(
             '('
-            . "(($cType = '' || $cType = '$xsd#string') AND $cValue != '')"
-            . " OR ($cType = '$xsd#boolean' AND $cValue != 'false')"
-            . " OR (($cType = '$xsd#integer' || $cType = '$xsd#double') AND CAST($cValue AS DECIMAL(15,10)) != 0)"
+            . "(($cType $cTypeEmpty||$cType='$xsd#string') AND $cValue!='')"
+            . " OR ($cType='$xsd#boolean' AND $cValue!='false')"
+            . " OR (($cType='$xsd#integer'||$cType='$xsd#double') AND CAST($cValue AS DECIMAL(15,10))!=0)"
             //plain check for all unknown datatypes
-            . " OR ($cType != '' AND $cType != '$xsd#string' AND $cType != '$xsd#boolean' AND $cType != '$xsd#integer' AND $cType != '$xsd#double' AND $cValue != '')"
+            . " OR ($cType $cTypeNotEmpty AND $cType!='$xsd#string' AND $cType!='$xsd#boolean' AND $cType!='$xsd#integer' AND $cType!='$xsd#double' AND $cValue!='')"
             . ')',
             self::$typeXsdBoolean
         );
@@ -249,7 +248,8 @@ var_dump($tree);
     {
         $strFuncName = strtolower($tree['name']);
         if (!isset(self::$arFuncParamNumbers[$strFuncName])) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Unsupported FILTER function: ' . $strFuncName
             );
         }
@@ -258,7 +258,8 @@ var_dump($tree);
         if ($nParams < self::$arFuncParamNumbers[$strFuncName][0]
          || $nParams > self::$arFuncParamNumbers[$strFuncName][1]
         ) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Wrong parameter count for FILTER function: ' . $strFuncName
                 . ' (got ' . $nParams . ', expected '
                 . self::$arFuncParamNumbers[$strFuncName][0]
@@ -298,15 +299,15 @@ var_dump($tree);
             }
             if (isset($tree['operand2']['language'])) {
                 $strColLanguage = $this->getLangCol($tree['operand1']);
-                $strExtra .= ' AND ' . $strColLanguage . ' = "'
+                $strExtra .= ' AND ' . $strColLanguage . '="'
                     . addslashes($tree['operand2']['language'])
                     . '"';
             }
 
             if ($this->isNumber($tree['operand2'])) {
                 $strColDatatype = $this->getDatatypeCol($tree['operand1']);
-                $strExtra .= ' AND (' . $strColDatatype . '  = "' . self::$typeXsdDouble . '"'
-                    . ' OR ' . $strColDatatype . '  = "' . self::$typeXsdInteger . '"'
+                $strExtra .= ' AND (' . $strColDatatype . '="' . self::$typeXsdDouble . '"'
+                    . ' OR ' . $strColDatatype . '="' . self::$typeXsdInteger . '"'
                     . ')';
                 return $strIsNull . '('
                     . 'CAST(' . $val1 . ' AS DECIMAL(15,10))'
@@ -320,17 +321,17 @@ var_dump($tree);
         // HACK: xsd:string needs special care... literals without datatype are xsd:strings (see sparql spec)
         if ($tree['type'] == 'equation' && $tree['operator'] == '=' && $tree['operand1']['type'] == 'function' &&
                 $tree['operand1']['name'] == 'datatype' && $tree['operand2']['type'] == 'value' &&
-                $tree['operand2']['value'] = '<http://www.w3.org/2001/XMLSchema#string>') {
-                    
+                $tree['operand2']['value'] == '<http://www.w3.org/2001/XMLSchema#string>') {
+             
             return  $strIsNull 
-                        . '('
+                        . '(('
                             . $val1
-                            . ' = ' 
+                            . '=' 
                             . $val2
                             . ' OR '
                             . $val1
-                            . ' = ""'
-                        . ')';
+                            . ' ' . $this->sg->strColEmpty
+                        . ') AND ' . substr($val1, 0, 2) . '.ot=2)';
         }
 
         //I don't check the operator since it is already checked in the parser
@@ -369,10 +370,10 @@ var_dump($tree);
         $o2  = $this->isObject($tree2);
 
         if ($so1 && $so2) {
-            $sql = ' AND ' . $this->getIsCol($tree1) . ' = ' . $this->getIsCol($tree2);
+            $sql = ' AND ' . $this->getIsCol($tree1) . '=' . $this->getIsCol($tree2);
             if ($o1 && $o2) {
                 //maybe needs string fix
-                $sql .= ' AND ' . $this->getDatatypeCol($tree1) . ' = '
+                $sql .= ' AND ' . $this->getDatatypeCol($tree1) . '='
                     . $this->getDatatypeCol($tree2);
             }
             return $sql;
@@ -399,12 +400,12 @@ var_dump($tree);
         if ($val->type == self::$typeXsdString) {
             //string can be empty type or xsd type
             return ' AND ('
-                . $this->getDatatypeCol($tree) . ' = "' . $val->type . '"'
+                . $this->getDatatypeCol($tree) . '="' . $val->type . '"'
                 . ' OR '
-                . $this->getDatatypeCol($tree) . ' = ""'
+                . $this->getDatatypeCol($tree) . ' ' . $this->sg->arTableColumnNames['datatype']['empty']
                 . ')';
         }
-        return ' AND ' . $this->getDatatypeCol($tree) . ' = "' . $val->type . '"';
+        return ' AND ' . $this->getDatatypeCol($tree) . '="' . $val->type . '"';
     }//protected function createSingleTypeCheck($val, $tree)
 
 
@@ -436,7 +437,8 @@ var_dump($tree);
     protected function createFunction_datatype($tree)
     {
         if (!$this->isObject($tree['parameter'][0])) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'datatype\'s first parameter needs to be an object'
             );
         }
@@ -461,7 +463,7 @@ var_dump($tree);
         }
 
         return self::mkVal(
-            $this->getIsCol($tree['parameter'][0]) . ' = "b"',
+            $this->getIsCol($tree['parameter'][0]) . '=' . $this->sg->arTypeValues['b'],
             self::$typeXsdBoolean
         );
     }//protected function createFunction_isblank($tree)
@@ -481,9 +483,13 @@ var_dump($tree);
     protected function createFunction_isliteral($tree)
     {
         if ($this->isObjectOrSubject($tree['parameter'][0])) {
-            return $this->getIsCol($tree['parameter'][0]) . ' = "l"';
+            return $this->getIsCol($tree['parameter'][0]) . '=' . $this->sg->arTypeValues['l'];
         }
-
+        
+        if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['parameter'][0]['value']])) {
+            return self::mkVal('TRUE', self::$typeXsdBoolean);
+        }
+        
         //This does not take combined functions into account (subfunctions)
         return self::mkVal(
             $this->isPlainString($tree) ? 'TRUE' : 'FALSE',
@@ -497,7 +503,7 @@ var_dump($tree);
     {
         if ($this->isObjectOrSubject($tree['parameter'][0])) {
             return self::mkVal(
-                $this->getIsCol($tree['parameter'][0]) . ' = "r"',
+                $this->getIsCol($tree['parameter'][0]) . '=' . $this->sg->arTypeValues['r'],
                 self::$typeXsdBoolean
             );
         } else {
@@ -554,16 +560,16 @@ var_dump($tree);
         switch ($lang) {
             case '*':
                 //anything but nothing
-                $sql = $col . ' != ""';
+                $sql = $col . ' ' . $this->sg->arTableColumnNames['lang']['not_empty'];
                 break;
             case '':
                 //nothing
-                $sql = $col . ' = ""';
+                $sql = $col . ' ' . $this->sg->arTableColumnNames['lang']['empty'];;
                 break;
             default:
                 //language, maybe with different subcode
                 // en -> en, en-US
-                $sql = '(' . $col . ' = "' . addslashes($lang) . '" OR '
+                $sql = '(' . $col . '="' . addslashes($lang) . '" OR '
                     . $col . ' LIKE "' . addslashes($lang) . '-%")';
                 break;
         }
@@ -608,7 +614,7 @@ var_dump($tree);
 
         if ($this->isObject($tree['parameter'][0])) {
             $col = $this->getIsCol($tree['parameter'][0]);
-            $sql = "($sql AND $col = 'l')";
+            $sql = "($sql AND $col=" . $this->sg->arTypeValues['l'] . ")";
         }
 
         return self::mkVal($sql, self::$typeXsdBoolean);
@@ -624,7 +630,7 @@ var_dump($tree);
         //FIXME: dead simple implementation that does not cover all cases
         return self::mkVal(
             $this->createTreeSql($tree['parameter'][0], $tree)
-                . ' = '
+                . '='
                 . $this->createTreeSql($tree['parameter'][1], $tree),
             self::$typeXsdBoolean
         );
@@ -641,7 +647,7 @@ var_dump($tree);
         if ($this->isObject($tree['parameter'][0])) {
             return self::mkVal(
                 '(CASE ' . $this->getIsCol($tree['parameter'][0])
-                . ' WHEN "b" THEN ""'
+                . ' WHEN 1 THEN ""'
                 . ' ELSE ' . $this->getValueCol($tree['parameter'][0])
                 . ' END)',
                 self::$typeXsdString
@@ -681,7 +687,8 @@ var_dump($tree);
 
 
     protected static function mkVal($value, $type = null) {
-        return new Erfurt_Sparql_EngineDb_FilterGenerator_Value($value, $type);
+        require_once 'Erfurt/Sparql/EngineDb/FilterGeneratorValue.php';
+        return new Erfurt_Sparql_EngineDb_FilterGeneratorValue($value, $type);
     }
 
 
@@ -690,10 +697,11 @@ var_dump($tree);
     {
         require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
         list($strTable, $chType) = $this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['value']];
-        if (!isset(Erfurt_Sparql_EngineDb_SqlGenerator::$arTableColumnNames[$chType][$type])) {
+        if (!isset($this->sg->arTableColumnNames[$chType][$type])) {
             return false;
         }
-        $strSqlCol = Erfurt_Sparql_EngineDb_SqlGenerator::$arTableColumnNames[$chType][$type];
+        $strSqlCol = $this->sg->arTableColumnNames[$chType][$type];
+        
         return $strTable . '.' . $strSqlCol;
     }
 
@@ -702,7 +710,7 @@ var_dump($tree);
     protected function getDatatypeCol($tree)
     {
         list($strTable, $chType) = $this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['value']];
-        return $strTable . '.l_datatype';
+        return $strTable . '.' . $this->sg->arTableColumnNames['datatype']['value'];
     }
 
 
@@ -724,7 +732,7 @@ var_dump($tree);
     protected function getLangCol($tree)
     {
         list($strTable, $chType) = $this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['value']];
-        return $strTable . '.l_language';
+        return $strTable . '.' . $this->sg->arTableColumnNames['language']['value'];
     }
 
 
@@ -795,6 +803,8 @@ var_dump($tree);
 
     protected function isValueButNotVariableNorString($tree)
     {
+        require_once 'Erfurt/Sparql/Variable.php';
+        
         return $tree['type'] == 'value'
          && $tree['type']['quoted'] === false
          && !Erfurt_Sparql_Variable::isVariable($tree['value']);
@@ -810,6 +820,8 @@ var_dump($tree);
     */
     protected function isVariable($tree)
     {
+        require_once 'Erfurt/Sparql/Variable.php';
+        
         return $tree['type'] == 'value'
          && $tree['quoted'] === false
          && Erfurt_Sparql_Variable::isVariable($tree['value'])
@@ -826,38 +838,4 @@ var_dump($tree);
             return self::$arOperatorSwitches[$op];
         }
     }//protected static function switchOperator($op)
-
-}//class SparqlEngineDb_FilterGenerator
-
-
-
-
-/**
-*   Value class that holds some arbitrary value
-*   and a datatype.
-*   Objects of this class can transparently be used in strings since
-*   its __toString() returns the value.
-*/
-class Erfurt_Sparql_EngineDb_FilterGenerator_Value
-{
-    public $value = null;
-    public $type  = null;
-
-
-
-    public function __construct($value, $type = null)
-    {
-        $this->value = $value;
-        $this->type  = $type;
-    }
-
-
-
-    public function __toString()
-    {
-        return $this->value;
-    }
-
-}//class SparqlEngineDb_FilterGenerator_Value
-
-?>
+}
