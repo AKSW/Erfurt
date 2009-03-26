@@ -55,13 +55,27 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private $_modelLanguages = array();
     
+
+    /**
+     * An array that includes all necessary options for
+     * http access to virtuoso key=>value style
+     * useHTTP  
+     * endpointURI
+     * davFolder
+     * username
+     * password
+     * 
+     * 
+     */
+    private $_httpConfig = array();
+
     /**
      * Caching array for imported model IRIs.
      * Format: array(<model IRI> => array(<imported IRI>, ...))
      * @var array
      */
     private $_importedModels = array();
-    
+ 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -76,6 +90,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $dsn        = $adapterOptions['dsn'];
         $username   = $adapterOptions['username'];
         $password   = $adapterOptions['password'];
+        
+        if(isset($adapterOptions['useHTTP']) && $adapterOptions['useHTTP']==true){
+        	$this->_httpConfig['useHTTP'] 		= true;	
+        	$this->_httpConfig['username'] 		= $username;	
+        	$this->_httpConfig['password'] 		=  $password;	
+        	$this->_httpConfig['endpointURI'] 	=  $adapterOptions['endpointURI'];	
+        	$this->_httpConfig['davFolder'] 	=  $adapterOptions['davFolder'];	
+         }else{
+         	$this->_httpConfig['useHTTP'] 		= false;	
+         }
+        
+        
         
         if (!function_exists('odbc_connect')) {
             require_once 'Erfurt/Exception.php';
@@ -563,6 +589,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $resultFormat = 'plain') 
     {    
+    	
+    	 if($this->_httpConfig['useHTTP']==true){
+    	 	return  $this->_httpSelect($query, $resultFormat);
+    	 	}
+    	
         $result      = array();
         $json_encode = false;
         
@@ -604,7 +635,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if ($json_encode) {
             $result = json_encode($result);
         }
-        
         return $result;
     }
     
@@ -798,6 +828,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _execSparql($sparqlQuery, $graphUri = 'NULL') 
     {
+    	//echo $sparqlQuery;
         if (!is_string($graphUri) || $graphUri == '') {
             $graphUri = 'NULL';
         } else if ($graphUri != 'NULL') {
@@ -825,6 +856,70 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $result;
     }
     
+    
+    private function _httpUpdate( $sparqlQuery){
+        	$username 		= $this->_httpConfig['username'];	
+        	$password 		= $this->_httpConfig['password'];	
+        	$endpointURI 	= $this->_httpConfig['endpointURI'];	
+        	$davFolder 		= $this->_httpConfig['davFolder'];
+
+    		$url = $endpointURI.$davFolder;
+    		$client = new Zend_Http_Client($url, array());
+    		$client->setMethod(Zend_Http_Client::POST);
+    		$client->setRawData($query, 'application/sparql-query');
+			$client->setAuth($username, $password);
+			$response =  $client->request();
+			//testing below here:
+			
+			//var_dump($client);
+			echo "Answer\n";
+			echo $response->getStatus();
+			echo $response->getMessage();
+    }
+    
+    /*
+		All SPARQL queries that can be sent via http
+*/
+    
+    private function _httpSelect( $sparqlQuery, $resultFormat = 'plain'){
+    		$username 		= $this->_httpConfig['username'];	
+        	$password 		= $this->_httpConfig['password'];	
+        	$endpointURI 	= $this->_httpConfig['endpointURI'];	
+        	
+    		$sparqlQuery = urlencode($sparqlQuery);
+    		$url = $endpointURI.'/sparql?query='.$sparqlQuery;
+    		require_once('Zend/Http/Client.php');
+    		$client = new Zend_Http_Client();
+    		$client->setAuth($username, $password);
+    		
+    		//FORMAT issues:
+    		$format = ($resultFormat=='plain')?'JSON':$resultFormat;
+    		$url .='&format='.$format;
+    		$client->setUri($url);
+    		
+			$response =  $client->request();
+			$result = $response->getBody();
+			
+			//TODO catch errors here
+			
+			switch ($resultFormat ){
+				case 'JSON': return $result;
+				case 'xml': return $result;
+				case 'plain' : {
+					$retval = array();
+					$j = json_decode($result,true);
+					
+					foreach ($j['results']['bindings'] as $b){
+						$tmp=array();
+						foreach ($b as $key=>$value){
+							$tmp[$key]  = $value['value'];
+						}//foreach 
+						$retval[]=$tmp;
+					}//foreach 
+				}return $retval;
+			}
+	}
+	    
     /**
      * Executes a SQL statement and returns an ODBC result identifier.
      *
