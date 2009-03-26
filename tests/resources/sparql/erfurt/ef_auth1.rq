@@ -1,0 +1,8 @@
+SELECT ?subject ?predicate ?object
+FROM <http://localhost/OntoWiki/Config/>
+FROM <http://ns.ontowiki.net/SysOnt/>
+WHERE { 
+        ?subject ?predicate ?object . 
+        ?subject <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Agent> . 
+        ?subject <http://xmlns.com/foaf/0.1/nick> "Admin"^^<http://www.w3.org/2001/XMLSchema#string> 
+}

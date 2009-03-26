@@ -1,0 +1,10 @@
+SELECT DISTINCT ?uri ?uri0 ?uri1
+FROM <http://3ba.se/conferences/>
+WHERE {
+    ?uri a <http://www.w3.org/2002/07/owl#Ontology>.                            
+    OPTIONAL { ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?uri0. }
+    OPTIONAL { ?uri <http://purl.org/dc/elements/1.1/title> ?uri1. }
+    FILTER (!sameTerm(?uri, <http://3ba.se/conferences/>))
+    FILTER isUri(?uri)
+}
+LIMIT 6

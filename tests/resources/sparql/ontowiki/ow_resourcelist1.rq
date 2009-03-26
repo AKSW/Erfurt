@@ -1,0 +1,39 @@
+SELECT DISTINCT ?resourceUri  ?resourceUri0 ?resourceUri1
+FROM <http://3ba.se/conferences/>
+WHERE {
+    ?resourceUri a ?type
+    OPTIONAL { ?resourceUri <http://www.w3.org/2000/01/rdf-schema#label> ?resourceUri0. }
+    OPTIONAL { ?resourceUri <http://purl.org/dc/elements/1.1/title> ?resourceUri1. }
+    FILTER (isURI(?resourceUri))
+    FILTER (sameTerm(?type, <http://swrc.ontoware.org/ontology#Person>))
+}
+ORDER BY ?resourceUri
+LIMIT 10
+OFFSET 0
+SELECT DISTINCT ?resourceUri ?TYPEOBJECT ?TYPELITERAL ?TYPEOBJECT0 ?TYPEOBJECT1
+FROM <http://3ba.se/conferences/>
+WHERE {  
+    {
+        ?resourceUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?TYPEOBJECT. 
+        OPTIONAL { ?TYPEOBJECT <http://www.w3.org/2000/01/rdf-schema#label> ?TYPEOBJECT0 } 
+        OPTIONAL { ?TYPEOBJECT <http://purl.org/dc/elements/1.1/title> ?TYPEOBJECT1 }
+    } 
+    UNION 
+    {
+        ?resourceUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?TYPELITERAL
+    } 
+    FILTER (isURI(?TYPEOBJECT)) 
+    FILTER (isLiteral(?TYPELITERAL)) 
+    FILTER ( 
+        str(?resourceUri) = <http://3ba.se/conferences/AbrahamBernstein> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AchilleVarzi> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AlainLeger> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AldoGangemi> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AleksanderPivk> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AlessandroLenci> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AlexBorgida> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AlexanderLoeser> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AmitSheth> || 
+        str(?resourceUri) = <http://3ba.se/conferences/AndreasAbecker>
+    )
+}

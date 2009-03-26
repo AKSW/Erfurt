@@ -7,6 +7,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
 {
     const RAP_TEST_DIR = 'resources/sparql/rap/';
     const OW_TEST_DIR = 'resources/sparql/ontowiki/';
+    const EF_TEST_DIR = 'resources/sparql/erfurt/';
     const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
     protected $_sparqlQueries = array();
@@ -17,10 +18,13 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
         // 1. ow tests 
         $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl');
         
-        // 2. rap tests
+        // 2. erfurt tests
+        $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl');
+        
+        // 3. rap tests
         $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl');
     
-        // 3. dawg2
+        // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
@@ -72,6 +76,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
                      
                 $queryArray = array();
                 $queryArray['name']     = $s;
+                $queryArray['file_name']     = $queryFileName;
                 $queryArray['group']    = 'Positive syntax tests';
                 $queryArray['type']     = 'positive';
                 
@@ -90,6 +95,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
 
                 $queryArray = array();
                 $queryArray['name']     = $s;
+                $queryArray['file_name']     = $queryFileName;
                 $queryArray['group']    = 'Negative syntax tests';
                 $queryArray['type']     = 'negative';
 
@@ -148,7 +154,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
     {
         $msg =  'No.: ' . $i . PHP_EOL .
                 'Group: ' . $query['group'] . PHP_EOL .
-                #'Filename: ' . $query['file_name'] . PHP_EOL .
+                'Filename: ' . $query['file_name'] . PHP_EOL .
                 'Name: ' . $query['name'] . PHP_EOL;
                 #'Query: ' . $query['query'] . PHP_EOL;
                 

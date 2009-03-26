@@ -1,0 +1,16 @@
+SELECT ?instance ?label ?lat ?long
+FROM <http://3ba.se/conferences/>
+WHERE {
+    {
+        ?instance <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat;
+            <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long.
+        FILTER (str(?instance) = <http://3ba.se/conferences/AbrahamBernstein>)                                      
+    }
+    UNION
+    {
+        { ?instance a <http://3ba.se/conferences/AbrahamBernstein>. }
+        ?instance <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat;
+            <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long.
+    } 
+    OPTIONAL { ?instance <http://www.w3.org/2000/01/rdf-schema#label> ?label. }
+}

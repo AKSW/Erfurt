@@ -1,0 +1,7 @@
+SELECT ?s ?p ?o
+FROM <http://localhost/OntoWiki/Config/>
+FROM <http://ns.ontowiki.net/SysOnt/>
+WHERE { 
+    ?s ?p ?o . 
+    FILTER (sameTerm(?s, <http://ns.ontowiki.net/SysOnt/Anonymous>))
+}

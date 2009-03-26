@@ -1,0 +1,11 @@
+SELECT  ?0 ?1            
+FROM <http://3ba.se/conferences/>
+WHERE {
+    {
+        <http://3ba.se/conferences/> <http://www.w3.org/2000/01/rdf-schema#label> ?0
+    }
+    UNION  
+    {
+        <http://3ba.se/conferences/> <http://purl.org/dc/elements/1.1/title> ?1
+    }
+}

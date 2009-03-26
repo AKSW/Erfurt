@@ -7,12 +7,62 @@
 
 <>  rdf:type mf:Manifest ;
     rdfs:comment "OntoWiki SPARQL tests." ;
-    mf:entries ( :ow_hierarchy :ow_resourceview ).
+    mf:entries ( :ow_ext_community1 :ow_ext_linkinghere1 :ow_ext_linkinghere2 :ow_ext_map1 :ow_ext_map2
+                 :ow_ext_properties1 :ow_ext_showproperties1 :ow_ext_similarinstances1 :ow_ext_similarinstances2
+                 :ow_ext_usage1 :ow_ext_usage2 :ow_hierarchy :ow_resource1 :ow_resourcelist1 ).
+
+:ow_ext_community1  mf:name  "ow_ext_community1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_community1.rq> .
+
+:ow_ext_linkinghere1  mf:name  "ow_ext_linkinghere1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_linkinghere1.rq> .
+
+:ow_ext_linkinghere2  mf:name  "ow_ext_linkinghere2.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_linkinghere2.rq> .
+
+:ow_ext_map1  mf:name  "ow_ext_map1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_map1.rq> .
+
+:ow_ext_map2  mf:name  "ow_ext_map2.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_map2.rq> .
+
+:ow_ext_properties1  mf:name  "ow_ext_properties1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_properties1.rq> .
+
+:ow_ext_showproperties1  mf:name  "ow_ext_showproperties1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_showproperties1.rq> .
+
+:ow_ext_similarinstances1  mf:name  "ow_ext_similarinstances1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_similarinstances1.rq> .
+
+:ow_ext_similarinstances2  mf:name  "ow_ext_similarinstances2.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_similarinstances2.rq> .
+
+:ow_ext_usage1  mf:name  "ow_ext_usage1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_usage1.rq> .
+
+:ow_ext_usage2  mf:name  "ow_ext_usage2.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_ext_usage2.rq> .
 
 :ow_hierarchy  mf:name  "ow_hierarchy.rq" ;
-         rdf:type   mf:PositiveSyntaxTest ;
-         mf:action  <ow_hierarchy.rq> .
-	 
-:ow_resourceview  mf:name  "ow_resourceview.rq" ;
-         rdf:type   mf:PositiveSyntaxTest ;
-         mf:action  <ow_resourceview.rq> .
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_hierarchy.rq> .
+
+:ow_resource1  mf:name  "ow_resource1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_resource1.rq> .
+
+:ow_resourcelist1  mf:name  "ow_resourcelist1.rq" ;
+rdf:type   mf:PositiveSyntaxTest ;
+mf:action  <ow_resourcelist1.rq> .

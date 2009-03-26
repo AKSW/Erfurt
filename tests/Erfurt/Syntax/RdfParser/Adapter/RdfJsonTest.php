@@ -23,6 +23,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends PHPUnit_Framework_Test
     
     public function testParseFromUrl()
     {
+// TODO model has to be available
+        $this->markTestIncomplete('Not implemented yet.');return;
+        
         $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/rdfjson?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
         $graphUri = 'http://3ba.se/conferences/3/';
         

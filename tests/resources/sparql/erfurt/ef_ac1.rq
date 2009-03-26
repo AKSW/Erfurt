@@ -1,0 +1,7 @@
+SELECT ?group ?p ?o
+FROM <http://localhost/OntoWiki/Config/>
+FROM <http://ns.ontowiki.net/SysOnt/>
+WHERE { 
+    ?group ?p ?o . 
+    ?group <http://xmlns.com/foaf/0.1/member> <http://ns.ontowiki.net/SysOnt/Anonymous> 
+}

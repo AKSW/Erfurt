@@ -1,0 +1,6 @@
+SELECT ?lat, ?long
+FROM <http://3ba.se/conferences/>
+WHERE {
+    <http://3ba.se/conferences/AbrahamBernstein> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat;
+        <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?long.
+}

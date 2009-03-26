@@ -1,0 +1,6 @@
+SELECT ?parent ?child 
+FROM <http://3ba.se/conferences/>
+WHERE {
+    ?child <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?parent.
+    FILTER (sameTerm(?parent, <http://swrc.ontoware.org/ontology#Person>))
+}

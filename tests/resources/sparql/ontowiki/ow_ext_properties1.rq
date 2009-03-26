@@ -1,0 +1,18 @@
+SELECT ?predicate ?object ?literal ?predicate0 ?predicate1 ?object0 ?object1
+FROM <http://3ba.se/conferences/>
+WHERE {
+    {
+        <http://swrc.ontoware.org/ontology#Person> ?predicate ?literal. 
+        FILTER (isLiteral(?literal))
+    }
+    UNION
+    {
+        <http://swrc.ontoware.org/ontology#Person> ?predicate ?object.
+        FILTER (isUri(?object))                
+        OPTIONAL { ?object <http://www.w3.org/2000/01/rdf-schema#label> ?object0. }
+        OPTIONAL { ?object <http://purl.org/dc/elements/1.1/title> ?object1. }
+    }            
+    OPTIONAL { ?predicate <http://www.w3.org/2000/01/rdf-schema#label> ?predicate0. }
+    OPTIONAL { ?predicate <http://purl.org/dc/elements/1.1/title> ?predicate1. }
+    FILTER (str(?predicate) != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
+}

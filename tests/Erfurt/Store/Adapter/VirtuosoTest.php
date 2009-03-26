@@ -6,7 +6,7 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
 {
     public $fixture = null;
     private $_options = array(
-        'dsn'      => 'VOS509', 
+        'dsn'      => 'VOS505', 
         'username' => 'dba', 
         'password' => 'dba'
     );

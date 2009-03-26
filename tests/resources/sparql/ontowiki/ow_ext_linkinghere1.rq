@@ -1,0 +1,8 @@
+SELECT DISTINCT ?uri ?uri0 ?uri1
+FROM <http://3ba.se/conferences/>
+WHERE {
+    ?subject ?uri <http://3ba.se/conferences/>.
+    OPTIONAL { ?uri <http://www.w3.org/2000/01/rdf-schema#label> ?uri0. }
+    OPTIONAL { ?uri <http://purl.org/dc/elements/1.1/title> ?uri1. }
+}
+LIMIT 5

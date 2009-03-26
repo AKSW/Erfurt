@@ -1,0 +1,7 @@
+SELECT ?s ?p ?o
+FROM <http://3ba.se/conferences/>
+WHERE { 
+    ?s ?p ?o . 
+    FILTER (isLiteral(?o)) . 
+    FILTER (sameTerm(?s, <http://3ba.se/conferences/AbrahamBernstein>)) 
+}

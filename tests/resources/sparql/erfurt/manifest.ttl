@@ -1,0 +1,39 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <http://www.w3.org/2001/sw/DataAccess/tests/data-r2/syntax-sparql1/manifest#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+@prefix dawgt:   <http://www.w3.org/2001/sw/DataAccess/tests/test-dawg#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Erfurt SPARQL tests." ;
+    mf:entries ( :ef_ac1 :ef_ac2 :ef_auth1 :ef_resource1 :ef_serializer1 :ef_serializer2 :ef_store1 ).
+
+:ef_ac1  mf:name  "ef_ac1.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_ac1.rq> .
+
+:ef_ac2  mf:name  "ef_ac2.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_ac2.rq> .
+
+:ef_auth1  mf:name  "ef_auth1.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_auth1.rq> .
+
+:ef_resource1  mf:name  "ef_resource1.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_resource1.rq> .
+
+:ef_serializer1  mf:name  "ef_serializer1.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_serializer1.rq> .
+
+:ef_serializer2  mf:name  "ef_serializer2.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_serializer2.rq> .
+
+:ef_store1  mf:name  "ef_store1.rq" ;
+    rdf:type   mf:PositiveSyntaxTest ;
+    mf:action  <ef_store1.rq> .
+

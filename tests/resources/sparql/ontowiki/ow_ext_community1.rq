@@ -1,0 +1,13 @@
+SELECT DISTINCT ?author ?comment ?content ?date ?alabel     
+FROM <http://3ba.se/conferences/>
+WHERE {
+    ?comment <http://rdfs.org/sioc/ns#about> <http://3ba.se/conferences/AbrahamBernstein>.
+    ?comment a <http://rdfs.org/sioc/ns#Comment>.
+    ?comment <http://rdfs.org/sioc/ns#has_creator> ?author.
+    OPTIONAL { ?author <http://www.w3.org/2000/01/rdf-schema#label> ?alabel }
+    OPTIONAL { ?author <http://xmlns.com/foaf/0.1/nick> ?anick }
+    ?comment <http://rdfs.org/sioc/ns#content> ?content.
+    ?comment <http://rdfs.org/sioc/ns#created_at> ?date.
+}
+ORDER BY ASC(?date)
+LIMIT 10
