@@ -105,6 +105,11 @@ class Erfurt_Store
         
         if ($backend === 'zenddb') {
             $this->_backendName = 'ZendDb';
+            
+            // Used Ef schema as default for the ZendDb backend
+            if (null === $schema) {
+                $schemaName = 'Ef';
+            }
         } else {
             $this->_backendName = ucfirst($backend);
         }

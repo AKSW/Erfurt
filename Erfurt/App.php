@@ -327,6 +327,7 @@ class Erfurt_App
             }
             
             // check configured backend and if not set set it as empty (e.g. virtuoso needs no special backend)
+// TODO Maybe later, if we have different schemas... for now we only need virtuoso and zenddb with ef schema. 
             if (isset($config->store->schema)) {
                 $schema = $config->store->schema;
             } else {

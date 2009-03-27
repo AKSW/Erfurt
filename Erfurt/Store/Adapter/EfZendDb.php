@@ -44,8 +44,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     public function __construct($adapterOptions = array()) 
     {
-        $adapter    = $adapterOptions['adapter'];
-        $host       = $adapterOptions['host'];
+        $adapter    = $adapterOptions['dbtype'];
+        $host       = isset($adapterOptions['host']) ? $adapterOptions['host'] : 'localhost';
         $username   = $adapterOptions['username'];
         $password   = $adapterOptions['password'];
         $dbname     = $adapterOptions['dbname'];
@@ -55,49 +55,25 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             'username'  => $username,
             'password'  => $password,
             'dbname'    => $dbname,
-            'profiler'  => true
+            'profiler'  => false
         );
         
         switch (strtolower($adapter)) {
-            case 'mysqli':
-                require_once 'Zend/Db/Adapter/Mysqli.php';
-                $this->_dbConn = new Zend_Db_Adapter_Mysqli($adapterOptions);
-                break;
-            case 'db2':
-                require_once 'Zend/Db/Adapter/Db2.php';
-                $this->_dbConn = new Zend_Db_Adapter_Db2($adapterOptions);
-                break;
-            case 'oracle':
-                require_once 'Zend/Db/Adapter/Oracle.php';
-                $this->_dbConn = new Zend_Db_Adapter_Oracle($adapterOptions);
-                break;
-            case 'pdo_ibm':
-                require_once 'Zend/Db/Adapter/Pdo/Ibm.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Ibm($adapterOptions);
-                break;
-            case 'pdo_mssql':
-                require_once 'Zend/Db/Adapter/Pdo/Mssql.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Mssql($adapterOptions);
-                break;
-            case 'pdo_mysql':
-                require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($adapterOptions);
-                break;
-            case 'pdo_oci':
-                require_once 'Zend/Db/Adapter/Pdo/Oci.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Oci($adapterOptions);
-                break;
-            case 'pdo_pgsql':
-                require_once 'Zend/Db/Adapter/Pdo/Pqsql.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Pgsql($adapterOptions);
-                break;
-            case 'pdo_sqlite':
-                require_once 'Zend/Db/Adapter/Pdo/Sqlite.php';
-                $this->_dbConn = new Zend_Db_Adapter_Pdo_Sqlite($adapterOptions);
+            case 'mysql':
+                if (extension_loaded('mysqli')) {
+                    require_once 'Zend/Db/Adapter/Mysqli.php';
+                    $this->_dbConn = new Zend_Db_Adapter_Mysqli($adapterOptions);
+                } else if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
+                    require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
+                    $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($adapterOptions);
+                } else {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
+                }
                 break;
             default:
                 require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Given database adapter is not supported by Zend_Db', -1);
+                throw new Erfurt_Exception('Given database adapter is not supported.', -1);
         }
         
         try {
