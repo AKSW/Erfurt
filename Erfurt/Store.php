@@ -959,7 +959,7 @@ class Erfurt_Store
                 $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
-#var_dump((string)$queryObject);exit;          
+   
         // TODO: check if adapter supports requested result format
         return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
     }

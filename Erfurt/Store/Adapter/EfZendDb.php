@@ -890,7 +890,6 @@ throw new Exception('Not implemented yet.');
 
         $query = $parser->parse((string)$query);        
 
-
         $result = $engine->queryModel($query, $resultform);
 
         return $result;   

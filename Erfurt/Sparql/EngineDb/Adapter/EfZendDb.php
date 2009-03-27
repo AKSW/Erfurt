@@ -229,6 +229,14 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
                 //require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/EfZendDb/Xml.php';
                 //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
                 //break;
+            case 'extended':
+                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Extended.php';
+                $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Extended();
+                break;
+            case 'json':
+                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Json.php';
+                $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Json();
+                break;
             case 'plain':
             default:
                 require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Plain.php';

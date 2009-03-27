@@ -637,10 +637,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 return array(
                     $strTablePrefix . '.o as ' . $this->getSqlVariableNameValue($varname),
                     $strTablePrefix . '.ot as ' . $this->getSqlVariableNameIs($varname),
-                    $strTablePrefix . '.o_r as ' . $this->getSqlVariableNameRef($varname)
-                    #$strTablePrefix . '.ol as ' . $this->getSqlVariableNameLanguage($varname),
-                    #$strTablePrefix . '.od as ' . $this->getSqlVariableNameDatatype($varname),
-                    #$strTablePrefix . '.od_r as ' . $this->getSqlVariableNameDatatypeRef($varname)
+                    $strTablePrefix . '.o_r as ' . $this->getSqlVariableNameRef($varname),
+                    $strTablePrefix . '.ol as ' . $this->getSqlVariableNameLanguage($varname),
+                    $strTablePrefix . '.od as ' . $this->getSqlVariableNameDatatype($varname),
+                    $strTablePrefix . '.od_r as ' . $this->getSqlVariableNameDatatypeRef($varname)
                 );
             default:
                 require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
@@ -740,24 +740,24 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
                 if (isset($this->arUsedVarTypes[$strVar]['o']) && $nCount < 4) {
                     //it's a subject or object, but we don't want the type
-                    #if (isset($this->arVarAssignments[$strVar]['sql_lang'])) {
-                    #    $strColLanguage = $this->arVarAssignments[$strVar]['sql_lang'];
-                    #} else {
-                    #    $strColLanguage = 'dL';
-                    #}
-                    #if (isset($this->arVarAssignments[$strVar]['sql_type'])) {
-                    #    $strColDatatype = $this->arVarAssignments[$strVar]['sql_type'];
-                    #    $strColDatatypeRef = $this->arVarAssignments[$strVar]['sql_dt_ref'];
-                    #} else {
-                    #    $strColDatatype = 'dD';
-                    #    $strColDatatypeRef = 'dDR';
-                    #}
-                    #$ar[] = 'NULL as '
-                    #    . $strColLanguage;
-                    #$ar[] = 'NULL as '
-                    #    . $strColDatatype;
-                    #$ar[] = 'NULL as '
-                    #    . $strColDatatypeRef;
+                    if (isset($this->arVarAssignments[$strVar]['sql_lang'])) {
+                        $strColLanguage = $this->arVarAssignments[$strVar]['sql_lang'];
+                    } else {
+                        $strColLanguage = 'dL';
+                    }
+                    if (isset($this->arVarAssignments[$strVar]['sql_type'])) {
+                        $strColDatatype = $this->arVarAssignments[$strVar]['sql_type'];
+                        $strColDatatypeRef = $this->arVarAssignments[$strVar]['sql_dt_ref'];
+                    } else {
+                        $strColDatatype = 'dD';
+                        $strColDatatypeRef = 'dDR';
+                    }
+                    $ar[] = 'NULL as '
+                        . $strColLanguage;
+                    $ar[] = 'NULL as '
+                        . $strColDatatype;
+                    $ar[] = 'NULL as '
+                        . $strColDatatypeRef;
                 }
                 $ars[] = implode(',', $ar);
             }
