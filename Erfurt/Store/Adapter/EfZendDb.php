@@ -171,7 +171,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $subject = $subjectHash;
+                        $subject = substr($subject, 0, 223) . $subjectHash;
                     }
                     
                     $pRef = false;
@@ -186,7 +186,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $predicate = $predicateHash;
+                        $predicate = substr($predicate, 0, 223) . $predicateHash;
                     }
                     
                     $oRef = false;
@@ -207,7 +207,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $object['value'] = $objectHash;
+                        $object['value'] = substr($object['value'], 0, 223) . $objectHash;
                     }
                     
                     $data = array(
@@ -243,7 +243,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                             }
                             
-                            $data['od']   = $dTypeHash;
+                            $data['od']   = substr($data['od'], 0, 223) . $dTypeHash;
                             $data['od_r'] = $dtRef;
                             
                         } else {
@@ -350,15 +350,15 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $modelId = $this->_modelInfoCache[$graphUri]['modelId'];
         
         if ($subject !== null && strlen($subject) > $this->_getSchemaRefThreshold()) {
-            $subject = md5($subject);
+            $subject = substr($subject, 0, 223) . md5($subject);
         } 
         
         if ($predicate !== null && strlen($predicate) > $this->_getSchemaRefThreshold()) {
-            $predicate = md5($predicate);
+            $predicate = substr($predicate, 0, 223) . md5($predicate);
         } 
         
         if ($object !== null && strlen($object) > $this->_getSchemaRefThreshold()) {
-            $object = md5($object);
+            $object = substr($object, 0, 223) . md5($object);
         } 
         
         $whereString = '1';
@@ -401,7 +401,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
         if (isset($options['literal_datatype'])) {
             if (strlen($options['literal_datatype']) > $this->_getSchemaRefThreshold()) {
-                $whereString .= ' AND od = "' . md5($options['literal_datatype']) . '"';
+                $whereString .= ' AND od = "' . substr($options['literal_datatype'], 0, 223) .
+                                md5($options['literal_datatype']) . '"';
             } else {
                 $whereString .= ' AND od = "' . $options['literal_datatype'] . '"';
             }
@@ -749,13 +750,13 @@ throw new Exception('Not implemented yet.');
                     $sHash = md5($s);
                     
                     $sId = $this->_insertValueInto('ef_uri', $modelId, $s, $sHash); 
-                    $s = $sHash;
+                    $s = substr($s, 0, 223) . $sHash;
                 }
                 if (strlen($p) > $this->_getSchemaRefThreshold()) {
                     $pHash = md5($p);
                     
                     $pId = $this->_insertValueInto('ef_uri', $modelId, $p, $pHash);
-                    $p = $pHash;
+                    $p = substr($p, 0, 223) . $pHash;
                 }
                 if (strlen($o) > $this->_getSchemaRefThreshold()) {
                     $oHash = md5($o);
@@ -766,14 +767,14 @@ throw new Exception('Not implemented yet.');
                         $oId = $this->_insertValueInto('ef_uri', $modelId, $o, $oHash); 
                     }
                     
-                    $o = $oHash;
+                    $o = substr($o, 0, 223) . $oHash;
                 }
                 if (isset($stm['o']['datatype']) && strlen($stm['o']['datatype']) > $this->_getSchemaRefThreshold()) {
                     $oDtHash = md5($stm['o']['datatype']);
                     
                     $dtId = $this->_insertValueInto('ef_uri', $modelId, $stm['o']['datatype'], $oDtHash);
                     
-                    $oDt = $oDtHash; 
+                    $oDt = substr($oDt, 0, 223) . $oDtHash; 
                 }
                     
                 $sql = "INSERT INTO ef_stmt 
@@ -883,14 +884,15 @@ throw new Exception('Not implemented yet.');
         
         require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
         $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_modelInfoCache);
-                
+               
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();        
 
         $query = $parser->parse((string)$query);        
 
+
         $result = $engine->queryModel($query, $resultform);
-   
+
         return $result;   
     }
     
@@ -978,11 +980,11 @@ throw new Exception('Not implemented yet.');
         
         // Create ef_graph table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
-        	        id			TINYINT(1) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        uri			VARCHAR(150) COLLATE ascii_bin NOT NULL,
+        	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        uri			VARCHAR(255) COLLATE ascii_bin NOT NULL,
         	        uri_r	    INT UNSIGNED DEFAULT NULL,					
-        	        base		VARCHAR(150) COLLATE ascii_bin NOT NULL,
-        	        base_r	INT UNSIGNED DEFAULT NULL,
+        	        base		VARCHAR(255) COLLATE ascii_bin NOT NULL,
+        	        base_r	    INT UNSIGNED DEFAULT NULL,
         	        UNIQUE unique_graph (uri)							
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
@@ -999,25 +1001,25 @@ throw new Exception('Not implemented yet.');
         // Create ef_stmt table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
             	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            	    g	    TINYINT(1) UNSIGNED NOT NULL,               # foreign key to ef_graph
-            	    s		VARCHAR(150) COLLATE ascii_bin NOT NULL,    # subject or subject hash
-            	    p		VARCHAR(150) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
-            	    o		VARCHAR(150) COLLATE utf8_bin NOT NULL,     # object or object hash
+            	    g	    INT UNSIGNED NOT NULL,                      # foreign key to ef_graph
+            	    s		VARCHAR(255) COLLATE ascii_bin NOT NULL,    # subject or subject hash
+            	    p		VARCHAR(255) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
+            	    o		VARCHAR(255) COLLATE utf8_bin NOT NULL,     # object or object hash
             	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
             	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
             	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
             	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
             	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
             	    ol 		VARCHAR(10) COLLATE ascii_bin DEFAULT NULL,
-            	    od 	    VARCHAR(150) COLLATE ascii_bin DEFAULT NULL,
+            	    od 	    VARCHAR(255) COLLATE ascii_bin DEFAULT NULL,
             	    od_r 	INT UNSIGNED DEFAULT NULL,
-            	    UNIQUE  unique_stmt (g, s, p, o, s_r, p_r, o_r, st, ot, ol, od, od_r),
-            	    INDEX 	idx_gpo	(g, p, o),
-            	    INDEX   idx_gsp (g, s, p),
-            	    INDEX   idx_gspo (g, s, p, o), # TODO needed?
-            	    INDEX   idx_gs (g, s),
-            	    INDEX   idx_gp (g, p),
-            	    INDEX   idx_go (g, o)
+            	    UNIQUE  unique_stmt (g, s(150), p(150), o(150), st, ot, ol, od(150)),
+            	    INDEX 	idx_gpo	(g, p(100), o(100)),
+            	    INDEX   idx_gsp (g, s(100), p(100)),
+            	    INDEX   idx_gspo (g, s(100), p(100), o(100)), # TODO needed?
+            	    INDEX   idx_gs (g, s(100)),
+            	    INDEX   idx_gp (g, p(100)),
+            	    INDEX   idx_go (g, o(100))
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
         $success = false;
@@ -1033,8 +1035,8 @@ throw new Exception('Not implemented yet.');
         // Create ef_ns table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
         	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	    TINYINT(1) UNSIGNED NOT NULL,
-        	        ns		VARCHAR(150) COLLATE ascii_bin NOT NULL,
+        	        g	    INT UNSIGNED NOT NULL,
+        	        ns		VARCHAR(255) COLLATE ascii_bin NOT NULL,
         	        ns_r	INT UNSIGNED DEFAULT NULL,					
         	        prefix	VARCHAR(255) COLLATE ascii_bin NOT NULL,
         	        UNIQUE unique_ns (g, ns, ns_r, prefix)
@@ -1053,7 +1055,7 @@ throw new Exception('Not implemented yet.');
         // Create ef_uri table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
         	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	TINYINT(1) UNSIGNED NOT NULL,
+        	        g	INT UNSIGNED NOT NULL,
         	        v	LONGTEXT COLLATE ascii_bin NOT NULL,
         	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
         	        UNIQUE unique_uri (g, vh)
@@ -1072,7 +1074,7 @@ throw new Exception('Not implemented yet.');
         // Create ef_lit table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_lit (
         	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	TINYINT(1) UNSIGNED NOT NULL,
+        	        g	INT UNSIGNED NOT NULL,
         	        v	LONGTEXT COLLATE utf8_bin NOT NULL,
         	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
         	        UNIQUE unique_lit (g, vh)
@@ -1090,7 +1092,7 @@ throw new Exception('Not implemented yet.');
     
     protected function _getSchemaRefThreshold()
     {
-        return 150;
+        return 255;
     }
     
     protected function _optimizeTables()
