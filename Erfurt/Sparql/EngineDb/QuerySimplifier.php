@@ -25,9 +25,9 @@
 class Erfurt_Sparql_EngineDb_QuerySimplifier 
 {
     /**
-    *   Simplify the query by flattening out subqueries.
-    *   Modifies the passed query object directly.
-    */
+     *   Simplify the query by flattening out subqueries.
+     *   Modifies the passed query object directly.
+     */
     public function simplify(Erfurt_Sparql_Query $query) {
 	
         $arPatterns = $query->getResultPart();
@@ -46,16 +46,16 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
 
 
     /**
-    *   Creates a plan what to do.
-    *
-    *   @return array Array of arrays. Key is the parent pattern id,
-    *               value is an array of subpatterns that belong to
-    *               that parental pattern.
-    */
+     *   Creates a plan what to do.
+     *
+     *   @return array Array of arrays. Key is the parent pattern id,
+     *               value is an array of subpatterns that belong to
+     *               that parental pattern.
+     */
     protected function createPlan(&$arPatterns)
     {
         $arNumbers = $this->getNumbers($arPatterns);
-        if (count($arNumbers) == 0) {
+        if (count($arNumbers) === 0) {
             return array();
         }
 
@@ -139,7 +139,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
                 
                 // Get the current optionals for the child and put the id at the end of optionalIds
                 $removableOpts = array();
-                foreach ($arPatterns as $nId3 => &$opPattern) {
+                foreach ($arPatterns as $nId3 => $opPattern) {
                     if ($opPattern->getOptional() === $arPatterns[$nChild]->patternId) {
                         $removableOpts[] = $opPattern->patternId;
                     }
@@ -216,7 +216,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
     protected function _getOptionalIds(&$arPatterns, $nTestId, $recursive = true)
     {
         $result = array();
-        foreach ($arPatterns as $nId => &$pattern) {
+        foreach ($arPatterns as $nId => $pattern) {
             if ($pattern->getOptional() === $nTestId) {
                 $result[] = $pattern->patternId;
             }
@@ -227,29 +227,28 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
                 $result = array_merge($result, $this->_getOptionalIds($arPatterns, $tempId, true));
             }
         }
-     
+
         return $result;
     }
 
-
     /**
-    *   Returns an array of id-value pairs determining
-    *   which pattern IDs (array id) are deepest nested
-    *   (higher value).
-    *   Array is sorted in reverse order, highest values
-    *   first.
-    *
-    *   @param array $arPatterns    Array with GraphPatterns
-    *   @return array Array with key-value pairs
-    */
+     *   Returns an array of id-value pairs determining
+     *   which pattern IDs (array id) are deepest nested
+     *   (higher value).
+     *   Array is sorted in reverse order, highest values
+     *   first.
+     *
+     *   @param array $arPatterns    Array with GraphPatterns
+     *   @return array Array with key-value pairs
+     */
     protected function getNumbers(&$arPatterns)
     {
         $arNumbers = array();
-        foreach ($arPatterns as $nId => &$pattern) {
+        foreach ($arPatterns as $nId => $pattern) {
             $nParent = $pattern->getSubpatternOf();
             
             if ($nParent !== null) {
-                $arNumbers[$nId] = $arNumbers[$nParent] + 1;
+                $arNumbers[$nId] = (isset($arNumbers[$nParent]) ? $arNumbers[$nParent] : 0)  + 1;
             } else {
                 $arNumbers[$nId] = 0;
             }
@@ -257,7 +256,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
 
         //remove the not so interesting ones
         foreach ($arNumbers as $nId => $nNumber) {
-            if ($nNumber == 0) {
+            if ($nNumber === 0) {
                 unset($arNumbers[$nId]);
             }
         }
@@ -266,15 +265,13 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
         return $arNumbers;
     }
 
-
-
     /**
-    *   Removes all empty graph patterns from the array.
-    *   Modifies it directly.
-    */
+     *   Removes all empty graph patterns from the array.
+     *   Modifies it directly.
+     */
     protected static function dropEmpty(&$arPatterns)
     {
-        foreach ($arPatterns as $nId => &$pattern) {
+        foreach ($arPatterns as $nId => $pattern) {
             if ($pattern->isEmpty()) {   
                 foreach ($arPatterns as $nId2 => &$pattern2) {
                     if ($pattern2->getSubpatternOf() === $pattern->patternId) {
@@ -291,18 +288,18 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
         
         foreach ($arPatterns as $nId => &$pattern) {
             $nParent = $pattern->getSubpatternOf();
-            if (!isset($arPatterns[$nParent])) {
-                $arPatterns[$nId]->setSubpatternOf(null);
+            if (null !== $nParent && !isset($arPatterns[$nParent])) {
+                $pattern->setSubpatternOf(null);
             }
             
             $nUnion = $pattern->getUnion();
-            if (!isset($arPatterns[$nUnion])) {
-                $arPatterns[$nId]->setUnion(null);
+            if (null !== $nUnion && !isset($arPatterns[$nUnion])) {
+                $pattern->setUnion(null);
             }
             
             $nOptional = $pattern->getOptional();
-            if (!isset($arPatterns[$nOptional])) {
-                $arPatterns[$nId]->setOptional(null);
+            if (null !== $nOptional && !isset($arPatterns[$nOptional])) {
+                $pattern->setOptional(null);
             }
         }
     }

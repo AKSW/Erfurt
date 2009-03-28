@@ -523,6 +523,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
     }
     
+    public function init()
+    {
+        // Nothing to be done here.
+    }
+    
     /** @see Erfurt_Store_Adapter_Interface */
     public function isModelAvailable($graphIri, $useAc = true) 
     {

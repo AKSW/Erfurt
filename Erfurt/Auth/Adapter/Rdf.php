@@ -22,8 +22,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     /** @var string */
     protected $password = null;
 
-    /** @var Erfurt_Rdf_Model */
-    protected $acModel = null;
+    /** @var string */
+    protected $acModelUri = null;
 
     /** @var array */
     protected $users = array();
@@ -43,18 +43,17 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     /**
      * Constructor
      */
-    public function __construct(Erfurt_Rdf_Model $acModel, $username = null, $password = null) {        
+    public function __construct($username = null, $password = null) {        
         $this->username = $username;
         $this->password = $password;
-        $this->acModel  = $acModel;
+        $this->store    = Erfurt_App::getInstance()->getStore();
         
         $config = Erfurt_App::getInstance()->getConfig();
-        // $this->_dbUsername = $config->database->username;
-        // $this->_dbPassword = $config->database->password;
         
-        $store = $acModel->getStore();
-        $this->_dbUsername = $store->getDbUser();
-        $this->_dbPassword = $store->getDbPassword();
+        $this->_dbUsername = $this->store->getDbUser();
+        $this->_dbPassword = $this->store->getDbPassword();
+        
+        $this->acModelUri = $config->ac->modelUri;
         
         // load URIs from config
         $this->_uris = array(
@@ -291,8 +290,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      */
     private function _sparql($sparqlQuery) {
         try {
-            $sparqlQuery->addFrom($this->acModel->getModelIri());
-            $result = $this->acModel->getStore()->sparqlQuery($sparqlQuery, 'plain', false);
+            $sparqlQuery->addFrom($this->acModelUri);
+            $result = $this->store->sparqlQuery($sparqlQuery, 'plain', false);
         } catch (Exception $e) {
             var_dump($e);exit;
             return null;

@@ -153,6 +153,11 @@ interface Erfurt_Store_Adapter_Interface
 	public function importRdf($modelIri, $data, $type, $locator);
 	
 	/**
+	 * This method allows the backend to (re)initialize itself, e.g. when an import was done.
+	 */
+	public function init();
+	
+	/**
 	 * @param string $modelIri The Iri, which identifies the model to look for.
 	 * @param boolean $useAc Whether to use access control or not.
 	 * 

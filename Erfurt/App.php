@@ -102,13 +102,8 @@ class Erfurt_App
      */ 
     public function getSysOntModel() {
         
-        if (!$this->_sysOntModel) {
-            $config = $this->getConfig();
-            
-            if ($this->getStore()->isModelAvailable($config->sysOnt->modelUri, false)) {
-                $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
-            }
-        }
+        $config = $this->getConfig();
+        $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
         
         return $this->_sysOntModel;
     }
@@ -120,14 +115,8 @@ class Erfurt_App
      */
     public function getAcModel() {
         
-        if (!$this->_acModel) {
-            $config = $this->getConfig();
-            
-            if ($this->getStore()->isModelAvailable($config->ac->modelUri, false)) {
-                $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
-            }
-            
-        }
+        $config = $this->getConfig();
+        $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
         
         return $this->_acModel;
     }
@@ -178,12 +167,14 @@ class Erfurt_App
      */
     public static function start(Zend_Config $config = null) 
     {   
+        $start = microtime(true);
+        
         $inst = self::getInstance();
         $inst->loadConfig($config);
         
         // check for debugging mode
         $config = $inst->getConfig();   
-        if ($config->debug == true) {
+        if ((boolean)$config->debug === true) {
             error_reporting(E_ALL | E_STRICT);
             if (!defined('_EFDEBUG')) {
                 define('_EFDEBUG', 1);
@@ -204,13 +195,12 @@ class Erfurt_App
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception($e->getMessage(), -1);
             }
-        } 
+        }
         
-        $inst->getStore()->checkSetup();
-        
-// TODO handle session start before output
-        $inst->getAuth()->hasIdentity();
-        
+        $inst->getLog()->debug(PHP_EOL . PHP_EOL . PHP_EOL);
+        $time = (microtime(true) - $start)*1000;
+        $inst->getLog()->debug('Erfurt_App: Started. (' . $time . ' ms)'); 
+                
         return $inst;
     }
     
@@ -270,8 +260,7 @@ class Erfurt_App
             }
                 
             require_once 'Zend/Log.php';
-            $this->_log = new Zend_Log($logWriter);
-            $this->_log->debug('Erfurt_App: logger initialized');       
+            $this->_log = new Zend_Log($logWriter);       
         }
         
         return $this->_log;
@@ -340,8 +329,19 @@ class Erfurt_App
                 $backendOptions = $backendConfig->toArray();
             }
         
-            require_once 'Erfurt/Store.php';
-            $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+            try {
+                require_once 'Erfurt/Store.php';
+                $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+            } catch (Erfurt_Store_Adapter_Exception $e) {
+                if ($e->getCode() === 10) {
+                    // In this case the db environment was not initialized... It should be initialized now.
+                    $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+                    $this->_store->checkSetup();
+                } else {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception($e->getMessage(), -1);
+                }
+            }
         }
         
         return $this->_store;
@@ -406,7 +406,7 @@ class Erfurt_App
     {
         // Set up the authentication adapter
         require_once 'Erfurt/Auth/Adapter/Rdf.php';
-        $adapter = new Erfurt_Auth_Adapter_Rdf($this->getAcModel(), $username, $password);
+        $adapter = new Erfurt_Auth_Adapter_Rdf($username, $password);
         
         // Attempt authentication, saving the result
         $result = $this->getAuth()->authenticate($adapter);

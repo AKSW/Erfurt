@@ -19,7 +19,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     
     private $_modelCache = array();
-    private $_modelInfoCache = false;
+    private $_modelInfoCache = null;
     
     private $_dbConn = false;
     
@@ -82,7 +82,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Could not connect to database.', -1);
+            throw new Erfurt_Exception('Could not connect to database with name: "' . $dbname . '". Please check your credentials and whether the database exists and the server is running.', -1);
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
             require_once 'Erfurt/Exception.php';
@@ -97,28 +97,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
         }
-        
-        try {
-            // try to fetch model and namespace infos... if all tables are present this should not lead to an error.
-            $this->_fetchModelInfos();
-        } catch (Erfurt_Exception $e) {
-            // error while fetching model and namespace infos... should only be the case if the tables aren't present,
-            // for db connection is already established (in constructor)... so let's check for tables
-            if (!$this->_isSetup()) {
-                $this->_createTables();
-                require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Store_Adapter_Exception('Database environment was not initialized.', 10);
-            } else {
-                require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Exception('Store: Error while fetching model and namespace infos.', -1);
-            }   
-        }
-    }
-    
-    public function __destruct() 
-    {   
-        //var_dump($this->_dbConn);exit;
-        //$this->_dbConn->closeConnection();
     }
     
     // ------------------------------------------------------------------------
@@ -128,7 +106,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphUri, array $statementsArray, $options = array())
     {
-        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        $modelInfoCache = $this->_getModelInfos();
+        
+        $graphId = $modelInfoCache[$graphUri]['modelId'];
         
         $this->_dbConn->beginTransaction();
         
@@ -347,8 +327,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
-        $modelId = $this->_modelInfoCache[$graphUri]['modelId'];
+        $modelInfoCache = $this->_getModelInfos();
         
+        $modelId = $modelInfoCache[$graphUri]['modelId'];
+
         if ($subject !== null && strlen($subject) > $this->_getSchemaRefThreshold()) {
             $subject = substr($subject, 0, 223) . md5($subject);
         } 
@@ -420,7 +402,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
 // TODO
 throw new Exception('Not implemented yet.');
-        $modelId = $this->_modelInfoCache[$graphIri]['modelId'];
+        $modelInfoCache = $this->_getModelInfos();
+
+        $modelId = $modelInfoCache[$graphIri]['modelId'];
         
         $this->_dbConn->beginTransaction();
         try {
@@ -470,7 +454,8 @@ throw new Exception('Not implemented yet.');
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteModel($graphUri) 
     {
-        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        $modelInfoCache = $this->_getModelInfos();
+        $graphId = $modelInfoCache[$graphUri]['modelId'];
         
         // remove all rows with the specified modelID from the models, statements and namespaces tables
         $this->_dbConn->delete('ef_graph', "id = $graphId");
@@ -482,9 +467,10 @@ throw new Exception('Not implemented yet.');
         // invalidate the cache and fetch model infos again
         require_once 'Erfurt/App.php';
         $cache = Erfurt_App::getInstance()->getCache();
-        $tags =  array('model_info', $this->_modelInfoCache[$modelIri]['modelId']);
+        $tags =  array('model_info', $modelInfoCache[$modelIri]['modelId']);
         #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
-        $this->_fetchModelInfos();
+        $this->_modelCache = array();
+        $this->_modelInfoCache = null;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -495,9 +481,11 @@ throw new Exception('Not implemented yet.');
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function getAvailableModels($withTitle = false) 
-    {    
+    {
+        $modelInfoCache = $this->_getModelInfos();
+            
         $models = array();
-        foreach ($this->_modelInfoCache as $mInfo) {
+        foreach ($modelInfoCache as $mInfo) {
             $m = array(
                 'modelIri'  => $mInfo['modelIri'],
             );
@@ -529,8 +517,10 @@ throw new Exception('Not implemented yet.');
      */
     public function getImportsClosure($modelIri) 
     {
-        if (isset($this->_modelInfoCache["$modelIri"]['imports'])) {
-            return $this->_modelInfoCache["$modelIri"]['imports'];
+        $modelInfoCache = $this->_getModelInfos();
+        
+        if (isset($modelInfoCache["$modelIri"]['imports'])) {
+            return $modelInfoCache["$modelIri"]['imports'];
         } else {
             return array();
         }
@@ -544,16 +534,18 @@ throw new Exception('Not implemented yet.');
             return $this->_modelCache[$modelIri];
         }
 
+        $modelInfoCache = $this->_getModelInfos();
+
         // choose the right type for the model instance and instanciate it
-        if ($this->_modelInfoCache[$modelIri]['type'] === 'owl') {
+        if ($modelInfoCache[$modelIri]['type'] === 'owl') {
             require_once 'Erfurt/Owl/Model.php';
-            $m = new Erfurt_Owl_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Owl_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
         } else if ($this->_modelInfoCache[$modelIri]['type'] === 'rdfs') {
             require_once 'Erfurt/Rdfs/Model.php';
-            $m = new Erfurt_Rdfs_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Rdfs_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
         } else {
             require_once 'Erfurt/Rdf/Model.php';
-            $m = new Erfurt_Rdf_Model($modelIri, $this->_modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Rdf_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
         }
         
         $this->_modelCache[$modelIri] = $m;
@@ -612,10 +604,11 @@ throw new Exception('Not implemented yet.');
         require_once 'Erfurt/App.php';
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
-        $this->_fetchModelInfos();
+        $this->_modelInfoCache = null;
         
         if ($type === 'owl') {
             $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, EF_OWL_ONTOLOGY);
+            $this->_modelInfoCache = null;
         }
         
         // instanciate the model
@@ -650,7 +643,8 @@ throw new Exception('Not implemented yet.');
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $parsedArray = $parser->parse($data, $locator, $modelUri, false);
             
-            $modelId = $this->_modelInfoCache["$modelUri"]['modelId']; 
+            $modelInfoCache = $this->_getModelInfos();
+            $modelId = $modelInfoCache["$modelUri"]['modelId']; 
             
             // create file
             $tmpDir     = Erfurt_App::getInstance()->getTempDir();
@@ -842,11 +836,18 @@ throw new Exception('Not implemented yet.');
             throw new Erfurt_Store_Adapter_Exception('CSV import not supported for this database server.');
         }   
     }
+    
+    public function init()
+    {
+        $this->_modelInfoCache = null;
+    }
         
     /** @see Erfurt_Store_Adapter_Interface */
     public function isModelAvailable($modelIri) 
     {
-        if (isset($this->_modelInfoCache[$modelIri])) {
+        $modelInfoCache = $this->_getModelInfos();
+        
+        if (isset($modelInfoCache[$modelIri])) {
             return true;
         } else {
             return false;
@@ -874,16 +875,10 @@ throw new Exception('Not implemented yet.');
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $resultform = 'plain') 
     {
-        #$logger = Erfurt_App::getInstance()->getLog();
-        #$debugText = 'Sparql Query (';
-        #$stack = xdebug_get_function_stack();
-        #$key = count ($stack)-2;
-        #$debugText .= $stack[$key]['file'] . $stack[$key]['line'];
-        #$debugText .= '): ' . (string)$query;
-        #$logger->debug($debugText);
+        $start = microtime(true);
         
         require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
-        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_modelInfoCache);
+        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
                
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();        
@@ -891,6 +886,12 @@ throw new Exception('Not implemented yet.');
         $query = $parser->parse((string)$query);        
 
         $result = $engine->queryModel($query, $resultform);
+        
+        // Debug executed SPARQL queries in debug mode (7)
+        $logger = Erfurt_App::getInstance()->getLog();
+        $time = (microtime(true) - $start)*1000;
+        $debugText = 'SPARQL Query (' . $time . ' ms)';
+        $logger->debug($debugText);
 
         return $result;   
     }
@@ -898,7 +899,17 @@ throw new Exception('Not implemented yet.');
     /** @see Erfurt_Store_Sql_Interface */
     public function sqlQuery($sqlQuery)
     {
-        return $this->_dbConn->fetchAll($sqlQuery);
+        $start = microtime(true);
+        
+        $result = $this->_dbConn->fetchAll($sqlQuery);
+        
+        // Debug executed SQL queries in debug mode (7)
+        $logger = Erfurt_App::getInstance()->getLog();
+        $time = (microtime(true) - $start)*1000;
+        $debugText = 'SQL Query (' . $time . ' ms)';
+        $logger->debug($debugText);
+        
+        return $result;
     }
     
     // ------------------------------------------------------------------------
@@ -1089,13 +1100,49 @@ throw new Exception('Not implemented yet.');
         }   
     }
     
+    protected function _getModelInfos()
+    {
+        if (null === $this->_modelInfoCache) {
+            
+            try {
+                // try to fetch model and namespace infos... if all tables are present this should not lead to an error.
+                $this->_fetchModelInfos();
+            } catch (Erfurt_Exception $e) {
+                // error while fetching model and namespace infos... should only be the case if the tables aren't present,
+                // for db connection is already established (in constructor)... so let's check for tables
+                if (!$this->_isSetup()) {
+                    $this->_createTables();
+                    
+                    try {
+                        Erfurt_App::getInstance()->getStore()->checkSetup();
+                    } catch (Erfurt_Store_Exception $e2) {
+                        if ($e2->getCode() == 20) {
+                            $this->_fetchModelInfos();
+                        } else {
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
+                            throw new Erfurt_Store_Adapter_Exception(
+                                'Store: Error while initializing the environment.', -1);
+                        }
+                    }
+                    
+                } else {
+                    require_once 'Erfurt/Store/Adapter/Exception.php';
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Store: Error while fetching model and namespace infos.', -1);
+                }   
+            }
+        }
+        
+        return $this->_modelInfoCache;
+    }
+    
     protected function _getSchemaRefThreshold()
     {
         return 255;
     }
     
     protected function _optimizeTables()
-    {
+    {   
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
             $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_stmt');
             $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_uri');
@@ -1226,7 +1273,7 @@ throw new Exception('Not implemented yet.');
                 LEFT JOIN ef_lit l ON (l.id = s3.o_r)';
                         
             try {
-                $result = $this->_dbConn->query($sql);
+                $result = $this->sqlQuery($sql);
             } catch (Exception $e) {
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Error while fetching model and namespace informations.');
@@ -1239,9 +1286,9 @@ throw new Exception('Not implemented yet.');
             } else {
                 $this->_modelInfoCache = array();
                 
-                $rowSet = $result->fetchAll();
-                #var_dump($rowSet);exit;
-                foreach ($rowSet as $row) {
+                #$rowSet = $result->fetchAll();
+                #var_dump($result);exit;
+                foreach ($result as $row) {
                     if (!isset($this->_modelInfoCache[$row['uri']])) {
                         $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
                         $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];

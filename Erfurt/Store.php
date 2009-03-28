@@ -491,8 +491,13 @@ class Erfurt_Store
         // remove any statements about deleted model from SysOnt
         if (Erfurt_App::getInstance()->getAcModel() !== false) {
             $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
-            $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
-            $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+            
+            // Only do that, if the deleted model was not one of the sys models
+            $config = Erfurt_App::getInstance()->getConfig();
+            if (($modelIri !== $config->sysont->model) && ($modelIri !== $config->sysont->schema)) {
+                $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
+                $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+            }
         }
     }
     
@@ -644,8 +649,30 @@ class Erfurt_Store
     {
         // check whether model exists and is visible
         if (!$this->isModelAvailable($modelIri, $useAc)) {
-            require_once 'Erfurt/Exception.php';
-            throw new Exception("Model <$modelIri> is not available.");
+            $config = Erfurt_App::getInstance()->getConfig();
+            
+            if (!$useAc && (($modelIri === $config->sysont->model) || ($modelIri === $config->sysont->schema))) {
+                try {
+                    $this->checkSetup();
+                } catch (Erfurt_Store_Exception $e) {
+                    if ($e->getCode() === 20) {
+                        // Everything is fine, sys models now imported
+                    } else {
+                        require_once 'Erfurt/Store/Exception.php';
+                        throw new Erfurt_Store_Exception("Check setup failed.");
+                    }
+                }
+                
+                if (!$this->isModelAvailable($modelIri, $useAc)) {
+                    require_once 'Erfurt/Store/Exception.php';
+                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+                }
+            } else {
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+            }
+            
+            
         }
         
         $modelInstance = $this->_backendAdapter->getModel($modelIri);
@@ -828,7 +855,10 @@ class Erfurt_Store
         } else {
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
-            return $parser->parseToStore($data, $locator, $modelIri, $useAc);
+            $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
+            $this->_backendAdapter->init();
+            
+            return $retVal;
         }
     }
     

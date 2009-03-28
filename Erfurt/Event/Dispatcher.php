@@ -78,7 +78,7 @@ class Erfurt_Event_Dispatcher
         if (is_object($handler)) {
             // simply store handling object
             $this->_registeredEvents[$eventName][] = $handler;
-            $this->_logger->info(get_class($handler) . " registered for event '$eventName'");
+            $this->_logger->info('Erfurt_Event_Dispatcher: ' . get_class($handler) . " registered for event '$eventName'");
         } else if (is_array($handler)) {
             // or check mandatory parameters
             if (!array_key_exists('class_name', $handler)) {
@@ -93,7 +93,7 @@ class Erfurt_Event_Dispatcher
             
             // and add handler class info
             $this->_registeredEvents[$eventName][] = $handler;
-            $this->_logger->info($handler['class_name'] . " registered for event '$eventName'");
+            $this->_logger->info('Erfurt_Event_Dispatcher: ' . $handler['class_name'] . " registered for event '$eventName'");
         }
         // var_dump($this->_registeredEvents);
         

@@ -232,7 +232,7 @@ class Erfurt_Ac_Default {
      */
     private function _getUserModelRights($userURI) {
    
-        $this->_log->debug('OntoWiki_Ac::_getUserModelRights()');
+        $this->_log->debug('Erfurt_Ac_Default: _getUserModelRights called.');
         
         $userRights = $this->_userRights;
         
