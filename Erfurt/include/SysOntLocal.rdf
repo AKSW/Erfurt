@@ -3,6 +3,7 @@
   <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
   <!ENTITY LocalConfig "http://localhost/OntoWiki/Config/">
   <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY sioc "http://rdfs.org/sioc/ns#">
   <!ENTITY owl "http://www.w3.org/2002/07/owl#">
   <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
@@ -11,6 +12,7 @@
 <rdf:RDF xml:base="&LocalConfig;"
          xmlns:SysOnt="&SysOnt;"
          xmlns:foaf="&foaf;"
+         xmlns:sioc="&sioc;"
          xmlns:owl="&owl;"
          xmlns:rdf="&rdf;"
          xmlns:rdfs="&rdfs;">
@@ -25,23 +27,23 @@
   </owl:Ontology>
 
 <!-- Instances -->
-  <foaf:Agent rdf:about="Admin"
+  <sioc:User rdf:about="Admin"
              rdfs:label="Admin">
     <rdfs:comment>This is the pre-configured Admin User.</rdfs:comment>
-    <foaf:nick rdf:datatype="&xsd;string">Admin</foaf:nick>
-  </foaf:Agent>
+    <foaf:accountName rdf:datatype="&xsd;string">Admin</foaf:accountName>
+  </sioc:User>
 
-  <foaf:Group rdf:about="AdminGroup"
+  <sioc:Usergroup rdf:about="AdminGroup"
               rdfs:label="AdminGroup">
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
     <SysOnt:grantAccess rdf:resource="&SysOnt;AnyAction"/>
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>The group of all admins. If not changed, they can trigger all actions and can edit all models but the system ontology.</rdfs:comment>
-    <foaf:member rdf:resource="Admin"/>
-  </foaf:Group>
+    <sioc:has_member rdf:resource="Admin"/>
+  </sioc:Usergroup>
 
-  <foaf:Group rdf:about="DefaultUserGroup"
+  <sioc:Usergroup rdf:about="DefaultUserGroup"
               rdfs:label="DefaultUserGroup">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
@@ -50,7 +52,7 @@
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
-  </foaf:Group>
+  </sioc:Usergroup>
 
   <rdf:Description rdf:about="&SysOnt;Anonymous">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
@@ -75,7 +77,7 @@
 
 	<!-- Statement Selector TestCase -->
 	<SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
-		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s rdf:type foaf:Agent.}</SysOnt:sparqlWhereClause>
+		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s rdf:type sioc:User.}</SysOnt:sparqlWhereClause>
 		<SysOnt:model rdf:resource="&LocalConfig;" />
 	</SysOnt:StatementSelector>
 
@@ -84,7 +86,7 @@
 		<SysOnt:model rdf:resource="&LocalConfig;" />
 	</SysOnt:StatementSelector>
 
-  <foaf:Group rdf:about="AdvancedACLGroup"
+  <sioc:Usergroup rdf:about="AdvancedACLGroup"
               rdfs:label="AdvancedACLGroup">
     <SysOnt:grantStatementsView rdf:resource="SelectAllUserInfo"/>
     <SysOnt:denyStatementsView rdf:resource="SelectAllPasswords"/>
@@ -95,7 +97,7 @@
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
-  </foaf:Group>
+  </sioc:Usergroup>
 
 
 </rdf:RDF>
