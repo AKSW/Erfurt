@@ -10,7 +10,7 @@
  *   tstamp         TIMESTAMP NOT NULL, 
  *   action_type    INT NOT NULL, 
  *   parent         INT DEFAULT NULL, 
- *   payload_id     INT NOT NULL
+ *   payload_id     INT DEFAULT NULL
  * );
  * 
  * CREATE TABLE ef_versioning_payloads(
@@ -39,6 +39,8 @@ class Erfurt_Versioning
     const STATEMENTS_ROLLBACK = 23;
     
     protected $_currentAction = null;
+
+    protected $_currentActionParent = null;
     
     protected $_versioningEnabled = true;
     
@@ -80,11 +82,11 @@ class Erfurt_Versioning
     {
         // no action to end?
         if (null === $this->_currentAction) {
-// TODO throw exception
-            throw new Exception();
+            throw new Exception('Action not started');
+        } else {
+            $this->_currentAction = null;
+            $this->_currentActionParent = null;
         }
-        
-        $this->_currentAction = null;
     }
     
     /**
@@ -115,6 +117,7 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
+                AND parent IS NULL
                 ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
            
@@ -189,7 +192,7 @@ class Erfurt_Versioning
     {
         if ($this->isVersioningEnabled()) {
             $graphUri = $event->graphUri;
-        
+    
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
         } else {
             // do nothing
@@ -216,7 +219,7 @@ class Erfurt_Versioning
     {
         if($this->isVersioningEnabled()) {
             $graphUri = $event->graphUri;
-        
+    
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
         } else {
             // do nothing
@@ -236,13 +239,14 @@ class Erfurt_Versioning
      */
     public function rollbackAction($actionId) 
     {
-        $actionsSql = 'SELECT action_type, payload_id, model FROM ef_versioning_actions WHERE id = ' . 
-                       ((int)$actionId);
+        $actionsSql = 'SELECT action_type, payload_id, model, parent FROM ef_versioning_actions WHERE ' .
+                      '( id = ' . ((int)$actionId) . ' OR parent = ' . ((int)$actionId) . ' ) ' .
+                      'AND payload_id IS NOT NULL';
                        
         $result = $this->_getStore()->sqlQuery($actionsSql);
         
-        if ((count($result) !== 1) || ($result[0]['payload_id'] === null)) {
-
+        if ((count($result) == 0) || ($result[0]['payload_id'] === null)) {
+            var_dump($actionsSql);exit();
             $dedicatedException = 'No valid entry in ef_versioning_actions for action ID';
             throw new Exception('No rollback possible (' .  $dedicatedException . ')');
 
@@ -250,69 +254,63 @@ class Erfurt_Versioning
 
         } else {
 
-            $type = (int) $result[0]['action_type'];
-            $modelUri = $result[0]['model'];
-            $payloadID = (int) $result[0]['payload_id'];
-            
-            $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
-                           $payloadID;
+            foreach ($result as $i) {
+
+                $type = (int) $i['action_type'];
+                $modelUri = $i['model'];
+                $payloadID = (int) $i['payload_id'];
+
+                $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
+                $payloadID;
                            
-            $payloadResult = $this->_getStore()->sqlQuery($payloadsSql);
-            
-            if (count($payloadResult) !== 1) {
+                $payloadResult = $this->_getStore()->sqlQuery($payloadsSql);
 
-                $dedicatedException = 'No valid entry in ef_versioning_payloads for payload ID';
-                throw new Exception('No rollback possible (' . $dedicatedException . ')');
+                if (count($payloadResult) !== 1) {
 
-                return false;
+                    $dedicatedException = 'No valid entry in ef_versioning_payloads for payload ID';
+                    throw new Exception('No rollback possible (' . $dedicatedException . ')');
 
-            } else {
-                
-                $payload = unserialize($payloadResult[0]['statement_hash']);
-            
-                // disable versioning while restoring data
-                $this->enableVersioning(false);
+                    return false;
 
-                if ($type === self::STATEMENT_ADDED) {
-                    $this->_getStore()->deleteMultipleStatements($modelUri, $payload);
-                } else if ($type === self::STATEMENT_REMOVED) {
-                    $this->_getStore()->addMultipleStatements($modelUri, $payload);
+                } else {
+                    
+                    $payload = unserialize($payloadResult[0]['statement_hash']);
+
+                    if ($type === self::STATEMENT_ADDED) {
+                        $this->_getStore()->deleteMultipleStatements($modelUri, $payload);
+                    } else if ($type === self::STATEMENT_REMOVED) {
+                        $this->_getStore()->addMultipleStatements($modelUri, $payload);
+                    } else {
+                        // do nothing
+                    }
+
                 }
 
-                // remove history records that were rolled back
-                $actionsSql = 'DELETE FROM ef_versioning_actions WHERE id = ' . 
-                           ((int)$actionId);
-
-                $this->_getStore()->sqlQuery($actionsSql);
-
-                $payloadsSql = 'DELETE FROM ef_versioning_payloads WHERE id = ' .
-                               $payloadID;
-
-                $this->_getStore()->sqlQuery($payloadsSql);
-
-                // enable versioning again
-                $this->enableVersioning(true);
-
-                return true;
             }
+
+            return true;
+
         }
     }
     
     /**
      * Starts a log action to which subsequent statement modifications are added.
      *
-     * @param $actionName string The name of the action to be recorded.
+     * @param $actionSpec array with keys type, modeluri, resourceuri
      * @return 
      */
     public function startAction($actionSpec)
     {
         // action already running?
         if (null !== $this->_currentAction) {
-// TODO throw exception
-            throw new Exception();
+            throw new Exception('Action already started');
+        } else {
+            $actionType = $actionSpec['type'];
+            $graphUri = $actionSpec['modeluri'];
+            $resource = $actionSpec['resourceuri'];
+            $this->_currentAction = $actionSpec;
+            $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType);
         }
-        
-        $this->_currentAction = $actionSpec;
     }
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
@@ -328,8 +326,14 @@ class Erfurt_Versioning
             $actionsSql .= ')';
         }
         
+        if (null !== $this->_currentActionParent) {
+            $actionParent = $this->_currentActionParent;
+        } else {
+            $actionParent = 'NULL';
+        }
+
         $actionsSql .= ' VALUES (\'' . $graphUri . '\', \'' . $userUri . '\', \'' . $resource . '\', \'' . date('c') . '\', ' . 
-                       $actionType . ', NULL';
+                       $actionType . ', ' . $actionParent;
                        
         if (null !== $payloadId) {
            $actionsSql .= ', ' . $payloadId . ')';
@@ -338,6 +342,11 @@ class Erfurt_Versioning
         }               
 
         $this->_getStore()->sqlQuery($actionsSql);
+
+        if (null !== $this->_currentAction) {
+            $parentActionId = $this->_getStore()->lastInsertId();
+            return $parentActionId;
+        }
     }
     
     private function _execAddPayload($payload)
@@ -405,7 +414,7 @@ class Erfurt_Versioning
                 'tstamp'      => 'TIMESTAMP NOT NULL',
                 'action_type' => 'INT NOT NULL',
                 'parent'      => 'INT DEFAULT NULL',
-                'payload_id'  => 'INT NOT NULL'
+                'payload_id'  => 'INT DEFAULT NULL'
             );
             
             $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
