@@ -886,7 +886,7 @@ throw new Exception('Not implemented yet.');
         $query = $parser->parse((string)$query);        
 
         $result = $engine->queryModel($query, $resultform);
-        
+       
         // Debug executed SPARQL queries in debug mode (7)
         $logger = Erfurt_App::getInstance()->getLog();
         $time = (microtime(true) - $start)*1000;

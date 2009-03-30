@@ -29,7 +29,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
      *   Modifies the passed query object directly.
      */
     public function simplify(Erfurt_Sparql_Query $query) {
-	
+#return;	
         $arPatterns = $query->getResultPart();
         self::dropEmpty($arPatterns);
        
@@ -109,8 +109,21 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
                         $usedVars[] = $tp->getObject();
                     }
                 }
+                foreach ($optionalIds as $oId) {
+                    foreach ($arPatterns[$oId]->getTriplePatterns() as $tp) {
+                        if (is_string($tp->getSubject())) {
+                            $usedVars[] = $tp->getSubject();
+                        }
+                        if (is_string($tp->getPredicate())) {
+                            $usedVars[] = $tp->getPredicate();
+                        }
+                        if (is_string($tp->getObject())) {
+                            $usedVars[] = $tp->getObject();
+                        }
+                    }
+                }
                 $usedVars = array_unique($usedVars);
-                
+
                 $neededConstraints = array();
                 foreach ($base->getConstraints() as $c) {
                     $needed = false;
