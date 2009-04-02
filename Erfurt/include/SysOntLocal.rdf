@@ -47,6 +47,7 @@
               rdfs:label="DefaultUserGroup">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
+    <SysOnt:grantAccess rdf:resource="&SysOnt;Rollback"/>
     <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
     <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
@@ -57,6 +58,7 @@
   <rdf:Description rdf:about="&SysOnt;Anonymous">
     <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <SysOnt:denyAccess rdf:resource="&SysOnt;Login"/>
+    <SysOnt:denyAccess rdf:resource="&SysOnt;Rollback"/>
     <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
     <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
@@ -72,6 +74,10 @@
 
   <rdf:Description rdf:about="&SysOnt;Login">
     <SysOnt:rawConfig>type=RDF</SysOnt:rawConfig>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;Rollback">
+    <SysOnt:rawConfig>global=on</SysOnt:rawConfig>
   </rdf:Description>
 
 

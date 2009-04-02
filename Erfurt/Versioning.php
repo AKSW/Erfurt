@@ -312,6 +312,27 @@ class Erfurt_Versioning
             $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType);
         }
     }
+
+    /**
+     * Loading Details for a specified ActionId and returns it as array.
+     *
+     * @param $id int
+     * @return array containg columns action_type and statement_hash
+     */
+    public function getDetailsForAction($id)
+    {
+        $detailsSql = 'SELECT actions.action_type, payloads.statement_hash ' . 
+                      '  FROM ef_versioning_actions AS actions, ' . 
+                      '       ef_versioning_payloads AS payloads ' .
+                      'WHERE ' . 
+                      '( actions.id = ' . $id . ' OR actions.parent = ' . $id . ' ) ' . 
+                      'AND actions.payload_id IS NOT NULL ' .
+                      'AND actions.payload_id = payloads.id ';
+
+        $resultArray = $this->_getStore()->sqlQuery($detailsSql);
+
+        return $resultArray;
+    }
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {

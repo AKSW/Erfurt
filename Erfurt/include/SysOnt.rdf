@@ -259,5 +259,10 @@
     <rdfs:comment>Login to the OntoWiki application.</rdfs:comment>
   </Action>
 
+  <Action rdf:about="Rollback"
+                rdfs:label="Rollback">
+    <rdfs:comment>Login to the OntoWiki application.</rdfs:comment>
+  </Action>
+
 </rdf:RDF>
 

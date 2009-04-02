@@ -53,6 +53,9 @@ class Erfurt_App
     
     /** @var Zend_Log */
     private $_log = false;
+
+    /** @var */
+    private $_versioning = false;
     
     /**
      * constructor
@@ -195,6 +198,19 @@ class Erfurt_App
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception($e->getMessage(), -1);
             }
+        }
+
+        // Starting Versioning
+        try {
+            $versioning = $inst->getVersioning();
+            if ((boolean)$config->versioning === true) {
+                $versioning->enableVersioning(true);
+            } else {
+                $versioning->enableVersioning(false);
+            }
+        } catch (Erfurt_Exception $e) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception($e->getMessage(), -1);
         }
         
         $inst->getLog()->debug(PHP_EOL . PHP_EOL . PHP_EOL);
@@ -597,6 +613,20 @@ class Erfurt_App
         
         return true;
     }
+
+    /**
+     * Returns Versioning, if not found instantiates it
+     *
+     * @return Erfurt_Versioning
+     */
+    public function getVersioning() {
+        if (!$this->_versioning) {
+            require_once 'Erfurt/Versioning.php';
+            $this->_versioning = new Erfurt_Versioning();
+        }
+        return $this->_versioning;
+    }
+
 }
 
 ?>
