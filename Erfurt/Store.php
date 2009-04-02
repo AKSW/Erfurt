@@ -728,6 +728,11 @@ class Erfurt_Store
         return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
     }
     
+    public function getObjectsInferred($modelUri, $startResources, $objectProperty, $hierarchyProperty = null)
+    {
+        
+    }
+    
     /**
      * Calculates the transitive closure for a given property and a set of starting nodes.
      *
@@ -741,12 +746,12 @@ class Erfurt_Store
      * @param boolean $inverse Denotes whether the property is inverse, i.e. ?child ?property ?parent
      * @param int $maxDepth The maximum number of iteration steps
      */ 
-    public function getTransitiveClosure($modelIri, $property, array $startResources, $inverse = true, $maxDepth = self::MAX_ITERATIONS)
+    public function getTransitiveClosure($modelIri, $property, $startResources, $inverse = true, $maxDepth = self::MAX_ITERATIONS)
     {
         if (method_exists($this->_backendAdapter, 'getTransitiveClosure')) {
-            $closure = $this->_backendAdapter->getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth);
+            $closure = $this->_backendAdapter->getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
 	    } else {
-	        $closure = $this->_getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth);
+	        $closure = $this->_getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
 	    }
 	    
 	    return $closure;
