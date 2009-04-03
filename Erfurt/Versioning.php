@@ -353,8 +353,11 @@ class Erfurt_Versioning
             $actionParent = 'NULL';
         }
 
-        $actionsSql .= ' VALUES (\'' . $graphUri . '\', \'' . $userUri . '\', \'' . $resource . '\', \'' . date('c') . '\', ' . 
-                       $actionType . ', ' . $actionParent;
+        $actionsSql .= ' VALUES (\'' . 
+                       addslashes($graphUri) . '\', \'' .
+                       addslashes($userUri) . '\', \'' . 
+                       addslashes($resource) . '\', \'' . date('c') . '\', ' . 
+                       addslashes($actionType) . ', ' . $actionParent;
                        
         if (null !== $payloadId) {
            $actionsSql .= ', ' . $payloadId . ')';
@@ -373,7 +376,7 @@ class Erfurt_Versioning
     private function _execAddPayload($payload)
     {
         $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (\'' .
-                        serialize($payload) . '\')';
+                        addslashes(serialize($payload)) . '\')';
                         
         $this->_getStore()->sqlQuery($payloadsSql);
         $payloadId = $this->_getStore()->lastInsertId();
