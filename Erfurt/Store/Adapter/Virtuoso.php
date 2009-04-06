@@ -854,7 +854,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         if ($this->_longRead) {
-            odbc_longreadlen($result, 100000000);
+            // odbc_longreadlen($result, 100000000);
+            odbc_longreadlen($result, 16777216);
             $this->_longRead = false;
         }
         

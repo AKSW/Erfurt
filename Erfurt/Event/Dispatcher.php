@@ -123,8 +123,15 @@ class Erfurt_Event_Dispatcher
                         include_once $pathSpec;
                     }
                     
+                    if (isset($handler['config'])) {
+                        $handlerObject->config = $handler['config'];
+                    }
+                    
                     // instantiate handler
-                    $handlerObject = $this->_getHandlerInstance($handler['class_name']);
+                    $handlerObject = $this->_getHandlerInstance(
+                        $handler['class_name'],     // class name
+                        $handler['include_path'],   // plug-in root
+                        $handler['config']);        // private config
                 } else {
                     $handlerObject = $handler;
                 }
@@ -176,10 +183,10 @@ class Erfurt_Event_Dispatcher
      *
      * @param string $className
      */
-    private function _getHandlerInstance($className)
+    private function _getHandlerInstance($className, $root, $config)
     {
         if (!array_key_exists($className, $this->_handlerInstances)) {
-            $this->_handlerInstances[$className] = new $className();
+            $this->_handlerInstances[$className] = new $className($root, $config);
         }
         
         return $this->_handlerInstances[$className];

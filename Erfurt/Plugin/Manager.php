@@ -75,6 +75,11 @@ class Erfurt_Plugin_Manager
         // parse plugin config
         $pluginConfig = parse_ini_file($pluginPath . self::CONFIG_FILENAME, true);
         
+        if (array_key_exists('private', $pluginConfig)) {
+            require_once 'Zend/Config/Ini.php';
+            $pluginPrivateConfig = new Zend_Config_Ini($pluginPath . self::CONFIG_FILENAME, 'private', true);
+        }
+        
         // check if plugin is enabled
         if (!array_key_exists('enabled', $pluginConfig) || !(boolean) $pluginConfig['enabled']) {
             return;
@@ -87,7 +92,8 @@ class Erfurt_Plugin_Manager
                 } else if (is_string($event)) {
                     $pluginSpec = array(
                         'class_name'   => ucfirst($pluginName), 
-                        'include_path' => $pluginPath
+                        'include_path' => $pluginPath, 
+                        'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
                     );
                     
                     // register plugin events with event dispatcher
