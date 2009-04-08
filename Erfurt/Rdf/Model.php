@@ -84,6 +84,11 @@ class Erfurt_Rdf_Model
     {
         $this->_modelIri = $modelIri;
         $this->_baseIri  = $baseIri;
+        
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
+        }
     }
     
     /**
