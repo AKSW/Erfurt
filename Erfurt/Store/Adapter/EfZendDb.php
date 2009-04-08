@@ -846,7 +846,7 @@ throw new Exception('Not implemented yet.');
     public function isModelAvailable($modelIri) 
     {
         $modelInfoCache = $this->_getModelInfos();
-        
+
         if (isset($modelInfoCache[$modelIri])) {
             return true;
         } else {
@@ -1259,13 +1259,17 @@ throw new Exception('Not implemented yet.');
                         AND s3.st = 0 
                         AND s3.ot = 2 
                         AND (';
-            
-            for ($i=1; $i<count($this->_titleProperties); ++$i) {
-                $sql .= 's3.p = "' . $this->_titleProperties[$i] . '"';
+
+            // Create SQL code for each title property
+            $count = count($this->_titleProperties);
+            $i = 0;
+            foreach ($this->_titleProperties as $titleProp) {
+                $sql .= 's3.p = "' . $titleProp . '"';
                 
-                if ($i < count($this->_titleProperties)-1) {
+                if ($i < $count-1) {
                     $sql .= ' OR ';
                 }
+                ++$i;
             }
             
             $sql .= '))
