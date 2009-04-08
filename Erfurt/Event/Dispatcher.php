@@ -112,13 +112,13 @@ class Erfurt_Event_Dispatcher
         $result = self::INIT_VALUE;
         
         if (array_key_exists($eventName, $this->_registeredEvents)) {
-            foreach ($this->_registeredEvents[$eventName] as $handler) {
+            foreach ($this->_registeredEvents[$eventName] as &$handler) {
                 if (is_array($handler)) {
                     // observer is an array, try to load class
                     if (!class_exists($handler['class_name'], false)) {
                         $pathSpec = rtrim($handler['include_path'], '/\\') 
                                   . DIRECTORY_SEPARATOR 
-                                  . strtolower($handler['class_name']) 
+                                  . $handler['file_name']
                                   . '.php';
                         include_once $pathSpec;
                     }
@@ -154,6 +154,8 @@ class Erfurt_Event_Dispatcher
                 } else {
                     // TODO: throw exception or log error?
                 }
+            
+                $handler['instance'] = $handlerObject;
             }
         }
         
@@ -191,5 +193,23 @@ class Erfurt_Event_Dispatcher
         
         return $this->_handlerInstances[$className];
     }
+    
+    /**
+     * Returns the instance of a given plugin, iff such a plugin is registered and was
+     * already handled. In the case no such plugin exists or was instanciated, this
+     * method returns false.
+     * 
+     * @param string $pluginName
+     * @return Erfurt_Plugin
+     */
+    public function getPluginInstance($pluginName)
+    {
+        $className = ucfirst($pluginName) . Erfurt_Plugin_Manager::PLUGIN_CLASS_POSTFIX;
+        
+        if (array_key_exists($className, $this->_handlerInstances)) {
+            return $this->_handlerInstances[$className];
+        } else {
+            return false;
+        }
+    }
 }
-

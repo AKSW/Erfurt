@@ -20,6 +20,8 @@ class Erfurt_Plugin_Manager
      */
     const CONFIG_FILENAME = 'plugin.ini';
     
+    const PLUGIN_CLASS_POSTFIX = 'Plugin';
+    
     /**
      * Name of the private config section that is injected into the plugin instance.
      * @var string
@@ -91,7 +93,8 @@ class Erfurt_Plugin_Manager
                     // TODO: allow trigger method that differs from event name
                 } else if (is_string($event)) {
                     $pluginSpec = array(
-                        'class_name'   => ucfirst($pluginName), 
+                        'class_name'   => ucfirst($pluginName) . self::PLUGIN_CLASS_POSTFIX, 
+                        'file_name'    => $pluginName,
                         'include_path' => $pluginPath, 
                         'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
                     );
