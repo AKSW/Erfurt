@@ -958,7 +958,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _getLastError() 
     {
-        return odbc_errormsg($this->_connection) . ' (' . odbc_error($this->_connection) . ')';
+        if (null != $this->_connection) {
+          return odbc_errormsg($this->_connection) . ' (' . odbc_error($this->_connection) . ')';
+        } else {
+          return '(no errormsg)';
+        }
     }
     
     /**
