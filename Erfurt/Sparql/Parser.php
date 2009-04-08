@@ -1055,7 +1055,7 @@ class Erfurt_Sparql_Parser
             $this->_checkDtypeLang($node, strlen($sep));
         } else {
             $datatype = '';
-            if (strpos($node, '.') !== false) {
+            if (is_string($node) && strpos($node, '.') !== false) {
                 $datatype = EF_XSD_NS . 'integer';
             } else {
                 $datatype = EF_XSD_NS . 'decimal';
@@ -1179,7 +1179,7 @@ class Erfurt_Sparql_Parser
             }    
             
         } else if ($this->_varCheck($node)) {
-            $pos = strpos($node, '.');
+            $pos = is_string($node) ? strpos($node, '.') : false;
             if ($pos) {
                 return substr($node,0,$pos);
             } else {

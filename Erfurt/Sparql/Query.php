@@ -192,19 +192,24 @@ class Erfurt_Sparql_Query
      */
     public static function getLanguageTag($var)
     {
-        $nAt = strpos($var, '@');
-        if ($nAt === false) {
+        if (is_string($var)) {
+            $nAt = strpos($var, '@');
+            if ($nAt === false) {
+                return null;
+            }
+
+            //in case @ and ^^ are combined
+            $nHatHat = strpos($var, '^^', $nAt + 1);
+            if ($nHatHat === false) {
+                $tag = substr($var, $nAt + 1);
+            } else {
+                $tag = substr($var, $nAt + 1, $nHatHat - $nAt - 1);
+            }
+            return $tag;
+        } else {
             return null;
         }
         
-        //in case @ and ^^ are combined
-        $nHatHat = strpos($var, '^^', $nAt + 1);
-        if ($nHatHat === false) {
-            $tag = substr($var, $nAt + 1);
-        } else {
-            $tag = substr($var, $nAt + 1, $nHatHat - $nAt - 1);
-        }
-        return $tag;
     }
     
     // ------------------------------------------------------------------------
@@ -353,27 +358,32 @@ class Erfurt_Sparql_Query
      */
     public function getDatatype($var)
     {
-        $nHatHat = strpos($var, '^^');
-        if ($nHatHat === false) {
+        if (is_string($var)) {
+            $nHatHat = strpos($var, '^^');
+            if ($nHatHat === false) {
+                return null;
+            }
+
+            $nAt = strpos($var, '@', $nHatHat + 2);
+            if ($nAt === false) {
+                $type = substr($var, $nHatHat + 2);
+            } else {
+                $type = substr($var, $nHatHat + 2, $nAt - $nHatHat - 2);
+            }
+
+            $fullUri = $this->getFullUri($type);
+            if ($fullUri === false) {
+                $fullUri = $type;
+                if ($fullUri[0] == '<' && substr($fullUri, -1) == '>') {
+                    $fullUri = substr($fullUri, 1, -1);
+                }
+            }
+
+            return $fullUri;
+        } else {
             return null;
         }
         
-        $nAt = strpos($var, '@', $nHatHat + 2);
-        if ($nAt === false) {
-            $type = substr($var, $nHatHat + 2);
-        } else {
-            $type = substr($var, $nHatHat + 2, $nAt - $nHatHat - 2);
-        }
-
-        $fullUri = $this->getFullUri($type);
-        if ($fullUri === false) {
-            $fullUri = $type;
-            if ($fullUri[0] == '<' && substr($fullUri, -1) == '>') {
-                $fullUri = substr($fullUri, 1, -1);
-            }
-        }
-
-        return $fullUri;
     }
     
     /**
