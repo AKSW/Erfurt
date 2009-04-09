@@ -2,8 +2,12 @@
 /**
  * Erfurt application class
  *
- * @package app
- * @version $Id$
+ * @category erfurt
+ * @package  app
+ * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version  $Id$
  */
 class Erfurt_App 
 {   
@@ -288,7 +292,8 @@ class Erfurt_App
     public function getEventDispatcher() {
         
         if (!$this->_ed) {
-            $this->_ed = new Erfurt_EventDispatcher($this);
+            require_once 'Erfurt/Event/Dispatcher.php';
+            $this->_ed = Erfurt_Event_Dispatcher::getInstance();
         }
         
         return $this->_ed;
@@ -413,24 +418,74 @@ class Erfurt_App
     
     
     /**
-     * authtenticate user
+     * Authenticates a user with a given username and password.
      * 
-     * authenticate a user to the store
-     * 
+     * @param string $username
+     * @param string $password
+     * @return Zend_Auth_Result
      */
     public function authenticate($username = 'Anonymous', $password = '')
     {
-        // Set up the authentication adapter
+        // Set up the authentication adapter.
         require_once 'Erfurt/Auth/Adapter/Rdf.php';
         $adapter = new Erfurt_Auth_Adapter_Rdf($username, $password);
         
-        // Attempt authentication, saving the result
+        // Attempt authentication, saving the result.
+        $result = $this->getAuth()->authenticate($adapter);
+
+        // If the result is not valid, make sure the identity is cleared.
+        if (!$result->isValid()) {
+            $this->getAuth()->clearIdentity();
+        }
+
+        return $result;
+    }
+    
+    /**
+     * The second step of the OpenID authentication process.
+     * Authenticates a user with a given OpenID. On success this
+     * method will not return but instead redirect the user to the
+     * specified URL.
+     * 
+     * @param string $openId
+     * @param string $redirectUrl
+     * @return Zend_Auth_Result
+     */
+    public function authenticateWithOpenId($openId, $verifyUrl, $redirectUrl)
+    {
+        require_once 'Erfurt/Auth/Adapter/OpenId.php';
+        $adapter = new Erfurt_Auth_Adapter_OpenId($openId, $verifyUrl, $redirectUrl);
+        
+        $result = $this->getAuth()->authenticate($adapter);
+
+        // If we reach this point, something went wrong with the authentication process...
+        // So we always clear the identity.
+        if (!$result->isValid()) {
+            $this->getAuth()->clearIdentity();
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * The third and last step of the OpenID authentication process.
+     * Checks whether the response is a valid OpenID result and
+     * returns the appropriate auth result.
+     * 
+     * @param array $get The query part of the authentication request.
+     * @return Zend_Auth_Result
+     */
+    public function verifyOpenIdResult($get)
+    {
+        require_once 'Erfurt/Auth/Adapter/OpenId.php';
+        $adapter = new Erfurt_Auth_Adapter_OpenId(null, null, null, $get);
+        
         $result = $this->getAuth()->authenticate($adapter);
 
         if (!$result->isValid()) {
             $this->getAuth()->clearIdentity();
         }
-        
+
         return $result;
     }
 
@@ -587,6 +642,36 @@ class Erfurt_App
         $tempAdapter = new Erfurt_Auth_Adapter_Rdf($this->getAcModel(), '', '');
         
         return $tempAdapter->getUsers();
+    }
+    
+    /**
+     * Adds a new OpenID user to the store
+     *
+     * @todo Make robust
+     */
+    public function addOpenIdUser($openid, $email = '', $label = '', $group = null)
+    {
+        $acModel = $this->getAcModel();
+        $userUri = urldecode($openid);
+        
+        // uri rdf:type sioc:User
+        $acModel->addStatement($userUri, EF_RDF_TYPE, $this->_config->ac->user->class, array(), false);
+        
+        if (!empty($email)) {
+            // uri sioc:mailbox email
+            $acModel->addStatement($userUri, $this->_config->ac->user->mail, 'mailto:' . $email, array(), false);
+        }
+        
+        if (!empty($label)) {
+            // uri sioc:mailbox email
+            $acModel->addStatement($userUri, EF_RDFS_LABEL, $label, array(), false);
+        }
+        
+        if (null !== $group) {
+            $acModel->addStatement($group, $this->_config->ac->group->membership, $userUri, array(), false);
+        }
+        
+        return true;
     }
     
     /**

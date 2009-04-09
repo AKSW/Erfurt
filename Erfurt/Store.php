@@ -1,5 +1,6 @@
 <?php
 /**
+ * @category  erfurt
  * @package   store
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author    Norman Heino <norman.heino@gmail.com>
