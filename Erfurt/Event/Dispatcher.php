@@ -134,6 +134,7 @@ class Erfurt_Event_Dispatcher
                         $handler['config']);        // private config
                 } else {
                     $handlerObject = $handler;
+                    $handler = array();
                 }
                 
                 if (is_object($handlerObject)) {
