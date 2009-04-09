@@ -17,11 +17,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     private $_format = null; 
     private $_parser = null;
     
+    private $_oldReporting = null;
+    
     public function __construct($format = 'rdfxml')
     {
-        if (defined('_EFDEBUG')) {
-            error_reporting(E_ALL | ~E_STRICT);
-        }
+        $this->_oldReporting = error_reporting();
+        error_reporting(E_ALL | ~E_STRICT);
         
         $this->_format = $format;
         
@@ -38,9 +39,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Arc implements Erfurt_Syntax_RdfParser_Ada
     
     public function __destruct()
     {
-        if (defined('_EFDEBUG')) {
-            error_reporting(E_ALL | E_STRICT);
-        }
+            error_reporting($this->_oldReporting);
     }
     
     public function parseFromDataString($dataString)

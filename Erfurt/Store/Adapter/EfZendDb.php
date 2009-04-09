@@ -400,54 +400,56 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
-// TODO
-throw new Exception('Not implemented yet.');
+// TODO support for long uris and literals
         $modelInfoCache = $this->_getModelInfos();
 
-        $modelId = $modelInfoCache[$graphIri]['modelId'];
+        $modelId = $modelInfoCache[$graphUri]['modelId'];
         
         $this->_dbConn->beginTransaction();
         try {
             foreach ($statementsArray as $subject => $predicatesArray) {
                 foreach ($predicatesArray as $predicate => $objectsArray) {
                     foreach ($objectsArray as $object) {
-                        $whereString = 'modelID = ' . $modelId . ' ';
+                        $whereString = 'g = ' . $modelId . ' ';
                         
                         // check whether the subject is a blank node
                         if (substr($subject, 0, 2) === '_:') {
                             $subject = substr($subject, 2);
-                            $whereString .= 'AND subject_is = "b" ';
+                            $whereString .= 'AND st = 1 ';
                         } else {
-                            $whereString .= 'AND subject_is = "r" ';
+                            $whereString .= 'AND st = 0 ';
                         }
 
                         // check the type of the object
                         if ($object['type'] === 'uri') {
-                            $whereString .= 'AND object_is = "r" ';
+                            $whereString .= 'AND ot = 0 ';
                         } else if ($object['type'] === 'bnode') {
-                            $whereString .= 'AND object_is = "b" ';
+                            $whereString .= 'AND ot = 1 ';
                         } else {
-                            $whereString .= 'AND object_is = "l" ';
-                            $whereString .= isset($object['lang']) ? 'AND l_language ="' . $object['lang'] . '" ' : '';
-                            $whereString .= isset($object['datatype']) ? 'AND l_datatype ="' . $object['datatype'] . 
+                            $whereString .= 'AND ot = 2 ';
+                            $whereString .= isset($object['lang']) ? 'AND ol = "' . $object['lang'] . '" ' : '';
+                            $whereString .= isset($object['datatype']) ? 'AND od = "' . $object['datatype'] . 
                                             '" ' : '';
                         }
 
-                        $whereString .= 'AND subject = "' . $subject . '" ';
-                        $whereString .= 'AND predicate = "' . $predicate . '" ';
-                        $whereString .= 'AND object = "' . $object . '" ';
-                        
-                        $this->_dbConn->delete('statements', $whereString);
+                        $whereString .= 'AND s = "' . $subject . '" ';
+                        $whereString .= 'AND p = "' . $predicate . '" ';
+                        $whereString .= 'AND o = "' . $object['value'] . '" ';
+
+                        $this->_dbConn->delete('ef_stmt', $whereString);
                     }
                 }
             }
             
             // if everything went ok... commit the changes to the database
             $this->_dbConn->commit();
+            
+            $this->_cleanUpValueTables($graphUri);
         } catch (Exception $e) {
             // something went wrong... rollback
             $this->_dbConn->rollback();
-            throw new Erfurt_Exception('Bulk insertion of statements failed.');
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Bulk deletion of statements failed.'.$e);
         }
     }
     
