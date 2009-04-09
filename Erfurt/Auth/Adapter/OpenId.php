@@ -201,6 +201,9 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 $identity['username'] = $userResult['userLabel'];
             }
             
+            require_once 'Zend/OpenId/Consumer.php';
+            $consumer = new Zend_OpenId_Consumer();
+            
             if (!$consumer->verify($this->_get, $this->_get['openid_identity'], $this->_sReg)) {
                 $result = false;
                 $msg = 'OpenID authentication failed.';
