@@ -215,6 +215,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
+            
             if ($arTriplePattern != null) {
                 foreach ($arTriplePattern as $triplePattern) {
                     list (
@@ -232,8 +233,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     ++$this->nTriplePatternCount;
                     ++$this->nUnionTriplePatternCount;
                 }
+                ++$this->nGraphPatternCount;
             }
-            ++$this->nGraphPatternCount;
+            
 
             foreach ($this->query->getResultPart() as $optionalPattern) {
                 if ($optionalPattern->getOptional() === $graphPattern->patternId) {

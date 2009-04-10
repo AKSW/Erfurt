@@ -29,11 +29,11 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
      *   Modifies the passed query object directly.
      */
     public function simplify(Erfurt_Sparql_Query $query) {
-#return;	
+#return;
         $arPatterns = $query->getResultPart();
         self::dropEmpty($arPatterns);
-       
-        $arPlan     = $this->createPlan($arPatterns);
+      
+        $arPlan = $this->createPlan($arPatterns);
         if (count($arPlan) == 0) {
             $query->setResultPart($arPatterns);
             return 0;
@@ -55,6 +55,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
     protected function createPlan(&$arPatterns)
     {
         $arNumbers = $this->getNumbers($arPatterns);
+
         if (count($arNumbers) === 0) {
             return array();
         }
