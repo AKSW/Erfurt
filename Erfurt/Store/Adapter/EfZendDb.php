@@ -316,6 +316,23 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
     }
     
+    /** @see Erfurt_Store_Adapter_Interface */
+    public function countWhereMatches($graphIris, $whereSpec, $countSpec)
+    {
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart("COUNT DISTINCT $countSpec")
+              ->setFrom($graphIris)
+              ->setWherePart($whereSpec);
+
+        $result = $this->sparqlQuery($query);
+        
+        if ($result) {
+            return $result;
+        }
+        
+        return 0;
+    }
+    
     /** @see Erfurt_Store_Sql_Interface */
     public function createTable($tableName, array $columns) 
     {

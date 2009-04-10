@@ -367,8 +367,8 @@ class Erfurt_Store
      * @param string $graphUri
      * @param string $whereSpec
      */
-    public function countWhereMatches($graphIri, $countSpec, $whereSpec)
-	{	    
+    public function countWhereMatches($graphIri, $whereSpec, $countSpec)
+	{
 	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
 	        if ($this->_checkAc($graphIri)) {
 	            $graphIris = array_merge($this->_getImportsClosure($graphIri), array($graphIri));

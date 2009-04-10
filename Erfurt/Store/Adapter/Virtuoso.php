@@ -202,7 +202,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function countWhereMatches($graphIris, $countSpec, $whereSpec)
+    public function countWhereMatches($graphIris, $whereSpec, $countSpec)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setProloguePart("SELECT COUNT DISTINCT $countSpec")
