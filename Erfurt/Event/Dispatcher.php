@@ -110,10 +110,10 @@ class Erfurt_Event_Dispatcher
     {
         $eventName = $event->getName();
         $result = self::INIT_VALUE;
-        
+
         if (array_key_exists($eventName, $this->_registeredEvents)) {
             foreach ($this->_registeredEvents[$eventName] as &$handler) {
-                if (is_array($handler)) {
+                if (is_array($handler) && !empty($handler)) {
                     // observer is an array, try to load class
                     if (!class_exists($handler['class_name'], false)) {
                         $pathSpec = rtrim($handler['include_path'], '/\\') 
@@ -132,7 +132,7 @@ class Erfurt_Event_Dispatcher
                         $handler['class_name'],     // class name
                         $handler['include_path'],   // plug-in root
                         $handler['config']);        // private config
-                } else {
+                } else if (is_object($handler)) {
                     $handlerObject = $handler;
                     $handler = array();
                 }
