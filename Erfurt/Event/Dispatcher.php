@@ -113,25 +113,30 @@ class Erfurt_Event_Dispatcher
 
         if (array_key_exists($eventName, $this->_registeredEvents)) {
             foreach ($this->_registeredEvents[$eventName] as &$handler) {
-                if (is_array($handler) && !empty($handler)) {
-                    // observer is an array, try to load class
-                    if (!class_exists($handler['class_name'], false)) {
-                        $pathSpec = rtrim($handler['include_path'], '/\\') 
-                                  . DIRECTORY_SEPARATOR 
-                                  . $handler['file_name']
-                                  . '.php';
-                        include_once $pathSpec;
+                if (is_array($handler)) {
+                    // handler is already instanciated
+                    if (isset($handler['instance']) && is_object($handler['instance'])) {
+                        $handlerObject = $handler['instance'];
+                    } else {
+                        // observer is an array, try to load class
+                        if (!class_exists($handler['class_name'], false)) {
+                            $pathSpec = rtrim($handler['include_path'], '/\\') 
+                                      . DIRECTORY_SEPARATOR 
+                                      . $handler['file_name']
+                                      . '.php';
+                            include_once $pathSpec;
+                        }
+
+                        if (isset($handler['config'])) {
+                            $handlerObject->config = $handler['config'];
+                        }
+
+                        // instantiate handler
+                        $handlerObject = $this->_getHandlerInstance(
+                            $handler['class_name'],     // class name
+                            $handler['include_path'],   // plug-in root
+                            $handler['config']);        // private config
                     }
-                    
-                    if (isset($handler['config'])) {
-                        $handlerObject->config = $handler['config'];
-                    }
-                    
-                    // instantiate handler
-                    $handlerObject = $this->_getHandlerInstance(
-                        $handler['class_name'],     // class name
-                        $handler['include_path'],   // plug-in root
-                        $handler['config']);        // private config
                 } else if (is_object($handler)) {
                     $handlerObject = $handler;
                     $handler = array();
