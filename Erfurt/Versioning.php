@@ -7,7 +7,7 @@
  *   model          VARCHAR(255) NOT NULL, 
  *   useruri        VARCHAR(255) NOT NULL,
  *   resource       VARCHAR(255), 
- *   tstamp         TIMESTAMP NOT NULL, 
+ *   tstamp         INT NOT NULL, 
  *   action_type    INT NOT NULL, 
  *   parent         INT DEFAULT NULL, 
  *   payload_id     INT DEFAULT NULL
@@ -104,7 +104,7 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
         $result = $this->_getStore()->sqlQuery($sql);
@@ -114,24 +114,37 @@ class Erfurt_Versioning
     
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
-        $sql = 'SELECT id, useruri, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+        $sql = 'SELECT id, useruri, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
                 AND parent IS NULL
-                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
            
         $result = $this->_getStore()->sqlQuery($sql);
         
         return $result;
     }
+
+    public function getHistoryForResourceList($resources, $graphUri, $page = 1)
+    {   
+        $sql = 'SELECT id, useruri, tstamp, action_type ' .
+               'FROM ef_versioning_actions WHERE
+                model = \'' . $graphUri . '\' AND ( resource = \'' . implode ('\' OR resource = \'' ,$resources) . '\' )
+                AND parent IS NULL
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
+                ( ( $page - 1) * $this->getLimit() );
+        $result = $this->_getStore()->sqlQuery($sql);
+        
+        return $result;
+    } 
     
     public function getHistoryForUser($userUri, $page = 1)
     {
         $sql = 'SELECT id, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . $this->getLimit() . ' OFFSET ' .
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
         $result = $this->_getStore()->sqlQuery($sql);
@@ -356,7 +369,7 @@ class Erfurt_Versioning
         $actionsSql .= ' VALUES (\'' . 
                        addslashes($graphUri) . '\', \'' .
                        addslashes($userUri) . '\', \'' . 
-                       addslashes($resource) . '\', \'' . date('c') . '\', ' . 
+                       addslashes($resource) . '\', \'' . time() . '\', ' . 
                        addslashes($actionType) . ', ' . $actionParent;
                        
         if (null !== $payloadId) {
@@ -435,7 +448,7 @@ class Erfurt_Versioning
                 'model'       => 'VARCHAR(255) NOT NULL',
                 'useruri'     => 'VARCHAR(255) NOT NULL',
                 'resource'    => 'VARCHAR(255)',
-                'tstamp'      => 'TIMESTAMP NOT NULL',
+                'tstamp'      => 'INT NOT NULL',
                 'action_type' => 'INT NOT NULL',
                 'parent'      => 'INT DEFAULT NULL',
                 'payload_id'  => 'INT DEFAULT NULL'

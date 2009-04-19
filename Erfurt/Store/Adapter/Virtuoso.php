@@ -663,10 +663,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         if (isset($parts['limit'][1][0])) {
-            $selectAdd .= 'TOP ' . $parts['limit'][1][0];
+            $selectAdd = 'TOP ' . $parts['limit'][1][0];
             
             if (isset($parts['offset'][1][0]) && ((int) $parts['offset'][1][0] > 0)) {
-                $selectAdd .= ', ' . $parts['offset'][1][0];
+                $selectAdd = 'TOP ' . $parts['offset'][1][0] . ' , ' . $parts['limit'][1][0];
             }
         }
         
@@ -677,7 +677,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
         
         $sqlQuery = preg_replace(array_keys($replacings), array_values($replacings), $sqlQuery);
-        
+
         $resultArray = array();
         
         if ($result = $this->_execSql($sqlQuery)) {
