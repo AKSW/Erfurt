@@ -47,7 +47,7 @@ class Erfurt_Store_Adapter_Virtuoso_XmlConverter
     {
         $document = new DOMDocument();
         $document->preserveWhiteSpace = false;
-        $document->loadXml(utf8_encode($xmlSparqlResults));
+        $document->loadXml($xmlSparqlResults);
         
         $this->detectNamespacesFromDocument($document);
         

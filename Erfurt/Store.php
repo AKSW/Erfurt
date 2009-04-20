@@ -689,6 +689,18 @@ class Erfurt_Store
     }
     
     /**
+     * Returns a logo URL.
+     *
+     * @return string
+     */
+    public function getLogoUri()
+    {
+        if (method_exists($this->_backendAdapter, 'getLogoUri')) {
+            return $this->_backendAdapter->getLogoUri();
+        }
+    }
+    
+    /**
      * Returns the number fo queries committed.
      *
      * @return int
