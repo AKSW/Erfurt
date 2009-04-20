@@ -7,8 +7,8 @@ require_once 'Zend/Auth/Adapter/Interface.php';
  * class also checks, whether a given user exists in the store and is allowed
  * to login.
  * 
- * @category  erfurt
- * @package   auth
+ * @package  erfurt
+ * @subpackage   auth
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2009 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

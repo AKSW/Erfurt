@@ -5,7 +5,8 @@ require_once 'Erfurt/Event.php';
 /**
  * Erfurt event dispatcher.
  *
- * @package    event
+ * @package erfurt
+ * @subpackage    event
  * @author     Michael Haschke
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

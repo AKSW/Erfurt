@@ -8,7 +8,7 @@
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
  * It was modified and extended in order to fit into Erfurt.
  *
- * @package sparql
+ * @subpackage sparql
  * @author Christian Weiske <cweiske@cweiske.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL

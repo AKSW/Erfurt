@@ -6,7 +6,8 @@ require_once 'Erfurt/App.php';
   * 
   * TODO: RECHTE REIHENFOLGE 
   *
-  * @package ac
+  * @package erfurt
+  * @subpackage ac
   * @author Stefan Berger <berger@intersolut.de>
   * @version $Id$
   */

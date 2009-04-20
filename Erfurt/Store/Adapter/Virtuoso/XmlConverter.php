@@ -8,7 +8,7 @@
  * applying json_decode to a JSON-encoded SPARQL result set
  * ({@link http://www.w3.org/TR/rdf-sparql-json-res/}).
  *
- * @package   store
+ * @subpackage   store
  * @author    Christian Würker <christian.wuerker@ceus-media.de
  * @author    Norman Heino <norman.heino@gmail.com>
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}

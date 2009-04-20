@@ -23,7 +23,8 @@
 /**
  * Erfurt versioning component
  *
- * @package    versioning
+ * @package erfurt
+ * @subpackage    versioning
  * @author     Philipp Frischmuth <prischmuth@googlemail.com>
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

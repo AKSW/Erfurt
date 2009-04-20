@@ -6,7 +6,7 @@ require_once 'Erfurt/Exception.php';
  *   @author Christian Weiske <cweiske@cweiske.de>
  *   @license http://www.gnu.org/licenses/lgpl.html LGPL
  *
- *   @package sparql
+ *   @subpackage sparql
  */
 class Erfurt_Sparql_EngineDb_SqlGeneratorException extends Erfurt_Exception
 {

@@ -8,7 +8,8 @@ require_once 'Zend/Auth/Result.php';
  *
  * Authenticates a subject via an RDF store using a provided model.
  *
- * @package auth
+ * @package erfurt
+ * @subpackage auth
  * @author  Stefan Berger <berger@intersolut.de>
  * @author  Norman Heino <norman.heino@gmail.com>
  * @license

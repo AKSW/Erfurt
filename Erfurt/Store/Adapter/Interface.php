@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @package    store
+ * @package erfurt
+ * @subpackage    store
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}

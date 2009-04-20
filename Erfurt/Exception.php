@@ -1,7 +1,7 @@
 <?php
 /**
- * @category   Erfurt
- * @package    exception
+ * @package   Erfurt
+ * @subpackage    exception
  * @copyright  AKSW team 2007
  * @author Stefan Berger <berger@intersolut.de>
  */

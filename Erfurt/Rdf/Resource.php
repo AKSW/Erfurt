@@ -5,7 +5,8 @@ require_once 'Erfurt/Rdf/Node.php';
 /**
  * Represents a basic RDF resource.
  *
- * @package    rdf
+ * @package erfurt
+ * @subpackage    rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

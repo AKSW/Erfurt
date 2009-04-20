@@ -5,7 +5,8 @@
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
  * It was modified and extended in order to fit into Erfurt.
  *
- * @package sparql
+ * @package erfurt
+ * @subpackage sparql
  * @author Tobias Gauss <tobias.gauss@web.de>
  * @author Christian Weiske <cweiske@cweiske.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>

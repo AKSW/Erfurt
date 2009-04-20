@@ -7,7 +7,7 @@ require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
 *   @author Christian Weiske <cweiske@cweiske.de>
 *   @license http://www.gnu.org/licenses/lgpl.html LGPL
 *
-*   @package sparql
+*   @subpackage sparql
 */
 class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_EngineDb_SqlGenerator
 {

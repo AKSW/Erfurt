@@ -1,11 +1,12 @@
 <?php
 /**
- *   Generates SQL from Sparql FILTER parts
+ * Generates SQL from Sparql FILTER parts
  *
- *   @author Christian Weiske <cweiske@cweiske.de>
- *   @license http://www.gnu.org/licenses/lgpl.html LGPL
+ * @author Christian Weiske <cweiske@cweiske.de>
+ * @license http://www.gnu.org/licenses/lgpl.html LGPL
  *
- *   @package sparql
+ * @package erfurt
+ * @subpackage sparql
  */
 class Erfurt_Sparql_EngineDb_FilterGenerator
 {

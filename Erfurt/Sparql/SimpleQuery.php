@@ -3,7 +3,8 @@
  * This class models a SPARQL query that can be used within an application in order to make
  * it easier e.g. to set different parts of a query independently.
  *
- * @package    sparql
+ * @package erfurt
+ * @subpackage    sparql
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

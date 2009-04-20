@@ -4,7 +4,8 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
 /**
  * Erfurt RDF Store - Adapter for Redland.
  * 
- * @package    store
+ * @package erfurt
+ * @subpackage    store
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

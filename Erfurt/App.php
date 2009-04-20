@@ -2,8 +2,8 @@
 /**
  * Erfurt application class
  *
- * @category erfurt
- * @package  app
+ * @package erfurt
+ * @subpackage  app
  * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

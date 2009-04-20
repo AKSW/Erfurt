@@ -6,8 +6,8 @@
  * to make wrappers customizable by the user and to avoid expensive requests
  * to be done to frequent. The default cache lifetime is one hour.
  * 
- * @category   erfurt
- * @package    wrapper
+ * @package   erfurt
+ * @subpackage    wrapper
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

@@ -9,7 +9,8 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  * Connects to a Virtuoso Universal Server via ODBC, therefore
  * requiring PHP to be compiled with the ODBC extension.
  *
- * @package    store
+ * @package erfurt
+ * @subpackage    store
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

@@ -8,7 +8,7 @@
  *   @author Christian Weiske <cweiske@cweiske.de>
  *   @license http://www.gnu.org/licenses/lgpl.html LGPL
  *
- *   @package sparql
+ *   @subpackage sparql
  */
 interface Erfurt_Sparql_EngineDb_ResultRenderer
 {

@@ -3,7 +3,8 @@
 /**
  * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
- * @package    rdf
+ * @package erfurt
+ * @subpackage    rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
