@@ -286,7 +286,12 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
             }
             
             foreach ($arResultVars as $var) {
-                $head['vars'][] = (string)$var;
+                $var = (string) $var;
+                if ( $var[0] === '?' ) {
+                    $head['vars'][] = substr($var,1);
+                } else {
+                    $head['vars'][] = $var;
+                }
             }
             
             return $head;
