@@ -65,8 +65,8 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         $matches      = array();
         
         // parse namespace/local part
-        preg_match('/^(.+[#\/])(.+[^#\/])$/', $iri, $matches);
-        
+        preg_match('/^(.+[#\/])(.*[^#\/])$/', $iri, $matches);
+
         $flag = false;
         if (count($matches) >= 3) {
             // match namespace

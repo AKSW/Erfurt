@@ -142,7 +142,7 @@ private $subjects;
 		if ($sType === 'bnode') {
 			if (isset($this->bNodes[$s]) && isset($this->bNodeCount[$s])) {
 				$nodeID = $this->bNodes[$s];
-				$count = $this->bNodeCount[$subject->getURI()];
+				$count = $this->bNodeCount[$s];
 				
 				if (($count > 1) || (($count === 1) && ($this->level === 1))) {
 					$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', $nodeID);
@@ -256,7 +256,7 @@ private $subjects;
 	 */
 	private function isList($node) {
 		
-		if ($node['type'] === 'literal') {
+		if ($node['type'] === 'literal' || $node['type'] === 'typed-literal') {
 		    return false;
 		}
 		
@@ -267,7 +267,7 @@ private $subjects;
 			}
 			return false;
 		}
-		
+
 		$listArray = $this->_getListArray();
 		if (isset($listArray[$node['value']])) {
 		    $propertyMap = $listArray[$node['value']];
@@ -294,7 +294,7 @@ private $subjects;
 	private function propertyBNode($value) 
     {	
 		if ($value['type'] === 'bnode') {
-			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', $value);
+			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', substr($value['value'], 2));
 			return true;
 		} else {
 		    return false;
@@ -310,9 +310,9 @@ private $subjects;
 		if (!$this->isList($value)) {
 		    return false;
 		} 
-		
+
 		$elements = array();
-		$current = $value;
+		$current = $value['value'];
 		
 		$listArray = $this->_getListArray();
 		
@@ -324,7 +324,7 @@ private $subjects;
 			$rest = $propertyMap['rest'];
 			$current = $rest;
 		}
-		
+
 		// write list
 		$this->stringWriter->addAttribute(EF_RDF_NS, 'parseType', 'Collection');
 		foreach ($elements as $e) {
@@ -382,8 +382,10 @@ private $subjects;
 		    return false;
 		} 
 		
-		$this->serializeSubject($value);
-		return true;
+		return false;
+// TODO
+		#$this->serializeSubject($value);
+		#return true;
 	}
 	
 	/**
@@ -426,7 +428,7 @@ private $subjects;
 	 * @throws Exception
 	 */
 	private function serializeProperty($property, $value) 
-	{	
+	{
 		$this->startElement($property);
 		
 		if (!$this->propertyList($value)
@@ -436,7 +438,6 @@ private $subjects;
 				&& !$this->propertyXMLLiteral($value)
 				&& !$this->propertyLiteral($value)) {
 			
-			var_dump($value);exit;
 			throw new Exception('Could not serialize property '.$property.' with value '.$value);
 		}
 		
@@ -460,7 +461,8 @@ private $subjects;
 			
 			return true;
 		} else if ($node['type'] === 'bnode') {
-			return true;
+			return false;
+			#return true;
 		} else {
 		    return false;
 	    }
@@ -495,11 +497,12 @@ private $subjects;
 	    
 	    $listArray = array();
 	    foreach ($result['bindings'] as $row) {
-	        $listArray[$row['s']] = array(
-	            'first' => $row['first'],
-	            'rest'  => $row['rest']
+	        $listArray[$row['s']['value']] = array(
+	            'first' => $row['first']['value'],
+	            'rest'  => $row['rest']['value']
 	        );
 	    }
+
 	    $this->_listArray = $listArray;
 	}
 	

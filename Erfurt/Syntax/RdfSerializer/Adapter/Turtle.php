@@ -30,7 +30,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     protected $_store = null;
     protected $_graphUri = null;
     
-    public function serializeGraphToString($graphUri, $pretty)
+    public function serializeGraphToString($graphUri, $pretty = false)
     {
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
@@ -88,7 +88,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         return $this->endRdf();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false)
     {
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;

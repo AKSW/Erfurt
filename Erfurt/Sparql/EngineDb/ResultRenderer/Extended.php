@@ -135,7 +135,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                     $result = $this->_createResource($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
                 } else {
                     $result =  $this->_createResource(
-                        $this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                        $this->uriValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]]);
                 }
                 break;
             case 1:
@@ -143,7 +143,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                      $result = $this->_createBlankNode($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
                 } else {
                     $result = $this->_createBlankNode(
-                        $this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                        $this->uriValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]]);
                 }
                 break;
             default:
@@ -360,7 +360,9 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
             if ($var[1] === 'o') {
                 if (isset($var['sql_ref'])) {
                     $refVariableNamesLit[] = $var['sql_ref'];
+                    $refVariableNamesUri[] = $var['sql_ref'];
                 }
+                
                 if (isset($var['sql_dt_ref'])) {
                     $refVariableNamesUri[] = $var['sql_dt_ref'];
                 }
@@ -370,9 +372,10 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 }
             }   
         }
+
         $refVariableNamesUri = array_unique($refVariableNamesUri);
         $refVariableNamesLit = array_unique($refVariableNamesLit);
-        
+
         $refIdsUri = array();
         $refIdsLit = array();
         foreach ($arRecordSets as $dbRecordSet) {
@@ -389,15 +392,15 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 }
             }
         }
-        
+
         if (count($refIdsUri) > 0) {
             $sql = 'SELECT id, v FROM ef_uri WHERE id IN (' . implode(',', $refIdsUri) . ')';
-            
+
             $result = $this->engine->sqlQuery($sql);
             foreach ($result as $row) {
+                
                 $this->uriValues[$row['id']] = $row['v'];
             }
-            
         }
         
         if (count($refIdsLit) > 0) {

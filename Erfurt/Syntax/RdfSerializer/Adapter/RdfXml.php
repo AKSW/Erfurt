@@ -1,5 +1,5 @@
 <?php
-require_once 'Erfurt/Syntax/RdfSerializer/Adpater/Interface.php';
+require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {
@@ -14,7 +14,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     
     protected $_rdfWriter = null;
     
-    public function serializeGraphToString($graphUri, $pretty)
+    public function serializeGraphToString($graphUri, $pretty = false)
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
@@ -61,7 +61,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		return $this->_rdfWriter->getContentString();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false)
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';

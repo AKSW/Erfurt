@@ -37,6 +37,8 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     protected $_useAc = true;
     protected $_stmtCounter = 0;
     
+    protected $_rdfElementParsed = false;
+    
     protected $_namespaces = array();
     
     public function parseFromDataString($dataString)
@@ -161,6 +163,8 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
             }
             return;
         }
+        
+        $this->_rdfElementParsed = true;
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
         if ($this->_data[$idx] === '/') {
@@ -702,6 +706,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _handleNamespaceDeclaration($parser, $prefix, $uri)
     {
-        $this->_namespaces[$uri] = $prefix;
+        if (!$this->_rdfElementParsed) {
+            $this->_namespaces[$uri] = $prefix;
+        }
+        
+       
     }
 }

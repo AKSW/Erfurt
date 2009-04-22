@@ -494,7 +494,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 	 * @param boolean/null $quote
 	 */
 	private function sanitize($str, $quote = false) {
-		
+
 		$result = '';
 		$str_chars = str_split($str);
 		
@@ -546,6 +546,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 		$this->nextNamespaces = array();
 		
 		foreach ($additions as $prefix=>$ns) {
+		    $this->_writtenPrefixes[] = $prefix;
 			$this->writeAttribute('xmlns:'.$prefix, $ns);
 		}
 	}
@@ -562,13 +563,22 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 		    $ns = $r->getNamespace();
 		    $local = $r->getLocalName();
 		}
-		
+	
 		$tag = $local;
 		
 		if ($ns !== null) {
 			$name = $this->getName($ns);
 
 			if ($name !== '') $tag = $name . ':' . $local;
+		} else {
+		    if ($tag !== 'xml:lang' && substr($tag, 0, 7) !== 'http://' && strpos($tag, ':') !== false) {
+		       $idx = strpos($tag, ':');
+		       
+		       $name = $this->getName(substr($tag, 0, $idx+1));
+		       $local = substr($tag, $idx+1);
+		       
+		       if ($name !== '') $tag = $name . ':' . $local;
+		    }
 		}
 		
 		$this->write($tag);
