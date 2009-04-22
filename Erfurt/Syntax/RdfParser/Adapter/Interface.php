@@ -17,5 +17,7 @@ interface Erfurt_Syntax_RdfParser_Adapter_Interface
     public function parseFromFilenameToStore($filename, $graphUri, $useAc = true);
     public function parseFromUrlToStore($filename, $graphUri, $useAc = true);
     
-    public function reset();
+    public function parseNamespacesFromDataString($dataString);
+    public function parseNamespacesFromFilename($filename);
+    public function parseNamespacesFromUrl($url);
 }

@@ -11,6 +11,6 @@
  */
 interface Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {    
-    public function serializeResourceToString($resourceUri, $graphUri);
-    public function serializeGraphToString($graphUri);
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false);
+    public function serializeGraphToString($graphUri, $pretty = false);
 }

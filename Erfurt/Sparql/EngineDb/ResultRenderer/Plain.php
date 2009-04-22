@@ -191,7 +191,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
     {
         return array(
             'type'  => 'bnode',
-            'value' => ('_:'.$id)
+            'value' => $id
         );
     }
     

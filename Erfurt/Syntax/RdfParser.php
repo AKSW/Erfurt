@@ -31,25 +31,25 @@ class Erfurt_Syntax_RdfParser
             case 'rdfxml':
             case 'xml':
             case 'rdf':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
-                #require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
-                #$this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
+                #require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
+                #$this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
+                require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
+                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
                 break;
             case 'turtle':
             case 'ttl':
-            case 'n3':
             case 'nt':
             case 'ntriple':
-            case 'rdfn3':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
+                require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
+                $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
                 break;
             case 'json':
             case 'rdfjson':
                 require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
                 break;
+            case 'n3':
+            case 'rdfn3':
             default:
                 require_once 'Erfurt/Syntax/RdfParserException.php';
                 throw new Erfurt_Syntax_RdfParserException("Format '$format' not supported");
@@ -74,6 +74,22 @@ class Erfurt_Syntax_RdfParser
             $result = $this->_parserAdapter->parseFromFilename($dataPointer);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataString($dataPointer);
+        } else {
+            require_once 'Erfurt/Syntax/RdfParserException.php';
+            throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');
+        }
+        
+        return $result;
+    }
+    
+    public function parseNamespaces($dataPointer, $pointerType)
+    {
+        if ($pointerType === self::LOCATOR_URL) {
+            $result = $this->_parserAdapter->parseNamespacesFromUrl($dataPointer);       
+        } else if ($pointerType === self::LOCATOR_FILE) {
+            $result = $this->_parserAdapter->parseNamespacesFromFilename($dataPointer);
+        } else if ($pointerType === self::LOCATOR_DATASTRING) {
+            $result = $this->_parserAdapter->parseNamespacesFromDataString($dataPointer);
         } else {
             require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');

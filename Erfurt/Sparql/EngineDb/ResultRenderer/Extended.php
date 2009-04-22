@@ -49,7 +49,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 $result = array();
                 $result['head'] = $this->_getResultHeader();
                 $result['bindings'] = $this->_getVariableArrayFromRecordSets($arRecordSets, $strResultForm, true);
-                
+
                 return $result;
                 break;
             case 'ask':
@@ -95,15 +95,15 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
     
     protected function _createLiteral($value, $language, $datatype)
     {
-        
+
         $retVal = array(
             'type'  => 'literal',
             'value' => $value
         );
                 
-        if ((null !== $language)) {
+        if ($language !== '') {
             $retVal['xml:lang'] = $language;
-        } else if ((null !== $datatype)) {
+        } else if ($datatype !== '') {
             $retVal['type'] = 'typed-literal';
             $retVal['datatype'] = $datatype;
         }
@@ -148,8 +148,8 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 break;
             default:
                  if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-                     $result = $this->_createLiteral(
-                         $row[$this->sg->arVarAssignments[$strVarName]['sql_value']], null, null);
+                     #$result = $this->_createLiteral(
+                     #    $row[$this->sg->arVarAssignments[$strVarName]['sql_value']], null, null);
                     
                     if ($row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']] === null) {
                         $result = $this->_createLiteral(
@@ -165,8 +165,8 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                         );
                     }
                 } else {
-                    $result = $this->_createLiteral(
-                         $this->literalValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]], null, null);
+                    #$result = $this->_createLiteral(
+                    #$this->literalValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]], null, null);
                     
                     if ($row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']] === null) {
                         $result = $this->_createLiteral(

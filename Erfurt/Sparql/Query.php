@@ -323,7 +323,7 @@ class Erfurt_Sparql_Query
      */
     public function getBlanknodeLabel()
     {
-        return ('_:bN' . $this->bnodeCounter++);
+        return ('bN' . $this->bnodeCounter++);
     }
     
     /**

@@ -210,6 +210,11 @@ class Erfurt_Rdf_Model
         return $this->_baseIri;
     }
     
+    public function getBaseUri()
+    {
+        return $this->getBaseIri();
+    }
+        
     /**
      * Returns the model IRI
      *
@@ -218,6 +223,11 @@ class Erfurt_Rdf_Model
     public function getModelIri() 
     {    
         return $this->_modelIri;
+    }
+    
+    public function getModelUri()
+    {
+        return $this->getModelIri();
     }
     
     /**

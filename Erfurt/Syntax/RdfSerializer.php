@@ -27,35 +27,72 @@ class Erfurt_Syntax_RdfSerializer
             case 'rdfxml':
             case 'xml':
             case 'rdf':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Arc.php';
-                $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Arc('rdfxml');
+                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
+                $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
                 break;
             case 'turtle':
             case 'ttl':
-            case 'n3':
             case 'nt':
             case 'ntriple':
-            case 'rdfn3':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Arc.php';
-                $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Arc('turtle');
+                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
+                $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
                 break;
             case 'json':
             case 'rdfjson':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
                 break;
+            case 'rdfn3':
+            case 'n3':
             default:
                 throw new Exception("Format '$format' not supported");
         }        
     }
     
-    public function serializeGraphToString($graphUri)
+    public function serializeGraphToString($graphUri, $pretty = false)
     {
-        return $this->_serializerAdapter->serializeGraphToString($graphUri);
+        return $this->_serializerAdapter->serializeGraphToString($graphUri, $pretty);
     }
     
-    public function serializeResourceToString($resourceUri, $graphUri)
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false)
     {
-        return $this->_serializerAdapter->serializeResourceToString($resourceUri, $graphUri);
+        return $this->_serializerAdapter->serializeResourceToString($resourceUri, $graphUri, $pretty);
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        //return $this->_serializerAdapter->serializeResourceToString($resourceUri, $graphUri);
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->addFrom($graphUri);
+        $query->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <' . $resourceUri . '>)) } 
+                              ORDER BY asc(?s) asc(?p)
+                              LIMIT 1000');
+        
+        $result = $store->sparqlQuery($query, 'extended');
+
+$this->_serializerAdapter->setGraphUri($graphUri);
+$this->_serializerAdapter->setBaseUri('http://3ba.se/conferences/');
+$this->_serializerAdapter->handleNamespace('rdf', EF_RDF_NS);
+$this->_serializerAdapter->handleNamespace('rdfs', EF_RDFS_NS);
+$this->_serializerAdapter->startRdf('Exported with the new Erfurt exporter classes...');
+        //$this->_serializerAdapter->startRdf();
+        
+
+        
+        foreach ($result['bindings'] as $row) {
+            $s     = $row['s']['value'];
+            $p     = $row['p']['value'];
+            $o     = $row['o']['value'];
+            $sType = $row['s']['type'];
+            $oType = $row['o']['type'];
+            $lang  = isset($row['o']['lang']) ? $row['o']['lang'] : null;
+            $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
+            
+            $this->_serializerAdapter->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
+        }
+        
+        return $this->_serializerAdapter->endRdf();
+
     }
 }

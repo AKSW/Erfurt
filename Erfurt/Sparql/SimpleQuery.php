@@ -54,7 +54,7 @@ class Erfurt_Sparql_SimpleQuery
             $queryString .= 'FROM NAMED <' . $fromNamed . '>' . PHP_EOL;
         }
         
-        $queryString .= $this->_wherePart;
+        $queryString .= $this->_wherePart . ' ';
         
         if ($this->_orderClause !== null) {
             $queryString .= 'ORDER BY ' . $this->_orderClause . PHP_EOL;

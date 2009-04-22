@@ -50,6 +50,8 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      */
     protected $_title = null;
     
+    protected $_isBlankNode = false;
+    
     /**
      * Constructor
      *
@@ -66,7 +68,6 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         preg_match('/^(.+[#\/])(.+[^#\/])$/', $iri, $matches);
         
         $flag = false;
-        
         if (count($matches) >= 3) {
             // match namespace
             if (array_key_exists($matches[1], $namespaces)) {
@@ -74,6 +75,10 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 $this->_namespace = $matches[1];
                 $this->_name      = $matches[2];
                 $this->_prefix    = $namespaces[$this->_namespace];
+            } else {
+                $flag = true;
+                $this->_namespace = $matches[1];
+                $this->_name      = $matches[2];
             }
         }
         
@@ -117,6 +122,16 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
             
             return $qName;
         }
+    }
+    
+    public function getNamespace()
+    {
+        return $this->_namespace;
+    }
+    
+    public function getLocalName()
+    {
+        return $this->_name;
     }
     
     /**
@@ -179,15 +194,34 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $resource;
     }
     
+    public static function initWithUri($uri)
+    {
+        $resource = new self($uri);
+        return $resource;
+    }
+    
     public static function initWithNamespaceAndLocalname($namespace, $local)
     {
         $resource = new self($namespace . $local);
         return $resource;
     }
     
+    public static function initWithBlankNode($id)
+    {
+        $resource = new self($id);
+        $this->_isBlankNode = true;
+        return $resource;
+    }
+    
     public function isBlankNode()
     {
-        return false;
+        return $this->_isBlankNode;
+    }
+    
+    public function getId()
+    {
+        // Alias for BlankNodes
+        return $this->getIri();
     }
     
     public function getUri()

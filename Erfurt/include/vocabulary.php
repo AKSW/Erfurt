@@ -60,6 +60,10 @@ define('EF_RDFS_DOMAIN', EF_RDFS_NS.'domain');
 define('EF_RDFS_RANGE', EF_RDFS_NS.'range');
 	
 define('EF_XSD_STRING', EF_XSD_NS.'string');
+define('EF_XSD_INTEGER', EF_XSD_NS.'integer');
+define('EF_XSD_DECIMAL', EF_XSD_NS.'decimal');
+define('EF_XSD_DOUBLE', EF_XSD_NS.'double');
+define('EF_XSD_BOOLEAN', EF_XSD_NS.'boolean');
 	
 define('EF_BNODE_PREFIX', 'node');
 

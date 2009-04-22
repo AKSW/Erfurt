@@ -158,6 +158,26 @@ class Erfurt_Store
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
     
+    public function addNamespacePrefix($graphUri, $ns, $prefix, $useAc = true)
+    {
+        if (method_exists($this->_backendAdapter, 'addNamespacePrefix')) {
+    	    if ($this->_checkAc($graphUri, 'edit', $useAc)) {
+    	        $this->_backendAdapter->addNamespacePrefix($graphUri, $ns, $prefix);
+    	    }
+        }
+    }
+    
+    public function listNamespacePrefixes($graphUri)
+    {
+        if (method_exists($this->_backendAdapter, 'listNamespacePrefixes')) {
+    	    if ($this->_checkAc($graphUri)) {
+    	        return $this->_backendAdapter->listNamespacePrefixes($graphUri);
+    	    }
+        }
+        
+        return array();
+    }
+    
     /**
      * Adds statements in an array to the graph specified by $graphIri.
      *
@@ -305,8 +325,8 @@ class Erfurt_Store
                 }
             } catch (Erfurt_Exception $e) {
                 // Delete the model, for the import failed.
-                $this->deleteModel($sysOntSchema, false);
-                
+                $this->_backendAdapter->deleteModel($sysOntSchema);
+echo $e->getMessage();exit;
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed.");
             }
@@ -338,7 +358,7 @@ class Erfurt_Store
                 }
             } catch (Erfurt_Exception $e) {
                 // Delete the model, for the import failed.
-                $this->deleteModel($sysOntSchema, false);
+                $this->_backendAdapter->deleteModel($sysOntSchema);
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed.");
             }
@@ -779,7 +799,7 @@ class Erfurt_Store
     {
         $supportedFormats = array(
             'rdfxml'    => 'RDF/XML',
-            'n3'        => 'Notation 3',
+            'ttl'       => 'Turtle',
             'rdfjson'   => 'RDF/JSON (Talis)'
         );
         
@@ -795,7 +815,7 @@ class Erfurt_Store
     {
         $supportedFormats = array(
             'rdfxml'    => 'RDF/XML',
-            'n3'        => 'Notation 3',
+            'ttl'       => 'Turtle',
             'rdfjson'   => 'RDF/JSON (Talis)'
         );
         

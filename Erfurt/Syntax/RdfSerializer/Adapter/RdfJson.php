@@ -14,7 +14,7 @@ require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {    
-    public function serializeResourceToString($resourceUri, $graphUri)
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty)
     {
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
@@ -23,75 +23,67 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (!isLiteral(?o)) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
-        $result1 = $store->sparqlQuery($sparql, 'plain', false);
+        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resourceUri.'>)) }');
+        $sparql->setOrderClause('?s');
+        $sparql->setLimit(1000);
         
-        $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setProloguePart('SELECT ?s ?p ?o');
-        $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (isLiteral(?o)) . FILTER (sameTerm(?s, <' . $resourceUri . '>)) }');
-        $result2 =$store->sparqlQuery($sparql, 'plain', false);
-        
-        foreach ($result1 as $stm) {
-            $s = $stm['s'];
-            $p = $stm['p'];
-            $o = $stm['o'];
+        $offset = 0;
+        while (true) {
+            $sparql->setOffset($offset);
             
-            if (!isset($triples["$s"])) {
-                $triples["$s"] = array();
+            $result = $store->sparqlQuery($sparql, 'extended');
+            
+            $counter = 0;
+            foreach ($result['bindings'] as $stm) {
+                $s = $stm['s']['value'];
+                $p = $stm['p']['value'];
+                $o = $stm['o'];
+
+                if (!isset($triples["$s"])) {
+                    $triples["$s"] = array();
+                }
+
+                if (!isset($triples["$s"]["$p"])) {
+                    $triples["$s"]["$p"] = array();
+                }
+                
+                if ($o['type'] === 'typed-literal') {
+                    $triples["$s"]["$p"][] = array(
+                        'type'     => 'literal',
+                        'value'    => $o['value'],
+                        'datatype' => $o['datatype']
+                    );
+                } else if ($o['type'] === 'typed-literal') {
+                    $oArray = array(
+                        'type'  => 'literal',
+                        'value' => $o['value']
+                    );
+                    
+                    if (isset($o['xml:lang'])) {
+                        $oArray['lang'] = $o['xml:lang'];
+                    }
+                    
+                    $triples["$s"]["$p"][] = $oArray;
+                } else {
+                    $triples["$s"]["$p"][] = array(
+                        'type'     => $o['type'],
+                        'value'    => $o['value']
+                    );
+                }
+                $counter++;
             }
             
-            if (!isset($triples["$s"]["$p"])) {
-                $triples["$s"]["$p"] = array();
+            if ($counter < 1000) {
+                break;
             }
             
-            if (substr($o, 0, 2) == '_:') {
-                $triples["$s"]["$p"][] = array(
-                    'type'  => 'bnode',
-                    'value' => $o
-                );
-            } else {
-                $triples["$s"]["$p"][] = array(
-                    'type'  => 'uri',
-                    'value' => $o
-                );
-            }
-        }
-        
-        foreach ($result2 as $stm) {
-            $s = $stm['s'];
-            $p = $stm['p'];
-            $o = $stm['o'];
-            
-            if (!isset($triples["$s"])) {
-                $triples["$s"] = array();
-            }
-            
-            if (!isset($triples["$s"]["$p"])) {
-                $triples["$s"]["$p"] = array();
-            }
-            
-            $objArray = array(
-                'type'  => 'literal'
-            );
-            
-            if (strrpos($o, '^^') !== false) {
-                $objArray['value'] = substr($o, 0, strrpos($o, '^^'));
-                $objArray['datatype'] = substr($o, strrpos($o, '^^')+2);
-            } else if (strrpos($o, '@') !== false) {
-                $objArray['value'] = substr($o, 0, strrpos($o, '@'));
-                $objArray['lang'] = substr($o, strrpos($o, '@')+1);
-            } else {
-                $objArray['value'] = $o;
-            }
-            
-            $triples["$s"]["$p"][] = $objArray;             
+            $offset += 1000;
         }
         
         return json_encode($triples);
     }
     
-    public function serializeGraphToString($graphUri)
+    public function serializeGraphToString($graphUri, $pretty)
     {   
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
@@ -100,69 +92,61 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (!isLiteral(?o)) }');
-        $result1 = $store->sparqlQuery($sparql, 'plain', false);
+        $sparql->setWherePart('WHERE { ?s ?p ?o }');
+        $sparql->setOrderClause('?s');
+        $sparql->setLimit(1000);
         
-        $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setProloguePart('SELECT ?s ?p ?o');
-        $sparql->addFrom($graphUri);
-        $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (isLiteral(?o)) }');
-        $result2 =$store->sparqlQuery($sparql, 'plain', false);
-        
-        foreach ($result1 as $stm) {
-            $s = $stm['s'];
-            $p = $stm['p'];
-            $o = $stm['o'];
+        $offset = 0;
+        while (true) {
+            $sparql->setOffset($offset);
             
-            if (!isset($triples["$s"])) {
-                $triples["$s"] = array();
+            $result = $store->sparqlQuery($sparql, 'extended');
+
+            $counter = 0;
+            foreach ($result['bindings'] as $stm) {
+                $s = $stm['s']['value'];
+                $p = $stm['p']['value'];
+                $o = $stm['o'];
+
+                if (!isset($triples["$s"])) {
+                    $triples["$s"] = array();
+                }
+
+                if (!isset($triples["$s"]["$p"])) {
+                    $triples["$s"]["$p"] = array();
+                }
+                
+                if ($o['type'] === 'typed-literal') {
+                    $triples["$s"]["$p"][] = array(
+                        'type'     => 'literal',
+                        'value'    => $o['value'],
+                        'datatype' => $o['datatype']
+                    );
+                } else if ($o['type'] === 'typed-literal') {
+                    $oArray = array(
+                        'type'  => 'literal',
+                        'value' => $o['value']
+                    );
+                    
+                    if (isset($o['xml:lang'])) {
+                        $oArray['lang'] = $o['xml:lang'];
+                    }
+                    
+                    $triples["$s"]["$p"][] = $oArray;
+                } else {
+                    $triples["$s"]["$p"][] = array(
+                        'type'     => $o['type'],
+                        'value'    => $o['value']
+                    );
+                }
+                $counter++;
             }
             
-            if (!isset($triples["$s"]["$p"])) {
-                $triples["$s"]["$p"] = array();
+            if ($counter < 1000) {
+                break;
             }
             
-            if (substr($o, 0, 2) == '_:') {
-                $triples["$s"]["$p"][] = array(
-                    'type'  => 'bnode',
-                    'value' => $o
-                );
-            } else {
-                $triples["$s"]["$p"][] = array(
-                    'type'  => 'uri',
-                    'value' => $o
-                );
-            }
-        }
-        
-        foreach ($result2 as $stm) {
-            $s = $stm['s'];
-            $p = $stm['p'];
-            $o = $stm['o'];
-            
-            if (!isset($triples["$s"])) {
-                $triples["$s"] = array();
-            }
-            
-            if (!isset($triples["$s"]["$p"])) {
-                $triples["$s"]["$p"] = array();
-            }
-            
-            $objArray = array(
-                'type'  => 'literal'
-            );
-            
-            if (strrpos($o, '^^') !== false) {
-                $objArray['value'] = substr($o, 0, strrpos($o, '^^'));
-                $objArray['datatype'] = substr($o, strrpos($o, '^^')+2);
-            } else if (strrpos($o, '@') !== false) {
-                $objArray['value'] = substr($o, 0, strrpos($o, '@'));
-                $objArray['lang'] = substr($o, strrpos($o, '@')+1);
-            } else {
-                $objArray['value'] = $o;
-            }
-            
-            $triples["$s"]["$p"][] = $objArray;             
+            $offset += 1000;
         }
         
         return json_encode($triples);

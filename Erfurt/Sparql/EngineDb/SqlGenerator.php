@@ -22,13 +22,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator
         ),
         'datatype' => array(
             'value' => 'l_datatype',
-            'empty' => '=""',
-            'not_empty' => '!=""'
+            'empty' => "=''",
+            'not_empty' => "!=''"
         ),
         'language' => array(
             'value' => 'l_language',
-            'empty' => '=""',
-            'not_empty' => '!=""'
+            'empty' => "=''",
+            'not_empty' => "!=''"
         )
     );
     

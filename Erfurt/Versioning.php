@@ -47,6 +47,8 @@ class Erfurt_Versioning
     
     protected $_limit = 10;
     
+    protected $_store = null;
+    
     /**
      * Constructor registers with Erfurt_Event_Dispatcher
      * and adds triggers for operations on statements (add/del)
@@ -420,8 +422,11 @@ class Erfurt_Versioning
      */
     public function _getStore()
     {
-        $app = Erfurt_App::getInstance();
-        return $app->getStore();
+        if (null === $this->_store) {
+            $this->_store = Erfurt_App::getInstance()->getStore();
+        }
+        
+        return $this->_store;
     }
     
     /**

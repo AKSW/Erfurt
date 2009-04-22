@@ -111,15 +111,18 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         
         $graphId = $modelInfoCache[$graphUri]['modelId'];
         
-        $this->_dbConn->beginTransaction();
-        
+        $sqlQuery = 'INSERT IGNORE INTO ef_stmt (g,s,p,o,s_r,p_r,o_r,st,ot,ol,od,od_r) VALUES ';
+        $insertArray = array();
+   
         $counter = 0;
         foreach ($statementsArray as $subject => $predicatesArray) {
             foreach ($predicatesArray as $predicate => $objectsArray) {
                 foreach ($objectsArray as $object) {
+                    $sqlString = '';
+                    
                     // check whether the subject is a blank node
-                    if (substr($subject, 0, 2) === '_:') {
-                        $subject = substr($subject, 2);
+                    if (substr((string)$subject, 0, 2) === '_:') {
+                        $subject = substr((string)$subject, 2);
                         $subjectIs = '1';
                     } else {
                         $subjectIs = '0';
@@ -131,18 +134,22 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         $lang = false;
                         $dType = false;
                     } else if ($object['type'] === 'bnode') {
+                        if (substr((string)$object['value'], 0, 2) === '_:') {
+                            $object['value'] = substr((string)$object['value'], 2);
+                        }
+                        
                         $objectIs = '1';
                         $lang = false;
                         $dType = false;
                     } else {
                         $objectIs = '2';
-                        $lang = isset($object['lang']) ? $object['lang'] : false;
-                        $dType = isset($object['datatype']) ? $object['datatype'] : false;
+                        $lang = isset($object['lang']) ? $object['lang'] : '';
+                        $dType = isset($object['datatype']) ? $object['datatype'] : '';
                     }
                     
                     $sRef = false;
-                    if (strlen($subject) > $this->_getSchemaRefThreshold()) {
-                        $subjectHash = md5($subject);
+                    if (strlen((string)$subject) > $this->_getSchemaRefThreshold()) {
+                        $subjectHash = md5((string)$subject);
                         
                         try {
                             $sRef = $this->_insertValueInto('ef_uri', $graphId, $subject, $subjectHash);
@@ -152,12 +159,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $subject = substr($subject, 0, 223) . $subjectHash;
+                        $subject = substr((string)$subject, 0, 223) . $subjectHash;
                     }
                     
                     $pRef = false;
-                    if (strlen($predicate) > $this->_getSchemaRefThreshold()) {
-                        $predicateHash = md5($predicate);
+                    if (strlen((string)$predicate) > $this->_getSchemaRefThreshold()) {
+                        $predicateHash = md5((string)$predicate);
                         
                         try {
                             $pRef = $this->_insertValueInto('ef_uri', $graphId, $predicate, $predicateHash);
@@ -167,12 +174,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $predicate = substr($predicate, 0, 223) . $predicateHash;
+                        $predicate = substr((string)$predicate, 0, 223) . $predicateHash;
                     }
                     
                     $oRef = false;
-                    if (strlen($object['value']) > $this->_getSchemaRefThreshold()) {
-                        $objectHash = md5($object['value']);
+                    if (strlen((string)$object['value']) > $this->_getSchemaRefThreshold()) {
+                        $objectHash = md5((string)$object['value']);
                         
                         if ($object['type'] === 'literal') {
                             $tableName = 'ef_lit';
@@ -188,73 +195,123 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $object['value'] = substr($object['value'], 0, 223) . $objectHash;
-                    }
-                    
-                    $data = array(
-                        'g'     => $graphId,
-                        's'     => $subject,
-                        'p'     => $predicate,
-                        'o'     => $object['value'],
-                        'st'    => $subjectIs,
-                        'ot'    => $objectIs
-                    );
-                    
-                    if ($sRef !== false) {
-                        $data['s_r'] = $sRef;
-                    }
-                    if ($pRef !== false) {
-                        $data['p_r'] = $pRef;
-                    }
-                    if ($oRef !== false) {
-                        $data['o_r'] = $oRef;
-                    }
-                    if ($lang !== false) {
-                        $data['ol'] = $lang;
-                    }
-                    if ($dType !== false) {
-                        if (strlen($dType) > $this->_getSchemaRefThreshold()) {
-                            $dTypeHash = md5($dType);
-                            
-                            try {
-                                $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
-                            } catch (Erfurt_Store_Adapter_Exception $e) {
-                                $this->rollback();
-                                require_once 'Erfurt/Store/Adapter/Exception.php';
-                                throw new Erfurt_Store_Adapter_Exception($e->getMessage());
-                            }
-                            
-                            $data['od']   = substr($data['od'], 0, 223) . $dTypeHash;
-                            $data['od_r'] = $dtRef;
-                            
-                        } else {
-                            $data['od'] = $dType;
-                        }
+                        $object['value'] = substr((string)$object['value'], 0, 223) . $objectHash;
                     }
 
-                    try {
-                        $this->_dbConn->insert('ef_stmt', $data);
-                        $counter++;
-                    } catch (Exception $e) {
-                        if ($this->_getNormalizedErrorCode() === 1000) {
-                            continue;
-                        } else {
-                            $this->_dbConn->rollback();
+                    $oValue = addslashes($object['value']);
+                    
+                    $sqlString .= "($graphId,'$subject','$predicate','$oValue',";
+
+                    #$data = array(
+                    #    'g'     => $graphId,
+                    #    's'     => $subject,
+                    #    'p'     => $predicate,
+                    #    'o'     => $object['value'],
+                    #    'st'    => $subjectIs,
+                    #    'ot'    => $objectIs
+                    #);
+
+                    if ($sRef !== false) {
+                        $sqlString .= "$sRef,";
+                    } else {
+                        $sqlString .= "\N,";
+                    }
+                    if ($pRef !== false) {
+                        $sqlString .= "$pRef,";
+                    } else {
+                        $sqlString .= "\N,";
+                    }
+                    if ($oRef !== false) {
+                        $sqlString .= "$oRef,";
+                    } else {
+                        $sqlString .= "\N,";
+                    }
+                    
+                    $sqlString .= "$subjectIs,$objectIs,'$lang',";
+                    
+                    #$data['ol'] = $lang;
+                    
+                    
+                    if (strlen((string)$dType) > $this->_getSchemaRefThreshold()) {
+                        $dTypeHash = md5((string)$dType);
+                            
+                        try {
+                            $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
+                        } catch (Erfurt_Store_Adapter_Exception $e) {
+                            $this->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
-                            throw new Erfurt_Store_Adapter_Exception('Bulk insertion of statements failed: ' .
-                                            $this->_dbConn->getConnection()->error);
-                        } 
-                    }    
+                            throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+                        }
+                            
+                        $dType   = substr((string)$data['od'], 0, 223) . $dTypeHash;
+                        $data['od_r'] = $dtRef;
+                        
+                        $sqlString .= "'$dType',$dtRef)"; 
+                    } else {
+                        #$data['od'] = $dType;
+                        $sqlString .= "'$dType',\N)";
+                    }
+                    
+                    $insertArray[] = $sqlString;
+                    $counter++;
+
+                    #try {
+                    #    $this->_dbConn->insert('ef_stmt', $data);
+                    #    $counter++;
+                    #} catch (Exception $e) {
+                    #    if ($this->_getNormalizedErrorCode() === 1000) {
+                    #        continue;
+                    #    } else {
+                    #        $this->_dbConn->rollback();
+                    #        require_once 'Erfurt/Store/Adapter/Exception.php';
+                    #        throw new Erfurt_Store_Adapter_Exception('Bulk insertion of statements failed: ' .
+                    #                        $this->_dbConn->getConnection()->error);
+                    #    } 
+                    #}    
                 }
             }
         }
-            
-        // if everything went ok... commit the changes to the database
-        $this->_dbConn->commit();
-        
+         
+        $sqlQuery .= implode(',', $insertArray);
+
+        if ($counter > 0) {
+            $this->sqlQuery($sqlQuery);
+        }
+
         if ($counter > 100) {
             $this->_optimizeTables();
         }
+    }
+    
+    public function listNamespacePrefixes($graphUri)
+    {
+        $modelInfoCache = $this->_getModelInfos();
+        return $modelInfoCache[$graphUri]['namespaces'];
+    }
+    
+    public function addNamespacePrefix($graphUri, $ns, $prefix)
+    {
+        $modelInfoCache = $this->_getModelInfos();
+        $graphId = $modelInfoCache[$graphUri]['modelId'];
+        
+        $data = array(
+            'g' => $graphId,
+            'prefix' => $prefix
+        );
+        
+        if (strlen($ns) > $this->_getSchemaRefThreshold()) {
+            $nsHash = md5($ns);
+            
+            $refId = $this->_insertValueInto('ef_uri', $graphId, $ns, $nsHash);
+            $ns = substr($ns, 0, 223) . $nsHash;
+            
+            $data['ns'] = $ns;
+            $data['ns_r'] = $refId;
+        } else {
+            $data['ns'] = $ns;
+        }
+        
+        $this->_dbConn->insert('ef_ns', $data);
     }
     
     protected function _getNormalizedErrorCode() 
@@ -487,7 +544,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         // invalidate the cache and fetch model infos again
         require_once 'Erfurt/App.php';
         $cache = Erfurt_App::getInstance()->getCache();
-        $tags =  array('model_info', $modelInfoCache[$modelIri]['modelId']);
+        $tags =  array('model_info', $modelInfoCache[$graphUri]['modelId']);
         #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
         $this->_modelCache = array();
         $this->_modelInfoCache = null;
@@ -574,11 +631,14 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     
     /** @see Erfurt_Store_Adapter_Interface */ 
     public function getNewModel($graphUri, $baseUri = '', $type = 'owl') 
-    {    
+    {
         $data = array(
-            'uri'  => $graphUri,
-            'base'   => $baseUri
+            'uri'  => $graphUri
         );
+        
+        if ($baseUri !== '') {
+            $data['base'] = $baseUri;
+        }
 
         // insert the new model into the database
         $this->_dbConn->insert('ef_graph', $data);
@@ -648,7 +708,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         $app = Erfurt_App::getInstance();
         
-        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTempDir() !== false) {
+        if (false && $this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTempDir() !== false) {
+// TODO fix importRdf to work with arc xml parser
             return array('rdfxml' => 'RDF/XML');
         } else {
             return array();
@@ -674,7 +735,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $count = 0;
             $longStatements = array();
             foreach ($parsedArray as $s => $pArray) {
-                if (substr($s, 0, 1) === '_') {
+                if (substr($s, 0, 2) === '_:') {
+                    $s = substr($s, 2);
                     $sType = '1';
                 } else {
                     $sType = '0';
@@ -699,6 +761,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         if ($o['type'] === 'literal') {
                             $oType = '2';
                         } else if ($o['type'] === 'bnode') {
+                            if (substr($o['value'], 0, 2) === '_:') {
+                                $o['value'] = substr($o['value'], 2);
+                            }
+                            
                             $oType = '1';
                         } else {
                             $oType = '0';
@@ -748,14 +814,14 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             
             // Delete the temp file
             unlink($filename);
-            
+   
             // Now add the long-value-statements
             foreach($longStatements as $stm) {
                 $sId = false;
                 $pId = false;
                 $oId = false;
                 $dtId = false;
-                
+   
                 $s = $stm['s'];
                 $p = $stm['p'];
                 $o = $stm['o']['value'];
@@ -790,7 +856,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     
                     $oDt = substr($oDt, 0, 223) . $oDtHash; 
                 }
-                    
+     
                 $sql = "INSERT INTO ef_stmt 
                         (g,s,p,o,s_r,p_r,o_r,st,ot,ol,od,od_r) 
                         VALUES ($modelId,'$s','$p','$o',";
@@ -843,7 +909,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     $sql .= "\N,\N)";
                 }
                 
-                $this->_dbConn->getConnection()->query($sql);
+                //$this->_dbConn->getConnection()->query($sql);
             }
             
             if ($count > 10000) {
@@ -921,7 +987,19 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         $start = microtime(true);
         
-        $result = $this->_dbConn->fetchAll($sqlQuery);
+        if (strtolower(substr($sqlQuery, 0, 6)) === 'insert') {
+            // Handle without ZendDb
+            $result = $this->_dbConn->getConnection()->query($sqlQuery);
+
+            if ($result !== true) {
+#echo($sqlQuery);exit;
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception('SQL INSERT query failed: ' .      
+                            $this->_dbConn->getConnection()->error);
+            }
+        } else {
+            $result = $this->_dbConn->fetchAll($sqlQuery);
+        }
         
         // Debug executed SQL queries in debug mode (7)
         $logger = Erfurt_App::getInstance()->getLog();
@@ -1013,7 +1091,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
         	        uri			VARCHAR(255) COLLATE ascii_bin NOT NULL,
         	        uri_r	    INT UNSIGNED DEFAULT NULL,					
-        	        base		VARCHAR(255) COLLATE ascii_bin NOT NULL,
+        	        base		VARCHAR(255) COLLATE ascii_bin DEFAULT NULL,
         	        base_r	    INT UNSIGNED DEFAULT NULL,
         	        UNIQUE unique_graph (uri)							
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
@@ -1040,8 +1118,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
             	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
             	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
-            	    ol 		VARCHAR(10) COLLATE ascii_bin DEFAULT NULL,
-            	    od 	    VARCHAR(255) COLLATE ascii_bin DEFAULT NULL,
+            	    ol 		VARCHAR(10) COLLATE ascii_bin NOT NULL,
+            	    od 	    VARCHAR(255) COLLATE ascii_bin NOT NULL,
             	    od_r 	INT UNSIGNED DEFAULT NULL,
             	    UNIQUE  unique_stmt (g, s(150), p(150), o(150), st, ot, ol, od(150)),
             	    INDEX 	idx_gpo	(g, p(100), o(100)),
@@ -1242,7 +1320,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
         
         $id = $result['id'];
-        
+
         return $id;
     }
     

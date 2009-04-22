@@ -94,8 +94,18 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
         return true;
     }
     
-    public function reset()
+    public function parseNamespacesFromDataString($dataString)
     {
-        // Nothing to do here.
+        return array();
+    }
+    
+    public function parseNamespacesFromFilename($filename)
+    {
+        return array();
+    }
+    
+    public function parseNamespacesFromUrl($url)
+    {
+        return array();
     }
 }

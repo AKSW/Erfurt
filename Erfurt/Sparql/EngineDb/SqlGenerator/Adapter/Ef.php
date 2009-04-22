@@ -25,13 +25,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         ),
         'datatype' => array(
             'value' => 'od',
-            'empty' => 'IS NULL',
-            'not_empty' => 'IS NOT NULL'
+            'empty' => "=''",
+            'not_empty' => "!=''"
         ),
         'language' => array(
             'value' => 'ol',
-            'empty' => 'IS NULL',
-            'not_empty' => 'IS NOT NULL'
+            'empty' => "=''",
+            'not_empty' => "!=''"
         )
     );
     
@@ -598,8 +598,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         $strTablePrefix . '.od as ' . $this->getSqlVariableNameValue($var),
                         $strTablePrefix . '.od_r as ' . $this->getSqlVariableNameRef($var),
                         '0 as ' . $this->getSqlVariableNameIs($var),
-                        'NULL as ' . $this->getSqlVariableNameLanguage($var),
-                        'NULL as ' . $this->getSqlVariableNameDatatype($var),
+                        '"" as ' . $this->getSqlVariableNameLanguage($var),
+                        '"" as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else if ($func == 'lang') {
                     if ($chType != 'o') {
@@ -611,8 +611,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     return array(
                         $strTablePrefix . '.ol as ' . $this->getSqlVariableNameValue($var),
                         '2 as ' . $this->getSqlVariableNameIs($var),
-                        'NULL as ' . $this->getSqlVariableNameLanguage($var),
-                        'NULL as ' . $this->getSqlVariableNameDatatype($var),
+                        '"" as ' . $this->getSqlVariableNameLanguage($var),
+                        '"" as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else {
                     require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
@@ -754,9 +754,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         $strColDatatype = 'dD';
                         $strColDatatypeRef = 'dDR';
                     }
-                    $ar[] = 'NULL as '
+                    $ar[] = '"" as '
                         . $strColLanguage;
-                    $ar[] = 'NULL as '
+                    $ar[] = '"" as '
                         . $strColDatatype;
                     $ar[] = 'NULL as '
                         . $strColDatatypeRef;
@@ -848,7 +848,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 if ($bject->getDatatype() == '' || $bject->getDatatype() == 'http://www.w3.org/2001/XMLSchema#string') {
                     //string
                     $r .= ' AND ('
-                        . $strColDatatype . ' IS NULL'
+                        . $strColDatatype . "=''"
                         . ' OR ' . $strColDatatype . '="http://www.w3.org/2001/XMLSchema#string"'
                         . ')';
                 } else {
@@ -864,7 +864,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                    . $this->_qstr($bject->getLanguage());
             } else {
                 $strColLanguage = $strTablePrefix . '.ol';
-                $r .= ' AND ' . $strColLanguage . ' IS NULL';
+                $r .= ' AND ' . $strColLanguage . "=''";
             }
             return $r;
 
@@ -918,14 +918,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                   $strTablePrefixNew . '.o=' . $strTablePrefixOld . '.o'
                 . ' AND '
                 . $strTablePrefixNew . '.ot='  . $strTablePrefixOld . '.ot'
-                . ' AND ('
+                . ' AND '
                 . $strTablePrefixNew . '.ol=' . $strTablePrefixOld . '.ol'
-                . ' OR ('
-                . $strTablePrefixNew . '.ol IS NULL AND ' . $strTablePrefixOld . '.ol IS NULL))'
-                . ' AND ('
-                . $strTablePrefixNew . '.od=' . $strTablePrefixOld . '.od'
-                . ' OR ('
-                . $strTablePrefixNew . '.od IS NULL AND ' . $strTablePrefixOld . '.od IS NULL))';
+                . ' AND '
+                . $strTablePrefixNew . '.od=' . $strTablePrefixOld . '.od';
         }
     }//protected static function getSqlEqualityCondition($arNew, $arOld)
 

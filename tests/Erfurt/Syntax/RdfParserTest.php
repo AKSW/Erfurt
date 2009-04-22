@@ -32,8 +32,8 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
         $result2 = $adapter->parseFromUrl($url);
         
         $this->assertEquals($result1, $result2);
@@ -44,14 +44,14 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
 // TODO use a url, that is available on every machine
         $this->markTestIncomplete();return;
         
-        $this->_object->initializeWithFormat('n3');
+        $this->_object->initializeWithFormat('ttl');
         $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/n3?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
         
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $result2 = $adapter->parseFromUrl($url);
         
         $this->assertEquals($result1, $result2);
@@ -82,8 +82,8 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
         $result2 = $adapter->parseFromFilename($filename);
         
         $this->assertEquals($result1, $result2);
@@ -94,13 +94,13 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
 // TODO error in arc?
         $this->markTestIncomplete();return;
         
-        $this->_object->initializeWithFormat('n3');
-        $filename = 'resources/syntax/conferences.n3';
+        $this->_object->initializeWithFormat('ttl');
+        $filename = 'resources/syntax/conferences.ttl';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $result2 = $adapter->parseFromFilename($filename);
         
         $this->assertEquals($result1, $result2);
@@ -139,8 +139,8 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
         
         $result1 = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
         $result2 = $adapter->parseFromDataString($dataString);
         
         $this->assertEquals($result1, $result2);
@@ -148,16 +148,16 @@ class Erfurt_Syntax_RdfParserTest extends PHPUnit_Framework_TestCase
     
     public function testParseWithDataStringAndN3()
     {
-        $this->_object->initializeWithFormat('n3');
+        $this->_object->initializeWithFormat('ttl');
         
-        $dataString = '<http://3ba.se/conferences/> rdf:type ns0:Ontology ;
-                                     ns1:label "Conference Model" ;
-                                     ns1:comment "Demo Model about Conferences and Semantic Web People" .';
+        $dataString = '<http://3ba.se/conferences/> a <Ontology> ;
+                                     <label> "Conference Model" ;
+                                     <comment> "Demo Model about Conferences and Semantic Web People" .';
         
         $result1 = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
         
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('turtle');
+        require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
+        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $result2 = $adapter->parseFromDataString($dataString);
         
         $this->assertEquals($result1, $result2);
