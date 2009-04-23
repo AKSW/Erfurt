@@ -680,7 +680,7 @@ echo $e->getMessage();exit;
                         // Everything is fine, sys models now imported
                     } else {
                         require_once 'Erfurt/Store/Exception.php';
-                        throw new Erfurt_Store_Exception("Check setup failed.");
+                        throw new Erfurt_Store_Exception('Check setup failed:' . $e->getMessage());
                     }
                 }
                 
