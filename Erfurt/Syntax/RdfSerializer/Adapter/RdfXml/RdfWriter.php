@@ -140,14 +140,7 @@ private $subjects;
 
 		// add identifier
 		if ($sType === 'bnode') {
-			if (isset($this->bNodes[$s]) && isset($this->bNodeCount[$s])) {
-				$nodeID = $this->bNodes[$s];
-				$count = $this->bNodeCount[$s];
-				
-				if (($count > 1) || (($count === 1) && ($this->level === 1))) {
-					$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', $nodeID);
-				}
-			}
+			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', substr($s, 2));
 		} else {
 			$this->stringWriter->addAttribute(EF_RDF_NS, 'about', $s);	
 		}
@@ -256,7 +249,7 @@ private $subjects;
 	 */
 	private function isList($node) {
 		
-		if ($node['type'] === 'literal' || $node['type'] === 'typed-literal') {
+		if ($node['type'] === 'literal') {
 		    return false;
 		}
 		
@@ -350,23 +343,17 @@ private $subjects;
 	 */
 	private function propertyLiteral($value) 
 	{
-		if ($value['type'] === 'typed-literal') {
-		    $datatype = $value['datatype'];
-		    $this->stringWriter->addAttribute(EF_RDF_NS, 'datatype', $datatype);
+		if ($value['type'] === 'literal') {
+		    if (isset($value['lang'])) {
+		        $language = $value['lang'];
+		        $this->stringWriter->addAttribute('xml:lang', null, $language);
+		    } else if (isset($value['datatype'])) {
+		        $datatype = $value['datatype'];
+    		    $this->stringWriter->addAttribute(EF_RDF_NS, 'datatype', $datatype);
+		    }
+		    
 		    $this->stringWriter->writeData($value['value']);
-			return true;
-		} else if ($value['type'] === 'literal') {
-		    $datatype = null;
-			$language = isset($value['lang']) ? $value['lang'] : null;
-			
-			if (null !== $datatype) {
-			    $this->stringWriter->addAttribute(EF_RDF_NS, 'datatype', $datatype);
-			} 
-			if (null !== $language) {
-			    $this->stringWriter->addAttribute(null, 'xml:lang', $language);
-			}
-			$this->stringWriter->writeData($value['value']);
-			return true;
+		    return true;
 		} else {
 		    return false;
 		}
@@ -438,6 +425,7 @@ private $subjects;
 				&& !$this->propertyXMLLiteral($value)
 				&& !$this->propertyLiteral($value)) {
 			
+			#var_dump($value);exit;
 			throw new Exception('Could not serialize property '.$property.' with value '.$value);
 		}
 		

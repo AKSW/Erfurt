@@ -163,7 +163,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
             }
             return;
         }
-        
+                
         $this->_rdfElementParsed = true;
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
@@ -412,9 +412,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
                     
                     $this->_addStatement($subject->getResource(), $propUri, '', 'literal', $this->_currentXmlLang, $dt);
                     $this->_handleReification('');
-                } else {
+                } else {    
                     $resourceRes = $this->_getPropertyResource($attrs);
-                                        
+               
                     if (null === $resourceRes) {
                         return;
                     }
@@ -435,7 +435,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
                 }
             } else {
                 // Not an empty element.
-                
+               
                 $datatype = $this->_removeAttribute($attrs, EF_RDF_NS.'datatype');
                 if (null !== $datatype) {
                     $predicate->setDatatype($datatype);
@@ -461,7 +461,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     {
         $resource = $this->_removeAttribute($attrs, EF_RDF_NS.'resource');
         $nodeId   = $this->_removeAttribute($attrs, EF_RDF_NS.'nodeID');
-        
+     
         if (null !== $resource) {
             return $this->_resolveUri($resource);
         } else if (null !== $nodeId) {
@@ -479,7 +479,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     }
     
     protected function _addStatement($s, $p, $o, $oType = null, $lang = null, $dType = null)
-    {
+    {        
         if (!isset($this->_statements["$s"])) {
             $this->_statements["$s"] = array();
         }
@@ -500,11 +500,11 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
             'value' => $o
         );
         
-        if ($oType === 'literal' && null !== $dType) {
-            $objectArray['datatype'] = $dType;
-        }
+        // If we have a language we use that language and datatype is string implicit.
         if ($oType === 'literal' && null !== $lang) {
             $objectArray['lang'] = $lang;
+        } else if ($oType === 'literal' && null !== $dType) {
+            $objectArray['datatype'] = $dType;
         }
         
         $this->_statements["$s"]["$p"][] = $objectArray;
@@ -597,13 +597,11 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
             // Relative URI... Resolve against the base URI.
             if ($this->_getBaseUri()) {
                 return $this->_getBaseUri() . $about;
-            } else {
-                $this->_throwException('Base URI not set. Resolving of relative URI "' . $about . '" failed.');
             }
-        } else {
-            // Absolute URI... Return it.
-            return $about;
-        }
+        } 
+        
+        // Absolute URI... Return it.
+        return $about;
     }
     
     protected function _createBNode($id = null)

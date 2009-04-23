@@ -209,7 +209,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public static function initWithBlankNode($id)
     {
         $resource = new self($id);
-        $this->_isBlankNode = true;
+        $resource->_isBlankNode = true;
         return $resource;
     }
     

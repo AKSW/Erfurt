@@ -111,6 +111,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 $this->_pArray[$p] = array();
             }
             
+            if ($oType === 'typed-literal') {
+               $oType = 'literal';
+            }
+            
             $oArray =  array(
                 'value' => $o,
                 'type'  => $oType
@@ -118,8 +122,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
             
             if (null !== $lang) {
                 $oArray['lang'] = $lang;
-            }
-            if (null !== $dType) {
+            } else if (null !== $dType) {
                 $oArray['datatype'] = $dType;
             }
             
@@ -131,6 +134,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
             $this->_currentSubjectType = $sType;
             $this->_pArray = array($p => array());
 
+            if ($oType === 'typed-literal') {
+               $oType = 'literal';
+            }
+
             $oArray =  array(
                 'value' => $o,
                 'type'  => $oType
@@ -138,8 +145,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
             if (null !== $lang) {
                 $oArray['lang'] = $lang;
-            }
-            if (null !== $dType) {
+            } else if (null !== $dType) {
                 $oArray['datatype'] = $dType;
             }
 
@@ -191,7 +197,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     		    $o = $row['o']['value'];
     		    $sType = $row['s']['type'];
     		    $oType = $row['o']['type'];
-    		    $lang  = isset($row['o']['lang']) ? $row['o']['lang'] : null;
+    		    $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
                 $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
 
                 $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);

@@ -555,8 +555,13 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 	 * @param string $ns
 	 * @param string $local
 	 */
-	private function writeQName($ns, $local = null) {
-		
+	private function writeQName($ns, $local = null) 
+	{
+	    if ($ns === 'xml:lang') {
+	        $this->write($ns);
+	        return;
+	    } 
+	    	
 		if (null === $local) {
 		    require_once 'Erfurt/Rdf/Resource.php';
 		    $r = Erfurt_Rdf_Resource::initWithUri($ns);
@@ -571,7 +576,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 
 			if ($name !== '') $tag = $name . ':' . $local;
 		} else {
-		    if ($tag !== 'xml:lang' && substr($tag, 0, 7) !== 'http://' && strpos($tag, ':') !== false) {
+		    if (substr($tag, 0, 7) !== 'http://' && strpos($tag, ':') !== false) {
 		       $idx = strpos($tag, ':');
 		       
 		       $name = $this->getName(substr($tag, 0, $idx+1));

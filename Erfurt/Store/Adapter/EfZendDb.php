@@ -113,29 +113,33 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         
         $sqlQuery = 'INSERT IGNORE INTO ef_stmt (g,s,p,o,s_r,p_r,o_r,st,ot,ol,od,od_r) VALUES ';
         $insertArray = array();
-   
+
         $counter = 0;
         foreach ($statementsArray as $subject => $predicatesArray) {
             foreach ($predicatesArray as $predicate => $objectsArray) {
                 foreach ($objectsArray as $object) {
                     $sqlString = '';
                     
+                    $s = $subject;
+                    $p = $predicate;
+                    $o = $object;
+                    
                     // check whether the subject is a blank node
-                    if (substr((string)$subject, 0, 2) === '_:') {
-                        $subject = substr((string)$subject, 2);
+                    if (substr((string)$s, 0, 2) === '_:') {
+                        $s = substr((string)$s, 2);
                         $subjectIs = '1';
                     } else {
                         $subjectIs = '0';
                     }
 
                     // check the type of the object
-                    if ($object['type'] === 'uri') {
+                    if ($o['type'] === 'uri') {
                         $objectIs = '0';
                         $lang = false;
                         $dType = false;
-                    } else if ($object['type'] === 'bnode') {
-                        if (substr((string)$object['value'], 0, 2) === '_:') {
-                            $object['value'] = substr((string)$object['value'], 2);
+                    } else if ($o['type'] === 'bnode') {
+                        if (substr((string)$o['value'], 0, 2) === '_:') {
+                            $o['value'] = substr((string)$o['value'], 2);
                         }
                         
                         $objectIs = '1';
@@ -143,64 +147,64 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         $dType = false;
                     } else {
                         $objectIs = '2';
-                        $lang = isset($object['lang']) ? $object['lang'] : '';
-                        $dType = isset($object['datatype']) ? $object['datatype'] : '';
+                        $lang = isset($o['lang']) ? $o['lang'] : '';
+                        $dType = isset($o['datatype']) ? $o['datatype'] : '';
                     }
                     
                     $sRef = false;
-                    if (strlen((string)$subject) > $this->_getSchemaRefThreshold()) {
-                        $subjectHash = md5((string)$subject);
+                    if (strlen((string)$s) > $this->_getSchemaRefThreshold()) {
+                        $subjectHash = md5((string)$s);
                         
                         try {
-                            $sRef = $this->_insertValueInto('ef_uri', $graphId, $subject, $subjectHash);
+                            $sRef = $this->_insertValueInto('ef_uri', $graphId, $s, $subjectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $subject = substr((string)$subject, 0, 223) . $subjectHash;
+                        $s = substr((string)$s, 0, 223) . $subjectHash;
                     }
                     
                     $pRef = false;
-                    if (strlen((string)$predicate) > $this->_getSchemaRefThreshold()) {
-                        $predicateHash = md5((string)$predicate);
+                    if (strlen((string)$p) > $this->_getSchemaRefThreshold()) {
+                        $predicateHash = md5((string)$p);
                         
                         try {
-                            $pRef = $this->_insertValueInto('ef_uri', $graphId, $predicate, $predicateHash);
+                            $pRef = $this->_insertValueInto('ef_uri', $graphId, $p, $predicateHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $predicate = substr((string)$predicate, 0, 223) . $predicateHash;
+                        $p = substr((string)$p, 0, 223) . $predicateHash;
                     }
                     
                     $oRef = false;
-                    if (strlen((string)$object['value']) > $this->_getSchemaRefThreshold()) {
-                        $objectHash = md5((string)$object['value']);
+                    if (strlen((string)$o['value']) > $this->_getSchemaRefThreshold()) {
+                        $objectHash = md5((string)$o['value']);
                         
-                        if ($object['type'] === 'literal') {
+                        if ($o['type'] === 'literal') {
                             $tableName = 'ef_lit';
                         } else {
                             $tableName = 'ef_uri';
                         }
                         
                         try {
-                            $oRef = $this->_insertValueInto($tableName, $graphId, $object['value'], $objectHash);
+                            $oRef = $this->_insertValueInto($tableName, $graphId, $o['value'], $objectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $object['value'] = substr((string)$object['value'], 0, 223) . $objectHash;
+                        $o['value'] = substr((string)$o['value'], 0, 223) . $objectHash;
                     }
 
-                    $oValue = addslashes($object['value']);
+                    $oValue = addslashes($o['value']);
                     
-                    $sqlString .= "($graphId,'$subject','$predicate','$oValue',";
+                    $sqlString .= "($graphId,'$s','$p','$oValue',";
 
                     #$data = array(
                     #    'g'     => $graphId,
@@ -228,7 +232,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     }
                     
                     $sqlString .= "$subjectIs,$objectIs,'$lang',";
-                    
+
                     #$data['ol'] = $lang;
                     
                     
