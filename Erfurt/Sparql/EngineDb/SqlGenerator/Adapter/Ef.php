@@ -197,6 +197,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $this->arUnionVarAssignments[0] = array();
 
         foreach ($this->query->getResultPart() as $graphPattern) {
+            
             if ($graphPattern->isEmpty()) {
                 continue;
             }
@@ -207,6 +208,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $this->nUnionTriplePatternCount = 0;
                 $this->nGraphPatternCount = 0;
                 $this->arUnionVarAssignments[$this->nUnionCount] = array();
+                
+                // 2009-04-23: Is it OK to reset this, when we start the next union?
+                $this->arUsedVarAssignments = array();
             }
             
             if ($graphPattern->getOptional() !== null) {
@@ -215,7 +219,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
-            
+   
             if ($arTriplePattern != null) {
                 foreach ($arTriplePattern as $triplePattern) {
                     list (
@@ -235,8 +239,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
                 ++$this->nGraphPatternCount;
             }
-            
-
+             
             foreach ($this->query->getResultPart() as $optionalPattern) {
                 if ($optionalPattern->getOptional() === $graphPattern->patternId) {
                     $this->nTriplePatternCount = 0;
@@ -264,6 +267,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             }
         }
 
+
         //constraints extra. needed, since OPTIONAL parts are put after
         // the current pattern while the constraint already refers to variables
         // defined in there
@@ -276,6 +280,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $arConstraints = $graphPattern->getConstraints();
 
             if ($arConstraints != null) {
+
                 foreach ($arConstraints as $constraint) {
                     $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
                      .= $filterGen->createFilterSql(
@@ -287,7 +292,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             }
             ++$this->nGraphPatternCount;
         }
-
+        
         $arSelect    = $this->createEqualSelects($arSelect);
         $arStrSelect = array();
 
@@ -369,15 +374,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arRefVars      = array();
         $strTablePrefix = 't' . $this->nTableId;
 
-        require_once 'Erfurt/Sparql/Variable.php';
-
         /**
         *   SELECT part
         *   We do select only the columns we need for variables
         */
-        
+     
         require_once 'Erfurt/Sparql/Variable.php';
-        
+
         if (Erfurt_Sparql_Variable::isVariable($subject)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$subject])) {
                 //already selected -> add equality check
@@ -410,7 +413,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
             }
         }
-        
+         
         if (Erfurt_Sparql_Variable::isVariable($predicate)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$predicate])) {
                 //already selected -> add equality check
@@ -440,7 +443,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
             }
         }
-        
+       
         if (Erfurt_Sparql_Variable::isVariable($object)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$object])) {
                 //already selected -> add equality check
@@ -483,7 +486,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
             }
         }
-
+   
         /**
         * WhereEquality - needs to be done now because strTablePrefix may change
         */
@@ -531,7 +534,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             }
 
             foreach ($arRefVars as $strRefVar => $strSqlVar) {
-
                 $strFrom .= ' AND ' . $this->arUsedVarAssignments[$strRefVar] . '=' . $strSqlVar;
             }
             
