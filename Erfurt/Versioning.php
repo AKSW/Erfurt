@@ -104,7 +104,7 @@ class Erfurt_Versioning
     
     public function getHistoryForGraph($graphUri, $page = 1)
     {
-        $sql = 'SELECT id, useruri, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+        $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
@@ -115,6 +115,26 @@ class Erfurt_Versioning
         return $result;
     }
     
+    /**
+     * In difference to getHistoryForGraph, this method do result history
+     * actions but the last changed resources
+     * TODO: Make this query more useful (count, with timestamp)
+     *
+     * @param string $graphUri the URI of the knowledge base
+     */
+    public function getConciseHistoryForGraph($graphUri, $page = 1)
+    {
+        $sql = 'SELECT DISTINCT useruri, resource ' .
+               'FROM ef_versioning_actions WHERE
+                model = \'' . $graphUri . '\'
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
+                ($page*$this->getLimit()-$this->getLimit());
+        
+        $result = $this->_getStore()->sqlQuery($sql);
+
+        return $result;
+    }
+
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {   
         $sql = 'SELECT id, useruri, tstamp, action_type ' .
@@ -144,7 +164,7 @@ class Erfurt_Versioning
     
     public function getHistoryForUser($userUri, $page = 1)
     {
-        $sql = 'SELECT id, resource, CONVERT(char(26), tstamp) AS tstamp, action_type ' .
+        $sql = 'SELECT id, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
