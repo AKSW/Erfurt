@@ -678,11 +678,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         $replacings = array(
-            '/SELECT/i'         => 'SELECT ' . $selectAdd, 
             '/LIMIT\s+(\d+)/i'  => '', 
             '/OFFSET\s+(\d+)/i' => ''
         );
-        
+
+        // Need to distinguish between SELECT and SELECT DISTINCT for LIMIT-OFFSET conversion
+        if ( preg_match('/DISTINCT/i',$sqlQuery) ) {
+            $replacings['/SELECT\s+DISTINCT/i'] = 'SELECT DISTINCT ' . $selectAdd;
+        } else {
+            $replacings['/SELECT/i'] = 'SELECT ' . $selectAdd;
+        }
+
         $sqlQuery = preg_replace(array_keys($replacings), array_values($replacings), $sqlQuery);
 
         $resultArray = array();
