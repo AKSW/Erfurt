@@ -198,9 +198,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
 
         foreach ($this->query->getResultPart() as $graphPattern) {
             
-            if ($graphPattern->isEmpty()) {
-                continue;
-            }
+            #if ($graphPattern->isEmpty()) {
+            #    continue;
+            #}
             
             if ($graphPattern->getUnion() !== null) {
                 ++$this->nUnionCount;

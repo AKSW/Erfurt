@@ -225,7 +225,7 @@ class Erfurt_Sparql_Parser
      *
      *   @param array $tree  Tree to be modified
      */
-    protected static function _balanceTree(&$tree)
+    public static function balanceTree(&$tree)
     {
         if (isset($tree['type']) && $tree['type'] === 'equation' && isset($tree['operand1']['type']) &&
             $tree['operand1']['type'] === 'equation' && $tree['level'] === $tree['operand1']['level'] &&
@@ -244,7 +244,7 @@ class Erfurt_Sparql_Parser
         }
     }
     
-    protected static function _fixNegationInFuncName(&$tree)
+    public static function fixNegationInFuncName(&$tree)
     {
         if ($tree['type'] === 'function' && $tree['name'][0] === '!') {
             $tree['name'] = substr($tree['name'], 1);
@@ -255,7 +255,7 @@ class Erfurt_Sparql_Parser
                 unset($tree['negated']);
             }
             //perhaps more !!
-            self::_fixNegationInFuncName($tree);
+            self::fixNegationInFuncName($tree);
         }
     }
 
@@ -666,7 +666,7 @@ class Erfurt_Sparql_Parser
                     if ($bFunc1) {
                         $tree['type'] = 'function';
                         $tree['name'] = $part[0]['value'];
-                        self::_fixNegationInFuncName($tree);
+                        self::fixNegationInFuncName($tree);
                         if (isset($part[1]['type'])) {
                             $part[1] = array($part[1]);
                         }
@@ -675,7 +675,7 @@ class Erfurt_Sparql_Parser
                     } else if ($bFunc2) {
                         $tree['operand2']['type'] = 'function';
                         $tree['operand2']['name'] = $tree['operand2']['value'];
-                        self::_fixNegationInFuncName($tree['operand2']);
+                        self::fixNegationInFuncName($tree['operand2']);
                         $tree['operand2']['parameter']  = $part[0];
                         unset($tree['operand2']['value']);
                         unset($tree['operand2']['quoted']);
@@ -797,7 +797,7 @@ class Erfurt_Sparql_Parser
 
             if (isset($tree['type']) && $tree['type'] === 'equation' && isset($part[0])) {
                 $tree['operand2'] = $part[0];
-                self::_balanceTree($tree);
+                self::balanceTree($tree);
                 $part = array();
             }
         }
@@ -808,7 +808,7 @@ class Erfurt_Sparql_Parser
             && isset($tree['operand1']) && !isset($tree['operand2'])
             && isset($part[0])) {
             $tree['operand2'] = $part[0];
-            self::_balanceTree($tree);
+            self::balanceTree($tree);
         }
 
         if ((count($tree) === 0) && (count($part) > 1)) {

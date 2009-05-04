@@ -21,5 +21,5 @@ interface Erfurt_Sparql_EngineDb_ResultRenderer
      *   @param SparqlEngineDb $engine   Sparql Engine to query the database
      *   @return mixed   The result as rendered by the result renderers.
      */
-    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine);
+    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine, $vars);
 }

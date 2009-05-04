@@ -76,6 +76,8 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     *   @var SparqlEngineDb_Preparator
     */
     protected $pr = null;
+    
+    protected $arModelIdMapping = null;
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -88,6 +90,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {
 		$this->dbConn = $dbConn;
 		$this->arModelIdMapping = $arModelIdMapping;
+    }
+    
+    public function getModelIdMapping()
+    {
+        return $this->arModelIdMapping;
     }
     
     // ------------------------------------------------------------------------
@@ -217,9 +224,14 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         require_once 'Erfurt/Sparql/EngineDb/QuerySimplifier.php';
         $qsimp = new Erfurt_Sparql_EngineDb_QuerySimplifier();
         $qsimp->simplify($this->query);
-
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
-        $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($this->query, $this->arModelIdMapping);
+        
+        require_once 'Erfurt/Sparql/EngineDb/QueryOptimizer.php';
+        $queryOptimizer = new Erfurt_Sparql_EngineDb_QueryOptimizer($this);
+        $result = $queryOptimizer->optimize($this->query);
+        
+        if ($result instanceof Erfurt_Sparql_Query) {
+            $this->query = $result;
+        }
         
         $resultform = strtolower($resultform);
         switch ($resultform) {
@@ -243,6 +255,17 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Plain();
         }
         
+        if (is_array($result)) {
+            $result = $rc->convertFromDbResults($result['data'], $this->query, $this, $result['vars']);
+            
+            return $result;
+        }
+        
+        
+        
+        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
+        $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($this->query, $this->arModelIdMapping);
+        
         require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
         $this->ts = new Erfurt_Sparql_EngineDb_TypeSorter($this->query, $this);
 
@@ -253,7 +276,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $this->ts->setData($this->sg);
 
         return $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
-                    $this->getQuery(), $this);
+                    $this->query, $this, $this->sg->arVarAssignments);
     }
     
     public function sqlQuery($sql)
@@ -276,11 +299,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
-
+#echo $strSql;
         if ($strSql === '()') {
             return array();
         }
-        
+      
         if ($nLimit === null && $nOffset == 0) {
             $ret = $this->dbConn->query($strSql);
         } else if ($nLimit === null) {
@@ -288,7 +311,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         } else {
             $ret = $this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
         }
-
+#var_dump($ret->fetchAll());exit;
         return $ret->fetchAll();
     }
 

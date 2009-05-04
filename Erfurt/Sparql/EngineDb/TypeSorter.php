@@ -28,7 +28,9 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     */
     public static $arCastTypes = array(
         'http://www.w3.org/2001/XMLSchema#integer'  => 'SIGNED INTEGER',
+        'http://www.w3.org/2001/XMLSchema#int'  => 'SIGNED INTEGER',
         'http://www.w3.org/2001/XMLSchema#decimal'  => 'DECIMAL',
+        #'http://www.w3.org/2001/XMLSchema#float'    => 'FLOAT',
         //yes, this does not work with multiple time zones.
         'http://www.w3.org/2001/XMLSchema#dateTime' => 'CHAR',
         'http://www.w3.org/2001/XMLSchema#date'     => 'CHAR',
@@ -109,7 +111,9 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             $strOrder = $this->getSqlOrderBy();
 
             foreach ($arSqls as &$arSql) {
-                $arSql['order'] = $strOrder;
+                if ($strOrder !== '') {
+                    $arSql['order'] = $strOrder;
+                }   
             }
             return array(
                 $arSqls
@@ -381,15 +385,19 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         foreach ($arSM['order by'] as $arVar) {
             $strSparqlVar = $arVar['val'];
             if (isset($this->arUsedVarAssignments[$strSparqlVar])) {
-                if (!isset($arTypeSet[$strSparqlVar]['datatype'])
-                  || $arTypeSet[$strSparqlVar]['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
+                if (!isset($arTypeSet[$strSparqlVar]['datatype']) || $arTypeSet[$strSparqlVar]['datatype'] == ''
+                  || $arTypeSet[$strSparqlVar]['datatype'] == 'String' || $arTypeSet[$strSparqlVar]['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
                     $sqlOrder[] = $this->arUsedVarAssignments[$strSparqlVar] . ' ' . strtoupper($arVar['type']);
                 } else {
+                    try {
+                        $sqlOrder[] = self::getCastMethod(
+                            $arTypeSet[$strSparqlVar]['datatype'],
+                            $this->arUsedVarAssignments[$strSparqlVar]
+                        ) . ' ' . strtoupper($arVar['type']);
+                    } catch (Exception $e) {
+                        $sqlOrder[] = $this->arUsedVarAssignments[$strSparqlVar] . ' ' . strtoupper($arVar['type']);
+                    }
                     
-                    $sqlOrder[] = self::getCastMethod(
-                        $arTypeSet[$strSparqlVar]['datatype'],
-                        $this->arUsedVarAssignments[$strSparqlVar]
-                    ) . ' ' . strtoupper($arVar['type']);
                 }
             }
         }
@@ -417,6 +425,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         if (isset(self::$arCastTypes[$strType])) {
             return 'CAST(' . $strSqlVar . ' as ' . self::$arCastTypes[$strType] . ')';
         } else {
+            
             //unsupported type!
             throw new Exception('Unsupported cast type in order by: ' . $strType);
             return $strSqlVar;

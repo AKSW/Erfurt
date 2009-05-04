@@ -286,6 +286,14 @@ class Erfurt_Sparql_Query
         $this->varDatatypes[$id] = $datatype;
     }
     
+    public function setResultVars($vars)
+    {
+        $this->resultVars = array();
+        foreach ($vars as $var) {
+            $this->addResultVar($var);
+        }
+    }
+    
     /**
      * Adds a new variable to the variable list.
      *

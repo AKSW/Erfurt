@@ -194,6 +194,11 @@ class Erfurt_Sparql_GraphPattern
     {
         $this->constraints = array_merge($this->constraints, $cons);
     }
+    
+    public function setConstraints($cons)
+    {
+        $this->constraints = $cons;
+    }
 
     /**
      * Adds a pointer to an optional graphPattern.

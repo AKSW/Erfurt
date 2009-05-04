@@ -100,6 +100,20 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
     }
     
+    public function __destruct()
+    {
+        #$log = Erfurt_App::getInstance()->getLog();
+        
+        #$profiles = $this->_dbConn->getProfiler()->getQueryProfiles();
+        
+        #foreach ($profiles as $profile) {
+        #    $debugStr = 'Query: ' . $profile->getQuery() . PHP_EOL;
+        #    $debugStr .= 'Time: ' . $profile->getElapsedSecs() . PHP_EOL;
+        #    
+        #    $log->debug($debugStr);
+        #}
+    }
+    
     // ------------------------------------------------------------------------
     // --- Public methods (derived from Erfurt_Store_Adapter_Abstract) --------
     // ------------------------------------------------------------------------
@@ -387,7 +401,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
               ->setWherePart($whereSpec);
 
         $result = $this->sparqlQuery($query);
-        
+
         if ($result) {
             return $result;
         }
@@ -972,11 +986,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();        
-
+                     
         $query = $parser->parse((string)$query);        
 
         $result = $engine->queryModel($query, $resultform);
-       
+
         // Debug executed SPARQL queries in debug mode (7)
         $logger = Erfurt_App::getInstance()->getLog();
         $time = (microtime(true) - $start)*1000;
@@ -996,7 +1010,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $result = $this->_dbConn->getConnection()->query($sqlQuery);
 
             if ($result !== true) {
-#echo($sqlQuery);exit;
+
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception('SQL INSERT query failed: ' .      
                             $this->_dbConn->getConnection()->error);
@@ -1063,8 +1077,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         // Create ef_info table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
-                    id          TINYINT(1) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                    schema_id   VARCHAR(10) COLLATE ascii_bin NOT NULL
+                    id        TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                    schema_id VARCHAR(10) COLLATE ascii_bin NOT NULL
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
         $success = false;
@@ -1093,9 +1107,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         // Create ef_graph table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
         	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        uri			VARCHAR(255) COLLATE ascii_bin NOT NULL,
+        	        uri			VARCHAR(160) COLLATE ascii_bin NOT NULL,
         	        uri_r	    INT UNSIGNED DEFAULT NULL,					
-        	        base		VARCHAR(255) COLLATE ascii_bin DEFAULT NULL,
+        	        base		VARCHAR(160) COLLATE ascii_bin DEFAULT NULL,
         	        base_r	    INT UNSIGNED DEFAULT NULL,
         	        UNIQUE unique_graph (uri)							
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
@@ -1109,29 +1123,28 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $this->_dbConn->getConnection()->error);
         }
         
+        // INT means, we could store up to 4.294.967.295 statements        
         
         // Create ef_stmt table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
             	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             	    g	    INT UNSIGNED NOT NULL,                      # foreign key to ef_graph
-            	    s		VARCHAR(255) COLLATE ascii_bin NOT NULL,    # subject or subject hash
-            	    p		VARCHAR(255) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
-            	    o		VARCHAR(255) COLLATE utf8_bin NOT NULL,     # object or object hash
+            	    s		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # subject or subject hash
+            	    p		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
+            	    o		VARCHAR(160) COLLATE utf8_bin NOT NULL,     # object or object hash
             	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
             	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
             	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
             	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
             	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
             	    ol 		VARCHAR(10) COLLATE ascii_bin NOT NULL,
-            	    od 	    VARCHAR(255) COLLATE ascii_bin NOT NULL,
+            	    od 	    VARCHAR(160) COLLATE ascii_bin NOT NULL,
             	    od_r 	INT UNSIGNED DEFAULT NULL,
-            	    UNIQUE  unique_stmt (g, s(150), p(150), o(150), st, ot, ol, od(150)),
-            	    INDEX 	idx_gpo	(g, p(100), o(100)),
-            	    INDEX   idx_gsp (g, s(100), p(100)),
-            	    INDEX   idx_gspo (g, s(100), p(100), o(100)), # TODO needed?
-            	    INDEX   idx_gs (g, s(100)),
-            	    INDEX   idx_gp (g, p(100)),
-            	    INDEX   idx_go (g, o(100))
+            	    UNIQUE  unique_stmt (g, s, p, o, st, ot, ol, od),
+            	    INDEX   idx_g_p_o_ot (g, p, o, ot),
+            	    INDEX   idx_g_o_ot (g, o, ot)
+            	    #INDEX   idx_o_g_p_ot (o, g, p, ot)
+            	    #INDEX   idx_s_g_p_st (s, g, p, st)
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
         $success = false;
@@ -1148,10 +1161,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
         	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
         	        g	    INT UNSIGNED NOT NULL,
-        	        ns		VARCHAR(255) COLLATE ascii_bin NOT NULL,
+        	        ns		VARCHAR(160) COLLATE ascii_bin NOT NULL,
         	        ns_r	INT UNSIGNED DEFAULT NULL,					
-        	        prefix	VARCHAR(255) COLLATE ascii_bin NOT NULL,
-        	        UNIQUE unique_ns (g, ns, ns_r, prefix)
+        	        prefix	VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_ns (g, ns, prefix)
                 ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
         
         $success = false;
@@ -1240,7 +1253,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     
     protected function _getSchemaRefThreshold()
     {
-        return 255;
+        // We use 160, for the max index length is 1000 byte and the unique_stmt index needs
+        // to fit in.
+        return 160;
     }
     
     protected function _optimizeTables()

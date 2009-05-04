@@ -92,7 +92,15 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         $this->bOptional = $bOptional;
         $this->nUnionCount = $nUnionCount;
 
-        return ' AND ' . $this->createTreeSql($tree, null);
+#return ' AND ' . $this->createTreeSql($tree, null);
+        try {
+            return ' AND ' . $this->createTreeSql($tree, null);
+        } catch (Exception $e) {
+            return '';
+        }
+        
+
+        
     }//public function createFilterSql($tree)
 
     protected function createTreeSql($tree, $parent)

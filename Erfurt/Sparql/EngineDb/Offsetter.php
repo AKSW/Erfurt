@@ -23,7 +23,7 @@ class Erfurt_Sparql_EngineDb_Offsetter
     }
     
     /**
-     * Determines the offset in the sqls, the position to start form.
+     * Determines the offset in the sqls, the position to start from.
      */
     public function determineOffset($arSqls)
     {
@@ -36,7 +36,7 @@ class Erfurt_Sparql_EngineDb_Offsetter
         $nCount = 0;
         foreach ($arSqls as $nId => $arSql) {
             $nCurrentCount = $this->_getCount($arSql);
-            
+
             if ($nCurrentCount + $nCount > $arSM['offset']) {
                 return array($nId, $arSM['offset'] - $nCount);
             }
@@ -59,7 +59,7 @@ class Erfurt_Sparql_EngineDb_Offsetter
         $sql = Erfurt_Sparql_EngineDb_SqlMerger::getCount($this->_query, $arSql);
         
         $dbResult = $this->_engine->sqlQuery($sql);
-        
+
         $nCount = 0;
         foreach ($dbResult as $row) {
             $nCount = intval($row['count']);

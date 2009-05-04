@@ -21,6 +21,8 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
         
     protected $uriValues = array();
     protected $literalValues = array();
+    
+    protected $_vars = null;
 
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
@@ -35,11 +37,11 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
      * @param $engine Sparql Engine to query the database
      * @return array
      */
-    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine)
+    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine, $vars)
     {
         $this->query    = $query;
         $this->engine   = $engine;
-        $this->sg       = $engine->getSqlGenerator();
+        $this->_vars    = $vars;
 
         $strResultForm = $this->query->getResultForm();
         switch ($strResultForm) {
@@ -225,61 +227,61 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
     {
         $strVarName = (string)$strVar;
         
-        if ($row[$this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
+        if ($row[$this->_vars[$strVarName]['sql_value']] === null) {
             return '';
         }
         
         $result = null;
-        switch ($row[$this->sg->arVarAssignments[$strVarName]['sql_is']]) {
+        switch ($row[$this->_vars[$strVarName]['sql_is']]) {
             case 0:
-                if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-                    $result = $this->_createResource($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
+                if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
+                    $result = $this->_createResource($row[$this->_vars[$strVarName]['sql_value']]);
                 } else {
                     $result =  $this->_createResource(
-                        $this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                        $this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
                 }
                 break;
             case 1:
-                 if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-                     $result = $this->_createBlankNode($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
+                 if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
+                     $result = $this->_createBlankNode($row[$this->_vars[$strVarName]['sql_value']]);
                 } else {
                     $result = $this->_createBlankNode(
-                        $this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                        $this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
                 }
                 break;
             default:
-                 if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
+                 if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
                      $result = $this->_createLiteral(
-                         $row[$this->sg->arVarAssignments[$strVarName]['sql_value']], null, null);
+                         $row[$this->_vars[$strVarName]['sql_value']], null, null);
                     
-                    #if ($row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']] === null) {
+                    #if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
                     #    $result = $this->_createLiteral(
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_value']],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_lang']],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_type']]
+                    #        $row[$this->_vars[$strVarName]['sql_value']],
+                    #        $row[$this->_vars[$strVarName]['sql_lang']],
+                    #        $row[$this->_vars[$strVarName]['sql_type']]
                     #    );
                     #} else {
                     #    $result = $this->_createLiteral(
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_value']],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_lang']],
-                    #        $this->uriValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']]]
+                    #        $row[$this->_vars[$strVarName]['sql_value']],
+                    #        $row[$this->_vars[$strVarName]['sql_lang']],
+                    #        $this->uriValues[$row[$this->_vars[$strVarName]['sql_dt_ref']]]
                     #    );
                     #}
                 } else {
                     $result = $this->_createLiteral(
-                         $this->literalValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]], null, null);
+                         $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]], null, null);
                     
-                    #if ($row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']] === null) {
+                    #if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
                     #    $result = $this->_createLiteral(
-                    #        $this->literalValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_lang']],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_type']]
+                    #        $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]],
+                    #        $row[$this->_vars[$strVarName]['sql_lang']],
+                    #        $row[$this->_vars[$strVarName]['sql_type']]
                     #    );
                     #} else {
                     #    $result = $this->_createLiteral(
-                    #        $this->literalValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_ref']]],
-                    #        $row[$this->sg->arVarAssignments[$strVarName]['sql_lang']],
-                    #        $this->uriValues[$row[$this->sg->arVarAssignments[$strVarName]['sql_dt_ref']]]
+                    #        $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]],
+                    #        $row[$this->_vars[$strVarName]['sql_lang']],
+                    #        $this->uriValues[$row[$this->_vars[$strVarName]['sql_dt_ref']]]
                     #    );
                     #}
                 }
@@ -305,15 +307,15 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
     {
         $strVarName = (string)$strVar;
         
-        if ($row[$this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
+        if ($row[$this->_vars[$strVarName]['sql_value']] === null) {
             return '';
         }
         
         $result = null;
-        if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-            $result = $this->_createResource($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
+        if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
+            $result = $this->_createResource($row[$this->_vars[$strVarName]['sql_value']]);
         } else {
-            $result = $this->_createResource($this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+            $result = $this->_createResource($this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
         }
     
         if ($asArray) {
@@ -344,23 +346,23 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
     {
         $strVarName = (string)$strVar;
         
-        if ($row[$this->sg->arVarAssignments[$strVarName]['sql_value']] === null) {
+        if ($row[$this->_vars[$strVarName]['sql_value']] === null) {
             return '';
         }
 
         $result = null;
-        if ($row[$this->sg->arVarAssignments[$strVarName]['sql_is']] === 0) {
-            if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-                $result = $this->_createResource($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
+        if ($row[$this->_vars[$strVarName]['sql_is']] === 0) {
+            if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
+                $result = $this->_createResource($row[$this->_vars[$strVarName]['sql_value']]);
             } else {
-                $result = $this->_createResource($this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                $result = $this->_createResource($this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
             }
         } else {
-            if ($row[$this->sg->arVarAssignments[$strVarName]['sql_ref']] === null) {
-                $result = $this->_createBlankNode($row[$this->sg->arVarAssignments[$strVarName]['sql_value']]);
+            if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
+                $result = $this->_createBlankNode($row[$this->_vars[$strVarName]['sql_value']]);
             } else {
                 $result = $this->_createBlankNode(
-                    $this->uriValues[$this->sg->arVarAssignments[$strVarName]['sql_ref']]);
+                    $this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
             }
         }
         
@@ -392,7 +394,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
         }
 
         if (in_array('*', $arResultVars)) {
-            $arResultVars = array_keys($this->sg->arVarAssignments);
+            $arResultVars = array_keys($this->_vars);
         }
         
         foreach ($dbRecordSet as $row) {
@@ -400,11 +402,11 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
             foreach ($arResultVars as $strVar) {
                 $strVarName = (string)$strVar;
                 $strVarId = ltrim($strVar, '?$');
-                if (!isset($this->sg->arVarAssignments[$strVarName])) {
+                if (!isset($this->_vars[$strVarName])) {
                     //variable is in select, but not in result (test: q-select-2)
                     $arResultRow[$strVarId] = '';
                 } else {
-                    $arVarSettings = $this->sg->arVarAssignments[$strVarName];
+                    $arVarSettings = $this->_vars[$strVarName];
                     
                     // Contains whether variable is s, p or o.
                     switch ($arVarSettings[1]) {
@@ -436,7 +438,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
         // First, we need to check, whether there is a need to dereference some values
         $refVariableNamesUri = array();
         $refVariableNamesLit = array();
-        foreach ($this->sg->arVarAssignments as $var) {
+        foreach ($this->_vars as $var) {
             if ($var[1] === 'o') {
                 if (isset($var['sql_ref'])) {
                     $refVariableNamesLit[] = $var['sql_ref'];
