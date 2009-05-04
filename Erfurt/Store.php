@@ -1154,6 +1154,8 @@ echo $e->getMessage();exit;
             }
         }
         
+        $closure = array_merge(array_combine($startResources, $startResources), $closure);
+        
         return $closure;
     }
 }
