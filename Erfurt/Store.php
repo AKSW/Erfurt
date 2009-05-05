@@ -1186,7 +1186,8 @@ echo $e->getMessage();exit;
             $classes = array();
             foreach ($result as $row) {
                 // $key = $inverse ? $row['child'] : $row['parent'];
-                $closure[$row['child']] = array(
+                $key = $inverse ? $row['child'] : $row['parent'];
+                $closure[$key] = array(
                     'node'   => $inverse ? $row['child'] : $row['parent'], 
                     'parent' => $inverse ? $row['parent'] : $row['child'], 
                     'depth'  => $i
@@ -1195,7 +1196,18 @@ echo $e->getMessage();exit;
             }
         }
         
-        $closure = array_merge(array_combine($startResources, $startResources), $closure);
+        // prepare start resources inclusion
+        $merger = array();
+        foreach ($startResources as $startUri) {
+            $merger[(string) $startUri] = array(
+                'node'   => $startUri, 
+                'parent' => null, 
+                'depth'  => 0
+            );
+        }
+        
+        // merge in start resources
+        $closure = array_merge($merger, $closure);
         
         return $closure;
     }
