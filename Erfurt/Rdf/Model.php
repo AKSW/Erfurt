@@ -29,7 +29,7 @@ class Erfurt_Rdf_Model
      * The model IRI
      * @var string
      */
-    protected $_modelIri = null;
+    protected $_graphUri = null;
     
     /**
      * An array of namespace IRIs (keys) and prefixes 
@@ -83,7 +83,7 @@ class Erfurt_Rdf_Model
      */ 
     public function __construct($modelIri, $baseIri = null) 
     {
-        $this->_modelIri = $modelIri;
+        $this->_graphUri = $modelIri;
         $this->_baseIri  = $baseIri;
         
         $config = Erfurt_App::getInstance()->getConfig();
@@ -117,7 +117,7 @@ class Erfurt_Rdf_Model
      */
     public function addStatement($subject, $predicate, $object, $options = array(), $useAcl = true)
     {   
-        $this->getStore()->addStatement($this->_modelIri, $subject, $predicate, $object, $options, $useAcl);
+        $this->getStore()->addStatement($this->_graphUri, $subject, $predicate, $object, $options, $useAcl);
         
         return $this;
     }
@@ -133,7 +133,7 @@ class Erfurt_Rdf_Model
      */
     public function addMultipleStatements(array $statements)
     {
-        $this->getStore()->addMultipleStatements($this->_modelIri, $statements);
+        $this->getStore()->addMultipleStatements($this->_graphUri, $statements);
         
         return $this;
     }
@@ -165,7 +165,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteStatement($subject, $predicate, $object)
     {
-        $this->getStore()->deleteMatchingStatements($this->_modelIri, $subject, $predicate, $object);
+        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subject, $predicate, $object);
     }
     
     /**
@@ -177,7 +177,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteMultipleStatements(array $statements)
     {
-        $this->getStore()->deleteMultipleStatements($this->_modelIri, $statements);
+        $this->getStore()->deleteMultipleStatements($this->_graphUri, $statements);
     }
     
     /**
@@ -192,7 +192,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, $options = array())
     {
-        $this->getStore()->deleteMatchingStatements($this->_modelIri, $subjectSpec, $predicateSpec, $objectSpec,
+        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec,
                                 $options);
     }
     
@@ -204,7 +204,7 @@ class Erfurt_Rdf_Model
     public function getBaseIri()
     {
         if (null === $this->_baseIri) {
-            return $this->_modelIri;
+            return $this->_graphUri;
         }
         
         return $this->_baseIri;
@@ -222,7 +222,7 @@ class Erfurt_Rdf_Model
      */
     public function getModelIri() 
     {    
-        return $this->_modelIri;
+        return $this->_graphUri;
     }
     
     public function getModelUri()
@@ -424,14 +424,37 @@ class Erfurt_Rdf_Model
     
     // ------------------------------------------------------------------------
     
-    public function sparqlQueryWithPlainResult($query)
+    public function sparqlQuery($query, $options = array())
+    {
+        $defaultOptions = array(
+            'result_format' => 'plain'
+        );
+        
+        $options = array_merge($defaultOptions, $options);
+        
+        // Do not allow disabling of ac here!
+        if (isset($options['use_ac'])) {
+            unset($options['use_ac']);
+        }
+        
+        if (!($query instanceof Erfurt_Sparql_SimpleQuery)) {
+            require_once 'Erfurt/Sparql/SimpleQuery.php';
+            $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
+        }
+        
+        $query->addFrom($this->_graphUri);
+
+        return $this->getStore()->sparqlQuery($query, $options);
+    }
+    
+    /*public function sparqlQueryWithPlainResult($query)
     {    
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($query);
-        $queryObject->addFrom($this->_modelIri);
+        $queryObject->addFrom($this->_graphUri);
         
         return $this->getStore()->sparqlQuery($queryObject);
-    }
+    }*/
     
     public function getStore()
     {    

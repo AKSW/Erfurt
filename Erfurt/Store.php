@@ -27,6 +27,14 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
     
     /**
+     * Contains additional graph uris, that should be used when executing a sparql
+     * query. The array contains keys with graph uris, which values are arrays
+     * containing one ore more additional graoh uris. 
+     * @var array
+     */
+    protected $_additionalImports = array();
+    
+    /**
      * Username of the super user who gets unrestricted access
      * @var string
      */
@@ -157,6 +165,17 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
+    
+    /**
+     * Sets the additional imports array for a given graph uri.
+     * 
+     * @param string $graphUri
+     * @param array $additionalImports
+     */ 
+    public function setAdditionalImports($graphUri, $additionalImports = array())
+    {
+        $this->_additionalImports[$graphUri] = $additionalImports;
+    }
     
     public function addNamespacePrefix($graphUri, $ns, $prefix, $useAc = true)
     {
@@ -998,26 +1017,46 @@ echo $e->getMessage();exit;
      * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $resultFormat = 'plain', $useAc = true)
+    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $options = array())
     {
         self::$_queryCount++;
-         
-        // add owl:imports
-        foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
-                $queryObject->addFrom($importedGraphUri);
+        
+        $defaultOptions = array(
+            'result_format'          => 'plain',
+            'use_ac'                 => true,
+            'use_owl_imports'        => true,
+            'use_additional_imports' => true
+        );
+     
+        $options = array_merge($defaultOptions, $options);
+    
+        if ($options['use_owl_imports'] === true) {
+            // add owl:imports
+            foreach ($queryObject->getFrom() as $fromGraphUri) {
+                foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
+                    $queryObject->addFrom($importedGraphUri);
+                }
+            }
+        }
+        
+        // Add additional imports, if option is set true.
+        if ($options['use_additional_imports'] === true) {
+            foreach ($queryObject->getFrom() as $fromGraphUri) {
+                if (isset($this->_additionalImports[$fromGraphUri])) {
+                    foreach ($this->_additionalImports[$fromGraphUri] as $additional) {
+                        $queryObject->addFrom($additional);
+                    }
+                }
             }
         }
         
         // if using accesss control, filter FROM (NAMED) for allowed models
-        if ($useAc) {
+        if ($options['use_ac'] === true) {
             $modelsFiltered = $this->_filterModels($queryObject->getFrom());
             
             // query contained a non-allowed non-existent model
             if (empty($modelsFiltered)) {
-                return;
-                // require_once 'Erfurt/Exception.php';
-                // throw new Erfurt_Exception('Query could not be executed.');
+                return false;
             }
             
             $queryObject->setFrom($modelsFiltered);
@@ -1028,6 +1067,8 @@ echo $e->getMessage();exit;
                 $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
+        
+        $resultFormat = $options['result_format'];
    
         // TODO: check if adapter supports requested result format
         return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);

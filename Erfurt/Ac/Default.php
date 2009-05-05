@@ -211,7 +211,7 @@ class Erfurt_Ac_Default {
 
         try {
             $sparqlQuery->addFrom($model->getModelIri());
-            $result = $model->getStore()->sparqlQuery($sparqlQuery, 'plain', false);
+            $result = $model->getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
         } catch (SparqlParserException $e) {
             $this->_log->info('Ac::_sparql() - query contains the following error: '.$e->getMessage());
             

@@ -481,7 +481,7 @@ private $subjects;
 	    $query->addFrom($this->_graphUri);
 	    $query->setWherePart('WHERE { ?s <' . EF_RDF_FIRST . '> ?first . ?s <' . EF_RDF_REST . '> ?rest }');
 	    
-	    $result = $this->_store->sparqlQuery($query, 'extended');
+	    $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
 	    
 	    $listArray = array();
 	    foreach ($result['bindings'] as $row) {

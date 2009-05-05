@@ -31,7 +31,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         while (true) {
             $sparql->setOffset($offset);
             
-            $result = $store->sparqlQuery($sparql, 'extended');
+            $result = $store->sparqlQuery($sparql, array('result_format' => 'extended'));
             
             $counter = 0;
             foreach ($result['bindings'] as $stm) {
@@ -100,7 +100,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         while (true) {
             $sparql->setOffset($offset);
             
-            $result = $store->sparqlQuery($sparql, 'extended');
+            $result = $store->sparqlQuery($sparql, array('result_format' => 'extended'));
 
             $counter = 0;
             foreach ($result['bindings'] as $stm) {

@@ -246,7 +246,7 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                             FILTER (sameTerm(?s, <$openId>))
                         }";
         $query->setWherePart($where);
-        $result = $this->_store->sparqlQuery($query, 'plain', false);
+        $result = $this->_store->sparqlQuery($query, array('use_ac' => false));
         
         foreach ((array)$result as $row) {
             // Set user URI

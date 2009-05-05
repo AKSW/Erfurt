@@ -143,7 +143,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function getTitle()
     {
         if (null === $this->_title) {
-            if ($this->_model) {
+            if (null !== $this->_model) {
                 $select = '';
                 $where = array();
                 
@@ -154,18 +154,14 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 }
                 $titleQuery = '
                     SELECT ' . $select . ' 
-                    FROM <' . $this->_model->getModelIri() . '> 
                     WHERE {
                         ' . implode(' UNION ', $where) . '
                     }';
                 
-                // build query object
-                include_once 'Erfurt/Sparql/SimpleQuery.php';
-                $query = Erfurt_Sparql_SimpleQuery::initWithString($titleQuery);
-                $store = $this->_model->getStore();
+                $result = $this->_model->sparqlQuery($titleQuery);
                 
                 // check all title props for values
-                if ($result = $store->sparqlQuery($query)) {
+                if ($result !== false) {
                     foreach ($result as $row) {
                         foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
                             if (!empty($row[$key])) {

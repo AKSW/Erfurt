@@ -64,7 +64,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
             
-            $result = $this->_store->sparqlQuery($query, 'extended');
+            $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
             
             foreach ($result['bindings'] as $row) {
                 $s     = $row['s']['value'];
@@ -122,7 +122,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
             
-            $result = $this->_store->sparqlQuery($query, 'extended');
+            $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
             
             foreach ($result['bindings'] as $row) {
                 $s     = $row['s']['value'];
