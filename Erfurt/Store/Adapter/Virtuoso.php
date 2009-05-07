@@ -317,39 +317,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getAvailableModels($withTitle = false) {        
+    public function getAvailableModels() {        
         if (!$this->_models) {
             $this->_models = array();
             
-            if ($withTitle) {
-                $select = '';
-                $where  = array();
-                $order  = '';
+            $select = '?graph';
+            $where  = array();
                 
-                $where[] = ' {GRAPH ?graph {?graph <' . EF_RDF_TYPE . '> ?o.}}';
-                foreach ($this->_titleProperties as $key => $uri) {
-                    $select .= ' ?graph' . $key;
-                    $where[] = ' {GRAPH ?graph {OPTIONAL {?graph <' . $uri . '> ?graph' . $key . '}}}';
-                    $order   = ' ?graph' . $key . $order;
-                }
-                $query   = 'SELECT ?graph' . $select . ' WHERE {' . implode(' UNION ', $where) . '} ORDER BY' . $order;
-                // var_dump((string) $query);
+            $where[] = ' {GRAPH ?graph {?graph <' . EF_RDF_TYPE . '> ?o.}}';
                 
-                $result = $this->_execSparql($query);
-                while (odbc_fetch_row($result)) {
-                    $graph = odbc_result($result, 1);
-                    if (!in_array($graph, $this->_virtuosoSpecialModels)) {
-                        if (!array_key_exists($graph, $this->_models)) {
-                            $this->_models[$graph] = array('modelIri' => $graph);
-                        }
-                        for ($i = 2; $i <= odbc_num_fields($result); ++$i) {
-                            $title = odbc_result($result, $i);
-                            // echo $title;exit;
-                            if (!empty($title) && !array_key_exists('label', $this->_models[$graph])) {
-                                $this->_models[$graph]['label'] = $title;
-                                break;
-                            }
-                        }
+            $query   = 'SELECT ?graph' . $select . ' WHERE {' . implode(' UNION ', $where) . '}';
+            // var_dump((string) $query);
+                
+            $result = $this->_execSparql($query);
+            while (odbc_fetch_row($result)) {
+                $graph = odbc_result($result, 1);
+                if (!in_array($graph, $this->_virtuosoSpecialModels)) {
+                    if (!array_key_exists($graph, $this->_models)) {
+                            $this->_models[$graph] = true;
                     }
                 }
             }

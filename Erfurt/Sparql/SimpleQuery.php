@@ -179,14 +179,14 @@ class Erfurt_Sparql_SimpleQuery
         return $this;
     }
     
-    public function setFrom($newFromArray)
+    public function setFrom(array $newFromArray)
     {
         $this->_from = $newFromArray;
         
         return $this;
     }
     
-    public function setFromNamed($newFromNamedArray)
+    public function setFromNamed(array $newFromNamedArray)
     {
         $this->_fromNamed = $newFromNamedArray;
         

@@ -575,24 +575,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getAvailableModels($withTitle = false) 
+    public function getAvailableModels() 
     {
         $modelInfoCache = $this->_getModelInfos();
             
         $models = array();
         foreach ($modelInfoCache as $mInfo) {
-            $m = array(
-                'modelIri'  => $mInfo['modelIri'],
-            );
-                
-            if ($withTitle === true) {
-// TODO add title here
-                if (isset($mInfo['title'])) {
-                    $m['label'] = $mInfo['title'];
-                }
-            }
-                
-            $models[$mInfo['modelIri']] = $m;   
+            $models[$mInfo['modelIri']] = true;
         }
         
         return $models;
@@ -1356,7 +1345,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if ($cachedVal) {
             $this->_modelInfoCache = $cachedVal;
         } else {
-            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, n.ns, n.ns_r, n.prefix, s.o, s3.o AS title, u.v, l.v,
+            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, n.ns, n.ns_r, n.prefix, s.o, u.v,
                         (SELECT count(*) 
                         FROM ef_stmt s2 
                         WHERE s2.g = g.id 
@@ -1371,27 +1360,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         AND g.uri = s.s 
                         AND s.p = "' . EF_OWL_IMPORTS. '" 
                         AND s.ot = 0) 
-                    LEFT JOIN ef_stmt s3 ON (g.id = s3.g 
-                        AND g.uri = s3.s
-                        AND s3.st = 0 
-                        AND s3.ot = 2 
-                        AND (';
-
-            // Create SQL code for each title property
-            $count = count($this->_titleProperties);
-            $i = 0;
-            foreach ($this->_titleProperties as $titleProp) {
-                $sql .= 's3.p = "' . $titleProp . '"';
-                
-                if ($i < $count-1) {
-                    $sql .= ' OR ';
-                }
-                ++$i;
-            }
-            
-            $sql .= '))
-                LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = n.ns_r OR u.id = s.o_r)
-                LEFT JOIN ef_lit l ON (l.id = s3.o_r)';
+                    LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = n.ns_r OR u.id = s.o_r)';
                         
             try {
                 $result = $this->sqlQuery($sql);
@@ -1432,10 +1401,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         if ($row['o'] !== null &&
                          !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
                             $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
-                        }
-                        
-                        if ($row['title'] !== null) {
-                            $this->_modelInfoCache[$row['uri']]['title'] = $row['title'];
                         }
                     } else {
                         if ($row['ns'] !== null &&

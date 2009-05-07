@@ -84,14 +84,10 @@ interface Erfurt_Store_Adapter_Interface
 	public function exportRdf($modelIri, $serializationType = 'xml', $filename = null);
 	
 	/**
-	 * @param boolean $withTitle Whether to return a human readable title for each available model.
-	 * @return array Returns an indexed array containing an associative array for each row. Each result row has
-	 * the following keys:  - 'modelIri'    => Contains the Iri of the model.
-	 *                      - ('title')     => If the $withTitle parameter is given with true as value, this key
-	 *                                         contains a human readable title for the model resource, else this key
-	 *                                         will not be set.
+	 * @return array Returns an associative array, where the key is the URI of a graph and the value
+     * is true.
 	 */
-	public function getAvailableModels($withTitle = false);
+	public function getAvailableModels();
 	
 	/**
 	 * Returns the prefix used by the store to identify blank nodes.

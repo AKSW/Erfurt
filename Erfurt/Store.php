@@ -46,6 +46,15 @@ class Erfurt_Store
      */
     protected $_dbPass = null;
     
+    /**
+     * A RDF/PHP array containing additional configuration options for graphs
+     * in the triple store. This information is stored in the local system
+     * ontology.
+     * @var array
+     * 
+     */
+    protected $_graphConfigurations = null;
+    
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -581,9 +590,10 @@ echo $e->getMessage();exit;
      */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
     {
-        if (empty($graphUris)) {
-            $graphUris = array_keys($this->getAvailableModels(true));
-        }
+        // This is not neccessary, for if no graph URI is speicifed, all available graphs are queried automatically.
+        //if (empty($graphUris)) {
+        //    $graphUris = array_keys($this->getAvailableModels(true));
+        //}
         
         $stringSpec = (string) $stringSpec;
         $graphUris  = (array) $graphUris;
@@ -626,22 +636,29 @@ echo $e->getMessage();exit;
     }
     
     /**
-     * @param boolean $withTitle Whether to return a human readable title for each available model.
-     * @return array Returns an indexed array containing an associative array for each row. Each result row has
-     * the following keys:  - 'modelIri'    => Contains the Iri of the model.
-     *                      - ('title')     => If the $withTitle parameter is given with true as value, this key
-     *                                         contains a human readable title for the model resource, else this key
-     *                                         will not be set.
+     * @param boolean $withHidden Whether to return URIs of hidden graphs, too.
+     * @return array Returns an associative array, where the key is the URI of a graph and the value
+     * is true.
      */
-    public function getAvailableModels($withTitle = false)
+    public function getAvailableModels($withHidden = false)
     {
         // backend adapter returns all models
-        $models = $this->_backendAdapter->getAvailableModels($withTitle);
+        $models = $this->_backendAdapter->getAvailableModels();
     
-        // filter for access control
-        foreach ($models as $key => $model) {
-            if (!$this->_checkAc($model['modelIri'])) {
-                unset($models[$key]);
+        // filter for access control and hidden models
+        foreach ($models as $graphUri => $true) {
+            if (!$this->_checkAc($graphUri)) {
+                unset($models[$graphUri]);
+            }
+            if ($withHidden === false) {
+                $graphConfig = $this->_getGraphConfiguration($graphUri);
+                
+                if (isset($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'])) {
+                    if ($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'][0]['value'] === 'true') {
+                        unset($models[$graphUri]);
+                    }
+                    
+                }
             }
         }
         
@@ -1094,6 +1111,53 @@ echo $e->getMessage();exit;
     // --- Protected (implemented) methods ------------------------------------
     // ------------------------------------------------------------------------
 
+    protected function _getGraphConfiguration($graphUri)
+    {
+        if (null === $this->_graphConfigurations) {
+            $config         = Erfurt_App::getInstance()->getConfig();
+            $sysOntModelUri = $config->sysOnt->modelUri;
+            
+            // Fetch the graph configurations
+            require_once 'Erfurt/Sparql/SimpleQuery.php';
+            $queryObject = new Erfurt_Sparql_SimpleQuery();
+            $queryObject->setProloguePart('SELECT ?s ?p ?o');
+            $queryObject->setFrom(array($sysOntModelUri));
+            $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
+
+            $result = $this->sparqlQuery($queryObject, array('use_ac' => false, 'result_format' => 'extended'));
+            
+            $stmtArray = array();
+            foreach ($result['bindings'] as $row) {
+                if (!isset($stmtArray[$row['s']['value']])) {
+                    $stmtArray[$row['s']['value']] = array();
+                }
+                
+                if (!isset($stmtArray[$row['s']['value']][$row['p']['value']])) {
+                    $stmtArray[$row['s']['value']][$row['p']['value']] = array();
+                }
+                
+                if ($row['o']['type'] === 'typed-literal') {
+                    $row['o']['type'] = 'literal';
+                }
+                
+                if (isset($row['o']['xml:lang'])) {
+                    $row['o']['lang'] = $row['o']['xml:lang'];
+                    unset($row['o']['xml:lang']);
+                }
+                
+                $stmtArray[$row['s']['value']][$row['p']['value']][] = $row['o'];
+            }
+            
+            $this->_graphConfigurations = $stmtArray;    
+        }
+        
+        if (isset($this->_graphConfigurations[$graphUri])) {
+            return $this->_graphConfigurations[$graphUri];
+        } else {
+            return array();
+        }
+    }
+
     /**
      * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param
      * makes it easy to disable access control for internal usage.
@@ -1127,8 +1191,8 @@ echo $e->getMessage();exit;
     private function _filterModels(array $modelIris)
     {
         $allowedModels = array();
-        foreach ($this->getAvailableModels(true) as $key => $model) {
-            $allowedModels[] = $model['modelIri'];
+        foreach ($this->getAvailableModels(true) as $key => $true) {
+            $allowedModels[] = $key;
         }
         
         $modelIrisFiltered = array();
