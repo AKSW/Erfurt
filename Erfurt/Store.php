@@ -599,10 +599,9 @@ echo $e->getMessage();exit;
      */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
     {
-        // This is not neccessary, for if no graph URI is speicifed, all available graphs are queried automatically.
-        //if (empty($graphUris)) {
-        //    $graphUris = array_keys($this->getAvailableModels(true));
-        //}
+        if (empty($graphUris)) {
+            $graphUris = array_keys($this->getAvailableModels(true));
+        }
         
         $stringSpec = (string) $stringSpec;
         $graphUris  = (array) $graphUris;
