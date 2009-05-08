@@ -26,6 +26,12 @@ class Erfurt_Rdf_Model
     protected $_isEditable = false;
     
     /**
+     * An array containing options for the graph stored in the system ontology.
+     * @var array
+     */
+    protected $_graphOptions = null;
+    
+    /**
      * The model IRI
      * @var string
      */
@@ -242,6 +248,24 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Returns an array of options (the object part of an RDF/PHP array) or null
+     * if no such options exists. An option is identified through an URI.
+     * 
+     * @param string $optionUri The URI that identifies the option.
+     * @return array|null An array containing the value(s) for the given option.
+     */
+    public function getOption($optionUri)
+    {
+        $options = $this->_getOptions();
+        
+        if (!isset($options[$optionUri])) {
+            return null;
+        } else {
+            return $options[$optionUri];
+        }
+    }
+    
+    /**
      * Resource factory method
      *
      * @return Erfurt_Rdf_Resource
@@ -332,6 +356,58 @@ class Erfurt_Rdf_Model
     }
     
     /**
+     * Sets an option for the model in the SysOnt.
+     * If no value is given, the option will be unset.
+     * 
+     * @param string $optionUri The URI that identifies the option.
+     * @param array|null An array (RDF/PHP object part) of values or null.
+     */
+    public function setOption($optionUri, $value = null)
+    {
+        if (!$this->_isEditable) {
+            // User has no right to edit the model.
+            return;
+        }
+        
+        
+        $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysOnt->modelUri;
+        
+        $options = $this->_getOptions();
+        $store = $this->getStore();
+        
+        if (isset($options[$optionUri])) {
+            // In this case we need to remove the old values from sysont        
+            $options = array(
+                'use_ac'       => false, // We disable AC, for we need to write the system ontology.
+                'subject_type' => Erfurt_Store::TYPE_IRI
+            );
+            
+            $store->deleteMatchingStatements($sysOntUri, $this->_graphUri, $optionUri, null, $options);
+        }
+        
+        if (null !== $value) {
+            $addArray = array();
+            $addArray[$this->_graphUri] = array();
+            $addArray[$this->_graphUri][$optionUri] = $value;
+
+            $store->addMultipleStatements($sysOntUri, $addArray, false);
+        }
+        
+// TODO add this statement on model add?!
+        // Add a statement graphUri a SysOnt:Model
+        $addArray[$this->_graphUri] = array();
+        $addArray[$this->_graphUri][EF_RDF_TYPE] = array();
+        $addArray[$this->_graphUri][EF_RDF_TYPE][] = array(
+            'value' => 'http://ns.ontowiki.net/SysOnt/Model',
+            'type'  => 'uri'
+        );
+        $store->addMultipleStatements($sysOntUri, $addArray, false);
+        
+        // Reset the options
+        $this->_graphOptions = null;
+    }
+    
+    /**
      * Updates this model if the mutual difference of 2 RDF/PHP arrays.
      *
      * Added statements are those that are found in $changed but not in $original, 
@@ -358,6 +434,23 @@ class Erfurt_Rdf_Model
     // ------------------------------------------------------------------------
     // --- Private/protected methods ------------------------------------------
     // ------------------------------------------------------------------------
+    
+    /**
+     * Sets the internal options array for the model (if neccessary) and returns it.
+     * The options are actually fetched by the store class.
+     * 
+     * @return array An array of all options. If there are no options for the model
+     * an empty array is returned.
+     */
+    protected function _getOptions()
+    {
+        if (null === $this->_graphOptions) {
+            $store = $this->getStore();
+            $this->_graphOptions = $store->getGraphConfiguration($this->_graphUri);
+        }
+        
+        return $this->_graphOptions;
+    }
     
     /**
      * Calculates the difference of two RDF/PHP arrays.
@@ -443,6 +536,18 @@ class Erfurt_Rdf_Model
         }
         
         $query->addFrom($this->_graphUri);
+        
+// TODO decide where to put this code... Always use the hidden imports?
+        // Add all hidden imports
+        $config = Erfurt_App::getInstance()->getConfig();
+        $additionals = $this->getOption($config->sysOnt->properties->hiddenImports);
+        $additionalsArray = array();
+        if (null !== $additionals) {
+            foreach ($additionals as $row) {
+                $additionalsArray[] = $row['value'];
+            }
+            $this->getStore()->setAdditionalImports($this->_graphUri, $additionalsArray);
+        }
 
         return $this->getStore()->sparqlQuery($query, $options);
     }

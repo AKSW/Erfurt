@@ -458,7 +458,11 @@ echo $e->getMessage();exit;
      */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
     {
-        if ($this->_checkAc($graphUri, 'edit')) {
+        if (!isset($options['use_ac'])) {
+            $options['use_ac'] = true;
+        }
+        
+        if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
                 $retVal =  $this->_backendAdapter->deleteMatchingStatements(
                 $graphUri, $subject, $predicate, $object, $options);
@@ -467,7 +471,12 @@ echo $e->getMessage();exit;
                 require_once 'Erfurt/Event.php';
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri   = $graphUri; 
-                $event->statements = $retVal;
+                
+                // Just set a payload, in case backend returns the deleted statements.
+                if (is_array($retVal)) {
+                    $event->statements = $retVal;
+                }
+                
                 Erfurt_Event_Dispatcher::getInstance()->trigger($event);
             } catch (Erfurt_Store_Adapter_Exception $e) {
 // TODO Create a exception for too many matching values
@@ -651,7 +660,7 @@ echo $e->getMessage();exit;
                 unset($models[$graphUri]);
             }
             if ($withHidden === false) {
-                $graphConfig = $this->_getGraphConfiguration($graphUri);
+                $graphConfig = $this->getGraphConfiguration($graphUri);
                 
                 if (isset($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'])) {
                     if ($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'][0]['value'] === 'true') {
@@ -1107,12 +1116,9 @@ echo $e->getMessage();exit;
 	    // TODO: use default SQL store
     }
     
-    // ------------------------------------------------------------------------
-    // --- Protected (implemented) methods ------------------------------------
-    // ------------------------------------------------------------------------
-
-    protected function _getGraphConfiguration($graphUri)
+    public function getGraphConfiguration($graphUri)
     {
+// TODO check for ac
         if (null === $this->_graphConfigurations) {
             $config         = Erfurt_App::getInstance()->getConfig();
             $sysOntModelUri = $config->sysOnt->modelUri;
@@ -1157,6 +1163,10 @@ echo $e->getMessage();exit;
             return array();
         }
     }
+    
+    // ------------------------------------------------------------------------
+    // --- Protected (implemented) methods ------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
      * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param
