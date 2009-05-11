@@ -40,25 +40,8 @@ class Erfurt_Rdf_Model
     /**
      * An array of namespace IRIs (keys) and prefixes 
      * @var array
-     * @todo remove hard-coded mock namespaces
      */
-    protected $_namespaces = array(
-        'http://www.w3.org/1999/02/22-rdf-syntax-ns#' => 'rdf', 
-        'http://www.w3.org/2000/01/rdf-schema#'       => 'rdfs', 
-        'http://www.w3.org/2002/07/owl#'              => 'owl', 
-        'http://www.w3.org/2001/XMLSchema#'           => 'xsd', 
-        'http://ns.ontowiki.net/SysOnt/'              => 'SysOnt', 
-        'http://purl.org/dc/elements/1.1/'            => 'dc', 
-        'http://xmlns.com/foaf/0.1/'                  => 'foaf', 
-        'http://usefulinc.com/ns/doap#'               => 'doap', 
-        'http://xmlns.com/wordnet/1.6/'               => 'wordnet', 
-        'http://www.w3.org/2004/02/skos/core#'        => 'skos', 
-        'http://rdfs.org/sioc/ns#'                    => 'sioc', 
-        'http://swrc.ontoware.org/ontology#'          => 'swrc', 
-        'http://ns.aksw.org/e-learning/lcl/'          => 'lcl', 
-        'http://www.w3.org/2003/01/geo/wgs84_pos#'    => 'geo', 
-        // 'nodeID://'                                   => '_'
-    );
+	protected $_namespaces = NULL;
     
     /**
      * The model's title property value
@@ -244,6 +227,7 @@ class Erfurt_Rdf_Model
      */
     public function getNamespaces()
     {
+		if($this->_namespaces === NULL) $this->_initiateNamespaces();
         return $this->_namespaces;
     }
     
@@ -565,5 +549,61 @@ class Erfurt_Rdf_Model
     {    
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
-    }
+	}
+
+	/**
+	 * Get all namespaces with there prefix
+	 * @return array with namespace as key and prefix as value
+	 */
+	public function getPrefixes()
+	{
+		if($this->_namespaces === NULL) $this->_initiateNamespaces();
+		return $this->_namespaces;
+	}
+
+	/**
+	 * Add a namespace -> prefix mapping
+	 * @param $namespace the namespace uri
+	 * @param $prefix a prefix to identify the namespace
+	 */
+	public function addPrefix($namespace, $prefix)
+	{
+		if($this->_namespaces === NULL) $this->_initiateNamespaces();
+		if(!isset($this->_namespaces[$namespace]) && (array_search($prefix) === false) ) $this->_namespaces[$namespace] = $prefix;
+	}
+
+	/**
+	 * Delete a namespace -> prefix mapping
+	 * @param $prefix the prefix you want to remove
+	 */
+	public function deletePrefix($prefix)
+	{
+		if($this->_namespaces === NULL) $this->_initiateNamespaces();
+		unset($this->_namespaces[array_search($prefix)]);
+	}
+
+	/**
+	 * initialy set the namespace mapping array for the model
+	 * (read the mapping from system configuration)
+	 */
+	protected function _initiateNamespaces()
+	{
+		$this->_namespaces = array(
+        'http://www.w3.org/1999/02/22-rdf-syntax-ns#' => 'rdf', 
+        'http://www.w3.org/2000/01/rdf-schema#'       => 'rdfs', 
+        'http://www.w3.org/2002/07/owl#'              => 'owl', 
+        'http://www.w3.org/2001/XMLSchema#'           => 'xsd', 
+        'http://ns.ontowiki.net/SysOnt/'              => 'SysOnt', 
+        'http://purl.org/dc/elements/1.1/'            => 'dc', 
+        'http://xmlns.com/foaf/0.1/'                  => 'foaf', 
+        'http://usefulinc.com/ns/doap#'               => 'doap', 
+        'http://xmlns.com/wordnet/1.6/'               => 'wordnet', 
+        'http://www.w3.org/2004/02/skos/core#'        => 'skos', 
+        'http://rdfs.org/sioc/ns#'                    => 'sioc', 
+        'http://swrc.ontoware.org/ontology#'          => 'swrc', 
+        'http://ns.aksw.org/e-learning/lcl/'          => 'lcl', 
+        'http://www.w3.org/2003/01/geo/wgs84_pos#'    => 'geo', 
+        // 'nodeID://'                                   => '_'
+	    );
+	}
 }
