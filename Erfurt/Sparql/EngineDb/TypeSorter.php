@@ -239,6 +239,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
         
         $sql      = 'SELECT DISTINCT ' . implode(',', $arSel) . ' ' . $strFrom . $strWhere;
+
         $arResult = $this->_engine->sqlQuery($sql);
 
 
@@ -253,13 +254,14 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             foreach ($arRow as $key => $value) {
                 list($strSparqlVar, $strType) = explode('-', $key);
                 
-                if ($value === null) {
+                if ($value === null && $strType !== 'type') {
                     $value = 'http://www.w3.org/2001/XMLSchema#string';
-                }
+                } 
                 
                 $arTypes[$nLine][$strSparqlVar][$strType] = $value;
             }
         }
+        
         $arTypes = array_unique($arTypes);
         
         return $arTypes;

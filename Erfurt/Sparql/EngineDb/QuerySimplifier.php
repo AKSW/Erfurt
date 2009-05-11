@@ -32,7 +32,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
 #return;
         $arPatterns = $query->getResultPart();
         self::dropEmpty($arPatterns);
-      
+
         $arPlan = $this->createPlan($arPatterns);
         if (count($arPlan) == 0) {
             $query->setResultPart($arPatterns);
@@ -284,19 +284,31 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
      *   Modifies it directly.
      */
     protected static function dropEmpty(&$arPatterns)
-    {
+    {   
+        $id = count($arPatterns)+1;
+        $newOptionalMapping = array(); // $oldId => array($newId1, $newId2)
         foreach ($arPatterns as $nId => $pattern) {
             if ($pattern->isEmpty()) {   
                 foreach ($arPatterns as $nId2 => &$pattern2) {
                     if ($pattern2->getSubpatternOf() === $pattern->patternId) {
                        $pattern2->setSubpatternOf($pattern->getSubpatternOf());
-                    }
-                    if ($pattern2->getUnion() === $pattern->patternId) {
+                       
+                       if (!isset($newOptionalMapping[$pattern->patternId])) {
+                           $newOptionalMapping[$pattern->patternId] = array();
+                       }
+                       $newOptionalMapping[$pattern->patternId][] = $pattern2->patternId;
+                    } else if ($pattern2->getUnion() === $pattern->patternId) {
                         $pattern2->setUnion($pattern->getUnion());
+                    } else if ($pattern2->getOptional() === $pattern2->patternId) {
+                        if (null !== $pattern->getUnion()) {
+                            $pattern->setOptional($pattern->getUnion());
+                        } else if (null !== $pattern->getSubpatternOf()) {
+                                $pattern->setOptional($pattern->getSubpatternOf());
+                        }
                     }
                 }
                 
-                unset($arPatterns[$nId]);    
+                unset($arPatterns[$nId]);
             }
         }
         
@@ -313,7 +325,32 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
             
             $nOptional = $pattern->getOptional();
             if (null !== $nOptional && !isset($arPatterns[$nOptional])) {
-                $pattern->setOptional(null);
+                if (isset($newOptionalMapping[$nOptional])) {
+                    $pattern->setOptional($newOptionalMapping[$nOptional][0]);
+                    
+                    if (count($newOptionalMapping[$nOptional]) > 1) {
+                        for ($i = 1; $i < count($newOptionalMapping[$nOptional]); ++$i) {
+                            $newPattern = clone $pattern;
+                            
+                            while (true) {
+                                if (array_key_exists($id, $arPatterns)) {
+                                    $id++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            
+                            $newPattern->setId($id);
+                            $newPattern->setOptional($newOptionalMapping[$nOptional][$i]);
+                            $arPatterns[] = $newPattern;
+                        }
+                    }
+                } else {
+                    $pattern->setOptional(null);
+                }
+                
+                
+                
             }
         }
     }
