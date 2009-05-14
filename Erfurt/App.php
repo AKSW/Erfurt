@@ -51,12 +51,18 @@ class Erfurt_App
     
     /** @var */
     private $_cache = false;
+
+    /** @var */
+    private $_queryCache = false;
     
     /** @var */
     private $_cacheBackend = false;
-    
+ 
+    /** @var */
+    private $_queryCacheBackend = false;
+   
     /** @var Zend_Log */
-    private $_log = false;
+    private $_logs = array();
 
     /** @var */
     private $_versioning = false;
@@ -258,10 +264,12 @@ class Erfurt_App
     /**
      * @throws Erfurt_Exception
      * @throws Erfurt_Exception
+     * @access public
+     * @param string $logIdentifier identifies the logfile (fileName without Extension)
      */
-    public function getLog() {
+    public function getLog($logIdentifier = 'erfurt' ) {
  
-        if (!$this->_log) {
+        if (!isset($this->_logs[$logIdentifier])) {
             $config = $this->getConfig();
         
             if ((boolean)$config->efloglevel != false) {
@@ -272,7 +280,8 @@ class Erfurt_App
                     $logWriter = new Zend_Log_Writer_Null();
                 } else {
                     require_once 'Zend/Log/Writer/Stream.php';
-                    $logWriter = new Zend_Log_Writer_Stream($logDir . 'erfurt.log');    
+                    $logWriter = new Zend_Log_Writer_Stream($logDir.$logIdentifier.".log"); 
+  
                 }
             } else {
                 require_once 'Zend/Log/Writer/Null.php';
@@ -280,10 +289,9 @@ class Erfurt_App
             }
                 
             require_once 'Zend/Log.php';
-            $this->_log = new Zend_Log($logWriter);       
+            $this->_logs[$logIdentifier] = new Zend_Log($logWriter);       
         }
-        
-        return $this->_log;
+        return $this->_logs[$logIdentifier];
     }
     
     /**
@@ -327,7 +335,6 @@ class Erfurt_App
     {
         if ($this->_store === false) {
             $config = $this->getConfig();
-            
             // schema must be set, else throw an exception
             if (isset($config->store->backend)) {
                 $backend = strtolower($config->store->backend);
@@ -502,7 +509,7 @@ class Erfurt_App
         
         return $this->_auth;
     }
-    
+
     public function getCache() 
     {    
         if (!$this->_cache) {
@@ -615,6 +622,62 @@ class Erfurt_App
         
         return $this->_cacheBackend;
     }
+
+    public function getQueryCache() {
+        if (!$this->_queryCache) {
+            $config = $this->getConfig();
+            require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
+            require_once 'Erfurt/Cache/Frontend/QueryCache.php';
+            $this->_queryCache = new Erfurt_Cache_Frontend_QueryCache();
+            
+            $backend = $this->getQueryCacheBackend();
+            $this->_queryCache->setBackend($backend);
+        }
+        return $this->_queryCache;
+    }
+
+
+    private function getQueryCacheBackend() {    
+        if (!$this->_queryCacheBackend) {
+            $config = $this->getConfig();
+            $backendOptions = array();   
+            if (!isset($config->cache->query->enable) || !(boolean)$config->cache->query->enable) {
+                require_once 'Erfurt/Cache/Backend/QueryCache/Null.php';
+                $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Null();
+            } 
+            // cache is enabled
+            else {
+                // check for the cache type and throw an exception if cache type is not set
+                if (!isset($config->cache->query->type)) {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception('Cache type is not set in config.'); 
+                } 
+                else {
+                    // check the type an whether type is supported
+                    switch (strtolower($config->cache->query->type)) {
+                        case 'database':
+                             require_once 'Erfurt/Cache/Backend/QueryCache/Database.php';
+                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Database();
+                            break;
+#                       case 'file':
+#                            require_once 'Erfurt/Cache/Backend/QueryCache/File.php';
+#                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_File();
+#                            break;
+#                       case 'memory':
+#                            require_once 'Erfurt/Cache/Backend/QueryCache/Memory.php';
+#                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Memory();
+#                            break;
+                        default: 
+                            require_once 'Erfurt/Exception.php';
+                            throw new Erfurt_Exception('Cache type is not supported.');
+                    }
+                }
+            }
+        }
+        return $this->_queryCacheBackend;
+    }
+
+
     
     /**
      * Convenience shortcut for Ac_Default::isActionAllowed()

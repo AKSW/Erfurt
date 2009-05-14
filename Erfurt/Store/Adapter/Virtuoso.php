@@ -525,13 +525,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         if (is_string($graphIri)) {
             // check if graph exists in database
-            $result = $this->_execSparql('ASK WHERE {GRAPH <' . $graphIri . '> {?s ?p ?o.}}');
-            
-            if (odbc_result($result, 1)) {
-                return true;
-            }
+            return $this->sparqlAsk('ASK WHERE {GRAPH <' . $graphIri . '> {?s ?p ?o.}}');
         }
-        
         return false;
     }
     
@@ -574,13 +569,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function sparqlAsk($query)
     {        
-        $result = $this->_execSparql($query);
-        
-        if (odbc_result($result, 1) == '1') {
-            return true;
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        if (!($sparqlResult = $queryCache->load( $query ))){
+            $sparqlResult = $this->_execSparql($query);
+
+            if (odbc_result($sparqlResult, 1) == '1') {
+                $sparqlResult = true;
+            }
+            else {
+                $sparqlResult = false;
+            }
+            $queryCache->save( $query, $sparqlResult);
         }
-        
-        return false;
+        return $sparqlResult;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -607,7 +608,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $query = ' define output:format "TTL" '
                    .  $query;
         }
-        
+     
         if ($result = $this->_execSparql($query)) {
             $result = $this->_odbcResultToArray($result);
         }
@@ -675,7 +676,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $sqlQuery = preg_replace(array_keys($replacings), array_values($replacings), $sqlQuery);
-
         $resultArray = array();
         
         if ($result = $this->_execSql($sqlQuery)) {
@@ -934,12 +934,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     private function _execSql($sqlQuery) 
     {
         $result = @odbc_exec($this->_connection, $sqlQuery);
-        
+        $this->_longRead = true; 
         if ($this->_longRead) {
-            odbc_longreadlen($result, 0);
+            odbc_longreadlen($result, 16777216);
             $this->_longRead = false;
         }
-        
         if (false === $result) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('SQL Error: ' . $this->_getLastError() . ' ' .

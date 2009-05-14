@@ -229,6 +229,10 @@ class Erfurt_Store
         }
         
         $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
+
+        //invalidate deprecated Cache Objects
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithStatements($graphUri, $statementsArray );
         
         require_once 'Erfurt/Event/Dispatcher.php';
         require_once 'Erfurt/Event.php';
@@ -271,8 +275,13 @@ class Erfurt_Store
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-       return $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
-        
+        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
+
+        //invalidate deprecateded Cache Objects
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidate( $graphUri, $subject , $predicate, $object );
+
+
         require_once 'Erfurt/Event/Dispatcher.php';
         require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onAddStatement');
@@ -466,6 +475,9 @@ echo $e->getMessage();exit;
             try {
                 $retVal =  $this->_backendAdapter->deleteMatchingStatements(
                 $graphUri, $subject, $predicate, $object, $options);
+
+                $queryCache = Erfurt_App::getInstance()->getQueryCache();
+                $queryCache->invalidate( $graphUri, $subject , $predicate, $object );
                 
                 require_once 'Erfurt/Event/Dispatcher.php';
                 require_once 'Erfurt/Event.php';
@@ -514,6 +526,10 @@ echo $e->getMessage();exit;
         }
         
         $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
+
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
+
         
         require_once 'Erfurt/Event/Dispatcher.php';
         require_once 'Erfurt/Event.php';
@@ -545,6 +561,10 @@ echo $e->getMessage();exit;
         
         // delete model
         $this->_backendAdapter->deleteModel($modelIri);
+
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithModelIri( $modelIri );
+
         
         // remove any statements about deleted model from SysOnt
         if (Erfurt_App::getInstance()->getAcModel() !== false) {
@@ -959,12 +979,12 @@ echo $e->getMessage();exit;
         
         return false;
     }
-    
+
     public function isSqlSupported()
     {
         return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
-    
+
     /**
      * Returns the ID for the last insert statement.
      */
@@ -1029,8 +1049,16 @@ echo $e->getMessage();exit;
                 $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        if (!($sparqlResult = $queryCache->load( (string) $queryObject))){
+#           // TODO: check if adapter supports requested result format
+            $startTime = microtime(true);
+            $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
+            $duration = microtime(true) - $startTime;
+            $queryCache->save( (string) $queryObject, $sparqlResult, $duration);
+        }
         
-        return $this->_backendAdapter->sparqlAsk((string) $queryObject);
+        return $sparqlResult;
     }
     
     /**
@@ -1063,7 +1091,6 @@ echo $e->getMessage();exit;
                 }
             }
         }
-        
         // Add additional imports, if option is set true.
         if ($options['use_additional_imports'] === true) {
             foreach ($queryObject->getFrom() as $fromGraphUri) {
@@ -1092,11 +1119,18 @@ echo $e->getMessage();exit;
                 $queryObject->setFromNamed($this->_filterModels($fromNamed));
             }
         }
-        
+
+        //queriing SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options['result_format'];
-   
-        // TODO: check if adapter supports requested result format
-        return $this->_backendAdapter->sparqlQuery((string) $queryObject, $resultFormat);
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        if (!($sparqlResult = $queryCache->load( (string) $queryObject ))){
+#           // TODO: check if adapter supports requested result format
+            $startTime = microtime(true);
+            $sparqlResult = $this->_backendAdapter->sparqlQuery( (string) $queryObject, $resultFormat);
+            $duration = microtime(true) - $startTime;
+            $queryCache->save( (string) $queryObject , $sparqlResult, $duration );
+        }
+        return $sparqlResult;
     }
     
     /**

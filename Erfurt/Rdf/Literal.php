@@ -11,6 +11,27 @@ class Erfurt_Rdf_Literal extends Erfurt_Rdf_Node {
 		
 		$this->_label = $label;
 	}
+
+    /**
+     * Returns a string representation of this resource.
+     *
+     * @return string
+     */
+    public function __toString() {
+        if ( $this->getLabel() ) {
+            $ret = $this->getLabel();
+            if ( $this->getDatatype() ) {
+                $ret .= "^^" . $this->getDatatype() ;
+            }
+            else if ( $this->getLanguage() ) {
+                $ret .= "@" . $this->getLanguage() ;
+            }
+            return $ret;
+        } 
+        else {
+            return "";
+        }
+    }
 	
 	public function setLanguage($lang) {
 		
