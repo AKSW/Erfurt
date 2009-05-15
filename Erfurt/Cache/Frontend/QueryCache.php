@@ -10,13 +10,20 @@
  *	@link			http://code.google.com/p/ontowiki/
  *	@version		0.1
  */
-class Erfurt_Cache_Frontend_QueryCache
-{
+class Erfurt_Cache_Frontend_QueryCache {
+
     /**
      * backend Object
      * @var object
     */
     var $_backend;
+    
+
+    /**
+     * Transactions for Object issignment to QueryCache
+     * @var transactions
+    */
+    protected static $_transactions = array();
 
 
 	/**
@@ -62,7 +69,13 @@ class Erfurt_Cache_Frontend_QueryCache
             $graphUris = $parsedQuery['graphs'];
 
             //saving the Query and the Result with the configured Backend
-            $result =  $this->getBackend()->save($queryId, $queryString, $graphUris, $triplePatterns, $queryResult, $duration);
+            $result =  $this->getBackend()->save(   $queryId, 
+                                                    $queryString, 
+                                                    $graphUris, 
+                                                    $triplePatterns, 
+                                                    $queryResult, 
+                                                    $duration, 
+                                                    $this->getTransactions());
             return $result;
         }
         else {
@@ -101,10 +114,12 @@ class Erfurt_Cache_Frontend_QueryCache
      *	invalidating a CacheResult according to given statements
      *	@access     public
      *	@param      array   $statements     statements array in the form: statements[$subject][$predicate] = $object;
-     *  @return     int     $count          number of queries which was affected of the invalidation process
+     *  @return     array   $qids           list of queryIds which are nwo invalidated
     */
     public function invalidateWithStatements( $modelIri, $statements = array() ) {
-        return $this->getBackend()->invalidate( $modelIri, $statements );
+        $qids = $this->getBackend()->invalidate( $modelIri, $statements );
+        $this->invalidateCacheObjects($qids);
+        return $qids;
     }
 
 
@@ -123,10 +138,65 @@ class Erfurt_Cache_Frontend_QueryCache
     }
 
 
+    /**
+     *	invalidating CacheResults according to a given modelIRI
+     *	@access     public
+     *	@param      string   $modelIri  modelIri
+     *  @return     string   $status    status of the process
+    */
     public function invalidateWithModelIri( $modelIri ) {
         return $this->getBackend()->invalidateWithModelIri( $modelIri );
     }
 
+
+    //TODO : holen der CacheObjectKeys aus QueryCache -> umbauen der invalidate Methode
+    //TODO : ObjectCache umbauen und zu den objectkeys die entsprechenden Objecte rausholen und löschen
+    public function invalidateCacheObjects ( $queryIds ) {
+        //ObjectCache holen
+
+        //ObjectCacheObjecte löschen
+
+        //im Querycache die results zu den ObjectKeys invalidieren
+         $this->getBackend()->invalidateObjectKeys( $queryIds );
+    }
+
+    /**
+     *	starting a Caching Transaction to assign cache Objects to queryCacheResults
+     *	@access     public
+     *	@param      string   $modelIri  modelIri
+     *  @return     string   $status    status of the process
+    */
+    public function startTransaction ( $transactionKey ) {
+        self::$_transactions[$transactionKey] = 1; 
+    }
+
+    /**
+     *	starting a Caching Transaction to assign cache Objects to queryCacheResults
+     *	@access     public
+     *	@param      string   $modelIri  modelIri
+     *  @return     string   $status    status of the process
+    */
+    public function endTransaction ( $transactionKey ) {
+        if ( isset (self::$_transactions[$transactionKey]) )
+            unset ( self::$_transactions[$transactionKey] ) ; 
+    }
+
+
+    /**
+     *	starting a Caching Transaction to assign cache Objects to queryCacheResults
+     *	@access     public
+     *	@param      string   $modelIri  modelIri
+     *  @return     string   $status    status of the process
+    */
+    public function getTransactions () {
+        return self::$_transactions;
+    }
+
+
+    //TODO : MODI ALL, BYDURATION, BYTTL
+    public function cleanUpCache ($options) {
+
+    }
 
     //----------------------------------------------------
     //private Methods                                   //

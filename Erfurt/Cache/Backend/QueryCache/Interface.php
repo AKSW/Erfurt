@@ -35,7 +35,7 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
      *  @param      float   $duration       the duration of the originally executed Query in seconds, microseconds
      *  @return     boolean $result         returns the state of the saveprocess
      */
-    public function save ( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0 ) ;
+    public function save ( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0, $transactions = array() ) ;
 
 
     /**
@@ -77,6 +77,15 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidateWithModelIri ( $modelIri ) ;
+
+    /**
+     *  invalidating all cached ObjectKeys according to a query list of QueryIds
+     *  @access     public
+     *  @param      string  $objectKeys     An array of Objectkeys
+     */
+    public function invalidateObjectKeys ( $queryIds = array ()) ;
+
+
 
     /**
      *  check if a QueryResult is cached yet

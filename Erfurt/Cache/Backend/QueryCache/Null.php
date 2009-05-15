@@ -4,7 +4,7 @@ require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
 class Erfurt_Cache_Backend_QueryCache_NULL extends Erfurt_Cache_Backend_QueryCache_Backend {
 
     // saving a Query Result according to his Query and QueryHash
-     public function save ($queryId, $queryString, $graphUris, $triplePatterns, $queryResult, $duration = 0) {
+     public function save ($queryId, $queryString, $graphUris, $triplePatterns, $queryResult, $duration = 0, $transactions = array()) {
         return false;
     }
 
@@ -28,6 +28,10 @@ class Erfurt_Cache_Backend_QueryCache_NULL extends Erfurt_Cache_Backend_QueryCac
     }
 
     public function invalidateWithModelIri ( $modelIri ) {
+        return false;
+    }
+
+    public function invalidateObjectKeys ( $queryIds = array ()) {
         return false;
     }
 

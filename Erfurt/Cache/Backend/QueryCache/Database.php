@@ -38,6 +38,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->_query('DROP INDEX ef_cache_query_rm_qid_mid');
         $this->_query('DROP INDEX ef_cache_query_triple_tid');
         $this->_query('DROP INDEX ef_cache_query_triple_tid_spo');
+        $this->_query('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
 
 		$this->_query('DROP TABLE ef_cache_query_triple');
 		$this->_query('DROP TABLE ef_cache_query_model');
@@ -45,6 +46,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->_query('DROP TABLE ef_cache_query_rt');
         $this->_query('DROP TABLE ef_cache_query_rm');
         $this->_query('DROP TABLE ef_cache_query_version');
+        $this->_query('DROP TABLE ef_cache_query_objectKey');
 
 
 		$this->_query('CREATE TABLE ef_cache_query_result (
@@ -54,6 +56,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 result LONG VARBINARY NULL ,
                 hit_count INT NULL,
                 inv_count INT NULL,
+                time_stamp FLOAT NULL,
                 duration FLOAT NULL,
                 PRIMARY KEY ( qid ))');
 
@@ -80,6 +83,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 mid VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, mid ))');
 
+		$this->_query('CREATE TABLE ef_cache_query_objectKey (
+                qid VARCHAR( 255 ) NOT NULL ,
+                objectKey VARCHAR( 255 ) NOT NULL ,
+                PRIMARY KEY ( qid, objectKey ))');
+
 		$this->_query('CREATE TABLE ef_cache_query_version (
                 num INT NOT NULL ,
                 PRIMARY KEY ( num )) ');
@@ -93,6 +101,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $this->_query('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
         $this->_query('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
+
+        $this->_query('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
 
         $this->_query('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
         $this->_query('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
@@ -113,7 +123,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      float     $duration       the duration of the originally executed Query in seconds, microseconds
      *  @return     boolean   $result         returns the state of the saveprocess
      */    
-    public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0 ) {
+    public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0, $transactions = array() ) {
         #check that this query isn't saved yet
         if ( false === $this->exists ( $queryId ) ) {
             #encoding the queryResult
@@ -124,11 +134,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 query,
                 result,
                 hit_count,
+                time_stamp, 
                 duration) VALUES (
                 '".$queryId."',
                 '".$queryString."', 
                 '".$queryResult."',
                 0, 
+                ".(microtime(true)).",
                 ".$duration.")" ;
             $ret = $this->_query ( $query ) ;
 
@@ -137,11 +149,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             //saving modelIris in modelTable
             $this->_saveModelIris ( $queryId, $modelIris ) ;
+
         }
         else {
             $queryResult = $this->_encodeResult( $queryResult );
             $this->_query ( "UPDATE ef_cache_query_result SET result = '".$queryResult."', duration = ".$duration." WHERE qid = '".$queryId."'" );
         }
+        //saving transactionKeys to transactions table according to a queryId
+        $this->_saveTransactions ( $queryId, $transactions ) ;
     }
 
 
@@ -217,6 +232,28 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             }
         }
         $clauseString = implode (" OR ", $clauses);
+
+        // retrieve List Of qids which have to vbe invalidated
+        $query = " SELECT qid FROM 
+                        (
+                            SELECT qid qid1
+                            FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
+                            WHERE ( ".$clauseString." )
+                        ) first 
+                        JOIN 
+                        (
+                            SELECT qid 
+                            FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
+                            WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )
+                        ) second 
+                        ON first.qid1 = second.qid ";
+        $result = $this->_query ( $query );
+
+        $qids = array();
+        foreach ($result as $entry) {
+            $qids[] = $entry['qid'];
+        }
+
         $query = "  UPDATE ef_cache_query_result SET result = NULL 
                     WHERE 
                     (
@@ -234,7 +271,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
                         )
                     )";
-        return $this->_query ( $query );
+        $this->_query ( $query );
+        return $qids;
     }
 
 
@@ -272,11 +310,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             //delete entries in query_rm 
             $this->_query ( "DELETE FROM ef_cache_query_rm WHERE qid = '".$qid."'" );
 
+            //delete entries in query_rm 
+            $this->_query ( "DELETE FROM ef_cache_query_objectKeys WHERE qid = '".$qid."'" );
+
             //delete entries in query_model
             $this->_query ( "DELETE FROM ef_cache_query_model WHERE modelIri = '".$modelIri."'" );
         }
     }
 
+    public function invalidateObjectKeys ( $queryIds = array ()) {
+
+    }
 
     /**
      *  check if a QueryResult is cached yet
@@ -384,6 +428,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         }
     }
 
+    private function _saveTransactions ( $queryId, $transactions ) {
+
+        $keys = array_keys ($transactions) ;
+        foreach ($keys as $key) {
+            $query = "INSERT INTO ef_cache_query_objectKeys (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+        }
+
+    }
 
     /**
      *  this private methode encapsulates the functionality to retrieve the last InsertId
