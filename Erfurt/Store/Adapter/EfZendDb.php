@@ -715,7 +715,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         $app = Erfurt_App::getInstance();
         
-        if (false && $this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTempDir() !== false) {
+        if (false && $this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTmpDir() !== false) {
 // TODO fix importRdf to work with arc xml parser
             return array('rdfxml' => 'RDF/XML');
         } else {
@@ -735,7 +735,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $modelId = $modelInfoCache["$modelUri"]['modelId']; 
             
             // create file
-            $tmpDir     = Erfurt_App::getInstance()->getTempDir();
+            $tmpDir     = Erfurt_App::getInstance()->getTmpDir();
             $filename   = $tmpDir . 'import' . md5((string)time()) . '.csv';
             $fileHandle = fopen($filename, 'w');
             
