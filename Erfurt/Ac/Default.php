@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -517,7 +517,7 @@ class Erfurt_Ac_Default
             $sparqlQuery->setProloguePart('SELECT ?s ?p ?o')
                         ->setWherePart('WHERE { 
                             ?s ?p ?o . 
-                            FILTER (sameTerm(?s, <' . $this->_user['uri'] . '>))
+                            FILTER (sameTerm(?s, <' . $userURI . '>))
                         }');
             
             if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
