@@ -76,6 +76,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @var array
      */
     private $_importedModels = array();
+	
+	
+	/**
+	 * debug variable, if enabled prints all sparql queries 
+	 * and puts an <xmp> in front
+	 * @var boolean
+	 */
+	private $_debug_show_queries = false;
  
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -608,6 +616,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $query = ' define output:format "TTL" '
                    .  $query;
         }
+		
+		//this is used to filter out certain queries when working with dbpedia
+		//it should be deactivated for normal use
+		if( strpos($query, "?__resource") >0
+			&& strpos($query, "?__resource1") >0
+			&& strpos($query, "?__resource2") >0
+		){
+			$this->_debug_print($query."\n was filtered");
+			$arr['head']=array();
+			$arr['head']['vars']=array();
+			$arr['head']['vars'][]='__resource';
+			$arr['head']['vars'][]='__resource1';
+			$arr['bindings']=array();;
+			//this is used to filter out certain queries when working with dbpedia
+			//the following line should be deactivated for normal use
+			//return $arr;
+		}
      
         if ($result = $this->_execSparql($query)) {
             $result = $this->_odbcResultToArray($result);
@@ -844,7 +869,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         
+		$now = microtime(true);
         $result = @odbc_exec($this->_connection, $virtuosoPl);
+		$this->_debug_print("SPARQL query: ".$sparqlQuery."\nduration: ".((microtime(true)-$now)*1000)." msec");
         
         if (false === $result) {
             require_once 'Erfurt/Exception.php';
@@ -1106,4 +1133,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         return $logo;
     }
+	
+	 /**
+     * 
+	 * used for performance debugging of OntoWiki
+	 * w.r.t. Virtuoso.
+	 * Some queries are very slow when executed against a virtuoso store.
+	 * 
+     *
+     * @param string $message
+     * @returns void
+     */ 
+    private function _debug_print($message)
+    {
+		if($this->_debug_show_queries){
+			echo "<xmp> This message is shown, because the debug variable in ";
+			echo "store adapter Virtuoso.php is set to true\n";
+			echo $message."\n";
+			echo "***************\n";
+		}
+	}
 }
