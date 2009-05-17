@@ -41,6 +41,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     /** @var array */
     private $_uris = array();
     
+    private $_loginDisabled = false;
+    
     /**
      * Constructor
      */
@@ -67,6 +69,10 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             'action_deny'     => $config->ac->action->deny, 
             'action_login'    => $config->ac->action->login
         );
+        
+        if (isset($config->ac->deactivateLogin) && ((boolean)$config->ac->deactivateLogin === true)) {
+            $this->_loginDisabled = true;
+        }
     }
     
     /**
@@ -76,11 +82,9 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      * @return Zend_Auth_Result
      */
     public function authenticate() {
-            
-        // anonymous is always allowed to log in?
-        if ($this->username === 'Anonymous') {
-            $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getAnonymousUser());
         
+        if ($this->_loginDisabled === true || $this->username === 'Anonymous') {
+            $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getAnonymousUser());
         // super admin
         } else if ($this->username === $this->_dbUsername and $this->password === $this->_dbPassword) {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getSuperAdmin());

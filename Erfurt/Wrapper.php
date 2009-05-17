@@ -92,7 +92,7 @@ abstract class Erfurt_Wrapper
         require_once 'Erfurt/Cache/Frontend/AutoId.php';
         $frontendAdapter = new Erfurt_Cache_Frontend_AutoId($frontendOptions);
         
-        $tmpDir = Erfurt_App::getInstance()->getTmpDir();
+        $tmpDir = Erfurt_App::getInstance()->getCacheDir();
         if ($tmpDir !== false) {
             $backendOptions = array(
                 'cache_dir' => $tmpDir);

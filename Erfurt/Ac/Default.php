@@ -59,16 +59,16 @@ class Erfurt_Ac_Default
         'acModelUri'         => 'http://localhost/OntoWiki/Config/',
         'anonymousUserUri'   => 'http://ns.ontowiki.net/SysOnt/Anonymous',
         'superUserUri'       => 'http://ns.ontowiki.net/SysOnt/SuperAdmin',
-        'propAnyModel'       => 'http://ns.ontowiki.net/SysOnt/anyModel',
+        'propAnyModel'       => 'http://ns.ontowiki.net/SysOnt/AnyModel',
         'propGrantModelView' => 'http://ns.ontowiki.net/SysOnt/grantModelView',
         'propDenyModelView'  => 'http://ns.ontowiki.net/SysOnt/denyModelView',
         'propGrantModelEdit' => 'http://ns.ontowiki.net/SysOnt/grantModelEdit',
         'propDenyModelEdit'  => 'http://ns.ontowiki.net/SysOnt/denyModelEdit',
         'actionClassUri'     => 'http://ns.ontowiki.net/SysOnt/Action',
-        'propAnyAction'      => 'http://ns.ontowiki.net/SysOnt/anyAction',
+        'propAnyAction'      => 'http://ns.ontowiki.net/SysOnt/AnyAction',
         'propGrantAccess'    => 'http://ns.ontowiki.net/SysOnt/grantAccess',
         'propDenyAccess'     => 'http://ns.ontowiki.net/SysOnt/denyAccess',
-        'modelClassUri'      => 'http://ns.ontowiki.net/SysOnt/model',
+        'modelClassUri'      => 'http://ns.ontowiki.net/SysOnt/Model',
         'actionConfigUri'    => 'http://ns.ontowiki.net/SysOnt/rawConfig'
     );
         
@@ -626,9 +626,10 @@ class Erfurt_Ac_Default
         
         // access control informations
         $this->_acModel = $app->getAcModel();
-        $this->_uris['acModelUri'] = $this->_acModel->getModelUri();
-
+        
         // get custom uri configuration
+        $this->_uris['acBaseUri']   = $this->_config->ac->baseUri;
+        $this->_uris['acModelUri'] = $this->_acModel->getModelUri();
         $this->_uris['anonymousUserUri']   = $this->_config->ac->user->anonymousUser;
         $this->_uris['superUserUri']       = $this->_config->ac->user->superAdmin;
         $this->_uris['propAnyModel']       = $this->_config->ac->models->anyModel;
@@ -641,6 +642,7 @@ class Erfurt_Ac_Default
         $this->_uris['propGrantAccess']    = $this->_config->ac->action->grant;
         $this->_uris['propDenyAccess']     = $this->_config->ac->action->deny;
         $this->_uris['modelClassUri']      = $this->_config->ac->models->class;
+        $this->_uris['actionConfigUri']    = $this->_config->ac->action->rawConfig;
     }
     
     /**

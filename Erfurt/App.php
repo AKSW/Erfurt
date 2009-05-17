@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -456,6 +456,28 @@ class Erfurt_App
     }
     
     /**
+     * Returns a directory, which can be used for file-based caching.
+     * If no such (writable) directory is found, false is returned.
+     * 
+     * @return string|false
+     */
+    public function getCacheDir()
+    {
+        $config = $this->getConfig();
+        
+        if (isset($config->cache->path)) {
+            $matches = array();
+            if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->cache->path, $matches) === 1)) {
+                $config->cache->path = EF_BASE . $config->cache->path;
+            }
+            
+            return $config->cache->path;
+        } else {
+            return $this->getTmpDir();
+        }
+    }
+    
+    /**
      * Returns the configuration object.
      * 
      * @return Zend_Config
@@ -532,19 +554,20 @@ class Erfurt_App
         $config = $this->getConfig();
         
         if (isset($config->log->path)) {
-            if (substr($config->log->path,0, 1) === '/') {
-                $logDir = $config->log->path;
-            } else {
-                $logDir = EF_BASE . $config->log->path;
+            $matches = array();
+            if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->log->path, $matches) === 1)) {
+                $config->log->path = EF_BASE . $config->log->path;
             }
+            
+            return $config->log->path;
         } else { 
             $logDir = EF_BASE . 'logs';
-        }
-       
-        if (is_writable($logDir)) {
-            return $logDir;
-        } else {
-            return $this->getTmpDir();
+            
+            if (is_writable($logDir)) {
+                return $logDir;
+            } else {
+                return $this->getTmpDir();
+            }
         }
     }
     
@@ -657,26 +680,15 @@ class Erfurt_App
     }
         
     /**
-     * Returns the configured temporary directory if such is configured.
-     * The default directory is the stanard UNIX /tmp folder.
+     * Returns a valid tmp folder depending on the OS used.
      * 
-     * @return string|false
+     * @return string
      */
     public function getTmpDir()
     {
-        $config = $this->getConfig();
-        
-        if (isset($config->tmpDir)) {
-            $tmpDir = $config->tmpDir;
-        } else {
-            $tmpDir = '/tmp';
-        }
-        
-        if (is_writable($tmpDir)) {
-            return $tmpDir;
-        } else {
-            return false;
-        }
+        // We use a Zend method here, for it already checks the OS.
+        require_once 'Zend/Cache/Backend.php';
+        return Zend_Cache_Backend::getTmpDir();
     }
     
     /**
