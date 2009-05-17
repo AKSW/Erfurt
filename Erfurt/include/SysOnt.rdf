@@ -219,6 +219,13 @@
     <rdfs:domain rdf:resource="&sioc;Usergroup"/>
     <rdfs:range rdf:resource="&sioc;User"/>
   </owl:ObjectProperty>
+  
+  <owl:ObjectProperty rdf:about="hiddenImports"
+                          rdfs:label="hidden imports">
+      <rdfs:comment>Acts like owl:imports but is not part of the model itself.</rdfs:comment>
+      <rdfs:domain rdf:resource="Model" />
+      <rdfs:range rdf:resource="Model" />
+    </owl:ObjectProperty>
 
 <!-- Instances -->
   <sioc:User rdf:about="Anonymous"
