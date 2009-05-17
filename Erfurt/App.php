@@ -544,8 +544,7 @@ class Erfurt_App
     
     /**
      * Returns the configured log directory. If no such directory is configured
-     * a logs folder under the Erfurt tree is used iff available. It this fails too
-     * the temp dir will be used.
+     * a logs folder under the Erfurt tree is used iff available.
      * 
      * @return string|false
      */
@@ -559,14 +558,18 @@ class Erfurt_App
                 $config->log->path = EF_BASE . $config->log->path;
             }
             
-            return $config->log->path;
+            if (is_writable($config->log->path)) {
+                return $config->log->path;
+            } else {
+                return false;
+            }
         } else { 
             $logDir = EF_BASE . 'logs';
             
             if (is_writable($logDir)) {
                 return $logDir;
             } else {
-                return $this->getTmpDir();
+                return false;
             }
         }
     }
