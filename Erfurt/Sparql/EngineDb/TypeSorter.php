@@ -272,11 +272,14 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 
             }
         }
-
-        foreach ($arTypes[0] as &$var) {
-            $var['type'] = array_values(array_unique($var['type']));
-            $var['datatype'] = array_values(array_unique($var['datatype']));
+        
+        if (count($arTypes) > 0) {
+            foreach ($arTypes[0] as &$var) {
+                $var['type'] = array_values(array_unique($var['type']));
+                $var['datatype'] = array_values(array_unique($var['datatype']));
+            }
         }
+        
 
         //$arTypes = array_unique($arTypes);
 
