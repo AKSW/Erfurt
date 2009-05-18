@@ -102,8 +102,11 @@ class Erfurt_Sparql_Parser
         $tokens = array();
         $n      = 0;
         
+        $inLiteral   = false;
+        $longLiteral = false;
+        
         for ($i=0; $i<$len; ++$i) {
-            if (in_array($queryString[$i], $removeableSpecialChars)) {        
+            if (in_array($queryString[$i], $removeableSpecialChars) && !$inLiteral) {        
                 if (isset($tokens[$n]) && $tokens[$n] !== '') {
                     if ((strlen($tokens[$n]) >= 2)) {
                         if (($tokens[$n][strlen($tokens[$n])-1] === '.') && 
@@ -123,6 +126,28 @@ class Erfurt_Sparql_Parser
                 
                 continue;
             } else if (in_array($queryString[$i], $specialChars)) {
+                if ($queryString[$i] === '"' || $queryString[$i] === "'") {
+                    $foundChar = $queryString[$i];
+                    if (!$inLiteral) {
+                        // Check for long literal
+                        if (($queryString[($i+1)] === $foundChar) && ($queryString[($i+2)] === $foundChar)) {
+                            $longLiteral = true;
+                        }
+                        
+                        $inLiteral = true;
+                    } else {
+                        // We are inside a literal... Check whether this is the end of the literal.
+                        if ($longLiteral) {
+                            if (($queryString[($i+1)] === $foundChar) && ($queryString[($i+2)] === $foundChar)) {
+                                $inLiteral = false;
+                                $longLiteral = false;
+                            }
+                        } else {
+                            $inLiteral = false;
+                        }
+                    }
+                }
+                
                 if (isset($tokens[$n]) && ($tokens[$n] !== '')) {
                     // Check whether trailing char is a dot.
                     if ((strlen($tokens[$n]) >= 2)) {
@@ -1065,7 +1090,9 @@ class Erfurt_Sparql_Parser
             require_once 'Erfurt/Rdf/Literal.php';
             $node = Erfurt_Rdf_Literal::initWithLabel($node);
             $node->setDatatype($datatype);
-        } 
+        }
+        
+        
     }
     
     /**
