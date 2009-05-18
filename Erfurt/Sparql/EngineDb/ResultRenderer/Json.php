@@ -21,9 +21,9 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Json extends Erfurt_Sparql_EngineDb_
      * @param $engine Sparql Engine to query the database
      * @return array
      */
-    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine)
+    public function convertFromDbResults($arRecordSets, Erfurt_Sparql_Query $query, $engine, $vars)
     {
-        $result = parent::convertFromDbResults($arRecordSets, $query, $engine);
+        $result = parent::convertFromDbResults($arRecordSets, $query, $engine, $vars);
         return json_encode($result);        
     }
 }
