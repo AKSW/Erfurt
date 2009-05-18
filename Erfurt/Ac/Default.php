@@ -486,12 +486,11 @@ class Erfurt_Ac_Default
     {
         if (!isset($this->_userRights[$userURI])) {
             // In this case we need to fetch the rights for the user.
-            
             $userRights = $this->_userRightsTemplate;
             
             // Super admin, i.e. a user that has database rights (only for debugging purposes and only if
             // enabled in config).
-            if (($userURI === $this->_uris['superUserUri']) && ((boolean)$this->_config->ac->alloweDbUser === true)) {
+            if (($userURI === $this->_uris['superUserUri']) && ((boolean)$this->_config->ac->allowDbUser === true)) {
                 $userRights['userAnyActionAllowed']     = true;
                 $userRights['userAnyModelEditAllowed']  = true;
                 $userRights['userAnyModelViewAllowed']  = true;
