@@ -134,7 +134,9 @@ class Erfurt_Cache_Frontend_QueryCache {
     public function invalidate( $modelIri, $subject, $predicate, $object ) {
         $statements = array();
         $statements[$subject][$predicate][] = $object ;
-        return $this->invalidateWithStatements($modelIri, $statements);
+
+        $qids = $this->invalidateWithStatements($modelIri, $statements);
+        return $qids;
     }
 
 
@@ -145,16 +147,25 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     string   $status    status of the process
     */
     public function invalidateWithModelIri( $modelIri ) {
-        return $this->getBackend()->invalidateWithModelIri( $modelIri );
+
+        $qids = $this->getBackend()->invalidateWithModelIri( $modelIri );
+        $this->invalidateCacheObjects ( $qids );
+        return $qids;
     }
 
 
     //TODO : holen der CacheObjectKeys aus QueryCache -> umbauen der invalidate Methode
     //TODO : ObjectCache umbauen und zu den objectkeys die entsprechenden Objecte rausholen und löschen
     public function invalidateCacheObjects ( $queryIds ) {
-        //ObjectCache holen
+        //requesting ObjectKeys according to the List of QueryIds
+        $oKeys = $this->getBackend()->getObjectKeys ($queryIds) ;
+        //create ObjectCache 
+        $eCache = Erfurt_App::getInstance()->getCache();
 
-        //ObjectCacheObjecte löschen
+        //delete objects in ObjectCache
+        foreach ($oKeys as $oKey) {
+            $eCache->remove ($oKey) ;
+        }        
 
         //im Querycache die results zu den ObjectKeys invalidieren
          $this->getBackend()->invalidateObjectKeys( $queryIds );
@@ -167,7 +178,7 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     string   $status    status of the process
     */
     public function startTransaction ( $transactionKey ) {
-        self::$_transactions[$transactionKey] = 1; 
+        self::$_transactions[$transactionKey] = $transactionKey; 
     }
 
     /**

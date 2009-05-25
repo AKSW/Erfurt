@@ -2,34 +2,9 @@
 require_once 'Zend/Cache/Backend/Interface.php';
 require_once 'Zend/Cache/Backend.php';
 
-class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface {
-	
-	// ------------------------------------------------------------------------
-	// --- Protected properties -----------------------------------------------
-	// ------------------------------------------------------------------------
-	
-	/**
-	 * available options
-	 * 
-	 * @var array
-	 */
-	protected $_options = array(
-	    'host'      => false,
-	    'username'  => false,
-	    'password'  => false,
-	    'dbname'    => false
-	);
-	
-	// ------------------------------------------------------------------------
-	// --- Private properties -------------------------------------------------
-	// ------------------------------------------------------------------------
-	
-	/**
-	 * The DB connection
-	 * 
-	 * @var mixed $_dbConn 
-	 */
-	private $_dbConn = false;
+class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface {
+
+    public $store = null;
 	
 	// ------------------------------------------------------------------------
 	// --- Magic methods ------------------------------------------------------
@@ -43,29 +18,11 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
 	public function __construct($options = array()) {
 		
 		parent::__construct($options);
-		if ($this->_options['host'] === false) {
-		    require_once 'Erfurt/Exception.php';
-		    throw new Erfurt_Exception('host not given');
-		}
-		if ($this->_options['username'] === false) {
-		    require_once 'Erfurt/Exception.php';
-		    throw new Erfurt_Exception('username not given');
-		}
-		if ($this->_options['password'] === false) {
-		    require_once 'Erfurt/Exception.php';
-		    throw new Erfurt_Exception('password not given');
-		}
-		if ($this->_options['dbname'] === false) {
-		    require_once 'Erfurt/Exception.php';
-		    throw new Erfurt_Exception('dbname not given');
-		}
-		
-		$this->_getConnection();
+        $this->store = Erfurt_App::getInstance()->getStore();
 	}
 	
 	public function __destruct() {
 		
-		$this->_closeConnection();
 	}
 	
 	// ------------------------------------------------------------------------
@@ -103,18 +60,18 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
      */
     public function load($id, $doNotTestCacheValidity = false) {
 
-        $sql = 'SELECT content FROM ef_cache WHERE id = "' . $id . '"';
+        $sql = "SELECT content FROM ef_cache WHERE id = '" . $id . "'";
 
         if (!$doNotTestCacheValidity) {
-            $sql .= ' AND (expire = 0 OR expire > ' . time() . ')';
+            $sql .= " AND (expire = 0 OR expire > " . time() . ")";
         }
 
         $result = $this->_query($sql);
-
 		if ($result !== false) {
-			$row = @$result->fetch_row();
-	        if ($row) {
-	            return $row[0];
+            if (isset($result[0])) {
+                $content = $result[0]['content'];
+                $content = base64_decode($content);
+	            return $content;
 	        }
 		}
 		
@@ -129,12 +86,11 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
      */
     public function remove($id) {
 	
-        $res = $this->_query('SELECT COUNT(*) AS nbr FROM ef_cache WHERE id = "' . $id . '"');
-		$res = @$res->fetch_row();
+        $res = $this->_query("SELECT COUNT(*) FROM ef_cache WHERE id = '" . $id . "'");
 
-        $result1 = $res[0];
-        $result2 = $this->_query('DELETE FROM ef_cache WHERE id = "' . $id . '"');
-        $result3 = $this->_query('DELETE FROM tag WHERE id = "' . $id . '"');
+        $result1 = $res[0]['count'];
+        $result2 = $this->_query("DELETE FROM ef_cache WHERE id = '" . $id . "'");
+        $result3 = $this->_query("DELETE FROM tag WHERE id = '" . $id . "'");
 
         return ($result1 && $result2 && $result3);
     }
@@ -162,7 +118,8 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
         }
 
         $lifetime = $this->getLifetime($specificLifetime);
-        $data = $this->_getConnection()->real_escape_string($data);
+        #$data = $this->_getConnection()->real_escape_string($data);
+        $data = base64_encode ($data);
         $mktime = time();
         if (is_null($lifetime)) {
             $expire = 0;
@@ -170,12 +127,14 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
             $expire = $mktime + $lifetime;
         }
 
-        $this->_query('DELETE FROM ef_cache WHERE id = "' . $id . '"');      
-		$sql = 'INSERT INTO ef_cache (id, content, lastModified, expire) 
-				VALUES ("' . $id . '", "' . $data . '", ' . $mktime . ', ' . $expire . ')';
-        $res = $this->_query($sql);
-        if (!$res) {
-            $this->_log('Erfurt_Cache_Backend_Mysqli::save() : impossible to store the cache id=' . $id, 7);
+        $this->_query("DELETE FROM ef_cache WHERE id = '" . $id . "'");      
+		$sql = "INSERT INTO ef_cache (id, content, lastModified, expire) 
+				VALUES ('" . $id . "', '" . $data . "', ' . $mktime . ', ' . $expire . ')";
+        $this->_query($sql);
+        $res = $this->store->lastInsertId();
+
+        if ($res != "0" && !$res) {
+            $this->_log('Erfurt_Cache_Backend_Database::save() : impossible to store the cache id=' . $id, 7);
             return false;
         }
         $res = true;
@@ -195,11 +154,11 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
      */
     public function test($id) {
 	
-        $sql = 'SELECT lastModified FROM ef_cache WHERE id = "' . $id . '" AND (expire = 0 OR expire > ' . time() . ')';
+        $sql = "SELECT lastModified FROM ef_cache WHERE id = '" . $id . "' AND (expire = 0 OR expire > " . time() . ")";
         $result = $this->_query($sql);
-        $row = @$result->fetch_row();
-        if ($row) {
-            return ((int)$row[0]);
+
+        if ($result[0]) {
+            return ((int) $result[0]['lastModified']);
         }
 
         return false;
@@ -221,16 +180,18 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
         $this->_query('DROP TABLE ef_cache');
         $this->_query('DROP TABLE ef_cache_tag');
 		
-		$this->_query('CREATE TABLE ef_cache_version (
-							num 			INT PRIMARY KEY)');
+		$this->_query(' CREATE TABLE ef_cache_version (
+							num     INT,
+                        PRIMARY KEY (num))');
 		
-        $this->_query('CREATE TABLE ef_cache (
-							id 				VARCHAR(255) PRIMARY KEY, 
-							content 		BLOB, 
-							lastModified 	INT, 
-							expire 			INT)');
+        $this->_query(' CREATE TABLE ef_cache (
+							id 				VARCHAR(255) , 
+							content 		LONG VARBINARY , 
+							lastModified 	INT , 
+							expire 			INT,
+                        PRIMARY KEY (id))');
 					
-        $this->_query('CREATE TABLE ef_cache_tag (
+        $this->_query(' CREATE TABLE ef_cache_tag (
 							name 			VARCHAR(255), 
 							id 				VARCHAR(255))');
 
@@ -284,11 +245,11 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
         if ($mode === Zend_Cache::CLEANING_MODE_OLD) {
             $mktime = time();
 			
-			$sql1 = 'DELETE FROM ef_cache_tag WHERE id IN 
-						(SELECT id FROM ef_cache WHERE expire > 0 AND expire <= ' . $mktime . ')';
+			$sql1 = "DELETE FROM ef_cache_tag WHERE id IN 
+						(SELECT id FROM ef_cache WHERE expire > 0 AND expire <= " . $mktime . ")";
             $res1 = $this->_query($sql1);
 
-			$sql2 = 'DELETE FROM ef_cache WHERE expire > 0 AND expire <= ' . $mktime;
+			$sql2 = "DELETE FROM ef_cache WHERE expire > 0 AND expire <= " . $mktime;
             $res2 = $this->_query($sql2);
 
             return ($res1 && $res2);
@@ -298,7 +259,7 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
             $first = true;
             $ids = array();
             foreach ($tags as $tag) {
-                $res = $this->_query('SELECT DISTINCT(id) AS id FROM ef_cache_tag WHERE name = "' . $tag . '"');
+                $res = $this->_query("SELECT DISTINCT(id) AS id FROM ef_cache_tag WHERE name = '" . $tag . "'");
                 if (!$res) {
                     return false;
                 }
@@ -329,8 +290,7 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
                 $id = $row[0];
                 $matching = false;
                 foreach ($tags as $tag) {
-					$sql = 'SELECT COUNT(*) AS nbr FROM ef_cache_tag WHERE name = "' . $tag . '" AND id = "' 
-						 . $id . '"';
+					$sql = "SELECT COUNT(*) AS nbr FROM ef_cache_tag WHERE name = '" . $tag . "' AND id = '" . $id . "'";
                     $res = $this->_query($sql);
                     if (!$res) {
                         return false;
@@ -352,51 +312,17 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
         return false;
     }
 	
-	/**
-	 * Closes the connection to the db.
-	 */
-	private function _closeConnection() {
-		
-		if ($this->_dbConn) {
-			$this->_dbConn->close();
-		}
-		
-		$this->_dbConn = false;
-	}
-	
-	/**
-	 * @return resource Returns the resource for the db connection.
-	 */
-	private function _getConnection() {
-		
-		if (!$this->_dbConn) {
-			
-			$dbHost 	= $this->_options['host'];
-			$dbUser 	= $this->_options['username'];
-			$dbPassword	= $this->_options['password'];
-			$dbName 	= $this->_options['dbname'];
-			
-			$this->_dbConn = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
-			
-			if (mysqli_connect_errno()) {
-				require_once 'Zend/Cache.php';
-				Zend_Cache::throwException('Could not connect to cache database.');
-			}
-		}
-		
-		return $this->_dbConn;
-	}
-	
+
 	private function _query($sql) {
 		
-		$dbConn = $this->_getConnection();
-		if ($dbConn) {
-			$result = $dbConn->query($sql);
-			
-			return $result;
-		} else {
-			return false;
-		}
+        try {
+            $result = $this->store->sqlQuery( $sql );        
+        } catch (Erfurt_Store_Adapter_Exception $e){
+            $logger = Erfurt_App::getInstance()->getLog('cache');
+            $logger->log($e->getMessage(), $e->getCode());
+            return false;
+        }
+        return $result;
 	}
 	
 	/**
@@ -408,8 +334,8 @@ class Erfurt_Cache_Backend_Mysqli extends Zend_Cache_Backend implements Zend_Cac
      */
     private function _registerTag($id, $tag) {
 	
-        $res = $this->_query('DELETE FROM ef_cache_tag WHERE name = "' . $tag . '" AND id = "' . $id . '"');
-        $res = $this->_query('INSERT INTO ef_cache_tag (name, id) VALUES ("' . $tag . '", "' . $id . '")');
+        $res = $this->_query("DELETE FROM ef_cache_tag WHERE name = '" . $tag . "' AND id = '" . $id . "'");
+        $res = $this->_query("INSERT INTO ef_cache_tag (name, id) VALUES ('" . $tag . "', '" . $id . "')");
         
 		if (!$res) {
             $this->_log('Erfurt_Cache_Backend_Mysqli::_registerTag() : impossible to register tag=' . $tag 

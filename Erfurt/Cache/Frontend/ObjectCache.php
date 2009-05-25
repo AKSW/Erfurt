@@ -1,7 +1,7 @@
 <?php
 require_once 'Zend/Cache/Core.php';
 
-class Erfurt_Cache_Frontend_AutoId extends Zend_Cache_Core 
+class Erfurt_Cache_Frontend_ObjectCache extends Zend_Cache_Core 
 {
     /**
      * This method is the only addtition made to Zend_Cache_Core. It takes a class-instance, a function name,

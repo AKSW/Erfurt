@@ -234,7 +234,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $clauseString = implode (" OR ", $clauses);
 
         // retrieve List Of qids which have to vbe invalidated
-        $query = " SELECT qid FROM 
+        $query = " SELECT DISTINCT (qid) FROM 
                         (
                             SELECT qid qid1
                             FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
@@ -253,19 +253,18 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         foreach ($result as $entry) {
             $qids[] = $entry['qid'];
         }
-
         $query = "  UPDATE ef_cache_query_result SET result = NULL 
                     WHERE 
                     (
                         qid IN 
                         (   
-                            SELECT qid 
+                            SELECT DISTINCT (qid) 
                             FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                             WHERE ( ".$clauseString." )
                         ) 
                         AND qid IN
                         (
-                            SELECT qid 
+                            SELECT DISTINCT (qid) 
                             FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                             WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )
 
@@ -283,11 +282,12 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidateWithModelIri( $modelIri ) {
-        $query = "SELECT qid 
+        $query = "SELECT DISTINCT (qid) 
                   FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                   WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )";
 
         $qids = $this->_query ( $query );
+
         foreach ($qids as $qid) {
             $qid = $qid['qid'];
 
@@ -310,17 +310,45 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             //delete entries in query_rm 
             $this->_query ( "DELETE FROM ef_cache_query_rm WHERE qid = '".$qid."'" );
 
-            //delete entries in query_rm 
-            $this->_query ( "DELETE FROM ef_cache_query_objectKeys WHERE qid = '".$qid."'" );
-
             //delete entries in query_model
             $this->_query ( "DELETE FROM ef_cache_query_model WHERE modelIri = '".$modelIri."'" );
         }
+
+        foreach ($result as $entry) {
+            $qids[] = $entry['qid'];
+        }
+        return $qids;
     }
 
-    public function invalidateObjectKeys ( $queryIds = array ()) {
+    public function invalidateObjectKeys ( $qids = array ()) {
+
+        foreach ($qids as $qid) {
+            //delete entries in query_objectKey
+            $query = "DELETE FROM ef_cache_query_objectKey WHERE qid = '".$qid."'" ;
+            $this->_query ( $query );
+        }
+    }
+
+    public function getObjectKeys ( $qids = array() ) {
+
+        $clauses = array();
+        foreach ($qids as $qid) {
+            $clauses[] = " qid = '".$qid."' ";
+        }
+        $clauses = implode (" OR " , $clauses);
+
+        $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE " . $clauses ;
+
+        $result = $this->_query ( $query );
+
+        $oKeys = array();
+        foreach ($result as $entry) {
+            $oKeys[] = $entry['objectKey'];
+        }
+        return $oKeys;
 
     }
+
 
     /**
      *  check if a QueryResult is cached yet
@@ -432,7 +460,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $keys = array_keys ($transactions) ;
         foreach ($keys as $key) {
-            $query = "INSERT INTO ef_cache_query_objectKeys (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+            $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+            $this->_query ($query);
         }
 
     }

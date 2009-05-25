@@ -229,7 +229,6 @@ class Erfurt_Store
         }
         
         $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
-
         //invalidate deprecated Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithStatements($graphUri, $statementsArray );

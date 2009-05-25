@@ -445,8 +445,8 @@ class Erfurt_App
             );
         
             require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
-            require_once 'Erfurt/Cache/Frontend/AutoId.php';
-            $this->_cache = new Erfurt_Cache_Frontend_AutoId($frontendOptions);
+            require_once 'Erfurt/Cache/Frontend/ObjectCache.php';
+            $this->_cache = new Erfurt_Cache_Frontend_ObjectCache($frontendOptions);
             
             $backend = $this->_getCacheBackend();
             $this->_cache->setBackend($backend);
@@ -840,46 +840,9 @@ class Erfurt_App
                 } else {
                     // check the type an whether type is supported
                     switch (strtolower($config->cache->type)) {
-                        case 'mysqli':
-                            if (isset($config->cache->mysqli->host)) {
-                                $dbHost = $config->cache->mysqli->host;
-                            } else if ($config->database->backend == strtolower('mysqli')) {
-                                $dbHost = $config->database->host;
-                            } else {
-                                require_once 'Erfurt/Exception.php';
-                                throw new Erfurt_Exception(
-                                    'Cache parameters must be set seperatly or backend must be mysql ' .
-                                    'in order to use the default database settings.'
-                                );
-                            }
-                            
-                            if (isset($config->cache->mysqli->username)) {
-                                $dbUser = $config->cache->mysqli->username;
-                            } else {
-                                $dbUser = $config->database->username;
-                            }
-                            
-                            if (isset($config->cache->mysqli->password)) {
-                                $dbPassword = $config->cache->mysqli->password;
-                            } else {
-                                $dbPassword = $config->database->password;
-                            }
-                            
-                            if (isset($config->cache->mysqli->dbname)) {
-                                $dbName = $config->cache->mysqli->dbname;
-                            } else {
-                                $dbName = $config->database->dbname;
-                            }
-                            
-                            $backendOptions = array(
-                                'host'      => $dbHost,
-                                'username'  => $dbUser,
-                                'password'  => $dbPassword,
-                                'dbname'    => $dbName
-                            );
-                            
-                            require_once 'Erfurt/Cache/Backend/Mysqli.php';
-                            $this->_cacheBackend = new Erfurt_Cache_Backend_Mysqli($backendOptions);
+                        case 'database':
+                            require_once 'Erfurt/Cache/Backend/Database.php';
+                            $this->_cacheBackend = new Erfurt_Cache_Backend_Database();
                             break;
                         case 'sqlite':
                             if (isset($config->cache->sqlite->dbname)) {
@@ -934,7 +897,7 @@ class Erfurt_App
                     // check the type an whether type is supported
                     switch (strtolower($config->cache->query->type)) {
                         case 'database':
-                             require_once 'Erfurt/Cache/Backend/QueryCache/Database.php';
+                            require_once 'Erfurt/Cache/Backend/QueryCache/Database.php';
                             $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Database();
                             break;
 #                       case 'file':
