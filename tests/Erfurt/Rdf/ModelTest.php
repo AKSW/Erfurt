@@ -261,6 +261,67 @@ class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($s1only, $this->_storeStub->addMultipleStatements);
         $this->assertEquals($s2only, $this->_storeStub->deleteMultipleStatements);
     }
+    
+    public function testUpdateWithMutualDifferenceObjectsDifferInDatatype()
+    {
+        $model = $this->_getMockedModel();
+        
+        // prepare data
+        $statements1 = array(
+            'subject' => array(
+                'predicate' => array(
+                    array('type' => 'literal', 'value' => 'literal1', 'datatype' => 'datatype1'), 
+                    array('type' => 'literal', 'value' => 'literal2', 'datatype' => 'datatype2'), 
+                    array('type' => 'literal', 'value' => 'literal3'), 
+                    array('type' => 'literal', 'value' => 'literal4', 'datatype' => 'datatype4')
+                )
+            )
+        );
+        $statements2 = array(
+            'subject' => array(
+                'predicate' => array(
+                    array('type' => 'literal', 'value' => 'literal1', 'datatype' => 'datatype2'), 
+                    array('type' => 'literal', 'value' => 'literal2'), 
+                    array('type' => 'literal', 'value' => 'literal3', 'datatype' => 'datatype3'), 
+                    array('type' => 'literal', 'value' => 'literal4', 'datatype' => 'datatype4')
+                )
+            )
+        );
+        
+        $s1only = array(
+            'subject' => array(
+                'predicate' => array(
+                    array('type' => 'literal', 'value' => 'literal1', 'datatype' => 'datatype1'), 
+                    array('type' => 'literal', 'value' => 'literal2', 'datatype' => 'datatype2'), 
+                    array('type' => 'literal', 'value' => 'literal3')
+                )
+            )
+        );
+        $s2only = array(
+            'subject' => array(
+                'predicate' => array(
+                    array('type' => 'literal', 'value' => 'literal1', 'datatype' => 'datatype2'), 
+                    array('type' => 'literal', 'value' => 'literal2'), 
+                    array('type' => 'literal', 'value' => 'literal3', 'datatype' => 'datatype3')
+                )
+            )
+        );
+        
+        // test 1
+        $model->updateWithMutualDifference($statements1, $statements2);
+        $this->assertEquals($s1only, $this->_storeStub->addMultipleStatements);
+        $this->assertEquals($s2only, $this->_storeStub->deleteMultipleStatements);
+        
+        // test 2
+        $model->updateWithMutualDifference($statements2, $statements1);
+        $this->assertEquals($s2only, $this->_storeStub->addMultipleStatements);
+        $this->assertEquals($s1only, $this->_storeStub->deleteMultipleStatements);
+    }
+    
+    // public function testUpdateWithMutualDifferenceObjectsDifferInLanguage()
+    // {
+    //     
+    // }
 }
 
 
