@@ -93,7 +93,7 @@ class Erfurt_Sparql_SimpleQuery
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*)?(PREFIX.*)*(ASK|COUNT|(SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
+            'prologue'   => '/(BASE.*)?(PREFIX.*)*(\s+ASK|\s+COUNT|(\s+SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
             'from'       => '/FROM\s+<(.+?)>/i', 
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
             'where'      => '/(WHERE\s+)?\{.*\}/si', 
@@ -225,7 +225,7 @@ class Erfurt_Sparql_SimpleQuery
         if (stripos($whereString, 'where') !== false) {
             $this->_wherePart = $whereString;
         } else {
-            $this->_wherePart = $whereString;
+            $this->_wherePart = 'WHERE' . $whereString;
         }
         
         return $this;
