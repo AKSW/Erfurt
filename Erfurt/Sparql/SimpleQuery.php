@@ -93,7 +93,7 @@ class Erfurt_Sparql_SimpleQuery
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*)?(PREFIX.*)*(\s+ASK|\s+COUNT|(\s+SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
+            'prologue'   => '/(BASE.*)?(PREFIX.*)*(\s+ASK|\s+COUNT|(SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
             'from'       => '/FROM\s+<(.+?)>/i', 
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
             'where'      => '/(WHERE\s+)?\{.*\}/si', 
