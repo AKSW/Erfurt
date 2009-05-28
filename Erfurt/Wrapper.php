@@ -89,8 +89,8 @@ abstract class Erfurt_Wrapper
             'automatic_serialization' => true
         );
         
-        require_once 'Erfurt/Cache/Frontend/AutoId.php';
-        $frontendAdapter = new Erfurt_Cache_Frontend_AutoId($frontendOptions);
+        require_once 'Erfurt/Cache/Frontend/ObjectCache.php';
+        $frontendAdapter = new Erfurt_Cache_Frontend_ObjectCache($frontendOptions);
         
         $tmpDir = Erfurt_App::getInstance()->getCacheDir();
         if ($tmpDir !== false) {

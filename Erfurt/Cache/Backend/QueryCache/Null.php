@@ -1,7 +1,12 @@
 <?php
 require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
 
-class Erfurt_Cache_Backend_QueryCache_NULL extends Erfurt_Cache_Backend_QueryCache_Backend {
+class Erfurt_Cache_Backend_QueryCache_Null extends Erfurt_Cache_Backend_QueryCache_Backend {
+
+    public function __construct()
+    {
+        // Nothing to do here... It is not neccessary to call the super constructor here!
+    }
 
     // saving a Query Result according to his Query and QueryHash
      public function save ($queryId, $queryString, $graphUris, $triplePatterns, $queryResult, $duration = 0, $transactions = array()) {
@@ -48,6 +53,11 @@ class Erfurt_Cache_Backend_QueryCache_NULL extends Erfurt_Cache_Backend_QueryCac
     // creating the inital cacheStructure
     public function createCacheStructure () {
         return true;
+    }
+    
+    public function getObjectKeys ( $qids = array() ) 
+    {
+        return array();
     }
 }
 ?>
