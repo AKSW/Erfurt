@@ -1,8 +1,8 @@
 <?php
-require_once 'test_base.php';
+require_once 'Erfurt/TestCase.php';
 require_once 'Erfurt/Sparql/Parser.php';
 
-class Erfurt_Sparql_ParserTest extends PHPUnit_Framework_TestCase
+class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 {
     protected $_parser = null;
     

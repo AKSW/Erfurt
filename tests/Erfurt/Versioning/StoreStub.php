@@ -96,6 +96,14 @@ class Erfurt_Versioning_StoreStub
     {
         return true;
     }
+    
+    public function listTables()
+    {
+        return array(
+            'ef_versioning_actions',
+            'ef_versioning_payloads'
+        );
+    }
 }
 
 

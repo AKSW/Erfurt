@@ -1,5 +1,4 @@
 <?php
-require_once 'test_base.php';
 require_once 'Erfurt/VersioningTest.php';
 
 class Erfurt_Versioning_TestSuite extends PHPUnit_Framework_TestSuite

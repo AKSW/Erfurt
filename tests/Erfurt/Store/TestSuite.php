@@ -1,5 +1,4 @@
 <?php
-require_once 'test_base.php';
 require_once 'Erfurt/Store/Adapter/VirtuosoTest.php';
 require_once 'Erfurt/StoreTest.php';
 

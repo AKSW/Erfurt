@@ -1,5 +1,6 @@
 <?php
 require_once 'test_base.php';
+require_once 'Erfurt/App.php';
 
 require_once 'Erfurt/Sparql/Parser.php';
 
@@ -15,6 +16,9 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
     
     public function __construct()
     {
+        // We need to call the instance, for we need the constants to be defined!
+        Erfurt_App::getInstance();
+        
         // 1. ow tests 
         $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl');
         
@@ -35,12 +39,12 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
         $base = $subject;
         $predicate = 'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#include';
         $object = $result["$subject"]["$predicate"][0]['value'];
-        
+
         while (true) {
             $p = EF_RDF_NS . 'first';
             $filename = $result["$object"]["$p"][0]['value'];
-            
-            $filename = self::DAWG_DATA_DIR . substr($filename, strlen($base)+1);
+
+            $filename = self::DAWG_DATA_DIR . substr($filename, strlen($base));
             
             $this->_importFromManifest($filename);
             
@@ -69,7 +73,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
                 $pArray[EF_RDF_TYPE][0]['value'] ===
                  'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#PositiveSyntaxTest') {
                 
-                $queryFileName = substr($filename, 0, strrpos($filename, '/')) .
+                $queryFileName = substr($filename, 0, strrpos($filename, '/')+1) .
                                 substr($pArray["$mfAction"][0]['value'], 
                                 strrpos($pArray["$mfAction"][0]['value'], '/'));
                                 
@@ -88,7 +92,7 @@ class Erfurt_Sparql_ParserParseTest implements PHPUnit_Framework_Test
                     $pArray[EF_RDF_TYPE][0]['value'] ===
                     'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#NegativeSyntaxTest') {
                 
-                $queryFileName = substr($filename, 0, strrpos($filename, '/')) .
+                $queryFileName = substr($filename, 0, strrpos($filename, '/')+1) .
                                 substr($pArray["$mfAction"][0]['value'], 
                                 strrpos($pArray["$mfAction"][0]['value'], '/'));
 

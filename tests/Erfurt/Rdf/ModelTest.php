@@ -1,9 +1,10 @@
 <?php
-require_once 'test_base.php';
+require_once 'Erfurt/TestCase.php';
+
 require_once 'Erfurt/Rdf/Model.php';
 require_once 'Erfurt/Rdf/StoreStub.php';
 
-class Erfurt_Rdf_ModelTest extends PHPUnit_Framework_TestCase
+class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
 {
     protected $_storeStub = null;
     

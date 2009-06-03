@@ -1,5 +1,4 @@
 <?php
-require_once 'test_base.php';
 require_once 'Erfurt/Sparql/ParserParseTest.php';
 require_once 'Erfurt/Sparql/ParserTest.php';
 

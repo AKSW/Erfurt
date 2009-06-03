@@ -1,8 +1,8 @@
 <?php
-require_once 'test_base.php';
+require_once 'Erfurt/TestCase.php';
 require_once 'Erfurt/Store/Adapter/Virtuoso.php';
 
-class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
 {
     public $fixture = null;
     private $_options = array(
@@ -12,7 +12,8 @@ class Erfurt_Store_Adapter_VirtuosoTest extends PHPUnit_Framework_TestCase
     );
     
     public function setUp()
-    {
+    {   
+        $this->markTestNeedsVirtuoso();
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($this->_options);
     }
     

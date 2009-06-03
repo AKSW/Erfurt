@@ -1,0 +1,17 @@
+[private]
+
+;;----------------------------------------------------------------------------;;
+;; Database Connection Settings                                               ;;
+;;----------------------------------------------------------------------------;;
+
+store.backend = zenddb ; zenddb, virtuoso, multi
+
+store.zenddb.dbname   = ef_testbed
+store.zenddb.username = ow
+store.zenddb.password = ow
+store.zenddb.dbtype   = mysql     ; mysql
+;store.zenddb.host     = localhost ; default is localhost
+
+;store.virtuoso.dsn      = vos505
+;store.virtuoso.username = dba
+;store.virtuoso.password = dba

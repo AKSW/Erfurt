@@ -1,8 +1,8 @@
 <?php
-require_once 'test_base.php';
+require_once 'Erfurt/TestCase.php';
 require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
 
-class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends PHPUnit_Framework_TestCase
+class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
 {
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
@@ -24,7 +24,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends PHPUnit_Framework_Test
     public function testParseFromUrl()
     {
 // TODO model has to be available
-        $this->markTestIncomplete('Not implemented yet.');return;
+        $this->markTestIncomplete('Not implemented yet.');
         
         $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/rdfjson?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
         $graphUri = 'http://3ba.se/conferences/3/';
