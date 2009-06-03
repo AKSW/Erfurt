@@ -1,12 +1,18 @@
 <?php
 require_once 'test_base.php';
-
 require_once 'Erfurt/App.php';
 
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 {
     private $_dbWasUsed      = false;
     private $_testConfig     = null;
+    
+    public function __construct($name = null, $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        
+        Erfurt_App::getInstance();
+    }
     
     protected function tearDown()
     {
