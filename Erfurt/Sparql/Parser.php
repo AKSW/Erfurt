@@ -252,6 +252,7 @@ class Erfurt_Sparql_Parser
      */
     public static function balanceTree(&$tree)
     {
+
         if (isset($tree['type']) && $tree['type'] === 'equation' && isset($tree['operand1']['type']) &&
             $tree['operand1']['type'] === 'equation' && $tree['level'] === $tree['operand1']['level'] &&
             self::$_operatorPrecedence[$tree['operator']] > self::$_operatorPrecedence[$tree['operand1']['operator']]) {
@@ -652,7 +653,6 @@ class Erfurt_Sparql_Parser
             } else if (strtolower($tok) === 'filter' || strtolower($tok) === 'optional') {
                 break;
             }
-
             switch ($tok) {
                 case '"':
                 case '\'':
@@ -669,15 +669,15 @@ class Erfurt_Sparql_Parser
                     }
                     continue 2;
                     break;
-                case '>':
-                    $litQuotes = null;
-                    $part[] = array(
-                        'type'  => 'value',
-                        'value' => $strQuoted,
-                        'quoted'=> false
-                    );
-                    continue 2;
-                    break;
+#                case '>':
+#                   $litQuotes = null;
+#                    $part[] = array(
+#                        'type'  => 'value',
+#                        'value' => $strQuoted,
+#                        'quoted'=> false
+#                    ); 
+#                    continue 2;
+#                    break;
                 case '(':
                     $parens = true;
                     $bFunc1 = isset($part[0]['type']) && $part[0]['type'] === 'value';
@@ -723,10 +723,12 @@ class Erfurt_Sparql_Parser
                 case "\t":
                     continue 2;
                 case '=':
-                case '>':
+                case '>': 
                 case '<':
-                case '<=':
+                case '<=': 
                 case '>=':
+                case '-' : //TODO: check correctness
+                case '+' : //TODO: check correctness
                 case '!=':
                 case '&&':
                 case '||':
@@ -819,7 +821,6 @@ class Erfurt_Sparql_Parser
                     'quoted'    => false
                 );
             }
-
             if (isset($tree['type']) && $tree['type'] === 'equation' && isset($part[0])) {
                 $tree['operand2'] = $part[0];
                 self::balanceTree($tree);
