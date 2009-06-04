@@ -605,9 +605,8 @@ class Erfurt_Rdf_Model
 		    $this->_initiateNamespaces();
         }
 
-        while(array_search($namespace))
-        {
-            unset($this->_namespaces[array_search($namespace)]);
+        while($key = array_search ($namespace, $this->_namespaces)) {
+            unset($this->_namespaces[$key]);
         }
     }
 
@@ -633,6 +632,19 @@ class Erfurt_Rdf_Model
             'lcl'      => 'http://ns.aksw.org/e-learning/lcl/', 
             'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
 			//'_'      => 'nodeID://'
-	    );
+		);
+		/*
+		$option = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
+		for($i = 0; $i < count($option); $i++){
+			$property = $option[$i];
+			$splitpos = strpos($property['value'], "=");
+			$prefix    = substr($property['value'], 0, $splitpos);
+			$namespace = substr($property['value'], $splitpos);
+			$prefix_var = $prefix . " =(" . $splitpos . ")> " . $namespace . "\n";
+			echo "dump prefix_var:";
+			var_dump($prefix_var);
+			$this->_namespaces[$prefix] = $namespace;
+		}
+		 */
 	}
 }
