@@ -322,7 +322,67 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     // public function testUpdateWithMutualDifferenceObjectsDifferInLanguage()
     // {
     //     
-    // }
+	// }
+
+	public function testGetDefaultPrefixesAndNamespaces()
+	{
+        $model = $this->_getMockedModel();
+		
+		$default = array(
+            'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
+            'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
+            'owl'      => 'http://www.w3.org/2002/07/owl#', 
+            'xsd'      => 'http://www.w3.org/2001/XMLSchema#', 
+            'SysOnt'   => 'http://ns.ontowiki.net/SysOnt/', 
+            'dc'       => 'http://purl.org/dc/elements/1.1/', 
+            'foaf'     => 'http://xmlns.com/foaf/0.1/', 
+            'doap'     => 'http://usefulinc.com/ns/doap#', 
+            'wordnet'  => 'http://xmlns.com/wordnet/1.6/', 
+            'skos'     => 'http://www.w3.org/2004/02/skos/core#', 
+            'sioc'     => 'http://rdfs.org/sioc/ns#', 
+            'swrc'     => 'http://swrc.ontoware.org/ontology#', 
+            'lcl'      => 'http://ns.aksw.org/e-learning/lcl/', 
+            'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
+	    );
+		$prefixes = $model->getPrefixes();
+		reset($default);
+		while($pointer = each($default)){
+			$this->assertArrayHasKey($pointer['key'], $prefixes);
+			$this->assertEquals($pointer['value'], $prefixes[$pointer['key']]);
+		}
+		$namespaces = $model->getNamespaces();
+		reset($default);
+		while($pointer = each($default)){
+			$this->assertArrayHasKey($pointer['value'], $namespaces);
+			$this->assertEquals($pointer['key'], $namespaces[$pointer['value']]);
+		}
+	}
+
+	public function testAddAndGetAndDeletePrefix()
+	{
+		$model = $this->_getMockedModel();
+
+		$model->addPrefix("test","http://testhausen/foo/bar/");
+		$prefixes = $model->getPrefixes();
+		$this->assertArrayHasKey("test", $prefixes);
+		$this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
+		$model->deletePrefix("test");
+		$prefixes = $model->getPrefixes();
+		$this->assertFalse(array_key_exists("test",$prefixes));
+	}
+
+	public function testAddAndGetAndDeleteNamespaces()
+	{
+		$model = $this->_getMockedModel();
+
+		$model->addPrefix("test","http://testhausen/foo/bar/");
+		$prefixes = $model->getPrefixes();
+		$this->assertArrayHasKey("test", $prefixes);
+		$this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
+		$model->deleteNamespace("http://testhausen/foo/bar/");
+		$prefixes = $model->getNamespaces();
+		$this->assertFalse(array_key_exists("http://testhausen/foo/bar/",$prefixes));
+	}
 }
 
 
