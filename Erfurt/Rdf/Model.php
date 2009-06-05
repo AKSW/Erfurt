@@ -578,7 +578,25 @@ class Erfurt_Rdf_Model
 		}
 		
 		if (!isset ($this->_namespaces[$prefix])) {
-		    $this->_namespaces[$prefix] = $namespace;
+			$this->_namespaces[$prefix] = $namespace;
+
+			/**
+			 * get prefixes from model configuration
+			 */
+			$option   = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
+
+			/**
+			 * add new prefix with namespace to the config option
+			 */
+			$option[] = array(
+				"value" => $prefix . "=" . $namespace,
+				"type"  => "literal"
+			);
+
+			/**
+			 * write the config option back to the model
+			 */
+			$this->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option);
 		} 
 	}
 
@@ -593,6 +611,25 @@ class Erfurt_Rdf_Model
 		}
 		
 		unset($this->_namespaces[$prefix]);
+
+		/**
+		 * get prefixes from model configuration
+		 */
+		$option   = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
+
+		/**
+		 * remove the entry with the given prefix from the config option
+		 */
+		for($i = 0; $i < count($option); $i++){
+			if(0 === strpos($option[$i]["value"], $prefix . "=")){
+				unset($option[$i]);
+			}
+		}
+
+		/**
+		 * write the config option back to the model
+		 */
+		$this->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option);
 	}
 
 	/**
@@ -606,7 +643,7 @@ class Erfurt_Rdf_Model
         }
 
         while($key = array_search ($namespace, $this->_namespaces)) {
-            unset($this->_namespaces[$key]);
+            $this->deletePrefix($key);
         }
     }
 
@@ -616,6 +653,10 @@ class Erfurt_Rdf_Model
 	 */
 	protected function _initiateNamespaces()
 	{
+		/**
+		 * set some default prefixes ans namespaces
+		 * should be in some config later
+		 */
 		$this->_namespaces = array(
             'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
             'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
@@ -633,18 +674,28 @@ class Erfurt_Rdf_Model
             'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
 			//'_'      => 'nodeID://'
 		);
-		/*
+
+		/**
+		 * get prefixes from model configuration
+		 */
 		$option = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
+
+		/**
+		 * iterate config option and split prefix and namespace
+		 */
 		for($i = 0; $i < count($option); $i++){
-			$property = $option[$i];
-			$splitpos = strpos($property['value'], "=");
-			$prefix    = substr($property['value'], 0, $splitpos);
-			$namespace = substr($property['value'], $splitpos);
-			$prefix_var = $prefix . " =(" . $splitpos . ")> " . $namespace . "\n";
-			echo "dump prefix_var:";
-			var_dump($prefix_var);
+			$property   = $option[$i];
+			$splitpos   = strpos($property['value'], "=");          // find splitposition
+			$prefix     = substr($property['value'], 0, $splitpos); // get the part befor the '='
+			$namespace  = substr($property['value'], $splitpos);    // get the rest
 			$this->_namespaces[$prefix] = $namespace;
 		}
-		 */
+	}
+
+	/**
+	 * This is a trigger function to test if the config options are written propperly
+	 */
+	public function initiateNamespacesTrigger(){
+		$this->_initiateNamespaces();
 	}
 }
