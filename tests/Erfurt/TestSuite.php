@@ -5,6 +5,7 @@ require_once 'Erfurt/Sparql/TestSuite.php';
 require_once 'Erfurt/Store/TestSuite.php';
 require_once 'Erfurt/Syntax/TestSuite.php';
 require_once 'Erfurt/Versioning/TestSuite.php';
+require_once 'Erfurt/Wrapper/TestSuite.php';
 
 class Erfurt_TestSuite extends PHPUnit_Framework_TestSuite
 {
@@ -18,6 +19,7 @@ class Erfurt_TestSuite extends PHPUnit_Framework_TestSuite
         $suite->addTestSuite('Erfurt_Store_TestSuite');
         $suite->addTestSuite('Erfurt_Syntax_TestSuite');
         $suite->addTestSuite('Erfurt_Versioning_TestSuite');
+        $suite->addTestSuite('Erfurt_Wrapper_TestSuite');
         
         return $suite;
     }
