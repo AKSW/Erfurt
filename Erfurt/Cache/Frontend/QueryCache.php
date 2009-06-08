@@ -118,7 +118,7 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     public function invalidateWithStatements( $modelIri, $statements = array() ) {
         $qids = $this->getBackend()->invalidate( $modelIri, $statements );
-        $this->invalidateCacheObjects($qids);
+        $this->_invalidateCacheObjects($qids);
         return $qids;
     }
 
@@ -149,27 +149,10 @@ class Erfurt_Cache_Frontend_QueryCache {
     public function invalidateWithModelIri( $modelIri ) {
 
         $qids = $this->getBackend()->invalidateWithModelIri( $modelIri );
-        $this->invalidateCacheObjects ( $qids );
+        $this->_invalidateCacheObjects ( $qids );
         return $qids;
     }
 
-
-    //TODO : holen der CacheObjectKeys aus QueryCache -> umbauen der invalidate Methode
-    //TODO : ObjectCache umbauen und zu den objectkeys die entsprechenden Objecte rausholen und löschen
-    public function invalidateCacheObjects ( $queryIds ) {
-        //requesting ObjectKeys according to the List of QueryIds
-        $oKeys = $this->getBackend()->getObjectKeys ($queryIds) ;
-        //create ObjectCache 
-        $eCache = Erfurt_App::getInstance()->getCache();
-
-        //delete objects in ObjectCache
-        foreach ($oKeys as $oKey) {
-            $eCache->remove ($oKey) ;
-        }        
-
-        //im Querycache die results zu den ObjectKeys invalidieren
-         $this->getBackend()->invalidateObjectKeys( $queryIds );
-    }
 
     /**
      *	starting a Caching Transaction to assign cache Objects to queryCacheResults
@@ -215,7 +198,7 @@ class Erfurt_Cache_Frontend_QueryCache {
 
     /**
      *	creating a QueryHash of a SparqlQuery
-     *	@access     public
+     *	@access     private
      *	@param      string   $queryString   SparqlQuery
      *  @return     string   $hash          md5 generated Hash
     */
@@ -223,10 +206,34 @@ class Erfurt_Cache_Frontend_QueryCache {
         return md5( $queryString);
     }
 
+    /**
+     *	invalidate Cache Objects
+     *	@access     private
+     *	@param      array   $queryIds      ListOfQueryIds
+    */
+    private function _invalidateCacheObjects ( $queryIds, $removeByTags = false ) {
+        //requesting ObjectKeys according to the List of QueryIds
+        $oKeys = $this->getBackend()->getObjectKeys ($queryIds) ;
+        //create ObjectCache 
+        $eCache = Erfurt_App::getInstance()->getCache();
+
+        //delete objects in ObjectCache
+        //TODO: _clean im Objectcache umschreiben.
+#        if ($removeByTags == true)
+#            $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
+
+        foreach ($oKeys as $oKey) {
+            $eCache->remove ($oKey) ;
+        }
+
+        //im Querycache die results zu den ObjectKeys invalidieren
+         $this->getBackend()->invalidateObjectKeys( $queryIds );
+    }
+
 
     /**
      *	parsing the Query
-     *	@access     public
+     *	@access     private
      *	@param      string   $queryString   SparqlQuery
      *  @return     array    $queryParts    $queryParts['triples'] = $triples;
      *                                      $queryParts['graphs'] = $graphs;
@@ -267,6 +274,7 @@ class Erfurt_Cache_Frontend_QueryCache {
         }
         $queryParts['triples'] = $triples;
         $queryParts['graphs'] = $graphs;
+
         return $queryParts;
     }
 

@@ -61,7 +61,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
     public function load($id, $doNotTestCacheValidity = false) {
 
         $sql = "SELECT content FROM ef_cache WHERE id = '" . $id . "'";
-
         if (!$doNotTestCacheValidity) {
             $sql .= " AND (expire = 0 OR expire > " . time() . ")";
         }
@@ -74,7 +73,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 	            return $content;
 	        }
 		}
-		
         return false;
     }
 
@@ -85,12 +83,11 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
      * @return boolean true if no problem
      */
     public function remove($id) {
-	
         $res = $this->_query("SELECT COUNT(*) FROM ef_cache WHERE id = '" . $id . "'");
 
         $result1 = $res[0]['count'];
         $result2 = $this->_query("DELETE FROM ef_cache WHERE id = '" . $id . "'");
-        $result3 = $this->_query("DELETE FROM tag WHERE id = '" . $id . "'");
+        $result3 = $this->_query("DELETE FROM ef_cache_tag WHERE id = '" . $id . "'");
 
         return ($result1 && $result2 && $result3);
     }

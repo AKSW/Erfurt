@@ -125,6 +125,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */    
     public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0, $transactions = array() ) {
         #check that this query isn't saved yet
+
         if ( false === $this->exists ( $queryId ) ) {
             #encoding the queryResult
             $queryResult = $this->_encodeResult( $queryResult );
@@ -137,13 +138,12 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 time_stamp, 
                 duration) VALUES (
                 '".$queryId."',
-                '".$queryString."', 
+                '".(str_replace("'", '"', $queryString))."', 
                 '".$queryResult."',
                 0, 
                 ".(microtime(true)).",
                 ".$duration.")" ;
             $ret = $this->_query ( $query ) ;
-
             //saving triplePatterns in tripleTable
             $this->_saveTriplePatterns ( $queryId, $triplePatterns ) ;
 
@@ -250,6 +250,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $result = $this->_query ( $query );
 
         $qids = array();
+
+        if (!$result)
+            return $qids;        
+
         foreach ($result as $entry) {
             $qids[] = $entry['qid'];
         }
@@ -331,22 +335,15 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     public function getObjectKeys ( $qids = array() ) {
 
-        $clauses = array();
-        foreach ($qids as $qid) {
-            $clauses[] = " qid = '".$qid."' ";
-        }
-        $clauses = implode (" OR " , $clauses);
-
-        $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE " . $clauses ;
-
-        $result = $this->_query ( $query );
-
         $oKeys = array();
-        foreach ($result as $entry) {
-            $oKeys[] = $entry['objectKey'];
+        foreach ($qids as $qid) {
+            $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE qid='".$qid."'"; ;
+            $result = $this->_query ( $query );
+            foreach ($result as $entry) {
+                $oKeys[] = $entry['objectKey'];
+            }
         }
         return $oKeys;
-
     }
 
 
