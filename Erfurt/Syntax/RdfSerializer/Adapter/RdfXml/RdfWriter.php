@@ -2,7 +2,8 @@
 /**
  * An implemenation of a RDF string writer.
  *
- * @package syntax
+ * @package erfurt
+ * @subpackage   syntax
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License

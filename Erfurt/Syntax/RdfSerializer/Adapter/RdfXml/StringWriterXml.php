@@ -25,7 +25,8 @@
 /**
  * This implementation of a string writer, writes the content as pretty formatted XML in a string.
  *
- * @package syntax
+ * @package erfurt
+ * @subpackage   syntax
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License

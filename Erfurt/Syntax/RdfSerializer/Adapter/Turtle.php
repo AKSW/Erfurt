@@ -6,7 +6,8 @@ require_once 'Erfurt/Syntax/Utils/Turtle.php';
  * This class acts as an intermediate implementation for some important formats.
  * It uses the ARC library unitl we have own implementations.
  * 
- * @package   syntax
+ * @package erfurt
+ * @subpackage   syntax
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
