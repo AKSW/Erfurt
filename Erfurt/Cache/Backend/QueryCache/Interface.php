@@ -35,7 +35,7 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
      *  @param      float   $duration       the duration of the originally executed Query in seconds, microseconds
      *  @return     boolean $result         returns the state of the saveprocess
      */
-    public function save ( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0, $transactions = array() ) ;
+    public function save ( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0 ) ;
 
 
     /**

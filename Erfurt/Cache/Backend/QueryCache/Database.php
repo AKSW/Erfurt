@@ -31,22 +31,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
 	final public function createCacheStructure() {
 
-		$this->_query('DROP INDEX ef_cache_query_result_qid');
-        $this->_query('DROP INDEX ef_cache_query_result_qid_count');
-        $this->_query('DROP INDEX ef_cache_query_model_mid_modelIri');
-        $this->_query('DROP INDEX ef_cache_query_rt_qid_tid');
-        $this->_query('DROP INDEX ef_cache_query_rm_qid_mid');
-        $this->_query('DROP INDEX ef_cache_query_triple_tid');
-        $this->_query('DROP INDEX ef_cache_query_triple_tid_spo');
-        $this->_query('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
+		#$this->_query('DROP INDEX ef_cache_query_result_qid');
+        #$this->_query('DROP INDEX ef_cache_query_result_qid_count');
+        #$this->_query('DROP INDEX ef_cache_query_model_mid_modelIri');
+        #$this->_query('DROP INDEX ef_cache_query_rt_qid_tid');
+        #$this->_query('DROP INDEX ef_cache_query_rm_qid_mid');
+        #$this->_query('DROP INDEX ef_cache_query_triple_tid');
+        #$this->_query('DROP INDEX ef_cache_query_triple_tid_spo');
+        #$this->_query('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
 
-		$this->_query('DROP TABLE ef_cache_query_triple');
-		$this->_query('DROP TABLE ef_cache_query_model');
-        $this->_query('DROP TABLE ef_cache_query_result');
-        $this->_query('DROP TABLE ef_cache_query_rt');
-        $this->_query('DROP TABLE ef_cache_query_rm');
-        $this->_query('DROP TABLE ef_cache_query_version');
-        $this->_query('DROP TABLE ef_cache_query_objectKey');
+		#$this->_query('DROP TABLE ef_cache_query_triple');
+		#$this->_query('DROP TABLE ef_cache_query_model');
+        #$this->_query('DROP TABLE ef_cache_query_result');
+        #$this->_query('DROP TABLE ef_cache_query_rt');
+        #$this->_query('DROP TABLE ef_cache_query_rm');
+        #$this->_query('DROP TABLE ef_cache_query_version');
+        #$this->_query('DROP TABLE ef_cache_query_objectKey');
 
 
 		$this->_query('CREATE TABLE ef_cache_query_result (
@@ -123,7 +123,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      float     $duration       the duration of the originally executed Query in seconds, microseconds
      *  @return     boolean   $result         returns the state of the saveprocess
      */    
-    public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0, $transactions = array() ) {
+    public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0) {
         #check that this query isn't saved yet
 
         if ( false === $this->exists ( $queryId ) ) {
@@ -155,8 +155,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $queryResult = $this->_encodeResult( $queryResult );
             $this->_query ( "UPDATE ef_cache_query_result SET result = '".$queryResult."', duration = ".$duration." WHERE qid = '".$queryId."'" );
         }
-        //saving transactionKeys to transactions table according to a queryId
-        $this->_saveTransactions ( $queryId, $transactions ) ;
     }
 
 
@@ -217,6 +215,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidate ( $modelIri, $statements = array() ) {
+
+        if (sizeof($statements) == 0)
+            return false;
+
         $clauses = array();
         foreach ( $statements as $subject => $predicates ) {
             foreach ($predicates as $predicate => $objects) {
@@ -324,11 +326,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         return $qids;
     }
 
-    public function invalidateObjectKeys ( $qids = array ()) {
+    public function invalidateObjectKeys ( $oids = array ()) {
 
-        foreach ($qids as $qid) {
+        foreach ($oids as $oid) {
             //delete entries in query_objectKey
-            $query = "DELETE FROM ef_cache_query_objectKey WHERE qid = '".$qid."'" ;
+            $query = "DELETE FROM ef_cache_query_objectKey WHERE objectKey = '".$oid."'" ;
             $this->_query ( $query );
         }
     }
@@ -340,10 +342,21 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE qid='".$qid."'"; ;
             $result = $this->_query ( $query );
             foreach ($result as $entry) {
-                $oKeys[] = $entry['objectKey'];
+                $oKeys[$entry['objectKey']] = $entry['objectKey'];
             }
         }
         return $oKeys;
+    }
+
+
+    public function saveTransactions ( $queryId, $transactions ) {
+
+        $keys = array_keys ($transactions) ;
+        foreach ($keys as $key) {
+            $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+            $this->_query ($query);
+        }
+
     }
 
 
@@ -414,7 +427,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             }
             
             // build association of triple and result
-            $this->_query ( "INSERT INTO ef_cache_query_rt (qid, tid) VALUES ('".$queryId."','".$tripleId."')" );
+
+            $res = $this->_query ( "SELECT * FROM ef_cache_query_rt WHERE qid = '".$queryId."' AND tid = '".$tripleId."'" );
+            if (sizeof($res) == 0) {
+                $this->_query ( "INSERT INTO ef_cache_query_rt (qid, tid) VALUES ('".$queryId."','".$tripleId."')" );
+            }
         }       
     }
 
@@ -449,19 +466,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $modelId = $result[0]['mid'] ;
             }
 
+
             $this->_query ( "INSERT INTO ef_cache_query_rm (qid, mid) VALUES ('".$queryId."', '".$modelId."')" );
         }
     }
 
-    private function _saveTransactions ( $queryId, $transactions ) {
-
-        $keys = array_keys ($transactions) ;
-        foreach ($keys as $key) {
-            $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
-            $this->_query ($query);
-        }
-
-    }
 
     /**
      *  this private methode encapsulates the functionality to retrieve the last InsertId
@@ -486,12 +495,32 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     resultSet       $result         the result of the SQL Query
      */	
 	private function _query( $sql ) {
+        $result = false ;
+        $checkCache = false;
         try {
-            $result = $this->store->sqlQuery( $sql );        
+            $result = $this->store->sqlQuery( $sql ); 
+    
         } catch (Erfurt_Store_Adapter_Exception $e){
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->log($e->getMessage(), $e->getCode());
-            return false;
+            $result = false;
+            $checkCache = true;
+        }
+
+        if ($checkCache) {
+
+            try {            
+                $query = "SELECT num FROM ef_cache_query_version" ;
+                $result = $this->store->sqlQuery( $query );        
+            } catch (Erfurt_Store_Adapter_Exception $f) {
+                $this->createCacheStructure ();
+                if (!$this->checkCacheVersion()) {
+                    Zend_Cache::throwException('Impossible to build cache structure.');
+                }
+                else { 
+                    $result = $this->_query($sql);
+                }
+            }
         }
         return $result;
 	}	
@@ -504,7 +533,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     string         $result      result as base 64 erncoded String
      */	
     private function _encodeResult ( $result ) {
-        $result = base64_encode( $result );
+        $result = addslashes( $result );
         return $result;
     }	
 
@@ -516,7 +545,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     string          $result      decoded result
      */	
     private function _decodeResult ( $result ) {
-        $result = base64_decode( $result );
+        #$result = ( $result );
         return $result;
     }	
 	

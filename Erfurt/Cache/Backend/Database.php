@@ -69,7 +69,7 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 		if ($result !== false) {
             if (isset($result[0])) {
                 $content = $result[0]['content'];
-                $content = base64_decode($content);
+                #$content = base64_decode($content);
 	            return $content;
 	        }
 		}
@@ -116,7 +116,7 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 
         $lifetime = $this->getLifetime($specificLifetime);
         #$data = $this->_getConnection()->real_escape_string($data);
-        $data = base64_encode ($data);
+        $data = addslashes($data);
         $mktime = time();
         if (is_null($lifetime)) {
             $expire = 0;

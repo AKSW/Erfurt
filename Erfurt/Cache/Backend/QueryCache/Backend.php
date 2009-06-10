@@ -30,12 +30,6 @@ abstract class Erfurt_Cache_Backend_QueryCache_Backend implements Erfurt_Cache_B
     */
 	public function __construct() { 
         $this->store = Erfurt_App::getInstance()->getStore();
-        if (!$this->checkCacheVersion()) {	
-            $this->createCacheStructure ();
-            if (!$this->checkCacheVersion()) {
-                Zend_Cache::throwException('Impossible to build cache structure.');
-            }
-        }
     }
 
     /**

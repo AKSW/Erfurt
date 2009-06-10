@@ -67,15 +67,17 @@ class Erfurt_Cache_Frontend_QueryCache {
             $parsedQuery = $this->parseQuery( $queryString );
             $triplePatterns = $parsedQuery['triples'];
             $graphUris = $parsedQuery['graphs'];
-
             //saving the Query and the Result with the configured Backend
             $result =  $this->getBackend()->save(   $queryId, 
                                                     $queryString, 
                                                     $graphUris, 
                                                     $triplePatterns, 
                                                     $queryResult, 
-                                                    $duration, 
-                                                    $this->getTransactions());
+                                                    $duration);
+
+            //saving transactionKeys to transactions table according to a queryId
+            $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
+
             return $result;
         }
         else {
@@ -98,6 +100,10 @@ class Erfurt_Cache_Frontend_QueryCache {
             if ($result) {
                 $result = unserialize ($result);
                 $this->getBackend()->incrementHitCounter($queryId);
+
+                //saving transactionKeys to transactions table according to a queryId
+                $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
+
                 return $result;
             }
             else {
@@ -118,7 +124,9 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     public function invalidateWithStatements( $modelIri, $statements = array() ) {
         $qids = $this->getBackend()->invalidate( $modelIri, $statements );
-        $this->_invalidateCacheObjects($qids);
+        if ($qids) {
+            $oids = $this->_invalidateCacheObjects($qids);
+        }
         return $qids;
     }
 
@@ -227,7 +235,9 @@ class Erfurt_Cache_Frontend_QueryCache {
         }
 
         //im Querycache die results zu den ObjectKeys invalidieren
-         $this->getBackend()->invalidateObjectKeys( $queryIds );
+         $this->getBackend()->invalidateObjectKeys( $oKeys );
+
+        return $oKeys;
     }
 
 
