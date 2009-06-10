@@ -21,6 +21,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $this->_object    = new Erfurt_Syntax_RdfParser_Adapter_Turtle();   
     }
     
+    
     public function testParseEmpty()
     {
         $data = '';
@@ -2065,5 +2066,19 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
         $this->assertEquals(1806, $counter);
         
+    }
+    
+    public function testIssue421TurtleParserOnUpdateResturnsError()
+    {
+        $data = '<http://model.de#Class1> a <http://www.w3.org/2002/07/owl#Class> ;
+        <http://www.w3.org/2000/01/rdf-schema#label> "classLabel"@de,
+        "classLabel"@nl, "classLabel"@en ;
+        <http://model.de#sort> "1" ;
+        <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://model.de#Category> .';
+        
+        $result = $this->_object->parseFromDataString($data);
+
+        $this->assertEquals(1, count($result));
+        $this->assertEquals(4, count($result['http://model.de#Class1']));
     }
 }

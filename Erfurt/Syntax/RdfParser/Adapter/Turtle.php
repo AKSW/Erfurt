@@ -432,7 +432,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             
             $lang .= $c;
             $c = $this->_read();
-            while ($c !== -1 && !$this->_isWS($c)) {
+            while ($c !== -1 && !$this->_isWS($c) && !($c === ',')) {
                 $lang .= $c;
                 $c = $this->_read();
             }
@@ -629,7 +629,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $localName = $c;
         
         $c = $this->_read();
-        while ($c !== -1 && !$this->_isWS($c) && $c !== ',' && $c !== ';') {
+        while ($c !== -1 && !$this->_isWS($c) && $c !== ',' && $c !== ';' && $c !== ')') {
             $localName .= $c;
             $c = $this->_read();
         }
@@ -814,11 +814,11 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_parseObject();
 
         while ($this->_skipWS() === ',') {
-            $this->_read(); // Skipe the ,
+            $this->_read(); // Skip the ,
             $this->_skipWS(); // Skip additional whitespace
             $this->_parseObject();
+            
         }
-        
     }
     
     protected function _parseObject()
