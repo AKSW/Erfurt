@@ -135,11 +135,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 query,
                 result,
                 hit_count,
+                inv_count,
                 time_stamp, 
                 duration) VALUES (
                 '".$queryId."',
                 '".(str_replace("'", '"', $queryString))."', 
                 '".$queryResult."',
+                0,
                 0, 
                 ".(microtime(true)).",
                 ".$duration.")" ;
@@ -184,8 +186,12 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param        string    $queryId        Its a hash of the QueryString
      */
     public function incrementHitCounter( $queryId ) {
-        $count = $this->exists ( $queryId ) ;
-        $query = "UPDATE ef_cache_query_result SET hit_count = ".($count+1)." WHERE qid = '".$queryId."'";
+        $query = "  UPDATE ef_cache_query_result 
+                    SET hit_count = ( 
+                        SELECT hit_count 
+                        FROM ef_cache_query_result 
+                        WHERE qid='".$queryId."' ) + 1
+                    WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
         $this->_query ( $query );
     }
 
@@ -196,15 +202,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param        string    $queryId        Its a hash of the QueryString
      */
     public function incrementInvalidationCounter( $queryId ) {
-        $query = "SELECT inv_count FROM ef_cache_query_result WHERE qid = '".$queryId."'";
-	    $count = $this->_query ( $query );
-        if (!$count) {
-            $count = 0;
-        }
-        else {
-            $count = (int) $count[0]['inv_count'];
-        }
-        $this->_query ( "UPDATE ef_cache_query_result SET inv_count = ".($count+1)." WHERE qid = '".$queryId."'" );
+        $query = "  UPDATE ef_cache_query_result 
+                    SET inv_count = ( 
+                        SELECT inv_count 
+                        FROM ef_cache_query_result 
+                        WHERE qid='".$queryId."' ) + 1
+                    WHERE qid='".$queryId."'";
+        $this->_query ( $query );    
     }
 
 
@@ -236,19 +240,23 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $clauseString = implode (" OR ", $clauses);
 
         // retrieve List Of qids which have to vbe invalidated
-        $query = " SELECT DISTINCT (qid) FROM 
+        $query = "  SELECT DISTINCT (qid) 
+                    FROM 
                         (
                             SELECT qid qid1
                             FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                             WHERE ( ".$clauseString." )
                         ) first 
-                        JOIN 
+                    JOIN 
                         (
-                            SELECT qid 
+                            SELECT qid qid2
                             FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                             WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )
                         ) second 
-                        ON first.qid1 = second.qid ";
+                        ON first.qid1 = second.qid2 
+                    JOIN 
+                        ef_cache_query_result result ON result.qid = qid2 
+                    WHERE result.result IS NOT NULL";
         $result = $this->_query ( $query );
 
         $qids = array();

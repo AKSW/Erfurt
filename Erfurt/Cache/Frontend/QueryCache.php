@@ -125,6 +125,9 @@ class Erfurt_Cache_Frontend_QueryCache {
     public function invalidateWithStatements( $modelIri, $statements = array() ) {
         $qids = $this->getBackend()->invalidate( $modelIri, $statements );
         if ($qids) {
+            foreach ($qids as $qid) {
+                $this->getBackend()->incrementInvalidationCounter($qid);
+            }
             $oids = $this->_invalidateCacheObjects($qids);
         }
         return $qids;
