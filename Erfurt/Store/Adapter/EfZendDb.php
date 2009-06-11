@@ -346,7 +346,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphUri, $subject, $predicate, $object)
+    public function addStatement($graphUri, $subject, $predicate, $object, $options = array())
     {
         $statementArray = array();
         $statementArray["$subject"] = array();

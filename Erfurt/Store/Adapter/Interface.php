@@ -21,7 +21,7 @@ interface Erfurt_Store_Adapter_Interface
     public function addMultipleStatements($graphIri, array $statementsArray, $options = array());
     
 	/**
-     * @param string $modelIri
+     * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param string $object (IRI, blank node or literal)
@@ -33,13 +33,7 @@ interface Erfurt_Store_Adapter_Interface
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-	public function addStatement($modelIri, 
-	                             $subject, 
-	                             $predicate, 
-	                             $object, 
-	                             $options = array(
-	                                 'subject_type' => Erfurt_Store::TYPE_IRI, 
-	                                 'object_type' => Erfurt_Store::TYPE_IRI));
+	public function addStatement($graphUri, $subject, $predicate, $object, $options = array());
 	
 	/**
      * 
