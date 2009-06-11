@@ -670,7 +670,7 @@ class Erfurt_Rdf_Model
             'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
             'owl'      => 'http://www.w3.org/2002/07/owl#', 
             'xsd'      => 'http://www.w3.org/2001/XMLSchema#', 
-            'SysOnt'   => 'http://ns.ontowiki.net/SysOnt/', 
+            'sysont'   => 'http://ns.ontowiki.net/SysOnt/', 
             'dc'       => 'http://purl.org/dc/elements/1.1/', 
             'foaf'     => 'http://xmlns.com/foaf/0.1/', 
             'doap'     => 'http://usefulinc.com/ns/doap#', 
