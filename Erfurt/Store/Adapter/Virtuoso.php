@@ -170,7 +170,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $options = array_merge($defaultOptions, $options);
         $insertSparql = '
             INSERT INTO GRAPH <' . $graphIri . '> {
-                ' . $this->_buildGraphPattern($statementsArray, false , $options['escape_literals']) . '
+                ' . $this->buildTripleString($statementsArray) . '
             }';
         
         return $this->_execSparql($insertSparql);
@@ -281,7 +281,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $deleteSparql = '
             DELETE FROM GRAPH <' . $graphIri . '> {
-                ' . $this->_buildGraphPattern($statementsArray, true) . '
+                ' . $this->buildTripleString($statementsArray) . '
             }
         ';
         // var_dump($deleteSparql);exit;
@@ -328,15 +328,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getAvailableModels() {        
         if (!$this->_models) {
             $this->_models = array();
+                
+            $query = 'SELECT ?graph WHERE {
+                GRAPH ?graph {
+                    ?graph <' . EF_RDF_TYPE . '> ?o.
+                }
+            }';
             
-            $select = '?graph';
-            $where  = array();
-                
-            $where[] = ' {GRAPH ?graph {?graph <' . EF_RDF_TYPE . '> ?o.}}';
-                
-            $query   = 'SELECT ?graph' . $select . ' WHERE {' . implode(' UNION ', $where) . '}';
-            // var_dump((string) $query);
-                
             $result = $this->_execSparql($query);
             while (odbc_fetch_row($result)) {
                 $graph = odbc_result($result, 1);
@@ -713,6 +711,86 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
+    
+    /**
+     * Builds a SPARQL-compatible literal string with long literals if necessary.
+     */
+    public function buildLiteralString($value, $datatype = null, $lang = null)
+    {
+        $longLiteral    = false;
+        $value          = (string) $value;
+        $quoteChar      = (strpos($value, '"') !== false) ? "'" : '"';
+        $languageString = null;
+        
+        switch ($datatype) {
+            case 'http://www.w3.org/2001/XMLSchema#boolean':
+                $search  = array('0', '1');
+                $replace = array('false', 'true');
+                $value   = str_replace($search, $replace, $value);
+                break;
+            case '':
+            case null:
+            case 'http://www.w3.org/2001/XMLSchema#string':
+                $value = addcslashes($value, $quoteChar);
+                
+                /** 
+                 * Check for characters not allowed in a short literal
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 */
+                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
+                    $longLiteral = true;
+                }
+            break;
+        }
+        
+        $value = $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '')
+               . $value 
+               . $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '');
+        
+        if (!empty($datatype)) {
+            $value .= '^^' . '<' . (string) $datatype . '>';
+        } else if (!empty($lang)) {
+            $value .= '@' . (string) $lang;
+        }
+        
+        return $value;
+    }
+    
+    /**
+     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
+     *
+     * @param $rdfPhpStatements A nested statement array
+     * @return string
+     */
+    public function buildTripleString(array $rdfPhpStatements)
+    {
+        $triples = '';
+        
+        foreach ($rdfPhpStatements as $currentSubject => $predicates) {
+            foreach ($predicates as $currentPredicate => $objects) {
+                foreach ($objects as $currentObject) {
+                    // TODO: blank nodes
+                    $resource = '<' . $currentSubject . '>';
+                    $property = '<' . $currentPredicate . '>';
+                    
+                    if ($currentObject['type'] == 'uri') {
+                        $value = '<' . $currentObject['value'] . '>';
+                    } else {
+                        $value = $this->buildLiteralString(
+                            $currentObject['value'], 
+                            array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null, 
+                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
+                        );
+                    }
+                    
+                    // add triple
+                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
+                }
+            }
+        }
+        
+        return $triples;
+    }
     
     /**
      * Builds a sparql graph pattern from an array of statements.

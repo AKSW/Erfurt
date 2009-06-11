@@ -192,8 +192,8 @@ class Erfurt_Rdf_Model
      */
     public function getBaseIri()
     {
-        if (null === $this->_baseIri) {
-            return $this->_graphUri;
+        if (empty($this->_baseIri)) {
+            return $this->getModelIri();
         }
         
         return $this->_baseIri;
@@ -391,7 +391,15 @@ class Erfurt_Rdf_Model
     public function updateWithMutualDifference(array $original, array $changed)
     {
         $addedStatements   = $this->_getStatementsDiff($changed, $original);
-        $removedStatements = $this->_getStatementsDiff($original, $changed);        
+        $removedStatements = $this->_getStatementsDiff($original, $changed);
+        
+        if (defined('_EFDEBUG')) {
+            require_once 'Erfurt/App.php';
+            $logger = Erfurt_App::getInstance()->getLog();
+            
+            $logger->debug('added: ', count($addedStatements));
+            $logger->debug('removed: ', count($removedStatements));
+        }       
         
         // var_dump('added: ', $addedStatements);
         // var_dump('removed: ', $removedStatements);
