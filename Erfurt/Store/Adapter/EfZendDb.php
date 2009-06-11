@@ -346,42 +346,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphUri, $subject, $predicate, $object, 
-            $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
+    public function addStatement($graphUri, $subject, $predicate, $object)
     {
-        if ($options['subject_type'] === Erfurt_Store::TYPE_BLANKNODE) {
-            if (substr($subject, 0, 2) !== '_:') {
-                $subject = '_:' . $subject;
-            }
-            
-        }
-        if ($options['object_type'] === Erfurt_Store:: TYPE_BLANKNODE) {
-            if (substr($object, 0, 2) !== '_:') {
-                $object = '_:' . $object;
-            }
-        } 
-        
         $statementArray = array();
         $statementArray["$subject"] = array();
         $statementArray["$subject"]["$predicate"] = array();
-        $statementArray["$subject"]["$predicate"][] = array(
-            'value' => $object
-        );
-        
-        if ($options['object_type'] === Erfurt_Store:: TYPE_BLANKNODE) {
-            $statementArray["$subject"]["$predicate"][0]['type'] = 'bnode';
-        } else if ($options['object_type'] === Erfurt_Store:: TYPE_LITERAL) {
-            $statementArray["$subject"]["$predicate"][0]['type'] = 'literal';
-        } else {
-            $statementArray["$subject"]["$predicate"][0]['type'] = 'uri';
-        }
-        
-        if (isset($options['literal_language'])) {
-            $statementArray["$subject"]["$predicate"][0]['lang'] = $options['literal_language'];
-        }
-        if (isset($options['literal_datatype'])) {
-            $statementArray["$subject"]["$predicate"][0]['datatype'] = $options['literal_datatype'];
-        }
+        $statementArray["$subject"]["$predicate"][] = $object;
         
         try {
             $this->addMultipleStatements($graphUri, $statementArray);
@@ -583,7 +553,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         foreach ($modelInfoCache as $mInfo) {
             $models[$mInfo['modelIri']] = true;
         }
-        
+
         return $models;
     }
     
@@ -620,16 +590,21 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         $modelInfoCache = $this->_getModelInfos();
 
+        $baseUri = $modelInfoCache[$modelIri]['baseIri'];
+        if ($baseUri === '') {
+            $baseUri = null;
+        }
+
         // choose the right type for the model instance and instanciate it
         if ($modelInfoCache[$modelIri]['type'] === 'owl') {
             require_once 'Erfurt/Owl/Model.php';
-            $m = new Erfurt_Owl_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Owl_Model($modelIri, $baseUri);
         } else if ($this->_modelInfoCache[$modelIri]['type'] === 'rdfs') {
             require_once 'Erfurt/Rdfs/Model.php';
-            $m = new Erfurt_Rdfs_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Rdfs_Model($modelIri, $baseUri);
         } else {
             require_once 'Erfurt/Rdf/Model.php';
-            $m = new Erfurt_Rdf_Model($modelIri, $modelInfoCache[$modelIri]['baseIri']);
+            $m = new Erfurt_Rdf_Model($modelIri, $baseUri);
         }
         
         $this->_modelCache[$modelIri] = $m;
@@ -1267,7 +1242,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 JOIN ef_stmt s ON s.g = $graphId AND s.ot = 2 AND s.o_r = l.id
                 WHERE l.g = $graphId
                 GROUP BY l.id";
-        
+
         $idArray = array();
         foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
             $idArray[] = $row['id'];
