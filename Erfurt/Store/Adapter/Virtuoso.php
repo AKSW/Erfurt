@@ -712,7 +712,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 			//return $arr;
 		}
      
-        if ($result = $this->_execSparql($query)) {
+        if ($result = $this->_execSparql((string)$query)) {
             $result = $this->_odbcResultToArray($result);
         }
         
