@@ -339,18 +339,16 @@ class Erfurt_Rdf_Model
             // User has no right to edit the model.
             return;
         }
-        
-        
+         
         $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysOnt->modelUri;
-        
+       
         $options = $this->_getOptions();
         $store = $this->getStore();
-        
+
         if (isset($options[$optionUri])) {
             // In this case we need to remove the old values from sysont        
             $options = array(
                 'use_ac'       => false, // We disable AC, for we need to write the system ontology.
-                'subject_type' => Erfurt_Store::TYPE_IRI
             );
             
             $store->deleteMatchingStatements($sysOntUri, $this->_graphUri, $optionUri, null, $options);
@@ -427,7 +425,7 @@ class Erfurt_Rdf_Model
             $store = $this->getStore();
             $this->_graphOptions = $store->getGraphConfiguration($this->_graphUri);
         }
-        
+
         return $this->_graphOptions;
     }
     

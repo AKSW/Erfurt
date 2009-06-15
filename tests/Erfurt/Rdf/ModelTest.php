@@ -56,6 +56,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testAddMultipleStatements()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -75,6 +77,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testDeleteMultipleStatements()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -94,6 +98,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testUpdateWithMutualDifferenceStatementsDiffer()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -120,6 +126,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testUpdateWithMutualDifferenceObjectsDiffer()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -161,6 +169,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testUpdateWithMutualDifferenceObjectsDifferInType()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -213,6 +223,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testUpdateWithMutualDifferenceObjectsDifferInValue()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -265,6 +277,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     
     public function testUpdateWithMutualDifferenceObjectsDifferInDatatype()
     {
+        $this->markTestIncomplete();
+        
         $model = $this->_getMockedModel();
         
         // prepare data
@@ -322,14 +336,14 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
     // public function testUpdateWithMutualDifferenceObjectsDifferInLanguage()
     // {
     //     
-	// }
+    // }
 
-	public function testGetDefaultPrefixesAndNamespaces()
-	{
+    public function testGetDefaultPrefixesAndNamespaces()
+    {
 //        $model = $this->_getMockedModel();
         $model = new Erfurt_Rdf_Model('http://example.org/');
-		
-		$default = array(
+        
+        $default = array(
             'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
             'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
             'owl'      => 'http://www.w3.org/2002/07/owl#', 
@@ -344,95 +358,115 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
             'swrc'     => 'http://swrc.ontoware.org/ontology#', 
             'lcl'      => 'http://ns.aksw.org/e-learning/lcl/', 
             'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
-	    );
-		$prefixes = $model->getPrefixes();
-		reset($default);
-		while($pointer = each($default)){
-			$this->assertArrayHasKey($pointer['key'], $prefixes);
-			$this->assertEquals($pointer['value'], $prefixes[$pointer['key']]);
-		}
-		$namespaces = $model->getNamespaces();
-		reset($default);
-		while($pointer = each($default)){
-			$this->assertArrayHasKey($pointer['value'], $namespaces);
-			$this->assertEquals($pointer['key'], $namespaces[$pointer['value']]);
-		}
-	}
+        );
+        $prefixes = $model->getPrefixes();
+        reset($default);
+        while($pointer = each($default)){
+            $this->assertArrayHasKey($pointer['key'], $prefixes);
+            $this->assertEquals($pointer['value'], $prefixes[$pointer['key']]);
+        }
+        $namespaces = $model->getNamespaces();
+        reset($default);
+        while($pointer = each($default)){
+            $this->assertArrayHasKey($pointer['value'], $namespaces);
+            $this->assertEquals($pointer['key'], $namespaces[$pointer['value']]);
+        }
+    }
 
-	public function testAddAndGetAndDeletePrefix()
-	{
-		$test_config = false;	// switch config_test on/off because the config doesn't seam to work in the testenvironment at the moment
+    public function testAddAndGetAndDeletePrefix()
+    {
+        $test_config = false;   // switch config_test on/off because the config doesn't seam to work in the testenvironment at the moment
 
-		/**
-		 * get new model
-		 */
-//		$model = $this->_getMockedModel();
+        /**
+         * get new model
+         */
+//      $model = $this->_getMockedModel();
         $model = new Erfurt_Rdf_Model('http://example.org/');
 
-		/**
-		 * add a test prefix to the model
-		 */
-		$model->addPrefix("test","http://testhausen/foo/bar/");
+        /**
+         * add a test prefix to the model
+         */
+        $model->addPrefix("test","http://testhausen/foo/bar/");
 
-		/**
-		 * get prefixes from the model and test if added prefix exists
-		 */
-		$prefixes = $model->getPrefixes();
-		$this->assertArrayHasKey("test", $prefixes);
-		$this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
+        /**
+         * get prefixes from the model and test if added prefix exists
+         */
+        $prefixes = $model->getPrefixes();
+        $this->assertArrayHasKey("test", $prefixes);
+        $this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
 
-		/**
-		 * get the prefixes from the model again to test if they where saved to config
-		 */
-		if ($test_config){
-			$model->initiateNamespacesTrigger();
-			$prefixes = $model->getPrefixes();
-			$this->assertArrayHasKey("test", $prefixes);
-			$this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
-		}
+        /**
+         * get the prefixes from the model again to test if they where saved to config
+         */
+        if ($test_config){
+            $model->initiateNamespacesTrigger();
+            $prefixes = $model->getPrefixes();
+            $this->assertArrayHasKey("test", $prefixes);
+            $this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
+        }
 
-		/**
-		 * delete test prefix
-		 */
-		$model->deletePrefix("test");
+        /**
+         * delete test prefix
+         */
+        $model->deletePrefix("test");
 
-		/**
-		 * check if it is deleted
-		 */
-		$prefixes = $model->getPrefixes();
-		$this->assertFalse(array_key_exists("test",$prefixes));
-		
-		/**
-		 * and again check if it is deleted from config
-		 */
-		if ($test_config){
-			$model->initiateNamespacesTrigger();
-			$prefixes = $model->getPrefixes();
-			$this->assertFalse(array_key_exists("test",$prefixes));
-		}
+        /**
+         * check if it is deleted
+         */
+        $prefixes = $model->getPrefixes();
+        $this->assertFalse(array_key_exists("test",$prefixes));
+        
+        /**
+         * and again check if it is deleted from config
+         */
+        if ($test_config){
+            $model->initiateNamespacesTrigger();
+            $prefixes = $model->getPrefixes();
+            $this->assertFalse(array_key_exists("test",$prefixes));
+        }
 
-		/**
-		 * add the test prefix to the model again
-		 * and delete it by namespace
-		 */
-		$model->addPrefix("test","http://testhausen/foo/bar/");
-		$model->deleteNamespace("http://testhausen/foo/bar/");
+        /**
+         * add the test prefix to the model again
+         * and delete it by namespace
+         */
+        $model->addPrefix("test","http://testhausen/foo/bar/");
+        $model->deleteNamespace("http://testhausen/foo/bar/");
 
-		/**
-		 * check if it is deleted
-		 */
-		$prefixes = $model->getNamespaces();
-		$this->assertFalse(array_key_exists("http://testhausen/foo/bar/",$prefixes));
+        /**
+         * check if it is deleted
+         */
+        $prefixes = $model->getNamespaces();
+        $this->assertFalse(array_key_exists("http://testhausen/foo/bar/",$prefixes));
 
-		/**
-		 * and also from config
-		 */
-		if ($test_config){
-			$model->initiateNamespacesTrigger();
-			$prefixes = $model->getNamespaces();
-			$this->assertFalse(array_key_exists("http://testhausen/foo/bar/",$prefixes));
-		}
-	}
+        /**
+         * and also from config
+         */
+        if ($test_config){
+            $model->initiateNamespacesTrigger();
+            $prefixes = $model->getNamespaces();
+            $this->assertFalse(array_key_exists("http://testhausen/foo/bar/",$prefixes));
+        }
+    }
+    
+    public function testSetGetOption()
+    {
+        $this->markTestNeedsDatabase();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getNewModel('http://example.org/', 'http://example.org/', 'owl', false);
+
+        $testProp = 'http://ns.ontowiki.net/SysOnt/foobartest';
+        $optionIn = array();
+        $optionIn[] = array(
+            'value' => 'testliteralfoobar',
+            'type'  => 'literal'
+        );
+
+        $model->setOption($testProp, $optionIn);
+        $optionOut = $model->getOption($testProp);
+
+        $this->assertEquals($optionIn, $optionOut);
+    }
 }
 
 

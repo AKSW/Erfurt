@@ -415,41 +415,46 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if ($predicate !== null) {
             $whereString .= " AND p = '$predicate'";
         }
-        if ($object !== null) {
-            $whereString .= " AND o = '$object'";
-        }
-        if (isset($options['subject_type'])) {
-            switch ($options['subject_type']) {
-                case Erfurt_Store::TYPE_IRI:
-                    $whereString .= ' AND st = 0';
-                    break;
-                case Erfurt_Store::TYPE_BLANKNODE:
-                    $whereString .= ' AND st = 1';
-                    break;
-            }
-        }
-        if (isset($options['object_type'])) {
-            switch ($options['object_type']) {
-                case Erfurt_Store::TYPE_IRI:
-                    $whereString .= ' AND ot = 0';
-                    break;
-                case Erfurt_Store::TYPE_LITERAL:
-                    $whereString .= ' AND ot = 2';
-                    break;
-                case Erfurt_Store::TYPE_BLANKNODE:
-                    $whereString .= ' AND ot = 1';
-                    break;
-            }
-        }
-        if (isset($options['literal_language'])) {
-            $whereString .= ' AND ol = "' . $options['literal_language'] . '"';
-        }
-        if (isset($options['literal_datatype'])) {
-            if (strlen($options['literal_datatype']) > $this->_getSchemaRefThreshold()) {
-                $whereString .= ' AND od = "' . substr($options['literal_datatype'], 0, 223) .
-                                md5($options['literal_datatype']) . '"';
+        
+        
+        if (null !== $subject) {
+            if (substr($subject, 0, 2) === '_:') {
+                $whereString .= ' AND st = 1';
             } else {
-                $whereString .= ' AND od = "' . $options['literal_datatype'] . '"';
+                $whereString .= ' AND st = 0';
+            }
+        }
+        
+        if (null !== $object) {
+            if (isset($object['value'])) {
+                $whereString .= ' AND o = "' . $object['value'] . '"';
+            }
+            
+            if (isset($object['type'])) {
+                switch ($object['type']) {
+                    case 'uri':
+                        $whereString .= ' AND ot = 0';
+                        break;
+                    case 'literal':
+                        $whereString .= ' AND ot = 2';
+                        break;
+                    case 'bnode':
+                        $whereString .= ' AND ot = 1';
+                        break;
+                }
+            }
+            
+            if (isset($object['lang'])) {
+                $whereString .= ' AND ol = "' . $object['lang'] . '"';
+            }
+            
+            if (isset($object['datatype'])) {
+                if (strlen($object['datatype']) > $this->_getSchemaRefThreshold()) {
+                    $whereString .= ' AND od = "' . substr($object['datatype'], 0, 223) .
+                                    md5($object['datatype']) . '"';
+                } else {
+                    $whereString .= ' AND od = "' . $object['datatype'] . '"';
+                }
             }
         }
         
@@ -669,7 +674,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $this->_modelInfoCache = null;
         
         if ($type === 'owl') {
-            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, EF_OWL_ONTOLOGY);
+            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, array('type' => 'uri', 'value' => EF_OWL_ONTOLOGY));
             $this->_modelInfoCache = null;
         }
         

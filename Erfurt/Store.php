@@ -240,6 +240,8 @@ class Erfurt_Store
         $event->statements = $statementsArray;
         
         Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        
+        $this->_graphConfigurations = null;
     }
     
     /**
@@ -287,6 +289,8 @@ class Erfurt_Store
         );
         
         Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        
+        $this->_graphConfigurations = null;
     }
     
 // TODO Remove the following method... not necessary...
@@ -818,8 +822,8 @@ echo $e->getMessage();exit;
         }
         
 // TODO: check whether user is allowed to create a new model
-        
-        return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
+        $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
+        return $this->getModel($modelIri, $useAc);
     }
     
     public function getObjectsInferred($modelUri, $startResources, $objectProperty, $hierarchyProperty = null)
@@ -1177,7 +1181,7 @@ echo $e->getMessage();exit;
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
             $result = $this->sparqlQuery($queryObject, array('use_ac' => false, 'result_format' => 'extended'));
-            
+        
             $stmtArray = array();
             foreach ($result['bindings'] as $row) {
                 if (!isset($stmtArray[$row['s']['value']])) {
