@@ -908,6 +908,8 @@ echo $e->getMessage();exit;
             throw new Erfurt_Store_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
         
+        require_once 'Erfurt/Syntax/RdfParser.php';
+        
         if ($type === 'auto') {
             // detect file type
             if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
@@ -918,21 +920,36 @@ echo $e->getMessage();exit;
             if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
                 $flag = false;
                 // try content-type
+                stream_context_get_default(array(
+                    'http' => array(
+                        'header' => "Accept: application/rdf+xml"
+                )));
+
                 $headers = get_headers($data, 1);
-                if (array_key_exists('Content-Type', $headers)) {
-                    switch (strtolower($headers['Content-Type'])) {
-                        case 'application/rdf+xml':
-                            $type = 'rdfxml';
-                            $flag = true;
-                            break;
-                        case 'text/rdf+n3':
-                            $type = 'n3';
-                            $flag = true;
-                            break;
-                        case 'application/json':
-                            $type = 'rdfjson';
-                            $flag = true;
-                            break;
+                stream_context_get_default(array(
+                    'http' => array(
+                        'header' => ""
+                )));
+                
+                if (is_array($headers) && array_key_exists('Content-Type', $headers)) {
+                    $ct = $headers['Content-Type'];
+                    if (is_array($ct)) {
+                        $ct = array_pop($ct);
+                    }
+                    $ct = strtolower($ct);
+                    
+                    if (substr($ct, 0, strlen('application/rdf+xml')) === 'application/rdf+xml') {
+                        $type = 'rdfxml';
+                        $flag = true;
+                    } else if (substr($ct, 0, strlen('text/plain')) === 'text/plain') {
+                        $type = 'rdfxml';
+                        $flag = true;
+                    } else if (substr($ct, 0, strlen('text/rdf+n3')) === 'text/rdf+n3') {
+                        $type = 'n3';
+                        $flag = true;
+                    } else if (substr($ct, 0, strlen('application/json')) === 'application/json') {
+                        $type = 'rdfjson';
+                        $flag = true;
                     }
                 } 
                 
