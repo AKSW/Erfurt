@@ -54,9 +54,7 @@ class Erfurt_Versioning
      * and adds triggers for operations on statements (add/del)
      */
     public function __construct()
-    {
-        $this->_initialize();
-        
+    {    
         // register for events
         require_once 'Erfurt/Event/Dispatcher.php';
         $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
@@ -110,7 +108,7 @@ class Erfurt_Versioning
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
-        $result = $this->_getStore()->sqlQuery($sql);
+        $result = $this->_sqlQuery($sql);
         
         return $result;
     }
@@ -130,7 +128,7 @@ class Erfurt_Versioning
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
         
-        $result = $this->_getStore()->sqlQuery($sql);
+        $result = $this->_sqlQuery($sql);
 
         return $result;
     }
@@ -144,7 +142,7 @@ class Erfurt_Versioning
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
            
-        $result = $this->_getStore()->sqlQuery($sql);
+        $result = $this->_sqlQuery($sql);
         
         return $result;
     }
@@ -157,7 +155,7 @@ class Erfurt_Versioning
                 AND parent IS NULL
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ( ( $page - 1) * $this->getLimit() );
-        $result = $this->_getStore()->sqlQuery($sql);
+        $result = $this->_sqlQuery($sql);
         
         return $result;
     } 
@@ -170,7 +168,7 @@ class Erfurt_Versioning
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
                 
-        $result = $this->_getStore()->sqlQuery($sql);
+        $result = $this->_sqlQuery($sql);
         
         return $result;
     }
@@ -279,7 +277,7 @@ class Erfurt_Versioning
                       '( id = ' . ((int)$actionId) . ' OR parent = ' . ((int)$actionId) . ' ) ' .
                       'AND payload_id IS NOT NULL';
                        
-        $result = $this->_getStore()->sqlQuery($actionsSql);
+        $result = $this->_sqlQuery($actionsSql);
         
         if ((count($result) == 0) || ($result[0]['payload_id'] === null)) {
             var_dump($actionsSql);exit();
@@ -299,7 +297,7 @@ class Erfurt_Versioning
                 $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
                 $payloadID;
                            
-                $payloadResult = $this->_getStore()->sqlQuery($payloadsSql);
+                $payloadResult = $this->_sqlQuery($payloadsSql);
 
                 if (count($payloadResult) !== 1) {
 
@@ -365,7 +363,7 @@ class Erfurt_Versioning
                       'AND actions.payload_id IS NOT NULL ' .
                       'AND actions.payload_id = payloads.id ';
 
-        $resultArray = $this->_getStore()->sqlQuery($detailsSql);
+        $resultArray = $this->_sqlQuery($detailsSql);
 
         return $resultArray;
     }
@@ -401,7 +399,7 @@ class Erfurt_Versioning
            $actionsSql .= ')';
         }               
 
-        $this->_getStore()->sqlQuery($actionsSql);
+        $this->_sqlQuery($actionsSql);
 
         if (null !== $this->_currentAction) {
             $parentActionId = $this->_getStore()->lastInsertId();
@@ -414,7 +412,7 @@ class Erfurt_Versioning
         $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (\'' .
                         addslashes(serialize($payload)) . '\')';
                         
-        $this->_getStore()->sqlQuery($payloadsSql);
+        $this->_sqlQuery($payloadsSql);
         $payloadId = $this->_getStore()->lastInsertId();
         
         return $payloadId;
@@ -435,12 +433,7 @@ class Erfurt_Versioning
         }
     }
     
-    /**
-     * This method is public only for unit testing purposes in order to allow stubbing of the store object.
-     * It should never be called directly. A direct call of this method will not do any harm, for the object is
-     * just reset.
-     */
-    public function _getStore()
+    protected function _getStore()
     {
         if (null === $this->_store) {
             $this->_store = Erfurt_App::getInstance()->getStore();
@@ -449,18 +442,13 @@ class Erfurt_Versioning
         return $this->_store;
     }
     
-    /**
-     * This method is public only for unit testing purposes in order to allow stubbing of the auth object.
-     * It should never be called directly. A direct call of this method will not do any harm, for the object is
-     * just reset.
-     */
-    public function _getAuth()
+    protected function _getAuth()
     {
         $app = Erfurt_App::getInstance();
         return $app->getAuth();
     }
     
-    private function _initialize()
+    public function initialize()
     {
         if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
@@ -491,5 +479,18 @@ class Erfurt_Versioning
             
             $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
         }        
+    }
+    
+    protected function _sqlQuery($sql)
+    {
+        try {
+            $result = $this->_getStore()->sqlQuery($sql);
+        } catch (Erfurt_Exception $e) {
+            // Try to initialize
+            $this->initialize();
+            $result = $this->_getStore()->sqlQuery($sql);
+        }
+        
+        return $result;
     }
 }
