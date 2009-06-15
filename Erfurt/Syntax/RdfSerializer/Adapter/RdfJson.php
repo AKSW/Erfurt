@@ -14,7 +14,7 @@ require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {    
-    public function serializeResourceToString($resourceUri, $graphUri, $pretty)
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false)
     {
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
@@ -83,7 +83,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         return json_encode($triples);
     }
     
-    public function serializeGraphToString($graphUri, $pretty)
+    public function serializeGraphToString($graphUri, $pretty = false)
     {   
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
