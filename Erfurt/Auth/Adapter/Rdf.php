@@ -12,19 +12,22 @@ require_once 'Zend/Auth/Result.php';
  * @subpackage auth
  * @author  Stefan Berger <berger@intersolut.de>
  * @author  Norman Heino <norman.heino@gmail.com>
+ * @author  Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license
  * @version $Id$
  */
 class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     
+    private $_config = null;
+    
     /** @var string */
-    protected $username = null;
+    protected $_username = null;
 
     /** @var string */
-    protected $password = null;
+    protected $_password = null;
 
     /** @var string */
-    protected $acModelUri = null;
+    protected $_acModelUri = null;
 
     /** @var array */
     protected $users = array();
@@ -33,46 +36,26 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     protected $_userDataFetched = false;
 
     /** @var string */
-    private $_dbUsername = '';
+    private $_dbUsername = null;
 
     /** @var string */
-    private $_dbPassword = '';
+    private $_dbPassword = null;
+    
+    private $_store = null;
+    
     
     /** @var array */
-    private $_uris = array();
+    private $_uris = null;
     
     private $_loginDisabled = false;
     
     /**
      * Constructor
      */
-    public function __construct($username = null, $password = null) {        
-        $this->username = $username;
-        $this->password = $password;
-        $this->store    = Erfurt_App::getInstance()->getStore();
-        
-        $config = Erfurt_App::getInstance()->getConfig();
-        
-        $this->_dbUsername = $this->store->getDbUser();
-        $this->_dbPassword = $this->store->getDbPassword();
-        
-        $this->acModelUri = $config->ac->modelUri;
-        
-        // load URIs from config
-        $this->_uris = array(
-            'user_class'      => $config->ac->user->class, 
-            'user_username'   => $config->ac->user->name, 
-            'user_password'   => $config->ac->user->pass, 
-            'user_mail'       => $config->ac->user->mail, 
-            'user_superadmin' => $config->ac->user->superAdmin, 
-            'user_anonymous'  => $config->ac->user->anonymousUser, 
-            'action_deny'     => $config->ac->action->deny, 
-            'action_login'    => $config->ac->action->login
-        );
-        
-        if (isset($config->ac->deactivateLogin) && ((boolean)$config->ac->deactivateLogin === true)) {
-            $this->_loginDisabled = true;
-        }
+    public function __construct($username = null, $password = null) 
+    {        
+        $this->_username = $username;
+        $this->_password = $password; 
     }
     
     /**
@@ -83,16 +66,16 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      */
     public function authenticate() {
         
-        if ($this->_loginDisabled === true || $this->username === 'Anonymous') {
+        if ($this->_isLoginDisabled() === true || $this->_username === 'Anonymous') {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getAnonymousUser());
         // super admin
-        } else if ($this->username === $this->_dbUsername and $this->password === $this->_dbPassword) {
+        } else if ($this->_username === $this->_getDbUsername() and $this->_password === $this->_getDbPassword()) {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getSuperAdmin());
         
         // normal user from system ontology
         } else {
             $identity = array(
-                'username'  => $this->username, 
+                'username'  => $this->_username, 
                 'uri'       => '', 
                 'dbuser'    => false, 
                 'anonymous' => false
@@ -100,32 +83,32 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             
             // have a look at the cache...
             $cache = Erfurt_App::getInstance()->getCache();
-            $id = $cache->makeId($this, '_fetchDataForUser', array($this->username));
+            $id = $cache->makeId($this, '_fetchDataForUser', array($this->_username));
             $cachedVal = $cache->load($id);
             if ($cachedVal) {
-                $this->_users[$this->username] = $cachedVal;
+                $this->_users[$this->_username] = $cachedVal;
             } else {
-                $this->_users[$this->username] = $this->_fetchDataForUser($this->username);
-                $cache->save($this->_users[$this->username]);
+                $this->_users[$this->_username] = $this->_fetchDataForUser($this->_username);
+                $cache->save($this->_users[$this->_username]);
             }
             
             // if login is denied return failure auth result
-            if ($this->_users[$this->username]['denyLogin'] === true) {
+            if ($this->_users[$this->_username]['denyLogin'] === true) {
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('Login not allowed!'));
             } 
             // does user not exist?
-            else if ($this->_users[$this->username]['userUri'] === false) {
+            else if ($this->_users[$this->_username]['userUri'] === false) {
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('User does not exist!'));
             } else {
                 // verify the password
-                if (!$this->_verifyPassword($this->password, $this->_users[$this->username]['userPassword'], 'sha1') 
-                        && !$this->_verifyPassword($this->password, $this->_users[$this->username]['userPassword'], 
+                if (!$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 'sha1') 
+                        && !$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 
                         '')) {
                     
                     $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('Wrong password entered!'));
                 } else {
-                    $identity['uri'] = $this->_users[$this->username]['userUri'];
-                    $identity['email'] = $this->_users[$this->username]['userEmail'];
+                    $identity['uri'] = $this->_users[$this->_username]['userUri'];
+                    $identity['email'] = $this->_users[$this->_username]['userEmail'];
                     
                     $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identity);
                 }
@@ -155,12 +138,14 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             'userEmail'     => ''
         );
         
+        $uris = $this->_getUris();
+        
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
         $sparqlQuery->setProloguePart('SELECT ?subject ?predicate ?object');
         
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
-            $this->_uris['user_class'] . '> . ?subject <' . $this->_uris['user_username'] . '> "' . $username . '"^^<' . 
+            $uris['user_class'] . '> . ?subject <' . $uris['user_username'] . '> "' . $username . '"^^<' . 
             EF_XSD_NS . 'string> }';
         $sparqlQuery->setWherePart($wherePart);
         
@@ -173,15 +158,15 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
                 
                 // check other predicates
                 switch ($userStatement['predicate']) {
-                    case $this->_uris['action_deny']:
+                    case $uris['action_deny']:
                         // if login is disallowed
-                        if ($userStatement['object'] === $this->_uris['action_login']) {
+                        if ($userStatement['object'] === $uris['action_login']) {
                             return array('denyLogin' => true);
                         }
-                    case $this->_uris['user_password']:
+                    case $uris['user_password']:
                         $returnVal['userPassword'] = $userStatement['object'];
                         break;
-                    case $this->_uris['user_mail']:
+                    case $uris['user_mail']:
                         $returnVal['userEmail'] = $userStatement['object'];
                         break;
                     default:
@@ -201,32 +186,34 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      * @return void
      */
     public function fetchDataForAllUsers()
-    {    
+    {   
+        $uris = $this->_getUris();
+         
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $userSparql = new Erfurt_Sparql_SimpleQuery();
         $userSparql->setProloguePart('SELECT ?subject ?predicate ?object');
         
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
-            $this->_uris['user_class'] . '> }';
+            $uris['user_class'] . '> }';
         $userSparql->setWherePart($wherePart);
         
         if ($result = $this->_sparql($userSparql)) {
             foreach ($result as $statement) {
                 switch ($statement['predicate']) {
-                case $this->_uris['action_deny']:
-                    if ($statement['object'] == $this->_uris['action_login']) {
+                case $uris['action_deny']:
+                    if ($statement['object'] == $uris['action_login']) {
                         $this->_users[$statement['subject']]['loginForbidden'] = true;
                     }
                     break;
-                case $this->_uris['user_username']:
+                case $uris['user_username']:
                     // save username
                     $this->_users[$statement['subject']]['userName'] = $statement['object'];
                     break;
-                case $this->_uris['user_password']:
+                case $uris['user_password']:
                     // save password
                     $this->_users[$statement['subject']]['userPassword'] = $statement['object'];
                     break;
-                case $this->_uris['user_mail']:
+                case $uris['user_mail']:
                     // save e-mail
                     $this->_users[$statement['subject']]['userEmail'] = $statement['object'];
                     break;
@@ -295,8 +282,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      */
     private function _sparql($sparqlQuery) {
         try {
-            $sparqlQuery->addFrom($this->acModelUri);
-            $result = $this->store->sparqlQuery($sparqlQuery, array('use_ac' => false));
+            $sparqlQuery->addFrom($this->_getAcModelUri());
+            $result = $this->_getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
         } catch (Exception $e) {
             var_dump($e);exit;
             return null;
@@ -311,9 +298,11 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      * @return array 
      */
     private function _getAnonymousUser() {
+        $uris = $this->_getUris();
+        
         $user = array(
             'username'  => 'Anonymous', 
-            'uri'       => $this->_uris['user_anonymous'], 
+            'uri'       => $uris['user_anonymous'], 
             'dbuser'    => false, 
             'email'     => '', 
             'anonymous' => true
@@ -328,9 +317,11 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      * @return array  
      */
     private function _getSuperAdmin() {
+        $uris = $this->_getUris();
+        
         $user = array(
             'username'  => 'SuperAdmin', 
-            'uri'       => $this->_uris['user_superadmin'], 
+            'uri'       => $uris['user_superadmin'], 
             'dbuser'    => true, 
             'email'     => '', 
             'anonymous' => false
@@ -338,6 +329,83 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
         
         return $user;
     }
+    
+    private function _getDbUsername()
+    {
+        if (null === $this->_dbUsername) {
+            $this->_dbUsername = $this->_getStore()->getDbUser();
+        }
+        
+        return $this->_dbUsername;
+    }
+    
+    private function _getDbPassword()
+    {
+        if (null === $this->_dbPassword) {
+            $this->_dbPassword = $this->_getStore()->getDbPassword();
+        }
+        
+        return $this->_dbPassword;
+    }
+    
+    private function _getConfig()
+    {
+        if (null === $this->_config) {
+            $this->_config = Erfurt_App::getInstance()->getConfig();
+        }
+        
+        return $this->_config;
+    }
+    
+    private function _getStore()
+    {
+        if (null === $this->_store) {
+            $this->_store = Erfurt_App::getInstance()->getStore();
+        }
+        
+        return $this->_store;
+    }
+    
+    private function _getAcModelUri()
+    {
+        if (null === $this->_acModelUri) {
+            $config = $this->_getConfig();
+            $this->_acModelUri = $config->ac->modelUri;
+        }
+        
+        return $this->_acModelUri;
+    }
+    
+    private function _getUris()
+    {
+        if (null === $this->_uris) {
+            $config = $this->_getConfig();
+            
+            $this->_uris = array(
+                'user_class'      => $config->ac->user->class, 
+                'user_username'   => $config->ac->user->name, 
+                'user_password'   => $config->ac->user->pass, 
+                'user_mail'       => $config->ac->user->mail, 
+                'user_superadmin' => $config->ac->user->superAdmin, 
+                'user_anonymous'  => $config->ac->user->anonymousUser, 
+                'action_deny'     => $config->ac->action->deny, 
+                'action_login'    => $config->ac->action->login
+            );
+        }
+        
+        return $this->_uris;
+    }
+    
+    private function _isLoginDisabled()
+    {
+        if (null === $this->_loginDisabled) {
+            $config = $this->_getConfig();
+            
+            if (isset($config->ac->deactivateLogin) && ((boolean)$config->ac->deactivateLogin === true)) {
+                $this->_loginDisabled = true;
+            }
+        }
+        
+        return $this->_loginDisabled;
+    }
 }
-
-?>
