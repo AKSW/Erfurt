@@ -191,15 +191,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $object = '<' . $object . '>';
         } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
             // make secure literal object 
-            $object = $this->_buildLiteralString($object, (isset($options['literal_datatype'])) ? $options['literal_datatype'] : null);        
+            $object = $this->buildLiteralString($object, (isset($options['literal_datatype'])) ? $options['literal_datatype'] : null);        
         }
         
         // datatype/language
-        if (array_key_exists('literal_language', $options)) {
-            $object .= '@' . $options['literal_language'];
-        } else if (array_key_exists('literal_datatype', $options)) {
-            $object .= '^^<' . $options['literal_datatype'] . '>';
-        }
+        // if (array_key_exists('literal_language', $options)) {
+        //     $object .= '@' . $options['literal_language'];
+        // } else if (array_key_exists('literal_datatype', $options)) {
+        //     $object .= '^^<' . $options['literal_datatype'] . '>';
+        // }
         
         // TODO: support blank nodes as subject
         $insertSparql = '
@@ -208,6 +208,86 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }';
         
         return $this->_execSparql($insertSparql);
+    }
+    
+    /**
+     * Builds a SPARQL-compatible literal string with long literals if necessary.
+     */
+    public function buildLiteralString($value, $datatype = null, $lang = null)
+    {
+        $longLiteral    = false;
+        $value          = (string) $value;
+        $quoteChar      = (strpos($value, '"') !== false) ? "'" : '"';
+        $languageString = null;
+        
+        switch ($datatype) {
+            case 'http://www.w3.org/2001/XMLSchema#boolean':
+                $search  = array('0', '1');
+                $replace = array('false', 'true');
+                $value   = str_replace($search, $replace, $value);
+                break;
+            case '':
+            case null:
+            case 'http://www.w3.org/2001/XMLSchema#string':
+                $value = addcslashes($value, $quoteChar);
+                
+                /** 
+                 * Check for characters not allowed in a short literal
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 */
+                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
+                    $longLiteral = true;
+                }
+            break;
+        }
+        
+        $value = $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '')
+               . $value 
+               . $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '');
+        
+        if (!empty($datatype)) {
+            $value .= '^^' . '<' . (string) $datatype . '>';
+        } else if (!empty($lang)) {
+            $value .= '@' . (string) $lang;
+        }
+        
+        return $value;
+    }
+    
+    /**
+     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
+     *
+     * @param $rdfPhpStatements A nested statement array
+     * @return string
+     */
+    public function buildTripleString(array $rdfPhpStatements)
+    {
+        $triples = '';
+        
+        foreach ($rdfPhpStatements as $currentSubject => $predicates) {
+            foreach ($predicates as $currentPredicate => $objects) {
+                foreach ($objects as $currentObject) {
+                    // TODO: blank nodes
+                    $resource = '<' . $currentSubject . '>';
+                    $property = '<' . $currentPredicate . '>';
+                    
+                    if ($currentObject['type'] == 'uri') {
+                        $value = '<' . $currentObject['value'] . '>';
+                    } else {
+                        $value = $this->buildLiteralString(
+                            $currentObject['value'], 
+                            array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null, 
+                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
+                        );
+                    }
+                    
+                    // add triple
+                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
+                }
+            }
+        }
+        
+        return $triples;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -711,172 +791,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
-    
-    /**
-     * Builds a SPARQL-compatible literal string with long literals if necessary.
-     */
-    public function buildLiteralString($value, $datatype = null, $lang = null)
-    {
-        $longLiteral    = false;
-        $value          = (string) $value;
-        $quoteChar      = (strpos($value, '"') !== false) ? "'" : '"';
-        $languageString = null;
-        
-        switch ($datatype) {
-            case 'http://www.w3.org/2001/XMLSchema#boolean':
-                $search  = array('0', '1');
-                $replace = array('false', 'true');
-                $value   = str_replace($search, $replace, $value);
-                break;
-            case '':
-            case null:
-            case 'http://www.w3.org/2001/XMLSchema#string':
-                $value = addcslashes($value, $quoteChar);
-                
-                /** 
-                 * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
-                 */
-                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
-                    $longLiteral = true;
-                }
-            break;
-        }
-        
-        $value = $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '')
-               . $value 
-               . $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '');
-        
-        if (!empty($datatype)) {
-            $value .= '^^' . '<' . (string) $datatype . '>';
-        } else if (!empty($lang)) {
-            $value .= '@' . (string) $lang;
-        }
-        
-        return $value;
-    }
-    
-    /**
-     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
-     *
-     * @param $rdfPhpStatements A nested statement array
-     * @return string
-     */
-    public function buildTripleString(array $rdfPhpStatements)
-    {
-        $triples = '';
-        
-        foreach ($rdfPhpStatements as $currentSubject => $predicates) {
-            foreach ($predicates as $currentPredicate => $objects) {
-                foreach ($objects as $currentObject) {
-                    // TODO: blank nodes
-                    $resource = '<' . $currentSubject . '>';
-                    $property = '<' . $currentPredicate . '>';
-                    
-                    if ($currentObject['type'] == 'uri') {
-                        $value = '<' . $currentObject['value'] . '>';
-                    } else {
-                        $value = $this->buildLiteralString(
-                            $currentObject['value'], 
-                            array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null, 
-                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
-                        );
-                    }
-                    
-                    // add triple
-                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
-                }
-            }
-        }
-        
-        return $triples;
-    }
-    
-    /**
-     * Builds a sparql graph pattern from an array of statements.
-     *
-     * @param $statementsArray an array of statements in RDF/PHP structure.
-     *
-     * @return string
-     */
-    private function _buildGraphPattern(array $statementsArray, $handleStringBug = false, $escapeLiterals = true)
-    {
-        $triples = '';
-        foreach ($statementsArray as $subject => $predicateArray) {
-            foreach ($predicateArray as $predicate => $objectsArray) {
-                foreach ($objectsArray as $object) {
-                    $triples .= '<' . $subject . '> <' . $predicate . '> ';
-                    
-                    switch ($object['type']) {
-                        case 'uri':
-                            $triples .= '<' . $object['value'] . '>';
-                            break;
-                        case 'literal':
-                            $object['value'] = $this->_buildLiteralString(
-                                $object['value'], 
-                                isset($object['datatype']) ? $object['datatype'] : null
-                            );
-                            
-                            $triples .= $object['value'] ;
-                            
-                            if (array_key_exists('datatype', $object)) {
-                                if ($handleStringBug && $object['datatype'] == 'http://www.w3.org/2001/XMLSchema#string') {
-                                    // add string triple w/o datatype
-                                    $triples .= '.' . PHP_EOL . '<' . $subject . '> <' . $predicate . '> ' . $object['value'] ;
-                                } else {
-                                    $triples .= '^^<' . $object['datatype'] . '>';
-                                }
-                            } else if (array_key_exists('lang', $object)) {
-                                $triples .= '@' . $object['lang'];
-                            }
-                            break;
-                    }
-                    
-                    $triples .= '.' . PHP_EOL;
-                }
-            }
-        }
-        #var_dump($triples);exit;
-        
-        return $triples;
-    }
-    
-    /**
-     * Builds a SPARQL-compatible literal string with long literals if necessary.
-     */
-    private function _buildLiteralString($literal, $datatype = 'http://www.w3.org/2001/XMLSchema#string')
-    {
-        $longLiteral = false;
-        $literal     = (string) $literal;
-        $quoteChar   = (strpos($literal, '"') !== false) ? "'" : '"';
-        
-        switch ($datatype) {
-            case 'http://www.w3.org/2001/XMLSchema#boolean':
-                $search  = array('0', '1');
-                $replace = array('false', 'true');
-                $literal = str_replace($search, $replace, $literal);
-            break;
-            case 'http://www.w3.org/2001/XMLSchema#string':
-            case '':
-            case null:
-                $literal = addcslashes($literal, $quoteChar);
-                
-                /** 
-                 * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
-                 */
-                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $literal) !== false) {
-                    $longLiteral = true;
-                }
-            break;
-        }
-        
-        $literal = $quoteChar . ($longLiteral ? $quoteChar . $quoteChar : '')
-                 . $literal 
-                 . $quoteChar . ($longLiteral ? $quoteChar . $quoteChar : '');
-        
-        return $literal;
-    }
     
     /**
      * Converts an ODBC result to an array.
