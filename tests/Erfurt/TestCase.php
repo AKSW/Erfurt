@@ -21,7 +21,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $this->authenticateDbUser();
             $store = Erfurt_App::getInstance()->getStore();
 
-            foreach ($store->getAvailableModels() as $graphUri => $true) {                
+            foreach ($store->getAvailableModels(true) as $graphUri => $true) {                
                 $store->deleteModel($graphUri);
             }
             
