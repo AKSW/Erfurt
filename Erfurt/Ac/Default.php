@@ -50,6 +50,8 @@ class Erfurt_Ac_Default
      */
     private $_config = null;
     
+    private $_isInit = false;
+    
     /**
      * Contains the configured ac concept uris.
      * @var array
@@ -95,19 +97,6 @@ class Erfurt_Ac_Default
     );
     
     // ------------------------------------------------------------------------
-    // --- Magic methods ------------------------------------------------------
-    // ------------------------------------------------------------------------
-    
-    /**
-     * The constructor of this class.
-     */
-    public function __construct() 
-    {   
-        // Just do some initialization. 
-        $this->_init();
-    }
-    
-    // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
     
@@ -119,6 +108,8 @@ class Erfurt_Ac_Default
      */
     public function getActionConfig($actionSpec)
     {   
+        $this->_init();
+        
         if (null === $this->_actionConfig) {
             // Fetch the action config.
             $actionConfig = array();
@@ -179,7 +170,9 @@ class Erfurt_Ac_Default
      * @return array Returns a list of allowed actions.
      */
     public function getAllowedActions() 
-    {    
+    {   
+        $this->_init();
+         
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         
@@ -203,6 +196,8 @@ class Erfurt_Ac_Default
      */
     public function getAllowedModels($type = 'view') 
     {   
+        $this->_init();
+        
         $type = strtolower($type);
         // not supported type?
         if (!in_array($type, array('view', 'edit'))) {
@@ -233,7 +228,9 @@ class Erfurt_Ac_Default
      * @return array Returns a list of denied actions.
      */
     public function getDeniedActions() 
-    {    
+    {   
+        $this->_init();
+         
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         
@@ -248,6 +245,8 @@ class Erfurt_Ac_Default
      */
     public function getDeniedModels($type = 'view') 
     {   
+        $this->_init();
+        
         $type = strtolower($type);
         // not supported type?
         if (!in_array($type, array('view', 'edit'))) {
@@ -272,6 +271,8 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
+        $this->_init();
+        
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         $type       = strtolower($type);
@@ -324,6 +325,8 @@ class Erfurt_Ac_Default
      */
     public function isActionAllowed($action) 
     {
+        $this->_init();
+        
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         $actionUri  = $this->_uris['acBaseUri'] . $action;
@@ -346,7 +349,9 @@ class Erfurt_Ac_Default
      * @return boolean Returns whether an action is allowed or not.
      */
     public function isAnyActionAllowed() 
-    {    
+    {   
+        $this->_init(); 
+        
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         
@@ -362,6 +367,8 @@ class Erfurt_Ac_Default
      */
     public function isAnyModelAllowed($type = 'view') 
     {
+        $this->_init();
+        
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user['uri']);
         $type       = strtolower($type);
@@ -407,6 +414,8 @@ class Erfurt_Ac_Default
      */
     public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
     {    
+        $this->_init();
+        
         $user       = $this->_getUser();
         $type       = strtolower($type);
         
@@ -451,7 +460,7 @@ class Erfurt_Ac_Default
         $this->_userRights[$user['uri']][$right][] = $modelUri;
 
 // TODO set the right cache tags, such that cache is invalidated!!!
-        $this->_acModel->addStatement($user['uri'], $prop, $modelUri);
+        $this->_acModel->addStatement($user['uri'], $prop, array('type' => 'uri', 'value' => $modelUri));
     }
     
     // ------------------------------------------------------------------------
@@ -487,14 +496,14 @@ class Erfurt_Ac_Default
         if (!isset($this->_userRights[$userURI])) {
             // In this case we need to fetch the rights for the user.
             $userRights = $this->_userRightsTemplate;
-            
+         
             // Super admin, i.e. a user that has database rights (only for debugging purposes and only if
             // enabled in config).
             if (($userURI === $this->_uris['superUserUri']) && ((boolean)$this->_config->ac->allowDbUser === true)) {
                 $userRights['userAnyActionAllowed']     = true;
                 $userRights['userAnyModelEditAllowed']  = true;
                 $userRights['userAnyModelViewAllowed']  = true;
-                
+
                 $this->_userRights[$userURI] = $userRights;
                 return $userRights;
             }
@@ -615,6 +624,10 @@ class Erfurt_Ac_Default
      */
     private function _init()
     {
+        if ($this->_isInit === true) {
+            return;
+        }
+        
         // Reset the user rights array.
         $this->_userRights = array();
         
@@ -642,6 +655,8 @@ class Erfurt_Ac_Default
         $this->_uris['propDenyAccess']     = $this->_config->ac->action->deny;
         $this->_uris['modelClassUri']      = $this->_config->ac->models->class;
         $this->_uris['actionConfigUri']    = $this->_config->ac->action->rawConfig;
+        
+        $this->_isInit = true;
     }
     
     /**
