@@ -161,7 +161,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addMultipleStatements($graphIri, array $statementsArray, $options = array())
+    public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
         // handle defaults
         $defaultOptions = array(
@@ -177,7 +177,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphIri, $subject, $predicate, $objectSpec, $options = array())
+    public function addStatement($graphIri, $subject, $predicate, $objectSpec, array $options = array())
     {
         if ($objectSpec['type'] == 'uri') {
             $object = '<' . $objectSpec['value'] . '>';
@@ -316,7 +316,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {        
         $subjectSpec   = $subject   ? '<' . $subject . '>'   : '?s';
         $predicateSpec = $predicate ? '<' . $predicate . '>' : '?p';
