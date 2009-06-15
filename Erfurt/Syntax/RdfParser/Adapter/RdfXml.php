@@ -53,7 +53,15 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     public function parseFromFilename($filename)
     {
+        stream_context_get_default(array(
+            'http' => array(
+                'header' => "Accept: application/rdf+xml"
+        )));
         $fileHandle = fopen($filename, 'r');
+        stream_context_get_default(array(
+            'http' => array(
+                'header' => ""
+        )));
         
         if ($fileHandle === false) {
             require_once 'Erfurt/Syntax/RdfParserException.php';
