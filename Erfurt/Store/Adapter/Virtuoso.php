@@ -177,29 +177,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphIri, $subject, $predicate, $object, $options = array())
+    public function addStatement($graphIri, $subject, $predicate, $objectSpec, $options = array())
     {
-        // handle defaults
-        $options = array_merge(array(
-            'subject_type'    => Erfurt_Store::TYPE_IRI, 
-            'object_type'     => Erfurt_Store::TYPE_IRI, 
-            'escape_literals' => true
-        ), $options);
-        
-        if ($options['object_type'] == Erfurt_Store::TYPE_IRI) {
-            // make IRI object
-            $object = '<' . $object . '>';
-        } else if ($options['object_type'] == Erfurt_Store::TYPE_LITERAL) {
-            // make secure literal object 
-            $object = $this->buildLiteralString($object, (isset($options['literal_datatype'])) ? $options['literal_datatype'] : null);        
+        if ($objectSpec['type'] == 'uri') {
+            $object = '<' . $objectSpec['value'] . '>';
+        } else {
+            $datatype = isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null;
+            $lang     = isset($objectSpec['lang']) ? $objectSpec['lang'] : null;
+            $object   = $this->buildLiteralString($objectSpec['value'], $datatype, $lang);
         }
-        
-        // datatype/language
-        // if (array_key_exists('literal_language', $options)) {
-        //     $object .= '@' . $options['literal_language'];
-        // } else if (array_key_exists('literal_datatype', $options)) {
-        //     $object .= '^^<' . $options['literal_datatype'] . '>';
-        // }
         
         // TODO: support blank nodes as subject
         $insertSparql = '
@@ -334,14 +320,25 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {        
         $subjectSpec   = $subject   ? '<' . $subject . '>'   : '?s';
         $predicateSpec = $predicate ? '<' . $predicate . '>' : '?p';
-        $objectSpec    = $object    ? '<' . $object . '>'    : '?o';
         
-        $deleteSparql = '
-            DELETE FROM GRAPH <' . $graphUri . '> {' . $subjectSpec . ' ' . $predicateSpec . ' ' . $objectSpec . '.}
-            WHERE {
-                GRAPH <' . $graphUri . '> {' . $subjectSpec . ' ' . $predicateSpec . ' ' . $objectSpec . '.}
+        if (null !== $object) {
+            if ($object['type'] == 'uri') {
+                $objectSpec = '<' . $object['value'] . '>';
+            } else {
+                $objectSpec = $this->buildLiteralString($object['value']);
             }
-        ';
+        } else {
+            $objectSpec = '?o';
+        }
+        
+        $quadSpec = sprintf('GRAPH <%s> {%s %s %s . }', $graphUri, $subjectSpec, $predicateSpec, $objectSpec);
+        
+        $deleteSparql = "
+            DELETE FROM $quadSpec
+            WHERE {
+                $quadSpec
+            }
+        ";
         
         return $this->_execSparql($deleteSparql);
     }
