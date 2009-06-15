@@ -255,13 +255,8 @@ class Erfurt_Store
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-    public function addStatement($graphUri, $subject, $predicate, $object, $options = array(), $useAcl = true)
+    public function addStatement($graphUri, $subject, $predicate, $object, $useAcl = true)
     {        
-        $options = array_merge(array(
-            'subject_type' => Erfurt_Store::TYPE_IRI, 
-            'object_type'  => Erfurt_Store::TYPE_IRI
-        ), $options);
-        
         // check whether model is available
         if ($useAcl && !$this->isModelAvailable($graphUri)) {
             require_once 'Erfurt/Exception.php';
@@ -274,7 +269,7 @@ class Erfurt_Store
             throw new Erfurt_Exception('No permissions to edit model.');
         }
         
-        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
+        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
 
         //invalidate deprecateded Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -285,9 +280,12 @@ class Erfurt_Store
         require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onAddStatement');
         $event->graphUri   = $graphUri; 
-        $event->subject = $subject;
-        $event->predicate = $predicate;
-        $event->object = $object;
+        $event->statement = array(
+            'subject'   => $subject,
+            'predicate' => $predicate,
+            'object'    => $object
+        );
+        
         Erfurt_Event_Dispatcher::getInstance()->trigger($event);
     }
     
@@ -562,7 +560,7 @@ echo $e->getMessage();exit;
         $this->_backendAdapter->deleteModel($modelIri);
 
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidateWithModelIri( $modelIri );
+        $queryCache->invalidateWithModelIri($modelIri);
 
         
         // remove any statements about deleted model from SysOnt
@@ -571,7 +569,7 @@ echo $e->getMessage();exit;
             
             // Only do that, if the deleted model was not one of the sys models
             $config = Erfurt_App::getInstance()->getConfig();
-            if (($modelIri !== $config->sysont->model) && ($modelIri !== $config->sysont->schema)) {
+            if (($modelIri !== $config->sysOnt->modelUri) && ($modelIri !== $config->sysOnt->schemaUri)) {
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
             }
@@ -671,7 +669,7 @@ echo $e->getMessage();exit;
     {
         // backend adapter returns all models
         $models = $this->_backendAdapter->getAvailableModels();
-    
+
         // filter for access control and hidden models
         foreach ($models as $graphUri => $true) {
             if (!$this->_checkAc($graphUri)) {
@@ -971,7 +969,6 @@ echo $e->getMessage();exit;
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
         } else {
-            require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
@@ -1142,7 +1139,7 @@ echo $e->getMessage();exit;
         if (!($sparqlResult = $queryCache->load( (string) $queryObject ))){
 #           // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlQuery( (string) $queryObject, $resultFormat);
+            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $resultFormat);
             $duration = microtime(true) - $startTime;
             $queryCache->save( (string) $queryObject , $sparqlResult, $duration );
         }
@@ -1160,9 +1157,9 @@ echo $e->getMessage();exit;
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
 	        return $this->_backendAdapter->sqlQuery($sqlQuery);
+	    } else {
+	        return false;
 	    }
-	    
-	    // TODO: use default SQL store
     }
     
     public function getGraphConfiguration($graphUri)
@@ -1301,6 +1298,9 @@ echo $e->getMessage();exit;
                         sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
                     )
                 }';
+
+            require_once 'Erfurt/Sparql/SimpleQuery.php';
+            $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);
 
             if (count($result = $this->_backendAdapter->sparqlQuery($subSparql)) < 1) {
                 break;
