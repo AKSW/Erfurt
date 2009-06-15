@@ -119,7 +119,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addMultipleStatements($graphUri, array $statementsArray, $options = array())
+    public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
         $modelInfoCache = $this->_getModelInfos();
         
@@ -346,7 +346,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphUri, $subject, $predicate, $object, $options = array())
+    public function addStatement($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $statementArray = array();
         $statementArray["$subject"] = array();
@@ -388,7 +388,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $modelInfoCache = $this->_getModelInfos();
         
