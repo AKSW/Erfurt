@@ -101,12 +101,11 @@ class Erfurt_Rdf_Model
      *
      * @param string $subject
      * @param string $predicate
-     * @param string $object
-     * @param array $options
+     * @param array $object
      */
-    public function addStatement($subject, $predicate, $object, $options = array(), $useAcl = true)
+    public function addStatement($subject, $predicate, array $object)
     {   
-        $this->getStore()->addStatement($this->_graphUri, $subject, $predicate, $object, $options, $useAcl);
+        $this->getStore()->addStatement($this->_graphUri, $subject, $predicate, $object);
         
         return $this;
     }
@@ -179,7 +178,7 @@ class Erfurt_Rdf_Model
      * @param string|null $predicateSpec
      * @param string|null $objectSpec
      */
-    public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, $options = array())
+    public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, array $options = array())
     {
         $this->getStore()->deleteMatchingStatements($this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec,
                                 $options);
@@ -229,7 +228,7 @@ class Erfurt_Rdf_Model
     public function getOption($optionUri)
     {
         $options = $this->_getOptions();
-        
+
         if (!isset($options[$optionUri])) {
             return null;
         } else {
