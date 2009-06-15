@@ -16,24 +16,21 @@ interface Erfurt_Store_Adapter_Interface
      *
      * @param string $graphIri
      * @param array  $statementsArray
-     * @param array  $options ("escapeLiteral" => FALSE/TRUE) to disable automatical escaping characters 
+     * @param array  $options ("escapeLiteral" => true/false) to disable automatical escaping characters 
      */
-    public function addMultipleStatements($graphIri, array $statementsArray, $options = array());
+    public function addMultipleStatements($graphIri, array $statementsArray, array $options = array());
     
 	/**
      * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param string $object (IRI, blank node or literal)
-     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
-     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
-     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
-     * the object of the statement is a literal. Furthermore it is possible to disable automatic escaping special
-     * characters (like \n) whith the option: "escapeLiteral" and the possible values FALSE and TRUE.
+     * @param array $options It is possible to disable automatic escaping special
+     * characters (like \n) whith the option: "escapeLiteral" and the possible values true and false.
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-	public function addStatement($graphUri, $subject, $predicate, $object, $options = array());
+	public function addStatement($graphUri, $subject, $predicate, $object, array $options = array());
 	
 	/**
      * 
@@ -41,13 +38,11 @@ interface Erfurt_Store_Adapter_Interface
      * @param mixed $subject (string or null)
      * @param mixed $predicate (string or null)
      * @param mixed $object (string or null)
-     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
-     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
-     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype'.
+     * @param array $options
      * 
      * @throws Erfurt_Exception
      */
-	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options = array());
+	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array());
 	
     /**
      * Deletes statements in an array from the graph specified by $graphIri.
