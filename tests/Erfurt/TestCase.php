@@ -56,6 +56,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsDatabase()
     {
+        if (EF_TEST_CONFIG_SKIP_DB_TESTS) {
+            $this->markTestSkipped();
+        }
+        
         $this->_loadTestConfig();
         
         if ($this->_testConfig === false) {

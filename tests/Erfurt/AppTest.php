@@ -582,7 +582,12 @@ class Erfurt_AppTest extends Erfurt_TestCase
          $this->assertEquals($expectedPath, $resolvedPath);
 
          $config->log->path = '/tmp';
-         $expectedPath = '/tmp';
+         $expectedPath = '/tmp/';
+         $resolvedPath = $app->getLogDir();
+         $this->assertEquals($expectedPath, $resolvedPath);
+         
+         $config->log->path = '/tmp/';
+         $expectedPath = '/tmp/';
          $resolvedPath = $app->getLogDir();
          $this->assertEquals($expectedPath, $resolvedPath);
 
@@ -821,6 +826,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testVerifyOpenIdResult()
     {
+        $this->markTestNeedsDatabase();
+        
         $get = array();
         $result = Erfurt_App::getInstance()->verifyOpenIdResult($get);
         $this->assertFalse($result->isValid());
