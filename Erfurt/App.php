@@ -81,6 +81,12 @@ class Erfurt_App
      */
     private $_config = null;
     
+    /**
+     * Holds whether app was started.
+     * @var boolean
+     */
+    private $_isStarted = false;
+    
     /** 
      * Contains an array of Zend_Log instances. 
      * @var array 
@@ -134,45 +140,14 @@ class Erfurt_App
     // ------------------------------------------------------------------------
     
     /**
-     * Singleton pattern makes clone unavailable.
-     */
-    private function __clone()
-    {
-        // Just do nothing, especially do not call __clone from super class.
-    }
-    
-    /**
      * The constructor of this class.
      * 
      * @throws Erfurt_Exception Throws an exception if wrong PHP or wrong Zend
      * Framework version is used.
      */
     private function __construct() 
-    {    
-        // Check the PHP version.        
-        if (!version_compare(phpversion(), self::EF_MIN_PHP_VERSION, '>=')) {
-            require_once 'Erfurt/Exception.php';
-			throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
-        }
-        
-        // Define Erfurt base constant.
-        define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
-        
-        // Update the include path, such that libraries like e.g. Zend are available.  
-        $include_path  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
-        set_include_path($include_path);
-        
-        // Check whether Zend is loaded with the right version.
-		require_once 'Zend/Version.php';
-		if (!version_compare(Zend_Version::VERSION, self::EF_MIN_ZEND_VERSION, '>=')) {
-			require_once 'Erfurt/Exception.php';
-			throw new Erfurt_Exception(
-			    'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
-			);
-		}
-        
-        // Include the vocabulary file.
-        require_once EF_BASE . 'include/vocabulary.php';
+    {
+        // Nothing to do here... We do the heavy stuff in an init method for cleaner design.
     }
     
     // ------------------------------------------------------------------------
@@ -193,11 +168,16 @@ class Erfurt_App
             self::$_instance = new Erfurt_App();
             
             if ($autoStart === true) {
-                self::start();
+                self::$_instance->start();
             }
         }
         
         return self::$_instance;
+    }
+    
+    public static function reset()
+    {
+        self::$_instance = null;
     }
     
     /**
@@ -206,20 +186,27 @@ class Erfurt_App
      * @param Zend_Config|null $config An optional config object that will be merged with
      * the Erfurt config.
      * 
-     * 
+     * @return Erfurt_App
      * @throws Erfurt_Exception Throws an exception if the connection to the backend server fails.
      */
-    public static function start(Zend_Config $config = null) 
+    public function start(Zend_Config $config = null) 
     {   
+        // If already started just return the object.
+        if ($this->_isStarted === true) {
+            return $this;
+        }
+        
         // Stop the time for debugging purposes.
         $start = microtime(true);
 
+        // Init the app environment
+        $this->_init();
+
         // Load the configuration first.
-        $inst = self::getInstance(false);
-        $inst->loadConfig($config);
-        
+        $this->loadConfig($config);
+
         // Check for debug mode.
-        $config = $inst->getConfig(); 
+        $config = $this->getConfig(); 
         if ((boolean)$config->debug === true) {
             error_reporting(E_ALL | E_STRICT);
             
@@ -228,11 +215,11 @@ class Erfurt_App
             }
             
             // In debug mode log level is set to the highest value automatically.
-            $config->efloglevel = 7;
+            $config->log->level = 7;
         }
         
         // Set the configured time zone.
-        if (isset($config->timezone)) {
+        if (isset($config->timezone) && ((boolean)$config->timezone !== false)) {
             date_default_timezone_set($config->timezone);
         } else {
             date_default_timezone_set('Europe/Berlin');
@@ -240,7 +227,7 @@ class Erfurt_App
         
         // Starting Versioning
         try {
-            $versioning = $inst->getVersioning();
+            $versioning = $this->getVersioning();
             if ((boolean)$config->versioning === true) {
                 $versioning->enableVersioning(true);
             } else {
@@ -253,9 +240,11 @@ class Erfurt_App
 
         // Write time to the log, if enabled.
         $time = (microtime(true) - $start)*1000;
-        $inst->getLog()->debug('Erfurt_App started in ' . $time . ' ms.'); 
+        $this->getLog()->debug('Erfurt_App started in ' . $time . ' ms.'); 
 
-        return $inst;
+        $this->_isStarted = true;
+
+        return $this;
     }
     
     /**
@@ -267,26 +256,69 @@ class Erfurt_App
      * @param string|null $group
      * @return boolean
      */
-    public function addOpenIdUser($openid, $email = '', $label = '', $group = null)
+    public function addOpenIdUser($openid, $email = '', $label = '', $group = '')
     {
-        $acModel = $this->getAcModel();
-        $userUri = urldecode($openid);
+        $acModel    = $this->getAcModel();
+        $acModelUri = $acModel->getModelUri();
+        $store      = $acModel->getStore();
+        $userUri    = urldecode($openid);
         
         // uri rdf:type sioc:User
-        $acModel->addStatement($userUri, EF_RDF_TYPE, $this->_config->ac->user->class, array(), false);
+        $store->addStatement(
+            $acModelUri,
+            $userUri, 
+            EF_RDF_TYPE, 
+            array(
+                'value' => $this->_config->ac->user->class,
+                'type'  => 'uri'
+            ), 
+            false
+        );
         
         if (!empty($email)) {
+            // Check whether email already starts with mailto:
+            if (substr($email, 0, 7) !== 'mailto:') {
+                $email = 'mailto:' . $email;
+            }
+            
             // uri sioc:mailbox email
-            $acModel->addStatement($userUri, $this->_config->ac->user->mail, 'mailto:' . $email, array(), false);
+            $store->addStatement(
+                $acModelUri,
+                $userUri, 
+                $this->_config->ac->user->mail, 
+                array(
+                    'value' => $email,
+                    'type'  => 'uri'
+                ),
+                false
+            );
         }
         
         if (!empty($label)) {
-            // uri sioc:mailbox email
-            $acModel->addStatement($userUri, EF_RDFS_LABEL, $label, array(), false);
+            // uri rdfs:label $label
+            $store->addStatement(
+                $acModelUri,
+                $userUri, 
+                EF_RDFS_LABEL, 
+                array(
+                    'value' => $label,
+                    'type'  => 'literal'
+                ),
+                false
+            );
         }
         
-        if (null !== $group) {
-            $acModel->addStatement($group, $this->_config->ac->group->membership, $userUri, array(), false);
+        if (!empty($group)) {
+            $store->addStatement(
+                $acModelUri,
+                $group, 
+                $this->_config->ac->group->membership, 
+                array(
+                    'value' => $userUri,
+                    'type'  => 'uri'
+                ),
+                false
+            );
         }
         
         return true;
@@ -301,21 +333,74 @@ class Erfurt_App
      * @param string|null $userGroupUri
      * @return boolean
      */
-    public function addUser($username, $password, $email, $userGroupUri = null)
+    public function addUser($username, $password, $email, $userGroupUri = '')
     {
-        $acModel = $this->getAcModel();
-        $userUri = $acModel->getModelIri() . urlencode($username);
+        $acModel    = $this->getAcModel();
+        $acModelUri = $acModel->getModelUri();
+        $store      = $acModel->getStore();
+        $userUri    = $acModelUri . urlencode($username);
         
-        $acModel->addStatement($userUri, EF_RDF_TYPE, $this->_config->ac->user->class, array(), false);
-        $acModel->addStatement(
-            $userUri, $this->_config->ac->user->name, $username, array(
-                'object_type' => Erfurt_Store::TYPE_LITERAL, 'literal_datatype' => EF_XSD_NS . 'string'
-            ), false);
-        $acModel->addStatement($userUri, $this->_config->ac->user->mail, 'mailto:' . $email, array(), false);
-        $acModel->addStatement($userUri, $this->_config->ac->user->pass, sha1($password), array(), false);
+        $store->addStatement(
+            $acModelUri,
+            $userUri, 
+            EF_RDF_TYPE, 
+            array(
+                'value' => $this->_config->ac->user->class, 
+                'type'  => 'uri'
+            ),
+            false
+        );
         
-        if ($userGroupUri) {
-            $acModel->addStatement($userGroupUri, $this->_config->ac->group->membership, $userUri, array(), false);
+        $store->addStatement(
+            $acModelUri,
+            $userUri, 
+            $this->_config->ac->user->name, 
+            array(
+                'value'    => $username, 
+                'type'     => 'literal',
+                'datatype' => EF_XSD_NS . 'string'
+            ),
+            false
+        );
+        
+        // Check whether email already starts with mailto:
+        if (substr($email, 0, 7) !== 'mailto:') {
+            $email = 'mailto:' . $email;
+        }
+        
+        $store->addStatement(
+            $acModelUri,
+            $userUri, 
+            $this->_config->ac->user->mail, 
+            array(
+                'value' => $email, 
+                'type'  => 'uri'
+            ),
+            false
+        );
+        
+        $store->addStatement(
+            $acModelUri,
+            $userUri, 
+            $this->_config->ac->user->pass, 
+            array(
+                'value' => sha1($password),
+                'type'  => 'literal'
+            ),
+            false
+        );
+        
+        if (!empty($userGroupUri)) {
+            $store->addStatement(
+                $acModelUri,
+                $userGroupUri, 
+                $this->_config->ac->group->membership, 
+                array(
+                    'value' => $userUri,
+                    'type'  => 'uri'
+                ),
+                false
+            );
         }
         
         return true;
@@ -471,7 +556,11 @@ class Erfurt_App
                 $config->cache->path = EF_BASE . $config->cache->path;
             }
             
-            return $config->cache->path;
+            if (is_writable($config->cache->path)) {
+                return $config->cache->path;
+            } else {
+                return $this->getTmpDir();
+            }
         } else {
             return $this->getTmpDir();
         }
@@ -519,7 +608,7 @@ class Erfurt_App
         if (!isset($this->_logObjects[$logIdentifier])) {
             $config = $this->getConfig();
     
-            if ((boolean)$config->efloglevel !== false) {
+            if ((boolean)$config->log->level !== false) {
                 $logDir = $this->getLogDir();
 
                 if ($logDir === false) {
@@ -558,19 +647,15 @@ class Erfurt_App
                 $config->log->path = EF_BASE . $config->log->path;
             }
             
+            $config->log->path = rtrim($config->log->path, '/\\') . '/';
+            
             if (is_writable($config->log->path)) {
                 return $config->log->path;
             } else {
                 return false;
             }
         } else { 
-            $logDir = EF_BASE . 'logs';
-            
-            if (is_writable($logDir)) {
-                return $logDir;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
     
@@ -649,19 +734,8 @@ class Erfurt_App
                 $backendOptions = $backendConfig->toArray();
             }
         
-            try {
-                require_once 'Erfurt/Store.php';
-                $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
-            } catch (Erfurt_Store_Adapter_Exception $e) {
-                if ($e->getCode() === 10) {
-                    // In this case the db environment was not initialized... It should be initialized now.
-                    $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
-                    $this->_store->checkSetup();
-                } else {
-                    require_once 'Erfurt/Exception.php';
-                    throw new Erfurt_Exception($e->getMessage());
-                }
-            } 
+            require_once 'Erfurt/Store.php';
+            $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
         }
         
         return $this->_store;
@@ -768,6 +842,14 @@ class Erfurt_App
     }
     
     /**
+     * Returns whether app was already started.
+     */
+    public function isStarted()
+    {
+        return $this->_isStarted;
+    }
+    
+    /**
      * Loads the Erfurt configuration with an optional given config
      * object injected.
      * 
@@ -847,7 +929,7 @@ class Erfurt_App
                         case 'sqlite':
                             if (isset($config->cache->sqlite->dbname)) {
                                 $backendOptions = array(
-                                    'cache_db_complete_path' => EF_BASE . 'tmp/' .$config->cache->sqlite->dbname
+                                    'cache_db_complete_path' => $this->getCacheDir() . $config->cache->sqlite->dbname
                                 );
                             } else {
                                 require_once 'Erfurt/Exception.php';
@@ -882,7 +964,7 @@ class Erfurt_App
         if (null === $this->_queryCacheBackend) {
             $config = $this->getConfig();
             $backendOptions = array();   
-            if (!isset($config->cache->query->enable) || !(boolean)$config->cache->query->enable) {
+            if (!isset($config->cache->query->enable) || ((boolean)$config->cache->query->enable === false)) {
                 require_once 'Erfurt/Cache/Backend/QueryCache/Null.php';
                 $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Null();
             } 
@@ -917,5 +999,46 @@ class Erfurt_App
         }
         
         return $this->_queryCacheBackend;
+    }
+    
+    private function _init()
+    {
+        // Check the PHP version.        
+        if (!version_compare($this->_getPhpVersion(), self::EF_MIN_PHP_VERSION, '>=')) {
+            require_once 'Erfurt/Exception.php';
+			throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
+        }
+        
+        // Define Erfurt base constant.
+        if (!defined('EF_BASE')) {
+            define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
+            
+            // Update the include path, such that libraries like e.g. Zend are available.  
+            $include_path  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
+            set_include_path($include_path);
+        }
+        
+        // Check whether Zend is loaded with the right version.
+		require_once 'Zend/Version.php';
+		if (!version_compare($this->_getZendVersion(), self::EF_MIN_ZEND_VERSION, '>=')) {
+			require_once 'Erfurt/Exception.php';
+			throw new Erfurt_Exception(
+			    'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
+			);
+		}
+        
+        // Include the vocabulary file.
+        require_once EF_BASE . 'include/vocabulary.php';
     } 
+    
+    protected function _getPhpVersion()
+    {
+        return phpversion();
+    }
+    
+    protected function _getZendVersion()
+    {
+        require_once 'Zend/Version.php';
+        return Zend_Version::VERSION;
+    }
 }
