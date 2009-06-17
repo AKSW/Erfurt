@@ -258,9 +258,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         ef_cache_query_result result ON result.qid = qid2 
                     WHERE result.result IS NOT NULL";
         $result = $this->_query ( $query );
-
         $qids = array();
-
         if (!$result)
             return $qids;        
 

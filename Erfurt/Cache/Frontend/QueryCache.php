@@ -76,8 +76,11 @@ class Erfurt_Cache_Frontend_QueryCache {
                                                     $duration);
 
             //saving transactionKeys to transactions table according to a queryId
-            $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
 
+            $objectCache = Erfurt_App::getInstance()->getCache();
+            if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+                $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
+            }
             return $result;
         }
         else {
@@ -99,11 +102,14 @@ class Erfurt_Cache_Frontend_QueryCache {
             $result = $this->getBackend()->load($queryId);
             if ($result) {
                 $result = unserialize ($result);
-                $this->getBackend()->incrementHitCounter($queryId);
+                if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
+                    $this->getBackend()->incrementHitCounter($queryId);
 
                 //saving transactionKeys to transactions table according to a queryId
-                $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
-
+                $objectCache = Erfurt_App::getInstance()->getCache();
+                if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+                    $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
+                }
                 return $result;
             }
             else {
@@ -124,11 +130,17 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     public function invalidateWithStatements( $modelIri, $statements = array() ) {
         $qids = $this->getBackend()->invalidate( $modelIri, $statements );
-        if ($qids) {
-            foreach ($qids as $qid) {
-                $this->getBackend()->incrementInvalidationCounter($qid);
+       if ($qids) {
+            if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
+            {
+                foreach ($qids as $qid) {
+                    $this->getBackend()->incrementInvalidationCounter($qid);
+                }
             }
-            $oids = $this->_invalidateCacheObjects($qids);
+            $objectCache = Erfurt_App::getInstance()->getCache();
+            if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+                $oids = $this->_invalidateCacheObjects($qids);
+            }
         }
         return $qids;
     }
@@ -160,7 +172,10 @@ class Erfurt_Cache_Frontend_QueryCache {
     public function invalidateWithModelIri( $modelIri ) {
 
         $qids = $this->getBackend()->invalidateWithModelIri( $modelIri );
-        $this->_invalidateCacheObjects ( $qids );
+        $objectCache = Erfurt_App::getInstance()->getCache();
+        if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+            $this->_invalidateCacheObjects ( $qids );
+        }
         return $qids;
     }
 
@@ -172,7 +187,11 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     string   $status    status of the process
     */
     public function startTransaction ( $transactionKey ) {
-        self::$_transactions[$transactionKey] = $transactionKey; 
+
+        $objectCache = Erfurt_App::getInstance()->getCache();
+        if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+            self::$_transactions[$transactionKey] = $transactionKey; 
+        }
     }
 
     /**
@@ -226,17 +245,17 @@ class Erfurt_Cache_Frontend_QueryCache {
         //requesting ObjectKeys according to the List of QueryIds
         $oKeys = $this->getBackend()->getObjectKeys ($queryIds) ;
         //create ObjectCache 
-        $eCache = Erfurt_App::getInstance()->getCache();
+        $objectCache = Erfurt_App::getInstance()->getCache();
 
         //delete objects in ObjectCache
         //TODO: _clean im Objectcache umschreiben.
 #        if ($removeByTags == true)
 #            $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
-
-        foreach ($oKeys as $oKey) {
-            $eCache->remove ($oKey) ;
+        if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+            foreach ($oKeys as $oKey) {
+                $objectCache->remove ($oKey) ;
+            }
         }
-
         //im Querycache die results zu den ObjectKeys invalidieren
          $this->getBackend()->invalidateObjectKeys( $oKeys );
 

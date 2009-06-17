@@ -872,7 +872,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             odbc_longreadlen($result, 16777216);
             $this->_longRead = false;
         }
-        
+ 
+        //Increment query counter 
+#        $query = "UPDATE ef_cache_query_version 
+#                    SET num = ( 
+#                        SELECT num 
+#                        FROM ef_cache_query_version )+ 1";
+#        $this->_execSql($query);
+       
         return $result;
     }
     
