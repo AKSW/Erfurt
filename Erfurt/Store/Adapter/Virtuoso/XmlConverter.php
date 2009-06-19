@@ -53,8 +53,8 @@ class Erfurt_Store_Adapter_Virtuoso_XmlConverter
         
         $vars     = array();
         $bindings = array();
-        $root   = $document->firstChild;
-        $set    = $root->firstChild;
+        $root     = $document->firstChild;
+        $set      = $root->firstChild;
         
         foreach ($set->childNodes as $node) {
             if (!$node->hasChildNodes()) {
@@ -63,6 +63,11 @@ class Erfurt_Store_Adapter_Virtuoso_XmlConverter
             
             $row = array();
             foreach ($node->childNodes as $binding) {
+                // exlude text nodes etc.
+                if (!($binding instanceof DOMElement)) {
+                    continue;
+                }
+                
                 $attrKey    = $binding->getAttributeNodeNS($this->_namespaces['rs'], 'name');
                 $nodeValue  = $binding->firstChild;
                 $dataKey    = $attrKey->value;
