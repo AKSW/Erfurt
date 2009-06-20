@@ -49,9 +49,9 @@
     </owl:Class>
   
 
-  <owl:Class rdf:about="StatementSelector" rdfs:label="Statement Selector">
+  <!--owl:Class rdf:about="StatementSelector" rdfs:label="Statement Selector">
     <rdfs:comment>Statements Based Access Control: Statement Selector select statements according to a specific SPARQL WHERE clause.</rdfs:comment>
-  </owl:Class>
+  </owl:Class-->
 
 <!-- Datatypes -->
   <rdfs:Datatype rdf:about="&xsd;string" rdfs:label="String"/>
@@ -98,12 +98,12 @@
     <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
 
-  <owl:DatatypeProperty rdf:about="sparqlWhereClause"
+  <!--owl:DatatypeProperty rdf:about="sparqlWhereClause"
                         rdfs:label="Statement(s)">
     <rdfs:comment>Statements Based Access Control: This property represents a set of statements with a specific SPARQL WHERE clause.</rdfs:comment>
     <rdfs:domain rdf:resource="StatementSelector"/>
     <rdfs:range rdf:resource="&xsd;string"/>
-  </owl:DatatypeProperty>
+  </owl:DatatypeProperty-->
 
 
 <!-- Object Properties -->
@@ -114,7 +114,7 @@
     <rdfs:range rdf:resource="&rdfs;Datatype"/>
   </owl:ObjectProperty>
 
-  <owl:ObjectProperty rdf:about="model"
+  <!--owl:ObjectProperty rdf:about="model"
                       rdfs:label="Model">
     <rdfs:comment>Statements Based Access Control: Restricts a Statement Selector to specific model(s). Selectors without restriction match to any model.</rdfs:comment>
     <rdfs:domain rdf:resource="StatementSelector"/>
@@ -149,7 +149,7 @@
     <rdfs:domain rdf:nodeID="b1"/>
     <rdfs:range rdf:resource="StatementSelector"/>
     <rdfs:subPropertyOf rdf:resource="denyStatementsEdit"/>
-  </owl:ObjectProperty>
+  </owl:ObjectProperty-->
 
 
   <owl:ObjectProperty rdf:about="grantModelEdit"
@@ -197,13 +197,13 @@
   </owl:ObjectProperty>
 
 
-  <owl:ObjectProperty rdf:about="subGroup"
+  <!--owl:ObjectProperty rdf:about="subGroup"
                       rdfs:label="has subgroup">
     <rdf:type rdf:resource="&owl;TransitiveProperty"/>
     <rdfs:comment>A group can have subgroups to manage user accounts (not implemented yet).</rdfs:comment>
     <rdfs:domain rdf:resource="&sioc;Usergroup"/>
     <rdfs:range rdf:resource="&sioc;Usergroup"/>
-  </owl:ObjectProperty>
+  </owl:ObjectProperty-->
 
 
   <owl:ObjectProperty rdf:about="&sioc;email"
@@ -248,13 +248,14 @@
     <rdfs:comment>This special action identifies any action.</rdfs:comment>
   </Action>
 
-	<StatementSelector rdf:about="AnyStatement" rdfs:label="Any Statement">
+	<!--StatementSelector rdf:about="AnyStatement" rdfs:label="Any Statement">
 		<model rdf:resource="AnyModel" />
     <rdfs:comment>This special selector selects any statement in any model.</rdfs:comment>
-  </StatementSelector>
+  </StatementSelector-->
 
   <Action rdf:about="RegisterNewUser"
                 rdfs:label="Register new User">
+    <rdfs:comment>Register new user with application/register</rdfs:comment>
   </Action>
 
   <Action rdf:about="ModelManagement" rdfs:label="Model Management">

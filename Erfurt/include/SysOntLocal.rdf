@@ -20,6 +20,7 @@
 <!-- Ontology Information -->
   <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="OntoWiki System Configuration">
     <rdfs:comment>This is your OntoWiki configuration model. You can configure model based access control and some actions here.</rdfs:comment>
+    <rdf:type rdf:resource="&SysOnt;Model" />
     <owl:imports>
       <owl:Ontology rdf:about="&SysOnt;"/>
     </owl:imports>
@@ -80,9 +81,12 @@
     <SysOnt:rawConfig>global=on</SysOnt:rawConfig>
   </rdf:Description>
 
+  <SysOnt:Model rdf:about="&SysOnt;">
+		    <SysOnt:hidden rdf:datatype="&xsd;boolean">true</SysOnt:hidden>
+  <SysOnt:Model>
 
 	<!-- Statement Selector TestCase -->
-	<SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
+	<!--SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
 		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s rdf:type sioc:User.}</SysOnt:sparqlWhereClause>
 		<SysOnt:model rdf:resource="&LocalConfig;" />
 	</SysOnt:StatementSelector>
@@ -103,7 +107,7 @@
     <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
     <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
     <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
-  </sioc:Usergroup>
+  </sioc:Usergroup-->
 
 
 </rdf:RDF>
