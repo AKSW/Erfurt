@@ -185,7 +185,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		while (true) {
 		    $query->setOffset($offset);
 		    
-		    $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
+		    $result = $this->_store->sparqlQuery($query, array(
+		        'result_format'   => 'extended',
+		        'use_owl_imports' => false,
+		        'use_additional_imports' => false
+		    ));
 
     		if ($offset === 0 && count($result['bindings']) > 0) {
     		    $this->_rdfWriter->addComment($description);
@@ -245,7 +249,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		while (true) {
 		    $query->setOffset($offset);
 		    
-		    $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
+		    $result = $this->_store->sparqlQuery($query, array(
+		        'result_format'   => 'extended',
+		        'use_owl_imports' => false,
+		        'use_additional_imports' => false
+		    ));
 
     		if ($offset === 0 && count($result['bindings']) > 0) {
     		    $this->_rdfWriter->addComment($description);
@@ -287,7 +295,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
             
-            $result = $this->_store->sparqlQuery($query, array('result_format' => 'extended'));
+            $result = $this->_store->sparqlQuery($query, array(
+		        'result_format'   => 'extended',
+		        'use_owl_imports' => false,
+		        'use_additional_imports' => false
+		    ));
             
             foreach ($result['bindings'] as $row) {
                 $s     = $row['s']['value'];
