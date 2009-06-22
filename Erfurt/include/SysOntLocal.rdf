@@ -83,7 +83,7 @@
 
   <SysOnt:Model rdf:about="&SysOnt;">
 		    <SysOnt:hidden rdf:datatype="&xsd;boolean">true</SysOnt:hidden>
-  <SysOnt:Model>
+  </SysOnt:Model>
 
 	<!-- Statement Selector TestCase -->
 	<!--SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
