@@ -48,20 +48,23 @@ class Erfurt_Versioning
     protected $_limit = 10;
     
     protected $_store = null;
+
+    protected $_isSetup = false;
     
     /**
      * Constructor registers with Erfurt_Event_Dispatcher
      * and adds triggers for operations on statements (add/del)
      */
     public function __construct()
-    {    
+    {
         // register for events
         require_once 'Erfurt/Event/Dispatcher.php';
         $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
-        $eventDispatcher->register('onAddStatement', $this)
-                        ->register('onAddMultipleStatements', $this)
-                        ->register('onDeleteMatchingStatements', $this)
-                        ->register('onDeleteMultipleStatements', $this);   
+
+        $eventDispatcher->register('onAddStatement', $this);
+        $eventDispatcher->register('onAddMultipleStatements', $this);
+        $eventDispatcher->register('onDeleteMatchingStatements', $this);
+        $eventDispatcher->register('onDeleteMultipleStatements', $this);
     }
     
     /**
@@ -71,6 +74,8 @@ class Erfurt_Versioning
      */
     public function enableVersioning($versioningEnabled = true)
     {
+        $this->_checkSetup();
+
         $this->_versioningEnabled = (bool) $versioningEnabled;
     }
     
@@ -95,6 +100,8 @@ class Erfurt_Versioning
      */
     public function getLastModifiedForResource($resourceUri, $graphUri)
     {
+        $this->_checkSetup();
+
         $history = $this->getHistoryForResource($resourceUri, $graphUri);
         
         return $history[0];
@@ -102,6 +109,8 @@ class Erfurt_Versioning
     
     public function getHistoryForGraph($graphUri, $page = 1)
     {
+        $this->_checkSetup();
+
         $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
@@ -122,6 +131,8 @@ class Erfurt_Versioning
      */
     public function getConciseHistoryForGraph($graphUri, $page = 1)
     {
+        $this->_checkSetup();
+
         $sql = 'SELECT DISTINCT useruri, resource ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
@@ -134,7 +145,9 @@ class Erfurt_Versioning
     }
 
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
-    {   
+    {
+        $this->_checkSetup();
+   
         $sql = 'SELECT id, useruri, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
@@ -148,7 +161,9 @@ class Erfurt_Versioning
     }
 
     public function getHistoryForResourceList($resources, $graphUri, $page = 1)
-    {   
+    {
+        $this->_checkSetup();
+
         $sql = 'SELECT id, useruri, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND ( resource = \'' . implode ('\' OR resource = \'' ,$resources) . '\' )
@@ -162,6 +177,8 @@ class Erfurt_Versioning
     
     public function getHistoryForUser($userUri, $page = 1)
     {
+        $this->_checkSetup();
+
         $sql = 'SELECT id, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
@@ -195,6 +212,8 @@ class Erfurt_Versioning
      */
     public function isVersioningEnabled()
     {
+        $this->_checkSetup();
+
         return (bool) $this->_versioningEnabled;
     }
     
@@ -212,6 +231,8 @@ class Erfurt_Versioning
     
     public function onAddStatement(Erfurt_Event $event)
     {
+        $this->_checkSetup();
+
         if ($this->isVersioningEnabled()) {
             $payloadId = $this->_execAddPayload($event->statement);
             $resourceArray = array_keys($event->statement);
@@ -224,6 +245,8 @@ class Erfurt_Versioning
     
     public function onAddMultipleStatements(Erfurt_Event $event)
     {
+        $this->_checkSetup();
+
         if ($this->isVersioningEnabled()) {
             $graphUri = $event->graphUri;
     
@@ -235,6 +258,8 @@ class Erfurt_Versioning
     
     public function onDeleteMatchingStatements(Erfurt_Event $event)
     {
+        $this->_checkSetup();
+
         if ($this->isversioningEnabled()) {
             $graphUri = $event->graphUri;
         
@@ -251,6 +276,8 @@ class Erfurt_Versioning
     
     public function onDeleteMultipleStatements(Erfurt_Event $event)
     {
+        $this->_checkSetup();
+
         if($this->isVersioningEnabled()) {
             $graphUri = $event->graphUri;
     
@@ -273,6 +300,8 @@ class Erfurt_Versioning
      */
     public function rollbackAction($actionId) 
     {
+        $this->_checkSetup();
+
         $actionsSql = 'SELECT action_type, payload_id, model, parent FROM ef_versioning_actions WHERE ' .
                       '( id = ' . ((int)$actionId) . ' OR parent = ' . ((int)$actionId) . ' ) ' .
                       'AND payload_id IS NOT NULL';
@@ -280,7 +309,6 @@ class Erfurt_Versioning
         $result = $this->_sqlQuery($actionsSql);
         
         if ((count($result) == 0) || ($result[0]['payload_id'] === null)) {
-            var_dump($actionsSql);exit();
             $dedicatedException = 'No valid entry in ef_versioning_actions for action ID';
             throw new Exception('No rollback possible (' .  $dedicatedException . ')');
 
@@ -335,6 +363,8 @@ class Erfurt_Versioning
      */
     public function startAction($actionSpec)
     {
+        $this->_checkSetup();
+
         // action already running?
         if (null !== $this->_currentAction) {
             throw new Exception('Action already started');
@@ -355,6 +385,8 @@ class Erfurt_Versioning
      */
     public function getDetailsForAction($id)
     {
+        $this->_checkSetup();
+
         $detailsSql = 'SELECT actions.action_type, payloads.statement_hash ' . 
                       '  FROM ef_versioning_actions AS actions, ' . 
                       '       ef_versioning_payloads AS payloads ' .
@@ -448,8 +480,23 @@ class Erfurt_Versioning
         return $app->getAuth();
     }
     
-    public function initialize()
+    /**
+     * late setup function for time saving and mocking in test cases
+     */
+    private function _checkSetup() {
+
+        if ($this->_isSetup) { 
+            //do nothing
+        } else {
+            $this->_initialize();
+            $this->_isSetup = true;
+        }
+
+    } 
+
+    private function _initialize()
     {
+
         if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
         }

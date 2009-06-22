@@ -2,8 +2,8 @@
 
 class Erfurt_Versioning_StoreStub
 {    
-    const ROLLBACK_ACTION_QUERY1 = 'SELECT action_type, payload_id FROM ef_versioning_actions WHERE id = ';
-    const ROLLBACK_ACTION_QUERY2 = 'SELECT statements_hash FROM ef_versioning_payloads WHERE id = ';
+    const ROLLBACK_ACTION_QUERY1 = 'SELECT action_type, payload_id, model, parent FROM ef_versioning_actions WHERE ( id = ';
+    const ROLLBACK_ACTION_QUERY2 = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ';
 
     public function sqlQuery($sql)
     {

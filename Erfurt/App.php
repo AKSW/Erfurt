@@ -227,10 +227,8 @@ class Erfurt_App
         
         // Starting Versioning
         try {
-            $versioning = $this->getVersioning();
-            if ((boolean)$config->versioning === true) {
-                $versioning->enableVersioning(true);
-            } else {
+            $versioning = $this->getVersioning(); 
+            if ((boolean)$config->versioning === false) {
                 $versioning->enableVersioning(false);
             }
         } catch (Erfurt_Exception $e) {
