@@ -41,7 +41,7 @@ class Erfurt_Rdf_Model
      * An array of namespace IRIs (keys) and prefixes 
      * @var array
      */
-	protected $_namespaces = null;
+	protected $_prefixes = null;
     
     /**
      * The model's title property value
@@ -571,11 +571,11 @@ class Erfurt_Rdf_Model
      */
     public function getNamespaces()
     {
-		if (null === $this->_namespaces) {
-		    $this->_initiateNamespaces();
+		if (null === $this->_prefixes) {
+		    $this->_initiatePrefixes();
 		}
 		
-        return array_flip($this->_namespaces);
+        return array_flip($this->_prefixes);
     }
     
 	/**
@@ -584,10 +584,10 @@ class Erfurt_Rdf_Model
 	 */
 	public function getPrefixes()
 	{
-		if (null === $this->_namespaces) {
-		    $this->_initiateNamespaces();
+		if (null === $this->_prefixes) {
+		    $this->_initiatePrefixes();
 		}
-		return $this->_namespaces;
+		return $this->_prefixes;
 	}
 
 	/**
@@ -597,12 +597,12 @@ class Erfurt_Rdf_Model
 	 */
 	public function addPrefix($prefix, $namespace)
 	{
-		if (null === $this->_namespaces) {
-		    $this->_initiateNamespaces();
+		if (null === $this->_prefixes) {
+		    $this->_initiatePrefixes();
 		}
 		
-		if (!isset ($this->_namespaces[$prefix])) {
-			$this->_namespaces[$prefix] = $namespace;
+		if (!isset ($this->_prefixes[$prefix])) {
+			$this->_prefixes[$prefix] = $namespace;
 
 			/**
 			 * get prefixes from model configuration
@@ -613,8 +613,8 @@ class Erfurt_Rdf_Model
 			 * add new prefix with namespace to the config option
 			 */
 			$option[] = array(
-				"value" => $prefix . "=" . $namespace,
-				"type"  => "literal"
+				'value' => $prefix . '=' . $namespace,
+				'type'  => 'literal'
 			);
 
 			/**
@@ -630,11 +630,11 @@ class Erfurt_Rdf_Model
 	 */
 	public function deletePrefix($prefix)
 	{
-		if (null === $this->_namespaces) {
-		    $this->_initiateNamespaces();
+		if (null === $this->_prefixes) {
+		    $this->_initiatePrefixes();
 		}
 		
-		unset($this->_namespaces[$prefix]);
+		unset($this->_prefixes[$prefix]);
 
 		/**
 		 * get prefixes from model configuration
@@ -645,7 +645,7 @@ class Erfurt_Rdf_Model
 		 * remove the entry with the given prefix from the config option
 		 */
 		for($i = 0; $i < count($option); $i++){
-			if(0 === strpos($option[$i]["value"], $prefix . "=")){
+			if(0 === strpos($option[$i]['value'], $prefix . '=')){
 				unset($option[$i]);
 			}
 		}
@@ -662,11 +662,11 @@ class Erfurt_Rdf_Model
 	 */
     public function deleteNamespace($namespace)
     {
-        if (null === $this->_namespaces) {
-		    $this->_initiateNamespaces();
-        }
+		if (null === $this->_prefixes) {
+		    $this->_initiatePrefixes();
+		}
 
-        while($key = array_search ($namespace, $this->_namespaces)) {
+        while($key = array_search ($namespace, $this->_prefixes)) {
             $this->deletePrefix($key);
         }
     }
@@ -675,13 +675,13 @@ class Erfurt_Rdf_Model
 	 * initialy set the namespace mapping array for the model
 	 * (read the mapping from system configuration)
 	 */
-	protected function _initiateNamespaces()
+	protected function _initiatePrefixes()
 	{
 		/**
 		 * set some default prefixes ans namespaces
 		 * should be in some config later
 		 */
-		$this->_namespaces = array(
+		$this->_prefixes = array(
             'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
             'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
             'owl'      => 'http://www.w3.org/2002/07/owl#', 
@@ -709,10 +709,10 @@ class Erfurt_Rdf_Model
 		 */
 		for($i = 0; $i < count($option); $i++){
 			$property   = $option[$i];
-			$splitpos   = strpos($property['value'], "=");          // find splitposition
+			$splitpos   = strpos($property['value'], '=');          // find splitposition
 			$prefix     = substr($property['value'], 0, $splitpos); // get the part befor the '='
 			$namespace  = substr($property['value'], $splitpos);    // get the rest
-			$this->_namespaces[$prefix] = $namespace;
+			$this->_prefixes[$prefix] = $namespace;
 		}
 	}
 
