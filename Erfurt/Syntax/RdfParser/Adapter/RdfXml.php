@@ -225,6 +225,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
                 array_pop($this->_elementStack);
             }
         } else {
+            if (null === $topElement) {
+                return;
+            }
+
             if ($topElement->parseAsCollection()) {
                 $lastListResource = $topElement->getLastListResource();
                 
