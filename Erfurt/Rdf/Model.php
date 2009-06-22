@@ -389,7 +389,7 @@ class Erfurt_Rdf_Model
     {
         $addedStatements   = $this->_getStatementsDiff($changed, $original);
         $removedStatements = $this->_getStatementsDiff($original, $changed);
-        
+
         if (defined('_EFDEBUG')) {
             require_once 'Erfurt/App.php';
             $logger = Erfurt_App::getInstance()->getLog();
@@ -466,7 +466,26 @@ class Erfurt_Rdf_Model
                     $found = false;
                     foreach ($statementsObject2[$subject][$predicate] as $object2) {
                         if ($object['type'] == $object2['type'] && $object['value'] == $object2['value']) {
-                            $found = true;
+                            
+                            if (isset($object['datatype'])) {
+                                if (isset($object2['datatype']) && $object['datatype'] === $object2['datatype']) {
+                                    $found = true;
+                                }
+                            } else {
+                                if (!isset($object2['datatype'])) {
+                                    if (isset($object['lang'])) {
+                                        if (isset($object2['lang']) && $object['lang'] === $object2['lang']) {
+                                            $found = true;
+                                        }
+                                    } else {
+                                        if (!isset($object2['lang'])) {
+                                            $found = true;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            
                         }
                     }
                     

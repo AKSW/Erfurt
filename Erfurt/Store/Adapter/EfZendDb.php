@@ -391,7 +391,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $modelInfoCache = $this->_getModelInfos();
-        
+       
         $modelId = $modelInfoCache[$graphUri]['modelId'];
 
         if ($subject !== null && strlen($subject) > $this->_getSchemaRefThreshold()) {
@@ -457,7 +457,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 }
             }
         }
-        
+
         // remove the specified statements from the database
         $this->_dbConn->delete('ef_stmt', $whereString);   
         
@@ -472,7 +472,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $modelInfoCache = $this->_getModelInfos();
 
         $modelId = $modelInfoCache[$graphUri]['modelId'];
-        
+    
         $this->_dbConn->beginTransaction();
         try {
             foreach ($statementsArray as $subject => $predicatesArray) {

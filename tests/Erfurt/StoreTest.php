@@ -60,6 +60,51 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
+    
+    public function testDeleteMatchingStatementsIssue436MultipleLanguageTags()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        
+        $modelUri = 'http://example.org/deleteTest/';
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getNewModel($modelUri, false);
+        
+        
+        $turtleString = '@base <http://bis.ontowiki.net/> .
+                    @prefix bis: <http://bis.ontowiki.net/> .
+                    @prefix dc: <http://purl.org/dc/elements/1.1/> .
+                    @prefix ldap: <http://purl.org/net/ldap#> .
+                    @prefix swrc: <http://swrc.ontoware.org/ontology#> .
+                    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+                    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+                    @prefix owl: <http://www.w3.org/2002/07/owl#> .
+                    @prefix ns: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+                    @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+                    @prefix wot: <http://xmlns.com/wot/0.1/> .
+
+                    bis:PeterPan ldap:mobile "+49 XXX 123456" ;
+                         ldap:roomNumber "5-XX" ;
+                         ldap:telephoneNumber "+49 341 123456" ;
+                         a swrc:FacultyMember ;
+                         rdfs:label "Peter Pan 2 de"@de, "Peter Pan 2 nl"@nl, "Peter Pan nl"@nl ;
+                         foaf:firstName "Peter" ;
+                         foaf:icqChatID "123-456-789" ;
+                         foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
+                         foaf:surname "PanPühn" .';
+        
+        $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
+        
+        $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
+        $result = $model->sparqlQuery($sparql);
+
+        $this->assertEquals(12, count($result));
+        
+        $store->deleteMatchingStatements($modelUri, 'http://bis.ontowiki.net/PeterPan', null, null);
+        
+        $result = $model->sparqlQuery($sparql);
+        $this->assertEquals(1, count($result));
+    }
 }
 
 

@@ -125,6 +125,30 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         return $this->parseNamespacesFromFilename($url);
     }
     
+    public function reset()
+    {
+        $this->_data = '';
+        $this->_pos  = 0;
+        
+        $this->_baseUri = null;
+        $this->_subject = null;
+        $this->_predicate = null;
+        $this->_object = null;
+
+        $this->_namespaces = array();
+
+        $this->_bnodeCounter = 0;
+
+        $this->_usedBnodeIds = array();
+
+        $this->_statements = array();
+
+        $this->_parseToStore = false;
+        $this->_graphUri = null;
+        $this->_useAc = true;
+        $this->_stmtCounter = 0;
+    }
+    
     protected function _addNamespacesToStore()
     {
         $store = Erfurt_App::getInstance()->getStore();
