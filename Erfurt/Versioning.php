@@ -233,7 +233,7 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        if ($this->isVersioningEnabled()) {
+        if ($this->isVersioningEnabled() && is_array($event->statement)) {
             $payloadId = $this->_execAddPayload($event->statement);
             $resourceArray = array_keys($event->statement);
             $resource = $resourceArray[0];
@@ -247,7 +247,7 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        if ($this->isVersioningEnabled()) {
+        if ($this->isVersioningEnabled() && is_array($event->statement)) {
             $graphUri = $event->graphUri;
     
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
