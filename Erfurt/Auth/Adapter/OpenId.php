@@ -144,6 +144,15 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
      */
     public function authenticate()
     {
+        // Check whether OpenId is supported (big integer support is needed.)
+        if (!$this->_isOpenIdSupported()) {
+            $result = false;
+            $msg = 'OpenID is currently not supported!';
+
+            require_once 'Zend/Auth/Result.php';
+            return new Zend_Auth_Result($result, null, array($msg));
+        }
+        
         // If id is given, login the user.
         if (null !== $this->_id) {
             // If sReg is given, we want to register, so don't check whether user exists.
@@ -285,5 +294,14 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
         }
 
         return $retVal;
+    }
+    
+    protected function _isOpenIdSupported()
+    {
+        if (extension_loaded('bcmath')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
