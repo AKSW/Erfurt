@@ -450,13 +450,20 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             $lang = '';
             $c = $this->_read();
             
-            #if (!$this->_isLanguageStartChar($c)) {
-            #    $this->_throwException('Expected a letter.');
-            #}
+            if (!$this->_isLanguageStartChar($c)) {
+                require_once 'Erfurt/Syntax/RdfParserException.php';
+                throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed as starting char in language tags.');
+            }
             
             $lang .= $c;
             $c = $this->_read();
-            while ($c !== -1 && !$this->_isWS($c) && !($c === ',')) {
+            
+            while ($c !== -1 && !$this->_isWS($c) && !($c === ',')) { 
+                if (!$this->_isLanguageChar($c)) {
+                    require_once 'Erfurt/Syntax/RdfParserException.php';
+                    throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed in language tags.');
+                }
+                
                 $lang .= $c;
                 $c = $this->_read();
             }
@@ -976,6 +983,16 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
                 $this->_unread();
             }
         }
+    }
+    
+    protected function _isLanguageStartChar($c) 
+    {
+        return (boolean)preg_match('/^[a-z]$/', $c);
+    }
+    
+    protected function _isLanguageChar($c)
+    {
+        return (boolean)preg_match('/^[a-z0-9\-]$/', $c);
     }
     
     protected function _isWS($c)

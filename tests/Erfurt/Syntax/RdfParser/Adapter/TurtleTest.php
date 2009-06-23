@@ -2068,7 +2068,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         
     }
     
-    public function testIssue421TurtleParserOnUpdateResturnsError()
+    public function testParseFromDataStringIssue421TurtleParserOnUpdateResturnsError()
     {
         $data = '<http://model.de#Class1> a <http://www.w3.org/2002/07/owl#Class> ;
         <http://www.w3.org/2000/01/rdf-schema#label> "classLabel"@de,
@@ -2080,5 +2080,39 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
         $this->assertEquals(1, count($result));
         $this->assertEquals(4, count($result['http://model.de#Class1']));
+    }
+    
+    public function testParseFromDataStringIssue446CorruptLanguageTags()
+    {
+        $turtle = '# Exported with the Erfurt API - http://aksw.org/Projects/Erfurt
+
+        @base <http://bis.ontowiki.net/> .
+        @prefix bis: <http://bis.ontowiki.net/> .
+        @prefix dc: <http://purl.org/dc/elements/1.1/> .
+        @prefix ldap: <http://purl.org/net/ldap#> .
+        @prefix swrc: <http://swrc.ontoware.org/ontology#> .
+        @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+        @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+        @prefix owl: <http://www.w3.org/2002/07/owl#> .
+        @prefix ns: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+        @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+        @prefix wot: <http://xmlns.com/wot/0.1/> .
+
+        bis:PeterPan ldap:mobile "+49 XXX 123456" ;
+                         ldap:roomNumber "5-XX" ;
+                         ldap:telephoneNumber "+49 341 12-345678" ;
+                         a swrc:FacultyMember ;
+                         rdfs:label "Peter Pan ü 2 de"@de, "Peter Pan ü 2 nl"@nl", "Peter Pan ü nl"@nl" ;
+                         foaf:firstName "Peter" ;
+                         foaf:icqChatID "123-456-789" ;
+                         foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
+                         foaf:surname "Pan ü" .';
+        
+        try {
+            $result = $this->_object->parseFromDataString($turtle);
+            $this->fail('Parsing should fail, but did not fail.');
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            
+        }
     }
 }
