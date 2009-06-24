@@ -682,11 +682,10 @@ echo $e->getMessage();exit;
             if ($withHidden === false) {
                 $graphConfig = $this->getGraphConfiguration($graphUri);
                 
-                if (isset($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'])) {
-                    if ($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'][0]['value'] === 'true') {
+                if (isset($graphConfig['http://ns.ontowiki.net/SysOnt/hidden'])) {                    
+                    if ((boolean)$graphConfig['http://ns.ontowiki.net/SysOnt/hidden'][0]['value']) {
                         unset($models[$graphUri]);
                     }
-                    
                 }
             }
         }

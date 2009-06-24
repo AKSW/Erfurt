@@ -479,7 +479,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             $datatype = $this->_parseValue();
             if ($datatype instanceof Erfurt_Rdf_Resource) {
                 require_once 'Erfurt/Rdf/Literal.php';
-                return Erfurt_Rdf_Literal::initWithLabelAndDatatype($label, $datatype);
+                return Erfurt_Rdf_Literal::initWithLabelAndDatatype($label, (string) $datatype);
             } else {
                 $this->_throwException('Illegal datatype value.');
                 return null;
