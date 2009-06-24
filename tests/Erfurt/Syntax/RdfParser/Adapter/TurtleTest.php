@@ -2115,4 +2115,24 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             
         }
     }
+    
+    public function testParseFromDataStringIssue449LanguageIsResourceObject()
+    {
+        $turtle = '@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+        
+                    <http://example.org/ttt/> rdfs:label "123"@de, "456"@en, "789"@nl .';
+
+        $result = $this->_object->parseFromDataString($turtle);
+        
+        $lang1 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['lang'];
+        $lang2 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][1]['lang'];
+        $lang3 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][2]['lang'];
+        
+        $this->assertFalse(is_object($lang1));
+        $this->assertFalse(is_object($lang2));
+        $this->assertFalse(is_object($lang3));
+        $this->assertTrue(is_string($lang1));
+        $this->assertTrue(is_string($lang2));
+        $this->assertTrue(is_string($lang3));
+    }
 }
