@@ -94,23 +94,26 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             
             // if login is denied return failure auth result
             if ($this->_users[$this->_username]['denyLogin'] === true) {
-                $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('Login not allowed!'));
+                $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Login not allowed!'));
             } 
             // does user not exist?
             else if ($this->_users[$this->_username]['userUri'] === false) {
-                $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('User does not exist!'));
+                $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('User does not exist!'));
             } else {
                 // verify the password
                 if (!$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 'sha1') 
                         && !$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 
                         '')) {
                     
-                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, $identity, array('Wrong password entered!'));
+                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Wrong password entered!'));
                 } else {
                     $identity['uri'] = $this->_users[$this->_username]['userUri'];
                     $identity['email'] = $this->_users[$this->_username]['userEmail'];
                     
-                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identity);
+                    require_once 'Erfurt/Auth/Identity.php';
+                    $identityObject = new Erfurt_Auth_Identity($identity);
+                    
+                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);
                 }
             } 
         }
@@ -308,7 +311,10 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             'anonymous' => true
         );
         
-        return $user;
+        require_once 'Erfurt/Auth/Identity.php';
+        $identityObject = new Erfurt_Auth_Identity($user);
+        
+        return $identityObject;
     }
 
     /**
@@ -327,7 +333,10 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             'anonymous' => false
         );
         
-        return $user;
+        require_once 'Erfurt/Auth/Identity.php';
+        $identityObject = new Erfurt_Auth_Identity($user);
+        
+        return $identityObject;
     }
     
     private function _getDbUsername()

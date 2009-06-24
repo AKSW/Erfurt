@@ -174,7 +174,7 @@ class Erfurt_Ac_Default
         $this->_init();
          
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         
         // filter denied actions
         $ret = array();
@@ -205,7 +205,7 @@ class Erfurt_Ac_Default
         }
          
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         
         $ret = array();
         $grantModelKey  = ($type === 'view') ? 'grantModelView' : 'grantModelEdit';
@@ -232,7 +232,7 @@ class Erfurt_Ac_Default
         $this->_init();
          
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         
         return $userRights['denyAccess']; 
     }
@@ -254,7 +254,7 @@ class Erfurt_Ac_Default
         }
         
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
             
         $denyModelKey = ($type === 'view') ? 'denyModelView' : 'denyModelEdit';
         
@@ -274,7 +274,7 @@ class Erfurt_Ac_Default
         $this->_init();
         
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         $type       = strtolower($type);
         
         // type = view; check whether allowed
@@ -328,7 +328,7 @@ class Erfurt_Ac_Default
         $this->_init();
         
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         $actionUri  = $this->_uris['acBaseUri'] . $action;
         
         if (in_array($actionUri, $userRights['denyAccess'])) {
@@ -353,7 +353,7 @@ class Erfurt_Ac_Default
         $this->_init(); 
         
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         
         return $userRights['userAnyActionAllowed'];
     }
@@ -370,7 +370,7 @@ class Erfurt_Ac_Default
         $this->_init();
         
         $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user['uri']);
+        $userRights = $this->_getUserModelRights($user->getUri());
         $type       = strtolower($type);
         
         if ($type === 'view') {
@@ -457,10 +457,10 @@ class Erfurt_Ac_Default
         }
         
         // Update the array that contains the right for the user.
-        $this->_userRights[$user['uri']][$right][] = $modelUri;
+        $this->_userRights[$user->getUri()][$right][] = $modelUri;
 
 // TODO set the right cache tags, such that cache is invalidated!!!
-        $this->_acModel->addStatement($user['uri'], $prop, array('type' => 'uri', 'value' => $modelUri));
+        $this->_acModel->addStatement($user->getUri(), $prop, array('type' => 'uri', 'value' => $modelUri));
     }
     
     // ------------------------------------------------------------------------

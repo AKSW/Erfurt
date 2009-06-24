@@ -403,7 +403,7 @@ class Erfurt_Versioning
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
         $user = $this->_getAuth()->getIdentity();
-        $userUri = $user['uri'];
+        $userUri = $user->getUri();
         
         $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent';
         

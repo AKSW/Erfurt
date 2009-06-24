@@ -201,27 +201,38 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 $result = false;
                 $msg = 'OpenID authentication failed.';
                 
+                /*
                 $identity = array(
                     'uri'       => null, 
                     'dbuser'    => false, 
                     'anonymous' => false
                 );
+                */
                 
                 require_once 'Zend/Auth/Result.php';
-                return new Zend_Auth_Result($result, $identity, array($msg));
+                return new Zend_Auth_Result($result, null, array($msg));
             }
             
             $identity = array(
-                'uri'       => $this->_get['openid_identity'], 
-                'dbuser'    => false, 
-                'anonymous' => false
+                'uri'            => $this->_get['openid_identity'], 
+                'dbuser'         => false, 
+                'anonymous'      => false,
+                'is_openid_user' => true
             );
             
             // This is just called in order to get the label for the user.
             $userResult = $this->_checkOpenId($this->_get['openid_identity']);
             
             if (isset($userResult['userLabel'])) {
-                $identity['username'] = $userResult['userLabel'];
+                $identity['label'] = $userResult['userLabel'];
+            }
+            
+            if (isset($userResult['username'])) {
+                $identity['username'] = $userResult['username'];
+            }
+            
+            if (isset($userResult['email'])) {
+                $identity['email'] = $userResult['email'];
             }
             
             require_once 'Zend/OpenId/Consumer.php';
@@ -230,13 +241,19 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             if (!$consumer->verify($this->_get, $this->_get['openid_identity'], $this->_sReg)) {
                 $result = false;
                 $msg = 'OpenID authentication failed.';
+                
+                require_once 'Zend/Auth/Result.php';
+                return new Zend_Auth_Result($result, null, array($msg));
             } else {
                 $result = true;
                 $msg = 'OpenID authentication successful.';
+                
+                require_once 'Erfurt/Auth/Identity.php';
+                $identityObject = new Erfurt_Auth_Identity($identity);
+                
+                require_once 'Zend/Auth/Result.php';
+                return new Zend_Auth_Result($result, $identityObject, array($msg));
             }
-            
-            require_once 'Zend/Auth/Result.php';
-            return new Zend_Auth_Result($result, $identity, array($msg));
         }
     }
     
@@ -288,6 +305,11 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 case EF_RDFS_LABEL:
                     $retVal['userLabel'] = $row['o'];
                     break;
+                case $this->_uris['user_username']:
+                    $retVal['username'] = $row['o'];
+                    break;
+                case $this->_uris['user_mail'];
+                    $retVal['email'] = $row['o'];
                 default:
                     // Ignore all other statements.
             }

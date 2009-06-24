@@ -500,8 +500,8 @@ class Erfurt_App
      */
     public function getAuth()
     {    
-        require_once 'Zend/Auth.php';
-        $auth = Zend_Auth::getInstance();
+        require_once 'Erfurt/Auth.php';
+        $auth = Erfurt_Auth::getInstance();
          
         return $auth; 
     }
