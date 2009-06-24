@@ -382,7 +382,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     
     /** @see Erfurt_Store */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options)
-    {
+    {        
         $query  = 'SELECT DISTINCT ?s ';
         $query .= 'FROM <' . implode($graphUris, '>' . PHP_EOL . 'FROM <') . '> ';
         $query .= 'WHERE {
@@ -600,7 +600,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     
     public function init()
     {
-        // Nothing to be done here.
+        // create fulltext index rule and update index
+        $this->_createFullTextIndexRules();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -788,6 +789,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
+    
+    private function _createFullTextIndexRules()
+    {
+        $a = microtime(true);
+        $this->_execSql('DB.DBA.RDF_OBJ_FT_RULE_ADD(NULL, NULL, \'ontowiki_ft_index\')');
+        $this->_execSql('DB.DBA.VT_INC_INDEX_DB_DBA_RDF_OBJ()');
+        
+        if (defined('_EFDEBUG')) {            
+            $logger = Erfurt_App::getInstance()->getLog();
+            $logger->info(sprintf('Creating Virtuoso full-text index: %f ms', (microtime(true) - $a) * 1000));
+        }
+    }
     
     /**
      * Converts an ODBC result to an array.

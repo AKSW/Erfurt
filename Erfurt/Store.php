@@ -970,7 +970,9 @@ echo $e->getMessage();exit;
         
         
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
-            return $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
+            $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
+            $this->_backendAdapter->init();
+            return $result;
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
