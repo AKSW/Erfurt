@@ -923,7 +923,7 @@ echo $e->getMessage();exit;
                 // try content-type
                 stream_context_get_default(array(
                     'http' => array(
-                        'header' => "Accept: application/rdf+xml"
+                        'header' => "Accept: application/rdf+xml, appliaction/json, text/rdf+n3, text/plain"
                 )));
 
                 $headers = get_headers($data, 1);
@@ -938,7 +938,7 @@ echo $e->getMessage();exit;
                         $ct = array_pop($ct);
                     }
                     $ct = strtolower($ct);
-                    
+
                     if (substr($ct, 0, strlen('application/rdf+xml')) === 'application/rdf+xml') {
                         $type = 'rdfxml';
                         $flag = true;
@@ -946,7 +946,7 @@ echo $e->getMessage();exit;
                         $type = 'rdfxml';
                         $flag = true;
                     } else if (substr($ct, 0, strlen('text/rdf+n3')) === 'text/rdf+n3') {
-                        $type = 'n3';
+                        $type = 'ttl';
                         $flag = true;
                     } else if (substr($ct, 0, strlen('application/json')) === 'application/json') {
                         $type = 'rdfjson';
@@ -961,7 +961,7 @@ echo $e->getMessage();exit;
                             $type = 'rdfxml';
                             break;
                         case '.n3':
-                            $type = 'rdfxml';
+                            $type = 'ttl';
                             break;
                     }
                 }

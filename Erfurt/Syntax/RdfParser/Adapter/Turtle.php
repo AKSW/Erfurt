@@ -80,7 +80,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_graphUri = $graphUri;
         $this->_useAc = $useAc;
         $this->parseFromFilename($filename);
-        
         $this->_writeStatementsToStore();
         $this->_addNamespacesToStore();
 
@@ -89,7 +88,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     public function parseFromUrlToStore($url, $graphUri, $useAc = true)
     {
-        return $this->parseFromFilename($url, $graphUri, $useAc);
+        return $this->parseFromFilenameToStore($url, $graphUri, $useAc);
     }
     
     public function parseNamespacesFromDataString($data)
