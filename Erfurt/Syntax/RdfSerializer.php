@@ -19,33 +19,70 @@ class Erfurt_Syntax_RdfSerializer
         return $serializer;
     }
     
+    public static function normalizeFormat($format)
+    {
+        $formatMapping = array(
+            'application/rdf+xml' => 'rdfxml', 
+            'rdfxml' => 'rdfxml', 
+            'rdf/xml' => 'rdfxml', 
+            'xml' => 'rdfxml',  
+            'rdf' => 'rdfxml', 
+            'text/plain' => 'rdfxml', 
+            'application/x-turtle' => 'turtle',
+            'text/turtle' => 'turtle',
+            'rdf/turtle' => 'turtle',
+            'rdfturtle' => 'turtle',
+            'turtle' => 'turtle',
+            'ttl' => 'turtle',
+            'nt' => 'turtle',
+            'ntriple' => 'turtle',
+            'rdf/n3' => 'rdfn3',
+            'rdfn3' => 'rdfn3',
+            'n3' => 'rdfn3',
+            'application/json' => 'rdfjson',
+            'json' => 'rdfjson',
+            'rdfjson' => 'rdfjson',
+            'rdf/json' => 'rdfjson'
+        );
+        
+        if (isset($formatMapping[strtolower($format)])) {
+            return $formatMapping[strtolower($format)];
+        } else {
+            return strtolower($format);
+        }
+    }
+    
+    public static function getSupportedFormats()
+    {
+        return array(
+            'rdfxml'  => 'RDF/XML',
+            'turtle'  => 'Turtle',
+            'rdfjson' => 'RDF/JSON (Talis)',
+            'rdfn3'   => 'Notation 3'
+        );
+    }
+    
     public function initializeWithFormat($format)
     {
-        $format = strtolower($format);
+        $format = self::normalizeFormat($format);
         
         switch ($format) {
             case 'rdfxml':
-            case 'xml':
-            case 'rdf':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
                 break;
             case 'turtle':
-            case 'ttl':
-            case 'nt':
-            case 'ntriple':
+            case 'rdfn3':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
                 break;
-            case 'json':
             case 'rdfjson':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
                 break;
-            case 'rdfn3':
-            case 'n3':
             default:
-                throw new Exception("Format '$format' not supported");
+                require_once 'Erfurt/Syntax/RdfSerializerException.php';
+                throw new Erfurt_Syntax_RdfSerializerException("Format '$format' not supported");
         }        
     }
     

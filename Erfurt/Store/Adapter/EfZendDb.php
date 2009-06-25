@@ -301,37 +301,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
     }
     
-    public function listNamespacePrefixes($graphUri)
-    {
-        $modelInfoCache = $this->_getModelInfos();
-        return $modelInfoCache[$graphUri]['namespaces'];
-    }
-    
-    public function addNamespacePrefix($graphUri, $ns, $prefix)
-    {
-        $modelInfoCache = $this->_getModelInfos();
-        $graphId = $modelInfoCache[$graphUri]['modelId'];
-        
-        $data = array(
-            'g' => $graphId,
-            'prefix' => $prefix
-        );
-        
-        if (strlen($ns) > $this->_getSchemaRefThreshold()) {
-            $nsHash = md5($ns);
-            
-            $refId = $this->_insertValueInto('ef_uri', $graphId, $ns, $nsHash);
-            $ns = substr($ns, 0, 223) . $nsHash;
-            
-            $data['ns'] = $ns;
-            $data['ns_r'] = $refId;
-        } else {
-            $data['ns'] = $ns;
-        }
-        
-        $this->_dbConn->insert('ef_ns', $data);
-    }
-    
     protected function _getNormalizedErrorCode() 
     {
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
@@ -530,7 +499,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         // remove all rows with the specified modelID from the models, statements and namespaces tables
         $this->_dbConn->delete('ef_graph', "id = $graphId");
         $this->_dbConn->delete('ef_stmt', "g = $graphId");
-        $this->_dbConn->delete('ef_ns', "g = $graphId");
         $this->_dbConn->delete('ef_uri', "g = $graphId");
         $this->_dbConn->delete('ef_lit', "g = $graphId");
         
@@ -1125,7 +1093,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $this->_dbConn->getConnection()->error);
         }
 
-
+        /*
         // Create ef_ns table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
         	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -1138,13 +1106,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         
         $success = false;
         $success = $this->_dbConn->getConnection()->query($sql);
-
+        
         if (!$success) {
              require_once 'Erfurt/Store/Adapter/Exception.php';
              throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_ns" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
-        
+        */
         
         // Create ef_uri table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
@@ -1325,7 +1293,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if ($cachedVal) {
             $this->_modelInfoCache = $cachedVal;
         } else {
-            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, n.ns, n.ns_r, n.prefix, s.o, u.v,
+            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
                         (SELECT count(*) 
                         FROM ef_stmt s2 
                         WHERE s2.g = g.id 
@@ -1335,12 +1303,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         AND s2.o = "' . EF_OWL_ONTOLOGY . '" 
                         AND s2.ot = 0) as is_owl_ontology 
                     FROM ef_graph g 
-                    LEFT JOIN ef_ns n ON (g.id = n.g) 
                     LEFT JOIN ef_stmt s ON (g.id = s.g
                         AND g.uri = s.s 
                         AND s.p = "' . EF_OWL_IMPORTS. '" 
                         AND s.ot = 0) 
-                    LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = n.ns_r OR u.id = s.o_r)';
+                    LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
                         
             try {
                 $result = $this->sqlQuery($sql);
@@ -1363,7 +1330,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
                         $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
                         $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
-                        $this->_modelInfoCache[$row['uri']]['namespaces']   = array();
                         $this->_modelInfoCache[$row['uri']]['imports']      = array();
                     
                         // set the type of the model
@@ -1372,22 +1338,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         } else {
                             $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
                         }
-
-                        if ($row['ns'] !== null &&
-                                !isset($this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']])) {
-                            
-                            $this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']] = $row['prefix'];
-                        }
+                        
                         if ($row['o'] !== null &&
                          !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
                             $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
                         }
                     } else {
-                        if ($row['ns'] !== null &&
-                                !isset($this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']])) {
-                            
-                            $this->_modelInfoCache[$row['uri']]['namespaces'][$row['ns']] = $row['prefix'];
-                        }
                         if ($row['o'] !== null &&
                                 !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
                             
@@ -1446,7 +1402,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (is_array($existingTables)) {
             if (!in_array('ef_info', $existingTables) ||
                 !in_array('ef_graph', $existingTables) ||
-                !in_array('ef_ns', $existingTables) ||
                 !in_array('ef_stmt', $existingTables) ||
                 !in_array('ef_uri', $existingTables) ||
                 !in_array('ef_lit', $existingTables)) {

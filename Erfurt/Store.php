@@ -188,21 +188,13 @@ class Erfurt_Store
     
     public function addNamespacePrefix($graphUri, $ns, $prefix, $useAc = true)
     {
-        if (method_exists($this->_backendAdapter, 'addNamespacePrefix')) {
-    	    if ($this->_checkAc($graphUri, 'edit', $useAc)) {
-    	        $this->_backendAdapter->addNamespacePrefix($graphUri, $ns, $prefix);
-    	    }
+        if ($this->_checkAc($graphUri, 'edit', $useAc)) {
+            
         }
     }
     
-    public function listNamespacePrefixes($graphUri)
+    public function getNamespacePrefixes($graphUri)
     {
-        if (method_exists($this->_backendAdapter, 'listNamespacePrefixes')) {
-    	    if ($this->_checkAc($graphUri)) {
-    	        return $this->_backendAdapter->listNamespacePrefixes($graphUri);
-    	    }
-        }
-        
         return array();
     }
     

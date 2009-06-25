@@ -49,7 +49,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $base = $graph->getBaseUri();
         $this->setBaseUri($base);
         
-        foreach ($this->_store->listNamespacePrefixes($graphUri) as $ns => $prefix) {
+        foreach ($this->_store->getNamespacePrefixes($graphUri) as $ns => $prefix) {
             $this->handleNamespace($prefix, $ns);
         }
 
@@ -111,7 +111,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $base = $graph->getBaseUri();
         $this->setBaseUri($base);
         
-        foreach ($this->_store->listNamespacePrefixes($graphUri) as $ns => $prefix) {
+        foreach ($this->_store->getNamespacePrefixes($graphUri) as $ns => $prefix) {
             $this->handleNamespace($prefix, $ns);
         }
 
