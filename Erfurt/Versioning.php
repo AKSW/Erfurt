@@ -138,11 +138,35 @@ class Erfurt_Versioning
                 model = \'' . $graphUri . '\'
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
+
+        $result = $this->_sqlQuery($sql);
+
+        return $result;
+    }
+
+    /**
+     * This method returns a distinct query result array of resource URIs which
+     * are modified since a certain timestamp on a given Knowledge Base
+     *
+     * @param string $graphUri the knowledge base (a URI string)
+     * @param integer $ts the Timestamp (as int!)
+     */
+    public function getModifiedResources($graphUri, $timestamp = 0)
+    {
+        $this->_checkSetup();
+        require_once 'Zend/Uri.php';
+
+        $sql = 'SELECT DISTINCT resource ' .
+               'FROM ef_versioning_actions WHERE
+                model = \'' . $graphUri . '\' AND
+                tstamp >= \'' . $timestamp . '\'
+                ORDER BY tstamp DESC';
         
         $result = $this->_sqlQuery($sql);
 
         return $result;
     }
+
 
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {
