@@ -25,6 +25,7 @@
       <owl:Ontology rdf:about="&SysOnt;"/>
     </owl:imports>
 	<owl:versionInfo>$Id$</owl:versionInfo>
+	<owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/erfurt/src/Erfurt/include/SysOntLocal.rdf" />
   </owl:Ontology>
 
 <!-- Instances -->
