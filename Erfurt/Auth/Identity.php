@@ -153,13 +153,14 @@ class Erfurt_Auth_Identity
                         $config->ac->user->name, 
                         array(
                             'type'  => 'literal',
-                            'value' => $newUsername
+                            'value' => $newUsername,
+                            'datatype' => EF_XSD_NS . 'string'
                         ), 
                         false
                     );
                 } else {
                     // Also delete password iff set!
-                     $store->deleteMatchingStatements(
+                    $store->deleteMatchingStatements(
                         $sysModelUri, 
                         $this->getUri(),
                         $config->ac->user->pass, 
