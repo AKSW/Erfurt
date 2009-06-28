@@ -25,13 +25,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         ),
         'datatype' => array(
             'value' => 'od',
-            'empty' => "=''",
-            'not_empty' => "!=''"
+            'empty' => '=""',
+            'not_empty' => '!=""'
         ),
         'language' => array(
             'value' => 'ol',
-            'empty' => "=''",
-            'not_empty' => "!=''"
+            'empty' => '=""',
+            'not_empty' => '!=""'
         )
     );
     
@@ -777,9 +777,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $str = stripslashes($str);
         } 
             
-        $str = str_replace("'", '"', $str);
+        $str = str_replace('"', "'", $str);
+        $str = str_replace(':', '\:', $str);
         
-        return "'" . $str . "'";
+        return '"' . $str . '"';
     }
 
     /**
@@ -850,7 +851,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 if ($bject->getDatatype() == '' || $bject->getDatatype() == 'http://www.w3.org/2001/XMLSchema#string') {
                     //string
                     $r .= ' AND ('
-                        . $strColDatatype . "=''"
+                        . $strColDatatype . '=""'
                         . ' OR ' . $strColDatatype . '="http://www.w3.org/2001/XMLSchema#string"'
                         . ')';
                 } else {
@@ -866,7 +867,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                    . $this->_qstr($bject->getLanguage());
             } else {
                 $strColLanguage = $strTablePrefix . '.ol';
-                $r .= ' AND ' . $strColLanguage . "=''";
+                $r .= ' AND ' . $strColLanguage . '=""';
             }
             return $r;
 
