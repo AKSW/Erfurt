@@ -96,7 +96,7 @@ class Erfurt_Auth_Identity
     
     public function isDbUser()
     {
-        return $thid->_isDbUser;
+        return $this->_isDbUser;
     }
     
     public function isAnonymousUser()
