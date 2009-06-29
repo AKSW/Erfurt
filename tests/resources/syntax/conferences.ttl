@@ -232,7 +232,7 @@ ns4:AIMSA2006 rdf:type ns2:Conference ;
               ns4:acceptanceNotification "2006-06-10"^^ns3:date ;
               ns4:camera-readySubmission "2006-06-30"^^ns3:date ;
               ns4:end "2006-09-15"^^ns3:date ;
-              ns4:place "Varna, Bulgaria"^^"String" ;
+              ns4:place "Varna, Bulgaria"^^<String> ;
               ns4:price "300"^^ns3:integer ;
               ns4:start "2006-09-13"^^ns3:date ;
               ns4:submissionsDue "2006-04-15"^^ns3:date ;

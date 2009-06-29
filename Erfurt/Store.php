@@ -1161,7 +1161,6 @@ echo $e->getMessage();exit;
     
     public function getGraphConfiguration($graphUri)
     {
-// TODO check for ac
         if (null === $this->_graphConfigurations) {
             $config         = Erfurt_App::getInstance()->getConfig();
             $sysOntModelUri = $config->sysOnt->modelUri;
