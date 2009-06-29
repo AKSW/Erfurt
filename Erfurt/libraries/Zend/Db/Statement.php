@@ -117,6 +117,8 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
      */
     protected function _parseParameters($sql)
     {
+        return;
+        
         $sql = $this->_stripQuoted($sql);
 
         // split into text and params
