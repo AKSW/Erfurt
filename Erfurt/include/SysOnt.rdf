@@ -256,21 +256,21 @@
 
   <Action rdf:about="RegisterNewUser"
                 rdfs:label="Register new User">
-    <rdfs:comment>Register new user with application/register</rdfs:comment>
+    <rdfs:comment>Register new users with application/register</rdfs:comment>
   </Action>
 
   <Action rdf:about="ModelManagement" rdfs:label="Model Management">
-    <rdfs:comment>User/Group can create and remove models</rdfs:comment>
+    <rdfs:comment>Create and remove models from the store</rdfs:comment>
   </Action>
 
   <Action rdf:about="Login"
                 rdfs:label="Login">
-    <rdfs:comment>Login to the OntoWiki application.</rdfs:comment>
+    <rdfs:comment>Login to the OntoWiki application</rdfs:comment>
   </Action>
 
   <Action rdf:about="Rollback"
                 rdfs:label="Rollback">
-    <rdfs:comment>Login to the OntoWiki application.</rdfs:comment>
+    <rdfs:comment>Rollback changes on statements to a past version (needs Versioning)</rdfs:comment>
   </Action>
 
 </rdf:RDF>
