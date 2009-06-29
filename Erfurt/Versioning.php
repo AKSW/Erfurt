@@ -33,6 +33,7 @@
  */
 class Erfurt_Versioning
 {
+    // standard constants for given actions
     const MODEL_IMPORTED      = 10;
     const STATEMENT_ADDED     = 20;
     const STATEMENT_CHANGED   = 21;
@@ -258,9 +259,17 @@ class Erfurt_Versioning
         $this->_checkSetup();
 
         if ($this->isVersioningEnabled() && is_array($event->statement)) {
-            $payloadId = $this->_execAddPayload($event->statement);
-            $resourceArray = array_keys($event->statement);
-            $resource = $resourceArray[0];
+
+            $payload = array (
+                $event->statement['subject'] => array (
+                    $event->statement['predicate'] => array (
+                        $event->statement['object']
+                    )
+                 )
+            );
+
+            $payloadId = $this->_execAddPayload($payload);
+            $resource = $event->statement['subject'];
             $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, $payloadId);
         } else {
             // do nothing
