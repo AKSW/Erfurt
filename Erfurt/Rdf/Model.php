@@ -568,7 +568,8 @@ class Erfurt_Rdf_Model
      * Returns an array of namespace IRIs (keys) and prefixes defined
      * in this model's source file.
      *
-     * @return array
+	 * @return array
+	 * @depreacted
      */
     public function getNamespaces()
     {
