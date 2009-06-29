@@ -7,6 +7,7 @@
  * @subpackage    rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
+ * @author     Natanael Arndt <arndtn@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
@@ -709,9 +710,9 @@ class Erfurt_Rdf_Model
 		 */
 		for($i = 0; $i < count($option); $i++){
 			$property   = $option[$i];
-			$splitpos   = strpos($property['value'], '=');          // find splitposition
-			$prefix     = substr($property['value'], 0, $splitpos); // get the part befor the '='
-			$namespace  = substr($property['value'], $splitpos);    // get the rest
+			$splitpos   = strpos($property['value'], '=');           // find splitposition
+			$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
+			$namespace  = substr($property['value'], $splitpos + 1); // get the rest
 			$this->_prefixes[$prefix] = $namespace;
 		}
 	}
