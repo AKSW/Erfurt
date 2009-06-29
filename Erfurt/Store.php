@@ -542,14 +542,14 @@ echo $e->getMessage();exit;
     {
         // check whether model is available
         if (!$this->isModelAvailable($modelIri, $useAc)) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception("Model <$modelIri> is not available and therefore not removable.");
+            require_once 'Erfurt/Store/Exception.php';
+            throw new Erfurt_Store_Exception("Model <$modelIri> is not available and therefore not removable.");
         }
         
         // check whether model editing is allowed
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception("No permissions to delete model <$modelIri>.");
+            require_once 'Erfurt/Store/Exception.php';
+            throw new Erfurt_Store_Exception("No permissions to delete model <$modelIri>.");
         }
         
         // delete model
