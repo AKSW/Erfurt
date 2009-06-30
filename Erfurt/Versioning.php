@@ -564,11 +564,10 @@ class Erfurt_Versioning
     protected function _sqlQuery($sql)
     {
         try {
+            $this->_checkSetup();
             $result = $this->_getStore()->sqlQuery($sql);
         } catch (Erfurt_Exception $e) {
-            // Try to initialize
-            $this->initialize();
-            $result = $this->_getStore()->sqlQuery($sql);
+            throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e->getMessage());    
         }
         
         return $result;
