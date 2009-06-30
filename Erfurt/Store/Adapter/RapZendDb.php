@@ -89,7 +89,7 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                 $this->_dbConn = new Zend_Db_Adapter_Pdo_Oci($adapterOptions);
                 break;
             case 'pdo_pgsql':
-                require_once 'Zend/Db/Adapter/Pdo/Pqsql.php';
+                require_once 'Zend/Db/Adapter/Pdo/Pgsql.php';
                 $this->_dbConn = new Zend_Db_Adapter_Pdo_Pgsql($adapterOptions);
                 break;
             case 'pdo_sqlite':
