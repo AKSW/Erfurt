@@ -39,12 +39,6 @@ class Erfurt_Rdf_Model
     protected $_graphUri = null;
     
     /**
-     * An array of namespace IRIs (keys) and prefixes 
-     * @var array
-     */
-	protected $_prefixes = null;
-    
-    /**
      * The model's title property value
      * @var string
      */
@@ -572,24 +566,42 @@ class Erfurt_Rdf_Model
 	 * @depreacted
      */
     public function getNamespaces()
-    {
-		if (null === $this->_prefixes) {
-		    $this->_initiatePrefixes();
-		}
-		
-        return array_flip($this->_prefixes);
+	{
+		$store = $this->getStore();
+        return array_flip($store->getNamespacePrefixes($this->_graphUri));
     }
     
 	/**
 	 * Get all namespaces with there prefix
-	 * @return array with namespace as key and prefix as value
+	 * @return array with prefixes as key and namespace as value
+	 * @depreacted
 	 */
 	public function getPrefixes()
 	{
-		if (null === $this->_prefixes) {
-		    $this->_initiatePrefixes();
-		}
-		return $this->_prefixes;
+		$store = $this->getStore();
+		return $store->getNamespacePrefixes($this->_graphUri);
+	}
+
+	/**
+	 * Get all namespaces with there prefix
+	 * @return array with namespace as key and prefix as value
+	 */
+	public function getNamespacePrefixes()
+	{
+		$store = $this->getStore();
+		return $store->getNamespacePrefixes($this->_graphUri);
+	}
+
+	/**
+	 * Add a namespace -> prefix mapping
+	 * @param $prefix a prefix to identify the namespace
+	 * @param $namespace the namespace uri
+	 * @depreacted
+	 */
+	public function addPrefix($prefix, $namespace)
+	{
+		$store = $this->getStore();
+		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
 	}
 
 	/**
@@ -597,131 +609,30 @@ class Erfurt_Rdf_Model
 	 * @param $prefix a prefix to identify the namespace
 	 * @param $namespace the namespace uri
 	 */
-	public function addPrefix($prefix, $namespace)
+	public function addNamespacePrefix($prefix, $namespace)
 	{
-		if (null === $this->_prefixes) {
-		    $this->_initiatePrefixes();
-		}
-		
-		if (!isset ($this->_prefixes[$prefix])) {
-			$this->_prefixes[$prefix] = $namespace;
+		$store = $this->getStore();
+		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
+	}
 
-			/**
-			 * get prefixes from model configuration
-			 */
-			$option   = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
-
-			/**
-			 * add new prefix with namespace to the config option
-			 */
-			$option[] = array(
-				'value' => $prefix . '=' . $namespace,
-				'type'  => 'literal'
-			);
-
-			/**
-			 * write the config option back to the model
-			 */
-			$this->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option);
-		} 
+	/**
+	 * Delete a namespace -> prefix mapping
+	 * @param $prefix the prefix you want to remove
+	 * @depreacted
+	 */
+	public function deletePrefix($prefix)
+	{
+		$store = $this->getStore();
+		$store->deleteNamespacePrefix($this->_graphUri, $prefix);
 	}
 
 	/**
 	 * Delete a namespace -> prefix mapping
 	 * @param $prefix the prefix you want to remove
 	 */
-	public function deletePrefix($prefix)
+	public function deleteNamespacePrefix($prefix)
 	{
-		if (null === $this->_prefixes) {
-		    $this->_initiatePrefixes();
-		}
-		
-		unset($this->_prefixes[$prefix]);
-
-		/**
-		 * get prefixes from model configuration
-		 */
-		$option   = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
-
-		/**
-		 * remove the entry with the given prefix from the config option
-		 */
-		for($i = 0; $i < count($option); $i++){
-			if(0 === strpos($option[$i]['value'], $prefix . '=')){
-				unset($option[$i]);
-			}
-		}
-
-		/**
-		 * write the config option back to the model
-		 */
-		$this->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option);
-	}
-
-	/**
-	 * Removes all prefixes representing this namespace
-	 * @param $namespace the namespace you want to remove
-	 */
-    public function deleteNamespace($namespace)
-    {
-		if (null === $this->_prefixes) {
-		    $this->_initiatePrefixes();
-		}
-
-        while($key = array_search ($namespace, $this->_prefixes)) {
-            $this->deletePrefix($key);
-        }
-    }
-
-	/**
-	 * initialy set the namespace mapping array for the model
-	 * (read the mapping from system configuration)
-	 */
-	protected function _initiatePrefixes()
-	{
-		/**
-		 * set some default prefixes ans namespaces
-		 * should be in some config later
-		 */
-		$this->_prefixes = array(
-            'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
-            'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
-            'owl'      => 'http://www.w3.org/2002/07/owl#', 
-            'xsd'      => 'http://www.w3.org/2001/XMLSchema#', 
-            'sysont'   => 'http://ns.ontowiki.net/SysOnt/', 
-            'dc'       => 'http://purl.org/dc/elements/1.1/', 
-            'foaf'     => 'http://xmlns.com/foaf/0.1/', 
-            'doap'     => 'http://usefulinc.com/ns/doap#', 
-            'wordnet'  => 'http://xmlns.com/wordnet/1.6/', 
-            'skos'     => 'http://www.w3.org/2004/02/skos/core#', 
-            'sioc'     => 'http://rdfs.org/sioc/ns#', 
-            'swrc'     => 'http://swrc.ontoware.org/ontology#', 
-            'lcl'      => 'http://ns.aksw.org/e-learning/lcl/', 
-            'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
-			//'_'      => 'nodeID://'
-		);
-
-		/**
-		 * get prefixes from model configuration
-		 */
-		$option = $this->getOption('http://ns.ontowiki.net/SysOnt/prefix');
-
-		/**
-		 * iterate config option and split prefix and namespace
-		 */
-		for($i = 0; $i < count($option); $i++){
-			$property   = $option[$i];
-			$splitpos   = strpos($property['value'], '=');           // find splitposition
-			$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
-			$namespace  = substr($property['value'], $splitpos + 1); // get the rest
-			$this->_prefixes[$prefix] = $namespace;
-		}
-	}
-
-	/**
-	 * This is a trigger function to test if the config options are written propperly
-	 */
-	public function initiateNamespacesTrigger(){
-		$this->_initiateNamespaces();
+		$store = $this->getStore();
+		$store->deleteNamespacePrefix($this->_graphUri, $prefix);
 	}
 }

@@ -54,6 +54,12 @@ class Erfurt_Store
      * 
      */
     protected $_graphConfigurations = null;
+	
+	/**
+     * An Array holding the Namespace prefixes (An array of namespace IRIs (keys) and prefixes) for some models
+     * @var array
+     */
+	protected $_prefixes = null;
     
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
@@ -186,18 +192,154 @@ class Erfurt_Store
         $this->_additionalImports[$graphUri] = $additionalImports;
     }
     
-    public function addNamespacePrefix($graphUri, $ns, $prefix, $useAc = true)
-    {
+	/**
+	 * Get all namespaces with there prefix
+     * @param string $graphUri
+	 * @return array with namespace as key and prefix as value
+	 */
+	public function getNamespacePrefixes($graphUri)
+	{
+		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+		    $this->_initiateNamespacePrefixes($graphUri);
+		}
+
+		return $this->_prefixes[$graphUri];
+	}
+
+	/**
+	 * Add a namespace -> prefix mapping
+     * @param string $graphUri
+	 * @param $prefix a prefix to identify the namespace
+	 * @param $namespace the namespace uri
+	 * @param $useAc use access control
+	 * @return boolean success state
+	 */
+	public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
+	{
         if ($this->_checkAc($graphUri, 'edit', $useAc)) {
             
         }
-    }
     
-    public function getNamespacePrefixes($graphUri)
-    {
-        return array();
-    }
-    
+		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+		    $this->_initiateNamespacePrefixes($graphUri);
+		}
+		
+		if (!isset ($this->_prefixes[$graphUri][$prefix])) {
+			$this->_prefixes[$graphUri][$prefix] = $namespace;
+
+			/**
+			 * get prefixes from model configuration
+			 */
+			$option     = $this->getGraphConfiguration($graphUri);
+
+			/**
+			 * add new prefix with namespace to the config option
+			 */
+			$option['http://ns.ontowiki.net/SysOnt/prefix'][] = array(
+				'value' => $prefix . '=' . $namespace,
+				'type'  => 'literal'
+			);
+
+			/**
+			 * write the config option back to the model
+			 */
+			$model      = $this->getModel($graphUri);
+			$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+
+			/**
+			 * return success
+			 */
+			return true;
+		}
+		/**
+		 * return fail
+		 */
+		return false;
+	}
+
+	/**
+	 * Delete a namespace -> prefix mapping
+     * @param string $graphUri
+	 * @param $prefix the prefix you want to remove
+	 * @param $useAc use access control
+	 * @return boolean successfully state
+	 */
+	public function deleteNamespacePrefix($graphUri, $prefix, $useAc = true)
+	{
+        if ($this->_checkAc($graphUri, 'edit', $useAc)) {
+
+			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+				$this->_initiateNamespacePrefixes($graphUri);
+			}
+
+			unset($this->_prefixes[$graphUri][$prefix]);
+
+			/**
+			 * get prefixes from model configuration
+			 */
+			$option     = $this->getGraphConfiguration($graphUri);
+
+			/**
+			 * remove the entry with the given prefix from the config option
+			 */
+			for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+				if(0 === strpos($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]['value'], $prefix . '=')){
+					unset($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]);
+				}
+			}
+
+			/**
+			 * write the config option back to the model
+			 */
+			$model      = $this->getModel($graphUri);
+			$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+
+			/**
+			 * should be successfully in every case
+			 */
+			return true;
+		} else {
+
+			/**
+			 * if authentication failes
+			 */
+			return false;
+		}
+	}
+
+	/**
+	 * initialy set the namespace mapping array for the model
+	 * (read the mapping from system configuration)
+     * @param string $graphUri
+	 */
+	protected function _initiateNamespacePrefixes($graphUri)
+	{
+
+		/**
+		 * get prefixes from model configuration
+		 */
+		$option     = $this->getGraphConfiguration($graphUri);
+
+		/**
+		 * iterate config option and split prefix and namespace
+		 */
+		for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+			$property   = $option['http://ns.ontowiki.net/SysOnt/prefix'][$i];
+			$splitpos   = strpos($property['value'], '=');           // find splitposition
+			$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
+			$namespace  = substr($property['value'], $splitpos + 1); // get the rest
+			$this->_prefixes[$graphUri][$prefix] = $namespace;
+		}
+	}
+
+	/**
+	 * This is a trigger function to test if the config options are written propperly
+     * @param string $graphUri
+	 */
+	public function initiateNamespacsPrefixesTrigger($graphUri){
+		$this->_initiateNamespacsPrefixes($graphUri);
+	}
+
     /**
      * Adds statements in an array to the graph specified by $graphIri.
      *
@@ -1158,7 +1300,12 @@ echo $e->getMessage();exit;
 	        return false;
 	    }
     }
-    
+
+	/**
+	 * Get the configuration for a graph.
+	 * @param string $graphUri to specity the graph
+	 * @return array 
+	 */
     public function getGraphConfiguration($graphUri)
     {
         if (null === $this->_graphConfigurations) {
@@ -1205,6 +1352,7 @@ echo $e->getMessage();exit;
             return array();
         }
     }
+
     
     // ------------------------------------------------------------------------
     // --- Protected (implemented) methods ------------------------------------
