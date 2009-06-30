@@ -45,18 +45,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         $this->assertEquals(0, count($result));
     }
     
-    public function testParseEncodingUtf8()
-    {
-        // TODO
-        $this->markTestIncomplete();
-    }
-    
-    public function testParseEncodingIso88591()
-    {
-        // TODO
-        $this->markTestIncomplete();
-    }
-    
     public function testParseBaseWithEmptyAbout()
     {
         $xml = $this->_getRdfXmlString('<owl:Ontology rdf:about=""></owl:Ontology>');
@@ -214,6 +202,19 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         return $dataArray;
     }
 
+    public function testParseFromUrlWithConferenceModelFromTrunk()
+    {
+        $url = 'http://ontowiki.googlecode.com/svn/trunk/models/Conferences/conferences.rdf';
+        
+        try {
+            $result = $this->_object->parseFromUrl($url);
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+    
+    
+    
     protected function _getRdfXmlString($innerXml)
     {
         return $this->_xmlString . $innerXml . '</rdf:RDF>';
