@@ -945,15 +945,19 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (strtolower(substr($sqlQuery, 0, 6)) === 'insert') {
             // Handle without ZendDb
             $result = $this->_dbConn->getConnection()->query($sqlQuery);
-
+            
             if ($result !== true) {
-
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception('SQL INSERT query failed: ' .      
                             $this->_dbConn->getConnection()->error);
             }
         } else {
-            $result = $this->_dbConn->fetchAll($sqlQuery);
+            try {
+                $result = $this->_dbConn->fetchAll($sqlQuery);
+            } catch (Zend_Db_Exception $e) {
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+            }
         }
         
         // Debug executed SQL queries in debug mode (7)
