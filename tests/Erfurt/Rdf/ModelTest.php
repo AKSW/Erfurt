@@ -453,47 +453,7 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $this->assertEquals(10, count($result));
     }
     
-    public function testGetDefaultPrefixesAndNamespaces()
-    {
-        $this->markTestNeedsDatabase();
-        $this->authenticateDbUser();
-        
-        $store = Erfurt_App::getInstance()->getStore();
-    
-        $model = $store->getNewModel('http://example.org/namespaceTest/', '', 'owl', false);
-        
-        $default = array(
-            'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 
-            'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#', 
-            'owl'      => 'http://www.w3.org/2002/07/owl#', 
-            'xsd'      => 'http://www.w3.org/2001/XMLSchema#', 
-            'sysont'   => 'http://ns.ontowiki.net/SysOnt/', 
-            'dc'       => 'http://purl.org/dc/elements/1.1/', 
-            'foaf'     => 'http://xmlns.com/foaf/0.1/', 
-            'doap'     => 'http://usefulinc.com/ns/doap#', 
-            'wordnet'  => 'http://xmlns.com/wordnet/1.6/', 
-            'skos'     => 'http://www.w3.org/2004/02/skos/core#', 
-            'sioc'     => 'http://rdfs.org/sioc/ns#', 
-            'swrc'     => 'http://swrc.ontoware.org/ontology#', 
-            'lcl'      => 'http://ns.aksw.org/e-learning/lcl/', 
-            'geo'      => 'http://www.w3.org/2003/01/geo/wgs84_pos#', 
-        );
-        
-        $prefixes = $model->getPrefixes();
-        
-        foreach ($default as $prefix=>$ns) {
-            $this->assertArrayHasKey($prefix, $prefixes);
-            $this->assertEquals($ns, $prefixes[$prefix]);
-        }
-        
-        $namespaces = $model->getNamespaces();
-        foreach ($default as $prefix=>$ns) {
-            $this->assertArrayHasKey($ns, $namespaces);
-            $this->assertEquals($prefix, $namespaces[$ns]);
-        }
-    }
-    
-    public function testAddAndGetAndDeletePrefix()
+    public function testAddAndGetAndDeleteNamespacePrefix()
     {
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
@@ -503,29 +463,19 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $model = $store->getNewModel('http://example.org/namespaceTest/', '', 'owl', false);
 
         // add a test prefix to the model
-        $model->addPrefix("test","http://testhausen/foo/bar/");
+        $model->addNamespacePrefix("test","http://testhausen/foo/bar/");
 
         // get prefixes from the model and test if added prefix exists
-        $prefixes = $model->getPrefixes();
+        $prefixes = $model->getNamespacePrefixes();
         $this->assertArrayHasKey("test", $prefixes);
         $this->assertEquals("http://testhausen/foo/bar/", $prefixes["test"]);
 
         // delete test prefix
-        $model->deletePrefix("test");
+        $model->deleteNamespacePrefix("test");
 
         // check if it is deleted
-        $prefixes = $model->getPrefixes();
+        $prefixes = $model->getNamespacePrefixes();
         $this->assertFalse(array_key_exists("test", $prefixes));
-        
-        
-        // add the test prefix to the model again
-        // and delete it by namespace
-        $model->addPrefix("test","http://testhausen/foo/bar/");
-        $model->deleteNamespace("http://testhausen/foo/bar/");
-
-        // check if it is deleted
-        $prefixes = $model->getNamespaces();
-        $this->assertFalse(array_key_exists("http://testhausen/foo/bar/", $prefixes));
     }
     
     public function testSetGetOption()
