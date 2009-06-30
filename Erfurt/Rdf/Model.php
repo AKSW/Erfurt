@@ -563,24 +563,13 @@ class Erfurt_Rdf_Model
      * in this model's source file.
      *
 	 * @return array
-	 * @depreacted
+	 * @deprecated
      */
     public function getNamespaces()
 	{
 		$store = $this->getStore();
         return array_flip($store->getNamespacePrefixes($this->_graphUri));
     }
-    
-	/**
-	 * Get all namespaces with there prefix
-	 * @return array with prefixes as key and namespace as value
-	 * @depreacted
-	 */
-	public function getPrefixes()
-	{
-		$store = $this->getStore();
-		return $store->getNamespacePrefixes($this->_graphUri);
-	}
 
 	/**
 	 * Get all namespaces with there prefix
@@ -596,7 +585,7 @@ class Erfurt_Rdf_Model
 	 * Add a namespace -> prefix mapping
 	 * @param $prefix a prefix to identify the namespace
 	 * @param $namespace the namespace uri
-	 * @depreacted
+	 * @deprecated
 	 */
 	public function addPrefix($prefix, $namespace)
 	{
@@ -613,17 +602,6 @@ class Erfurt_Rdf_Model
 	{
 		$store = $this->getStore();
 		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
-	}
-
-	/**
-	 * Delete a namespace -> prefix mapping
-	 * @param $prefix the prefix you want to remove
-	 * @depreacted
-	 */
-	public function deletePrefix($prefix)
-	{
-		$store = $this->getStore();
-		$store->deleteNamespacePrefix($this->_graphUri, $prefix);
 	}
 
 	/**
