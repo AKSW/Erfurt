@@ -216,40 +216,42 @@ class Erfurt_Store
 	 */
 	public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
 	{
-        if ($this->_checkAc($graphUri, 'edit', $useAc)) {
-            
-        }
-    
-		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
-		    $this->_initiateNamespacePrefixes($graphUri);
-		}
-		
-		if (!isset ($this->_prefixes[$graphUri][$prefix])) {
-			$this->_prefixes[$graphUri][$prefix] = $namespace;
+		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
 
-			/**
-			 * get prefixes from model configuration
-			 */
-			$option     = $this->getGraphConfiguration($graphUri);
+			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+				$this->_initiateNamespacePrefixes($graphUri);
+			}
 
-			/**
-			 * add new prefix with namespace to the config option
-			 */
-			$option['http://ns.ontowiki.net/SysOnt/prefix'][] = array(
-				'value' => $prefix . '=' . $namespace,
-				'type'  => 'literal'
-			);
+			if (!isset ($this->_prefixes[$graphUri][$prefix])) {
+				$this->_prefixes[$graphUri][$prefix] = $namespace;
 
-			/**
-			 * write the config option back to the model
-			 */
-			$model      = $this->getModel($graphUri);
-			$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+				/**
+				 * get prefixes from model configuration
+				 */
+				$option     = $this->getGraphConfiguration($graphUri);
 
-			/**
-			 * return success
-			 */
-			return true;
+				/**
+				 * add new prefix with namespace to the config option
+				 */
+				if (!isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+					$option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
+				}
+				$option['http://ns.ontowiki.net/SysOnt/prefix'][] = array(
+					'value' => $prefix . '=' . $namespace,
+					'type'  => 'literal'
+				);
+
+				/**
+				 * write the config option back to the model
+				 */
+				$model      = $this->getModel($graphUri);
+				$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+
+				/**
+				 * return success
+				 */
+				return true;
+			}
 		}
 		/**
 		 * return fail
@@ -282,10 +284,14 @@ class Erfurt_Store
 			/**
 			 * remove the entry with the given prefix from the config option
 			 */
-			for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
-				if(0 === strpos($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]['value'], $prefix . '=')){
-					unset($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]);
+			if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+				for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+					if(0 === strpos($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]['value'], $prefix . '=')){
+						unset($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]);
+					}
 				}
+			} else {
+				$option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
 			}
 
 			/**
@@ -323,12 +329,16 @@ class Erfurt_Store
 		/**
 		 * iterate config option and split prefix and namespace
 		 */
-		for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
-			$property   = $option['http://ns.ontowiki.net/SysOnt/prefix'][$i];
-			$splitpos   = strpos($property['value'], '=');           // find splitposition
-			$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
-			$namespace  = substr($property['value'], $splitpos + 1); // get the rest
-			$this->_prefixes[$graphUri][$prefix] = $namespace;
+		if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+			for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+				$property   = $option['http://ns.ontowiki.net/SysOnt/prefix'][$i];
+				$splitpos   = strpos($property['value'], '=');           // find splitposition
+				$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
+				$namespace  = substr($property['value'], $splitpos + 1); // get the rest
+				$this->_prefixes[$graphUri][$prefix] = $namespace;
+			}
+		} else {
+			$this->_prefixes[$graphUri] = array();
 		}
 	}
 
