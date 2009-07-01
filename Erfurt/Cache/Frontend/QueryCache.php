@@ -102,6 +102,7 @@ class Erfurt_Cache_Frontend_QueryCache {
             $result = $this->getBackend()->load($queryId);
             if ($result) {
                 $result = unserialize ($result);
+               
                 if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
                     $this->getBackend()->incrementHitCounter($queryId);
 

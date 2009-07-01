@@ -14,11 +14,20 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
 	final public function checkCacheVersion() {
-		$result = $this->_query('(SELECT num FROM ef_cache_query_version)');
+
+        $result = null;
+        try {            
+            $query = "SELECT num FROM ef_cache_query_version" ;
+            $result = $this->store->sqlQuery( $query );        
+        } catch (Erfurt_Store_Adapter_Exception $f) {
+            return false;
+        }
+
 		if (!$result) {
 			return false;
 		}
 		return true;
+
 	}
 
     /**
@@ -48,9 +57,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         #$this->_query('DROP TABLE ef_cache_query_version');
         #$this->_query('DROP TABLE ef_cache_query_objectKey');
 
+        $vocabulary = array();
+        switch ($this->store->getBackendName()) {
+            case "ZendDb" :
+            case "MySql" :
+                $vocabulary['identity'] = "AUTO_INCREMENT";
+            break;
+            case "Virtuoso":
+                $vocabulary['identity'] = "IDENTITY";
+            break;
+            default:
+                $vocabulary['identity'] = "IDENTITY";
+            break;
+        }
 
-		$this->_query('CREATE TABLE ef_cache_query_result (
-                id INT NOT NULL IDENTITY ,
+
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_result (
                 qid VARCHAR( 255 ) NOT NULL ,
                 query LONG VARCHAR NULL, 
                 result LONG VARBINARY NULL ,
@@ -60,52 +82,52 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 duration FLOAT NULL,
                 PRIMARY KEY ( qid ))');
 
-		$this->_query('CREATE TABLE ef_cache_query_triple (
-                tid INT NOT NULL IDENTITY,
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_triple (
+                tid INT NOT NULL '.$vocabulary['identity'].',
                 subject VARCHAR( 255 ) NULL ,
                 predicate VARCHAR( 255 ) NULL ,
                 object VARCHAR( 255 ) NULL ,
                 PRIMARY KEY ( tid ))');
 
-		$this->_query('CREATE TABLE ef_cache_query_model (
-                mid INT NOT NULL IDENTITY,
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_model (
+                mid INT NOT NULL '.$vocabulary['identity'].',
                 modelIri VARCHAR( 255 ) NULL ,
                 PRIMARY KEY ( mid ))');
 
 
-		$this->_query('CREATE TABLE ef_cache_query_rt (
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rt (
                 qid VARCHAR( 255 ) NOT NULL ,
                 tid VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, tid ))');
 
-		$this->_query('CREATE TABLE ef_cache_query_rm (
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rm (
                 qid VARCHAR( 255 ) NOT NULL ,
                 mid VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, mid ))');
 
-		$this->_query('CREATE TABLE ef_cache_query_objectKey (
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_objectKey (
                 qid VARCHAR( 255 ) NOT NULL ,
                 objectKey VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, objectKey ))');
 
-		$this->_query('CREATE TABLE ef_cache_query_version (
+		$this->store->sqlQuery('CREATE TABLE ef_cache_query_version (
                 num INT NOT NULL ,
                 PRIMARY KEY ( num )) ');
 
-		$this->_query('INSERT INTO ef_cache_query_version (num) VALUES (1)');
+		$this->store->sqlQuery('INSERT INTO ef_cache_query_version (num) VALUES (1)');
 
-        $this->_query('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
-        $this->_query('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
 
-        $this->_query('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
 
-        $this->_query('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-        $this->_query('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
 
-        $this->_query('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
 
-        $this->_query('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
-        $this->_query('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
+        $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
 	}
 
 
@@ -186,13 +208,26 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param        string    $queryId        Its a hash of the QueryString
      */
     public function incrementHitCounter( $queryId ) {
-        $query = "  UPDATE ef_cache_query_result 
-                    SET hit_count = ( 
-                        SELECT hit_count 
-                        FROM ef_cache_query_result 
-                        WHERE qid='".$queryId."' ) + 1
-                    WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
-        $this->_query ( $query );
+
+        switch ($this->store->getBackendName()) {
+            case "ZendDb" :
+            case "MySql" :
+                $count = $this->_query( "SELECT hit_count 
+                                FROM ef_cache_query_result 
+                                WHERE qid='".$queryId."' ") ;
+                $this->_query ( "UPDATE ef_cache_query_result SET hit_count = ".($count[0]['hit_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
+            break;
+            case "Virtuoso":
+            default:
+                $query = "  UPDATE ef_cache_query_result 
+                            SET hit_count = ( 
+                                SELECT hit_count 
+                                FROM ef_cache_query_result 
+                                WHERE qid='".$queryId."' ) + 1
+                            WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
+                $this->_query ( $query );
+            break;
+        }
     }
 
 
@@ -202,13 +237,27 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param        string    $queryId        Its a hash of the QueryString
      */
     public function incrementInvalidationCounter( $queryId ) {
-        $query = "  UPDATE ef_cache_query_result 
-                    SET inv_count = ( 
-                        SELECT inv_count 
-                        FROM ef_cache_query_result 
-                        WHERE qid='".$queryId."' ) + 1
-                    WHERE qid='".$queryId."'";
-        $this->_query ( $query );    
+
+        switch ($this->store->getBackendName()) {
+            case "ZendDb" :
+            case "MySql" :
+                $count = $this->_query( "SELECT inv_count 
+                                FROM ef_cache_query_result 
+                                WHERE qid='".$queryId."' ") ;
+                $this->_query ( "UPDATE ef_cache_query_result SET inv_count = ".($count[0]['inv_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
+            break;
+            case "Virtuoso":
+            default:
+                $query = "  UPDATE ef_cache_query_result 
+                            SET inv_count = ( 
+                                SELECT inv_count 
+                                FROM ef_cache_query_result 
+                                WHERE qid='".$queryId."' ) + 1
+                            WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
+                $this->_query ( $query );
+            break;
+        }
+   
     }
 
 
@@ -514,10 +563,16 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         }
 
         if ($checkCache) {
-
             try {            
-                $query = "SELECT num FROM ef_cache_query_version" ;
-                $result = $this->store->sqlQuery( $query );        
+                if (!$this->checkCacheVersion()) {
+                    $this->createCacheStructure ();
+                    if (!$this->checkCacheVersion()) {
+                        Zend_Cache::throwException('Impossible to build cache structure.');
+                    }
+                    else { 
+                        $result = $this->_query($sql);
+                    }
+                }
             } catch (Erfurt_Store_Adapter_Exception $f) {
                 $this->createCacheStructure ();
                 if (!$this->checkCacheVersion()) {

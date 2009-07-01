@@ -941,11 +941,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function sqlQuery($sqlQuery)
     {
         $start = microtime(true);
-        
-        if (strtolower(substr($sqlQuery, 0, 6)) === 'insert') {
+        $queryType = strtolower(substr($sqlQuery, 0, 6));
+        if ( $queryType  === 'insert' ||  
+             $queryType  === 'update' ||
+             $queryType  === 'create' ||
+             $queryType  === 'delete') {
             // Handle without ZendDb
             $result = $this->_dbConn->getConnection()->query($sqlQuery);
-            
             if ($result !== true) {
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception('SQL INSERT query failed: ' .      
@@ -954,9 +956,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } else {
             try {
                 $result = $this->_dbConn->fetchAll($sqlQuery);
-            } catch (Zend_Db_Exception $e) {
-                require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+            } catch (Zend_Db_Exception $e) { return false;
+                #require_once 'Erfurt/Store/Adapter/Exception.php';
+                #throw new Erfurt_Store_Adapter_Exception($e->getMessage());
             }
         }
         

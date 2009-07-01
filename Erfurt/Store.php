@@ -1285,6 +1285,7 @@ echo $e->getMessage();exit;
         //queriing SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options['result_format'];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
+
         if (!($sparqlResult = $queryCache->load( (string) $queryObject ))){
 #           // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
