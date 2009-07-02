@@ -581,7 +581,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($graphIri, $data, $type, $locator)
     {        
-        require_once 'Erfurt/Syntax/RdfParser.php';
+        // check type parameter
+        switch (strtolower($type)) {
+            case 'n3':  // N3
+            case 'nt':  // N-Triple
+                $type = 'ttl';
+                break;
+            case 'rdf': // RDF-XML
+            case 'rdfxml':
+            default:    // RDF/XML is default
+                $type = 'rdfxml';
+                break;
+        }
         
         $func = null;
         if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_FILE && is_readable($data)) {
@@ -593,9 +604,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             throw new Erfurt_Store_Adapter_Exception("Locator '$loactor' is not supported by Virtuoso.");
         }
         
+        $model = null;
         if ($func) {
-            return $this->$func($data, $type, $graphIri);
+            // import statements
+            $model = $this->$func($data, $type, $graphIri);
+            
+            if ($model instanceof Erfurt_Rdf_Model) {
+                require_once 'Erfurt/Syntax/RdfParser.php';
+                $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
+                
+                foreach($parser->parseNamespaces($data, $locator) as $namespaceUri => $prefix) {
+                    $model->addNamespacePrefix($prefix, $namespaceUri);
+                }
+            }
         }
+        
+        return $model;
     }
     
     public function init()
@@ -1023,7 +1047,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $baseUri The base IRI
      */
     private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = '') 
-    {        
+    {
         // check type parameter
         switch (strtolower($type)) {
             case 'n3':  // N3
@@ -1038,7 +1062,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         // import using internal Virtuoso/PL function
-        $importSql = sprintf("CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", $importFunc, $file, $baseUri, $graphUri);
+        $importSql = sprintf(
+            "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", 
+            $importFunc, 
+            $file, 
+            $baseUri, 
+            $graphUri);
         
         try {
             if ($res = $this->_execSql($importSql)) {

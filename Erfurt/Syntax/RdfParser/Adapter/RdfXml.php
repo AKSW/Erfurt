@@ -683,7 +683,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         xml_parser_set_option($xmlParser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($xmlParser, XML_OPTION_SKIP_WHITE, 1);
         
-        xml_set_start_namespace_decl_handler($xmlParser(), array($this, '_handleNamespaceDeclaration'));
+        xml_set_start_namespace_decl_handler($xmlParser, array($this, '_handleNamespaceDeclaration'));
         
         return $xmlParser;
     }
