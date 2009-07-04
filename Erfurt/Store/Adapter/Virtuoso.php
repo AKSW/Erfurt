@@ -163,15 +163,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        // handle defaults
-        $defaultOptions = array(
-            'escape_literals' => true
-        );
-        $options = array_merge($defaultOptions, $options);
-        $insertSparql = '
-            INSERT INTO GRAPH <' . $graphIri . '> {
-                ' . $this->buildTripleString($statementsArray) . '
-            }';
+        $insertSparql = sprintf(
+            'INSERT INTO GRAPH <%s> {%s}', 
+            $graphIri, 
+            $this->buildTripleString($statementsArray));
+        
+        if (defined('_EFDEBUG')) {
+            $log = Erfurt_App::getInstance()->getLog();
+            $log->debug('Add mutliple statements query: ' . PHP_EOL . $insertSparql);
+        }
         
         return $this->_execSparql($insertSparql);
     }
@@ -254,8 +254,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             foreach ($predicates as $currentPredicate => $objects) {
                 foreach ($objects as $currentObject) {
                     // TODO: blank nodes
-                    $resource = '<' . $currentSubject . '>';
-                    $property = '<' . $currentPredicate . '>';
+                    $resource = '<' . trim($currentSubject) . '>';
+                    $property = '<' . trim($currentPredicate) . '>';
                     
                     if ($currentObject['type'] == 'uri') {
                         $value = '<' . $currentObject['value'] . '>';
@@ -356,12 +356,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
-        $deleteSparql = '
-            DELETE FROM GRAPH <' . $graphIri . '> {
-                ' . $this->buildTripleString($statementsArray) . '
-            }
-        ';
-        // var_dump($deleteSparql);exit;
+        $deleteSparql = sprintf(
+            'DELETE FROM GRAPH <%s> {%s}', 
+            $graphIri, 
+            $this->buildTripleString($statementsArray));
+        
+        if (defined('_EFDEBUG')) {
+            $log = Erfurt_App::getInstance()->getLog();
+            $log->debug('Delete multiple statements query:' . PHP_EOL . $deleteSparql);
+        }
+        
         return $this->_execSparql($deleteSparql);
     }
     
@@ -613,7 +617,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 require_once 'Erfurt/Syntax/RdfParser.php';
                 $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
                 
-                foreach($parser->parseNamespaces($data, $locator) as $namespaceUri => $prefix) {
+                foreach ($parser->parseNamespaces($data, $locator) as $namespaceUri => $prefix) {
                     $model->addNamespacePrefix($prefix, $namespaceUri);
                 }
             }
@@ -895,9 +899,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         
-		$now = microtime(true);
         $result = @odbc_exec($this->_connection, $virtuosoPl);
-		$this->_debug_print("SPARQL query: ".$sparqlQuery."\nduration: ".((microtime(true)-$now)*1000)." msec");
         
         if (false === $result) {
             require_once 'Erfurt/Exception.php';
@@ -909,13 +911,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             odbc_longreadlen($result, 16777216);
             $this->_longRead = false;
         }
- 
-        //Increment query counter 
-#        $query = "UPDATE ef_cache_query_version 
-#                    SET num = ( 
-#                        SELECT num 
-#                        FROM ef_cache_query_version )+ 1";
-#        $this->_execSql($query);
        
         return $result;
     }

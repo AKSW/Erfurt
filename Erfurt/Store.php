@@ -373,6 +373,7 @@ class Erfurt_Store
         }
         
         $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
+        
         //invalidate deprecated Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithStatements($graphUri, $statementsArray );
@@ -382,8 +383,7 @@ class Erfurt_Store
         $event = new Erfurt_Event('onAddMultipleStatements');
         $event->graphUri   = $graphUri; 
         $event->statements = $statementsArray;
-        
-        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        $event->trigger();
         
         $this->_graphConfigurations = null;
     }
@@ -431,8 +431,7 @@ class Erfurt_Store
             'predicate' => $predicate,
             'object'    => $object
         );
-        
-        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        $event->trigger();
         
         $this->_graphConfigurations = null;
     }
@@ -672,16 +671,16 @@ echo $e->getMessage();exit;
         
         $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
 
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
-
-        
-        require_once 'Erfurt/Event/Dispatcher.php';
-        require_once 'Erfurt/Event.php';
-        $event = new Erfurt_Event('onDeleteMultipleStatements');
-        $event->graphUri   = $graphUri; 
-        $event->statements = $statementsArray;
-        Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        // $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        // $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
+        // 
+        // 
+        // require_once 'Erfurt/Event/Dispatcher.php';
+        // require_once 'Erfurt/Event.php';
+        // $event = new Erfurt_Event('onDeleteMultipleStatements');
+        // $event->graphUri   = $graphUri; 
+        // $event->statements = $statementsArray;
+        // Erfurt_Event_Dispatcher::getInstance()->trigger($event);
     }
     
     /**
