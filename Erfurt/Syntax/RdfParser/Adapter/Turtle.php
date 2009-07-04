@@ -152,7 +152,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     {
         $store = Erfurt_App::getInstance()->getStore();
         foreach ($this->_namespaces as $ns => $prefix) {
-            $store->addNamespacePrefix($this->_graphUri, $ns, $prefix, $this->_useAc);
+            $store->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
         }
     }
     
