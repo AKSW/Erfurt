@@ -671,16 +671,14 @@ echo $e->getMessage();exit;
         
         $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
 
-        // $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        // $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
-        // 
-        // 
-        // require_once 'Erfurt/Event/Dispatcher.php';
-        // require_once 'Erfurt/Event.php';
-        // $event = new Erfurt_Event('onDeleteMultipleStatements');
-        // $event->graphUri   = $graphUri; 
-        // $event->statements = $statementsArray;
-        // Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
+        
+        require_once 'Erfurt/Event.php';
+        $event = new Erfurt_Event('onDeleteMultipleStatements');
+        $event->graphUri   = $graphUri; 
+        $event->statements = $statementsArray;
+        $event->trigger();
     }
     
     /**
@@ -1212,7 +1210,7 @@ echo $e->getMessage();exit;
         }
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         if (!($sparqlResult = $queryCache->load( (string) $queryObject))){
-#           // TODO: check if adapter supports requested result format
+            // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
             $duration = microtime(true) - $startTime;
