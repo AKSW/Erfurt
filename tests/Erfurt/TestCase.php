@@ -20,10 +20,17 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         if ($this->_dbWasUsed) {
             $this->authenticateDbUser();
             $store = Erfurt_App::getInstance()->getStore();
+            $config = Erfurt_App::getInstance()->getConfig();
 
-            foreach ($store->getAvailableModels(true) as $graphUri => $true) {                
-                $store->deleteModel($graphUri);
+            foreach ($store->getAvailableModels(true) as $graphUri => $true) {
+                if ($graphUri !== $config->sysOnt->schemaUri && $graphUri !== $config->sysOnt->modelUri) {
+                    $store->deleteModel($graphUri);
+                }              
             }
+            
+            // Delete system models after all other models are deleted.
+            $store->deleteModel($config->sysOnt->modelUri);
+            $store->deleteModel($config->sysOnt->schemaUri);
             
             $this->_dbWasUsed = false;
         }
@@ -66,6 +73,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $this->markTestSkipped();
         }
         
+        $this->authenticateAnonymous();
+        
         try {
             $store = Erfurt_App::getInstance()->getStore();
             $store->checkSetup();
@@ -95,6 +104,11 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         Erfurt_App::reset();
         
         $this->_loadTestConfig();
+    }
+    
+    public function markTestUsesDb()
+    {
+        $this->_dbWasUsed = true;
     }
     
     public function markTestNeedsTestConfig()

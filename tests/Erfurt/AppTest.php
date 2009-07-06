@@ -259,7 +259,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $result = Erfurt_App::getInstance()->authenticate();
         $this->assertTrue($result->isValid());
         $identity = $result->getIdentity();
-        $this->assertEquals('Anonymous', $identity['username']);
+        $this->assertEquals('Anonymous', $identity->getUsername());
     }
     
     public function testAuthenticateWithExplicitAnonymous()
@@ -270,7 +270,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $result = Erfurt_App::getInstance()->authenticate('Anonymous');
         $this->assertTrue($result->isValid());
         $identity = $result->getIdentity();
-        $this->assertEquals('Anonymous', $identity['username']);
+        $this->assertEquals('Anonymous', $identity->getUsername());
     }
         
     public function testAuthenticateWithAdmin()
@@ -281,7 +281,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $result = Erfurt_App::getInstance()->authenticate('Admin');
         $this->assertTrue($result->isValid());
         $identity = $result->getIdentity();
-        $this->assertEquals('Admin', $identity['username']);
+        $this->assertEquals('Admin', $identity->getUsername());
     }
     
     public function testAuthenticateWithAdminWrongPassword()
@@ -301,7 +301,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $result = Erfurt_App::getInstance()->authenticate($this->getDbUser(), $this->getDbPassword());
         $this->assertTrue($result->isValid());
         $identity = $result->getIdentity();
-        $this->assertEquals('SuperAdmin', $identity['username']);
+        $this->assertEquals('SuperAdmin', $identity->getUsername());
     }
 
     public function testAuthenticateWithOpenIdWillFail()
@@ -317,6 +317,9 @@ class Erfurt_AppTest extends Erfurt_TestCase
         
         $this->assertTrue($result instanceof Zend_Auth_Result);
         $this->assertFalse($result->isValid());
+        
+        // Erfurt (versioning) needs a user...
+        $this->authenticateAnonymous();
         
         // Now we add the user, so we can test whether a non existing provider url also fails.
         Erfurt_App::getInstance()->addOpenIdUser($openId);

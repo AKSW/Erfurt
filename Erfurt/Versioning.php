@@ -75,8 +75,7 @@ class Erfurt_Versioning
      */
     public function enableVersioning($versioningEnabled = true)
     {
-        $this->_checkSetup();
-
+        //$this->_checkSetup();
         $this->_versioningEnabled = (bool) $versioningEnabled;
     }
     
@@ -516,15 +515,9 @@ class Erfurt_Versioning
     /**
      * late setup function for time saving and mocking in test cases
      */
-    private function _checkSetup() {
-
-        if ($this->_isSetup) { 
-            //do nothing
-        } else {
-            $this->_initialize();
-            $this->_isSetup = true;
-        }
-
+    private function _checkSetup() 
+    {
+        $this->_initialize();
     } 
 
     private function _initialize()
@@ -535,7 +528,7 @@ class Erfurt_Versioning
         }
         
         $existingTableNames = $this->_getStore()->listTables();
-        
+
         if (!in_array('ef_versioning_actions', $existingTableNames)) {
             $columnSpec = array(
                 'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
@@ -564,10 +557,15 @@ class Erfurt_Versioning
     protected function _sqlQuery($sql)
     {
         try {
-            $this->_checkSetup();
             $result = $this->_getStore()->sqlQuery($sql);
         } catch (Erfurt_Exception $e) {
-            throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e->getMessage());    
+            $this->_checkSetup();
+            
+            try {
+                $result = $this->_getStore()->sqlQuery($sql);
+            } catch (Erfurt_Exception $e2) {
+                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage());
+            }
         }
         
         return $result;

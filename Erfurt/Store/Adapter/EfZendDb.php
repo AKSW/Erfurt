@@ -494,7 +494,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function deleteModel($graphUri) 
     {
         $modelInfoCache = $this->_getModelInfos();
-        $graphId = $modelInfoCache[$graphUri]['modelId'];
+        
+        if (isset($modelInfoCache[$graphUri]['modelId'])) {
+            $graphId = $modelInfoCache[$graphUri]['modelId'];
+        } else {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Model deletion failed: No db id found for model URL.');
+        }
         
         // remove all rows with the specified modelID from the models, statements and namespaces tables
         $this->_dbConn->delete('ef_graph', "id = $graphId");
@@ -661,19 +667,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedImportFormats()
     {
-        $app = Erfurt_App::getInstance();
-        
-        if (false && $this->_dbConn instanceof Zend_Db_Adapter_Mysqli && $app->getTmpDir() !== false) {
-// TODO fix importRdf to work with arc xml parser
-            return array('rdfxml' => 'RDF/XML');
-        } else {
-            return array();
-        }
+        return array();
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function importRdf($modelUri, $data, $type, $locator)
     {
+// TODO fix or remove
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
@@ -956,9 +956,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } else {
             try {
                 $result = $this->_dbConn->fetchAll($sqlQuery);
-            } catch (Zend_Db_Exception $e) { return false;
-                #require_once 'Erfurt/Store/Adapter/Exception.php';
-                #throw new Erfurt_Store_Adapter_Exception($e->getMessage());
+            } catch (Zend_Db_Exception $e) { #return false;
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception($e->getMessage());
             }
         }
         
@@ -994,7 +994,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 	                 .  ')';
 
 	    $success = $this->_dbConn->getConnection()->query($createTable);
-	    
+
 	    if (!$success) {
 // TODO dedicated exception
 	        throw new Exception('Could not create database table with name ' . $tableName . '.');
@@ -1179,7 +1179,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         } else {
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception(
-                                'Store: Error while initializing the environment.', -1);
+                                'Store: Error while initializing the environment: ' . $e2->getMessage(), -1);
                         }
                     }
                     
@@ -1214,7 +1214,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     
     protected function _cleanUpValueTables($graphUri)
     {
-        $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        if (isset($this->_modelInfoCache[$graphUri]['modelId'])) {
+            $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
+        } else {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Failed to clean up value tables: No db id for <' . $graphUri .
+                                                     '> was found.');
+        }
         
         $sql = "SELECT l.id as id, count(l.id)
                 FROM ef_lit l
@@ -1223,6 +1229,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 GROUP BY l.id";
 
         $idArray = array();
+
         foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
             $idArray[] = $row['id'];
         }

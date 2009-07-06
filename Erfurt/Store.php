@@ -244,7 +244,7 @@ class Erfurt_Store
 				/**
 				 * write the config option back to the model
 				 */
-				$model      = $this->getModel($graphUri);
+				$model      = $this->getModel($graphUri, $useAc);
 				$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
 
 				/**
@@ -488,42 +488,12 @@ class Erfurt_Store
         
         $returnValue = true;
         
-        // check for system ontology
-        if (!$this->isModelAvailable($sysOntSchema, false)) {
-            $logger->info('System schema model not found. Loading model ...');
-            
-            $this->getNewModel($sysOntSchema, '', 'owl', false);
-            require_once 'Erfurt/Syntax/RdfParser.php';
-            try {
-                if (is_readable($schemaPath)) {
-                    // load SysOnt from file
-                    $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE,
-                            false);
-                } else {
-                    // load SysOnt from Web
-                    $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL,
-                            false);
-                }
-            } catch (Erfurt_Exception $e) {
-                // Delete the model, for the import failed.
-                $this->_backendAdapter->deleteModel($sysOntSchema);
-echo $e->getMessage();exit;
-                require_once 'Erfurt/Store/Exception.php';
-                throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed.");
-            }
-            
-            if (!$this->isModelAvailable($sysOntSchema, false)) {
-                require_once 'Erfurt/Store/Exception.php';
-                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
-            }
-            
-            $logger->info('System schema successfully loaded.');
-            $returnValue = false;
-        }
-
         // check for system configuration model
+        // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
+        // local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
             
             $this->getNewModel($sysOntModel, '', 'owl', false);
             require_once 'Erfurt/Syntax/RdfParser.php';
@@ -541,7 +511,7 @@ echo $e->getMessage();exit;
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntSchema);
                 require_once 'Erfurt/Store/Exception.php';
-                throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed.");
+                throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed -> " . $e->getMessage());
             }
             
             if (!$this->isModelAvailable($sysOntModel, false)) {
@@ -549,11 +519,45 @@ echo $e->getMessage();exit;
                 throw new Erfurt_Exception('Unable to load System Ontology model.');
             }
             
-            
-            $logger->info('System schema successfully loaded.');
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
         
+        // check for system ontology
+        if (!$this->isModelAvailable($sysOntSchema, false)) {
+            $logger->info('System schema model not found. Loading model ...');
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+            
+            $this->getNewModel($sysOntSchema, '', 'owl', false);
+            require_once 'Erfurt/Syntax/RdfParser.php';
+            try {
+                if (is_readable($schemaPath)) {
+                    // load SysOnt from file
+                    $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE,
+                            false);
+                } else {
+                    // load SysOnt from Web
+                    $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL,
+                            false);
+                }
+            } catch (Erfurt_Exception $e) {
+                // Delete the model, for the import failed.
+                $this->_backendAdapter->deleteModel($sysOntSchema);
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed -> " . $e->getMessage());
+            }
+            
+            if (!$this->isModelAvailable($sysOntSchema, false)) {
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
+            }
+            
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            $logger->info('System schema successfully loaded.');
+            $returnValue = false;
+        }
+
         if ($returnValue === false) {
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('One or more system models imported.', 20);
@@ -1117,6 +1121,7 @@ echo $e->getMessage();exit;
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
+
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
             $this->_backendAdapter->init();
             

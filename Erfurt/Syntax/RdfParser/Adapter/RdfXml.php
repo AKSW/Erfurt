@@ -549,6 +549,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     {
         // Check whether model exists.
         $store = Erfurt_App::getInstance()->getStore();
+
         if (!$store->isModelAvailable($this->_graphUri, $this->_useAc)) {
             throw new Exception('Model with uri ' . $this->_graphUri . ' not available.');
         }

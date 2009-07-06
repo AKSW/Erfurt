@@ -1,9 +1,10 @@
 <?php
+require_once 'Erfurt/Auth/Identity.php';
 
 class Erfurt_Versioning_AuthStub
 {    
     public function getIdentity()
     {
-        return array('uri' => 'http://example.org/user1/');
+        return new Erfurt_Auth_Identity(array('uri' => 'http://example.org/user1/'));
     }
 }

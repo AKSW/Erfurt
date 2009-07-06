@@ -1,7 +1,7 @@
 <?php
 require_once 'Erfurt/TestCase.php';
 
-require_once 'src/Erfurt/Owl/Model.php';
+require_once 'Erfurt/Owl/Model.php';
 
 /**
  * Test class for Erfurt_Owl_Model.

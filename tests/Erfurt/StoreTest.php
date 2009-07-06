@@ -1,6 +1,6 @@
 <?php
 require_once 'Erfurt/TestCase.php';
-
+require_once 'Erfurt/Syntax/RdfParser.php';
 require_once 'Erfurt/Store.php';
 
 class Erfurt_StoreTest extends Erfurt_TestCase
@@ -24,11 +24,8 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         try {
             $store->importRdf($url, $url, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
         } catch (Erfurt_Exception $e) {
-            $store->deleteModel($url, false);
             $this->fail($e->getMessage());
         }
-        
-        $store->deleteModel($url, false);
     }
     
     /**
@@ -54,7 +51,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $result = $model->sparqlQuery($sparql);
 
         $this->assertEquals(5, count($result));
-        
+       
         $store->deleteMatchingStatements($modelUri, 'http://model.org/model#localName', null, null);
         
         $result = $model->sparqlQuery($sparql);
@@ -104,6 +101,24 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
+    }
+    
+    public function testCheckSetupWithZendDb()
+    {
+        $this->markTestNeedsCleanZendDbDatabase();
+        $this->markTestUsesDb();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        $config = Erfurt_App::getInstance()->getConfig();
+        
+        try {
+            $store->checkSetup();
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        
+        $this->assertTrue($store->isModelAvailable($config->sysOnt->schemaUri, false));
+        $this->assertTrue($store->isModelAvailable($config->sysOnt->modelUri, false));
     }
 }
 
