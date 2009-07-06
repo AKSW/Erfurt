@@ -1,5 +1,4 @@
 <?php
-require_once 'test_base.php';
 require_once 'Erfurt/Rdf/ModelTest.php';
 require_once 'Erfurt/Rdf/LiteralTest.php';
 require_once 'Erfurt/Rdf/ResourceTest.php';

@@ -117,8 +117,8 @@ class Erfurt_StoreTest extends Erfurt_TestCase
             $this->fail($e->getMessage());
         }
         
-        $this->assertTrue($store->isModelAvailable($config->sysOnt->schemaUri, false));
-        $this->assertTrue($store->isModelAvailable($config->sysOnt->modelUri, false));
+        $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
+        $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
     }
 }
 

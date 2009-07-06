@@ -13,7 +13,7 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function setUp()
     {   
-        // $this->markTestNeedsVirtuoso();
+        $this->markTestNeedsVirtuoso();
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($this->_options);
     }
     

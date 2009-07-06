@@ -1,7 +1,5 @@
 <?php
-require_once 'test_base.php';
 require_once 'Erfurt/Owl/ModelTest.php';
-
 
 class Erfurt_Owl_TestSuite extends PHPUnit_Framework_TestSuite
 {

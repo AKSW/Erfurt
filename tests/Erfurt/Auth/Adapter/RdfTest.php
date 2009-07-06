@@ -3,7 +3,7 @@ require_once 'Erfurt/TestCase.php';
 
 require_once 'Erfurt/Auth/Adapter/Rdf.php';
 
-class Erfurt_Auth_AdapterRdfTest extends Erfurt_TestCase
+class Erfurt_Auth_Adapter_RdfTest extends Erfurt_TestCase
 {
     public function testObjectCreation()
     {
@@ -19,8 +19,8 @@ class Erfurt_Auth_AdapterRdfTest extends Erfurt_TestCase
         $id = $result->getIdentity();
 
         $this->assertTrue($result->isValid());
-        $this->assertEquals('Anonymous', $id['username']);
-        $this->assertTrue($id['anonymous']);
+        $this->assertEquals('Anonymous', $id->getUsername());
+        $this->assertTrue($id->isAnonymousUser());
     }
     
     public function testAuthenticateSuperAdmin()
@@ -34,8 +34,8 @@ class Erfurt_Auth_AdapterRdfTest extends Erfurt_TestCase
         $id = $result->getIdentity();
 
         $this->assertTrue($result->isValid());
-        $this->assertEquals('SuperAdmin', $id['username']);
-        $this->assertTrue($id['dbuser']);
+        $this->assertEquals('SuperAdmin', $id->getUsername());
+        $this->assertTrue($id->isDbUser());
     }
     
     public function testAuthenticateSuperAdminWithWrongPassword()
@@ -58,7 +58,7 @@ class Erfurt_Auth_AdapterRdfTest extends Erfurt_TestCase
         $id = $result->getIdentity();
 
         $this->assertTrue($result->isValid());
-        $this->assertEquals('Admin', $id['username']);
+        $this->assertEquals('Admin', $id->getUsername());
     }
     
     public function testAuthenticateUserWithWrongPassword()

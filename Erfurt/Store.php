@@ -223,15 +223,12 @@ class Erfurt_Store
 			}
 			
 			
-			if ($prefix === '' && $namespace == '') {
+			// quick hack... will be fixed bei nathanael
+			if ($prefix == '' || $namespace == '') {
 			    return false;
 			}
 			
-			if ($prefix === '') {
-			    $prefix = '_';
-			}
-
-			if (!isset ($this->_prefixes[$graphUri][$prefix])) {
+			if (!isset($this->_prefixes[$graphUri][$prefix])) {
 				$this->_prefixes[$graphUri][$prefix] = $namespace;
 
 				/**

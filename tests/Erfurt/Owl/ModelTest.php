@@ -1,6 +1,5 @@
 <?php
 require_once 'Erfurt/TestCase.php';
-
 require_once 'Erfurt/Owl/Model.php';
 
 /**
@@ -10,12 +9,6 @@ require_once 'Erfurt/Owl/Model.php';
 class Erfurt_Owl_ModelTest extends Erfurt_TestCase
 {
     /**
-     * @var    Erfurt_Owl_Model
-     * @access protected
-     */
-    protected $object;
-
-    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
@@ -23,7 +16,6 @@ class Erfurt_Owl_ModelTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Erfurt_Owl_Model;
     }
 
     /**
@@ -36,26 +28,10 @@ class Erfurt_Owl_ModelTest extends Erfurt_TestCase
     {
     }
 
-    /**
-     * @todo Implement testGetImportedIris().
-     */
-    public function testGetImportedIris()
+    public function testObjectCreationWithoutBaseUriAndWithoutImports()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testGetResource().
-     */
-    public function testGetResource()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $model = new Erfurt_Owl_Model('http://example.org/model/');
+        $this->assertTrue($model instanceof Erfurt_Owl_Model);
     }
 }
 ?>

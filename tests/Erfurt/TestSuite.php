@@ -1,5 +1,6 @@
 <?php
 require_once 'Erfurt/AppTest.php';
+require_once 'Erfurt/Auth/TestSuite.php';
 require_once 'Erfurt/Rdf/TestSuite.php';
 require_once 'Erfurt/Owl/TestSuite.php';
 require_once 'Erfurt/Sparql/TestSuite.php';
@@ -15,6 +16,7 @@ class Erfurt_TestSuite extends PHPUnit_Framework_TestSuite
         $suite = new Erfurt_TestSuite('Erfurt Tests');
         
         $suite->addTestSuite('Erfurt_AppTest');
+        $suite->addTestSuite('Erfurt_Auth_TestSuite');
         $suite->addTestSuite('Erfurt_Rdf_TestSuite');
         $suite->addTestSuite('Erfurt_Owl_TestSuite');
         $suite->addTestSuite('Erfurt_Sparql_TestSuite');

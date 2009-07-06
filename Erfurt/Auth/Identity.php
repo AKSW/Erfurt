@@ -37,8 +37,19 @@ class Erfurt_Auth_Identity
         $this->_propertyUris['label'] = EF_RDFS_LABEL;
         
         $this->_uri = $userSpec['uri'];
-        $this->_isDbUser = $userSpec['dbuser'];
-        $this->_isAnonymous = $userSpec['anonymous'];
+        
+        if (isset($userSpec['dbuser'])) {
+            $this->_isDbUser = $userSpec['dbuser'];
+        } else {
+            $this->_isDbUser = false;
+        }
+        
+        if (isset($userSpec['anonymous'])) {
+            $this->_isAnonymous = $userSpec['anonymous'];
+        } else {
+            $this->_isAnonymous = false;
+        }
+        
         
         if (isset($userSpec['username'])) {
             $this->_userData[$this->_propertyUris['username']] = $userSpec['username'];

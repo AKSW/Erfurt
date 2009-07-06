@@ -23,7 +23,6 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Erfurt_Rdf_Resource;
     }
 
     /**

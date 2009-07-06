@@ -151,7 +151,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     protected function _addNamespacesToStore()
     {
         $store = Erfurt_App::getInstance()->getStore();
-        foreach ($this->_namespaces as $ns => $prefix) {
+        foreach ($this->_namespaces as $prefix => $ns) {
             $store->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
         }
     }
@@ -258,6 +258,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     protected function _addNamespace($prefix, $ns)
     {
+        $prefix = (string)$prefix;
+        
+        if ($ns instanceof Erfurt_Rdf_Resource) {
+            $ns = $ns->getUri();
+        } else {
+            $ns = (string)$ns;
+        }
+        
         $this->_namespaces[$prefix] = $ns;
     }
     
