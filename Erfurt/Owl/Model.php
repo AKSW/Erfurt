@@ -32,10 +32,11 @@ class Erfurt_Owl_Model extends Erfurt_Rdfs_Model
      *
      * @return array
      */ 
-    public function getImportedIris()
+    public function getImports()
     {
         if (!$this->_imports) {
-            $this->_loadImports();
+            $store = $this->getStore();
+            $this->_imports = array_values($store->getImportsClosure($this->getModelUri()));
         }
         
         return $this->_imports;

@@ -582,7 +582,7 @@ class Erfurt_Store
 	{
 	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
 	        if ($this->_checkAc($graphIri)) {
-	            $graphIris = array_merge($this->_getImportsClosure($graphIri), array($graphIri));
+	            $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
 	        }
 	    }
@@ -872,6 +872,16 @@ class Erfurt_Store
     public function getDbPassword()
     {
         return $this->_dbPass;
+    }
+    
+    /**
+     * Recursively gets owl:imported model IRIs starting with $modelIri as root.
+     *
+     * @param string $modelIri
+     */
+    public function getImportsClosure($modelIri)
+    {
+        return $this->_backendAdapter->getImportsClosure($modelIri);
     }
     
     /**
@@ -1197,7 +1207,7 @@ class Erfurt_Store
         
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
+            foreach ($this->getImportsClosure($fromGraphUri) as $importedGraphUri) {
                 $queryObject->addFrom($importedGraphUri);
             }
         }
@@ -1257,7 +1267,7 @@ class Erfurt_Store
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
             foreach ($queryObject->getFrom() as $fromGraphUri) {
-                foreach ($this->_getImportsClosure($fromGraphUri) as $importedGraphUri) {
+                foreach ($this->getImportsClosure($fromGraphUri) as $importedGraphUri) {
                     $queryObject->addFrom($importedGraphUri);
                 }
             }
@@ -1426,16 +1436,6 @@ class Erfurt_Store
     }
     
     /**
-     * Recursively gets owl:imported model IRIs starting with $modelIri as root.
-     *
-     * @param string $modelIri
-     */
-    private function _getImportsClosure($modelIri)
-    {
-        return $this->_backendAdapter->getImportsClosure($modelIri);
-    }
-    
-    /**
      * Calculates the transitive closure for a given property and a set of starting nodes.
      *
      * @see getTransitiveClosure
@@ -1447,7 +1447,7 @@ class Erfurt_Store
         $i       = 0;
         
         $from = '';
-        foreach ($this->_getImportsClosure($modelIri) as $import) {
+        foreach ($this->getImportsClosure($modelIri) as $import) {
             $from .= 'FROM <' . $import . '>' . PHP_EOL;
         }
         
