@@ -335,7 +335,7 @@ class Erfurt_Rdf_Model
             return;
         }
          
-        $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysOnt->modelUri;
+        $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysont->modelUri;
        
         $options = $this->_getOptions();
         $store = $this->getStore();
@@ -531,7 +531,7 @@ class Erfurt_Rdf_Model
 // TODO decide where to put this code... Always use the hidden imports?
         // Add all hidden imports
         $config = Erfurt_App::getInstance()->getConfig();
-        $additionals = $this->getOption($config->sysOnt->properties->hiddenImports);
+        $additionals = $this->getOption($config->sysont->properties->hiddenImports);
         $additionalsArray = array();
         if (null !== $additionals) {
             foreach ($additionals as $row) {

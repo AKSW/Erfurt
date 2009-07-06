@@ -221,6 +221,15 @@ class Erfurt_Store
 			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
 				$this->_initiateNamespacePrefixes($graphUri);
 			}
+			
+			
+			if ($prefix === '' && $namespace == '') {
+			    return false;
+			}
+			
+			if ($prefix === '') {
+			    $prefix = '_';
+			}
 
 			if (!isset ($this->_prefixes[$graphUri][$prefix])) {
 				$this->_prefixes[$graphUri][$prefix] = $namespace;
@@ -479,12 +488,12 @@ class Erfurt_Store
     {
         $config         = Erfurt_App::getInstance()->getConfig();
         $logger         = Erfurt_App::getInstance()->getLog();
-        $sysOntSchema   = $config->sysOnt->schemaUri;
-        $schemaLocation = $config->sysOnt->schemaLocation;
-        $schemaPath     = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysOnt->schemaPath);
-        $sysOntModel    = $config->sysOnt->modelUri;
-        $modelLocation  = $config->sysOnt->modelLocation;
-        $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysOnt->modelPath);
+        $sysOntSchema   = $config->sysont->schemaUri;
+        $schemaLocation = $config->sysont->schemaLocation;
+        $schemaPath     = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysont->schemaPath);
+        $sysOntModel    = $config->sysont->modelUri;
+        $modelLocation  = $config->sysont->modelLocation;
+        $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $config->sysont->modelPath);
         
         $returnValue = true;
         
@@ -718,7 +727,7 @@ class Erfurt_Store
             
             // Only do that, if the deleted model was not one of the sys models
             $config = Erfurt_App::getInstance()->getConfig();
-            if (($modelIri !== $config->sysOnt->modelUri) && ($modelIri !== $config->sysOnt->schemaUri)) {
+            if (($modelIri !== $config->sysont->modelUri) && ($modelIri !== $config->sysont->schemaUri)) {
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
             }
@@ -1323,7 +1332,7 @@ class Erfurt_Store
     {
         if (null === $this->_graphConfigurations) {
             $config         = Erfurt_App::getInstance()->getConfig();
-            $sysOntModelUri = $config->sysOnt->modelUri;
+            $sysOntModelUri = $config->sysont->modelUri;
             
             // Fetch the graph configurations
             require_once 'Erfurt/Sparql/SimpleQuery.php';
