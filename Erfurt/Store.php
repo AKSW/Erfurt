@@ -639,7 +639,8 @@ class Erfurt_Store
                 require_once 'Erfurt/Event/Dispatcher.php';
                 require_once 'Erfurt/Event.php';
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
-                $event->graphUri   = $graphUri; 
+                $event->graphUri = $graphUri;
+                $event->resource = $subject;
                 
                 // Just set a payload, in case backend returns the deleted statements.
                 if (is_array($retVal)) {
