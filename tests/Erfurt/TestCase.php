@@ -23,14 +23,14 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $config = Erfurt_App::getInstance()->getConfig();
 
             foreach ($store->getAvailableModels(true) as $graphUri => $true) {
-                if ($graphUri !== $config->sysOnt->schemaUri && $graphUri !== $config->sysOnt->modelUri) {
+                if ($graphUri !== $config->sysont->schemaUri && $graphUri !== $config->sysont->modelUri) {
                     $store->deleteModel($graphUri);
                 }              
             }
             
             // Delete system models after all other models are deleted.
-            $store->deleteModel($config->sysOnt->modelUri);
-            $store->deleteModel($config->sysOnt->schemaUri);
+            $store->deleteModel($config->sysont->modelUri);
+            $store->deleteModel($config->sysont->schemaUri);
             
             $this->_dbWasUsed = false;
         }

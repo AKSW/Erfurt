@@ -748,7 +748,7 @@ class Erfurt_App
     {    
         if (null === $this->_sysOntModel) {
             $config = $this->getConfig();
-            $this->_sysOntModel = $this->getStore()->getModel($config->sysOnt->modelUri, false);
+            $this->_sysOntModel = $this->getStore()->getModel($config->sysont->modelUri, false);
         }
         
         return $this->_sysOntModel;

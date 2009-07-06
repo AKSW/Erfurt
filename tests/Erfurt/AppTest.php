@@ -253,8 +253,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testAuthenticateWithDefaultAnonymous()
     {
-        $this->markTestNeedsDatabase();
-        
         // Authenticate as Anonymous
         $result = Erfurt_App::getInstance()->authenticate();
         $this->assertTrue($result->isValid());
@@ -264,8 +262,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testAuthenticateWithExplicitAnonymous()
     {
-        $this->markTestNeedsDatabase();
-        
         // Authenticate as Anonymous
         $result = Erfurt_App::getInstance()->authenticate('Anonymous');
         $this->assertTrue($result->isValid());
@@ -433,7 +429,9 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetCacheWithDatabaseCacheBackend()
     {   
-        Erfurt_App::reset();
+// TODO How to use the new cache in Erfurt?
+        $this->markTestIncomplete();        
+        
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->enable = true;
@@ -725,39 +723,14 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetSysOntModel()
     {
+        $this->markTestNeedsDatabase();
+        
         $config      = Erfurt_App::getInstance()->getConfig();
-        $sysModelUri = $config->sysOnt->modelUri;
+        $sysModelUri = $config->sysont->modelUri;
         
-        $storeMock = $this->getMock('Erfurt_Store',
-            array('getModel'),
-            array(),
-            '',
-            false
-        );
-        
-        $storeMock->expects($this->once())
-                  ->method('getModel')
-                  ->will($this->returnValue(new Erfurt_Rdf_Model($sysModelUri)));
-        
-        $appMock = $this->getMock('Erfurt_App',
-            array('getStore'),
-            array(),
-            '',
-            false
-        );
-        $appMock->loadConfig();
-        
-        $appMock->expects($this->once())
-              ->method('getStore')
-              ->will($this->returnValue($storeMock));
-              
-         $sysModel = $appMock->getSysOntModel();
-        
-         if (!($sysModel instanceof Erfurt_Rdf_Model)) {
-             $this->fail();
-         }
-         
-         $this->assertEquals($sysModelUri, $sysModel->getModelUri());
+        $sysModel = Erfurt_App::getInstance()->getSysOntModel();
+        $this->assertTrue($sysModel instanceof Erfurt_Rdf_Model);
+        $this->assertEquals($sysModelUri, $sysModel->getModelUri());
     }
     
     public function testGetTmpDir()
