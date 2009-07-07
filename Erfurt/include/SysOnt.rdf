@@ -9,7 +9,7 @@
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
 ]>
 <rdf:RDF xml:base="&SysOnt;"
-         xmlns:SysOnt="&SysOnt;"
+         xmlns:sysont="&SysOnt;"
          xmlns="&SysOnt;"
          xmlns:foaf="&foaf;"
          xmlns:owl="&owl;"
