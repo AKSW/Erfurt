@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rdf:RDF [
   <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
+  <!ENTITY SysBase "http://ns.ontowiki.net/SysBase/">
   <!ENTITY LocalConfig "http://localhost/OntoWiki/Config/">
   <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
   <!ENTITY sioc "http://rdfs.org/sioc/ns#">
@@ -52,6 +53,7 @@
     <sysont:grantAccess rdf:resource="&SysOnt;Rollback"/>
     <sysont:denyModelView rdf:resource="&LocalConfig;"/>
     <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelEdit rdf:resource="&SysBase;"/>
     <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
     <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
@@ -63,6 +65,7 @@
     <sysont:denyAccess rdf:resource="&SysOnt;Rollback"/>
     <sysont:denyModelView rdf:resource="&LocalConfig;"/>
     <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelView rdf:resource="&SysBase;"/>
     <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
   </rdf:Description>
