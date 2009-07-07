@@ -441,7 +441,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $modelInfoCache = $this->_getModelInfos();
 
         $modelId = $modelInfoCache[$graphUri]['modelId'];
-    
+
         $this->_dbConn->beginTransaction();
         try {
             foreach ($statementsArray as $subject => $predicatesArray) {

@@ -396,9 +396,9 @@ class Erfurt_Rdf_Model
         // var_dump('added: ', $addedStatements);
         // var_dump('removed: ', $removedStatements);
         // exit;
-        
-        $this->addMultipleStatements($addedStatements);
+
         $this->deleteMultipleStatements($removedStatements);
+        $this->addMultipleStatements($addedStatements);
         
         return $this;
     }

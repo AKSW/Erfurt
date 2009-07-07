@@ -136,4 +136,16 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $this->assertTrue(is_string($lang2));
         $this->assertTrue(is_string($lang3));
     }
+    
+    public function testParseWithMailtoUriIssue477()
+    {
+        $turtle = '<http://example.org/1> <http://example.org/prop> <mailto:info@example.org> .';
+        
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'mailto:info@example.org',
+            $result['http://example.org/1']['http://example.org/prop'][0]['value']
+        );
+    }
 }
