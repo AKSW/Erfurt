@@ -58,6 +58,7 @@ define('EF_RDFS_DATATYPE', EF_RDFS_NS.'Datatype');
 define('EF_RDFS_CLASS', EF_RDFS_NS.'Class');
 define('EF_RDFS_DOMAIN', EF_RDFS_NS.'domain');
 define('EF_RDFS_RANGE', EF_RDFS_NS.'range');
+define('EF_RDFS_RESOURCE', EF_RDFS_NS.'Resource');
 	
 define('EF_XSD_STRING', EF_XSD_NS.'string');
 define('EF_XSD_INTEGER', EF_XSD_NS.'integer');
