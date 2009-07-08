@@ -161,7 +161,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_data = $data;
         $this->_dataLength = strlen($data);
         $this->_pos  = 0;
-        
+
         $c = $this->_skipWS();
 
         while ($c !== -1) {
@@ -289,7 +289,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     protected function _resolveUri($uri)
     {
-        if ($uri[0] === '#'|| (strpos($uri, ':') === false)) {
+        if (($uri[0] === '#') || (strpos($uri, ':') === false)) {
             if ($this->_getBaseUri()) {
                 return $this->_getBaseUri() . $uri;
             }
