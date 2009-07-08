@@ -147,7 +147,7 @@ class Erfurt_Auth_Identity
             } else {
                 // Set the new username.
                 $config = $app->getConfig();
-                $sysModelUri = $config->sysOnt->modelUri;
+                $sysModelUri = $config->sysont->modelUri;
                 
                 $store->deleteMatchingStatements(
                     $sysModelUri, 
@@ -231,7 +231,7 @@ class Erfurt_Auth_Identity
                 // Set new mail address
                 $store = $app->getStore();
                 $config = $app->getConfig();
-                $sysModelUri = $config->sysOnt->modelUri;
+                $sysModelUri = $config->sysont->modelUri;
                  
                 $store->deleteMatchingStatements(
                     $sysModelUri, 
@@ -282,7 +282,7 @@ class Erfurt_Auth_Identity
                 // Set new password.
                 $store = $app->getStore();
                 $config = $app->getConfig();
-                $sysModelUri = $config->sysOnt->modelUri;
+                $sysModelUri = $config->sysont->modelUri;
                 
                 $store->deleteMatchingStatements(
                     $sysModelUri, 
