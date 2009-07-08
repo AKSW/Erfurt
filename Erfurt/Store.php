@@ -627,7 +627,7 @@ class Erfurt_Store
         
         if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
-                $retVal =  $this->_backendAdapter->deleteMatchingStatements(
+                $ret =  $this->_backendAdapter->deleteMatchingStatements(
                 $graphUri, $subject, $predicate, $object, $options);
 
                 $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -639,12 +639,13 @@ class Erfurt_Store
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
                 
-                // Just set a payload, in case backend returns the deleted statements.
-                if (is_array($retVal)) {
-                    $event->statements = $retVal;
+                // just trigger if really data operations were performed 
+                if ((int) $ret > 0) {
+                    $event->trigger();
                 }
                 
-                Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+                return $ret;
+
             } catch (Erfurt_Store_Adapter_Exception $e) {
 // TODO Create a exception for too many matching values
                 // In this case we log without storing the payload. No rollback supported for such actions.

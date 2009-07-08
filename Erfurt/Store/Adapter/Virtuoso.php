@@ -339,8 +339,28 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $quadSpec
             }
         ";
+
+        // preforming delete operations
+        $ret = $this->_execSparql($deleteSparql);
+
+        // loading results
+        $retArray = array();
+        odbc_fetch_into($ret,$retArray);
+
+        // check how many triples have been deleted and return as int if possible
+        // else return odbc resource reference (like it was before)
+        if ( is_string(reset($retArray)) ) {
+
+            $set = preg_split('/(,|triples)/',current($retArray));
+            return (int) $set[1];
+
+        } else {
+
+            return $ret;
+
+        }
+            
         
-        return $this->_execSparql($deleteSparql);
     }
     
     /** @see Erfurt_Store_Adapter_Interface */

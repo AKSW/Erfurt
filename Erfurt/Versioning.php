@@ -94,11 +94,28 @@ class Erfurt_Versioning
             $this->_currentActionParent = null;
         }
     }
+
+    /**
+      *  Aborting current action and removing action entry from Database.
+      *  For use on Exceptions ...
+      */
+    private function _abortAction()
+    {
+        if ($this->isActionStarted()) {
+            $this->_sqlQuery(
+                'DELETE FROM ef_versioning_actions
+                 WHERE id = ' . $this->_currentActionParent
+            );
+            $this->endAction();
+        } else {
+            // do nothing
+        }
+    }
     
     /**
      * Probably shortcut?
      */
-    public function getLastModifiedForResource($resourceUri, $graphUri)
+    public function getLastModifiedForResource($resourceUri)
     {
         $this->_checkSetup();
 
@@ -341,6 +358,7 @@ class Erfurt_Versioning
         $result = $this->_sqlQuery($actionsSql);
         
         if ((count($result) == 0) || ($result[0]['payload_id'] === null)) {
+            $this->_abortAction();
             $dedicatedException = 'No valid entry in ef_versioning_actions for action ID';
             throw new Exception('No rollback possible (' .  $dedicatedException . ')');
 

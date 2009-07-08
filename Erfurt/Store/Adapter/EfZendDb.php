@@ -428,10 +428,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         // remove the specified statements from the database
-        $this->_dbConn->delete('ef_stmt', $whereString);   
+        $ret = $this->_dbConn->delete('ef_stmt', $whereString);   
         
         // Clean up ef_uri and ef_lit table
         $this->_cleanUpValueTables($graphUri);
+
+        // return number of affected rows (>0 means there were triples deleted)
+        return $ret;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
