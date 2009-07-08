@@ -268,7 +268,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidate ( $modelIri, $statements = array() ) {
-
         if (sizeof($statements) == 0)
             return false;
 
@@ -282,12 +281,28 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         $objectValue = (isset($object['lang'])) ?  $objectValue . "@" . $object['lang'] : $objectValue ;
                         $objectValue = (isset($object['datatype'])) ?  $objectValue . "^^" . $object['datatype'] : $objectValue ;
                     }
-                   $clauses[] = "((subject = '".$subject."' OR subject IS NULL) AND (predicate = '".$predicate."' OR predicate IS NULL) AND (object = '".$objectValue."' OR object IS NULL))";
+                    $clause = array();
+                    if ($subject != "") {
+                        $clause[] = "(subject = '".$subject."' OR subject IS NULL)" ;
+                    }
+                    if ($predicate != "") {
+                        $clause[] = "(predicate = '".$predicate."' OR predicate IS NULL)" ;
+                    }
+
+                    if ($object != null ) {
+                        $clause[] = "(object = '".$object."' OR object IS NULL)" ;
+                    }
+                    $clauses[] = "(". (implode (" AND ", $clause)) .")";
+                
+
+/*                   "(
+                    (subject = '".$subject."' OR subject IS NULL) AND 
+                    (predicate = '".$predicate."' OR predicate IS NULL) AND 
+                    (object = '".$objectValue."' OR object IS NULL))"; */
                 }
             }
         }
         $clauseString = implode (" OR ", $clauses);
-
         // retrieve List Of qids which have to vbe invalidated
         $query = "  SELECT DISTINCT (qid) 
                     FROM 
@@ -307,7 +322,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         ef_cache_query_result result ON result.qid = qid2 
                     WHERE result.result IS NOT NULL";
         $result = $this->_query ( $query );
-        $qids = array();
         if (!$result)
             return $qids;        
 
@@ -332,6 +346,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         )
                     )";
         $this->_query ( $query );
+
         return $qids;
     }
 
