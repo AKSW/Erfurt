@@ -46,10 +46,9 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     protected $_qualifiedNameDelimiter = ':';
     
     /**
-     * Human-readable representation of this resource.
+     * Whether this resource identifies a blank node
+     * @var boolean
      */
-    protected $_title = null;
-    
     protected $_isBlankNode = false;
     
     /**
@@ -132,54 +131,6 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function getLocalName()
     {
         return $this->_name;
-    }
-    
-    /**
-     * Returns a human-readable representation of this resource or false
-     * if no suitable value has been found.
-     *
-     * @return string|false
-     */
-    public function getTitle()
-    {
-        if (null === $this->_title) {
-            if (null !== $this->_model) {
-                $select = '';
-                $where = array();
-                
-                // query for all title props
-                foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
-                    $select .= ' ?' . $key;
-                    $where[] = ' {<' . $this->getIri() . '> <' . $titleProp . '> ?' . $key . '}' . PHP_EOL;
-                }
-                $titleQuery = '
-                    SELECT ' . $select . ' 
-                    WHERE {
-                        ' . implode(' UNION ', $where) . '
-                    }';
-                
-                $result = $this->_model->sparqlQuery($titleQuery);
-                
-                // check all title props for values
-                if ($result !== false) {
-                    foreach ($result as $row) {
-                        foreach ($this->_model->getTitleProperties() as $key => $titleProp) {
-                            if (!empty($row[$key])) {
-                                $this->_title = $row[$key];
-                                break(2);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // still empty?
-            if (empty($this->_title)) {
-                $this->_title = false;
-            }
-        }
-        
-        return $this->_title;
     }
     
     // ------------------------------------------------------------------------
