@@ -27,14 +27,6 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
     
     /**
-     * Contains additional graph uris, that should be used when executing a sparql
-     * query. The array contains keys with graph uris, which values are arrays
-     * containing one ore more additional graoh uris. 
-     * @var array
-     */
-    protected $_additionalImports = array();
-    
-    /**
      * Username of the super user who gets unrestricted access
      * @var string
      */
@@ -180,17 +172,6 @@ class Erfurt_Store
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
-    /**
-     * Sets the additional imports array for a given graph uri.
-     * 
-     * @param string $graphUri
-     * @param array $additionalImports
-     */ 
-    public function setAdditionalImports($graphUri, $additionalImports = array())
-    {
-        $this->_additionalImports[$graphUri] = $additionalImports;
-    }
     
 	/**
 	 * Get all namespaces with there prefix
@@ -880,9 +861,29 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-    public function getImportsClosure($modelIri)
+    public function getImportsClosure($modelIri, $withHiddenImports = true)
     {
-        return $this->_backendAdapter->getImportsClosure($modelIri);
+        $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
+        
+        if ($withHiddenImports === true) {
+            $config = Erfurt_App::getInstance()->getConfig();
+            $importsUri = $config->sysont->properties->hiddenImports;
+            
+            foreach ($currentLevel as $graphUri) {
+                $graphConfig = $this->getGraphConfiguration($graphUri);
+                
+                if (isset($graphConfig[$importsUri])) {
+                    foreach ($graphConfig[$importsUri] as $valueArray) {
+                        $currentLevel = array_merge(
+                            $currentLevel, 
+                            $this->getImportsClosure($valueArray['value'], $withHiddenImports)
+                        );
+                    }
+                }
+            }
+        }
+        
+        return array_unique($currentLevel);
     }
     
     /**
@@ -1262,24 +1263,17 @@ class Erfurt_Store
             'use_owl_imports'        => true,
             'use_additional_imports' => true
         );
+        
+        
      
         $options = array_merge($defaultOptions, $options);
-    
+        
+        $useAdditional = $options['use_additional_imports'];
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
             foreach ($queryObject->getFrom() as $fromGraphUri) {
-                foreach ($this->getImportsClosure($fromGraphUri) as $importedGraphUri) {
+                foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
                     $queryObject->addFrom($importedGraphUri);
-                }
-            }
-        }
-        // Add additional imports, if option is set true.
-        if ($options['use_additional_imports'] === true) {
-            foreach ($queryObject->getFrom() as $fromGraphUri) {
-                if (isset($this->_additionalImports[$fromGraphUri])) {
-                    foreach ($this->_additionalImports[$fromGraphUri] as $additional) {
-                        $queryObject->addFrom($additional);
-                    }
                 }
             }
         }
@@ -1350,7 +1344,13 @@ class Erfurt_Store
             $queryObject->setFrom(array($sysOntModelUri));
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
-            $result = $this->sparqlQuery($queryObject, array('use_ac' => false, 'result_format' => 'extended'));
+            $result = $this->sparqlQuery($queryObject, 
+                array(
+                    'use_ac' => false, 
+                    'result_format' => 'extended',
+                    'use_additional_imports' => false
+                )
+            );
         
             $stmtArray = array();
             foreach ($result['bindings'] as $row) {

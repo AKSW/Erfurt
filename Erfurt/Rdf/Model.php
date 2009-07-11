@@ -528,18 +528,6 @@ class Erfurt_Rdf_Model
         
         $query->addFrom($this->_graphUri);
         
-// TODO decide where to put this code... Always use the hidden imports?
-        // Add all hidden imports
-        $config = Erfurt_App::getInstance()->getConfig();
-        $additionals = $this->getOption($config->sysont->properties->hiddenImports);
-        $additionalsArray = array();
-        if (null !== $additionals) {
-            foreach ($additionals as $row) {
-                $additionalsArray[] = $row['value'];
-            }
-            $this->getStore()->setAdditionalImports($this->_graphUri, $additionalsArray);
-        }
-
         return $this->getStore()->sparqlQuery($query, $options);
     }
     
