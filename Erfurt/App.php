@@ -557,10 +557,12 @@ class Erfurt_App
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
-                return $this->getTmpDir();
+                return false;
+                //return $this->getTmpDir();
             }
         } else {
-            return $this->getTmpDir();
+            return false;
+            //return $this->getTmpDir();
         }
     }
     

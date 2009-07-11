@@ -1072,7 +1072,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $result = '';
         
         while ($backSlashIdx !== false) {
-            $result .= substr((string)$value, $startIdx, $backSlashIdx);
+            $result .= substr((string)$value, $startIdx, $backSlashIdx-$startIdx);
             
             $c = $value[($backSlashIdx+1)];
             switch ($c) {
@@ -1101,13 +1101,15 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case 'u':
-                    $xx = substr((string)$value, $backSlashIdx+2, $backSlashIdx+6);
+                    $xx = substr((string)$value, $backSlashIdx+2, 4);
                     $c = $this->_uchr(hexdec($xx));
+                    $startIdx = $backSlashIdx + 6;
                     $result .= $c;
                     break;
                 case 'U':
-                    $xx = substr((string)$value, $backSlashIdx+2, $backSlashIdx+10);
+                    $xx = substr((string)$value, $backSlashIdx+2, 8);
                     $c = $this->_uchr(hexdec($xx));
+                    $startIdx = $backSlashIdx + 10;
                     $result .= $c;
                     break;
             }

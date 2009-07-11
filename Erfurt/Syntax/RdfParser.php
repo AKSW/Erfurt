@@ -31,8 +31,6 @@ class Erfurt_Syntax_RdfParser
             case 'rdfxml':
             case 'xml':
             case 'rdf':
-                #require_once 'Erfurt/Syntax/RdfParser/Adapter/Arc.php';
-                #$this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Arc('rdfxml');
                 require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
                 break;
@@ -40,6 +38,8 @@ class Erfurt_Syntax_RdfParser
             case 'ttl':
             case 'nt':
             case 'ntriple':
+            case 'n3':
+            case 'rdfn3':
                 require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
                 break;
@@ -48,8 +48,6 @@ class Erfurt_Syntax_RdfParser
                 require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
                 break;
-            case 'n3':
-            case 'rdfn3':
             default:
                 require_once 'Erfurt/Syntax/RdfParserException.php';
                 throw new Erfurt_Syntax_RdfParserException("Format '$format' not supported");
