@@ -268,9 +268,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidate ( $modelIri, $statements = array() ) {
+
         if (sizeof($statements) == 0)
             return false;
 
+        $qids = array();
         $clauses = array();
         foreach ( $statements as $subject => $predicates ) {
             foreach ($predicates as $predicate => $objects) {
@@ -346,7 +348,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         )
                     )";
         $this->_query ( $query );
-
         return $qids;
     }
 
