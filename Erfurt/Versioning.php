@@ -50,8 +50,6 @@ class Erfurt_Versioning
     
     protected $_store = null;
 
-    protected $_isSetup = false;
-    
     /**
      * Constructor registers with Erfurt_Event_Dispatcher
      * and adds triggers for operations on statements (add/del)
@@ -75,14 +73,11 @@ class Erfurt_Versioning
      */
     public function enableVersioning($versioningEnabled = true)
     {
-        //$this->_checkSetup();
         $this->_versioningEnabled = (bool) $versioningEnabled;
     }
     
     /**
-     * 
-     *
-     *
+     * Stopping current action if possible throws Exception else
      */
     public function endAction()
     {
@@ -124,6 +119,12 @@ class Erfurt_Versioning
         return $history[0];
     }
     
+    /**
+     * get the versioning actions for a specific model
+     *
+     * @param string $graphUri the URI of the knowledge base
+     * @param page
+     */
     public function getHistoryForGraph($graphUri, $page = 1)
     {
         $this->_checkSetup();
@@ -185,17 +186,33 @@ class Erfurt_Versioning
     }
 
 
+    /**
+     * get the versioning actions for a specific resource of a model
+     *
+     * @param string $resourceUri the URI of the resource
+     * @param string $graphUri the URI of the knowledge base
+     * @param page
+     */
     public function getHistoryForResource($resourceUri, $graphUri, $page = 1)
     {
         $this->_checkSetup();
    
-        $sql = 'SELECT id, useruri, tstamp, action_type ' .
-               'FROM ef_versioning_actions WHERE
-                model = \'' . $graphUri . '\' AND resource = \'' . $resourceUri . '\'
-                AND parent IS NULL
+        $sql = 'SELECT v2.id,  v2.useruri, v2.tstamp, v2.action_type
+                FROM ef_versioning_actions AS v1, ef_versioning_actions AS v2
+                WHERE 
+                v1.model = \'' . $graphUri . '\' AND 
+                v1.resource = \'' . $resourceUri . '\' AND
+                v2.id = v1.parent
+                UNION
+                SELECT id, useruri, tstamp, action_type
+                FROM ef_versioning_actions
+                WHERE 
+                model = \'' . $graphUri . '\' AND 
+                resource = \'' . $resourceUri . '\' AND
+                parent IS NULL
                 ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
-           
+
         $result = $this->_sqlQuery($sql);
         
         return $result;
@@ -261,10 +278,7 @@ class Erfurt_Versioning
     public function setLimit($limit)
     {
         if ($limit <= 0) {
-// TODO dedicated exception
-            // Limit always has to be greater than zero. One result row should be the minimum, for
-            // zero means no result exists.
-            throw new Exception();
+            throw new Exception('Invalid value for limit. Must be postive integer.');
         }
         
         $this->_limit = (int) $limit;
@@ -357,7 +371,7 @@ class Erfurt_Versioning
                        
         $result = $this->_sqlQuery($actionsSql);
         
-        if ((count($result) == 0) || ($result[0]['payload_id'] === null)) {
+        if ( count($result) == 0 || $result[0]['payload_id'] === null ) {
             $this->_abortAction();
             $dedicatedException = 'No valid entry in ef_versioning_actions for action ID';
             throw new Exception('No rollback possible (' .  $dedicatedException . ')');
@@ -418,12 +432,14 @@ class Erfurt_Versioning
         // action already running?
         if (null !== $this->_currentAction) {
             throw new Exception('Action already started');
-        } else {
+        } elseif ($this->isVersioningEnabled() ) {
             $actionType = $actionSpec['type'];
             $graphUri = $actionSpec['modeluri'];
             $resource = $actionSpec['resourceuri'];
             $this->_currentAction = $actionSpec;
             $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType);
+        } else {
+            // do nothing
         }
     }
 
@@ -448,6 +464,41 @@ class Erfurt_Versioning
         $resultArray = $this->_sqlQuery($detailsSql);
 
         return $resultArray;
+    }
+
+    /**
+     * Deletes all history information on a specific model
+     * use with caution
+     */
+    public function deleteHistoryForModel($graphUri) 
+    {
+        $this->_checkSetup();
+
+        $sql = 'SELECT DISTINCT id, payload_id FROM ef_versioning_actions
+                WHERE model = \'' . $graphUri . '\'';
+
+        $result = $this->_sqlQuery($sql);
+
+        $sqldeleteAction = 'DELETE FROM ef_versioning_actions WHERE ';
+
+        $sqldeletePayload = 'DELETE FROM ef_versioning_payloads WHERE ';
+
+        foreach ($result as $value) {
+            if (!empty($value['id']) ) {
+                $sqldeleteAction .= 'id = ' . $value['id'] . ' OR ';
+            }
+            if (!empty($value['payload_id']) ) {
+                $sqldeletePayload .= 'id = ' . $value['payload_id'] . ' OR ';
+            }
+        }
+
+        $sqldeleteAction .= ' FALSE';
+        $sqldeletePayload .= ' FALSE';
+
+        $resultAction  = $this->_sqlQuery($sqldeleteAction);
+        $resultPayload = $this->_sqlQuery($sqldeletePayload);
+
+        var_dump($resultAction);var_dump($resultPayload); 
     }
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)

@@ -697,6 +697,9 @@ class Erfurt_Store
         // delete model
         $this->_backendAdapter->deleteModel($modelIri);
 
+        // and history
+        Erfurt_App::getInstance()->getVersioning()->deleteHistoryForModel($modelIri);
+
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithModelIri($modelIri);
 
