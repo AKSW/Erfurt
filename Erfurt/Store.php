@@ -194,7 +194,7 @@ class Erfurt_Store
 	 */
 	public function getNamespacePrefix($graphUri, $namespace, $useAc = true)
 	{
-		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+		if (null === $this->_prefixes || isset($this->_prefixes[$graphUri]) === false) {
 		    $this->_initiateNamespacePrefixes($graphUri);
 		}
 
@@ -207,7 +207,7 @@ class Erfurt_Store
 				$config = Erfurt_App::getInstance()->getConfig();
 				$prefix = array_search($namespace, $config->namespaces);
 			
-				if($prefix === false) {
+				if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
 					for($i = 0; isset($this->_prefixes[$graphUri]['ns' + $i]); $i++) {
 					}
 					$prefix = 'ns' + $i;
@@ -253,6 +253,16 @@ class Erfurt_Store
 			 */	
 			if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
 				throw new Erfurt_Exception('The given prefix is not a valid XML Prefix.');
+			}
+
+			/**
+			 * check if prefix matches a uri schema
+			 */
+			$config = Erfurt_App::getInstance()->getConfig();
+			$schemataArray = $config->uri->schemata->toArray();
+			$schema = array_search($prefix, $schemataArray);
+			if ($schema !== false) {
+				throw new Erfurt_Exception('The given prefix matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
 			}
 
 			if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
