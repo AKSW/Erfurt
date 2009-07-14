@@ -86,6 +86,23 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
     public function invalidateObjectKeys ( $queryIds = array ()) ;
 
 
+    
+    /**
+     *  deleting all cachedResults
+     *  @access     public
+     *  @return     boolean         $state          true / false
+     */
+    public function invalidateAll () ;
+
+
+    /**
+     *  deleting the initially created cacheStructure
+     *  @access     public
+     *  @return     boolean         $state          true / false
+     */
+    public function uninstall () ;
+
+
 
     /**
      *  check if a QueryResult is cached yet
@@ -112,6 +129,7 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
     public function createCacheStructure () ;
 
 
+    public function getObjectKeys () ;
 
 }
 

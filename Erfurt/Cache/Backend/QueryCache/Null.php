@@ -40,6 +40,17 @@ class Erfurt_Cache_Backend_QueryCache_Null extends Erfurt_Cache_Backend_QueryCac
         return false;
     }
 
+    public function invalidateAll () {
+
+        return true;
+    }
+
+    public function uninstall () {
+        return true;
+    }
+
+
+
     // check if a QueryResult is cached yet
     public function exists ($queryId) {
         return false;

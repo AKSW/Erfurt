@@ -218,8 +218,36 @@ class Erfurt_Cache_Frontend_QueryCache {
     }
 
 
-    //TODO : MODI ALL, BYDURATION, BYTTL
-    public function cleanUpCache ($options) {
+    /**
+     *	starting a Caching Transaction to assign cache Objects to queryCacheResults
+     *	@access     public
+     *  @param      array $options (mode => "CLEAR", mode => "UNINSTALL")    
+     *  @TODO       BYDURATION, BYTTL
+     *  @return     string   $status    status of the process
+    */
+    public function cleanUpCache ($options = array()) {
+
+        $ret = false;
+        if (!isset ($options['mode']))
+            return $ret;
+
+
+        switch (strtolower($options['mode'])) {
+            case 'clear' :
+                $qids = $this->getBackend()->invalidateAll( );
+                $objectCache = Erfurt_App::getInstance()->getCache();
+                if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
+                    $this->_invalidateCacheObjects ( $qids );
+                }
+                $ret = true;
+            break;
+            case 'uninstall' :
+                $ret = $this->getBackend()->uninstall( );                
+            break;
+
+        }
+
+        return $ret;
 
     }
 

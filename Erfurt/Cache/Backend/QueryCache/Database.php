@@ -40,23 +40,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
 	final public function createCacheStructure() {
 
-		#$this->_query('DROP INDEX ef_cache_query_result_qid');
-        #$this->_query('DROP INDEX ef_cache_query_result_qid_count');
-        #$this->_query('DROP INDEX ef_cache_query_model_mid_modelIri');
-        #$this->_query('DROP INDEX ef_cache_query_rt_qid_tid');
-        #$this->_query('DROP INDEX ef_cache_query_rm_qid_mid');
-        #$this->_query('DROP INDEX ef_cache_query_triple_tid');
-        #$this->_query('DROP INDEX ef_cache_query_triple_tid_spo');
-        #$this->_query('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
-
-		#$this->_query('DROP TABLE ef_cache_query_triple');
-		#$this->_query('DROP TABLE ef_cache_query_model');
-        #$this->_query('DROP TABLE ef_cache_query_result');
-        #$this->_query('DROP TABLE ef_cache_query_rt');
-        #$this->_query('DROP TABLE ef_cache_query_rm');
-        #$this->_query('DROP TABLE ef_cache_query_version');
-        #$this->_query('DROP TABLE ef_cache_query_objectKey');
-
         $vocabulary = array();
         switch ($this->store->getBackendName()) {
             case "ZendDb" :
@@ -418,6 +401,61 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         }
         return $oKeys;
     }
+
+
+    /**
+     *  deleting all cachedResults
+     *  @access     public
+     *  @return     boolean         $state          true / false
+     */
+    public function invalidateAll () {
+        $qids = $this->store->sqlQuery('SELECT qid FROM ef_cache_query_result');
+        $ret = $this->store->sqlQuery('UPDATE ef_cache_query_result SET result = NULL'); 
+        $this->store->sqlQuery('DELETE FROM ef_cache_query_objectKey');
+
+        return $qids;
+
+
+    }
+
+
+    /**
+     *  deleting the initially created cacheStructure
+     *  @access     public
+     *  @return     boolean         $state          true / false
+     */
+    public function uninstall () {
+
+		$this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid_count');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_model_mid_modelIri');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_rt_qid_tid');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_rm_qid_mid');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid_spo');
+        $this->store->sqlQuery('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
+
+		$this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
+		$this->store->sqlQuery('DROP TABLE ef_cache_query_model');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectKey');
+
+        return true;
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     public function saveTransactions ( $queryId, $transactions ) {
