@@ -183,8 +183,40 @@ class Erfurt_Store
 		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
 		    $this->_initiateNamespacePrefixes($graphUri);
 		}
-
+		
 		return $this->_prefixes[$graphUri];
+	}
+	    
+	/**
+	 * Get the prefix for one namespaces, will be created if no prefix exists
+     * @param string $graphUri
+	 * @return array with namespace as key and prefix as value
+	 */
+	public function getNamespacePrefix($graphUri, $namespace, $useAc = true)
+	{
+		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+		    $this->_initiateNamespacePrefixes($graphUri);
+		}
+
+		$prefix = array_search($namespace, $this->_prefixes[$graphUri]);
+		
+		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
+			if($prefix === false) {
+				// serach erfurt config for predefined prefixes
+			
+				$config = Erfurt_App::getInstance()->getConfig();
+				$prefix = array_search($namespace, $config->namespaces);
+			
+				if($prefix === false) {
+					for($i = 0; isset($this->_prefixes[$graphUri]['ns' + $i]); $i++) {
+					}
+					$prefix = 'ns' + $i;
+				}
+				$this->addNamespacePrefix($graphUri, $prefix, $namespace, $useAc);
+			}
+		}
+		
+		return $prefix;
 	}
 
 	/**
