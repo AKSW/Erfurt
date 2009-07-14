@@ -129,6 +129,12 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
     public function createCacheStructure () ;
 
 
+
+    /**
+     *  getObjectKeys from ObjectCache
+     *  @access     public
+     *  @return     array         $objectKeys
+     */
     public function getObjectKeys () ;
 
 }

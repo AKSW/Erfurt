@@ -26,7 +26,6 @@ class Erfurt_Cache_Backend_QueryCache_Null extends Erfurt_Cache_Backend_QueryCac
         return false;
     }
 
-
     // invalidating a cached Query Result 
     public function invalidate ($graphUri, $statements = array()) {
         return false;
@@ -48,8 +47,6 @@ class Erfurt_Cache_Backend_QueryCache_Null extends Erfurt_Cache_Backend_QueryCac
     public function uninstall () {
         return true;
     }
-
-
 
     // check if a QueryResult is cached yet
     public function exists ($queryId) {

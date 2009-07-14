@@ -380,6 +380,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         return $qids;
     }
 
+    /**
+     *  invalidating all cached ObjectKeys according to a given list of object identiefiers
+     *  @access     public
+     *  @param      array  $oids       list of objectIds
+     */
     public function invalidateObjectKeys ( $oids = array ()) {
 
         foreach ($oids as $oid) {
@@ -389,6 +394,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         }
     }
 
+    /**
+     *  retrieving all objectIds According to a List of queryIds
+     *  @access     public
+     *  @param      array  $qids       list of queryIds
+     */
     public function getObjectKeys ( $qids = array() ) {
 
         $oKeys = array();
@@ -447,17 +457,12 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     *  save transactions to assign a queryid to object identifiers
+     *  @access     public
+     *  @param      string          $queryId        Its a hash of the QueryString
+     *  @param      array           $transactions   list of object identifier
+     */
     public function saveTransactions ( $queryId, $transactions ) {
 
         $keys = array_keys ($transactions) ;
