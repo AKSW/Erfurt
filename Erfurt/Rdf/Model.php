@@ -568,6 +568,17 @@ class Erfurt_Rdf_Model
 		$store = $this->getStore();
 		return $store->getNamespacePrefixes($this->_graphUri);
 	}
+	
+	/**
+	 * Get the prefix for one namespaces, will be created if no prefix exists
+	 *
+	 * @return array with namespace as key and prefix as value
+	 */
+	public function getNamespacePrefix($namespace)
+	{
+		$store = $this->getStore();
+		return $store->getNamespacePrefix($this->_graphUri, $namespace);
+	}
 
 	/**
 	 * Add a namespace -> prefix mapping
