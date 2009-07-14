@@ -214,6 +214,8 @@ class Erfurt_Store
 				}
 				$this->addNamespacePrefix($graphUri, $prefix, $namespace, $useAc);
 			}
+		} else {
+			throw new Erfurt_Ac_Exception();
 		}
 		
 		return $prefix;
@@ -226,22 +228,34 @@ class Erfurt_Store
 	 * @param $namespace the namespace uri
 	 * @param $useAc use access control
 	 * @return boolean success state
+	 * @throws Erfurt_Exception
 	 */
 	public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
 	{
+		require_once('Erfurt/Utils.php');
+		require_once('Erfurt/Exception.php');
+
 		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
 
 			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
 				$this->_initiateNamespacePrefixes($graphUri);
 			}
-			
-			
-			// quick hack... will be fixed bei nathanael
-			if ($prefix == '' || $namespace == '') {
-			    return false;
+
+			/**
+			 * check namespace if valid
+			 */	
+			if (Zend_Uri::check($namespace) === false) {
+				throw new Erfurt_Exception('The given namespace is not a valid URI.');
 			}
-			
-			if (!isset($this->_prefixes[$graphUri][$prefix])) {
+
+			/**
+			 * check prefix if valid
+			 */	
+			if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
+				throw new Erfurt_Exception('The given prefix is not a valid XML Prefix.');
+			}
+
+			if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
 				$this->_prefixes[$graphUri][$prefix] = $namespace;
 
 				/**
@@ -270,6 +284,9 @@ class Erfurt_Store
 				 * return success
 				 */
 				return true;
+			} else {
+				throw new Erfurt_Exception('This prefix already exists.');
+				return false;
 			}
 		}
 		/**
@@ -284,6 +301,7 @@ class Erfurt_Store
 	 * @param $prefix the prefix you want to remove
 	 * @param $useAc use access control
 	 * @return boolean successfully state
+	 * @throws Erfurt_Exception
 	 */
 	public function deleteNamespacePrefix($graphUri, $prefix, $useAc = true)
 	{
