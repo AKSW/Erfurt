@@ -400,7 +400,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      array  $qids       list of queryIds
      */
     public function getObjectKeys ( $qids = array() ) {
-
         $oKeys = array();
         foreach ($qids as $qid) {
             $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE qid='".$qid."'"; ;
@@ -419,13 +418,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
     public function invalidateAll () {
-        $qids = $this->store->sqlQuery('SELECT qid FROM ef_cache_query_result');
-        $ret = $this->store->sqlQuery('UPDATE ef_cache_query_result SET result = NULL'); 
-        $this->store->sqlQuery('DELETE FROM ef_cache_query_objectKey');
-
+        $result = $this->store->sqlQuery('SELECT qid FROM ef_cache_query_result');
+        $qids = array();
+        foreach ($result as $entry) {
+            $qids[] = $entry['qid'];
+        }        
+        $this->store->sqlQuery('UPDATE ef_cache_query_result SET result = NULL'); 
         return $qids;
-
-
     }
 
 

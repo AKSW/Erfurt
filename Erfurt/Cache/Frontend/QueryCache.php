@@ -273,6 +273,7 @@ class Erfurt_Cache_Frontend_QueryCache {
     private function _invalidateCacheObjects ( $queryIds, $removeByTags = false ) {
         //requesting ObjectKeys according to the List of QueryIds
         $oKeys = $this->getBackend()->getObjectKeys ($queryIds) ;
+
         //create ObjectCache 
         $objectCache = Erfurt_App::getInstance()->getCache();
 
