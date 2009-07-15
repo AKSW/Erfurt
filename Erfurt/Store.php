@@ -299,11 +299,13 @@ class Erfurt_Store
 				throw new Erfurt_Exception('This prefix already exists.');
 				return false;
 			}
+		} else {
+			/**
+			 * return fail
+			 */
+			throw new Erfurt_Ac_Exception();
+			return false;
 		}
-		/**
-		 * return fail
-		 */
-		return false;
 	}
 
 	/**
