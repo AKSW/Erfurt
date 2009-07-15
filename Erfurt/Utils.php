@@ -25,8 +25,8 @@ class Erfurt_Utils
 		// the first part of this regexp is incorrect
 
 		$testResult = array();
-		preg_match('/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]{1}[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF.0-9\xB7]*/u', $string, $testResult);
-		if (array($testResult) && $string == $testResult[0]) {
+		$return = preg_match('/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]{1}[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF.0-9\xB7]*/u', $string, $testResult);
+		if ($return > 0 && $string == $testResult[0]) {
 			return true;
 		} else {
 			return false;
