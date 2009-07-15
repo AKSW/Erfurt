@@ -246,14 +246,14 @@ class Erfurt_Store
 			 * check namespace if valid
 			 */	
 			if (Zend_Uri::check($namespace) === false) {
-				throw new Erfurt_Exception('The given namespace is not a valid URI.');
+				throw new Erfurt_Exception('The given namespace ("' . $namespace . '") is not a valid URI.');
 			}
 
 			/**
 			 * check prefix if valid
 			 */	
 			if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
-				throw new Erfurt_Exception('The given prefix is not a valid XML Prefix.');
+				throw new Erfurt_Exception('The given prefix ("' . $prefix . '") is not a valid XML Prefix.');
 			}
 
 			/**
@@ -263,7 +263,7 @@ class Erfurt_Store
 			$schemataArray = $config->uri->schemata->toArray();
 			$schema = array_search($prefix, $schemataArray);
 			if ($schema !== false) {
-				throw new Erfurt_Exception('The given prefix matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
+				throw new Erfurt_Exception('The given prefix ("' . $prefix . '") matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
 			}
 
 			if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
