@@ -393,7 +393,7 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $turtle1 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
-                    @prefix ldap: <http://purl.org/net/ldap#> .
+                    @prefix ldapns: <http://purl.org/net/ldap#> .
                     @prefix swrc: <http://swrc.ontoware.org/ontology#> .
                     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
                     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -402,9 +402,9 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
                     @prefix foaf: <http://xmlns.com/foaf/0.1/> .
                     @prefix wot: <http://xmlns.com/wot/0.1/> .
 
-                    bis:PeterPan ldap:mobile "+49 XXX 123456" ;
-                         ldap:roomNumber "5-XX" ;
-                         ldap:telephoneNumber "+49 341 123456" ;
+                    bis:PeterPan ldapns:mobile "+49 XXX 123456" ;
+                         ldapns:roomNumber "5-XX" ;
+                         ldapns:telephoneNumber "+49 341 123456" ;
                          a swrc:FacultyMember ;
                          rdfs:label "Peter Pan 2 de"@de, "Peter Pan 2 nl"@nl, "Peter Pan nl"@nl ;
                          foaf:firstName "Peter" ;
@@ -415,7 +415,7 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $turtle2 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
-                    @prefix ldap: <http://purl.org/net/ldap#> .
+                    @prefix ldapns: <http://purl.org/net/ldap#> .
                     @prefix swrc: <http://swrc.ontoware.org/ontology#> .
                     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
                     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -424,9 +424,9 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
                     @prefix foaf: <http://xmlns.com/foaf/0.1/> .
                     @prefix wot: <http://xmlns.com/wot/0.1/> .
 
-                    bis:PeterPan ldap:mobile "+49 XXX 123456" ;
-                          ldap:roomNumber "5-XX" ;
-                          ldap:telephoneNumber "+49 341 123456" ;
+                    bis:PeterPan ldapns:mobile "+49 XXX 123456" ;
+                          ldapns:roomNumber "5-XX" ;
+                          ldapns:telephoneNumber "+49 341 123456" ;
                           a swrc:FacultyMember ;
                           rdfs:label "Peter Pan 2 de"@de ;
                           foaf:firstName "Peter" ;
