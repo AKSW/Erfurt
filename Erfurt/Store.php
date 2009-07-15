@@ -234,6 +234,7 @@ class Erfurt_Store
 	{
 		require_once('Erfurt/Utils.php');
 		require_once('Erfurt/Exception.php');
+        require_once('Zend/Uri.php');
 
 		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
 
@@ -773,6 +774,8 @@ class Erfurt_Store
             if (($modelIri !== $config->sysont->modelUri) && ($modelIri !== $config->sysont->schemaUri)) {
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
                 $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+                // invalidate for the sysmodel too
+                $queryCache->invalidateWithModelIri($acModelIri);
             }
         }
     }
