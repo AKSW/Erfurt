@@ -492,8 +492,8 @@ class Erfurt_Versioning
             }
         }
 
-        $sqldeleteAction .= ' FALSE';
-        $sqldeletePayload .= ' FALSE';
+        $sqldeleteAction    = substr($sqldeleteAction, 0, strlen($sqldeleteAction) - 3);
+        $sqldeletePayload   = substr($sqldeletePayload, 0, strlen($sqldeletePayload) - 3);
 
         $resultAction  = $this->_sqlQuery($sqldeleteAction);
         $resultPayload = $this->_sqlQuery($sqldeletePayload);
