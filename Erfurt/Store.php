@@ -772,8 +772,18 @@ class Erfurt_Store
             // Only do that, if the deleted model was not one of the sys models
             $config = Erfurt_App::getInstance()->getConfig();
             if (($modelIri !== $config->sysont->modelUri) && ($modelIri !== $config->sysont->schemaUri)) {
-                $this->_backendAdapter->deleteMatchingStatements($acModelIri, null, null, $modelIri);
-                $this->_backendAdapter->deleteMatchingStatements($acModelIri, $modelIri, null, null);
+                $this->_backendAdapter->deleteMatchingStatements(
+                    $acModelIri,
+                    null,
+                    null,
+                    array('value' => $modelIri)
+                );
+                $this->_backendAdapter->deleteMatchingStatements(
+                    $acModelIri, 
+                    $modelIri, 
+                    null, 
+                    null
+                );
                 // invalidate for the sysmodel too
                 $queryCache->invalidateWithModelIri($acModelIri);
             }
