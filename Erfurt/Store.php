@@ -208,9 +208,9 @@ class Erfurt_Store
 				$prefix = array_search($namespace, $config->namespaces);
 			
 				if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
-					for($i = 0; isset($this->_prefixes[$graphUri]['ns' + $i]); $i++) {
+					for($i = 0; isset($this->_prefixes[$graphUri]['ns' . $i]); $i++) {
 					}
-					$prefix = 'ns' + $i;
+					$prefix = 'ns' . $i;
 				}
 				$this->addNamespacePrefix($graphUri, $prefix, $namespace, $useAc);
 			}
