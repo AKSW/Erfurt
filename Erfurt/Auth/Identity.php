@@ -22,6 +22,7 @@ class Erfurt_Auth_Identity
     protected $_uri = null;
     
     protected $_isOpenId    = false;
+    protected $_isWebId     = false;
     protected $_isAnonymous = false;
     protected $_isDbUser    = false;
     
@@ -77,6 +78,12 @@ class Erfurt_Auth_Identity
             $this->_isOpenId = true;
         } else {
             $this->_isOpenId = false;
+        }
+        
+        if (isset($userSpec['is_webid_user'])) {
+            $this->_isWebId = true;
+        } else {
+            $this->_isWebId = false;
         }   
     }
     
@@ -105,6 +112,11 @@ class Erfurt_Auth_Identity
         return $this->_isOpenId;
     }
     
+    public function isWebId()
+    {
+        return $this->_isWebId;
+    }
+    
     public function isDbUser()
     {
         return $this->_isDbUser;
@@ -118,7 +130,7 @@ class Erfurt_Auth_Identity
     public function setUsername($newUsername)
     {
         // Non-OpenID users are not allowed to change their username!
-        if (!$this->isOpenId()) {
+        if (!($this->isOpenId() || $this->isWebId())) {
             require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Username change is not allowed!');
         }

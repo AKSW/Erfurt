@@ -428,6 +428,23 @@ class Erfurt_App
         return $result;
     }
     
+    public function authenticateWithFoafSsl($get = null, $redirectUrl = null)
+    {
+        // Set up the authentication adapter.
+        require_once 'Erfurt/Auth/Adapter/FoafSsl.php';
+        $adapter = new Erfurt_Auth_Adapter_FoafSsl($get, $redirectUrl);
+        
+        // Attempt authentication, saving the result.
+        $result = $this->getAuth()->authenticate($adapter);
+
+        // If the result is not valid, make sure the identity is cleared.
+        if (!$result->isValid()) {
+            $this->getAuth()->clearIdentity();
+        }
+
+        return $result;
+    }
+    
     /**
      * The second step of the OpenID authentication process.
      * Authenticates a user with a given OpenID. On success this
