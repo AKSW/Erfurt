@@ -435,6 +435,12 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     public function uninstall () {
 
+        // dropping indices isn't standard sql
+        // in virtuoso it only works without ... 'ON tbl_name' else there is error 37000
+        // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
+        // TODO platform indepent index handling
+
+        /*
 		$this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid');
         $this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid_count');
         $this->store->sqlQuery('DROP INDEX ef_cache_query_model_mid_modelIri');
@@ -443,6 +449,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid');
         $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid_spo');
         $this->store->sqlQuery('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
+        */
 
 		$this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
 		$this->store->sqlQuery('DROP TABLE ef_cache_query_model');
