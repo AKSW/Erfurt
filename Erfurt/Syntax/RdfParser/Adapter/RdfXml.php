@@ -734,8 +734,11 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _handleNamespaceDeclaration($parser, $prefix, $uri)
     {
+        $prefix = (string)$prefix;
+        $uri = (string)$uri;
+        
         if (!$this->_rdfElementParsed) {
-            if ($prefix && $uri) {
+            if ($prefix != '' && $uri != '') {
                 $this->_namespaces[$uri] = $prefix;
             }
         }

@@ -947,6 +947,13 @@ class Erfurt_Store
             $config = Erfurt_App::getInstance()->getConfig();
             $importsUri = $config->sysont->properties->hiddenImports;
             
+            $graphConfig = $this->getGraphConfiguration($modelIri);
+            if (isset($graphConfig[$importsUri])) {
+                foreach ($graphConfig[$importsUri] as $valueArray) {
+                    $currentLevel[$valueArray['value']] = $valueArray['value'];
+                }
+            }
+            
             foreach ($currentLevel as $graphUri) {
                 $graphConfig = $this->getGraphConfiguration($graphUri);
                 
@@ -1342,10 +1349,8 @@ class Erfurt_Store
             'use_additional_imports' => true
         );
         
-        
-     
         $options = array_merge($defaultOptions, $options);
-        
+
         $useAdditional = $options['use_additional_imports'];
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
