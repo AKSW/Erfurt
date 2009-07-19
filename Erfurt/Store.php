@@ -194,6 +194,9 @@ class Erfurt_Store
 	 */
 	public function getNamespacePrefix($graphUri, $namespace, $useAc = true)
 	{
+		require_once('Erfurt/Exception.php');
+		require_once('Erfurt/Ac/Exception.php');
+
 		if (null === $this->_prefixes || isset($this->_prefixes[$graphUri]) === false) {
 		    $this->_initiateNamespacePrefixes($graphUri);
 		}
@@ -234,6 +237,7 @@ class Erfurt_Store
 	{
 		require_once('Erfurt/Utils.php');
 		require_once('Erfurt/Exception.php');
+		require_once('Erfurt/Ac/Exception.php');
         require_once('Zend/Uri.php');
 
 		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
