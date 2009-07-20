@@ -315,7 +315,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
         if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
             $result = $this->_createResource($row[$this->_vars[$strVarName]['sql_value']]);
         } else {
-            $result = $this->_createResource($this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
+            $result = $this->_createResource($this->uriValues[$row[$this->_vars[$strVarName]['sql_ref']]]);
         }
     
         if ($asArray) {
@@ -355,14 +355,14 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
             if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
                 $result = $this->_createResource($row[$this->_vars[$strVarName]['sql_value']]);
             } else {
-                $result = $this->_createResource($this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
+                $result = $this->_createResource($this->uriValues[$row[$this->_vars[$strVarName]['sql_ref']]]);
             }
         } else {
             if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
                 $result = $this->_createBlankNode($row[$this->_vars[$strVarName]['sql_value']]);
             } else {
                 $result = $this->_createBlankNode(
-                    $this->uriValues[$this->_vars[$strVarName]['sql_ref']]);
+                    $this->uriValues[$row[$this->_vars[$strVarName]['sql_ref']]]);
             }
         }
         

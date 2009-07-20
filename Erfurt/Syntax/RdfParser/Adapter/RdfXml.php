@@ -107,7 +107,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $this->_graphUri = $graphUri;
         $this->_useAc = $useAc;
         $this->parseFromDataString($data, $baseUri);
-        
+
         $this->_writeStatementsToStore();
         $this->_addNamespacesToStore();
         
@@ -638,6 +638,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _resolveUri($about)
     {
+        if ($this->_checkSchemas($about)) {
+            return $about;
+        }
+        
 // TODO Handle all relative URIs the right way...
         if (substr($about, 0, 1) === '#' || $about === '' || strpos($about, '/') === false) {
             // Relative URI... Resolve against the base URI.
@@ -648,6 +652,19 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         
         // Absolute URI... Return it.
         return $about;
+    }
+    
+    protected function _checkSchemas($about)
+    {
+        $config = Erfurt_App::getInstance()->getConfig();
+		$schemataArray = $config->uri->schemata->toArray();
+		
+		$regExp = '/^(' . implode(':|', $schemataArray) . ').*$/';
+		if (preg_match($regExp, $about)) {
+		    return true;
+		} else {
+		    return false;
+		}
     }
     
     protected function _createBNode($id = null)
