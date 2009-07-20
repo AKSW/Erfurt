@@ -208,7 +208,11 @@ class Erfurt_Store
 				// serach erfurt config for predefined prefixes
 			
 				$config = Erfurt_App::getInstance()->getConfig();
-				$prefix = array_search($namespace, $config->namespaces);
+				if (is_array($config->namespaces)) {
+					$prefix = array_search($namespace, $config->namespaces);
+				} else {
+					$prefix = false;
+				}
 			
 				if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
 					for($i = 0; isset($this->_prefixes[$graphUri]['ns' . $i]); $i++) {
