@@ -41,8 +41,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected $_namespaces = array();
     
-    public function parseFromDataString($dataString)
+    public function parseFromDataString($dataString, $baseUri = null)
     {
+        if (null !== $baseUri) {
+            $this->_baseUri = $baseUri;
+        }
+        
         $xmlParser = $this->_getXmlParser();
         
         $this->_data = $dataString;
@@ -53,6 +57,8 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     public function parseFromFilename($filename)
     {
+        $this->_baseUri = $filename;
+        
         stream_context_get_default(array(
             'http' => array(
                 'header' => "Accept: application/rdf+xml"
@@ -95,12 +101,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         return true; 
     }
     
-    public function parseFromDataStringToStore($data, $graphUri, $useAc = true)
+    public function parseFromDataStringToStore($data, $graphUri, $useAc = true, $baseUri = null)
     {
         $this->_parseToStore = true;
         $this->_graphUri = $graphUri;
         $this->_useAc = $useAc;
-        $this->parseFromDataString($data);
+        $this->parseFromDataString($data, $baseUri);
         
         $this->_writeStatementsToStore();
         $this->_addNamespacesToStore();
@@ -110,6 +116,8 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     public function parseFromUrl($url)
     {
+        $this->_baseUri = $url;
+        
         require_once 'Zend/Http/Client.php';
         $client = new Zend_Http_Client($url, array(
             'maxredirects'  => 1,

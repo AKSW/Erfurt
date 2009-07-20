@@ -27,7 +27,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     protected $_useAc = true;
     protected $_stmtCounter = 0;
     
-    public function parseFromDataString($dataString)
+    public function parseFromDataString($dataString, $baseUri = null)
     {
         $this->_parse($dataString); 
         return $this->_statements;
@@ -35,6 +35,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     public function parseFromFilename($filename)
     {
+        $this->_baseUri = $filename;
+        
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
@@ -58,10 +60,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     public function parseFromUrl($url)
     {
+        $this->_baseUri = $url;
+        
         return $this->parseFromFilename($url);
     }
     
-    public function parseFromDataStringToStore($data, $graphUri, $useAc = true)
+    public function parseFromDataStringToStore($data, $graphUri, $useAc = true, $baseUri = null)
     {
         $this->_parseToStore = true;
         $this->_graphUri = $graphUri;

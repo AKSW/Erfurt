@@ -64,14 +64,14 @@ class Erfurt_Syntax_RdfParser
      * @param int One of the supported pointer types.
      * @return array Returns an RDF/PHP array.
      */
-    public function parse($dataPointer, $pointerType)
+    public function parse($dataPointer, $pointerType, $baseUri = null)
     {
         if ($pointerType === self::LOCATOR_URL) {
             $result = $this->_parserAdapter->parseFromUrl($dataPointer);       
         } else if ($pointerType === self::LOCATOR_FILE) {
             $result = $this->_parserAdapter->parseFromFilename($dataPointer);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
-            $result = $this->_parserAdapter->parseFromDataString($dataPointer);
+            $result = $this->_parserAdapter->parseFromDataString($dataPointer, $baseUri);
         } else {
             require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');
@@ -96,14 +96,14 @@ class Erfurt_Syntax_RdfParser
         return $result;
     }
     
-    public function parseToStore($dataPointer, $pointerType, $modelUri, $useAc = true)
+    public function parseToStore($dataPointer, $pointerType, $modelUri, $useAc = true, $baseUri = null)
     {
         if ($pointerType === self::LOCATOR_URL) {
             $result = $this->_parserAdapter->parseFromUrlToStore($dataPointer, $modelUri, $useAc);       
         } else if ($pointerType === self::LOCATOR_FILE) {
             $result = $this->_parserAdapter->parseFromFilenameToStore($dataPointer, $modelUri, $useAc);
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
-            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri, $useAc);
+            $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri, $useAc, $baseUri);
         } else {
             require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');
