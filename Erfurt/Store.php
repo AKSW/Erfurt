@@ -240,8 +240,6 @@ class Erfurt_Store
 	public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
 	{
 		require_once('Erfurt/Utils.php');
-		require_once('Erfurt/Exception.php');
-		require_once('Erfurt/Ac/Exception.php');
         require_once('Zend/Uri.php');
 
 		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
@@ -254,14 +252,16 @@ class Erfurt_Store
 			 * check namespace if valid
 			 */	
 			if (Zend_Uri::check($namespace) === false) {
-				throw new Erfurt_Exception('The given namespace ("' . $namespace . '") is not a valid URI.');
+			    require_once('Erfurt/Store/Exception.php');
+				throw new Erfurt_Store_Exception('The given namespace ("' . $namespace . '") is not a valid URI.');
 			}
 
 			/**
 			 * check prefix if valid
 			 */	
 			if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
-				throw new Erfurt_Exception('The given prefix ("' . $prefix . '") is not a valid XML Prefix.');
+			    require_once('Erfurt/Store/Exception.php');
+				throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") is not a valid XML Prefix.');
 			}
 
 			/**
@@ -271,7 +271,8 @@ class Erfurt_Store
 			$schemataArray = $config->uri->schemata->toArray();
 			$schema = array_search($prefix, $schemataArray);
 			if ($schema !== false) {
-				throw new Erfurt_Exception('The given prefix ("' . $prefix . '") matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
+			    require_once('Erfurt/Store/Exception.php');
+				throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
 			}
 
 			if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
@@ -304,14 +305,16 @@ class Erfurt_Store
 				 */
 				return true;
 			} else {
-				throw new Erfurt_Exception('This prefix already exists.');
+			    require_once('Erfurt/Store/Exception.php');
+				throw new Erfurt_Store_Exception('This prefix "' . $prefix . '" already exists.');
 				return false;
 			}
 		} else {
 			/**
 			 * return fail
 			 */
-			throw new Erfurt_Ac_Exception();
+		    require_once('Erfurt/Ac/Exception.php');
+			throw new Erfurt_Ac_Exception('No rights to add namespace prefix.');
 			return false;
 		}
 	}

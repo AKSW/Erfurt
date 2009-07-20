@@ -152,7 +152,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     {
         $store = Erfurt_App::getInstance()->getStore();
         foreach ($this->_namespaces as $prefix => $ns) {
-            $store->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+            try {
+                $store->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+            } catch (Erfurt_Store_Exception $e) {
+                // We need to catch the store exception, for the namespace component throws exceptions in case a prefix
+                // already exists.
+                
+                // Do nothing... just continue with the next one...
+            }
         }
     }
     
