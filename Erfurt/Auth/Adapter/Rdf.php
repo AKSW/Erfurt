@@ -47,7 +47,9 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     /** @var array */
     private $_uris = null;
     
-    private $_loginDisabled = false;
+    private $_loginDisabled = null;
+    
+    private $_dbUserAllowed = null;
     
     /**
      * Constructor
@@ -69,7 +71,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
         if ($this->_isLoginDisabled() === true || $this->_username === 'Anonymous') {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getAnonymousUser());
         // super admin
-        } else if ($this->_username === $this->_getDbUsername() and $this->_password === $this->_getDbPassword()) {
+        } else if ($this->_isDbUserAllowed() && $this->_username === $this->_getDbUsername() && $this->_password === $this->_getDbPassword()) {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getSuperAdmin());
         
         // normal user from system ontology
@@ -416,5 +418,20 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
         }
         
         return $this->_loginDisabled;
+    }
+    
+    private function _isDbUserAllowed()
+    {
+        if (null === $this->_dbUserAllowed) {
+            $config = $this->_getConfig();
+            
+            if (isset($config->ac->allowDbUser) && ((boolean)$config->ac->allowDbUser === true)) {
+                $this->_dbUserAllowed = true;
+            } else {
+                $this->_dbUserAllowed = false;
+            }
+        }
+        
+        return $this->_dbUserAllowed;
     }
 }
