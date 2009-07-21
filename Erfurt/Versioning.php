@@ -474,31 +474,68 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT DISTINCT id, payload_id FROM ef_versioning_actions
-                WHERE model = \'' . $graphUri . '\'';
+        $sql = 'SELECT DISTINCT ac.payload_id
+                FROM ef_versioning_actions AS ac
+                WHERE ac.model = \'' . $graphUri . '\' AND ac.payload_id IS NOT NULL';
 
         $result = $this->_sqlQuery($sql);
 
-        $sqldeleteAction = 'DELETE FROM ef_versioning_actions WHERE ';
+        // deleting explicitely by id described payloads
+        // we need to do so as JOIN isn't compatible with DELETE on Virtuoso
+        if (!empty($result)) {
 
-        $sqldeletePayload = 'DELETE FROM ef_versioning_payloads WHERE ';
+            $idArray = array();
 
-        foreach ($result as $value) {
-            if (!empty($value['id']) ) {
-                $sqldeleteAction .= 'id = ' . $value['id'] . ' OR ';
+            foreach ($result as $r ) {
+                    $idArray[] = $r['payload_id'];
+            } 
+
+            sort($idArray, SORT_NUMERIC);
+
+            // finding out ranges of ids to pack them together via id >= xxx AND id <= yyy
+            $last = 0;
+            $started = 0;
+            $ranges = array();
+            foreach ($idArray as $nr) {
+                if (!$started) {
+                    $started = $nr;
+                    $last = $nr;
+                } else {
+                    if ($nr == $last + 1) {
+                        $last++;
+                    } else {
+                        $ranges[] = ' ( id >= ' . $started . ' AND id <= ' . $last . ' ) ';
+                        $started = $nr;
+                        $last = $nr;
+                    }
+                }
             }
-            if (!empty($value['payload_id']) ) {
-                $sqldeletePayload .= 'id = ' . $value['payload_id'] . ' OR ';
+
+            $ranges[] = ' ( id >= ' . $started . ' AND id <= ' . $last . ' ) ';
+
+            // iterate over id ranges in groups of 100 per query
+            // (this optimizes exec. time for large consecutive changes)
+            for ($i = 0; $i < sizeof($ranges); $i = $i + 100) {
+
+                    $sqldeletePayload = 'DELETE FROM ef_versioning_payloads WHERE ';
+
+                    if ( ($i + 100) < sizeof($ranges) ) {
+                        $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,100));
+                    } else {
+                        $length = ( sizeof($ranges) ) % 100;
+                        $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,$length));
+                    }
+                    $resultPayload = $this->_sqlQuery($sqldeletePayload);
             }
         }
+        
 
-        $sqldeleteAction    = substr($sqldeleteAction, 0, strlen($sqldeleteAction) - 3);
-        $sqldeletePayload   = substr($sqldeletePayload, 0, strlen($sqldeletePayload) - 3);
+        // finally delete actions
+        $sqldeleteAction = 'DELETE FROM ef_versioning_actions WHERE model = \'' . $graphUri . '\'';
 
         $resultAction  = $this->_sqlQuery($sqldeleteAction);
-        $resultPayload = $this->_sqlQuery($sqldeletePayload);
 
-        var_dump($resultAction);var_dump($resultPayload); 
+
     }
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
@@ -633,7 +670,7 @@ class Erfurt_Versioning
             try {
                 $result = $this->_getStore()->sqlQuery($sql);
             } catch (Erfurt_Exception $e2) {
-                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage());
+                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage() . $sql);
             }
         }
         
