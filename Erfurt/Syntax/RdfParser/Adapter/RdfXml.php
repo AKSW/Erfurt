@@ -208,7 +208,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $this->_rdfElementParsed = true;
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
-        if ($this->_data[$idx] === '/') {
+        if (($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
             $this->_currentElementIsEmpty = true;
         } else {
             $this->_currentElementIsEmpty = false;
@@ -291,7 +291,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _handleCharDataStatement()
     {
-#var_dump($this->_currentCharData);
+#var_dump($this->_currentCharData);exit;
         if (null !== $this->_currentCharData) {
             if (trim($this->_currentCharData) === '') {
                 $this->_currentCharData = null;
@@ -299,7 +299,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
             }
             
             if (!$this->_topElemIsProperty()) {
-#var_dump($this->_currentCharData);
+#var_dump($this->_currentCharData);exit;
 #var_dump($this->_statements);
 #var_dump($this->_elementStack);exit;
                 $this->_throwException('Unexpected literal.');
@@ -324,7 +324,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     protected function _processNode($name, &$attrs)
     {
         $nodeResource = $this->_getNodeResource($attrs);
-        
+#var_dump($nodeResource);
         if (null === $nodeResource) {
             return;
         }
@@ -381,7 +381,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     protected function _processProperty($name, &$attrs)
     {
         $propUri = $name;
-        
+
         // List expansion rule
         if ($propUri === EF_RDF_NS.'li') {
             $subject = $this->_peekStack(0);
@@ -496,7 +496,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
                 #}
             }
         }
-        
+#var_dump($this->_currentElementIsEmpty);
         if ($this->_currentElementIsEmpty) {
             array_pop($this->_elementStack);
         }   

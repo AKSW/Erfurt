@@ -254,12 +254,16 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
     
         $client->setHeaders('Accept', 'application/rdf+xml');
         $response = $client->request();
-        
         if ($response->getStatus() === 200) {
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('rdfxml');
-            $result = $parser->parse($response->getBody(), Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-                
+            
+            try {
+                $result = $parser->parse($response->getBody(), Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+            } catch (Erfurt_Syntax_RdfParserException $e) {
+                return array();
+            }
+            
             return $result;
         } else {
             return array();

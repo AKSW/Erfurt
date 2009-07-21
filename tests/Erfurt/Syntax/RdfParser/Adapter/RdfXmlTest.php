@@ -213,8 +213,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         }
     }
     
-    
-    
     protected function _getRdfXmlString($innerXml)
     {
         return $this->_xmlString . $innerXml . '</rdf:RDF>';
