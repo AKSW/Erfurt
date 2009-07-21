@@ -545,6 +545,27 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         return 'bNode';
     }
     
+    /**
+     * Returns a list of graph uris, where each graph in the list contains at least
+     * one statement where the given resource uri is subject.
+     * 
+     * @param string $resourceUri
+     * @return array
+     */
+    public function getGraphsUsingResource($resourceUri) 
+    {    
+        $sqlQuery = 'SELECT DISTINCT g.uri FROM ef_stmt s 
+                     LEFT JOIN ef_graph g ON ( g.id = s.g)        
+                     WHERE s.s = "' . $resourceUri . '"';
+        $sqlResult = $this->sqlQuery($sqlQuery);
+        
+        $result = array();
+        foreach ($sqlResult as $row) {
+            $result[] = $row['uri'];
+        }
+        
+        return $result;
+    }
     
     /**
      * Recursively gets owl:imported model IRIs starting with $modelIri as root.

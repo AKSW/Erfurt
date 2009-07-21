@@ -1478,6 +1478,50 @@ class Erfurt_Store
         }
     }
 
+    /**
+     * Returns a list of graph uris, where each graph in the list contains at least
+     * one statement where the given resource uri is subject.
+     * 
+     * @param string $resourceUri
+     * @return array
+     */
+    public function getGraphsUsingResource($resourceUri, $useAc = true)
+    {
+        if (method_exists($this->_backendAdapter, 'getGraphsUsingResource')) {
+            $backendResult = $this->_backendAdapter->getGraphsUsingResource($resourceUri);
+            
+            if ($useAc) {
+                $realResult = array();
+                
+                foreach ($backendResult as $graphUri) {
+                    if ($this->isModelAvailable($graphUri, $useAc)) {
+                        $realResult[] = $graphUri;
+                    }
+                }
+                
+                return $realResult;
+            } else {
+                return $backendResult;
+            }
+        }
+        
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT DISTINCT ?graph')
+              ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
+        
+        $graphResult = array();
+        $result = $this->sparqlQuery($query, array('use_ac' => $useAc));
+          
+        if ($result) {
+            foreach ($result as $row) {
+                $graphResult[] = $row['graph'];
+            }
+        }
+        
+        return $graphResult;
+    }
+    
     
     // ------------------------------------------------------------------------
     // --- Protected (implemented) methods ------------------------------------

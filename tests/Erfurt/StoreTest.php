@@ -120,6 +120,18 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
         $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
     }
+    
+    public function testGetGraphsUsingResource()
+    {
+        $this->markTestNeedsDatabase();
+        
+        $resource = 'http://localhost/OntoWiki/Config/';
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        $graphs = $store->getGraphsUsingResource($resource, false);
+        
+        $this->assertTrue(in_array($resource, $graphs));
+    }
 }
 
 
