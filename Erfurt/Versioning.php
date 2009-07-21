@@ -81,6 +81,10 @@ class Erfurt_Versioning
      */
     public function endAction()
     {
+        if (!$this->isVersioningEnabled()) {
+            return;
+        }
+        
         // no action to end?
         if (null === $this->_currentAction) {
             throw new Exception('Action not started');
