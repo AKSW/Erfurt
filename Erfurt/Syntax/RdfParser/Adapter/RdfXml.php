@@ -120,13 +120,13 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         
         require_once 'Zend/Http/Client.php';
         $client = new Zend_Http_Client($url, array(
-            'maxredirects'  => 1,
+            'maxredirects'  => 10,
             'timeout'       => 30
         ));
     
         $client->setHeaders('Accept', 'application/rdf+xml, text/plain');
         $response = $client->request();
-        
+
         return $this->parseFromDataString($response->getBody());
     }
     
@@ -136,7 +136,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $this->_graphUri = $graphUri;
         $this->_useAc = $useAc;
         $this->parseFromUrl($url);
-        
+
         $this->_writeStatementsToStore();
         $this->_addNamespacesToStore();
 
