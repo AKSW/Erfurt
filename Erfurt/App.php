@@ -876,16 +876,36 @@ class Erfurt_App
     {   
         // Load the default erfurt config.
         require_once 'Zend/Config/Ini.php';
-        $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
-
+        if (is_readable((EF_BASE . 'config/default.ini'))) {
+            try {
+                $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
+            } catch (Zend_Config_Exception $e) {
+                require_once 'Erfurt/App/Exception.php';
+                throw new Erfurt_App_Exception('Error while parsing config file default.ini.');
+            }
+        } else {
+            require_once 'Erfurt/App/Exception.php';
+            throw new Erfurt_App_Exception('Config file default.ini not readable.');
+        }
+       
 		// Load user config iff available.
 		if (is_readable((EF_BASE . 'config.ini'))) {
-			$this->_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
+		    try {
+		        $this->_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
+		    } catch (Zend_Config_Exception $e) {
+                require_once 'Erfurt/App/Exception.php';
+                throw new Erfurt_App_Exception('Error while parsing config file config.ini.');
+            }
 		}
 
         // merge with injected config iff given
         if (null !== $config) {
-            $this->_config->merge($config);
+            try {
+		        $this->_config->merge($config);
+		    } catch (Zend_Config_Exception $e) {
+                require_once 'Erfurt/App/Exception.php';
+                throw new Erfurt_App_Exception('Error while merging with injected config.');
+            }   
         }
     }
     
