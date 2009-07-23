@@ -180,6 +180,17 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         return $this->parseNamespacesFromFilename($url);
     }
     
+    /**
+     * Call this method after parsing only. The function parseToStore will add namespaces automatically.
+     * This method is just for situations, where the namespaces are needed to after a in-memory parsing.
+     * 
+     * @return array
+     */
+    public function getNamespaces()
+    {
+        return $this->_namespaces;
+    }
+    
     protected function _addNamespacesToStore()
     {
         $store = Erfurt_App::getInstance()->getStore();

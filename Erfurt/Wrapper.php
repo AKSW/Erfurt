@@ -34,6 +34,8 @@ abstract class Erfurt_Wrapper
      */
     const RESULT_HAS_ADD            = 40;
     
+    const RESULT_HAS_NS             = 45;
+    
     /** 
      * States, whether the result contains a key 'remove', which can be used 
      * to match statements. 

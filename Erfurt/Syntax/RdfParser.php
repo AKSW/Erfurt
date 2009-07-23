@@ -80,6 +80,21 @@ class Erfurt_Syntax_RdfParser
         return $result;
     }
     
+    /**
+     * Call this method after parsing only. The function parseToStore will add namespaces automatically.
+     * This method is just for situations, where the namespaces are needed to after a in-memory parsing.
+     * 
+     * @return array
+     */
+    public function getNamespaces()
+    {
+        if (method_exists($this->_parserAdapter, 'getNamespaces')) {
+            return $this->_parserAdapter->getNamespaces();
+        } else {
+            return array();
+        }
+    }
+    
     public function parseNamespaces($dataPointer, $pointerType)
     {
         if ($pointerType === self::LOCATOR_URL) {
