@@ -64,6 +64,11 @@ class Erfurt_App
     private $_acModel = null;
     
     /**
+     * Contains a reference to Zend_Auth singleton.
+     */
+    private $_auth = null;
+    
+    /**
      * Contains the cache object. 
      * @var Zend_Cache_Core 
      */
@@ -217,14 +222,14 @@ class Erfurt_App
             // In debug mode log level is set to the highest value automatically.
             $config->log->level = 7;
         }
-        
+   
         // Set the configured time zone.
         if (isset($config->timezone) && ((boolean)$config->timezone !== false)) {
             date_default_timezone_set($config->timezone);
         } else {
             date_default_timezone_set('Europe/Berlin');
         }
-        
+          
         // Starting Versioning
         try {
             $versioning = $this->getVersioning(); 
@@ -517,10 +522,21 @@ class Erfurt_App
      */
     public function getAuth()
     {    
-        require_once 'Erfurt/Auth.php';
-        $auth = Erfurt_Auth::getInstance();
-         
-        return $auth; 
+        if (null === $this->_auth) {
+            require_once 'Erfurt/Auth.php';
+            $auth = Erfurt_Auth::getInstance();
+
+            $config = $this->getConfig();
+            if (isset($config->session->identifier)) {
+                $sessionNamespace = 'Erfurt_Auth' . $config->session->identifier;
+                require_once 'Zend/Auth/Storage/Session.php';
+                $auth->setStorage(new Zend_Auth_Storage_Session($sessionNamespace));
+            }
+            
+            $this->_auth = $auth;
+        }
+        
+        return $this->_auth; 
     }
     
     /**
