@@ -148,4 +148,21 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             $result['http://example.org/1']['http://example.org/prop'][0]['value']
         );
     }
+    
+    public function testParseWithDotAfterLanguageTagIssue536()
+    {
+        $turtle = '<http://example.org/1> <http://example.org/prop> "..."@nl.';
+        
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            '...',
+            $result['http://example.org/1']['http://example.org/prop'][0]['value']
+        );
+        
+        $this->assertEquals(
+            'nl',
+            $result['http://example.org/1']['http://example.org/prop'][0]['lang']
+        );
+    }
 }

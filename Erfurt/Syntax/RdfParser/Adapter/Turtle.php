@@ -487,7 +487,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             $lang .= $c;
             $c = $this->_read();
             
-            while ($c !== -1 && !$this->_isWS($c) && !($c === ',')) { 
+            while ($c !== -1 && !$this->_isWS($c) && !($c === ',') && !($c === '.')) { 
                 if (!$this->_isLanguageChar($c)) {
                     require_once 'Erfurt/Syntax/RdfParserException.php';
                     throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed in language tags.');
