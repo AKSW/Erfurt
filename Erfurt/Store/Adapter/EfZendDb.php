@@ -371,8 +371,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $predicate = substr($predicate, 0, 223) . md5($predicate);
         } 
         
-        if ($object !== null && strlen($object) > $this->_getSchemaRefThreshold()) {
-            $object = substr($object, 0, 223) . md5($object);
+        if ($object !== null && strlen($object['value']) > $this->_getSchemaRefThreshold()) {
+            $object = substr($object['value'], 0, 223) . md5($object['value']);
         } 
         
         $whereString = '1';

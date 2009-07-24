@@ -9,6 +9,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function __construct($name = null, $data = array(), $dataName = '')
     {
+        error_reporting(E_ALL | E_STRICT);
+        
         parent::__construct($name, $data, $dataName);
         
         Erfurt_App::getInstance();

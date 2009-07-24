@@ -132,6 +132,21 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $this->assertTrue(in_array($resource, $graphs));
     }
+    
+    public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        $query = 'COUNT WHERE { ?s ?p "SomethingThatDoesNotExistsIGUUGIZFZTFVBhjscjkggniperegrthhrt" . }';
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
+        
+        $result = $store->sparqlQuery($simpleQuery);
+        $this->assertEquals(0, $result);
+    }
 }
 
 

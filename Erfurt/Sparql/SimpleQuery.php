@@ -93,7 +93,7 @@ class Erfurt_Sparql_SimpleQuery
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*)?(PREFIX.*)*(\s+ASK|\s+COUNT|(SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
+            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|\s*COUNT|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
             'from'       => '/FROM\s+<(.+?)>/i', 
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
             'where'      => '/(WHERE\s+)?\{.*\}/si', 
@@ -105,7 +105,7 @@ class Erfurt_Sparql_SimpleQuery
         foreach ($tokens as $key => $pattern) {
             preg_match_all($pattern, $queryString, $parts[$key]);
         }
-
+        
         $queryObject = new self();
         if (isset($parts['prologue'][0][0])) {
             $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
