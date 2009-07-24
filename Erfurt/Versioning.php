@@ -480,7 +480,9 @@ class Erfurt_Versioning
 
         $sql = 'SELECT DISTINCT ac.payload_id
                 FROM ef_versioning_actions AS ac
-                WHERE ac.model = \'' . $graphUri . '\' AND ac.payload_id IS NOT NULL';
+                WHERE 
+                ( ac.model      = \'' . $graphUri . '\' OR  ac.resource   = \'' . $graphUri . '\' )
+                AND   ac.payload_id IS NOT NULL';
 
         $result = $this->_sqlQuery($sql);
 
@@ -535,7 +537,8 @@ class Erfurt_Versioning
         
 
         // finally delete actions
-        $sqldeleteAction = 'DELETE FROM ef_versioning_actions WHERE model = \'' . $graphUri . '\'';
+        $sqldeleteAction = 'DELETE FROM ef_versioning_actions WHERE
+                            model = \'' . $graphUri . '\' OR resource = \'' . $graphUri . '\'';
 
         $resultAction  = $this->_sqlQuery($sqldeleteAction);
 
