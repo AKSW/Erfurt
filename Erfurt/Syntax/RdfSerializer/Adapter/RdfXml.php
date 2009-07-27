@@ -229,7 +229,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$where = 'WHERE 
 		          { ?s ?p ?o . 
 		          OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2  } .
-	              FILTER (!bound(?o2)) || (';
+	              FILTER (!bound(?o2) || (';
 		
 		$count = count($this->_renderedTypes);
 		for ($i=0; $i<$count; ++$i) {
