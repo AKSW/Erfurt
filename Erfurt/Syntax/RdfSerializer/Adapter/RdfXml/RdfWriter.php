@@ -141,7 +141,7 @@ private $subjects;
 
 		// add identifier
 		if ($sType === 'bnode') {
-			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'node' . substr($s, 2));
+			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'b' . substr($s, 2));
 		} else {
 			$this->stringWriter->addAttribute(EF_RDF_NS, 'about', $s);	
 		}
@@ -288,7 +288,7 @@ private $subjects;
 	private function propertyBNode($value) 
     {	
 		if ($value['type'] === 'bnode') {
-			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'node' . substr($value['value'], 2));
+			$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'b' . substr($value['value'], 2));
 			return true;
 		} else {
 		    return false;
@@ -327,7 +327,7 @@ private $subjects;
 			} else {
 				$this->stringWriter->startElement(EF_RDF_NS, 'Description');
 				if ($e['type'] === 'bnode') {
-					$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'node' . $e['value']);
+					$this->stringWriter->addAttribute(EF_RDF_NS, 'nodeID', 'b' . $e['value']);
 				} else {
 					$this->stringWriter->addAttribute(EF_RDF_NS, 'about', $e['value']);
 				}
