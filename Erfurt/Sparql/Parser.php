@@ -479,10 +479,11 @@ class Erfurt_Sparql_Parser
      */
     protected function _parseAsk($form)
     {    
-        $this->_query->setResultForm($form);
-        $this->_fastForward();
+        $this->_query->setResultForm($form);       
         
-        if (current($this->_tokens) === '{') {
+        $this->_fastForward();
+
+        if (current($this->_tokens) === '{' || strtolower(current($this->_tokens)) === 'from') {
             prev($this->_tokens);
         }
     }
@@ -912,6 +913,7 @@ class Erfurt_Sparql_Parser
     protected function _parseFrom()
     {
         $this->_fastForward();
+
         if (strtolower(current($this->_tokens)) !== 'named') {
             if ($this->_iriCheck(current($this->_tokens)) || $this->_qnameCheck(current($this->_tokens))) {
                 $this->_query->addFrom(substr(current($this->_tokens), 1, -1));

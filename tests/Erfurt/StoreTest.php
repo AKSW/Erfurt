@@ -147,6 +147,26 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertEquals(0, $result);
     }
+    
+    public function testSparqlQueryWithCountAndFromIssue174()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        $query = 'COUNT 
+                  FROM <http://localhost/OntoWiki/Config/> 
+                  WHERE { 
+            ?s ?p ?o . 
+        }';
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
+        
+        $result = $store->sparqlQuery($simpleQuery);
+        
+        $this->assertEquals(181, $result);
+    }
 }
 
 
