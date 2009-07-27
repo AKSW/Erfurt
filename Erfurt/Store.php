@@ -570,7 +570,7 @@ class Erfurt_Store
                 }
             } catch (Erfurt_Exception $e) {
                 // Delete the model, for the import failed.
-                $this->_backendAdapter->deleteModel($sysOntSchema);
+                $this->_backendAdapter->deleteModel($sysOntModel);
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed -> " . $e->getMessage());
             }

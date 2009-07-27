@@ -639,7 +639,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
                 
                 foreach ($parser->parseNamespaces($data, $locator) as $namespaceUri => $prefix) {
-                    $model->addNamespacePrefix($prefix, $namespaceUri);
+                    try {
+                        $model->getStore()->addNamespacePrefix($model->getModelUri(), $prefix, $namespaceUri, false);
+                    } catch (Exception $e) {
+                        // Do nothing...
+                    }
+                    
                 }
             }
         }
