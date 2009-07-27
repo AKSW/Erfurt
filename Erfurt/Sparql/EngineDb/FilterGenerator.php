@@ -61,6 +61,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected static $typeXsdBoolean  = 'http://www.w3.org/2001/XMLSchema#boolean';
     protected static $typeXsdDateTime = 'http://www.w3.org/2001/XMLSchema#dateTime';
     protected static $typeXsdDouble   = 'http://www.w3.org/2001/XMLSchema#double';
+    protected static $typeXsdFloat    = 'http://www.w3.org/2001/XMLSchema#float';
     protected static $typeXsdInteger  = 'http://www.w3.org/2001/XMLSchema#integer';
     protected static $typeXsdString   = 'http://www.w3.org/2001/XMLSchema#string';
     protected static $typeVariable    = 'variable';
@@ -317,6 +318,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 $strColDatatype = $this->getDatatypeCol($tree['operand1']);
                 $strExtra .= ' AND (' . $strColDatatype . '="' . self::$typeXsdDouble . '"'
                     . ' OR ' . $strColDatatype . '="' . self::$typeXsdInteger . '"'
+                    . ' OR ' . $strColDatatype . '="' . self::$typeXsdFloat . '"' 
                     . ')';
                 return $strIsNull . '('
                     . 'CAST(' . $val1 . ' AS DECIMAL(15,10))'

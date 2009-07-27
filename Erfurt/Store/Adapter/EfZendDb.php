@@ -949,7 +949,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $parser = new Erfurt_Sparql_Parser();        
                      
         $query = $parser->parse((string)$query);        
-
         $result = $engine->queryModel($query, $resultform);
 
         // Debug executed SPARQL queries in debug mode (7)
