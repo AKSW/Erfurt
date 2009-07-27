@@ -111,11 +111,12 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                     $arSql['order'] = $strOrder;
                 }   
             }
+            
             return array(
                 $arSqls
             );
         }
-        
+
         $arNewSqls = array();
         foreach ($arSqls as $n => $arSql) {
             $strSelect = $arSql['select'];
@@ -398,13 +399,14 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     function getSqlOrderBy($arTypeSet = array(), $n = 0)
     {
         $arSM = $this->_query->getSolutionModifier();
+
         if ($arSM['order by'] === null) {
             return '';
         }
 
-        if (count($arTypeSet) === 0) {
-            return '';
-        }
+        #if (count($arTypeSet) === 0) {
+        #    return '';
+        #}
 
 //var_dump($arTypeSet);
 //var_dump($this->arUnionVarAssignments);

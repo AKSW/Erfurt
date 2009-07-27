@@ -179,6 +179,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
 		$query->addFrom($this->_graphUri);
 		$query->setWherePart('WHERE { ?s ?p ?o . ?s <' . EF_RDF_TYPE . '> <' . $class . '> }');
+		$query->setOrderClause('?s');
 		$query->setLimit(1000);
 		
 		$offset = 0;
@@ -227,8 +228,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		
 		$where = 'WHERE 
 		          { ?s ?p ?o . 
-		            OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2 } . 
-		            FILTER (!bound(?o2) || (';
+		          OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2  } .
+	              FILTER (!bound(?o2)) || (';
 		
 		$count = count($this->_renderedTypes);
 		for ($i=0; $i<$count; ++$i) {
@@ -243,8 +244,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		
 		$query->setWherePart($where);
 		$query->setOrderClause('?s');
-		$query->setLimit(1000);
-	
+	    $query->setLimit(1000);
+
 		$offset = 0;
 		while (true) {
 		    $query->setOffset($offset);

@@ -28,7 +28,7 @@ class Erfurt_Sparql_EngineDb_Offsetter
     public function determineOffset($arSqls)
     {
         $arSM = $this->_query->getSolutionModifier();
-        
+
         if ($arSM['offset'] === null) {
             return array(0, 0);
         }

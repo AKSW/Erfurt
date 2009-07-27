@@ -272,7 +272,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $arSqls = $this->sg->createSql();
 #var_dump($arSqls);exit;
         $this->ts->setData($this->sg);
-
+        
         return $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
                     $this->query, $this, $this->sg->arVarAssignments);
     }
@@ -297,7 +297,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
-#var_dump($nLimit);
+#var_dump($nLimit, $nOffset);
 #echo $strSql;
         if ($strSql === '()') {
             return array();
