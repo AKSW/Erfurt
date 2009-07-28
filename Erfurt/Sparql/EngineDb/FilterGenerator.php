@@ -305,7 +305,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         if ($this->isObject($tree['operand1'])) {
             if ($this->bOptional) {
                 $strIsNull    = '(';
-                $strIsNullEnd = ' OR ' . $val1 . ' IS NULL)';
+                $strIsNullEnd = ' OR ' . $val1 . '="")';
             }
             if (isset($tree['operand2']['language'])) {
                 $strColLanguage = $this->getLangCol($tree['operand1']);
@@ -341,7 +341,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                             . $val2
                             . ' OR '
                             . $val1
-                            . ' ' . $this->sg->strColEmpty
+                            . '=""'
                         . ') AND ' . substr($val1, 0, 2) . '.ot=2)';
         }
 

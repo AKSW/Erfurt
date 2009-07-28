@@ -298,7 +298,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 #var_dump($nLimit, $nOffset);
-#echo $strSql;
+#echo $strSql;exit;
         if ($strSql === '()') {
             return array();
         }

@@ -635,6 +635,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             case 'p':
                 return array(
                     $strTablePrefix . '.p as ' . $this->getSqlVariableNameValue($varname),
+                    'NULL as ' . $this->getSqlVariableNameIs($varname),
                     $strTablePrefix . '.p_r as ' . $this->getSqlVariableNameRef($varname)
                 );
             case 'o':
@@ -676,7 +677,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
     */
     protected function createEqualSelects($arSelect)
     {
-
         $arNewSelect = array();
         if (count($arSelect) == 1) {
             if ($arSelect[0] == array(array())) {
@@ -705,6 +705,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arVars = array_unique($arVars);
 
         foreach ($arSelect as $nUnionCount => $arUnionVars) {
+
             $arSelectVars = array();
             foreach ($arUnionVars as $arTripleVars) {
                 foreach ($arTripleVars as $strVar => $arVarParts) {
@@ -742,6 +743,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         . $this->arVarAssignments[$strVar]['sql_ref'];
                     
                 }
+                
                 if (isset($this->arUsedVarTypes[$strVar]['o']) && $nCount < 4) {
                     //it's a subject or object, but we don't want the type
                     if (isset($this->arVarAssignments[$strVar]['sql_lang'])) {
@@ -763,6 +765,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     $ar[] = 'NULL as '
                         . $strColDatatypeRef;
                 }
+                
                 $ars[] = implode(',', $ar);
             }
             $arNewSelect[$nUnionCount] = $ars;

@@ -516,7 +516,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                             $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                                . ' IS NULL)';
+                                . '="")';
                         } else {
                             $strWhereTypes .= $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
@@ -531,7 +531,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                                 . ' IS NULL)';
+                                 . '="")';
                          } else {
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
