@@ -177,7 +177,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $s = substr((string)$s, 0, 223) . $subjectHash;
+                        $s = substr((string)$s, 0, 128) . $subjectHash;
                     }
                     
                     $pRef = false;
@@ -192,7 +192,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $p = substr((string)$p, 0, 223) . $predicateHash;
+                        $p = substr((string)$p, 0, 128) . $predicateHash;
                     }
                     
                     $oRef = false;
@@ -213,7 +213,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                         
-                        $o['value'] = substr((string)$o['value'], 0, 223) . $objectHash;
+                        $o['value'] = substr((string)$o['value'], 0, 128) . $objectHash;
                     }
 
                     $oValue = addslashes($o['value']);
@@ -261,7 +261,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
                             
-                        $dType   = substr((string)$data['od'], 0, 223) . $dTypeHash;
+                        $dType   = substr((string)$data['od'], 0, 128) . $dTypeHash;
                         $data['od_r'] = $dtRef;
                         
                         $sqlString .= "'$dType',$dtRef)"; 
@@ -364,15 +364,15 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $modelId = $modelInfoCache[$graphUri]['modelId'];
 
         if ($subject !== null && strlen($subject) > $this->_getSchemaRefThreshold()) {
-            $subject = substr($subject, 0, 223) . md5($subject);
+            $subject = substr($subject, 0, 128) . md5($subject);
         } 
         
         if ($predicate !== null && strlen($predicate) > $this->_getSchemaRefThreshold()) {
-            $predicate = substr($predicate, 0, 223) . md5($predicate);
+            $predicate = substr($predicate, 0, 128) . md5($predicate);
         } 
         
         if ($object !== null && strlen($object['value']) > $this->_getSchemaRefThreshold()) {
-            $object = substr($object['value'], 0, 223) . md5($object['value']);
+            $object = substr($object['value'], 0, 128) . md5($object['value']);
         } 
         
         $whereString = '1';
@@ -419,7 +419,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             
             if (isset($object['datatype'])) {
                 if (strlen($object['datatype']) > $this->_getSchemaRefThreshold()) {
-                    $whereString .= ' AND od = "' . substr($object['datatype'], 0, 223) .
+                    $whereString .= ' AND od = "' . substr($object['datatype'], 0, 128) .
                                     md5($object['datatype']) . '"';
                 } else {
                     $whereString .= ' AND od = "' . $object['datatype'] . '"';
@@ -471,10 +471,26 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $whereString .= isset($object['datatype']) ? 'AND od = "' . $object['datatype'] . 
                                             '" ' : '';
                         }
+                        
+                        if (strlen((string)$subject) > $this->_getSchemaRefThreshold()) {
+                            $subjectHash = md5((string)$subject);
+                            $subject = substr((string)$subject, 0, 128) . $subjectHash;  
+                        }
+                        if (strlen((string)$predicate) > $this->_getSchemaRefThreshold()) {
+                            $predicateHash = md5((string)$predicate);
+                            $predicate = substr((string)$predicate, 0, 128) . $predicateHash;  
+                        }
+                        if (strlen((string)$object['value']) > $this->_getSchemaRefThreshold()) {
+                            $objectHash = md5((string)$object['value']);
+                            $object = substr((string)$object['value'], 0, 128) . $objectHash;  
+                        } else {
+                            $object = $object['value'];
+                        }
+                        
 
                         $whereString .= 'AND s = "' . $subject . '" ';
                         $whereString .= 'AND p = "' . $predicate . '" ';
-                        $whereString .= 'AND o = "' . $object['value'] . '" ';
+                        $whereString .= 'AND o = "' . $object . '" ';
 
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
@@ -809,13 +825,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     $sHash = md5($s);
                     
                     $sId = $this->_insertValueInto('ef_uri', $modelId, $s, $sHash); 
-                    $s = substr($s, 0, 223) . $sHash;
+                    $s = substr($s, 0, 128) . $sHash;
                 }
                 if (strlen($p) > $this->_getSchemaRefThreshold()) {
                     $pHash = md5($p);
                     
                     $pId = $this->_insertValueInto('ef_uri', $modelId, $p, $pHash);
-                    $p = substr($p, 0, 223) . $pHash;
+                    $p = substr($p, 0, 128) . $pHash;
                 }
                 if (strlen($o) > $this->_getSchemaRefThreshold()) {
                     $oHash = md5($o);
@@ -826,14 +842,14 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         $oId = $this->_insertValueInto('ef_uri', $modelId, $o, $oHash); 
                     }
                     
-                    $o = substr($o, 0, 223) . $oHash;
+                    $o = substr($o, 0, 128) . $oHash;
                 }
                 if (isset($stm['o']['datatype']) && strlen($stm['o']['datatype']) > $this->_getSchemaRefThreshold()) {
                     $oDtHash = md5($stm['o']['datatype']);
                     
                     $dtId = $this->_insertValueInto('ef_uri', $modelId, $stm['o']['datatype'], $oDtHash);
                     
-                    $oDt = substr($oDt, 0, 223) . $oDtHash; 
+                    $oDt = substr($oDt, 0, 128) . $oDtHash; 
                 }
      
                 $sql = "INSERT INTO ef_stmt 
