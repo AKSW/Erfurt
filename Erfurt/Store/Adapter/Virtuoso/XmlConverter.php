@@ -100,7 +100,7 @@ class Erfurt_Store_Adapter_Virtuoso_XmlConverter
                         $datatype = $nodeValue->getAttributeNodeNS($this->_namespaces['rdf'], 'datatype');
                         
                         $row[$dataKey] = array(
-                            'value'    => trim($nodeValue->textContent), 
+                            'value'    => $nodeValue->textContent, 
                             'type'     => $datatype ? 'typed-literal' : 'literal'
                         );
                         
