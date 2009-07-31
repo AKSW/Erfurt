@@ -93,6 +93,8 @@ class Erfurt_Sparql_Parser
      */
     public static function tokenize($queryString) 
     {
+        $inTelUri = false;
+        
         $queryString = trim($queryString);
 
         $removeableSpecialChars = array(' ', "\t", "\r", "\n");
@@ -106,7 +108,7 @@ class Erfurt_Sparql_Parser
         $longLiteral = false;
         
         for ($i=0; $i<$len; ++$i) {
-            if (in_array($queryString[$i], $removeableSpecialChars) && !$inLiteral) {        
+            if (in_array($queryString[$i], $removeableSpecialChars) && !$inLiteral && !$inTelUri) {        
                 if (isset($tokens[$n]) && $tokens[$n] !== '') {
                     if ((strlen($tokens[$n]) >= 2)) {
                         if (($tokens[$n][strlen($tokens[$n])-1] === '.') && 
@@ -125,7 +127,7 @@ class Erfurt_Sparql_Parser
                 }
                 
                 continue;
-            } else if (in_array($queryString[$i], $specialChars)) {
+            } else if (in_array($queryString[$i], $specialChars) && !$inTelUri) {
                 if ($queryString[$i] === '"' || $queryString[$i] === "'") {
                     $foundChar = $queryString[$i];
                     if (!$inLiteral) {
@@ -196,6 +198,13 @@ class Erfurt_Sparql_Parser
                     $tokens[$n++] = $queryString[$i];
                 }
             } else {
+                // Special care for tel URIs
+                if (substr($queryString, $i, 5) === '<tel:') {
+                    $inTelUri = true;
+                }
+                if ($inTelUri && $queryString[$i] === '>') {
+                    $inTelUri = false;
+                }
                 
                 
                 if (!isset($tokens[$n])) {
