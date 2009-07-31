@@ -634,7 +634,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function getNewModel($graphUri, $baseUri = '', $type = 'owl') 
     {
         $data = array(
-            'uri'  => $graphUri
+            'uri'  => &$graphUri
         );
         
         if ($baseUri !== '') {
@@ -1303,9 +1303,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     protected function _insertValueInto($tableName, $graphId, $value, $valueHash)
     {
         $data = array(
-            'g'     => $graphId,
-            'v'     => $value,
-            'vh'    => $valueHash
+            'g'     => &$graphId,
+            'v'     => &$value,
+            'vh'    => &$valueHash
         );
         
         try {
