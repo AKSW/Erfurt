@@ -440,7 +440,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
-// TODO support for long uris and literals
+
         $modelInfoCache = $this->_getModelInfos();
 
         $modelId = $modelInfoCache[$graphUri]['modelId'];
@@ -490,7 +490,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $whereString .= 'AND s = "' . $subject . '" ';
                         $whereString .= 'AND p = "' . $predicate . '" ';
-                        $whereString .= 'AND o = "' . $object . '" ';
+                        $whereString .= 'AND o = "' . str_replace('"', '\"', $object) . '" ';
 
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
@@ -505,7 +505,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             // something went wrong... rollback
             $this->_dbConn->rollback();
             require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception('Bulk deletion of statements failed.'.$e);
+            throw new Erfurt_Store_Adapter_Exception('Bulk deletion of statements failed.'.$e->getMessage());
         }
     }
     
