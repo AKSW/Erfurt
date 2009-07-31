@@ -795,7 +795,7 @@ class Erfurt_Store
                     $acModelIri,
                     null,
                     null,
-                    array('value' => $modelIri)
+                    array('value' => $modelIri, 'type' => 'uri')
                 );
                 $this->_backendAdapter->deleteMatchingStatements(
                     $acModelIri, 

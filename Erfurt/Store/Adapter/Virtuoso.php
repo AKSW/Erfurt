@@ -1015,11 +1015,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     private function _execSql($sqlQuery) 
     {
         $result = @odbc_exec($this->_connection, $sqlQuery);
-        $this->_longRead = true; 
-        if ($this->_longRead) {
+        $this->_longRead = true;
+        
+        if ($result && $this->_longRead) {
             odbc_longreadlen($result, 16777216);
             $this->_longRead = false;
         }
+        
         if (false === $result) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('SQL Error: ' . $this->_getLastError() . ' ' .
