@@ -569,6 +569,9 @@ class Erfurt_Store
                             Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
                 }
             } catch (Erfurt_Exception $e) {
+                // clear query cache completly
+                $queryCache = Erfurt_App::getInstance()->getQueryCache();
+                $queryCache->cleanUpCache( array('mode' => 'uninstall') );
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntModel);
                 require_once 'Erfurt/Store/Exception.php';
@@ -603,6 +606,9 @@ class Erfurt_Store
                             false);
                 }
             } catch (Erfurt_Exception $e) {
+                // clear query cache completly
+                $queryCache = Erfurt_App::getInstance()->getQueryCache();
+                $queryCache->cleanUpCache( array('mode' => 'uninstall') );
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntSchema);
                 require_once 'Erfurt/Store/Exception.php';
