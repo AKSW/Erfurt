@@ -415,7 +415,7 @@ class Erfurt_Ac_Default
     public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
     {    
         $this->_init();
-        
+       
         $user       = $this->_getUser();
         $type       = strtolower($type);
         
@@ -460,7 +460,8 @@ class Erfurt_Ac_Default
         $this->_userRights[$user->getUri()][$right][] = $modelUri;
 
 // TODO set the right cache tags, such that cache is invalidated!!!
-        $this->_acModel->addStatement($user->getUri(), $prop, array('type' => 'uri', 'value' => $modelUri));
+        $store = Erfurt_App::getInstance()->getStore();
+        $store->addStatement($this->_acModel->getModelUri(), $user->getUri(), $prop, array('type' => 'uri', 'value' => $modelUri), false);
     }
     
     // ------------------------------------------------------------------------

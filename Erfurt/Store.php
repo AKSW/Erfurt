@@ -1085,10 +1085,13 @@ class Erfurt_Store
                 throw new Erfurt_Exception('Failed creating the model.');
             }   
         }
-        
-// TODO: check whether user is allowed to create a new model
-        $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
-        return $this->getModel($modelIri, $useAc);
+    
+        if (!Erfurt_App::getInstance()->isActionAllowed('ModelManagement')) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception("Failed creating the model. Action not allowed!");
+        }
+
+        return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
     }
     
     public function getObjectsInferred($modelUri, $startResources, $objectProperty, $hierarchyProperty = null)
