@@ -1086,7 +1086,7 @@ class Erfurt_Store
             }   
         }
     
-        if (!Erfurt_App::getInstance()->isActionAllowed('ModelManagement')) {
+        if ($useAc && !Erfurt_App::getInstance()->isActionAllowed('ModelManagement')) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception("Failed creating the model. Action not allowed!");
         }
