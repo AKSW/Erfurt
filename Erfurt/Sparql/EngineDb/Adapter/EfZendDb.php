@@ -236,8 +236,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $resultform = strtolower($resultform);
         switch ($resultform) {
             case 'xml':
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('XML result format not supported yet.');
+                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Xml.php';
+                $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Xml();
+                break;
+                //require_once 'Erfurt/Exception.php';
+                //throw new Erfurt_Exception('XML result format not supported yet.');
                 //require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/EfZendDb/Xml.php';
                 //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
                 //break;
