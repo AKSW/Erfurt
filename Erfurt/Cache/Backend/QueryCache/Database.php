@@ -15,19 +15,21 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
 	final public function checkCacheVersion() {
 
-        $result = null;
+        $result = false;
         try {            
-            $query = "SELECT num FROM ef_cache_query_version" ;
-            $result = $this->store->sqlQuery( $query );        
+            $query = 'SELECT num FROM ef_cache_query_version';
+            $result = $this->store->sqlQuery($query);        
         } catch (Erfurt_Store_Adapter_Exception $f) {
             return false;
         }
 
 		if (!$result) {
 			return false;
+		} else if (is_array($result) && count($result) > 0) {
+		    return true;
+		} else {
+		    return false;
 		}
-		return true;
-
 	}
 
     /**
@@ -41,19 +43,18 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 	final public function createCacheStructure() {
 
         $vocabulary = array();
-        switch ($this->store->getBackendName()) {
-            case "ZendDb" :
-            case "MySql" :
+        switch (strtolower($this->store->getBackendName())) {
+            case 'zenddb' :
+            case 'mysql' :
                 $vocabulary['identity'] = "AUTO_INCREMENT";
             break;
-            case "Virtuoso":
+            case 'virtuoso':
                 $vocabulary['identity'] = "IDENTITY";
             break;
             default:
                 $vocabulary['identity'] = "IDENTITY";
             break;
         }
-
 
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_result (
                 qid VARCHAR( 255 ) NOT NULL ,
@@ -614,41 +615,37 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      string          $queryId        the Hash of the Query
      *  @return     resultSet       $result         the result of the SQL Query
      */	
-	private function _query( $sql ) {
-        $result = false ;
-        $checkCache = false;
+	private function _query($sql) 
+	{    
+        $result = false;
         try {
-            $result = $this->store->sqlQuery( $sql ); 
-    
+            $result = $this->store->sqlQuery($sql); 
         } catch (Erfurt_Store_Adapter_Exception $e){
             $logger = Erfurt_App::getInstance()->getLog('cache');
-            $logger->log($e->getMessage(), $e->getCode());
-            $result = false;
-            $checkCache = true;
-        }
-
-        if ($checkCache) {
-            try {            
-                if (!$this->checkCacheVersion()) {
-                    $this->createCacheStructure ();
-                    if (!$this->checkCacheVersion()) {
-                        Zend_Cache::throwException('Impossible to build cache structure.');
-                    }
-                    else { 
-                        $result = $this->_query($sql);
-                    }
+            $logger->debug($e->getMessage());
+            
+            $result = false;    
+            if (!$this->checkCacheVersion()) {
+                $logger->debug('Creating query cache table structure now.');
+                // In this case the tables are missing, so we try to create them once!
+                // If this fails, something else is wrong, so we re-throw the error!
+                try {
+                    $this->createCacheStructure();
+                    $result = $this->store->sqlQuery($sql);
+                } catch (Erfurt_Store_Adapter_Exception $e2) {
+                    $logger->debug($e2->getMessage());
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception(
+                        'Something went wrong while building query cache structure: ' . $e->getMessage()
+                    );
                 }
-            } catch (Erfurt_Store_Adapter_Exception $f) {
-                $this->createCacheStructure ();
-                if (!$this->checkCacheVersion()) {
-                    Zend_Cache::throwException('Impossible to build cache structure.');
-                }
-                else { 
-                    $result = $this->_query($sql);
-                }
+            } else {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception('Something went wrong in with the query cache: ' . $e->getMessage());
             }
         }
-        return $result;
+        
+        return $result;        
 	}	
 
 
@@ -676,5 +673,3 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     }	
 	
 }
-
-?>
