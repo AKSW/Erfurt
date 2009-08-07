@@ -12,19 +12,23 @@ class Erfurt_Sparql_Query2_GroupGraphPattern
 {
 	protected $elements = Array();
 	
-	public function addMember($member){
-		if(!is_a($member, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($member, "Erfurt_Sparql_Query2_TriplesBlock")){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::addMember must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_TriplesBlock, instance of ".gettype($member)." given");
+	public function addElement($member){
+		if(!is_a($member, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($member, "Erfurt_Sparql_Query2_Triple") && !is_a($member, "Erfurt_Sparql_Query2_Filter")){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_Triple or Erfurt_Sparql_Query2_Filter, instance of ".gettype($member)." given");
 			return;
 		}
 		$this->elements[] = $member;
+		return $this; //for chaining
 	}
 	
 	public function getSparql(){
 		$sparql = "{ \n";
 		
-		foreach($this->elements as $element){
-			$sparql .= $element->getSparql();
+		for($i=0; $i < count($this->elements); $i++){
+			$sparql .= $this->elements[$i]->getSparql();
+			if(isset($this->elements[$i+1]) && is_a($this->elements[$i+1], "Erfurt_Sparql_Query2_Triple"))
+				$sparql .= " . \n"; //realisation of TriplesBlock
+			else $sparql .= " \n";
 		}
 		
 		return $sparql."} \n";
@@ -48,30 +52,25 @@ class Erfurt_Sparql_Query2_GroupGraphPattern
 		return $this->elements;
 	}
 	
-	public function setElement($i, Erfurt_Sparql_Query2_GroupGraphPattern $element){
-		$this->elements[$i] = $element;
+	public function setElement($i, $member){
+		if(!is_a($member, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($member, "Erfurt_Sparql_Query2_Triple") && !is_a($member, "Erfurt_Sparql_Query2_Filter")){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_Triple or Erfurt_Sparql_Query2_Filter, instance of ".gettype($member)." given");
+			return;
+		}
+		$this->elements[$i] = $member;
+		return $this; //for chaining
 	}
 	
 	public function setElements($elements){
 		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_GroupGraphPattern")){
+			if(!is_a($element, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($element, "Erfurt_Sparql_Query2_Triple") && !is_a($element, "Erfurt_Sparql_Query2_Filter")){
 				throw new RuntimeException("In Erfurt_Sparql_Query2_GroupGraphPattern::setElements : the given array was not filled with objects from type \"Erfurt_Sparql_Query2_GroupGraphPattern\"");
-				return;
+				return $this; //for chaining
 			}
 		}
 		$this->elements = $elements;
+		return $this; //for chaining
 	}
 	
-	public $filters = array();
-	
-	public function addFilters(array $filters){
-		foreach($filters as $filter){
-			addFilter($filter);
-		}
-	}
-	
-	public function addFilter(Erfurt_Sparql_Query2_Filter $filter){
-		$filters[]=$filter;
-	}
 }
 ?>

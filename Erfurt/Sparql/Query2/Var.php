@@ -1,6 +1,6 @@
 <?php
-require_once "Query2/VarOrIriRef.php";
-require_once "Query2/VarOrTerm.php";
+require_once "VarOrIriRef.php";
+require_once "VarOrTerm.php";
 
 /**
  * Erfurt_Sparql Query - Var.
@@ -11,9 +11,9 @@ require_once "Query2/VarOrTerm.php";
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm{
+class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm
+{
 	protected $name;
-	
 	protected $varLabelType = "?";
 	
 	public function __construct($nname){
@@ -31,6 +31,7 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 	
 	public function setName($nname){
 		$this->name = $nname;
+		return $this; //for chaining
 	}
 	
 	public function setVarLabelType($ntype){
@@ -39,6 +40,7 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 		} else {
 			throw new RuntimeException("wrong parameter for Erfurt_Sparql_Query2_Var::setVarLabelType . $ or ? expected. "+$ntype+" found.");
 		}
+		return $this; //for chaining
 	}
 	
 	public function getVarLabelType($ntype){
@@ -47,6 +49,7 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 	
 	public function toggleVarLabelType(){
 		$this->varLabelType = $this->varLabelType == "?" ? "$" : "?";
+		return $this; //for chaining
 	}
 }
 ?>

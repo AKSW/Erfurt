@@ -15,6 +15,7 @@ class Erfurt_Sparql_Query2_OrderClause
 	
 	public function addVar(Erfurt_Sparql_Query2_Var $var){
 		$this->vars[] = $var;
+		return $this; //for chaining
 	}
 	
 	public function getSparql(){
@@ -30,12 +31,15 @@ class Erfurt_Sparql_Query2_OrderClause
 	
 	public function toggleDirection(){
 		$this->direction= $this->direction=="ASC"?"DESC":"ASC";
+		return $this; //for chaining
 	}
 	public function setAsc(){
 		$this->direction = "ASC";
+		return $this; //for chaining
 	}
 	public function setDesc(){
 		$this->direction = "DESC";
+		return $this; //for chaining
 	}
 	
 	public function used(){

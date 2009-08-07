@@ -13,19 +13,29 @@ require_once "Query2.php";
 
 $query = new Erfurt_Sparql_Query2();
 $pattern = new Erfurt_Sparql_Query2_GroupGraphPattern();
-$block = new Erfurt_Sparql_Query2_TriplesBlock();
 $s = new Erfurt_Sparql_Query2_Var("s");
 $p = new Erfurt_Sparql_Query2_Var("p");
 $triple1 = new Erfurt_Sparql_Query2_Triple($s, $p, new Erfurt_Sparql_Query2_Var("o"));
-$triple2 = new Erfurt_Sparql_Query2_Triple($s, $p , new Erfurt_Sparql_Query2_Var("q"));
-$block->addTriple($triple1);
-$pattern->addMember($block);
+
+$profPrefix =new Erfurt_Sparql_Query2_Prefix("profs", new Erfurt_Sparql_Query2_IriRef("http://professoren.de"));
+
+$query->setBase(new Erfurt_Sparql_Query2_IriRef("http://example.com"))
+->addPrefix($profPrefix)
+->addPrefix(new Erfurt_Sparql_Query2_Prefix("confs", new Erfurt_Sparql_Query2_IriRef("http://konferenzen.de")));
+
+$triple2 = new Erfurt_Sparql_Query2_Triple($s, new Erfurt_Sparql_Query2_IriRef("name", $profPrefix) , new Erfurt_Sparql_Query2_Var("q"));
+$triple3 = new Erfurt_Sparql_Query2_Triple($s, new Erfurt_Sparql_Query2_IriRef("bday", $profPrefix) , new Erfurt_Sparql_Query2_Var("q"));
 $optional_pattern = new Erfurt_Sparql_Query2_OptionalGraphPattern();
-$block2 = new Erfurt_Sparql_Query2_TriplesBlock();
-$block2->addTriple($triple2);
-$optional_pattern->addMember($block2);
-$pattern->addMember($optional_pattern);
-$query->setPattern($pattern);
+
+$query->setPattern(
+	$pattern->
+		addElement($triple1)->
+		addElement(
+			$optional_pattern->
+				addElement($triple2)->
+				addElement($triple3)
+		)
+);
 
 
 $query->addProjectionVar($p);
@@ -40,6 +50,6 @@ $query->setOffset(30);
 $query->getOrder()->addVar($s);
 //$query->getOrder()->toggleDirection();
 
-echo "<pre>".$query->getSparql()."</pre>";
+echo "<pre>".htmlentities($query->getSparql())."</pre>";
 
 ?>

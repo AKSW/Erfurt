@@ -27,7 +27,7 @@ class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_GraphTerm
 				$this->datatype = $meta;
 				$this->mode = 2;
 			} else {
-				throw new RuntimeException("Argument 2 passed to RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".gettype($meta)." given");
+				throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".gettype($meta)." given");
 			}
 		}
 	}

@@ -10,6 +10,7 @@ require_once "Query2/Var.php";
 require_once "Query2/GroupGraphPattern.php";
 require_once "Query2/GroupOrUnionGraphPattern.php";
 require_once "Query2/OptionalGraphPattern.php";
+require_once "Query2/IriRef.php";
 
 /**
  * Erfurt Sparql Query
@@ -48,7 +49,7 @@ class Erfurt_Sparql_Query2
 		$sparql = "";
 		
 		if($this->hasBase()){
-			$sparql .= "BASE ".$this->base;
+			$sparql .= "BASE ".$this->base->getSparql()." \n";
 		}
 		
 		foreach($this->prefixes as $prefix)
@@ -107,8 +108,9 @@ class Erfurt_Sparql_Query2
 				$this->type = $type;
 			break;
 			default:
-				throw new RuntimeException("Erfurt_Sparql_Query2::setType : Unknown query type given: \"".$type."\"");
+				throw new RuntimeException("Erfurt_Sparql_Query2::setQueryType : Unknown query type given: \"".$type."\"");
 		}
+		return $this; //for chaining
 	}
 	
 	public function isSelectType(){
@@ -142,6 +144,7 @@ class Erfurt_Sparql_Query2
 	public function setPattern(Erfurt_Sparql_Query2_GroupGraphPattern $npattern){
 		//TODO maybe add check here that the pattern doesnt contain two variables with same name
 		$this->pattern = $npattern;
+		return $this; //for chaining
 	}
 	
 	public function getPattern(){
@@ -150,10 +153,12 @@ class Erfurt_Sparql_Query2
 	
 	public function setLimit($nlimit){
 		$this->limit = $nlimit;
+		return $this; //for chaining
 	}
 	
 	public function removeLimit(){
 		$this->limit = 0;
+		return $this; //for chaining
 	}
 	
 	public function getLimit(){
@@ -162,10 +167,12 @@ class Erfurt_Sparql_Query2
 	
 	public function setOffset($noffset){
 		$this->offset = $noffset;
+		return $this; //for chaining
 	}
 	
 	public function removeOffset(){
 		$this->offset = 0;
+		return $this; //for chaining
 	}
 	
 	public function getOffset(){
@@ -175,6 +182,7 @@ class Erfurt_Sparql_Query2
 	public function setStar($bool){
 		if($bool) $this->selectVars = array(); // delete projection vars if set to star mode - usefull?
 		$this->star = $bool;
+		return $this; //for chaining
 	}
 	
 	public function isStar(){
@@ -185,6 +193,7 @@ class Erfurt_Sparql_Query2
 		if($bool) $this->distinctReducedMode = 1;
 		else if($this->distinctReducedMode == 1) 
 			$this->distinctReducedMode = 0;
+		return $this; //for chaining
 	}
 	
 	public function isDistinct(){
@@ -196,14 +205,17 @@ class Erfurt_Sparql_Query2
 			$this->distinctReducedMode = 2;
 		else if($this->distinctReducedMode == 2) 
 			$this->distinctReducedMode = 0;
+		return $this; //for chaining
 	}
 	
 	public function isReduced(){
 		return $this->reduced;
 	}
 	
-	public function setBase($base){
+	public function setBase(Erfurt_Sparql_Query2_IriRef $base){
+		if($base->isPrefixed()) throw new RuntimeException("Trying to add base with a prefix");
 		$this->base = $base;
+		return $this; //for chaining
 	}
 	
 	public function getBase($base){
@@ -216,6 +228,7 @@ class Erfurt_Sparql_Query2
 	
 	public function addFrom(GraphClause $from){
 		$this->froms[] = $from;
+		return $this; //for chaining
 	}
 	
 	public function getFrom($i){
@@ -229,6 +242,7 @@ class Erfurt_Sparql_Query2
 	public function setFrom($i, GraphClause $from){
 		if(!is_int($i)) throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2::setFrom must be an instance of int, instance of ".gettype($i)." given");
 		$this->froms[$i] = $from;
+		return $this; //for chaining
 	}
 	
 	public function hasFrom(){
@@ -238,22 +252,24 @@ class Erfurt_Sparql_Query2
 	public function addProjectionVar(Erfurt_Sparql_Query2_Var $var){
 		if(in_array($var, $this->selectVars)){
 			//already added
-			return;
+			return $this; //for chaining
 		}
 		
 		if(!in_array($var, $this->pattern->getVars())){
 			throw new RuntimeException("Trying to add projection-var that is not used in pattern");
-			return;
+			return $this; //for chaining
 		}
 		
 		if(count($this->selectVars) == 0)
 			$this->star = false; //if the first var is added: deactivate the star. maybe always?
 		
 		$this->selectVars[] = $var;
+		return $this; //for chaining
 	}
 	
 	public function addPrefix(Erfurt_Sparql_Query2_Prefix $prefix){
 		$this->prefixes[] = $prefix;
+		return $this; //for chaining
 	}
 	
 	public function getProjectionVars(){

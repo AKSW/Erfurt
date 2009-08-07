@@ -18,18 +18,22 @@ class Erfurt_Sparql_Query2_Triple
 		$this->s=$ns;
 		$this->p=$np;
 		$this->o=$no;
+		return $this; //for chaining
 	}
 	
-	public function setS(Erfurt_Sparql_Query2_Node $ns){
+	public function setS(Erfurt_Sparql_Query2_VarOrIriRef $ns){
 		$this->s=$ns;
+		return $this; //for chaining
 	}
 	
-	public function setP(Erfurt_Sparql_Query2_Node $np){
+	public function setP(Erfurt_Sparql_Query2_VarOrIriRef $np){
 		$this->p=$np;
+		return $this; //for chaining
 	}
 	
-	public function setO(Erfurt_Sparql_Query2_Node $no){
+	public function setO(Erfurt_Sparql_Query2_VarOrIriRef $no){
 		$this->o=$no;
+		return $this; //for chaining
 	}
 	
 	public function getS(){
