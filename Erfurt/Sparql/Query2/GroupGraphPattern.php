@@ -26,9 +26,11 @@ class Erfurt_Sparql_Query2_GroupGraphPattern
 		
 		for($i=0; $i < count($this->elements); $i++){
 			$sparql .= $this->elements[$i]->getSparql();
-			if(isset($this->elements[$i+1]) && is_a($this->elements[$i+1], "Erfurt_Sparql_Query2_Triple"))
-				$sparql .= " . \n"; //realisation of TriplesBlock
-			else $sparql .= " \n";
+			if(isset($this->elements[$i+1]) && is_a($this->elements[$i+1], "Erfurt_Sparql_Query2_Triple")){
+				$sparql .= " . "; //realisation of TriplesBlock
+			} 
+			$sparql .= " \n";
+			
 		}
 		
 		return $sparql."} \n";

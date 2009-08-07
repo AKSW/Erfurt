@@ -1,6 +1,6 @@
 <?php
 
-require_once "Query2/Var.php";
+require_once "Var.php";
 
 /**
  * Erfurt_Sparql Query - BlankNode.
@@ -15,7 +15,7 @@ class Erfurt_Sparql_Query2_BlankNode extends Erfurt_Sparql_Query2_Var{ //TODO 1.
 	protected $name = "";
 	
 	public function __construct($nname){
-		if(!is_bool($nname) && is_string($nname) && !empty($nname))
+		if(is_string($nname))
 			$this->name = $nname;
 	}
 	

@@ -1,4 +1,6 @@
 <?php
+require_once "GraphTerm.php";
+
 /**
  * Erfurt_Sparql Query - RDFLiteral.
  * 
@@ -8,7 +10,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */ 
-class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_GraphTerm
+class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm
 {
 	protected $string = "";
 	protected $datatype;

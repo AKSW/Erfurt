@@ -13,7 +13,7 @@ require_once "GroupGraphPattern.php";
 class Erfurt_Sparql_Query2_OptionalGraphPattern extends Erfurt_Sparql_Query2_GroupGraphPattern 
 {
  	public function getSparql(){
-		return "OPTIONAL ".parent::getSparql();
+		return "OPTIONAL ".substr(parent::getSparql(),0,-1); //subtr is cosmetic for stripping off the last linebreak 
 	}
 }
 ?>

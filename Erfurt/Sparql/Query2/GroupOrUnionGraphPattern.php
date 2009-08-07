@@ -27,6 +27,7 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
 	
 	public function addElement(Erfurt_Sparql_Query2_GroupGraphPattern $element){
 		$this->elements[] = $element;
+		return $this; //for chaining
 	}
 }
 ?>

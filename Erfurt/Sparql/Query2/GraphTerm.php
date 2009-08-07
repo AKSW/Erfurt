@@ -8,7 +8,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-abstract class Erfurt_Sparql_Query2_GraphTerm implements Erfurt_Sparql_Query2_VarOrTerm
+interface Erfurt_Sparql_Query2_GraphTerm extends Erfurt_Sparql_Query2_VarOrTerm
 {
 	
 }

@@ -27,10 +27,12 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
 	
 	public function setVarOrIri(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri){
 		$this->varOrIri = $nvarOrIri;
+		return $this; //for chaining
 	}
 	
 	public function setGroupGraphPattern(Erfurt_Sparql_Query2_GroupGraphPattern $nggp){
 		$this->ggp = $nggp;
+		return $this; //for chaining
 	}
 	
 	public function getVarOrIri(){

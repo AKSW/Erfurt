@@ -4,13 +4,13 @@ error_reporting(E_ALL);
  
 require_once "Query2/Prefix.php";
 require_once "Query2/OrderClause.php";
-require_once "Query2/TriplesBlock.php";
 require_once "Query2/Triple.php";
 require_once "Query2/Var.php";
 require_once "Query2/GroupGraphPattern.php";
 require_once "Query2/GroupOrUnionGraphPattern.php";
 require_once "Query2/OptionalGraphPattern.php";
 require_once "Query2/IriRef.php";
+require_once "Query2/RDFLiteral.php";
 
 /**
  * Erfurt Sparql Query
@@ -32,7 +32,6 @@ class Erfurt_Sparql_Query2
 	protected $limit = 0;
 	protected $offset = 0;
 	protected $distinctReducedMode = 0;
-	protected $reduced = false;
 	protected $order;
 	protected $selectVars = array();
 	protected $star = true;
@@ -45,6 +44,11 @@ class Erfurt_Sparql_Query2
 		$this->order = new Erfurt_Sparql_Query2_OrderClause();
 	}
 	
+	public function __toString() 
+    {    
+        return $this->getSparql();
+    }
+    
 	public function getSparql(){
 		$sparql = "";
 		
@@ -180,7 +184,7 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function setStar($bool){
-		if($bool) $this->selectVars = array(); // delete projection vars if set to star mode - usefull?
+		if($bool === true) $this->selectVars = array(); // delete projection vars if set to star mode - usefull?
 		$this->star = $bool;
 		return $this; //for chaining
 	}
@@ -190,7 +194,7 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function setDistinct($bool){
-		if($bool) $this->distinctReducedMode = 1;
+		if($bool === true) $this->distinctReducedMode = 1;
 		else if($this->distinctReducedMode == 1) 
 			$this->distinctReducedMode = 0;
 		return $this; //for chaining
@@ -201,7 +205,7 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function setReduced($bool){
-		if($bool) 
+		if($bool === true) 
 			$this->distinctReducedMode = 2;
 		else if($this->distinctReducedMode == 2) 
 			$this->distinctReducedMode = 0;

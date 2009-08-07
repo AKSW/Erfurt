@@ -14,14 +14,14 @@ class Erfurt_Sparql_Query2_Triple
 	protected $p;
 	protected $o;
 	
-	public function __construct(Erfurt_Sparql_Query2_VarOrIriRef $ns, Erfurt_Sparql_Query2_VarOrIriRef $np, Erfurt_Sparql_Query2_VarOrIriRef $no){
+	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $ns, Erfurt_Sparql_Query2_VarOrIriRef $np, Erfurt_Sparql_Query2_VarOrIriRef $no){
 		$this->s=$ns;
 		$this->p=$np;
 		$this->o=$no;
 		return $this; //for chaining
 	}
 	
-	public function setS(Erfurt_Sparql_Query2_VarOrIriRef $ns){
+	public function setS(Erfurt_Sparql_Query2_VarOrTerm $ns){
 		$this->s=$ns;
 		return $this; //for chaining
 	}

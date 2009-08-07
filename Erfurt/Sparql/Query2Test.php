@@ -19,22 +19,27 @@ $triple1 = new Erfurt_Sparql_Query2_Triple($s, $p, new Erfurt_Sparql_Query2_Var(
 
 $profPrefix =new Erfurt_Sparql_Query2_Prefix("profs", new Erfurt_Sparql_Query2_IriRef("http://professoren.de"));
 
-$query->setBase(new Erfurt_Sparql_Query2_IriRef("http://example.com"))
+$iri = new Erfurt_Sparql_Query2_IriRef("http://example.com");
+
+$query->setBase($iri)
 ->addPrefix($profPrefix)
 ->addPrefix(new Erfurt_Sparql_Query2_Prefix("confs", new Erfurt_Sparql_Query2_IriRef("http://konferenzen.de")));
 
-$triple2 = new Erfurt_Sparql_Query2_Triple($s, new Erfurt_Sparql_Query2_IriRef("name", $profPrefix) , new Erfurt_Sparql_Query2_Var("q"));
-$triple3 = new Erfurt_Sparql_Query2_Triple($s, new Erfurt_Sparql_Query2_IriRef("bday", $profPrefix) , new Erfurt_Sparql_Query2_Var("q"));
+$prefixedUri1 = new Erfurt_Sparql_Query2_IriRef("name", $profPrefix);
+$prefixedUri2 = new Erfurt_Sparql_Query2_IriRef("website", $profPrefix);
+$name = new Erfurt_Sparql_Query2_RDFLiteral("bob", "de");
+$triple2 = new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $prefixedUri1);
+$triple3 = new Erfurt_Sparql_Query2_Triple($s, $prefixedUri2, $prefixedUri2);
 $optional_pattern = new Erfurt_Sparql_Query2_OptionalGraphPattern();
 
 $query->setPattern(
-	$pattern->
-		addElement($triple1)->
-		addElement(
-			$optional_pattern->
-				addElement($triple2)->
-				addElement($triple3)
-		)
+	$pattern
+	->addElement($triple1)
+	->addElement(
+		$optional_pattern
+		->addElement($triple2)
+		->addElement($triple3)
+	)
 );
 
 
