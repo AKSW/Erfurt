@@ -1,4 +1,6 @@
 <?php
+require_once "Verb.php";
+
 /**
  * Erfurt_Sparql Query - VarOrIriRef.
  * 
@@ -8,6 +10,6 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-interface Erfurt_Sparql_Query2_VarOrIriRef {
+interface Erfurt_Sparql_Query2_VarOrIriRef extends Erfurt_Sparql_Query2_Verb{
 }
 ?>

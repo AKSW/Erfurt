@@ -1,6 +1,7 @@
 <?php
 
 require_once "VarOrIriRef.php";
+require_once "GraphTerm.php";
 
 /**
  * Erfurt_Sparql Query - IriRef.
@@ -11,13 +12,14 @@ require_once "VarOrIriRef.php";
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef{
-	protected $iriRef;
+class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_GraphTerm{
+	protected $iri;
 	protected $prefix;
 	
 	public function __construct($nresource){
 		if(!is_string($nresource)){throw new RuntimeException("wrong parameter for contructing Erfurt_Sparql_Query2_Variable. string expected. "+gettype($nresource)+" found.");}
-		$this->iriRef = $nresource;
+		$this->iri = $nresource;
+		
 		if(func_num_args()>1){
 			$prefix = func_get_arg(1);
 			if(is_a($prefix, "Erfurt_Sparql_Query2_Prefix")){
@@ -29,11 +31,19 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef{
 	}
 	
 	public function getSparql(){
-		return $this->isPrefixed() ? ($this->prefix->getPrefixName().":".$this->iriRef) : ("<".$this->iriRef.">");
+		return $this->isPrefixed() ? ($this->prefix->getPrefixName().":".$this->iri) : ("<".$this->iri.">");
 	}
 	
 	public function isPrefixed(){
 		return !empty($this->prefix);
+	}
+	
+	public function getIri(){
+		return $this->iri;
+	}
+	
+	public function getExpanded(){
+		return "<".( $this->isPrefixed() ? $this->prefix->getPrefixIri()->getIri() : "") . ($this->iri.">");
 	}
 }
 ?>

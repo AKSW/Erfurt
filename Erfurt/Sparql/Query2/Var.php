@@ -17,8 +17,13 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 	protected $varLabelType = "?";
 	
 	public function __construct($nname){
-		if(!is_string($nname)){throw new RuntimeException("wrong parameter for contructing Erfurt_Sparql_Query2_Var. string expected. "+gettype($nname)+" found.");}
-		$this->name = $nname;
+		if(is_string($nname) && $nname != ""){
+			$this->name = $nname;
+		} else if(is_a($nname, "Erfurt_Sparql_Query2_IriRef")){
+			$this->name = $this->extractName($nname->getIri());
+		} else {
+			throw new RuntimeException("wrong parameter for contructing Erfurt_Sparql_Query2_Var. string (not empty) or Erfurt_Sparql_Query2_IriRef expected. "+gettype($nname)+" found.");
+		}
 	}
 	
 	public function getSparql(){
@@ -50,6 +55,11 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 	public function toggleVarLabelType(){
 		$this->varLabelType = $this->varLabelType == "?" ? "$" : "?";
 		return $this; //for chaining
+	}
+	
+	protected function extractName($name){
+		$parts = preg_split("/[\/#]/", $name);
+		return $parts[count($parts)-1];
 	}
 }
 ?>

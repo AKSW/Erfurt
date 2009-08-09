@@ -14,7 +14,7 @@ class Erfurt_Sparql_Query2_Triple
 	protected $p;
 	protected $o;
 	
-	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $ns, Erfurt_Sparql_Query2_VarOrIriRef $np, Erfurt_Sparql_Query2_VarOrIriRef $no){
+	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $ns, Erfurt_Sparql_Query2_Verb $np, Erfurt_Sparql_Query2_VarOrTerm $no){
 		$this->s=$ns;
 		$this->p=$np;
 		$this->o=$no;
@@ -31,7 +31,7 @@ class Erfurt_Sparql_Query2_Triple
 		return $this; //for chaining
 	}
 	
-	public function setO(Erfurt_Sparql_Query2_VarOrIriRef $no){
+	public function setO(Erfurt_Sparql_Query2_VarOrTerm $no){
 		$this->o=$no;
 		return $this; //for chaining
 	}

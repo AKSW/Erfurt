@@ -28,5 +28,9 @@ class Erfurt_Sparql_Query2_Prefix //TODO must be unique in Query - factory?
 	public function getPrefixName(){
 		return $this->name;
 	}
+	
+	public function getPrefixIri(){
+		return $this->iri;
+	}
 }
 ?>

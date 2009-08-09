@@ -11,6 +11,9 @@ require_once "Query2/GroupOrUnionGraphPattern.php";
 require_once "Query2/OptionalGraphPattern.php";
 require_once "Query2/IriRef.php";
 require_once "Query2/RDFLiteral.php";
+require_once "Query2/BlankNode.php";
+require_once "Query2/Abstraction.php";
+require_once "Query2/A.php";
 
 /**
  * Erfurt Sparql Query
@@ -42,6 +45,7 @@ class Erfurt_Sparql_Query2
 	
 	public function __construct(){
 		$this->order = new Erfurt_Sparql_Query2_OrderClause();
+		$this->pattern = new Erfurt_Sparql_Query2_GroupGraphPattern;
 	}
 	
 	public function __toString() 
