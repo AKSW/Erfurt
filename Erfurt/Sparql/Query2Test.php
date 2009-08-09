@@ -51,7 +51,7 @@ $query->addProjectionVar($p);
 //$query->setReduced(true);
 $query->setDistinct(true);
 
-$query->setLimit(50);
+$query->setLimit(50); 
 $query->setOffset(30);
 $query->getOrder()->addVar($s);
 //$query->getOrder()->toggleDirection();
@@ -67,4 +67,5 @@ $abs->addNode($abs->getStartNode(), new Erfurt_Sparql_Query2_IriRef("http://exam
 		->addShownProperty(new Erfurt_Sparql_Query2_IriRef("http://example.com/someOtherClass#otherProp"));
 
 echo "<h3>Abstracted Query Building</h3><pre>".htmlentities($abs->getSparql())."</pre>";
+
 ?>

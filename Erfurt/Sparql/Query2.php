@@ -11,6 +11,9 @@ require_once "Query2/GroupOrUnionGraphPattern.php";
 require_once "Query2/OptionalGraphPattern.php";
 require_once "Query2/IriRef.php";
 require_once "Query2/RDFLiteral.php";
+require_once "Query2/NumericLiteral.php";
+require_once "Query2/Nil.php";
+require_once "Query2/BooleanLiteral.php";
 require_once "Query2/BlankNode.php";
 require_once "Query2/Abstraction.php";
 require_once "Query2/A.php";
@@ -286,6 +289,16 @@ class Erfurt_Sparql_Query2
 	
 	public function getOrder(){
 		return $this->order;
+	}
+	
+	public function varFactory($name){
+		$used = $this->pattern->getVars();
+		for($i=0; $i < count($used); $i++){
+			if($name == $used[$i]->getName()){
+				return $used[$i];
+			}
+		}
+		return new Erfurt_Sparql_Query2_Var($name);
 	}
 }
 ?>

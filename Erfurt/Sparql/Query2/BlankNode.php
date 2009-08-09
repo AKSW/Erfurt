@@ -22,9 +22,11 @@ class Erfurt_Sparql_Query2_BlankNode extends Erfurt_Sparql_Query2_Var implements
 	public function getSparql(){
 		return $this->isAnon() ? "[]" : "_:".$this->name;
 	}
+	
 	public function getName(){
 		return $this->name;
 	}
+	
 	public function isAnon(){
 		return empty($this->name);
 	}
