@@ -14,7 +14,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
 	final public function checkCacheVersion() {
-
         $result = false;
         try {            
             $query = 'SELECT num FROM ef_cache_query_version';
@@ -41,7 +40,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
 	final public function createCacheStructure() {
-
         $vocabulary = array();
         switch (strtolower($this->store->getBackendName())) {
             case 'zenddb' :
@@ -474,8 +472,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $keys = array_keys ($transactions) ;
         foreach ($keys as $key) {
-            $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
-            $this->_query ($query);
+            $query = "SELECT * FROM ef_cache_query_objectKey WHERE qid = '".$queryId."' AND objectKey = '".$key."'";
+            $ret = $this->_query ($query);
+        
+            if (!(isset($ret[0]['qid']))) {
+                $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+                $this->_query ($query);
+            }
         }
 
     }
