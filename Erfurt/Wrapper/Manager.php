@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id $
+ * @version $Id$
  */
 
 require_once 'Erfurt/Wrapper/Registry.php';
