@@ -989,7 +989,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $result = $this->_dbConn->getConnection()->query($sqlQuery);
             if ($result !== true) {
                 require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Store_Adapter_Exception('SQL INSERT query failed: ' .      
+                throw new Erfurt_Store_Adapter_Exception('SQL query failed: ' .      
                             $this->_dbConn->getConnection()->error);
             }
         } else {
