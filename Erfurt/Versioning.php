@@ -114,13 +114,17 @@ class Erfurt_Versioning
     /**
      * Probably shortcut?
      */
-    public function getLastModifiedForResource($resourceUri)
+    public function getLastModifiedForResource($resourceUri, $graphUri)
     {
         $this->_checkSetup();
 
         $history = $this->getHistoryForResource($resourceUri, $graphUri);
         
-        return $history[0];
+        if (is_array($history) && count($history) > 0) {
+            return $history[0];
+        } else {
+            return null;
+        }
     }
     
     /**
