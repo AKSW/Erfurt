@@ -87,13 +87,16 @@ private $subjects;
 	
 	protected $_listArray = null;
 	
+	protected $_useAc = true;
+	
 	/**
 	 * @param Erfurt_Syntax_StringWriterInterface $stringWriter
 	 * @param MemModel $model
 	 */
-	public function __construct($stringWriter) 
+	public function __construct($stringWriter, $useAc = true) 
 	{		
 		$this->resetState();
+		$this->_useAc = $useAc;
 		$this->stringWriter = $stringWriter;
 		$this->stringWriter->setDoctype(EF_RDF_NS, 'RDF');
 		$this->_store = Erfurt_App::getInstance()->getStore();
@@ -489,11 +492,13 @@ private $subjects;
 	    ));
 	    
 	    $listArray = array();
-	    foreach ($result['bindings'] as $row) {
-	        $listArray[$row['s']['value']] = array(
-	            'first' => $row['first']['value'],
-	            'rest'  => $row['rest']['value']
-	        );
+	    if ($result) {
+	        foreach ($result['bindings'] as $row) {
+    	        $listArray[$row['s']['value']] = array(
+    	            'first' => $row['first']['value'],
+    	            'rest'  => $row['rest']['value']
+    	        );
+    	    }
 	    }
 
 	    $this->_listArray = $listArray;

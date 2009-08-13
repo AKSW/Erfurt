@@ -14,17 +14,17 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     
     protected $_rdfWriter = null;
     
-    public function serializeGraphToString($graphUri, $pretty = false)
+    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
-        
+      
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
-        $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter);
+        $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
         
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri);
+        $graph = $this->_store->getModel($graphUri, $useAc);
         
 		$this->_rdfWriter->setGraphUri($graphUri);
 		
@@ -61,17 +61,17 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		return $this->_rdfWriter->getContentString();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty = false)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true)
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
         
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
-        $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter);
+        $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
         
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri);
+        $graph = $this->_store->getModel($graphUri, $useAc);
         
 		$this->_rdfWriter->setGraphUri($graphUri);
 		
@@ -91,7 +91,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		
 		$this->_rdfWriter->setMaxLevel(1);
 		
-		$this->_serializeResource($resource);
+		$this->_serializeResource($resource, $useAc);
 		
 		$this->_rdfWriter->endDocument();
 		
@@ -282,7 +282,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$this->_forceWrite();
 	}
 	
-	protected function _serializeResource($resource)
+	protected function _serializeResource($resource, $useAc = true, $level = 0)
 	{
 	    require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
@@ -293,13 +293,16 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         $query->setLimit(1000);
         
         $offset = 0;
+        $bnObjects = array();
+
         while (true) {
             $query->setOffset($offset);
             
             $result = $this->_store->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
-		        'use_additional_imports' => false
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
 		    ));
             
             foreach ($result['bindings'] as $row) {
@@ -311,6 +314,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
                 $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
 
+                if ($oType === 'bnode') {
+                    $bnObjects[] = substr($o, 2);
+                }
+
                 $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
             
@@ -320,7 +327,71 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     		
     		$offset += 1000;
         }
-        
         $this->_forceWrite();
+        
+        // SCBD -> Write Bnodes, too
+        if ($level <= 10) {
+            foreach ($bnObjects as $bn) {
+                $this->_serializeResource($bn, $useAc, $level+1);
+            }
+        }
+        
+        // We only return SCBD of the TOP resource...
+        if ($level > 0) {
+            return;
+        }
+        
+        // SCBD: Do the same for all Resources, that have the resource as object
+        
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->addFrom($this->_graphUri);
+        $query->setWherePart('WHERE { ?s ?p ?o . ?s ?p2 ?o2 . FILTER (sameTerm(?o2, <'.$resource.'>)) }');
+        $query->setOrderClause('?s');
+        $query->setLimit(1000);
+        
+        $offset = 0;
+        $bnObjects = array();
+
+        while (true) {
+            $query->setOffset($offset);
+            
+            $result = $this->_store->sparqlQuery($query, array(
+		        'result_format'   => 'extended',
+		        'use_owl_imports' => false,
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
+		    ));
+		         
+            foreach ($result['bindings'] as $row) {
+                $s     = $row['s']['value'];
+                $p     = $row['p']['value'];
+                $o     = $row['o']['value'];
+                $sType = $row['s']['type'];
+                $oType = $row['o']['type'];
+                $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
+                $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
+
+                if ($oType === 'bnode') {
+                    $bnObjects[] = substr($o, 2);
+                }
+
+                $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
+            }
+            
+            if (count($result['bindings']) < 1000) {
+    	        break;
+    		}
+    		
+    		$offset += 1000;
+        }
+        $this->_forceWrite();
+        
+        // SCBD -> Write Bnodes, too
+        if ($level <= 10) {
+            foreach ($bnObjects as $bn) {
+                $this->_serializeResource($bn, $useAc, $level+1);
+            }
+        }
 	}
 }

@@ -86,13 +86,13 @@ class Erfurt_Syntax_RdfSerializer
         }        
     }
     
-    public function serializeGraphToString($graphUri, $pretty = false)
+    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
-        return $this->_serializerAdapter->serializeGraphToString($graphUri, $pretty);
+        return $this->_serializerAdapter->serializeGraphToString($graphUri, $pretty, $useAc);
     }
     
-    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false)
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false, $useAc = true)
     {
-        return $this->_serializerAdapter->serializeResourceToString($resourceUri, $graphUri, $pretty);
+        return $this->_serializerAdapter->serializeResourceToString($resourceUri, $graphUri, $pretty, $useAc);
     }
 }

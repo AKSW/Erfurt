@@ -3,15 +3,12 @@ require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 require_once 'Erfurt/Syntax/Utils/Turtle.php';
 
 /**
- * This class acts as an intermediate implementation for some important formats.
- * It uses the ARC library unitl we have own implementations.
- * 
  * @package erfurt
  * @subpackage   syntax
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id: Arc.php 2672 2009-03-26 16:20:49Z pfrischmuth $
+ * @version   $Id$
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {   
@@ -31,11 +28,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     protected $_store = null;
     protected $_graphUri = null;
     
-    public function serializeGraphToString($graphUri, $pretty = false)
+    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri);
+        $graph = $this->_store->getModel($graphUri, $useAc);
 		
 		require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
@@ -68,7 +65,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $result = $this->_store->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
-		        'use_additional_imports' => false
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
 		    ));
             
             foreach ($result['bindings'] as $row) {
@@ -93,11 +91,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         return $this->endRdf();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty = false)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true)
     {
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri);
+        $graph = $this->_store->getModel($graphUri, $useAc);
 		
 		require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
@@ -130,7 +128,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $result = $this->_store->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
-		        'use_additional_imports' => false
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
 		    ));
             
             foreach ($result['bindings'] as $row) {

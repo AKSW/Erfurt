@@ -14,7 +14,7 @@ require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {    
-    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false)
+    public function serializeResourceToString($resourceUri, $graphUri, $pretty = false, $useAc = true)
     {
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
@@ -34,7 +34,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
             $result = $store->sparqlQuery($sparql, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
-		        'use_additional_imports' => false
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
 		    ));
             
             $counter = 0;
@@ -87,7 +88,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         return json_encode($triples);
     }
     
-    public function serializeGraphToString($graphUri, $pretty = false)
+    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {   
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
@@ -107,7 +108,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
             $result = $store->sparqlQuery($sparql, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
-		        'use_additional_imports' => false
+		        'use_additional_imports' => false,
+		        'use_ac' => $useAc
 		    ));
 
             $counter = 0;
