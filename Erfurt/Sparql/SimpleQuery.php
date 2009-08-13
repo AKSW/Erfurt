@@ -166,6 +166,21 @@ class Erfurt_Sparql_SimpleQuery
         return $this->_fromNamed;
     }
     
+    public function getLimit()
+    {
+        return $this->_limit;
+    }
+    
+    public function getOffset()
+    {
+        return $this->_offset;
+    }
+    
+    public function getProloguePart()
+    {
+        return $this->_prologuePart;
+    }
+    
     public function resetInstance()
     {
         $this->_prologuePart = null;
