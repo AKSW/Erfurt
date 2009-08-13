@@ -1,18 +1,16 @@
 <?php 
-
 /**
- * This file is part of the {@link http://ontowiki.net OntoWiki} project.
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id:$
+ * @version $Id$
  */
 
 require_once 'Zend/Auth.php';
 
-
 /**
- * One-sentence description of Auth.
+ * Extends the Zend_Auth class in order to provide some additional functionality.
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
@@ -30,6 +28,13 @@ class Erfurt_Auth extends Zend_Auth
         }
 
         return self::$_instance;
+    }
+    
+    public function setIdentity(Zend_Auth_Result $authResult)
+    {
+        if ($authResult->isValid()) {
+            $this->getStorage()->write($authResult->getIdentity());
+        }
     }
     
     public function setUsername($newUsername)
