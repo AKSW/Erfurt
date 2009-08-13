@@ -311,7 +311,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     protected function _resolveUri($uri)
     {
-        if (($uri[0] === '#') || (strpos($uri, ':') === false)) {
+        if ((strlen($uri) > 0) && ($uri[0] === '#') || (strpos($uri, ':') === false)) {
             if ($this->_getBaseUri()) {
                 return $this->_getBaseUri() . $uri;
             }
