@@ -1,12 +1,22 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @package  erfurt
- * @subpackage   wrapper
- * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2009 {@link http://aksw.org aksw}
- * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id$
+ * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version $Id $
+ */
+
+/**
+ * This class acts as the central registry for all active wrapper extensions.
+ * It provides functionality for listing all active wrapper extensions and
+ * gives access to wrapper instances.
+ *
+ * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @package    erfurt
+ * @subpackage wrapper
+ * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Wrapper_Registry
 {
@@ -45,6 +55,11 @@ class Erfurt_Wrapper_Registry
     // --- Public static methods ----------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * Returns the one and only instance of this class.
+     * 
+     * @return Erfurt_Wrapper_Registry
+     */
     public static function getInstance()
     {
         if (null === self::$_instance) {
@@ -54,6 +69,10 @@ class Erfurt_Wrapper_Registry
         return self::$_instance;
     }
     
+    /**
+     * Destroys the current instance. Next time getInstance is called a new
+     * instance will be created.
+     */
     public static function reset()
     {
         self::$_instance = null;

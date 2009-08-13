@@ -1,17 +1,24 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version $Id $
+ */
+
+/**
  * This abstract class provides the basis for dedicated data wrapper 
  * implementation classes, that provide RDF data for a given URI. Developers 
  * are encouraged to utilize the built-in config and cache objects in order
  * to make wrappers customizable by the user and to avoid expensive requests
  * to be done to frequent. The default cache lifetime is one hour.
  * 
+ * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package    erfurt
  * @subpackage wrapper
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 abstract class Erfurt_Wrapper
 {
@@ -19,40 +26,66 @@ abstract class Erfurt_Wrapper
     // --- Constants ----------------------------------------------------------
     // ------------------------------------------------------------------------
     
-    /** States, whether statements have been added by the wrapper. */
-    const STATEMENTS_ADDED          = 10;
+    /** 
+     * States, whether statements have been added by the wrapper. 
+     * 
+     * @var int
+     */
+    const STATEMENTS_ADDED = 10;
     
-    /** States, whether statements have been removed by the wrapper. */
-    const STATEMENTS_REMOVED        = 20;
+    /** 
+     * States, whether statements have been removed by the wrapper. 
+     * 
+     * @var int
+     */
+    const STATEMENTS_REMOVE = 20;
     
-    /** States, whether there have not been any modifications by the wrapper. */
-    const NO_MODIFICATIONS          = 30;
+    /** 
+     * States, whether there have not been any modifications by the wrapper. 
+     * 
+     * @var int
+     */
+    const NO_MODIFICATIONS = 30;
     
     /** 
      * States, whether the result contains a key 'add', which contains data 
      * to be added. 
+     * 
+     * @var int
      */
-    const RESULT_HAS_ADD            = 40;
+    const RESULT_HAS_ADD = 40;
     
-    const RESULT_HAS_NS             = 45;
+    /** 
+     * States, whether the result contains a key 'ns', which contains 
+     * namespaces to be added. 
+     * 
+     * @var int
+     */
+    const RESULT_HAS_NS = 45;
     
     /** 
      * States, whether the result contains a key 'remove', which can be used 
      * to match statements. 
+     * 
+     * @var int
      */
-    const RESULT_HAS_REMOVE         = 50;
+    const RESULT_HAS_REMOVE = 50;
     
     /** 
      * States, whether the result contains a key 'added_count', which contains 
      * the number of triples added. 
+     * 
+     * @var int
      */
-    const RESULT_HAS_ADDED_COUNT    = 60;
+    const RESULT_HAS_ADDED_COUNT = 60;
     
     /** 
      * States, whether the result contains a key 'removed_count', which 
      * contains the number of triples removed. 
+     * 
+     * @var int
      */
-    const RESULT_HAS_REMOVED_COUNT  = 70;
+    const RESULT_HAS_REMOVED_COUNT = 70;
     
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
@@ -108,7 +141,7 @@ abstract class Erfurt_Wrapper
         
         $frontendAdapter->setBackend($backendAdapter);
 
-        $this->_cache = $frontendAdapter;
+        $this->_cache  = $frontendAdapter;
         $this->_config = $config;
     }
     
@@ -193,7 +226,7 @@ abstract class Erfurt_Wrapper
      * @param string $uri This is the URI for which data should be wrapped.
      * @param string $graphUri The URI fro the graph to use. Some wrapper implementations
      * may need it, e.g. to do SPARQL queries against the graph.
-     * @return array/false 
+     * @return array|false 
      * @throws Erfurt_Wrapper_Exception
      */
     abstract public function run($uri, $graphUri);

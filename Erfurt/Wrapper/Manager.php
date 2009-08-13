@@ -1,16 +1,23 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version $Id $
+ */
+
 require_once 'Erfurt/Wrapper/Registry.php';
 
 /**
  * This class provides functionality in order to scan directories for wrapper
- * plugins.
+ * extensions.
  * 
+ * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package    erfurt
  * @subpackage wrapper
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright  Copyright (c) 2009 {@link http://aksw.org aksw}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 class Erfurt_Wrapper_Manager
 {
@@ -55,6 +62,9 @@ class Erfurt_Wrapper_Manager
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * The constructor of this class, which initializes new objects.
+     */
     public function __construct()
     {
         $this->_registry = Erfurt_Wrapper_Registry::getInstance();
@@ -85,7 +95,7 @@ class Erfurt_Wrapper_Manager
     
     /**
      * Checks a given wrapper name and path pair, whether the specified plugin
-     * is active (a key <code>enabled</code> needs to be set to <code>true</code>).
+     * is active (a key "enabled" needs to be set to "true").
      * If a wrapper plugin is not active, the method just returns. 
      * If a wrapper plugin is activated, the method parses the config file and
      * registers the wrapper within the registry.
@@ -112,11 +122,12 @@ class Erfurt_Wrapper_Manager
             $privateConfig = false;
         }
         
-        $wrapperSpec = array();
-        $wrapperSpec['class_name'] = ucfirst($wrapperName) . 'Wrapper';
-        $wrapperSpec['include_path'] = $wrapperPath;
-        $wrapperSpec['config'] = $privateConfig;
-        $wrapperSpec['instance'] = null;
+        $wrapperSpec = array(
+            'class_name'   => ucfirst($wrapperName) . 'Wrapper',
+            'include_path' => $wrapperPath,
+            'config'       => $privateConfig,
+            'instance'     => null
+        );
         
         // Finally register the wrapper.
         $this->_registry->register($wrapperName, $wrapperSpec);
