@@ -1,0 +1,36 @@
+[private]
+
+;;----------------------------------------------------------------------------;;
+;; Database Connection Settings                                               ;;
+;;----------------------------------------------------------------------------;;
+
+store.backend = multistore ; zenddb, virtuoso, multistore
+
+store.multistore.default.backend         = zenddb
+store.multistore.default.zenddb.dbname   = ow_new_layout
+store.multistore.default.zenddb.username = ow
+store.multistore.default.zenddb.password = ow
+store.multistore.default.zenddb.dbtype   = mysql
+store.multistore.default.zenddb.host     = localhost
+
+;store.multistore.additional.0.backend         = zenddb
+;store.multistore.additional.0.zenddb.dbname   = ow09
+;store.multistore.additional.0.zenddb.username = ow
+;store.multistore.additional.0.zenddb.password = ow
+;store.multistore.additional.0.zenddb.dbtype   = mysql
+;store.multistore.additional.0.zenddb.host     = localhost
+;store.multistore.additional.0.graphs.0        = "http://example.org/0.1/"
+
+;store.multistore.additional.1.backend           = sparql
+;store.multistore.additional.1.sparql.serviceurl = ""
+;store.multistore.additional.1.sparql.username   = ""
+;store.multistore.additional.1.sparql.password   = ""
+;store.multistore.additional.1.sparql.graphs.0   = "http://example.org/0.1/"
+;store.multistore.additional.1.graphs.0 = "http://example.org/0.1/"
+
+;store.multistore.additional.1.backend = ontowiki
+;store.multistore.additional.1.ontowiki.serviceurl = ""
+;store.multistore.additional.1.ontowiki.updateurl = ""
+;store.multistore.additional.1.ontowiki.graphs.0 = "http://example.org/0.1/"
+;store.multistore.additional.1.graphs.0 = "http://example.org/0.1/"
+

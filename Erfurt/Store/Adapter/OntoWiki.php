@@ -144,6 +144,14 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
                 return '';
             }
             
+            $config = Erfurt_App::getInstance()->getConfig();
+            if (isset($config->auth->foafssl->agentCertFilename)) {
+                $certFilename = $config->auth->foafssl->agentCertFilename;
+            } else {
+                // We need a cert
+                return '';
+            }
+            
             if (substr($url, 0, 7) === 'http://') {
                 // We need SSL here!
                 $url = 'https://' . substr($url, 7);
@@ -152,7 +160,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
             $client = new Zend_Http_Client($url, array(
                 'maxredirects'  => 10,
                 'timeout'       => 30,
-                'sslcert'       => '/etc/apache2/localhost.pem'
+                'sslcert'       => $certFilename
             ));
             
             $client->setHeaders(
