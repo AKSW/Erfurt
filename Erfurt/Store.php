@@ -927,7 +927,12 @@ class Erfurt_Store
      *
      * @return string
      */
-    public function getBackendName() {
+    public function getBackendName() 
+    {
+        if (method_exists($this->_backendAdapter, 'getBackendName')) {
+            return $this->_backendAdapter->getBackendName();
+        }
+        
         return $this->_backendName;
     }
     
