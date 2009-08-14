@@ -218,6 +218,7 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         $certFilename   = $tmpDir . '/' . $uniqueFilename . '.temp';
         
         // Configure for signing...
+        $config = Erfurt_App::getInstance()->getConfig();
         $state   = $config->auth->foafssl->provider->ca->state;
         $country = $config->auth->foafssl->provider->ca->country;
         $org     = $config->auth->foafssl->provider->ca->org;
@@ -383,6 +384,12 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         
         // Only add the user if allowed...
         if (!Erfurt_App::getInstance()->getAc()->isActionAllowed('RegisterNewUser')) {
+            return false;
+        }
+        
+        // Does user already exist?
+        $users = Erfurt_App::getInstance()->getUsers();
+        if (isset($users[$webId])) {
             return false;
         }
         
