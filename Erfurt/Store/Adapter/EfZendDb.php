@@ -172,7 +172,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         try {
                             $sRef = $this->_insertValueInto('ef_uri', $graphId, $s, $subjectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
-                            $this->rollback();
+                            $this->_dbConn->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
@@ -187,7 +187,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         try {
                             $pRef = $this->_insertValueInto('ef_uri', $graphId, $p, $predicateHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
-                            $this->rollback();
+                            $this->_dbConn->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
@@ -208,7 +208,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         try {
                             $oRef = $this->_insertValueInto($tableName, $graphId, $o['value'], $objectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
-                            $this->rollback();
+                            $this->_dbConn->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
@@ -256,7 +256,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         try {
                             $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
-                            $this->rollback();
+                            $this->_dbConn->rollback();
                             require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
@@ -429,7 +429,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         // remove the specified statements from the database
         $ret = $this->_dbConn->delete('ef_stmt', $whereString);   
-        
+
         // Clean up ef_uri and ef_lit table
         $this->_cleanUpValueTables($graphUri);
 
@@ -539,7 +539,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = false)
     {
-        throw new Exception('Not implemented yet.');
+        require_once 'Erfurt/Store/Adapter/Exception.php';
+        throw new Erfurt_Store_Adapter_Exception('Not implemented yet.');
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -553,6 +554,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         return $models;
+    }
+    
+    public function getBackendName()
+    {
+        return 'ZendDb';
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -1314,7 +1320,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             if ($this->_getNormalizedErrorCode() !== 1000) {
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception("Insertion of value into $tableName failed: " .
-                                $this->_dbConn->getConnection()->error);
+                                $e->getMessage());
             }
         }
         
