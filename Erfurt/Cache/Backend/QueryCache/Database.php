@@ -44,16 +44,43 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch (strtolower($this->store->getBackendName())) {
             case 'zenddb' :
             case 'mysql' :
-                $vocabulary['identity'] = "AUTO_INCREMENT";
+                $vocabulary['col_utf8_bin'] = "character set ascii     collate ascii_bin";
+                $vocabulary['col_ascii_bin'] = "character set ascii     collate ascii_bin";
             break;
             case 'virtuoso':
-                $vocabulary['identity'] = "IDENTITY";
+                $vocabulary['col_utf8_bin'] = "";
+                $vocabulary['col_ascii_bin'] = "";
             break;
             default:
-                $vocabulary['identity'] = "IDENTITY";
+                $vocabulary['col_utf8_bin'] = "";
+                $vocabulary['col_ascii_bin'] = "";
             break;
         }
 
+        if (!$this->store->isSqlSupported()) {
+            throw new Exception('To use the Query Cache, store adapter needs to implement the SQL interface.');
+        }
+        
+        $existingTableNames = $this->store->listTables();
+
+        if (!in_array('ef_cache_query_result', $existingTableNames)) {
+            $columnSpec = array(
+                'qid'           => 'VARCHAR(255)    '.$vocabulary['col_ascii_bin'].'   PRIMARY KEY NOT NULL',
+                'query'         => 'LONG VARCHAR    '.$vocabulary['col_utf8_bin'].'    NULL' ,
+                'result'        => 'LONG VARBINARY NULL',
+                'hit_count'     => 'INT NULL',
+                'inv_count'     => 'INT NULL',
+                'time_stamp'    => 'FLOAT NULL',
+                'duration'      => 'FLOAT NULL'
+            );
+            
+            $this->store->createTable('ef_cache_query_result', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
+        }
+        
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_result (
                 qid VARCHAR( 255 ) NOT NULL ,
                 query LONG VARCHAR NULL, 
@@ -63,53 +90,116 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 time_stamp FLOAT NULL,
                 duration FLOAT NULL,
                 PRIMARY KEY ( qid ))');
+*/
 
+        if (!in_array('ef_cache_query_triple', $existingTableNames)) {
+            $columnSpec = array(
+                'tid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
+                'subject'       => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
+                'predicate'     => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
+                'object'        => 'VARCHAR(255) '.$vocabulary['col_utf8_bin'].'   NULL',
+            );
+            
+            $this->store->createTable('ef_cache_query_triple', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
+            #$this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_triple (
                 tid INT NOT NULL '.$vocabulary['identity'].',
                 subject VARCHAR( 255 ) NULL ,
                 predicate VARCHAR( 255 ) NULL ,
                 object VARCHAR( 255 ) NULL ,
                 PRIMARY KEY ( tid ))');
+*/
 
+
+        if (!in_array('ef_cache_query_model', $existingTableNames)) {
+            $columnSpec = array(
+                'mid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
+                'modelIri'      => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].' NULL',
+            );
+            
+            $this->store->createTable('ef_cache_query_model', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_model (
                 mid INT NOT NULL '.$vocabulary['identity'].',
                 modelIri VARCHAR( 255 ) NULL ,
                 PRIMARY KEY ( mid ))');
 
+*/
 
+        if (!in_array('ef_cache_query_rt', $existingTableNames)) {
+            $columnSpec = array(
+                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'tid'           => 'INT NOT NULL, PRIMARY KEY ( qid, tid )'
+            );
+            
+            $this->store->createTable('ef_cache_query_rt', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
+    
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rt (
                 qid VARCHAR( 255 ) NOT NULL ,
                 tid VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, tid ))');
+*/
 
+        if (!in_array('ef_cache_query_rm', $existingTableNames)) {
+            $columnSpec = array(
+                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'mid'           => 'INT NOT NULL, PRIMARY KEY (qid, mid)',
+            );
+            
+            $this->store->createTable('ef_cache_query_rm', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rm (
                 qid VARCHAR( 255 ) NOT NULL ,
                 mid VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, mid ))');
+*/
 
+        if (!in_array('ef_cache_query_objectKey', $existingTableNames)) {
+            $columnSpec = array(
+                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'objectKey'     => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectKey)',
+            );
+            
+            $this->store->createTable('ef_cache_query_objectKey', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_objectKey (
                 qid VARCHAR( 255 ) NOT NULL ,
                 objectKey VARCHAR( 255 ) NOT NULL ,
                 PRIMARY KEY ( qid, objectKey ))');
+*/
 
+        if (!in_array('ef_cache_query_version', $existingTableNames)) {
+            $columnSpec = array(
+                'num'           => 'INT NOT NULL PRIMARY KEY',
+            );
+
+            $this->store->createTable('ef_cache_query_version', $columnSpec);
+            $this->store->sqlQuery('INSERT INTO ef_cache_query_version (num) VALUES (1)');
+        }
+
+/*
 		$this->store->sqlQuery('CREATE TABLE ef_cache_query_version (
                 num INT NOT NULL ,
                 PRIMARY KEY ( num )) ');
+*/
 
-		$this->store->sqlQuery('INSERT INTO ef_cache_query_version (num) VALUES (1)');
-
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
-
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
-
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
-
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
-
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
-        $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
 	}
 
 
@@ -639,7 +729,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     $logger->debug($e2->getMessage());
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception(
-                        'Something went wrong while building query cache structure: ' . $e->getMessage()
+                        'Something went wrong while building query cache structure: ' . $e2->getMessage()
                     );
                 }
             } else {
