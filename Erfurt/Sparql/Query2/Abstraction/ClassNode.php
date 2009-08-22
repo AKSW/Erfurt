@@ -17,7 +17,7 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		$this->type = $type;
 		$this->query = $query;
 		$this->classVar = new Erfurt_Sparql_Query2_Var($type->iri);
-		$this->query->getPattern()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, new Erfurt_Sparql_Query2_A(), $type->iri));
+		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, new Erfurt_Sparql_Query2_A(), $type->iri));
 	}
 	
 	public function addShownProperty(Erfurt_Sparql_Query2_IriRef $prop){
@@ -27,14 +27,14 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		$this->shownproperties[] = $prop;
 		$var = new Erfurt_Sparql_Query2_Var($prop);
 		$this->optionalpart->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $prop, $var));
-		$this->query->getPattern()->addElement($this->optionalpart);
+		$this->query->getWhere()->addElement($this->optionalpart);
 		$this->query->addProjectionVar($var);
 		return $this; //for chaining
 	}
 	
 	public function addLink(Erfurt_Sparql_Query2_IriRef $predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){
 		$this->outgoinglinks[] = new Erfurt_Sparql_Query2_Abstraction_Link($predicate, $target);
-		$this->query->getPattern()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, new Erfurt_Sparql_Query2_Var($target->getClass()->iri)));
+		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, new Erfurt_Sparql_Query2_Var($target->getClass()->iri)));
 		return $this; //for chaining
 	}
 	

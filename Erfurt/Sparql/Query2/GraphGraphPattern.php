@@ -14,15 +14,9 @@ require_once "GroupGraphPattern.php";
 class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupGraphPattern 
 {
 	protected $varOrIri;
-	protected $ggp;
 	
-	public function __construct(Erfurt_Sparql_Query2_VarOrIri $nvarOrIri, Erfurt_Sparql_Query2_GroupGraphPattern $nggp){
+	public function __construct(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri){
 		$this->varOrIri = $nvarOrIri;
-		$this->ggp = $nggp;
-	}
-	
-	public function __construct(){
-		
 	}
 	
 	public function setVarOrIri(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri){
@@ -30,25 +24,19 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
 		return $this; //for chaining
 	}
 	
-	public function setGroupGraphPattern(Erfurt_Sparql_Query2_GroupGraphPattern $nggp){
-		$this->ggp = $nggp;
-		return $this; //for chaining
-	}
-	
 	public function getVarOrIri(){
 		return $this->varOrIri;
 	}
 	
-	public function getGroupGraphPattern(){
-		return $this->ggp;
+	public function getSparql(){
+		return "GRAPH ".$this->varOrIri->getSparql()." ". substr(parent::getSparql(),0,-1); //subtr is cosmetic for stripping off the last linebreak 
 	}
 	
-	public function getSparql(){
-		if(!$this->varOrIri || !$this->ggp){
-			throw new RuntimeException("In Erfurt_Sparql_Query2_GraphGraphPattern: required fields not initialized yet");
-		} else {
-			return "GRAPH ".$this->varOrIri->getSparql()." ". $this->ggp->getSparql();
-		}
+	public function getVars(){
+		$vars = parent::getVars();
+		if(is_a($this->varOrIri, "Erfurt_Sparql_Query2_Var"))
+			$vars[] = $this->varOrIri;
+		return $vars;
 	}
 }
 ?>

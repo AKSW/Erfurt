@@ -10,8 +10,32 @@
  * @version    $Id$
  */
  
-abstract class Erfurt_Sparql_Query2_Filter 
+class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
 {
+	protected $element;
+	
+	public function __construct(Erfurt_Sparql_Query2_Constraint $element){
+		$this->element = $element;
+		parent::__construct();
+	}
+	
+	public function getConstraint(){
+	   return $this->element;
+	}
+	
+	public function setConstraint(Erfurt_Sparql_Query2_Constraint $element){
+	   $this->element = $element;
+	   return $this;
+	}
+	
+	public function getSparql(){
+		return "FILTER ".$this->element->getSparql();
+	}
+	
+	//TODO not implemented yet
+	public function getVars(){
+		return array();
+	}
 	
 }
 ?>

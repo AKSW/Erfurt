@@ -1,7 +1,4 @@
 <?php
-require_once "VarOrIriRef.php";
-require_once "VarOrTerm.php";
-
 /**
  * Erfurt_Sparql Query - Var.
  * 
@@ -11,7 +8,7 @@ require_once "VarOrTerm.php";
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm
+class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
 	protected $name;
 	protected $varLabelType = "?";
@@ -22,8 +19,9 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 		} else if(is_a($nname, "Erfurt_Sparql_Query2_IriRef")){
 			$this->name = $this->extractName($nname->getIri());
 		} else {
-			throw new RuntimeException("wrong parameter for contructing Erfurt_Sparql_Query2_Var. string (not empty) or Erfurt_Sparql_Query2_IriRef expected. "+gettype($nname)+" found.");
+			throw new RuntimeException("wrong parameter for constructing Erfurt_Sparql_Query2_Var. string (not empty) or Erfurt_Sparql_Query2_IriRef expected. ".typeHelper($nname)." found.");
 		}
+		parent::__construct();
 	}
 	
 	public function getSparql(){
@@ -61,5 +59,11 @@ class Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_VarOrIriRef, Erfu
 		$parts = preg_split("/[\/#]/", $name);
 		return $parts[count($parts)-1];
 	}
+	
+	
+	public function __toString(){
+		return $this->getSparql();
+	}
+	
 }
 ?>

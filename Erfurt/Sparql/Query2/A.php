@@ -12,5 +12,10 @@ class Erfurt_Sparql_Query2_A implements Erfurt_Sparql_Query2_Verb {
 	public function getSparql(){
 		return "a";
 	}
+	
+	public function __toString() 
+    {    
+        return $this->getSparql();
+    }
 }
 ?>

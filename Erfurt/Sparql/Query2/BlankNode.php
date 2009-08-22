@@ -11,12 +11,14 @@ require_once "Var.php";
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_BlankNode extends Erfurt_Sparql_Query2_Var implements Erfurt_Sparql_Query2_GraphTerm{ //TODO 1. may not appear in two different graphs. 2. an anon bn should only be used once (fix in ...GraphPattern)
+class Erfurt_Sparql_Query2_BlankNode extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_GraphTerm{ //TODO 1. may not appear in two different graphs. 2. an anon bn should only be used once (fix in ...GraphPattern)
 	protected $name = "";
-	
+
 	public function __construct($nname){
 		if(is_string($nname))
 			$this->name = $nname;
+			
+		parent::__construct();
 	}
 	
 	public function getSparql(){

@@ -8,7 +8,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_NumericLiteral implements Erfurt_Sparql_Query2_GraphTerm
+class Erfurt_Sparql_Query2_NumericLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
 	protected $value;
 	
@@ -16,12 +16,16 @@ class Erfurt_Sparql_Query2_NumericLiteral implements Erfurt_Sparql_Query2_GraphT
 		if(is_numeric($num)){
 			$this->value = $num;
 		} else {
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_NumericLiteral::__construct must be numeric, instance of ".gettype($num)." given");
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_NumericLiteral::__construct must be numeric, instance of ".typeHelper($num)." given");
 		}
 	}
 	
 	public function getSparql(){
 		return (string) $this->value;
 	}
+	public function __toString(){    
+        return $this->getSparql();
+    }
+	
 }
 ?>

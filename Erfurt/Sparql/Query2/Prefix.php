@@ -16,7 +16,7 @@ class Erfurt_Sparql_Query2_Prefix //TODO must be unique in Query - factory?
 	
 	public function __construct($nname, Erfurt_Sparql_Query2_IriRef $ref){
 		if(!is_string($nname))
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Prefix::__construct must be an instance of string, instance of ".gettype($ref)." given");
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Prefix::__construct must be an instance of string, instance of ".typeHelper($ref)." given");
 		$this->name = $nname;
 		$this->iri = $ref;
 	}

@@ -8,17 +8,17 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_Triple
+class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
 {
 	protected $s;
 	protected $p;
 	protected $o;
 	
-	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $ns, Erfurt_Sparql_Query2_Verb $np, Erfurt_Sparql_Query2_VarOrTerm $no){
+	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $ns, Erfurt_Sparql_Query2_Verb $np, Erfurt_Sparql_Query2_IF_ObjectList $no){
 		$this->s=$ns;
 		$this->p=$np;
 		$this->o=$no;
-		return $this; //for chaining
+		parent::__construct();
 	}
 	
 	public function setS(Erfurt_Sparql_Query2_VarOrTerm $ns){
@@ -26,12 +26,12 @@ class Erfurt_Sparql_Query2_Triple
 		return $this; //for chaining
 	}
 	
-	public function setP(Erfurt_Sparql_Query2_VarOrIriRef $np){
+	public function setP(Erfurt_Sparql_Query2_Verb $np){
 		$this->p=$np;
 		return $this; //for chaining
 	}
 	
-	public function setO(Erfurt_Sparql_Query2_VarOrTerm $no){
+	public function setO(Erfurt_Sparql_Query2_IF_ObjectList $no){
 		$this->o=$no;
 		return $this; //for chaining
 	}

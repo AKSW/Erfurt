@@ -1,6 +1,4 @@
 <?php
-require_once "GraphTerm.php";
-
 /**
  * Erfurt_Sparql Query - RDFLiteral.
  * 
@@ -10,15 +8,18 @@ require_once "GraphTerm.php";
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */ 
-class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm
+class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
-	protected $string = "";
+	protected $value = "";
 	protected $datatype;
 	protected $lang;
 	protected $mode = 0;
 	
-	public function __construct ($str){
-		$this->string = $str;
+	public function __construct($str){
+		if(!is_string($str)){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be a string, instance of ".typeHelper($str)." given");
+		}
+		$this->value = $str;
 
 		if(func_num_args()>1){
 			$meta = func_get_arg(1);
@@ -44,13 +45,13 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm
 				$this->datatype = $meta;
 				$this->mode = 2;
 			} else {
-				throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".gettype($meta)." given");
+				throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($meta)." given");
 			}
 		}
 	}
 	
 	public function getSparql(){
-		$sparql = "\"".$this->string."\"";
+		$sparql = "\"".$this->value."\"";
 		
 		switch($this->mode){
 			case 0:
@@ -64,6 +65,31 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm
 		}
 		
 		return $sparql;
+	}
+	
+	public function __toString(){
+		return $this->getSparql();
+	}
+	
+	public function setValue($val){
+		if(is_string($val)){
+			$this->value = $val;
+		} else {
+			//throw
+		}
+		return $this;
+	}
+	
+	public function getValue(){
+		return $this->value;
+	}
+	
+	public function setDatatype(Erfurt_Sparql_Query2_IriRef $type){
+		$this->datatype = $type;
+		return $this;
+	}
+	public function getDatatype(Erfurt_Sparql_Query2_IriRef $type){
+		return $this->datatype;
 	}
 }
 ?>
