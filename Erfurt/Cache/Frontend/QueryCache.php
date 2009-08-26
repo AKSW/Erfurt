@@ -18,7 +18,6 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     var $_backend;
     
-
     /**
      * Transactions for Object issignment to QueryCache
      * @var transactions
@@ -50,15 +49,16 @@ class Erfurt_Cache_Frontend_QueryCache {
      *	saving a QueryString, its result and the duration of the originally executed query
      *	@access     public
      *	@param      string  $queryString    SparqlQuery
+     *	@param      string  $resultFormat   the desired resultFormat
      *	@param      string  $queryResult    SparqlQuery Result
      *	@param      float   $duration       duration in seconds.microseconds
      *  @return     boolean $result         state of the saving process true/false
     */
-    public function save( $queryString, $queryResult, $duration = 0 ) {
+    public function save( $queryString, $resultFormat = "plain" , $queryResult, $duration = 0 ) {
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
         
             //create QueryId
-            $queryId = $this->createQueryId( $queryString );
+            $queryId = $this->createQueryId( $queryString, $resultFormat );
 
             //serializing the QueryResult
             $queryResult = serialize( $queryResult );
@@ -69,7 +69,7 @@ class Erfurt_Cache_Frontend_QueryCache {
             $graphUris = $parsedQuery['graphs'];
             //saving the Query and the Result with the configured Backend
             $result =  $this->getBackend()->save(   $queryId, 
-                                                    $queryString, 
+                                                    $queryString,
                                                     $graphUris, 
                                                     $triplePatterns, 
                                                     $queryResult, 
@@ -93,12 +93,13 @@ class Erfurt_Cache_Frontend_QueryCache {
      *	load a QueryResult according to its Sparql Query as String
      *  if the QueryHash not exists or no result is found its return false
      *	@access     public
-     *	@param      string  $queryString    SparqlQuery
+     *	@param      string  $queryString    SparqlQuery 
+     *  @param      string  $resultFormat   ResultFormat
      *  @return     String  $result         Resultset of the Query or false if no result exists
     */
-    public function load( $queryString ) {
+    public function load( $queryString, $resultFormat = "plain" ) {
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
-            $queryId = $this->createQueryId( $queryString );
+            $queryId = $this->createQueryId( $queryString, $resultFormat );
             $result = $this->getBackend()->load($queryId);
             if ($result) {
                 $result = unserialize ($result);
@@ -259,10 +260,11 @@ class Erfurt_Cache_Frontend_QueryCache {
      *	creating a QueryHash of a SparqlQuery
      *	@access     private
      *	@param      string   $queryString   SparqlQuery
+     *	@param      string   $rsultFormat   ResultFormat
      *  @return     string   $hash          md5 generated Hash
     */
-    private function createQueryId( $queryString ) {   
-        return md5( $queryString);
+    private function createQueryId( $queryString, $resultFormat ) {   
+        return md5( $queryString.$resultFormat);
     }
 
     /**

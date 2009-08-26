@@ -311,7 +311,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         $createTable = 'CREATE TABLE ' . (string) $tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
-        #var_dump($createTable);exit;       
+    
         return $this->sqlQuery($createTable);
     }
     
@@ -708,7 +708,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function sparqlAsk($query)
     {        
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        if (!($sparqlResult = $queryCache->load( $query ))){
+        if (!($sparqlResult = $queryCache->load( $query ,"plain"))){
             $sparqlResult = $this->_execSparql($query);
 
             if (odbc_result($sparqlResult, 1) == '1') {
@@ -717,7 +717,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             else {
                 $sparqlResult = false;
             }
-            $queryCache->save( $query, $sparqlResult);
+            $queryCache->save( $query, "plain" , $sparqlResult);
         }
         return $sparqlResult;
     }
@@ -726,7 +726,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function sparqlQuery($query, $resultFormat = 'plain') 
     {    
     	
-    	 if($this->_httpConfig['useHTTP']==true){
+    	 if($this->_httpConfig['useHTTP'] == true ){
     	 	return  $this->_httpSelect($query, $resultFormat);
     	 	}
     	
@@ -921,7 +921,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         // escape characters that delimit the query within the query
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
-        
         // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         

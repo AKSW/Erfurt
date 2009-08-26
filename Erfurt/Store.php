@@ -1343,12 +1343,12 @@ class Erfurt_Store
             }
         }
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        if (!($sparqlResult = $queryCache->load( (string) $queryObject))){
+        if (!($sparqlResult = $queryCache->load( (string) $queryObject, "plain"))){
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
             $duration = microtime(true) - $startTime;
-            $queryCache->save( (string) $queryObject, $sparqlResult, $duration);
+            $queryCache->save( (string) $queryObject, "plain" , $sparqlResult, $duration);
         }
         
         return $sparqlResult;
@@ -1408,12 +1408,12 @@ class Erfurt_Store
         $resultFormat = $options['result_format'];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        if (!($sparqlResult = $queryCache->load( (string) $queryObject ))){
+        if (!($sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat ))){
 #           // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $resultFormat);
             $duration = microtime(true) - $startTime;
-            $queryCache->save( (string) $queryObject , $sparqlResult, $duration );
+            $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
         return $sparqlResult;
     }

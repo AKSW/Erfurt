@@ -1037,7 +1037,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 	    }
 	    $createTable .= PHP_EOL
 	                 .  ')';
-
+#var_dump($createTable); die;
 	    $success = $this->_dbConn->getConnection()->query($createTable);
 
 	    if (!$success) {
