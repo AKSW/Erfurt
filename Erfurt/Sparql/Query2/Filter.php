@@ -29,7 +29,13 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
 	}
 	
 	public function getSparql(){
-		return "FILTER ".$this->element->getSparql();
+		$constraint_str = trim($this->element->getSparql());
+		
+		//grammar says: brackets are not needed , sparql engines say: error...
+		if(substr($constraint_str, 0, 1) != "("){
+			$constraint_str = "(".$constraint_str.")";
+		}
+		return "FILTER ".$constraint_str;
 	}
 	
 	//TODO not implemented yet

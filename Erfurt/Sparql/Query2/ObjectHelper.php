@@ -16,6 +16,8 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 		$this->id = Erfurt_Sparql_Query2::getNextID();
 	}
 	
+	//abstract public function getSparql();
+	
 	public function newUser($parent){
 		if(!in_array($parent, $this->parents))
 			$this->parents[] = $parent;
@@ -37,11 +39,22 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	
 	public function getParents(){
 		return $this->parents;
+	}
+	
+	public function equals(Erfurt_Sparql_Query2_ObjectHelper $obj){
+		//trivial cases
+		if($this==$obj) return true;
+		
+		if(get_class($this) != get_class($obj)){
+			return false; 
+		}
+		
+		return $this->getSparql() == $obj->getSparql();
 	}	
 }
 abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_ObjectHelper
 {
-	protected $elements;
+	protected $elements = array();
 	
 	//abstract public function addElement($member); //not used because some use typehinting some do it internally
 	
@@ -77,5 +90,41 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 		$this->elements = array();
 		return $this; //for chaining
 	}
+	
+	public function equals($obj){
+		//trivial cases
+		if($this==$obj) return true;
+		
+		if(get_class($this) != get_class($obj)){
+			return false; 
+		}
+
+			//check for mutual inclusion
+			foreach($obj->getElements() as $his){
+				$found = false;
+				
+				foreach($this->elements as $mine){
+					if($mine->equals($his)){
+						$found = true;
+					}
+				}
+				
+				if(!$found) return false;
+			}
+			
+			foreach($this->elements as $mine){
+				$found = false;
+				
+				foreach($obj->getElements() as $his){
+					if($his->equals($mine)){
+						$found = true;
+					}
+				}
+				
+				if(!$found) return false;
+			}
+			
+			return true;
+	}	
 } 
 ?>

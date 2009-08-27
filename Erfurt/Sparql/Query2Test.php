@@ -30,7 +30,9 @@ $name = new Erfurt_Sparql_Query2_RDFLiteral("bob", "en");
 $bnode = new Erfurt_Sparql_Query2_BlankNode("bn");
 $triplesamesubj = new Erfurt_Sparql_Query2_TriplesSameSubject($s, array(array("pred"=>$prefixedUri1, "obj"=>$name),array("pred"=>$prefixedUri2, "obj"=>new Erfurt_Sparql_Query2_ObjectList(array($iri1, $iri2)))));
 $optional_pattern = new Erfurt_Sparql_Query2_OptionalGraphPattern();
+$optional_pattern2 = new Erfurt_Sparql_Query2_OptionalGraphPattern();
 $mbox =  new Erfurt_Sparql_Query2_Var("mbox");
+$mbox2 =  new Erfurt_Sparql_Query2_Var("mbox");
 $triple2 = new Erfurt_Sparql_Query2_Triple($s, new Erfurt_Sparql_Query2_IriRef("mbox", $foafPrefix),$mbox);
 
 //test filter
@@ -50,6 +52,7 @@ $query->setWhere(
 	$pattern
 	->addElement($triple1)
 	->addElement($triplesamesubj)
+	->addElement($triplesamesubj) //duplicate
 	->addElement(
 		$optional_pattern
 			->addElement($triple2)
@@ -66,6 +69,7 @@ $query->setWhere(
 	)
 );
 
+$query->optimize();
 $nst->remove();
 // or 
 // $and->removeElement($nst->getID());
@@ -73,7 +77,7 @@ $nst->remove();
 
 //modify query
 $query->addProjectionVar($mbox);
-//$query->setStar(true);
+$query->setCountStar(true);
 
 //$query->setReduced(true);
 $query->setDistinct(true);
@@ -85,6 +89,8 @@ $idx = $query->getOrder()->add($mbox);
 
 //test different types
 //$query->setQueryType(Erfurt_Sparql_Query2::typeConstruct);
+//$query->getWhere()->removeAllElements();
+//$query->getConstructTemplate()->addElement(new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $name));
 
 echo "<h3>Basic Query Building</h3><pre>".htmlentities($query->getSparql())."</pre>";
 //echo $prefixedUri1->getSparql()." == ".htmlentities($prefixedUri1->getExpanded());

@@ -67,5 +67,13 @@ class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ObjectHelper impl
 		
 		return $vars;
 	}
+	/*
+	public function equals(Erfurt_Sparql_Query2_ObjectHelper $obj){
+		if(get_class($this) != get_class($obj)){
+			return false; //trivial case
+		}
+		
+		return ($this->s->equals($obj->getS()) && $this->p->equals($obj->getP()) && $this->o->equals($obj->getO()));
+	}*/
 }
 ?>

@@ -65,5 +65,13 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
 		return $this->getSparql();
 	}
 	
+	/*
+	public function equals($obj){
+		if(get_class($this) != get_class($obj)){
+			return false; //trivial case
+		}
+		
+		return ($this->name == $obj->getName() && $this->varLabelType == $obj->getVarLabelType());
+	}*/
 }
 ?>

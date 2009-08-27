@@ -13,11 +13,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
 {
 	protected $subject;
 	protected $propertyList = array();
-	protected $id;
-	
-	public function getID(){
-		return $this->id;
-	}
+
 	public function __construct(Erfurt_Sparql_Query2_VarOrTerm $subject, $propList = array()){
 		$this->subject = $subject;
 		if(!is_array($propList)){
@@ -32,7 +28,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
 			}
 		}
 		
-		$this->id = Erfurt_Sparql_Query2::getNextID();
+		parent::__construct();
 	}
 	
 	public function getSparql(){
@@ -52,5 +48,14 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
 	public function getVars(){
 		return array();
 	}
+	
+	public function getPropList(){
+		return $this->propertyList;
+	}
+	
+	public function getSubject(){
+		return $this->subject;
+	}
+	
 }
 ?>

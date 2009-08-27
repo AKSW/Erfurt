@@ -45,5 +45,14 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
 	public function getExpanded(){
 		return "<".( $this->isPrefixed() ? $this->prefix->getPrefixIri()->getIri() : "") . ($this->iri.">");
 	}
+	
+	/*
+	public function equals($obj){
+		if(get_class($this) != get_class($obj)){
+			return false; //trivial case
+		}
+		
+		return $this->getExpanded() == $obj->getExpanded();
+	}*/
 }
 ?>

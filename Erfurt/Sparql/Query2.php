@@ -57,6 +57,7 @@ class Erfurt_Sparql_Query2
 	protected $order;
 	protected $selectVars = array();
 	protected $star = true;
+	protected $countStar = false;
 	protected $pattern;
 	protected $prefixes = array();
 	protected $froms = array();
@@ -109,14 +110,16 @@ class Erfurt_Sparql_Query2
 			}
 		}
 		if($this->isSelectType() || $this->isDescribeType()){
-			if(count($this->selectVars) != 0 && !$this->star){
-				foreach($this->selectVars as $selectVar){
-					$sparql .= $selectVar->getSparql()." ";
+			if(!$this->countStar){
+				if(count($this->selectVars) != 0 && !$this->star){
+					foreach($this->selectVars as $selectVar){
+						$sparql .= $selectVar->getSparql()." ";
+					}
+				} else {
+					if(!$this->isAskType())
+						$sparql .= "*";
 				}
-			} else {
-				if(!$this->isAskType())
-					$sparql .= "*";
-			}
+			} else $sparql .= "COUNT(*)";
 		}
 		$sparql .= " \n";
 		
@@ -260,6 +263,15 @@ class Erfurt_Sparql_Query2
 	public function isStar(){
 		return count($this->selectVars) == 0 || $this->star;
 	}
+	public function setCountStar($bool){
+		if($bool === true) $this->selectVars = array(); // delete projection vars if set to star mode - usefull?
+		$this->countStar = $bool;
+		return $this; //for chaining
+	}
+	
+	public function isCountStar(){
+		return $this->countStar;
+	}
 	
 	public function setDistinct($bool){
 		if($bool === true) $this->distinctReducedMode = 1;
@@ -378,12 +390,12 @@ class Erfurt_Sparql_Query2
 	public function addProjectionVar(Erfurt_Sparql_Query2_Var $var){
 		if(in_array($var, $this->selectVars)){
 			//already added
-			return $this; //for chaining
+			return $this; //for chain/ing
 		}
 		
 		if(!in_array($var, $this->where->getVars())){
-			throw new RuntimeException("Trying to add projection-var that is not used in pattern");
-			return $this; //for chaining
+			//trigger_error("Trying to add projection-var (".$var->getSparql().") that is not used in pattern", E_USER_NOTICE);
+			//return $this; //for chaining
 		}
 		
 		if(count($this->selectVars) == 0)
@@ -419,6 +431,11 @@ class Erfurt_Sparql_Query2
 			}
 		}
 		return new Erfurt_Sparql_Query2_Var($name);
+	}
+	
+	public function optimize(){
+		$this->where->optimize();
+		return $this;
 	}
 }
 ?>
