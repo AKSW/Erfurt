@@ -11,21 +11,24 @@
 
 class Erfurt_Sparql_Query2_Abstraction_RDFSClass
 {
-	public $iri;
-	public $labels;
+	protected $iri;
+	protected $subclasses = array();
+	protected $labels;
 	
-	public function __construct(Erfurt_Sparql_Query2_IriRef $iri){
+	public function __construct(Erfurt_Sparql_Query2_IriRef $iri, $withChilds = false, $labels = array()){
 		$this->iri = $iri;
 		
-		if(func_num_args()>1){
-			$labels = func_get_arg(1);
-			if(is_array($labels)){
-				$this->labels = $labels;
-			} else {
-				throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Abstraction_RDFSClass::__construct must be an instance of array, instance of ".gettype($labels)." given");
-			}
-		}
-		
+ 		if($withChilds){
+			$owApp = OntoWiki_Application::getInstance();
+			$store       = $owApp->erfurt->getStore();
+	        $graph       = $owApp->selectedModel;
+	        $types   = array_keys($store->getTransitiveClosure($graph->getModelIri(), EF_RDFS_SUBCLASSOF, array($iri->getIri()), true));
+	        foreach($types as $type){
+	        	$this->subclasses[] = new Erfurt_Sparql_Query2_IriRef($type);
+	        }
+ 		}
+ 		
+		$this->labels = $labels;	
 	}
 	
 	public function getLabel($lang){
@@ -34,6 +37,14 @@ class Erfurt_Sparql_Query2_Abstraction_RDFSClass
 		} else {
 			return $this->iri->getIri();
 		}
+	}
+	
+	public function getIri(){
+		return $this->iri;
+	}
+	
+	public function getSubclasses(){
+		return $this->subclasses;
 	}
 }
 

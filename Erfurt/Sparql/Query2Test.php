@@ -68,8 +68,8 @@ $query->setWhere(
 		)
 	)
 );
-
 $query->optimize();
+
 $nst->remove();
 // or 
 // $and->removeElement($nst->getID());
@@ -93,7 +93,6 @@ $idx = $query->getOrder()->add($mbox);
 //$query->getConstructTemplate()->addElement(new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $name));
 
 echo "<h3>Basic Query Building</h3><pre>".htmlentities($query->getSparql())."</pre>";
-//echo $prefixedUri1->getSparql()." == ".htmlentities($prefixedUri1->getExpanded());
 
 $abs = new Erfurt_Sparql_Query2_Abstraction();
 $startclass = new Erfurt_Sparql_Query2_Abstraction_RDFSClass(new Erfurt_Sparql_Query2_IriRef("http://example.com/someclass"));

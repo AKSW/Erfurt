@@ -80,6 +80,15 @@ class Erfurt_Sparql_Query2
 		$this->setQueryType($type);
 	}
 	
+	public function __clone() {
+	    foreach($this as $key => $val) {
+	        if(is_object($val)||(is_array($val))){
+	            $this->{$key} = unserialize(serialize($val));
+	            //$this->$key= clone($this->$key); 
+	        }
+	    }
+	} 
+	
 	public function __toString() 
     {    
         return $this->getSparql();
