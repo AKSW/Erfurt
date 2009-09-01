@@ -1363,8 +1363,15 @@ class Erfurt_Store
      * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
-    public function sparqlQuery(Erfurt_Sparql_SimpleQuery $queryObject, $options = array())
-    {
+    public function sparqlQuery($queryObject, $options = array())
+    {	
+        if(is_a($queryObject, "Erfurt_Sparql_SimpleQuery"))
+        	;//trigger_error("Erfurt_Sparql_SimpleQuery is deprecated. Query: \n".(string)$queryObject, E_USER_NOTICE);
+        
+        if(!(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction"))){
+        	//throw new RuntimeException("Argument 1 passed to Erfurt_Store::sparqlQuery must be an instance of Erfurt_Sparql_Query2, instance of ".get_class($queryObject)." given");
+       	}
+       
         self::$_queryCount++;
         
         $defaultOptions = array(
@@ -1379,28 +1386,61 @@ class Erfurt_Store
         $useAdditional = $options['use_additional_imports'];
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
-            foreach ($queryObject->getFrom() as $fromGraphUri) {
-                foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
-                    $queryObject->addFrom($importedGraphUri);
-                }
+            if(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction")){
+	            //new way
+	            $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
+            	$from_strings = array();
+            	foreach ($queryObject->getFroms() as $graphClause) {
+	                $uri = $graphClause->getGraphIri()->getIri();
+	                $from_strings[] = $uri;
+	                foreach ($this->getImportsClosure($uri, $useAdditional) as $importedGraphUri) {
+	                    $queryObject->addFrom($importedGraphUri);
+	                }
+	            }
+	            
+            } else {
+               	foreach ($queryObject->getFrom() as $fromGraphUri) {
+	                foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
+	                    $queryObject->addFrom($importedGraphUri);
+	                }
+	            }
             }
         }
         
         // if using accesss control, filter FROM (NAMED) for allowed models
         if ($options['use_ac'] === true) {
-            $modelsFiltered = $this->_filterModels($queryObject->getFrom());
-            
-            // query contained a non-allowed non-existent model
-            if (empty($modelsFiltered)) {
-                return false;
-            }
-            
-            $queryObject->setFrom($modelsFiltered);
-            
-            // from named only if it was set
-            $fromNamed = $queryObject->getFromNamed();
-            if (count($fromNamed)) {
-                $queryObject->setFromNamed($this->_filterModels($fromNamed));
+            if(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction")){
+	            //new way
+            	$queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
+            	
+            	$from_strings = array();
+	            foreach ($queryObject->getFroms() as $graphClause) {
+		           $uri = $graphClause->getGraphIri()->getIri();
+		           $from_strings[] = $uri;
+		        }
+            	
+            	$modelsFiltered = $this->_filterModels($from_strings);
+	            
+	            // query contained a non-allowed non-existent model
+	            if (empty($modelsFiltered)) {
+	                return false;
+	            }
+	            
+	            $queryObject->setFroms($modelsFiltered);
+            } else {
+            	$modelsFiltered = $this->_filterModels($queryObject->getFrom());
+	            
+	            // query contained a non-allowed non-existent model
+	            if (empty($modelsFiltered)) {
+	                return false;
+	            }
+	            
+	            $queryObject->setFrom($modelsFiltered);
+	            // from named only if it was set
+	            $fromNamed = $queryObject->getFromNamed();
+	            if (count($fromNamed)) {
+	                $queryObject->setFromNamed($this->_filterModels($fromNamed));
+	            }
             }
         }
 

@@ -521,7 +521,7 @@ class Erfurt_Rdf_Model
             unset($options['use_ac']);
         }
         
-        if (!($query instanceof Erfurt_Sparql_SimpleQuery)) {
+        if (is_string($query)) {
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
         }
