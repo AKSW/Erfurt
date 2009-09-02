@@ -18,7 +18,7 @@ class Erfurt_Sparql_Query2_ObjectList implements Erfurt_Sparql_Query2_IF_ObjectL
 			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::__construct must be an array of Erfurt_Sparql_Query2_GraphNode's, instance of ".typeHelper($objects)." given");
 		} else {
 			foreach($objects as $object){
-				if(!is_a($object, "Erfurt_Sparql_Query2_GraphNode")){
+				if(!($object instanceof Erfurt_Sparql_Query2_GraphNode)){
 					throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::__construct must be an array of Erfurt_Sparql_Query2_GraphNode's, instance of ".typeHelper($object)." given");
 				} else {
 					$this->objects[] = $object;

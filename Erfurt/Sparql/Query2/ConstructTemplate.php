@@ -11,15 +11,21 @@
 
 class Erfurt_Sparql_Query2_ConstructTemplate extends Erfurt_Sparql_Query2_GroupGraphPattern
 {
-	public function addElement(Erfurt_Sparql_Query2_IF_TriplesSameSubject $element){
+	public function addElement($element){
+		if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) ){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject");
+		}
 		$this->elements[] = $element;
 		$element->newUser($this);
 		return $this; //for chaining
 	}
 	
-	public function setElement($i, Erfurt_Sparql_Query2_IF_TriplesSameSubject $element){
+	public function setElement($i, $element){
 		if(!is_int($i)){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of integer, instance of ".typeHelper($member)." given");
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of integer, instance of ".typeHelper($i)." given");
+		}
+		if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) ){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject");
 		}
 		$this->elements[$i] = $element;
 	}

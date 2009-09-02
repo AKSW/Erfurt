@@ -55,7 +55,7 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 	
 	public function addLink(Erfurt_Sparql_Query2_IriRef $predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){
 		$this->outgoinglinks[] = new Erfurt_Sparql_Query2_Abstraction_Link($predicate, $target);
-		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, new Erfurt_Sparql_Query2_Var($target->getClass()->iri)));
+		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, new Erfurt_Sparql_Query2_Var($target->getClass()->getIri())));
 		return $this; //for chaining
 	}
 	

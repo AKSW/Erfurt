@@ -1,6 +1,4 @@
 <?php
-//DEBUG
-error_reporting(E_ALL);
 
 require_once "Query2/structural-Interfaces.php";
 require_once "Query2/ObjectHelper.php";
@@ -320,13 +318,13 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function addFrom($from){
-		if(!is_a($from, "Erfurt_Sparql_Query2_GraphClause") && !is_a($from, "Erfurt_Sparql_Query2_IriRef") && !is_string($from)){
+		if(!($from instanceof Erfurt_Sparql_Query2_GraphClause || $from instanceof Erfurt_Sparql_Query2_IriRef || is_string($from))){
 			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2::addFrom must be an instance of Erfurt_Sparql_Query2_GraphClause or Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($setNamed)." given");
 		}
 		
 		$named = false;
 		
-		if(is_a($from, "Erfurt_Sparql_Query2_IriRef"))
+		if($from instanceof Erfurt_Sparql_Query2_IriRef)
 			$from = new Erfurt_Sparql_Query2_GraphClause($from);
 		if(is_string($from))
 			$from = new Erfurt_Sparql_Query2_GraphClause(new Erfurt_Sparql_Query2_IriRef($from));

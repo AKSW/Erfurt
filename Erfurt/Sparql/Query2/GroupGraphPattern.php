@@ -11,7 +11,7 @@
 class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupHelper
 {
 	public function addElement($member){
-		if(!is_a($member, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($member, "Erfurt_Sparql_Query2_IF_TriplesSameSubject") && !is_a($member, "Erfurt_Sparql_Query2_Filter")){
+		if(!($member instanceof Erfurt_Sparql_Query2_GroupGraphPattern) && !($member instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) && !($member instanceof Erfurt_Sparql_Query2_Filter)){
 			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_Triple or Erfurt_Sparql_Query2_Filter, instance of ".typeHelper($member)." given");
 			return;
 		}
@@ -25,7 +25,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 		
 		for($i=0; $i < count($this->elements); $i++){
 			$sparql .= $this->elements[$i]->getSparql();
-			if(is_a($this->elements[$i], "Erfurt_Sparql_Query2_IF_TriplesSameSubject") && isset($this->elements[$i+1]) && is_a($this->elements[$i+1], "Erfurt_Sparql_Query2_IF_TriplesSameSubject")){
+			if($this->elements[$i] instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && isset($this->elements[$i+1]) && $this->elements[$i+1] instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject){
 				$sparql .= " ."; //realisation of TriplesBlock
 			} 
 			$sparql .= " \n";
@@ -47,7 +47,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 	
 	
 	public function setElement($i, $member){
-		if(!is_a($member, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($member, "Erfurt_Sparql_Query2_IF_TriplesSameSubject") && !is_a($member, "Erfurt_Sparql_Query2_Filter")){
+		if(!($member instanceof Erfurt_Sparql_Query2_GroupGraphPattern) && !($member instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) && !($member instanceof Erfurt_Sparql_Query2_Filter)){
 			throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_IF_TriplesSameSubject or Erfurt_Sparql_Query2_Filter, instance of ".typeHelper($member)." given");
 		}
 		if(!is_int($i)){
@@ -63,7 +63,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 		}
 		
 		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($element, "Erfurt_Sparql_Query2_IF_TriplesSameSubject") && !is_a($element, "Erfurt_Sparql_Query2_Filter")){
+			if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern) && !($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) && !($element instanceof Erfurt_Sparql_Query2_Filter)){
 				throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_IF_TriplesSameSubject or Erfurt_Sparql_Query2_Filter");
 				return $this; //for chaining
 			}
@@ -78,7 +78,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 		}
 		
 		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_GroupGraphPattern") && !is_a($element, "Erfurt_Sparql_Query2_IF_TriplesSameSubject") && !is_a($element, "Erfurt_Sparql_Query2_Filter")){
+			if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern) && !($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) && !($element instanceof Erfurt_Sparql_Query2_Filter)){
 				throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_GroupGraphPattern or Erfurt_Sparql_Query2_IF_TriplesSameSubject or Erfurt_Sparql_Query2_Filter");
 				return $this; //for chaining
 			}
@@ -103,14 +103,14 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 						$to_remove[] = $this->elements[$i];
 						
 						//cant delete one without deleting both - need to copy first 
-						if(is_a($this->elements[$j], "Erfurt_Sparql_Query2_GroupHelper")){
+						if($this->elements[$j] instanceof Erfurt_Sparql_Query2_GroupHelper){
 							$copy = $this->elements[$j];
 							$classname = get_class($this->elements[$j]);
 							$this->elements[$j] = new $classname;
 							$this->elements[$j]->setElements($copy->getElements());
-						} else if(is_a($this->elements[$j], "Erfurt_Sparql_Query2_Triple")){
+						} else if($this->elements[$j] instanceof Erfurt_Sparql_Query2_Triple){
 							$this->elements[$j] = new Erfurt_Sparql_Query2_Triple($this->elements[$j]->getS(),$this->elements[$j]->getP(),$this->elements[$j]->getO());
-						} else if(is_a($this->elements[$j], "Erfurt_Sparql_Query2_TriplesSameSubject")){
+						} else if($this->elements[$j] instanceof Erfurt_Sparql_Query2_TriplesSameSubject){
 							$this->elements[$j] = new Erfurt_Sparql_Query2_TriplesSameSubject($this->elements[$j]->getSubject(),$this->elements[$j]->getPropList());
 						}
 						continue;
@@ -126,29 +126,9 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 			$obj->remove();
 		}
 		
-		/* merge optionals into one - not an equivalence-operation...
-		//find optionals
-		$optionals = array();
-		foreach($this->elements as $element){
-			if(is_a($element, "Erfurt_Sparql_Query2_OptionalGraphPattern") ){
-				$optionals[] = $element;
-			}
-		}
-		
-		if(count($optionals)>1){
-			for($i=0; $i<count($optionals); $i++){
-				if($i>0){
-					// merged into the first
-					$optionals[0]->addElements($optionals[$i]->getElements());
-					$optionals[$i]->remove();
-				}
-			}
-		}
-		*/
-		
 		//optimization is done on this level - proceed on deeper level
 		foreach($this->elements as $element){
-			if(is_a($element, "Erfurt_Sparql_Query2_GroupGraphPattern") ){
+			if($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern){
 				$element->optimize();
 			}
 		}

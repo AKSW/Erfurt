@@ -20,7 +20,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
 			throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_TriplesSameSubject::__construct must be an array of [Erfurt_Sparql_Query2_Verb, Erfurt_Sparql_Query2_IF_ObjectList]-pairs, instance of ".typeHelper($propList)." given");
 		} else {
 			foreach($propList as $prop){
-				if(!is_a($prop["pred"], "Erfurt_Sparql_Query2_Verb") || !is_a($prop["obj"], "Erfurt_Sparql_Query2_IF_ObjectList")){
+				if(!($prop["pred"] instanceof Erfurt_Sparql_Query2_Verb && $prop["obj"] instanceof Erfurt_Sparql_Query2_IF_ObjectList)){
 					throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_TriplesSameSubject::__construct must be an array of [Erfurt_Sparql_Query2_Verb, Erfurt_Sparql_Query2_IF_ObjectList]-pairs, instance of ".typeHelper($prop)." given");
 				} else {
 					$this->propertyList[] = $prop;

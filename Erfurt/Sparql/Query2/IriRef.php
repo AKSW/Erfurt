@@ -18,7 +18,7 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
 		
 		if(func_num_args()>1){
 			$prefix = func_get_arg(1);
-			if(is_a($prefix, "Erfurt_Sparql_Query2_Prefix")){
+			if($prefix instanceof Erfurt_Sparql_Query2_Prefix){
 				$this->prefix = $prefix;
 			} else {
 				throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_IriRef::__construct must be an instance of Erfurt_Sparql_Query2_Prefix, instance of ".typeHelper($prefix)." given");
@@ -45,14 +45,5 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
 	public function getExpanded(){
 		return "<".( $this->isPrefixed() ? $this->prefix->getPrefixIri()->getIri() : "") . ($this->iri.">");
 	}
-	
-	/*
-	public function equals($obj){
-		if(get_class($this) != get_class($obj)){
-			return false; //trivial case
-		}
-		
-		return $this->getExpanded() == $obj->getExpanded();
-	}*/
 }
 ?>

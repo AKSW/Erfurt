@@ -41,7 +41,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 		return $this->parents;
 	}
 	
-	public function equals(Erfurt_Sparql_Query2_ObjectHelper $obj){
+	public function equals($obj){
 		//trivial cases
 		if($this==$obj) return true;
 		
@@ -75,7 +75,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 		
 		for($i=0;$i<count($this->elements); $i++){
 			if($this->elements[$i]->getID() != $id){
-				if(is_a($this->elements[$i], "Erfurt_Sparql_Query2_GroupHelper"))
+				if($this->elements[$i] instanceof Erfurt_Sparql_Query2_GroupHelper)
 					$this->elements[$i]->removeElement($id);
 				$new[] = $this->elements[$i];
 			}

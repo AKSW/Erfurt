@@ -55,25 +55,17 @@ class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ObjectHelper impl
 	public function getVars(){
 		$vars = array();
 		
-		if(is_a($this->s, "Erfurt_Sparql_Query2_Var")){
+		if($this->s instanceof Erfurt_Sparql_Query2_Var){
 			$vars[] = $this->s;
 		}
-		if(is_a($this->p, "Erfurt_Sparql_Query2_Var")){
+		if($this->p instanceof Erfurt_Sparql_Query2_Var){
 			$vars[] = $this->p;
 		}
-		if(is_a($this->o, "Erfurt_Sparql_Query2_Var")){
+		if($this->o instanceof Erfurt_Sparql_Query2_Var){
 			$vars[] = $this->o;
 		}
 		
 		return $vars;
 	}
-	/*
-	public function equals(Erfurt_Sparql_Query2_ObjectHelper $obj){
-		if(get_class($this) != get_class($obj)){
-			return false; //trivial case
-		}
-		
-		return ($this->s->equals($obj->getS()) && $this->p->equals($obj->getP()) && $this->o->equals($obj->getO()));
-	}*/
 }
 ?>

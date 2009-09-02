@@ -27,7 +27,7 @@ abstract class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_Gro
 		if(is_string($element)){
 			$element = new Erfurt_Sparql_Query2_RDFLiteral($element);
 		}
-		if(!is_a($element, "Erfurt_Sparql_Query2_Expression")){
+		if(!($element instanceof Erfurt_Sparql_Query2_Expression)){
 			 throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_Expression or string, instance of ".typeHelper($element)." given");
 		}
 		$element->newUser($this);
@@ -61,7 +61,7 @@ abstract class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_Gro
 		}
 		
 		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_Expression")){
+			if(!($element instanceof Erfurt_Sparql_Query2_Expression)){
 				throw new RuntimeException("Argument 1 passed to ".__CLASS__."::setElements : must be an array of instances of Erfurt_Sparql_Query2_Expression");
 				return $this; //for chaining
 			}
@@ -206,7 +206,7 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_G
 		}
 		
 		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_Expression")){
+			if(!($element instanceof Erfurt_Sparql_Query2_Expression)){
 				throw new RuntimeException("Argument 1 passed to ".__CLASS__."::setElements : must be an array of instances of Erfurt_Sparql_Query2_Expression");
 				return $this; //for chaining
 			}
@@ -228,9 +228,9 @@ class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMu
 		if($op == self::minus || $op == self::plus ){
 			//a hack to convert a expression that is added first when added with a minus as operator - would be omitted otherwise. maybe not usefull?!
 			if($op == self::minus && count($this->elements)==0){
-				if(is_a($exp, "Erfurt_Sparql_Query2_RDFLiteral")){
+				if($exp instanceof Erfurt_Sparql_Query2_RDFLiteral){
 					$exp->setValue("-".$exp->getValue());
-				} else if (is_a($exp, "Efurt_Sparql_Query2_NumericLiteral")){
+				} else if ($exp instanceof Efurt_Sparql_Query2_NumericLiteral){
 					$exp->setValue((-1)*$exp->getValue());
 				} else {
 					$exp = new Erfurt_Sparql_Query2_UnaryExpression(Erfurt_Sparql_Query2_UnaryExpression::minus, $exp);
@@ -324,7 +324,7 @@ class Erfurt_Sparql_Query2_Function extends Erfurt_Sparql_Query2_ObjectHelper im
 			$iri = new Erfurt_Sparql_Query2_IriRef($iri);
 		}
 		
-		if(!is_a($iri, "Erfurt_Sparql_Query2_IriRef")){
+		if(!($iri instanceof Erfurt_Sparql_Query2_IriRef)){
 			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Function::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string (will be converted to IriRef), instance of ".typeHelper($args)." given");
 		}
 		
@@ -332,7 +332,7 @@ class Erfurt_Sparql_Query2_Function extends Erfurt_Sparql_Query2_ObjectHelper im
 		$args = array();
 		if(func_num_args()>1){
 			$args = func_get_arg(1);
-			if(is_a($args, "Erfurt_Sparql_Query2_Expression")){
+			if($args instanceof Erfurt_Sparql_Query2_Expression){
 				//only one given - pack into array
 				$args = array($args);
 			}
@@ -342,7 +342,7 @@ class Erfurt_Sparql_Query2_Function extends Erfurt_Sparql_Query2_ObjectHelper im
 			throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Function::__construct must be an array of Erfurt_Sparql_Query2_Expression's, instance of ".typeHelper($args)." given");
 		} else {
 			foreach($args as $arg){
-				if(!is_a($arg, "Erfurt_Sparql_Query2_Expression")){
+				if(!($arg instanceof Erfurt_Sparql_Query2_Expression)){
 					throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Function::__construct must be an array of Erfurt_Sparql_Query2_Expression's, instance of ".typeHelper($arg)." given");
 				} else {
 					$this->args[] = $arg;
@@ -526,7 +526,7 @@ class Erfurt_Sparql_Query2_Regex extends Erfurt_Sparql_Query2_ObjectHelper imple
 		
 		if(func_num_args()>2){
 			$element3 = func_get_arg(2);
-			if(is_a($element3, "Erfurt_Sparql_Query2_Expression")){
+			if($element3 instanceof Erfurt_Sparql_Query2_Expression){
 				$this->element3 = $element3;
 			} else {
 				throw new RuntimeException("Argument 3 passed to Erfurt_Sparql_Query2_Regex::__construct must be an instance of Erfurt_Sparql_Query2_Expression, instance of ".typeHelper($element3)." given");

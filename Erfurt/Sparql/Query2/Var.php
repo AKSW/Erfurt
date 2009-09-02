@@ -16,7 +16,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
 	public function __construct($nname){
 		if(is_string($nname) && $nname != ""){
 			$this->name = $nname;
-		} else if(is_a($nname, "Erfurt_Sparql_Query2_IriRef")){
+		} else if($nname instanceof Erfurt_Sparql_Query2_IriRef){
 			$this->name = $this->extractName($nname->getIri());
 		} else {
 			throw new RuntimeException("wrong parameter for constructing Erfurt_Sparql_Query2_Var. string (not empty) or Erfurt_Sparql_Query2_IriRef expected. ".typeHelper($nname)." found.");
