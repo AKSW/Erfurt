@@ -1365,10 +1365,10 @@ class Erfurt_Store
      */
     public function sparqlQuery($queryObject, $options = array())
     {	
-        if(is_a($queryObject, "Erfurt_Sparql_SimpleQuery"))
+        if($queryObject instanceof Erfurt_Sparql_SimpleQuery)
         	;//trigger_error("Erfurt_Sparql_SimpleQuery is deprecated. Query: \n".(string)$queryObject, E_USER_NOTICE);
         
-        if(!(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction"))){
+        if(!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction)){
         	//throw new RuntimeException("Argument 1 passed to Erfurt_Store::sparqlQuery must be an instance of Erfurt_Sparql_Query2, instance of ".get_class($queryObject)." given");
        	}
        
@@ -1386,8 +1386,8 @@ class Erfurt_Store
         $useAdditional = $options['use_additional_imports'];
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
-            if(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction")){
-	            //new way
+            if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
+	            //new way, "
 	            $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
             	$from_strings = array();
             	foreach ($queryObject->getFroms() as $graphClause) {
@@ -1409,7 +1409,7 @@ class Erfurt_Store
         
         // if using accesss control, filter FROM (NAMED) for allowed models
         if ($options['use_ac'] === true) {
-            if(is_a($queryObject, "Erfurt_Sparql_Query2") || is_a($queryObject, "Erfurt_Sparql_Query2_Abstraction")){
+            if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
 	            //new way
             	$queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
             	
