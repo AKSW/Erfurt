@@ -37,26 +37,58 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		$this->query->getWhere()->addElement($typePart);
 	}
 	
-	public function addShownProperty(Erfurt_Sparql_Query2_IriRef $prop, $name = null){
+	public function addShownProperty($predicate, $name = null){
+		if(is_string($predicate)){
+			$predicate = new Erfurt_Sparql_Query2_IriRef($predicate);
+		}
+		if(!($predicate instanceof Erfurt_Sparql_Query2_IriRef)){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addFilter must be an instance of Erfurt_Sparql_Query2_IriRef instance of ".typeHelper($predicate)." given");
+		}
+		
 		$optionalpart = new Erfurt_Sparql_Query2_OptionalGraphPattern();
 			
-		$this->shownproperties[] = $prop;
+		$this->shownproperties[] = $predicate;
 		if($name == null)
-			$var = new Erfurt_Sparql_Query2_Var($prop);
+			$var = new Erfurt_Sparql_Query2_Var($predicate);
 		else 
 			$var = new Erfurt_Sparql_Query2_Var($name);
 		
-		$optionalpart->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $prop, $var));
+		$optionalpart->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, $var));
 		$this->query->getWhere()->addElement($optionalpart);
 		
 		$this->query->addProjectionVar($var);
 		return $this; //for chaining
 	}
 	
-	public function addLink(Erfurt_Sparql_Query2_IriRef $predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){
+	public function addLink($predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){
+		if(is_string($predicate)){
+			$predicate = new Erfurt_Sparql_Query2_IriRef($predicate);
+		}
+		if(!($predicate instanceof Erfurt_Sparql_Query2_IriRef)){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addFilter must be an instance of Erfurt_Sparql_Query2_IriRef instance of ".typeHelper($predicate)." given");
+		}		
+		
 		$this->outgoinglinks[] = new Erfurt_Sparql_Query2_Abstraction_Link($predicate, $target);
 		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, new Erfurt_Sparql_Query2_Var($target->getClass()->getIri())));
 		return $this; //for chaining
+	}
+	
+	public function addFilter($predicate, $type, $value){
+		if(is_string($predicate)){
+			$predicate = new Erfurt_Sparql_Query2_IriRef($predicate);
+		}
+		if(!($predicate instanceof Erfurt_Sparql_Query2_IriRef)){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addFilter must be an instance of Erfurt_Sparql_Query2_IriRef instance of ".typeHelper($predicate)." given");
+		}
+		$propVar = new Erfurt_Sparql_Query2_Var($predicate);
+		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, $propVar));
+		switch($type){
+			case "contains":
+				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Filter(new Erfurt_Sparql_Query2_Regex($propVar, new Erfurt_Sparql_Query2_RDFLiteral($value))));
+			break;
+		}
+		
+		return $this;
 	}
 	
 	public function getClass(){

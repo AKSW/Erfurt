@@ -374,7 +374,7 @@ class Erfurt_Sparql_Query2
 			$froms[0] = $tmp;
 		}
 		for($i=0;$i<count($froms); $i++){
-			if(is_a($froms[$i], "Erfurt_Sparql_Query2_IriRef"))
+			if($froms[$i] instanceof Erfurt_Sparql_Query2_IriRef)
 				$froms[$i] = new Erfurt_Sparql_Query2_GraphClause($froms[$i]);
 			if(is_string($froms[$i]))
 				$froms[$i] = new Erfurt_Sparql_Query2_GraphClause(new Erfurt_Sparql_Query2_IriRef($froms[$i]));
@@ -410,6 +410,10 @@ class Erfurt_Sparql_Query2
 		
 		$this->selectVars[] = $var;
 		return $this; //for chaining
+	}
+	
+	public function deleteAllProjectionVars(){
+		$this->selectVars = array();
 	}
 	
 	public function addPrefix(Erfurt_Sparql_Query2_Prefix $prefix){
