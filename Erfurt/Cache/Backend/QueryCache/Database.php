@@ -581,9 +581,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
     public function exists ( $queryId ) {
-        $query = 'SELECT count(qid) as count FROM ef_cache_query_result WHERE qid = "'.$queryId.'"';
+        $query = 'SELECT * FROM ef_cache_query_result WHERE qid = \''.$queryId.'\'';
         $count = $this->_query ($query);
-        if ( $count[0]['count'] == 0 ) {
+        if ( count($count) == 0 ) {
             return false;
         } else {
             return true;
