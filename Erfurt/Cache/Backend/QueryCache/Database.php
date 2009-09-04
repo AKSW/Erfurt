@@ -581,12 +581,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     boolean         $state          true / false
      */
     public function exists ( $queryId ) {
-        $query = "SELECT hit_count FROM ef_cache_query_result WHERE qid = '".$queryId."'";
-	    $count = $this->_query ($query);
-        if ( !$count )
+        $query = 'SELECT count(qid) as count FROM ef_cache_query_result WHERE qid = "'.$queryId.'"';
+        $count = $this->_query ($query);
+        if ( $count[0]['count'] == 0 ) {
             return false;
-        return (int) $count[0]['hit_count'];
-        #return (bool) $result[0]['count'];
+        } else {
+            return true;
+        }
     }
 
 
@@ -661,6 +662,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     {
         if ( count( $modelIris ) == 0) {
             $modelIris[] = 'NULL' ;
+        } else {
+            $modelIris = array_unique($modelIris);
         }
 
         foreach ($modelIris as $modelIri) {
