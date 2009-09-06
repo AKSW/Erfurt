@@ -49,6 +49,7 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 			$this->query->getWhere()->addElement($filter);
 		} else {
 			$typePart= new Erfurt_Sparql_Query2_Triple($this->classVar, $member_predicate, $type->getIri());
+			$this->query->getWhere()->addElement($typePart);
 		}
 	}
 	

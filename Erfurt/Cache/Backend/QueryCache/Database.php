@@ -737,7 +737,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 }
             } else {
                 require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Something went wrong in with the query cache: ' . $e->getMessage());
+                throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage());
             }
         }
         

@@ -17,7 +17,7 @@ class Erfurt_Sparql_Query2_Abstraction_RDFSClass
 	
 	public function __construct(Erfurt_Sparql_Query2_IriRef $iri, $withChilds = false){
 		$this->iri = $iri;
-		/*
+		
  		if($withChilds){
 			$owApp = OntoWiki_Application::getInstance();
 			$store       = $owApp->erfurt->getStore();
@@ -26,7 +26,7 @@ class Erfurt_Sparql_Query2_Abstraction_RDFSClass
 	        foreach($types as $type){
 	        	$this->subclasses[] = new Erfurt_Sparql_Query2_IriRef($type);
 	        }
- 		}*/
+ 		}
 	}
 	
 	public function getLabel($lang){
