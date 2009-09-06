@@ -1392,9 +1392,9 @@ class Erfurt_Store
             	$from_strings = array();
             	foreach ($queryObject->getFroms() as $graphClause) {
 	                $uri = $graphClause->getGraphIri()->getIri();
-	                $from_strings[] = $uri;
+	                //$from_strings[] = $uri;
 	                foreach ($this->getImportsClosure($uri, $useAdditional) as $importedGraphUri) {
-	                    $queryObject->addFrom($importedGraphUri);
+	                    	$queryObject->addFrom($importedGraphUri);
 	                }
 	            }
 	            

@@ -299,7 +299,7 @@ class Erfurt_Sparql_Parser
     // ------------------------------------------------------------------------
     
     /**
-     * Main function of Erufrt_Sparql_Parser. 
+     * Main function of Erfurt_Sparql_Parser. 
      * Parses a query string.
      *
      * @param string $queryString The SPARQL query
@@ -312,7 +312,7 @@ class Erfurt_Sparql_Parser
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Querystring is empty.');
         }
-        
+        //echo "Parser is called on:\n".$queryString."\n\n";
         $this->_prepare();
         $this->_query->setQueryString($queryString);
 
@@ -849,7 +849,7 @@ class Erfurt_Sparql_Parser
 
         if ((count($tree) === 0) && (count($part) > 1)) {
             require_once 'Erfurt/Sparql/ParserException.php';
-            //throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
+            throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
         }
         
         if (!isset($tree['type']) && isset($part[0])) {

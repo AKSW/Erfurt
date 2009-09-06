@@ -24,7 +24,7 @@ class Erfurt_Sparql_Query2_Abstraction
 	protected $query;
 	protected $startNode;
 	
-	protected $allowedCalls = array("addFrom", "getFrom", "setFrom", "getFroms", "setFroms", "addProjectionVar", "getOrder", "setLimit", "setOffset", "getLimit", "getOffset", "setDistinct", "setReduced", "getDistinct", "getReduced");
+	protected $allowedCalls = array("addFrom", "getFrom", "setFrom", "getFroms", "setFroms", "addProjectionVar", "getOrder", "setLimit", "setOffset", "getLimit", "getOffset", "setDistinct", "setReduced", "getDistinct", "getReduced", "hasFrom");
 	
 	public function __construct(){
 		$this->query = new Erfurt_Sparql_Query2();

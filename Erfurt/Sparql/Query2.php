@@ -337,6 +337,13 @@ class Erfurt_Sparql_Query2
 			$from->setNamed($named);
 		}
 		
+		//search for equal froms
+		foreach($this->froms as $compare){
+			if($compare->getGraphIri()->getIri() == $from->getGraphIri()->getIri() && $compare->isNamed() == $from->isNamed()){
+				return $this; //for chaining
+			}
+		}
+		
 		$this->froms[] = $from;
 		return $this; //for chaining
 	}
@@ -390,8 +397,22 @@ class Erfurt_Sparql_Query2
 		return $this; //for chaining
 	}
 	
-	public function hasFrom(){
+	public function hasFroms(){
 		return !empty($this->froms);
+	}
+	
+	public function hasFrom($from){
+		if(!($from instanceof Erfurt_Sparql_Query2_GraphClause || $from instanceof Erfurt_Sparql_Query2_IriRef || is_string($from))){
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2::hasFrom must be an instance of Erfurt_Sparql_Query2_GraphClause or Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($setNamed)." given");
+		}
+		
+		
+		if($from instanceof Erfurt_Sparql_Query2_IriRef)
+			$from = new Erfurt_Sparql_Query2_GraphClause($from);
+		if(is_string($from))
+			$from = new Erfurt_Sparql_Query2_GraphClause(new Erfurt_Sparql_Query2_IriRef($from));
+		
+		return in_array($from, $this->froms);
 	}
 	
 	public function addProjectionVar(Erfurt_Sparql_Query2_Var $var){
