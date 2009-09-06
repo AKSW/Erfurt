@@ -414,6 +414,7 @@ class Erfurt_Sparql_Query2
 	
 	public function deleteAllProjectionVars(){
 		$this->selectVars = array();
+		return $this;
 	}
 	
 	public function addPrefix(Erfurt_Sparql_Query2_Prefix $prefix){

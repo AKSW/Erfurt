@@ -50,32 +50,34 @@ class Erfurt_Sparql_Query2_Abstraction
 		} else throw new RuntimeException("Query2_Abstraction: method $name not found");
 	}
 	
-	public function addNode(Erfurt_Sparql_Query2_Abstraction_ClassNode $source = null,  $predicate = null, $targetClass = null, $withChilds = false, $varName = null){
+	public function addNode(Erfurt_Sparql_Query2_Abstraction_ClassNode $sourceNode = null,  $LinkPredicate = null, $targetClass = null, $withChilds = true, $varName = null, $member_predicate = EF_RDF_TYPE){
 		// hack for overloaded functioncalls
-		if($predicate != null && !($predicate instanceof Erfurt_Sparql_Query2_IriRef)){
-			if(is_string($predicate)){
-				$predicate = new Erfurt_Sparql_Query2_IriRef($predicate);
-			} else throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Abstraction::addNode must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($predicate)." given");
+		if($LinkPredicate != null && !($LinkPredicate instanceof Erfurt_Sparql_Query2_IriRef)){
+			if(is_string($LinkPredicate)){
+				$LinkPredicate = new Erfurt_Sparql_Query2_IriRef($LinkPredicate);
+			} else throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Abstraction::addNode must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($LinkPredicate)." given");
 		}
-		if($targetClass != null && !($targetClass instanceof Erfurt_Sparql_Query2_Abstraction_RDFSClass)){
+		if($targetClass != null && !($targetClass instanceof Erfurt_Sparql_Query2_IriRef)){
 			if(is_string($targetClass)){
 				$targetClass = new Erfurt_Sparql_Query2_IriRef($targetClass);
 			} 
-			if($targetClass instanceof Erfurt_Sparql_Query2_IriRef){
-				$targetClass = new Erfurt_Sparql_Query2_Abstraction_RDFSClass($targetClass, $withChilds);
-			} else throw new RuntimeException("Argument 3 passed to Erfurt_Sparql_Query2_Abstraction::addNode must be an instance of Erfurt_Sparql_Query2_Abstraction_RDFSClass or Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($targetClass)." given");
+			if(!($targetClass instanceof Erfurt_Sparql_Query2_IriRef))
+				 throw new RuntimeException("Argument 3 passed to Erfurt_Sparql_Query2_Abstraction::addNode must be an instance of Erfurt_Sparql_Query2_IriRef or string, instance of ".typeHelper($targetClass)." given");
 		}
 		
-		if($source == null && $predicate == null){
+		if($sourceNode == null && $LinkPredicate == null){
 			//add startnode
-			$this->startNode = new Erfurt_Sparql_Query2_Abstraction_ClassNode($targetClass, $this->query, $varName);
+			$this->startNode = new Erfurt_Sparql_Query2_Abstraction_ClassNode($targetClass, $member_predicate, $this->query, $varName, $withChilds);
 			return $this->startNode;
 		}
 		
-		if($source != null && $predicate != null){
-			//add navigate from source node to new node
-			$newnode = new Erfurt_Sparql_Query2_Abstraction_ClassNode($targetClass, $this->query, $varName);
-			$source->addLink($predicate, $newnode);
+		if($sourceNode != null && $LinkPredicate != null){
+			if($targetClass == null){
+				//TODO: find type of referenced objects
+			}
+			//add link from source node to new node
+			$newnode = new Erfurt_Sparql_Query2_Abstraction_ClassNode($targetClass, $member_predicate, $this->query, $varName, $withChilds);
+			$sourceNode->addLink($LinkPredicate, $newnode);
 			return $newnode; //for chaining
 		} else {
 			throw new RuntimeException("Erfurt_Sparql_Query2_Abstraction::addNode : argument 1 and 2 must either both be null or both not null");

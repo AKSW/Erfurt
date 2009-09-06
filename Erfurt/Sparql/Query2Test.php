@@ -8,7 +8,8 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
- 
+define('EF_RDF_NS', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+define('EF_RDF_TYPE', EF_RDF_NS.'type');
 require_once "Query2.php";
 
 //test graph pattern
@@ -95,10 +96,10 @@ $idx = $query->getOrder()->add($mbox);
 echo "<h3>Basic Query Building</h3><pre>".htmlentities($query->getSparql())."</pre>";
 
 $abs = new Erfurt_Sparql_Query2_Abstraction();
-$startclass = new Erfurt_Sparql_Query2_Abstraction_RDFSClass(new Erfurt_Sparql_Query2_IriRef("http://example.com/someclass"));
-$abs->addNode(null, null, $startclass);
+$startclass = "http://example.com/someCollection";
+$abs->addNode(null, null, $startclass, false, "member", "isMember");
 $abs->getStartNode()->addShownProperty(new Erfurt_Sparql_Query2_IriRef("http://example.com/someclass#someprop"));
-$abs->addNode($abs->getStartNode(), new Erfurt_Sparql_Query2_IriRef("http://example.com/someclass#somelink"), new Erfurt_Sparql_Query2_Abstraction_RDFSClass(new Erfurt_Sparql_Query2_IriRef("http://example.com/someOtherClass")))
+$abs->addNode($abs->getStartNode(), new Erfurt_Sparql_Query2_IriRef("http://example.com/someclass#somelink"), "http://example.com/someOtherClass")
 		->addShownProperty(new Erfurt_Sparql_Query2_IriRef("http://example.com/someOtherClass#otherProp"));
 
 echo "<h3>Abstracted Query Building</h3><pre>".htmlentities($abs->getSparql())."</pre>";

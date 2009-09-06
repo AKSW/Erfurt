@@ -12,29 +12,44 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 	protected $outgoinglinks;
 	protected $query;
 	
-	public function __construct(Erfurt_Sparql_Query2_Abstraction_RDFSClass $type, Erfurt_Sparql_Query2 $query, $varName = null){
-		$this->type = $type;
+	public function __construct(Erfurt_Sparql_Query2_IriRef $type, $member_predicate = EF_RDF_TYPE, Erfurt_Sparql_Query2 $query, $varName = null, $withChilds = true){
+		
 		$this->query = $query;
+		
+		if($member_predicate==EF_RDF_TYPE){
+			$type = new Erfurt_Sparql_Query2_Abstraction_RDFSClass($type, $withChilds);
+			$member_predicate = new Erfurt_Sparql_Query2_A();
+		} else 
+			$type = new Erfurt_Sparql_Query2_Abstraction_NoClass($type, $member_predicate);
+			if(is_string($member_predicate))
+				$member_predicate = new Erfurt_Sparql_Query2_IriRef($member_predicate);
+		
+		
+		$this->type = $type;
 		if($varName == null)
 			$this->classVar = new Erfurt_Sparql_Query2_Var($type->getIri());
 		else
 			$this->classVar = new Erfurt_Sparql_Query2_Var($varName);
 			
-		$typePart= new Erfurt_Sparql_Query2_Triple($this->classVar, new Erfurt_Sparql_Query2_A(), $type->getIri());
+		
+		if(!($member_predicate instanceof Erfurt_Sparql_Query2_Verb)){
+			throw new RuntimeException("Argument 2 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::__construct must be an instance of Erfurt_Sparql_Query2_IriRef or string instance of ".typeHelper($predicate)." given");
+		}
+		
 		$subclasses = $type->getSubclasses();
 		if(!empty($subclasses)){
-			$union = new Erfurt_Sparql_Query2_GroupOrUnionGraphPattern();
-			$unionpart = new Erfurt_Sparql_Query2_GroupGraphPattern();
-			$unionpart->addElement($typePart);
-			$union->addElement($unionpart);
+			$typeVar = new Erfurt_Sparql_Query2_Var($type->getIri());
+			$typePart= new Erfurt_Sparql_Query2_Triple($this->classVar, $member_predicate, $typeVar);
+			$this->query->getWhere()->addElement($typePart);
+			$or = new Erfurt_Sparql_Query2_ConditionalOrExpression(); 
 			foreach($subclasses as $subclass){
-				$unionpart = new Erfurt_Sparql_Query2_GroupGraphPattern();
-				$unionpart->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, new Erfurt_Sparql_Query2_A(), $subclass));
-				$union->addElement($unionpart);
+				$or->addElement(new Erfurt_Sparql_Query2_sameTerm($typeVar, $subclass));
 			}
-			$typePart = $union;
+			$filter = new Erfurt_Sparql_Query2_Filter($or);
+			$this->query->getWhere()->addElement($filter);
+		} else {
+			$typePart= new Erfurt_Sparql_Query2_Triple($this->classVar, $member_predicate, $type->getIri());
 		}
-		$this->query->getWhere()->addElement($typePart);
 	}
 	
 	public function addShownProperty($predicate, $name = null){
@@ -80,11 +95,14 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		if(!($predicate instanceof Erfurt_Sparql_Query2_IriRef)){
 			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addFilter must be an instance of Erfurt_Sparql_Query2_IriRef instance of ".typeHelper($predicate)." given");
 		}
-		$propVar = new Erfurt_Sparql_Query2_Var($predicate);
-		$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, $propVar));
 		switch($type){
 			case "contains":
+				$propVar = new Erfurt_Sparql_Query2_Var($predicate);
+				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, $propVar));
 				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Filter(new Erfurt_Sparql_Query2_Regex($propVar, new Erfurt_Sparql_Query2_RDFLiteral($value))));
+			break;
+			case "equals":
+				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, new Erfurt_Sparql_Query2_RDFLiteral($value)));
 			break;
 		}
 		
