@@ -75,12 +75,13 @@ class Zend_Db_Statement_Mysqli extends Zend_Db_Statement
         $mysqli = $this->_adapter->getConnection();
 
         $this->_stmt = $mysqli->prepare($sql);
+        
         if ($this->_stmt === false || $mysqli->errno) {
             /**
              * @see Zend_Db_Statement_Mysqli_Exception
              */
             require_once 'Zend/Db/Statement/Mysqli/Exception.php';
-            //throw new Zend_Db_Statement_Mysqli_Exception("Mysqli prepare error: " . $mysqli->error." at query: ".$sql);
+            throw new Zend_Db_Statement_Mysqli_Exception("Mysqli prepare error: " . $mysqli->error." at query: ".$sql);
         }
     }
 
