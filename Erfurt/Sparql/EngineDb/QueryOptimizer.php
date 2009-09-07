@@ -48,7 +48,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $sm = $query->getSolutionModifier();
         if (isset($sm['limit']) || isset($sm['offset'])) {
             return $query;
-        }
+        } 
         
         
         $oldMandatory = array();
@@ -343,7 +343,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
 
         foreach ($orderifiedSqls as &$sqlArray) {
             foreach ($sqlArray as &$sql) {
-                $sql['where'] .= ' AND ' . implode(' AND ', $whereAddition);
+                if(!empty($whereAddition)) $sql['where'] .= ' AND ' . implode(' AND ', $whereAddition);
             }
         }
 #var_dump($orderifiedSqls);exit;

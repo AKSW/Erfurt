@@ -106,6 +106,7 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
             $sql = $sql->assemble();
         }
         $this->_parseParameters($sql);
+
         $this->_prepare($sql);
 
         $this->_queryId = $this->_adapter->getProfiler()->queryStart($sql);

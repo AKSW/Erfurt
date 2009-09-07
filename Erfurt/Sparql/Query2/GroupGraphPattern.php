@@ -21,15 +21,31 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 	}
 	
 	public function getSparql(){
-		$sparql = "{ \n";
-		
+		//sort filters to the end
+		$filters = array();
+		$new = array();
 		for($i=0; $i < count($this->elements); $i++){
-			$sparql .= $this->elements[$i]->getSparql();
+			if($this->elements[$i] instanceof Erfurt_Sparql_Query2_Filter){
+				$filters[] = $this->elements[$i];
+			} else {
+				$new[] = $this->elements[$i];
+			}
+		}
+		for($i=0; $i < count($filters); $i++){
+			$new[] = $filters[$i];
+		}
+		$this->elements = $new;
+		
+		//build sparql-string
+		$sparql = "{ \n";
+		for($i=0; $i < count($this->elements); $i++){
+			 $sparql .= $this->elements[$i]->getSparql();
 			if($this->elements[$i] instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && isset($this->elements[$i+1]) && $this->elements[$i+1] instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject){
 				$sparql .= " ."; //realisation of TriplesBlock
 			} 
 			$sparql .= " \n";
 		}
+		
 		
 		return $sparql."} \n";
 	}
