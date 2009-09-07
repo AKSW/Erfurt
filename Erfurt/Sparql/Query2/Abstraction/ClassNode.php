@@ -5,6 +5,7 @@ require_once "Link.php";
 class Erfurt_Sparql_Query2_Abstraction_ClassNode 
 {
 	protected $shownproperties = array();
+	protected $filters = array();
 	
 	protected $type;
 	protected $classVar;
@@ -53,7 +54,11 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		}
 	}
 	
-	public function addShownProperty($predicate, $name = null){
+	public function __clone() {
+	} 
+	
+	
+	public function addShownProperty($predicate, $name = null, $inverse = false){
 		if(is_string($predicate)){
 			$predicate = new Erfurt_Sparql_Query2_IriRef($predicate);
 		}
@@ -62,17 +67,23 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		}
 		
 		$optionalpart = new Erfurt_Sparql_Query2_OptionalGraphPattern();
-			
-		$this->shownproperties[] = $predicate;
+
 		if($name == null)
 			$var = new Erfurt_Sparql_Query2_Var($predicate);
 		else 
 			$var = new Erfurt_Sparql_Query2_Var($name);
 		
-		$optionalpart->addElement(new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, $var));
+		if(!$inverse)
+			$triple = new Erfurt_Sparql_Query2_Triple($this->classVar, $predicate, $var);
+		else 
+			$triple = new Erfurt_Sparql_Query2_Triple($var, $predicate, $this->classVar);
+			
+		$optionalpart->addElement($triple);
 		$this->query->getWhere()->addElement($optionalpart);
 		
 		$this->query->addProjectionVar($var);
+		
+		$this->shownproperties[] = array("optional" => $optionalpart, "var" => $var);
 		return $this; //for chaining
 	}
 	
@@ -99,13 +110,44 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
 		switch($type){
 			case "contains":
 				$propVar = new Erfurt_Sparql_Query2_Var($predicate);
-				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, $propVar));
-				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Filter(new Erfurt_Sparql_Query2_Regex($propVar, new Erfurt_Sparql_Query2_RDFLiteral($value))));
+				$filteringTriple = new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, $propVar);
+				$filterExp = new Erfurt_Sparql_Query2_Filter(new Erfurt_Sparql_Query2_Regex($propVar, new Erfurt_Sparql_Query2_RDFLiteral($value)));
+				$this->query->getWhere()->addElement($filteringTriple);
+				$this->query->getWhere()->addElement($filterExp);
+				$this->filters[] = array($filteringTriple, $filterExp);
 			break;
 			case "equals":
-				$this->query->getWhere()->addElement(new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, new Erfurt_Sparql_Query2_RDFLiteral($value)));
+				$filteringTriple = new Erfurt_Sparql_Query2_Triple($this->getClassVar(), $predicate, new Erfurt_Sparql_Query2_RDFLiteral($value));
+				$this->query->getWhere()->addElement($filteringTriple);
+				$this->filters[] = $filteringTriple;
 			break;
 		}
+		
+		return $this;
+	}
+	
+	public function clearShownProperties(){
+		foreach($this->shownproperties as $pair){
+			$this->query->removeProjectionVar($pair["var"]);
+			$pair["optional"]->remove();
+		}
+		return $this;
+	}
+	
+	public function clearFilter(){
+		foreach($this->filters as $filter){
+			if(is_array($filter)){
+				foreach($filter as $tripleOrFilter){
+					$tripleOrFilter->remove();
+				}
+			} else $filter->remove();
+		}
+		return $this->type;
+	}
+	
+	public function clearAll(){
+		$this->clearShownProperties();
+		$this->clearFilter();
 		
 		return $this;
 	}

@@ -43,13 +43,13 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	
 	public function equals($obj){
 		//trivial cases
-		if($this==$obj) return true;
+		if($this===$obj) return true;
 		
-		if(get_class($this) != get_class($obj)){
+		if(get_class($this) !== get_class($obj)){
 			return false; 
 		}
 		
-		return $this->getSparql() == $obj->getSparql();
+		return $this->getSparql() === $obj->getSparql();
 	}	
 }
 abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_ObjectHelper
@@ -93,9 +93,9 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 	
 	public function equals($obj){
 		//trivial cases
-		if($this==$obj) return true;
+		if($this===$obj) return true;
 		
-		if(get_class($this) != get_class($obj)){
+		if(get_class($this) !== get_class($obj)){
 			return false; 
 		}
 

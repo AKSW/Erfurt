@@ -20,6 +20,14 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
 		return $this; //for chaining
 	}
 	
+	public function getElement($i){
+		return $this->elements[$i];
+	}
+	
+	public function getElements(){
+		return $this->elements;
+	}
+	
 	public function getSparql(){
 		//sort filters to the end
 		$filters = array();

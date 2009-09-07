@@ -200,11 +200,11 @@ class Erfurt_Sparql_Query2
 	}
 
 	public function hasOffset(){
-		return !empty($this->offset);
+		return $this->offset!=0;
 	}
 	
 	public function hasLimit(){
-		return !empty($this->limit);
+		return $this->limit!=0;
 	}
 	
 	public function hasOrderBy(){
@@ -232,7 +232,7 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function setLimit($nlimit){
-		if($this->isAskType()) return; //throw new RuntimeException("Trying to set solution modifier \"Limit\" in an ASK-Query - not possible");
+		if($this->isAskType()) throw new RuntimeException("Trying to set solution modifier \"Limit\" in an ASK-Query - not possible");
 		$this->limit = $nlimit;
 		return $this; //for chaining
 	}
@@ -247,7 +247,9 @@ class Erfurt_Sparql_Query2
 	}
 	
 	public function setOffset($noffset){
-		if($this->isAskType()) return; //throw new RuntimeException("Trying to set solution modifier \"Offset\" in an ASK-Query - not possible");
+		if($this->isAskType()) 
+			throw new RuntimeException("Trying to set solution modifier \"Offset\" in an ASK-Query - not possible");
+		
 		$this->offset = $noffset;
 		return $this; //for chaining
 	}
@@ -430,6 +432,17 @@ class Erfurt_Sparql_Query2
 			$this->star = false; //if the first var is added: deactivate the star. maybe always?
 		
 		$this->selectVars[] = $var;
+		return $this; //for chaining
+	}
+	
+	public function removeProjectionVar(Erfurt_Sparql_Query2_Var $var){
+		$new = array();
+		foreach($this->selectVars as $compare){
+			if(!$compare->equals($var)){
+				$new[] = $compare;
+			} 
+		}
+		$this->selectVars = $new;
 		return $this; //for chaining
 	}
 	
