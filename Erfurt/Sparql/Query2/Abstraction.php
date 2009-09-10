@@ -1,5 +1,5 @@
 <?php
-
+require_once "Erfurt/Sparql/Query2.php";
 require_once "Abstraction/ClassNode.php";
 require_once "Abstraction/RDFSClass.php";
 require_once "Abstraction/Link.php";
