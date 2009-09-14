@@ -1,4 +1,5 @@
 <?php
+// vim: sw=4:sts=4:expandtab
 /**
  * @package  erfurt
  * @subpackage   store
@@ -46,13 +47,13 @@ class Erfurt_Store
      * 
      */
     protected $_graphConfigurations = null;
-	
-	/**
+
+    /**
      * An Array holding the Namespace prefixes (An array of namespace IRIs (keys) and prefixes) for some models
      * @var array
      */
-	protected $_prefixes = null;
-    
+    protected $_prefixes = null;
+
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -173,243 +174,243 @@ class Erfurt_Store
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
     
-	/**
-	 * Get all namespaces with there prefix
+    /**
+     * Get all namespaces with there prefix
      * @param string $graphUri
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefixes($graphUri)
-	{
-		if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
-		    $this->_initiateNamespacePrefixes($graphUri);
-		}
-		
-		return $this->_prefixes[$graphUri];
-	}
-	    
-	/**
-	 * Get the prefix for one namespaces, will be created if no prefix exists
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefixes($graphUri)
+    {
+        if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+            $this->_initiateNamespacePrefixes($graphUri);
+        }
+
+        return $this->_prefixes[$graphUri];
+    }
+
+    /**
+     * Get the prefix for one namespaces, will be created if no prefix exists
      * @param string $graphUri
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefix($graphUri, $namespace, $useAc = true)
-	{
-		require_once('Erfurt/Exception.php');
-		require_once('Erfurt/Ac/Exception.php');
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefix($graphUri, $namespace, $useAc = true)
+    {
+        require_once('Erfurt/Exception.php');
+        require_once('Erfurt/Ac/Exception.php');
 
-		if (null === $this->_prefixes || isset($this->_prefixes[$graphUri]) === false) {
-		    $this->_initiateNamespacePrefixes($graphUri);
-		}
+        if (null === $this->_prefixes || isset($this->_prefixes[$graphUri]) === false) {
+            $this->_initiateNamespacePrefixes($graphUri);
+        }
 
-		$prefix = array_search($namespace, $this->_prefixes[$graphUri]);
-		
-		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
-			if($prefix === false) {
-				// serach erfurt config for predefined prefixes
-			
-				$config = Erfurt_App::getInstance()->getConfig();
-				if (is_array($config->namespaces)) {
-					$prefix = array_search($namespace, $config->namespaces);
-				} else {
-					$prefix = false;
-				}
-			
-				if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
-					for($i = 0; isset($this->_prefixes[$graphUri]['ns' . $i]); $i++) {
-					}
-					$prefix = 'ns' . $i;
-				}
-				$this->addNamespacePrefix($graphUri, $prefix, $namespace, $useAc);
-			}
-		} else {
-			throw new Erfurt_Ac_Exception();
-		}
-		
-		return $prefix;
-	}
+        $prefix = array_search($namespace, $this->_prefixes[$graphUri]);
 
-	/**
-	 * Add a namespace -> prefix mapping
+        if ($this->_checkAc($graphUri, 'edit', $useAc)) {
+            if($prefix === false) {
+                // serach erfurt config for predefined prefixes
+
+                $config = Erfurt_App::getInstance()->getConfig();
+                if (is_array($config->namespaces)) {
+                    $prefix = array_search($namespace, $config->namespaces);
+                } else {
+                    $prefix = false;
+                }
+
+                if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
+                    for($i = 0; isset($this->_prefixes[$graphUri]['ns' . $i]); $i++) {
+                    }
+                    $prefix = 'ns' . $i;
+                }
+                $this->addNamespacePrefix($graphUri, $prefix, $namespace, $useAc);
+            }
+        } else {
+            throw new Erfurt_Ac_Exception();
+        }
+
+        return $prefix;
+    }
+
+    /**
+     * Add a namespace -> prefix mapping
      * @param string $graphUri
-	 * @param $prefix a prefix to identify the namespace
-	 * @param $namespace the namespace uri
-	 * @param $useAc use access control
-	 * @return boolean success state
-	 * @throws Erfurt_Exception
-	 */
-	public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
-	{
-		require_once('Erfurt/Utils.php');
+     * @param $prefix a prefix to identify the namespace
+     * @param $namespace the namespace uri
+     * @param $useAc use access control
+     * @return boolean success state
+     * @throws Erfurt_Exception
+     */
+    public function addNamespacePrefix($graphUri, $prefix, $namespace, $useAc = true)
+    {
+        require_once('Erfurt/Utils.php');
         require_once('Zend/Uri.php');
 
-		if ($this->_checkAc($graphUri, 'edit', $useAc)) {
-
-			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
-				$this->_initiateNamespacePrefixes($graphUri);
-			}
-
-			/**
-			 * check namespace if valid
-			 */	
-			if (Zend_Uri::check($namespace) === false) {
-			    require_once('Erfurt/Store/Exception.php');
-				throw new Erfurt_Store_Exception('The given namespace ("' . $namespace . '") is not a valid URI.');
-			}
-
-			/**
-			 * check prefix if valid
-			 */	
-			if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
-			    require_once('Erfurt/Store/Exception.php');
-				throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") is not a valid XML Prefix.');
-			}
-
-			/**
-			 * check if prefix matches a uri schema
-			 */
-			$config = Erfurt_App::getInstance()->getConfig();
-			$schemataArray = $config->uri->schemata->toArray();
-			$schema = array_search($prefix, $schemataArray);
-			if ($schema !== false) {
-			    require_once('Erfurt/Store/Exception.php');
-				throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
-			}
-
-			if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
-				$this->_prefixes[$graphUri][$prefix] = $namespace;
-
-				/**
-				 * get prefixes from model configuration
-				 */
-				$option     = $this->getGraphConfiguration($graphUri);
-
-				/**
-				 * add new prefix with namespace to the config option
-				 */
-				if (!isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
-					$option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
-				}
-				$option['http://ns.ontowiki.net/SysOnt/prefix'][] = array(
-					'value' => $prefix . '=' . $namespace,
-					'type'  => 'literal'
-				);
-
-				/**
-				 * write the config option back to the model
-				 */
-				$model      = $this->getModel($graphUri, $useAc);
-				$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
-
-				/**
-				 * return success
-				 */
-				return true;
-			} else {
-			    require_once('Erfurt/Store/Exception.php');
-				throw new Erfurt_Store_Exception('This prefix "' . $prefix . '" already exists.');
-				return false;
-			}
-		} else {
-			/**
-			 * return fail
-			 */
-		    require_once('Erfurt/Ac/Exception.php');
-			throw new Erfurt_Ac_Exception('No rights to add namespace prefix.');
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a namespace -> prefix mapping
-     * @param string $graphUri
-	 * @param $prefix the prefix you want to remove
-	 * @param $useAc use access control
-	 * @return boolean successfully state
-	 * @throws Erfurt_Exception
-	 */
-	public function deleteNamespacePrefix($graphUri, $prefix, $useAc = true)
-	{
         if ($this->_checkAc($graphUri, 'edit', $useAc)) {
 
-			if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
-				$this->_initiateNamespacePrefixes($graphUri);
-			}
+            if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+                $this->_initiateNamespacePrefixes($graphUri);
+            }
 
-			unset($this->_prefixes[$graphUri][$prefix]);
+            /**
+             * check namespace if valid
+             */
+            if (Zend_Uri::check($namespace) === false) {
+                require_once('Erfurt/Store/Exception.php');
+                throw new Erfurt_Store_Exception('The given namespace ("' . $namespace . '") is not a valid URI.');
+            }
 
-			/**
-			 * get prefixes from model configuration
-			 */
-			$option     = $this->getGraphConfiguration($graphUri);
+            /**
+             * check prefix if valid
+             */
+            if (Erfurt_Utils::isXmlPrefix($prefix) === false) {
+                require_once('Erfurt/Store/Exception.php');
+                throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") is not a valid XML Prefix.');
+            }
 
-			/**
-			 * remove the entry with the given prefix from the config option
-			 */
-			if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
-				for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
-					if(0 === strpos($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]['value'], $prefix . '=')){
-						unset($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]);
-					}
-				}
-			} else {
-				$option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
-			}
+            /**
+             * check if prefix matches a uri schema
+             */
+            $config = Erfurt_App::getInstance()->getConfig();
+            $schemataArray = $config->uri->schemata->toArray();
+            $schema = array_search($prefix, $schemataArray);
+            if ($schema !== false) {
+                require_once('Erfurt/Store/Exception.php');
+                throw new Erfurt_Store_Exception('The given prefix ("' . $prefix . '") matches a URI schema. Please avoid to use a URI schema from the IANA list: http://www.iana.org/assignments/uri-schemes.html.');
+            }
 
-			/**
-			 * write the config option back to the model
-			 */
-			$model      = $this->getModel($graphUri);
-			$model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+            if (isset($this->_prefixes[$graphUri][$prefix]) === false) {
+                $this->_prefixes[$graphUri][$prefix] = $namespace;
 
-			/**
-			 * should be successfully in every case
-			 */
-			return true;
-		} else {
+                /**
+                 * get prefixes from model configuration
+                 */
+                $option     = $this->getGraphConfiguration($graphUri);
 
-			/**
-			 * if authentication failes
-			 */
-			return false;
-		}
-	}
+                /**
+                 * add new prefix with namespace to the config option
+                 */
+                if (!isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+                    $option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
+            }
+            $option['http://ns.ontowiki.net/SysOnt/prefix'][] = array(
+                'value' => $prefix . '=' . $namespace,
+                'type'  => 'literal'
+                    );
 
-	/**
-	 * initialy set the namespace mapping array for the model
-	 * (read the mapping from system configuration)
+            /**
+             * write the config option back to the model
+             */
+            $model      = $this->getModel($graphUri, $useAc);
+            $model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+
+            /**
+             * return success
+             */
+            return true;
+            } else {
+                require_once('Erfurt/Store/Exception.php');
+                throw new Erfurt_Store_Exception('This prefix "' . $prefix . '" already exists.');
+                return false;
+            }
+        } else {
+            /**
+             * return fail
+             */
+            require_once('Erfurt/Ac/Exception.php');
+            throw new Erfurt_Ac_Exception('No rights to add namespace prefix.');
+            return false;
+        }
+    }
+
+    /**
+     * Delete a namespace -> prefix mapping
      * @param string $graphUri
-	 */
-	protected function _initiateNamespacePrefixes($graphUri)
-	{
+     * @param $prefix the prefix you want to remove
+     * @param $useAc use access control
+     * @return boolean successfully state
+     * @throws Erfurt_Exception
+     */
+    public function deleteNamespacePrefix($graphUri, $prefix, $useAc = true)
+    {
+        if ($this->_checkAc($graphUri, 'edit', $useAc)) {
 
-		/**
-		 * get prefixes from model configuration
-		 */
-		$option     = $this->getGraphConfiguration($graphUri);
+            if (null === $this->_prefixes || !isset($this->_prefixes[$graphUri])) {
+                $this->_initiateNamespacePrefixes($graphUri);
+            }
 
-		/**
-		 * iterate config option and split prefix and namespace
-		 */
-		if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
-			for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
-				$property   = $option['http://ns.ontowiki.net/SysOnt/prefix'][$i];
-				$splitpos   = strpos($property['value'], '=');           // find splitposition
-				$prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
-				$namespace  = substr($property['value'], $splitpos + 1); // get the rest
-				$this->_prefixes[$graphUri][$prefix] = $namespace;
-			}
-		} else {
-			$this->_prefixes[$graphUri] = array();
-		}
-	}
+            unset($this->_prefixes[$graphUri][$prefix]);
 
-	/**
-	 * This is a trigger function to test if the config options are written propperly
+            /**
+             * get prefixes from model configuration
+             */
+            $option     = $this->getGraphConfiguration($graphUri);
+
+            /**
+             * remove the entry with the given prefix from the config option
+             */
+            if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+                for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+                    if(0 === strpos($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]['value'], $prefix . '=')){
+                        unset($option['http://ns.ontowiki.net/SysOnt/prefix'][$i]);
+        }
+        }
+        } else {
+            $option['http://ns.ontowiki.net/SysOnt/prefix'] = array();
+        }
+
+        /**
+         * write the config option back to the model
+         */
+        $model      = $this->getModel($graphUri);
+        $model->setOption('http://ns.ontowiki.net/SysOnt/prefix', $option['http://ns.ontowiki.net/SysOnt/prefix']);
+
+        /**
+         * should be successfully in every case
+         */
+        return true;
+        } else {
+
+            /**
+             * if authentication failes
+             */
+            return false;
+        }
+    }
+
+    /**
+     * initialy set the namespace mapping array for the model
+     * (read the mapping from system configuration)
      * @param string $graphUri
-	 */
-	public function initiateNamespacsPrefixesTrigger($graphUri){
-		$this->_initiateNamespacsPrefixes($graphUri);
-	}
+     */
+    protected function _initiateNamespacePrefixes($graphUri)
+    {
+
+        /**
+         * get prefixes from model configuration
+         */
+        $option     = $this->getGraphConfiguration($graphUri);
+
+        /**
+         * iterate config option and split prefix and namespace
+         */
+        if (isset($option['http://ns.ontowiki.net/SysOnt/prefix'])) {
+            for($i = 0; $i < count($option['http://ns.ontowiki.net/SysOnt/prefix']); $i++){
+                $property   = $option['http://ns.ontowiki.net/SysOnt/prefix'][$i];
+        $splitpos   = strpos($property['value'], '=');           // find splitposition
+        $prefix     = substr($property['value'], 0, $splitpos);  // get the part befor the '='
+        $namespace  = substr($property['value'], $splitpos + 1); // get the rest
+        $this->_prefixes[$graphUri][$prefix] = $namespace;
+    }
+    } else {
+        $this->_prefixes[$graphUri] = array();
+    }
+    }
+
+    /**
+     * This is a trigger function to test if the config options are written propperly
+     * @param string $graphUri
+     */
+    public function initiateNamespacsPrefixesTrigger($graphUri){
+        $this->_initiateNamespacsPrefixes($graphUri);
+    }
 
     /**
      * Adds statements in an array to the graph specified by $graphIri.
@@ -640,33 +641,33 @@ class Erfurt_Store
      * @param string $whereSpec
      */
     public function countWhereMatches($graphIri, $whereSpec, $countSpec)
-	{
-	    if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
-	        if ($this->_checkAc($graphIri)) {
-	            $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
+    {
+        if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
+            if ($this->_checkAc($graphIri)) {
+                $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
-	        }
-	    }
-	    
-	    // TODO: is it better to throw an exception in this case?
-	    return self::COUNT_NOT_SUPPORTED;
-	}
-	
-	/**
+            }
+        }
+
+        // TODO: is it better to throw an exception in this case?
+        return self::COUNT_NOT_SUPPORTED;
+    }
+
+    /**
      * Creates the table specified by $tableSpec according to backend-specific 
      * create table statement.
      *
      * @param array $tableSpec An associative array of SQL column names and columnd specs.
      */
-	public function createTable($tableName, array $columns)
-	{
-	    if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-	        return $this->_backendAdapter->createTable($tableName, $columns);
-	    }
-	    
-	    // TODO: use default SQL store
-	}
-    
+    public function createTable($tableName, array $columns)
+    {
+        if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
+            return $this->_backendAdapter->createTable($tableName, $columns);
+        }
+
+        // TODO: use default SQL store
+    }
+
     /**
      * Deletes all statements that match the triple pattern specified.
      *
@@ -1121,11 +1122,11 @@ class Erfurt_Store
     {
         if (method_exists($this->_backendAdapter, 'getTransitiveClosure')) {
             $closure = $this->_backendAdapter->getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
-	    } else {
-	        $closure = $this->_getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
-	    }
-	    
-	    return $closure;
+        } else {
+            $closure = $this->_getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
+        }
+
+        return $closure;
     }
     
     /**
@@ -1284,10 +1285,10 @@ class Erfurt_Store
     public function lastInsertId()
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-	        return $this->_backendAdapter->lastInsertId();
-	    }
-	    
-	    // TODO: use default SQL store
+            return $this->_backendAdapter->lastInsertId();
+        }
+
+        // TODO: use default SQL store
     }
     
     /**
@@ -1300,10 +1301,10 @@ class Erfurt_Store
     public function listTables($prefix = '')
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-	        return $this->_backendAdapter->listTables($prefix);
-	    }
-	    
-	    // TODO: use default SQL store
+            return $this->_backendAdapter->listTables($prefix);
+        }
+
+        // TODO: use default SQL store
     }
     
     /**
@@ -1364,13 +1365,13 @@ class Erfurt_Store
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
     public function sparqlQuery($queryObject, $options = array())
-    {	
+    {
         if($queryObject instanceof Erfurt_Sparql_SimpleQuery)
-        	;//trigger_error("Erfurt_Sparql_SimpleQuery is deprecated. Query: \n".(string)$queryObject, E_USER_NOTICE);
-        
+            ;//trigger_error("Erfurt_Sparql_SimpleQuery is deprecated. Query: \n".(string)$queryObject, E_USER_NOTICE);
+
         if(!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction)){
-        	//throw new RuntimeException("Argument 1 passed to Erfurt_Store::sparqlQuery must be an instance of Erfurt_Sparql_Query2, instance of ".get_class($queryObject)." given");
-       	}
+            //throw new RuntimeException("Argument 1 passed to Erfurt_Store::sparqlQuery must be an instance of Erfurt_Sparql_Query2, instance of ".get_class($queryObject)." given");
+        }
        
         self::$_queryCount++;
         
@@ -1387,60 +1388,60 @@ class Erfurt_Store
         if ($options['use_owl_imports'] === true) {
             // add owl:imports
             if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
-	            //new way, "
-	            $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
-            	$from_strings = array();
-            	foreach ($queryObject->getFroms() as $graphClause) {
-	                $uri = $graphClause->getGraphIri()->getIri();
-	                //$from_strings[] = $uri;
-	                foreach ($this->getImportsClosure($uri, $useAdditional) as $importedGraphUri) {
-	                    	$queryObject->addFrom($importedGraphUri);
-	                }
-	            }
-	            
+                //new way, "
+                $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
+                $from_strings = array();
+                foreach ($queryObject->getFroms() as $graphClause) {
+                    $uri = $graphClause->getGraphIri()->getIri();
+                    //$from_strings[] = $uri;
+                    foreach ($this->getImportsClosure($uri, $useAdditional) as $importedGraphUri) {
+                        $queryObject->addFrom($importedGraphUri);
+                    }
+                }
+
             } else {
-               	foreach ($queryObject->getFrom() as $fromGraphUri) {
-	                foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
-	                    $queryObject->addFrom($importedGraphUri);
-	                }
-	            }
+                foreach ($queryObject->getFrom() as $fromGraphUri) {
+                    foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
+                        $queryObject->addFrom($importedGraphUri);
+                    }
+                }
             }
         }
         
         // if using accesss control, filter FROM (NAMED) for allowed models
         if ($options['use_ac'] === true) {
             if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
-	            //new way
-            	$queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
-            	
-            	$from_strings = array();
-	            foreach ($queryObject->getFroms() as $graphClause) {
-		           $uri = $graphClause->getGraphIri()->getIri();
-		           $from_strings[] = $uri;
-		        }
-            	
-            	$modelsFiltered = $this->_filterModels($from_strings);
-	            
-	            // query contained a non-allowed non-existent model
-	            if (empty($modelsFiltered)) {
-	                return false;
-	            }
-	            
-	            $queryObject->setFroms($modelsFiltered);
+                //new way
+                $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
+
+                $from_strings = array();
+                foreach ($queryObject->getFroms() as $graphClause) {
+                    $uri = $graphClause->getGraphIri()->getIri();
+                    $from_strings[] = $uri;
+                }
+
+                $modelsFiltered = $this->_filterModels($from_strings);
+
+                // query contained a non-allowed non-existent model
+                if (empty($modelsFiltered)) {
+                    return false;
+                }
+
+                $queryObject->setFroms($modelsFiltered);
             } else {
-            	$modelsFiltered = $this->_filterModels($queryObject->getFrom());
-	            
-	            // query contained a non-allowed non-existent model
-	            if (empty($modelsFiltered)) {
-	                return false;
-	            }
-	            
-	            $queryObject->setFrom($modelsFiltered);
-	            // from named only if it was set
-	            $fromNamed = $queryObject->getFromNamed();
-	            if (count($fromNamed)) {
-	                $queryObject->setFromNamed($this->_filterModels($fromNamed));
-	            }
+                $modelsFiltered = $this->_filterModels($queryObject->getFrom());
+
+                // query contained a non-allowed non-existent model
+                if (empty($modelsFiltered)) {
+                    return false;
+                }
+
+                $queryObject->setFrom($modelsFiltered);
+                // from named only if it was set
+                $fromNamed = $queryObject->getFromNamed();
+                if (count($fromNamed)) {
+                    $queryObject->setFromNamed($this->_filterModels($fromNamed));
+                }
             }
         }
 
@@ -1468,17 +1469,17 @@ class Erfurt_Store
     public function sqlQuery($sqlQuery)
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-	        return $this->_backendAdapter->sqlQuery($sqlQuery);
-	    } else {
-	        return false;
-	    }
+            return $this->_backendAdapter->sqlQuery($sqlQuery);
+        } else {
+            return false;
+        }
     }
 
-	/**
-	 * Get the configuration for a graph.
-	 * @param string $graphUri to specity the graph
-	 * @return array 
-	 */
+    /**
+     * Get the configuration for a graph.
+     * @param string $graphUri to specity the graph
+     * @return array 
+     */
     public function getGraphConfiguration($graphUri)
     {
         if (null === $this->_graphConfigurations) {
