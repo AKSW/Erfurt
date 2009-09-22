@@ -1,29 +1,39 @@
 <?php
 /**
- * OntoWiki
+ * OntoWiki Sparql Query - BooleanLiteral
  * 
- * @package    
+ * represent "true" and "false"
+ * 
+ * @package    ontowiki
+ * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-
 class Erfurt_Sparql_Query2_BooleanLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
 
 	protected $value;
-	public function __construct($num){
-		if(is_bool($num)){
-			$this->value = $num;
+	
+	/**
+	 * @param bool $bool
+	 */
+	public function __construct($bool){
+		if(is_bool($bool)){
+			$this->value = $bool;
 		} else {
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_NumericLiteral::__construct must be boolean, instance of ".typeHelper($num)." given");
+			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_BooleanLiteral::__construct must be boolean, instance of '.typeHelper($bool).' given");
 		}
-		
 	}
 	
+	/**
+     * getSparql
+     * build a valid sparql representation of this obj - should be 'true' or 'false'
+     * @return string
+     */
 	public function getSparql(){
-		return $this->value ? "true" : "false";
+		return $this->value ? 'true' : 'false';
 	}
 	
 	public function __toString(){    

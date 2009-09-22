@@ -1,6 +1,8 @@
 <?php
 /**
- * OntoWiki
+ * Erfurt Sparql Query2 - ConstructTemplate
+ * 
+ * is like a GroupGraphPattern but you can only add triples
  * 
  * @package    
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
@@ -11,38 +13,57 @@
 
 class Erfurt_Sparql_Query2_ConstructTemplate extends Erfurt_Sparql_Query2_GroupGraphPattern
 {
-	public function addElement($element){
-		if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) ){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject");
-		}
-		$this->elements[] = $element;
-		$element->newUser($this);
-		return $this; //for chaining
-	}
-	
-	public function setElement($i, $element){
-		if(!is_int($i)){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of integer, instance of ".typeHelper($i)." given");
-		}
-		if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) ){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject");
-		}
-		$this->elements[$i] = $element;
-	}
-	
-	public function setElements($elements){
-		if(!is_array($elements)){
-			throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElements : must be an array");
-		}
-		
-		foreach($elements as $element){
-			if(!is_a($element, "Erfurt_Sparql_Query2_IF_TriplesSameSubject")){
-				throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_IF_TriplesSameSubject");
-				return $this; //for chaining
-			}
-		}
-		$this->elements = $elements;
-		return $this; //for chaining
-	}
+    public function __construct(){
+    	parent::__construct();
+    }
+    
+    /**
+     * addElement
+     * @param Erfurt_Sparql_Query2_IF_TriplesSameSubject $element
+     * @return Erfurt_Sparql_Query2_ConstructTemplate $this
+     */
+    public function addElement($element){
+        if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject))
+        	throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ConstructTemplate::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject, instance of '.typeHelper($element).' given');
+        $this->elements[] = $element;
+        $element->newUser($this);
+        return $this; //for chaining
+    }
+    
+    /**
+     * setElement
+     * @param int $i
+     * @param Erfurt_Sparql_Query2_IF_TriplesSameSubject $element
+     * @return Erfurt_Sparql_Query2_ConstructTemplate $this
+     */
+    public function setElement($i, $element){
+        if(!is_int($i)){
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of integer, instance of '.typeHelper($i).' given');
+        }
+        if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject) ){
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject');
+        }
+        $this->elements[$i] = $element;
+    }
+    
+    /**
+     * setElements
+     * @param array $elements array of Erfurt_Sparql_Query2_IF_TriplesSameSubject 
+     * @return Erfurt_Sparql_Query2_ConstructTemplate $this
+     */
+    public function setElements($elements){
+        if(!is_array($elements)){
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElements : must be an array');
+        }
+        
+        foreach($elements as $element){
+            if(!is_a($element, 'Erfurt_Sparql_Query2_IF_TriplesSameSubject')){
+                throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_IF_TriplesSameSubject');
+                return $this; //for chaining
+            }
+        }
+        $this->elements = $elements;
+        return $this; //for chaining
+    }
 }
 ?>

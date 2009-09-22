@@ -753,7 +753,8 @@ class Erfurt_Sparql_Parser
                     $tree['type'] = 'equation';
                     $tree['level'] = $nLevel;
                     $tree['operator'] = $tok;
-                    $tree['operand1'] = $part[0];
+                    //TODO: remove the if when parse contraint is fixed (issue 601)
+                    if(isset($part[0])) $tree['operand1'] = $part[0]; else $tree['operand1'] = null;
                     unset($tree['operand2']);
                     $part = array();
                     continue 2;
@@ -849,7 +850,8 @@ class Erfurt_Sparql_Parser
 
         if ((count($tree) === 0) && (count($part) > 1)) {
             require_once 'Erfurt/Sparql/ParserException.php';
-            throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
+            //TODO: uncomment when issue 601 is fixed
+            //throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
         }
         
         if (!isset($tree['type']) && isset($part[0])) {

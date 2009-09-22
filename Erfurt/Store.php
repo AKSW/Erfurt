@@ -1366,13 +1366,9 @@ class Erfurt_Store
      */
     public function sparqlQuery($queryObject, $options = array())
     {
-        if($queryObject instanceof Erfurt_Sparql_SimpleQuery)
-            ;//trigger_error("Erfurt_Sparql_SimpleQuery is deprecated. Query: \n".(string)$queryObject, E_USER_NOTICE);
-
-        if(!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction)){
-            //throw new RuntimeException("Argument 1 passed to Erfurt_Store::sparqlQuery must be an instance of Erfurt_Sparql_Query2, instance of ".get_class($queryObject)." given");
-        }
-       
+        if($queryObject instanceof Erfurt_Sparql_Query2)
+            Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
+        
         self::$_queryCount++;
         
         $defaultOptions = array(

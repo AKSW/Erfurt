@@ -956,7 +956,27 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlAsk($query)
     {
-// TODO   
+		//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... looks like the engine supports it. but there is probably a reason for this not to be supported
+		$start = microtime(true);
+        
+        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
+        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
+               
+        require_once 'Erfurt/Sparql/Parser.php';
+        $parser = new Erfurt_Sparql_Parser();        
+
+        if(!($query instanceof Erfurt_Sparql_Query))
+        	$query = $parser->parse((string)$query);
+        	      
+        $result = $engine->queryModel($query);
+
+        // Debug executed SPARQL queries in debug mode (7)
+        $logger = Erfurt_App::getInstance()->getLog();
+        $time = (microtime(true) - $start)*1000;
+        $debugText = 'SPARQL Query (' . $time . ' ms)';
+        $logger->debug($debugText);
+
+        return $result;  
     }
     
     /** @see Erfurt_Store_Adapter_Interface */

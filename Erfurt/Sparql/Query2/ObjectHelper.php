@@ -1,12 +1,15 @@
 <?php
 /**
- * OntoWiki
+ * OntoWiki Sparql Query ObjectHelper
+ * 
+ * a abstract helper class for objects that are elements of groups. i.e.: Triples but also GroupGraphPatterns
  * 
  * @package    
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
+ * @abstract
  */
 abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	protected $id;
@@ -18,13 +21,24 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	
 	//abstract public function getSparql();
 	
-	public function newUser($parent){
+	/**
+	 * newUser
+	 * when a ObjectHelper-object is added to a GroupHelper-object this method is called let the child know of the new parent
+	 * @param Erfurt_Sparql_Query2_GroupHelper $parent
+	 * @return Erfurt_Sparql_Query2_ObjectHelper $this
+	 */
+	public function newUser(Erfurt_Sparql_Query2_GroupHelper $parent){
 		if(!in_array($parent, $this->parents))
 			$this->parents[] = $parent;
 		
 		return $this;
 	}
 	
+	/**
+	 * remove
+	 * removes this object from all parents
+	 * @return Erfurt_Sparql_Query2_ObjectHelper $this
+	 */
 	public function remove(){
 		foreach($this->parents as $parent){
 			$parent->removeElement($this->getID());			
@@ -33,14 +47,27 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 		return $this;
 	}
 	
+	/**
+	 * getID
+	 * @return int the id of this object
+	 */
 	public function getID(){
 		return $this->id;
 	}
 	
+	/**
+	 * getParents
+	 * @return array an array of Erfurt_Sparql_Query2_GroupHelper
+	 */
 	public function getParents(){
 		return $this->parents;
 	}
 	
+	/**
+	 * equals
+	 * @param mixed $obj the object to compare with
+	 * @return bool true if equal, false otherwise
+	 */
 	public function equals($obj){
 		//trivial cases
 		if($this===$obj) return true;
@@ -52,16 +79,34 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 		return $this->getSparql() === $obj->getSparql();
 	}	
 }
+
+/**
+ * Erfurt_Sparql_Query2_GroupHelper
+ */
 abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_ObjectHelper
 {
 	protected $elements = array();
 	
+	public function __construct(){
+    	parent::__construct();
+    }
+    
+	
 	//abstract public function addElement($member); //not used because some use typehinting some do it internally
 	
+	/**
+	 * getElement
+	 * @param int $i index of the element
+	 * @return Erfurt_Sparql_Query2_ObjectHelper the element
+	 */
 	public function getElement($i){
 		return $this->elements[$i];
 	}
 	
+	/**
+	 * getElements
+	 * @return array array of Erfurt_Sparql_Query2_ObjectHelper - the elements that are contained
+	 */
 	public function getElements(){
 		return $this->elements;
 	}
@@ -70,6 +115,11 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 	//abstract public function setElement($i, $member); //not used because some use typehinting some do it internally
 	abstract public function setElements($elements);
 	
+	/**
+	 * removeElement
+	 * @param int $i index of the element
+	 * @return Erfurt_Sparql_Query2_GroupHelper $this
+	 */
 	public function removeElement($id){
 		$new = array();
 		
@@ -85,12 +135,22 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 	
 		return $this; //for chaining
 	}
-	
+
+	/**
+	 * removeAllElements
+	 * @return Erfurt_Sparql_Query2_GroupHelper $this
+	 */
 	public function removeAllElements(){
 		$this->elements = array();
 		return $this; //for chaining
 	}
 	
+	/**
+	 * equals
+	 * checks for mutual inclusion
+	 * @param mixed $obj the object to compare with
+	 * @return bool true if equal, false otherwise
+	 */
 	public function equals($obj){
 		//trivial cases
 		if($this===$obj) return true;

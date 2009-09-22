@@ -1,36 +1,36 @@
 <?php
+
+require_once 'ObjectList.php';
+
 /**
- * OntoWiki
+ * Erfurt Sparql Query2 - Collection
  * 
- * @package    
+ * @package   ontowiki
+ * @subpackage query2 
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Collection implements Erfurt_Sparql_Query2_TriplesNode
+class Erfurt_Sparql_Query2_Collection extends Erfurt_Sparql_Query2_ObjectList  implements Erfurt_Sparql_Query2_TriplesNode
 {
-	protected $gnodes = array();
-	
-	public function __construct ($objects){
-		if(!is_array($objects)){
-			throw new RuntimeException("Argument 1 passed to Collection::__construct must be an array of Erfurt_Sparql_Query2_GraphNode's, instance of ".typeHelper($objects)." given");
-		} else {
-			foreach($objects as $object){
-				if(!is_a($object, "Erfurt_Sparql_Query2_GraphNode")){
-					throw new RuntimeException("Argument 1 passed to Collection::__construct must be an array of Erfurt_Sparql_Query2_GraphNode's, instance of ".typeHelper($object)." given");
-				} else {
-					$this->objects[] = $object;
-				}
-			}
-		}
-	}
-	
-	public function getSparql(){
-		return "(".implode(", ", $this->objects).")";
-	}
-	
-	public function __toString(){    
+    /**
+     * @param array array of Erfurt_Sparql_Query2_GraphNode
+     */
+    public function __construct ($objects){
+        parent::__construct($objects);
+    }
+
+	/**
+     * getSparql
+     * build a valid sparql representation of this obj - should be like "(obj1, obj2, obj3)"
+     * @return string
+     */
+    public function getSparql(){
+        return '('.parent::getSparql().')';
+    }
+    
+    public function __toString(){    
         return $this->getSparql();
     }
 }
