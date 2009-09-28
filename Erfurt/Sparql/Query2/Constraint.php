@@ -32,7 +32,7 @@ abstract class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_Gro
         if(!($element instanceof Erfurt_Sparql_Query2_Expression)){
              throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_Expression or string, instance of '.typeHelper($element).' given');
         }
-        $element->newUser($this);
+        $element->addParent($this);
         $this->elements[] = $element;
         return $this; //for chaining
     }
@@ -239,7 +239,7 @@ class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMu
                 }    
             }
             $this->elements[] = array('op'=>$op, 'exp'=>$exp);
-            $exp->newUser($this);
+            $exp->addParent($this);
         } else {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_UnaryExpression::__construct must be Erfurt_Sparql_Query2_AdditiveExpression::minus or Erfurt_Sparql_Query2_AdditiveExpression::plus');
         }
@@ -264,7 +264,7 @@ class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2
         } else {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_UnaryExpression::__construct must be Erfurt_Sparql_Query2_AdditiveExpression::times or Erfurt_Sparql_Query2_AdditiveExpression::divided');
         }
-        $exp->newUser($this);
+        $exp->addParent($this);
         return $this; //for chaining
     }
 }

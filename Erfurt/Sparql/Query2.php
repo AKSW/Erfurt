@@ -26,10 +26,8 @@ require_once 'Query2/Filter.php';
 
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj){
-    $class=(string) get_class($obj);
-    $type=(string) gettype($obj); 
-    $disptype = empty($class)?$type:$class;
-    return $disptype;
+    $class = get_class($obj);
+    return !empty($class) ? $class : gettype($obj);
 }
 
 /**
@@ -44,7 +42,7 @@ function typeHelper($obj){
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2
+class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
 {
     /**
      * @staticvar string a constant for select type
@@ -123,7 +121,7 @@ class Erfurt_Sparql_Query2
     public function __call($name, $params){
         if(method_exists($this->where, $name)){
             $ret = call_user_func_array(array($this->where, $name), $params);  
-        } else throw new RuntimeException("Query2_Abstraction: method $name does not exists");
+        } else throw new RuntimeException("Query2: method $name does not exists");
             
         if($ret == $this->where) 
         	return $this; 
@@ -481,6 +479,16 @@ class Erfurt_Sparql_Query2
     public function setBase(Erfurt_Sparql_Query2_IriRef $base){
         if($base->isPrefixed()) throw new RuntimeException('Trying to add base with a prefix');
         $this->base = $base;
+        $base->addParent($this);
+        return $this; //for chaining
+    }
+    /**
+     * removeBase
+     * @return Erfurt_Sparql_Query2 $this
+     */
+    public function removeBase(){
+        $this->base->removeParent($this);
+        $this->base = null;
         return $this; //for chaining
     }
     
@@ -551,23 +559,23 @@ class Erfurt_Sparql_Query2
     }
     
     /**
-     * deleteFroms
+     * removeFroms
      * delete all Froms of this query
      * @return Erfurt_Sparql_Query2 $this
      */
-    public function deleteFroms(){
+    public function removeFroms(){
         $this->froms = array();
         return $this; //for chaining
     }
     
     /**
-     * deleteFrom
+     * removeFrom
      * @param int $needle
      * @return Erfurt_Sparql_Query2 $this
      */
-    public function deleteFrom($needle){
+    public function removeFrom($needle){
         if(!is_int($needle)){
-            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2::deleteFrom must be an instance of int, instance of '.typeHelper($needle).' given');
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2::removeFrom must be an instance of int, instance of '.typeHelper($needle).' given');
         }
         $new = array();
         for($i=0;$i<count($this->froms); $i++){
@@ -685,10 +693,10 @@ class Erfurt_Sparql_Query2
     }
     
     /**
-     * deleteAllProjectionVars
+     * removeAllProjectionVars
      * @return Erfurt_Sparql_Query2 $this
      */
-    public function deleteAllProjectionVars(){
+    public function removeAllProjectionVars(){
         $this->projectionVars = array();
         return $this;
     }
@@ -700,6 +708,23 @@ class Erfurt_Sparql_Query2
      */
     public function addPrefix(Erfurt_Sparql_Query2_Prefix $prefix){
         $this->prefixes[] = $prefix;
+        return $this; //for chaining
+    }
+        
+    /**
+     * removePrefix
+     * @param Erfurt_Sparql_Query2_Prefix $var 
+     * @return Erfurt_Sparql_Query2 $this
+     */
+    public function removePrefix(Erfurt_Sparql_Query2_Prefix $pre){
+        $new = array();
+        
+        foreach($this->prefixes as $compare){
+            if(!$compare->equals($pre)){
+                $new[] = $compare;
+            } 
+        }
+        $this->prefixes = $new;
         return $this; //for chaining
     }
     
@@ -755,6 +780,28 @@ class Erfurt_Sparql_Query2
         if($this->constructTemplate != null)
         	$this->constructTemplate->optimize();
         return $this;
+    }
+    
+    public function removeElement($element, $equal = false){
+    	if($element instanceof Erfurt_Sparql_Query2_Var){
+    		$this->removeProjectionVar($element);
+    	} else if ($element instanceof Erfurt_Sparql_Query2_GraphClause){
+    		$this->removeFrom($element);
+    	} else if ($element instanceof Erfurt_Sparql_Query2_Prefix){
+    	   	$this->removePrefix($element);
+    	} else if($element instanceof Erfurt_Sparql_Query2_IriRef){
+    	    $this->removeBase($element);
+    	} else {
+    	    //throw
+    	    return $this;
+        }
+        
+        $element->removeParent($this);
+        return $this;
+    }
+    
+    public function setElements($elements){
+    	//throw
     }
 }
 ?>

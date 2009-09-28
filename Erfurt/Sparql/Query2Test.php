@@ -24,7 +24,7 @@ $iri3 = new Erfurt_Sparql_Query2_IriRef('http://bob-work.example.com/mailaddr_ch
 $query->addPrefix($foafPrefix);
 $query->addFrom('http://3ba.se/conferences/', true); //we can add strings - will be converted internally
 $query->addFrom('http://3ba.se/conferences/'); //doubled
-$query->deleteFrom(1); //so remove
+$query->removeFrom(1); //so remove
 $prefixedUri1 = new Erfurt_Sparql_Query2_IriRef('name', $foafPrefix);
 $prefixedUri2 = new Erfurt_Sparql_Query2_IriRef('website', $foafPrefix);
 $name = new Erfurt_Sparql_Query2_RDFLiteral('bob', 'en');

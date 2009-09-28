@@ -26,7 +26,7 @@ class Erfurt_Sparql_Query2_ConstructTemplate extends Erfurt_Sparql_Query2_GroupG
         if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject))
         	throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ConstructTemplate::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject, instance of '.typeHelper($element).' given');
         $this->elements[] = $element;
-        $element->newUser($this);
+        $element->addParent($this);
         return $this; //for chaining
     }
     
@@ -44,6 +44,8 @@ class Erfurt_Sparql_Query2_ConstructTemplate extends Erfurt_Sparql_Query2_GroupG
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_IF_TriplesSameSubject');
         }
         $this->elements[$i] = $element;
+        $element->addParent($this);
+        return $this; //for chaining
     }
     
     /**
@@ -57,10 +59,10 @@ class Erfurt_Sparql_Query2_ConstructTemplate extends Erfurt_Sparql_Query2_GroupG
         }
         
         foreach($elements as $element){
-            if(!is_a($element, 'Erfurt_Sparql_Query2_IF_TriplesSameSubject')){
+            if(!($element instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject)){
                 throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_IF_TriplesSameSubject');
                 return $this; //for chaining
-            }
+            } else $element->addParent($this);
         }
         $this->elements = $elements;
         return $this; //for chaining

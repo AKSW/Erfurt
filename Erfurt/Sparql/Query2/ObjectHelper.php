@@ -22,12 +22,12 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	//abstract public function getSparql();
 	
 	/**
-	 * newUser
-	 * when a ObjectHelper-object is added to a GroupHelper-object this method is called let the child know of the new parent
+	 * addParent
+	 * when a ObjectHelper-object is added to a GroupHelper-object this method is called. lets the child know of the new parent
 	 * @param Erfurt_Sparql_Query2_GroupHelper $parent
 	 * @return Erfurt_Sparql_Query2_ObjectHelper $this
 	 */
-	public function newUser(Erfurt_Sparql_Query2_GroupHelper $parent){
+	public function addParent(Erfurt_Sparql_Query2_GroupHelper $parent){
 		if(!in_array($parent, $this->parents))
 			$this->parents[] = $parent;
 		
@@ -41,8 +41,27 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 	 */
 	public function remove(){
 		foreach($this->parents as $parent){
-			$parent->removeElement($this->getID());			
+			$parent->removeElement($this);			
 		}
+		
+		return $this;
+	}
+	
+	/**
+	 * removeParent
+	 * removes a parent
+	 * @param Erfurt_Sparql_Query2_GroupHelper $parent
+	 * @return Erfurt_Sparql_Query2_ObjectHelper $this
+	 */
+	public function removeParent(Erfurt_Sparql_Query2_GroupHelper $parent){
+		$new = array();
+		foreach($this->parents as $compare){
+			if($compare != $parent){
+				$new[] = $compare;
+			}		
+		}
+		
+		$this->parents = $new;
 		
 		return $this;
 	}
@@ -92,7 +111,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
     }
     
 	
-	//abstract public function addElement($member); //not used because some use typehinting some do it internally
+	//abstract public function addElement($member); //not used because some use typehinting some do it internally for multiple types
 	
 	/**
 	 * getElement
@@ -120,17 +139,17 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 	 * @param int $i index of the element
 	 * @return Erfurt_Sparql_Query2_GroupHelper $this
 	 */
-	public function removeElement($id){
+	public function removeElement($element, $equal = false){
 		$new = array();
 		
 		for($i=0;$i<count($this->elements); $i++){
-			if($this->elements[$i]->getID() != $id){
+			if($this->elements[$i]->getID() != $element->getID() || ($equal && $this->elements[$i]->equals($element))){
 				if($this->elements[$i] instanceof Erfurt_Sparql_Query2_GroupHelper)
-					$this->elements[$i]->removeElement($id);
+					$this->elements[$i]->removeElement($element);
 				$new[] = $this->elements[$i];
 			}
 		}
-		
+		$element->removeParent($this);
 		$this->elements = $new;
 	
 		return $this; //for chaining

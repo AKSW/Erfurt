@@ -25,7 +25,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
             return;
         }
         $this->elements[] = $member;
-        $member->newUser($this);
+        $member->addParent($this);
         return $this; //for chaining
     }
     

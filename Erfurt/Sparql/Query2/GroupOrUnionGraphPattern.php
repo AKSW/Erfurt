@@ -42,7 +42,7 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
         if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
         	throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
         $this->elements[] = $element;
-        $element->newUser($this);
+        $element->addParent($this);
         return $this; //for chaining
     }
     
@@ -76,7 +76,7 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
                 throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_GroupGraphPattern');
                 return $this; //for chaining
             } else {
-                $element->newUser($this);
+                $element->addParent($this);
             }
         }
         $this->elements = $elements;
