@@ -233,7 +233,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
     
     public function addFilter($exp){
     	$filter = new Erfurt_Sparql_Query2_Filter($exp);
-    	$this->where->addElement($filter);
+    	$this->addElement($filter);
     	return $filter;
     }
 }

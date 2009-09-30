@@ -16,6 +16,8 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm,
     protected $lang;
     protected $mode = 0;
     
+    public static $knownShortcuts = array('int','boolean','float','decimal','string','time','date');
+    
     /**
      * @param string $str the literal value
      * @param null|string|Erfurt_Sparql_Query2_IriRef $meta if is null: untyped literal with no language tag. if is IriRef: typed literal. if is string: when string is one of ('int','boolean','float','decimal','string','time','date') convert to IriRef with XMLSchema#%s. else use as language tag.
@@ -28,25 +30,15 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm,
 
         if($meta != null){
             if(is_string($meta)){
-                switch($meta){
-                    case 'int':
-                    case 'boolean':
-                    case 'float':
-                    case 'decimal':
-                    case 'string':
-                    case 'time':
-                    case 'date':
-                        //a shortcut for XMLSchema types
-                        //is a typed literal
-                        $xmls='http://www.w3.org/2001/XMLSchema#';
-                        $this->datatype = new Erfurt_Sparql_Query2_IriRef($xmls.$meta);
-                        $this->mode = 2;
-                    break;
-                    default:
-                        // is literal with language tag
-                        $this->lang = $meta;
-                        $this->mode = 1;
-                    break;
+                if(in_array($meta, self::$knownShortcuts)){
+                   //is a typed literal, type given as shortcut
+                   $xmls='http://www.w3.org/2001/XMLSchema#';
+                   $this->datatype = new Erfurt_Sparql_Query2_IriRef($xmls.$meta);
+                   $this->mode = 2;
+                } else {
+                   // is a literal with language tag
+                   $this->lang = $meta;
+                   $this->mode = 1;
                 }
             } else if ($meta instanceof Erfurt_Sparql_Query2_IriRef){
                 //is a typed literal
