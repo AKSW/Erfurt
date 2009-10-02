@@ -118,8 +118,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             exit;
         }
         
-        // try to connect
-        $this->_connection = @odbc_connect($dsn, $username, $password);
+        // try to connect using the php plugin security if possible
+		if (function_exists ('__virt_internal_dsn')) {
+		    $this->_connection = @odbc_connect (__virt_internal_dsn(), null, null);
+		} else
+			 // try to connect normally
+            $this->_connection = @odbc_connect($dsn, $username, $password);
+		}
         
         if (null == $this->_connection) {
             require_once 'Erfurt/Exception.php';
