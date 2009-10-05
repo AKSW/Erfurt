@@ -657,6 +657,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         if (substr($about, 0, 1) === '#' || $about === '' || strpos($about, '/') === false) {
             // Relative URI... Resolve against the base URI.
             if ($this->_getBaseUri()) {
+                // prevent double hash (e.g. http://www.w3.org/TR/owl-guide/wine.rdf Issue 604)
+                if ( substr($about,0,1) === '#' && substr($this->_getBaseUri(),-1) === '#' ) {
+                    $about = substr($about,1);
+                } 
                 return $this->_getBaseUri() . $about;
             }
         } 

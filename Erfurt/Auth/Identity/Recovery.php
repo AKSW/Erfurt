@@ -36,9 +36,12 @@ class Erfurt_Auth_Identity_Recovery
      */
     private $options = array(
         'method'    => 'mail',
-        'template' => false ,
-        'templateHtml' => false
     );
+
+    /**
+     * @var template array
+     */
+    private $template = array('subject' => 'Erfurt_Auth_Identity_Recovery');
 
     /**
      * Constructor; accepts options array to overwrite default options
@@ -67,27 +70,8 @@ class Erfurt_Auth_Identity_Recovery
     /**
      *
      */
-    public function recoverWithIdentity( $identity )
+    public function validateUser($identity)
     {
-
-        switch ($this->options['method']) {
-            case 'mail':
-                $ret = $this->recoverWithMail( $identity );
-                break;
-            default:
-                $ret = false;
-                break;
-        }
-
-        return $ret;
-    }
-
-    /**
-     *
-     */
-    private function recoverWithMail( $identity )
-    {
-
         $config     = Erfurt_App::getInstance()->getConfig();
         $store      = Erfurt_App::getInstance()->getStore();
 
@@ -126,26 +110,62 @@ class Erfurt_Auth_Identity_Recovery
 
         $hash = $this->generateHash($userUri);
 
-        $mail = new Zend_Mail();
+        $this->template = array (
+            'userUri' => $userUri,
+            'hash' => $hash,
+            $config->ac->user->name => $username,
+            $config->ac->user->mail => $mailAddr
+        );
 
-        if ($this->options['template']) {
-            $mail-setBodyText(str_replace('%HASH%',$hash,$this->options['template']));
-        } else {
-            $mail->setBodyText($config->urlBase . 'application/accountrecovery/hash/' . $hash);
+        return $this->template;
+    }
+
+    /**
+     *
+     */
+    public function recoverWithIdentity( $identity )
+    {
+
+        switch ($this->options['method']) {
+            case 'mail':
+                $ret = $this->recoverWithMail( $identity );
+                break;
+            default:
+                $ret = false;
+                break;
         }
 
-        if ($this->options['templateHtml']) {
-            $mail-setBodyHtml(str_replace('%HASH%',$hash,$this->options['templateHtml']));
+        return $ret;
+    }
+
+    /**
+     *
+     */
+    private function recoverWithMail( $identity )
+    {
+        $config = Erfurt_App::getInstance()->getConfig();
+        $mail   = new Zend_Mail();
+
+        if ( array_key_exists('contentText', $this->template) ) {
+            $mail->setBodyText($this->template['contentText']);
         } else {
-            $mail->setBodyHtml($config->urlBase . 'application/accountrecovery/hash/' . $hash);
+            $contentText = '';
+            foreach ($this->template as $k => $v) {
+                $contentText .= $k . ' : ' . $v . PHP_EOL;
+            }
+            $mail->setBodyText($contentText);
         }
 
-        $mail->addTo($mailAddr, $username);
+        if ($this->template['contentHtml']) {
+            $mail->setBodyHtml($this->template['contentHtml']);
+        }
+
+        $mail->addTo($this->template['mailTo'], $this->template['mailUser']);
         $mail->setFrom(
             $this->options['mail']['localname'] . '@' . $this->options['mail']['hostname'],
             'Identity Recovery for ' . $this->options['mail']['hostname']
         );
-        $mail->setSubject('TestSubject');
+        $mail->setSubject($this->template['mailSubject']);
         $mail->send();
 
         return true;
@@ -268,6 +288,14 @@ class Erfurt_Auth_Identity_Recovery
         }
 
         return $ret;
+    }
+    
+    /**
+     *
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
     }
 }
 
