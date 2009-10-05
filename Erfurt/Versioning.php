@@ -255,6 +255,24 @@ class Erfurt_Versioning
         
         return $result;
     }
+	
+	/*
+	 * Gets latest changes for user on all resources for dashboard
+	 */
+	public function getHistoryForUserDash($userUri)
+    {
+        $this->_checkSetup();
+
+        $sql = 'SELECT DISTINCT resource ' .
+               'FROM ef_versioning_actions WHERE
+                useruri = \'' . $userUri . '\'
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
+                ($this->getLimit()-$this->getLimit());
+                
+        $result = $this->_sqlQuery($sql);
+        
+        return $result;
+    }
     
     public function getLimit()
     {
