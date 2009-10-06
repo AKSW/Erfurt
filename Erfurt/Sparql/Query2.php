@@ -123,7 +123,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
             $ret = call_user_func_array(array($this->where, $name), $params);  
         } else throw new RuntimeException("Query2: method $name does not exists");
             
-        if($ret == $this->where) 
+        if($this->where->equals($ret)) 
         	return $this; 
         else 
             return $ret;

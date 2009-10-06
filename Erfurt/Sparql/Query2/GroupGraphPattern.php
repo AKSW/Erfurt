@@ -176,7 +176,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
             for($j=0; $j<count($this->elements); $j++){
                 if($i!=$j){
                     //compare
-                    if($this->elements[$i] == $this->elements[$j]){
+                    if($this->elements[$i] === $this->elements[$j]){
                         //identical same object
                         $to_remove[] = $this->elements[$i];
                         

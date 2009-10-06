@@ -55,17 +55,18 @@ class Erfurt_Sparql_Query2_Abstraction
      * @param array $params
      */
     public function __call($name, $params){
-        if($name != "getWhere" && $name != "addTriple"){
+        if($name != "getWhere" && $name != "addTriple"){ //you shall not mess with the abstraction concept
             if(method_exists($this->query, $name)){
             	$ret = call_user_func_array(array($this->query, $name), $params); 
             } elseif (method_exists($this->startNode, $name)){
             	$ret = call_user_func_array(array($this->startNode, $name), $params); 
             } else throw new RuntimeException("Query2_Abstraction: method $name does not exists");
             
-            if($ret == $this->query || $ret == $this->startNode) 
+            if($this->query->equals($ret) || $this->startNode->equals($ret))
             	return $this; 
             else 
             	return $ret;
+                
         } else throw new RuntimeException("Query2_Abstraction: method $name not allowed");
     }
     
