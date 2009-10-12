@@ -49,22 +49,6 @@ class Erfurt_Auth_Identity_Recovery
     public function __construct( array $options = array() )
     {
         $this->options = array_merge($this->options,$options);
-
-        $method = $this->options['method'];
-
-        $config = Erfurt_App::getInstance()->getConfig();
-
-        $methodConfig = $config->recovery->{$method}->toArray();
-
-        if (!empty($methodConfig) ) {
-            if ( array_key_exists($method, $this->options) && is_array($this->options[$method]) ) {
-                $this->options[$method] = array_merge($methodConfig, $this->options[$method]);
-            } else {
-                $this->options[$method] = $methodConfig;
-            }
-        } else {
-            // do nothing
-        }
     }
 
     /**
@@ -128,6 +112,9 @@ class Erfurt_Auth_Identity_Recovery
 
         switch ($this->options['method']) {
             case 'mail':
+                $config = Erfurt_App::getInstance()->getConfig();
+                $this->options['mail']['localname'] = $config->mail->localname->recovery;
+                $this->options['mail']['hostname']  = $config->mail->hostname;
                 $ret = $this->recoverWithMail( $identity );
                 break;
             default:
@@ -161,10 +148,7 @@ class Erfurt_Auth_Identity_Recovery
         }
 
         $mail->addTo($this->template['mailTo'], $this->template['mailUser']);
-        $mail->setFrom(
-            $this->options['mail']['localname'] . '@' . $this->options['mail']['hostname'],
-            'Identity Recovery for ' . $this->options['mail']['hostname']
-        );
+        $mail->setFrom($this->options['mail']['localname'] . '@' . $this->options['mail']['hostname']);
         $mail->setSubject($this->template['mailSubject']);
         $mail->send();
 

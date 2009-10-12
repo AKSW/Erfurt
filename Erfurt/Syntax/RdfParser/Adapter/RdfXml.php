@@ -407,7 +407,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $id = $this->_removeAttribute($attrs, EF_RDF_NS.'ID');
         if (null !== $id) {
             $uri = $this->_buildUriFromId($id);
-            $predicare->setReificationUri($uri);
+            $predicate->setReificationUri($uri);
         }
         
         // Check for rdf:parseType attribute.

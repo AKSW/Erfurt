@@ -1073,7 +1073,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $graphUri The model IRI
      * @param string $baseUri The base IRI
      */
-    private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = '') 
+    private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = null) 
     {
         // check type parameter
         switch (strtolower($type)) {
@@ -1088,6 +1088,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
         }
         
+        // default base uri to graph uri if not given 
+        // (will be overriden by document directives e.g. xml:base)
+        if ($baseUri === null) {
+            $baseUri = $graphUri;
+        }
+        
         // import using internal Virtuoso/PL function
         $importSql = sprintf(
             "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", 
@@ -1095,7 +1101,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $file, 
             $baseUri, 
             $graphUri);
-        
+
         try {
             if ($res = $this->_execSql($importSql)) {
                 // TODO: owl:imports
