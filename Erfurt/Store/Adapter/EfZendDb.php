@@ -1085,6 +1085,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
             return $this->_createTablesMysql();
+        } else if ($this->_dbConn instanceof Zend_Db_Adapter_Sqlsrv) {
+            return $this->_createTablesSqlsrv();
         }
     }
     
@@ -1092,6 +1094,151 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      * This internal function creates the table structure for MySQL databases.
      */
     private function _createTablesMysql() 
+    {
+        // Create ef_info table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
+                    id        TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                    schema_id VARCHAR(10) COLLATE ascii_bin NOT NULL
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_info" failed:' . 
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Insert id of the current schema into the ef_info table.
+        $sql = 'INSERT INTO ef_info (schema_id) VALUES ("1.0")';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Insertion of "schema_id" into "ef_info" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        
+        // Create ef_graph table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
+        	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        uri			VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        uri_r	    INT UNSIGNED DEFAULT NULL,					
+        	        base		VARCHAR(160) COLLATE ascii_bin DEFAULT NULL,
+        	        base_r	    INT UNSIGNED DEFAULT NULL,
+        	        UNIQUE unique_graph (uri)							
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_graph" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        
+        // INT means, we could store up to 4.294.967.295 statements        
+        
+        // Create ef_stmt table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
+            	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            	    g	    INT UNSIGNED NOT NULL,                      # foreign key to ef_graph
+            	    s		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # subject or subject hash
+            	    p		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
+            	    o		VARCHAR(160) COLLATE utf8_bin NOT NULL,     # object or object hash
+            	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
+            	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
+            	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
+            	    ol 		VARCHAR(10) COLLATE ascii_bin NOT NULL,
+            	    od 	    VARCHAR(160) COLLATE ascii_bin NOT NULL,
+            	    od_r 	INT UNSIGNED DEFAULT NULL,
+            	    UNIQUE  unique_stmt (g, s, p, o, st, ot, ol, od),
+            	    INDEX   idx_g_p_o_ot (g, p, o, ot),
+            	    INDEX   idx_g_o_ot (g, o, ot)
+            	    #INDEX   idx_o_g_p_ot (o, g, p, ot)
+            	    #INDEX   idx_s_g_p_st (s, g, p, st)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_stmt" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+
+        /*
+        // Create ef_ns table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
+        	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	    INT UNSIGNED NOT NULL,
+        	        ns		VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        ns_r	INT UNSIGNED DEFAULT NULL,					
+        	        prefix	VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_ns (g, ns, prefix)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+        
+        if (!$success) {
+             require_once 'Erfurt/Store/Adapter/Exception.php';
+             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_ns" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        */
+        
+        // Create ef_uri table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	INT UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE ascii_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_uri (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_uri" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+
+
+        // Create ef_lit table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_lit (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	INT UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE utf8_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_lit (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+        
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_lit" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }   
+    }
+    
+    /**
+     * This internal function creates the table structure for MS SQL Server databases.
+     */
+    private function _createTablesSqlsrv() 
     {
         // Create ef_info table.
         $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
