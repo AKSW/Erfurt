@@ -19,7 +19,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      */
     public function __construct($nname){
         if(is_string($nname) && $nname != ''){
-            $this->name = $nname;
+            $this->name = preg_replace('/[^\w]/', '', $nname);
         } else if($nname instanceof Erfurt_Sparql_Query2_IriRef){
             $this->name = self::extractName($nname->getIri());
         } else {
