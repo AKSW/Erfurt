@@ -850,48 +850,120 @@ class Erfurt_Store
      */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
     {
+    
         if (empty($graphUris)) {
             $graphUris = array_keys($this->getAvailableModels(true));
         }
-        
+
+        // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
         $graphUris  = (array) $graphUris;
-        
+
         $options = array_merge(array(
             'case_sensitive'    => false, 
             'filter_classes'    => false, 
-            'filter_properties' => false
+            'filter_properties' => false,
+            'with_imports'      => true
         ), $options);
         
-        // execute backend-specific search
-        if (method_exists($this->_backendAdapter, 'findResourcesWithPropertyValue')) {
-            // TODO: add owl:imports'ed graphs
-            return $this->_backendAdapter->findResourcesWithPropertyValue($stringSpec, $graphUris, $options);
+        if ($options['with_imports'] === true) {
+        
+            // load imports for each graph
+            foreach ($graphUris as $graphUri) {
+            
+                // get imports
+                $importUris = $this->getImportsClosure($graphUri);
+                
+                // check if imports should be added else they are already present
+                foreach ($importUris as $importUri) {
+                
+                    if ( !in_array($importUri,$graphUris) ) {
+                        $graphUris[] = $importUri;
+                    } else {
+                        // do nothing
+                    }
+                    
+                }
+                 
+            }
+            
+        } else {
+            // do nothing (leave the graphUris-array as is)
         }
         
-        // generic SPARQL search
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
-        $query = new Erfurt_Sparql_SimpleQuery();
-
-        foreach ($graphUris as $graphUri) {
-            $query->addFrom($graphUri);
+        
+        // execute backend-specific search if available
+        if (method_exists($this->_backendAdapter, 'findResourcesWithPropertyValue')) 
+        {
+        
+            return $this->_backendAdapter->findResourcesWithPropertyValue($stringSpec, $graphUris, $options);
+            
         }
-
-        $query->setProloguePart('SELECT DISTINCT ?s');
-        $query->setWherePart('WHERE {
-            ?s ?p ?o.
-            ' . ($options['filter_properties'] ? '?ss ?s ?oo.' : '') . '
-            FILTER (regex(?o, "' . $stringSpec . '"' . ($options['case_sensitive'] ? '' : ', "i"') . '))
-        }');
-
-        $resources = array();
-        if ($results = $this->sparqlQuery($query)) {
-            foreach ($results as $row) {
-                array_push($resources, $row['s']);
+        // else execute Sparql Regex Fallback
+        else
+        {
+        
+            // New query object (Erfurt_Sparql_Query2)
+            require_once 'Erfurt/Sparql/Query2.php';
+            $query = new Erfurt_Sparql_Query2();
+            
+            foreach ($graphUris as $graphUri) {
+                $query->addFrom($graphUri);
             }
-        }
+            
+            $query->setDistinct(true);
+            
+            $s_var = new Erfurt_Sparql_Query2_Var('s');
+            $p_var = new Erfurt_Sparql_Query2_Var('p');
+            $o_var = new Erfurt_Sparql_Query2_Var('o');
+            
+            $query->addProjectionVar($s_var);
+            
+            $default_tpattern = new Erfurt_Sparql_Query2_Triple($s_var, $p_var, $o_var);
+            
+            $query->getWhere()->addElement($default_tpattern);
+            
+            if ($options['filter_properties']) {
+                $ss_var = new Erfurt_Sparql_Query2_var('ss');
+                $oo_var = new Erfurt_Sparql_Query2_var('oo');
+                
+                $filterprop_tpattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
+                
+                $query->getWhere()->addElement($filterprop_tpattern);
+            }
+            
+            if ($options['case_sensitive']) {
+            
+                $query->addFilter(
+                    new Erfurt_Sparql_Query2_Regex(
+                        $o_var, 
+                        new Erfurt_Sparql_Query2_RDFLiteral($stringSpec)
+                    )
+                );
+                
+            } else {
+            
+                $query->addFilter(
+                
+                    new Erfurt_Sparql_Query2_Regex(
+                        $o_var, 
+                        new Erfurt_Sparql_Query2_RDFLiteral($stringSpec), 
+                        new Erfurt_Sparql_Query2_RDFLiteral('i')
+                    )
+                );
+                
+            }
+            
+            $resources = array();
+            if ($results = $this->sparqlQuery($query)) {
+                foreach ($results as $row) {
+                    array_push($resources, $row['s']);
+                }
+            }
 
-        return $resources;
+            return $resources;
+
+        }
     }
     
     /**

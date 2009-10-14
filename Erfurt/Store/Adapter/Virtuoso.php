@@ -412,14 +412,42 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store */
     public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options)
     {        
-        $query  = 'SELECT DISTINCT ?s ';
-        $query .= 'FROM <' . implode($graphUris, '>' . PHP_EOL . 'FROM <') . '> ';
-        $query .= 'WHERE {
-            ?s ?p ?o.
-            ' . ($options['filter_properties'] ? '?ss ?s ?oo.' : '') . '
-            FILTER (bif:contains(?o, \'"' . $stringSpec . '*"\'))
-        }';
+        // New query object (Erfurt_Sparql_Query2)
+        require_once 'Erfurt/Sparql/Query2.php';
+        $query = new Erfurt_Sparql_Query2();
         
+        foreach ($graphUris as $graphUri) {
+            $query->addFrom($graphUri);
+        }
+        
+        $query->setDistinct(true);
+        
+        $s_var = new Erfurt_Sparql_Query2_Var('s');
+        $p_var = new Erfurt_Sparql_Query2_Var('p');
+        $o_var = new Erfurt_Sparql_Query2_Var('o');
+        
+        $query->addProjectionVar($s_var);
+        
+        $default_tpattern = new Erfurt_Sparql_Query2_Triple($s_var, $p_var, $o_var);
+        
+        $query->getWhere()->addElement($default_tpattern);
+        
+        if ($options['filter_properties']) {
+            $ss_var = new Erfurt_Sparql_Query2_var('ss');
+            $oo_var = new Erfurt_Sparql_Query2_var('oo');
+            
+            $filterprop_tpattern = Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
+            
+            $query->getWhere()->addElement($filterprop_tpattern);
+        }
+        
+        $query->addFilter(
+            new Erfurt_Sparql_Query2_Function(
+                'bif:contains' ,
+                array( $o_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec) )
+            )
+        );
+
         $resources = array();
         if ($results = $this->sparqlQuery($query)) {
             foreach ($results as $row) {
