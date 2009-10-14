@@ -72,6 +72,15 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
                 }
                 break;
+            case 'sqlsrv':
+                if (extension_loaded('sqlsrv')) {
+                    require_once 'Zend/Db/Adapter/Sqlsrv.php';
+                    $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($adapterOptions);
+                } else {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
+                }
+                break;
             default:
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Given database adapter is not supported.', -1);
