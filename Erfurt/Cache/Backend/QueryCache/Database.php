@@ -79,19 +79,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
         }
         
-
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_result (
-                qid VARCHAR( 255 ) NOT NULL ,
-                query LONG VARCHAR NULL, 
-                result LONG VARBINARY NULL ,
-                hit_count INT NULL,
-                inv_count INT NULL,
-                time_stamp FLOAT NULL,
-                duration FLOAT NULL,
-                PRIMARY KEY ( qid ))');
-*/
-
         if (!in_array('ef_cache_query_triple', $existingTableNames)) {
             $columnSpec = array(
                 'tid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
@@ -102,18 +89,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
-            #$this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid_spo ON ef_cache_query_triple(tid, subject, predicate, object)');
         }
-
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_triple (
-                tid INT NOT NULL '.$vocabulary['identity'].',
-                subject VARCHAR( 255 ) NULL ,
-                predicate VARCHAR( 255 ) NULL ,
-                object VARCHAR( 255 ) NULL ,
-                PRIMARY KEY ( tid ))');
-*/
-
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
             $columnSpec = array(
@@ -124,14 +100,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
         }
-
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_model (
-                mid INT NOT NULL '.$vocabulary['identity'].',
-                modelIri VARCHAR( 255 ) NULL ,
-                PRIMARY KEY ( mid ))');
-
-*/
 
         if (!in_array('ef_cache_query_rt', $existingTableNames)) {
             $columnSpec = array(
@@ -144,13 +112,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     
         }
 
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rt (
-                qid VARCHAR( 255 ) NOT NULL ,
-                tid VARCHAR( 255 ) NOT NULL ,
-                PRIMARY KEY ( qid, tid ))');
-*/
-
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
             $columnSpec = array(
                 'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
@@ -160,13 +121,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
-
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_rm (
-                qid VARCHAR( 255 ) NOT NULL ,
-                mid VARCHAR( 255 ) NOT NULL ,
-                PRIMARY KEY ( qid, mid ))');
-*/
 
         if (!in_array('ef_cache_query_objectKey', $existingTableNames)) {
             $columnSpec = array(
@@ -178,13 +132,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
         }
 
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_objectKey (
-                qid VARCHAR( 255 ) NOT NULL ,
-                objectKey VARCHAR( 255 ) NOT NULL ,
-                PRIMARY KEY ( qid, objectKey ))');
-*/
-
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
             $columnSpec = array(
                 'num'           => 'INT NOT NULL PRIMARY KEY',
@@ -193,12 +140,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->createTable('ef_cache_query_version', $columnSpec);
             $this->store->sqlQuery('INSERT INTO ef_cache_query_version (num) VALUES (1)');
         }
-
-/*
-		$this->store->sqlQuery('CREATE TABLE ef_cache_query_version (
-                num INT NOT NULL ,
-                PRIMARY KEY ( num )) ');
-*/
 
 	}
 
@@ -363,8 +304,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         $clause[] = "(predicate = '".$predicate."' OR predicate IS NULL)" ;
                     }
 
-                    if ($object != null ) {
-                        $clause[] = "(object = '".$object."' OR object IS NULL)" ;
+                    if ($objectValue != null ) {
+                        $clause[] = "(object = '".$objectValue."' OR object IS NULL)" ;
                     }
                     $clauses[] = "(". (implode (" AND ", $clause)) .")";
                 
@@ -529,19 +470,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
         // TODO platform indepent index handling
 
-        /*
-		$this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_result_qid_count');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_model_mid_modelIri');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_rt_qid_tid');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_rm_qid_mid');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_triple_tid_spo');
-        $this->store->sqlQuery('DROP INDEX ef_cache_query_objectKey_qid_objectKey');
-        */
-
-		$this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
-		$this->store->sqlQuery('DROP TABLE ef_cache_query_model');
+	$this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
+	$this->store->sqlQuery('DROP TABLE ef_cache_query_model');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
@@ -589,6 +519,137 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             return true;
         }
     }
+
+    public function getUsedTriplePattern($limit = NULL, $minOccurence = NULL) {
+
+        $limiter = "";
+        if ($limit) {
+            $limiter = "Limit ".$limit;
+        }
+
+        $filter = "";
+        if ($minOccurence) {
+            $filter = "WHERE s1.tripleHitCount > $minOccurence ";
+        }
+
+        $query = "
+            SELECT  s1.tid, s2.subject, s2.predicate, s2.object, s1.tripleHitCount as tripleCount
+            FROM 
+            (
+              SELECT rt.tid, SUM(r.hit_count +1) as tripleHitCount
+              FROM 
+                 ef_cache_query_rt as rt JOIN
+                 ef_cache_query_result as r  ON (r.qid=rt.qid)
+              GROUP BY (rt.tid)
+            ) as s1 JOIN
+
+            (
+              SELECT t.tid, t.subject, t.predicate, t.object
+              FROM 
+                ef_cache_query_triple as t
+            ) as s2 ON (s1.tid = s2.tid)
+            ".$filter."
+            ORDER BY tripleCount DESC 
+            ".$limiter."
+        ";
+        $result = $this->_query ($query);
+        return $result;
+    }
+
+    public function createMaterializedViews ($patternList) {
+
+	 $backendName = strtolower($this->store->getBackendName());
+	 if (!($backendName == "mysql" || $backendName == "zenddb" )) {
+	  return false;
+	 }
+	 $createdViews = array();
+	 foreach ($patternList as $pattern ) {
+
+	    $subject = $pattern['subject'];
+	    $predicate = $pattern['predicate'];
+	    $object = $pattern['object'];
+	    if ($subject || $predicate || $object) {
+	       $tableName = "ef_stmt_view_".$pattern['tid'];
+	       $resCreate = $this->createNewView($tableName);
+	       $resCopy = $this->copyStatementsToView($tableName, $subject, $predicate, $object);
+
+	       $createdViews[] =array( 
+		  'viewName' => $tableName,
+		  'subject' => $subject,
+		  'predicate' => $predicate,
+		  'object' => $object,
+		  'countEntries' => $resCopy);
+	    }
+	 }
+	 return $createdViews;
+    }
+
+
+    private function createNewView ($tableName) {
+
+       $query = "
+	 CREATE TABLE IF NOT EXISTS `".$tableName."` (
+	   `id` int(10) unsigned NOT NULL,
+	   `g` int(10) unsigned NOT NULL,
+	   `s` varchar(160) character set ascii collate ascii_bin NOT NULL,
+	   `p` varchar(160) character set ascii collate ascii_bin NOT NULL,
+	   `o` varchar(160) character set utf8 collate utf8_bin NOT NULL,
+	   `s_r` int(10) unsigned default NULL,
+	   `p_r` int(10) unsigned default NULL,
+	   `o_r` int(10) unsigned default NULL,
+	   `st` tinyint(1) unsigned NOT NULL,
+	   `ot` tinyint(1) unsigned NOT NULL,
+	   `ol` varchar(10) character set ascii collate ascii_bin NOT NULL,
+	   `od` varchar(160) character set ascii collate ascii_bin NOT NULL,
+	   `od_r` int(10) unsigned default NULL,
+	   PRIMARY KEY  (`id`),
+	   UNIQUE KEY `unique_stmt` (`g`,`s`,`p`,`o`,`st`,`ot`,`ol`,`od`),
+	   KEY `idx_g_p_o_ot` (`g`,`p`,`o`,`ot`),
+	   KEY `idx_g_o_ot` (`g`,`o`,`ot`)
+	 ) ENGINE=MyISAM  DEFAULT CHARSET=ascii AUTO_INCREMENT=352 ;";
+       $result = $this->_query ($query);
+       
+       return $result;
+    }
+
+    private function copyStatementsToView($viewName, $subject, $predicate, $object) {
+
+       $clauses = array();
+       if ($subject) {
+	  $clauses['s.s'] = "s.s = '".$subject."'";
+       }
+
+       if ($predicate) {
+	  $clauses['s.p'] = "s.p = '".$predicate."'";
+       }
+
+       if ($object) {
+	  $clauses['s.o'] = "s.o = '".$object."'";
+       }
+
+       if (sizeOf($clauses) > 0) {
+	 $clauseString = "WHERE " . implode(" AND ", $clauses);
+	  $query ="
+	    REPLACE INTO ".$viewName." (id, g, s, p, o, s_r, p_r, o_r, st, ot, ol, od, od_r)
+		SELECT s.id, s.g, s.s, s.p, s.o, s.s_r, s.p_r, s.o_r, s.st, s.ot, s.ol, s.od, s.od_r
+		FROM ef_stmt as s ".$clauseString;
+	  $result = $this->_query ($query);
+
+	  $query = "SELECT COUNT(*) as count FROM ".$viewName;
+	  $result = $this->_query ($query);
+	  return $result[0]['count'];
+       }
+       return false;
+    }
+
+
+    public function getMaterializedViews() {
+
+#        $pattern = $this->getUsedTriplePattern();
+#        $tblNames = mysql_list_tables();
+
+    }
+
 
 
     //-------------------------------------------------------------------------------
