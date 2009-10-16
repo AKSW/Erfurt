@@ -331,7 +331,7 @@ class Erfurt_Ac_Default
         $userRights = $this->_getUserModelRights($user->getUri());
         $actionUri  = $this->_uris['acBaseUri'] . $action;
 
-        // Action explicitly not allowed
+        // Action not allowed (init is optimized on all actions which have an instance)
         if (in_array($actionUri, $userRights['denyAccess'])) {
             return false;
         } 
@@ -343,43 +343,25 @@ class Erfurt_Ac_Default
         else if ($this->isAnyActionAllowed()) {
             return true;
         } 
-        // No record for action found, so create and disallow
+        // create action instance
         else {
         
-            // add statements only if user is local erfurt user
-            if ($user->isAnonymousUser() || $user->isDbUser() || $user->isWebId() || $user->isOpenId()) {
-                return false;
-            } else {
-                // try to generate nice label (insert whitespace before uppercase chars)
-                $label = preg_replace_callback(
-                    "/[A-Z]{1}[a-z]{2,}/",
-                    create_function(
-                        '$matches',
-                        'return \' \' . $matches[0];'
-                     ),
-                     $action
-                );
-            
-                // array for new statements (an action instance pus label and the user deny-action statement)
-                $actionStmt = array(
-                    $actionUri => array ( 
-                        EF_RDF_TYPE => array ( 
-                            array ( 'type' => 'uri' , 'value' => $this->_uris['actionClassUri'] )
-                        ) ,
-                        EF_RDFS_LABEL => array (
-                            array ( 'type' => 'literal' , 'value' => $label )
-                        )
+            // array for new statements (an action instance pus label)
+            $actionStmt = array(
+                $actionUri => array ( 
+                    EF_RDF_TYPE => array ( 
+                        array ( 'type' => 'uri' , 'value' => $this->_uris['actionClassUri'] )
                     ) ,
-                    $user->getUri() => array (
-                        $this->_uris['propDenyAccess'] => array (
-                            array ( 'type' => 'uri' , 'value' => $actionUri )
-                        )
+                    EF_RDFS_LABEL => array (
+                        array ( 'type' => 'literal' , 'value' => $action )
                     )
-                );
-                $store = Erfurt_App::getInstance()->getStore();
-                $store->addMultipleStatements($this->_uris['acModelUri'], $actionStmt, false);
-                return false;
-            }
+                )
+            );
+            
+            $store = Erfurt_App::getInstance()->getStore();
+            $store->addMultipleStatements($this->_uris['acModelUri'], $actionStmt, false);
+            
+            return false;
         }
     }
     
@@ -566,9 +548,12 @@ class Erfurt_Ac_Default
             $sparqlQuery->setProloguePart('SELECT ?s ?p ?o')
                         ->setWherePart('WHERE { 
                             ?s ?p ?o . 
-                            FILTER (sameTerm(?s, <' . $userURI . '>))
+                            FILTER (
+                                sameTerm(?s, <' . $userURI . '>) ||
+                                sameTerm(?o, <' . $this->_config->ac->action->class . '>)
+                            )
                         }');
-            
+
             if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
             }
@@ -600,8 +585,11 @@ class Erfurt_Ac_Default
      * @param array $userRights A reference to an array containing user rights.
      */
     private function _filterAccess($resultList, &$userRights) 
-    {     
-        foreach ($resultList as $entry) {           
+    {
+    
+        $allActions = array();
+    
+        foreach ($resultList as $entry) {
             // any action allowed?
             if (($entry['o'] === $this->_uris['propAnyAction']) 
                     && ($entry['p'] === $this->_uris['propGrantAccess'])) {
@@ -656,6 +644,21 @@ class Erfurt_Ac_Default
                     $userRights['denyModelEdit'][] = $entry['o'];
                 }
             }
+            // load all actions into array (handle afterwards)
+            else if(
+                $entry['p'] === EF_RDF_TYPE && 
+                $entry['o'] === $this->_config->ac->action->class && 
+                $entry['s'] !== $this->_config->ac->action->anyAction 
+            ) {
+                    $allActions[] = $entry['s'];
+            }
+        }
+        
+        // optimize denyAccess for not anyAction allowed users only
+        if (!$userRights['userAnyActionAllowed']) {
+            // get existing actions which are not defined (and disallowed)
+            $undefinedActions = array_unique(array_diff($allActions,$userRights['grantAccess'],$userRights['denyAccess']));
+            $userRights['denyAccess']   = array_merge($userRights['denyAccess'],$undefinedActions);
         }
     }
     
