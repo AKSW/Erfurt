@@ -330,7 +330,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             if ($object['type'] == 'uri') {
                 $objectSpec = '<' . $object['value'] . '>';
             } else {
-                $objectSpec = $this->buildLiteralString($object['value']);
+                $objectSpec = $this->buildLiteralString(
+                    $object['value'], 
+                    array_key_exists('datatype', $object) ? $object['datatype'] : null, 
+                    array_key_exists('lang', $object) ? $object['datatype'] : null
+                );
             }
         } else {
             $objectSpec = '?o';
