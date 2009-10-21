@@ -5,13 +5,12 @@ require_once 'Erfurt/Event/Dispatcher.php';
 /**
  * Erfurt plugin manager.
  *
- * @package erfurt
- * @subpackage    plugin
- * @author     Michael Haschke
- * @author     Norman Heino <norman.heino@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $$
+ * @package Erfurt
+ * @subpackage plugin
+ * @author Michael Haschke
+ * @author Norman Heino <norman.heino@gmail.com>
+ * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Plugin_Manager
 {
@@ -21,6 +20,10 @@ class Erfurt_Plugin_Manager
      */
     const CONFIG_FILENAME = 'plugin.ini';
     
+    /**
+     * Postfix for plug-in class names
+     * @var string
+     */
     const PLUGIN_CLASS_POSTFIX = 'Plugin';
     
     /**
@@ -39,7 +42,7 @@ class Erfurt_Plugin_Manager
      * Array of active plugins.
      * @var array
      */
-    protected $_plugins;
+    protected $_plugins = array();
     
     /**
      * Erfurt event dispatcher to register plugins.
@@ -68,6 +71,23 @@ class Erfurt_Plugin_Manager
     }
     
     /**
+     * Returns whether the specified plug-in is enabled
+     *
+     * @param string $name The unique name of the plug-in
+     * @param booleand $registeredOnly Returns true if the plug-in is enabled
+     *        and has been registered for at least one event.
+     * @return boolean
+     */
+    public function isPluginEnabled($pluginName, $registeredOnly = false)
+    {
+        if (array_key_exists($pluginName, $this->_plugins)) {
+            return !$registeredOnly || !empty($this->_plugins[$pluginName]);
+        }
+        
+        return false;
+    }
+    
+    /**
      * Adds a plugin and registers it with the dispatcher.
      *
      * @param string $pluginName
@@ -88,6 +108,11 @@ class Erfurt_Plugin_Manager
             return;
         }
         
+        // keep track of loaded plug-ins
+        if (!array_key_exists($pluginName, $this->_plugins)) {
+            $this->_plugins[$pluginName] = array();
+        }
+        
         if (array_key_exists('events', $pluginConfig) and is_array($pluginConfig['events'])) {
             foreach ($pluginConfig['events'] as $event) {
                 if (is_array($event)) {
@@ -102,6 +127,9 @@ class Erfurt_Plugin_Manager
                     
                     // register plugin events with event dispatcher
                     $this->_eventDispatcher->register($event, $pluginSpec);
+                    
+                    // keep track of registered events for the plugin
+                    array_push($this->_plugins[$pluginName], $event);
                 }
             }
         }
