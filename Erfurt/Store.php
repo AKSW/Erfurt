@@ -206,14 +206,23 @@ class Erfurt_Store
 
         if ($this->_checkAc($graphUri, 'edit', $useAc)) {
             if($prefix === false) {
+                $efApp = Erfurt_App::getInstance();
+                $logger = $efApp->getLog();
                 // serach erfurt config for predefined prefixes
 
-                $config = Erfurt_App::getInstance()->getConfig();
-                if (is_array($config->namespaces)) {
-                    $prefix = array_search($namespace, $config->namespaces);
+                $config = $efApp->getConfig();
+                $namespaces = $config->namespaces->toArray();
+
+                $logger->debug('Prefixmangagement in Store: Searching for namespace: ' . var_export($namespace, true));
+                $logger->debug('Prefixmangagement in Store: The predefined namespace prefixes: ' . var_export($namespaces, true));
+
+                if (is_array($namespaces)) {
+                    $prefix = array_search($namespace, $namespaces);
                 } else {
                     $prefix = false;
                 }
+
+                $logger->debug('Prefixmangagement in Store: Found prefix? ' . var_export($prefix, true));
 
                 if($prefix === false || isset($this->_prefixes[$graphUri][$prefix])) {
                     for($i = 0; isset($this->_prefixes[$graphUri]['ns' . $i]); $i++) {
