@@ -99,6 +99,12 @@ class Erfurt_App
      */
     private $_logObjects = array();
     
+    /**
+     * Namespace management module
+     * @var Erfurt_Namespaces
+     */
+    protected $_namespaces = null;
+    
     /** 
      * Contains an instance of the Erfurt plugin manager.
      * @var Erfurt_Plugin_Manager
@@ -691,6 +697,25 @@ class Erfurt_App
         } else { 
             return false;
         }
+    }
+    
+    /**
+     * Returns the namespace management module.
+     *
+     * @return Erfurt_Namespaces
+     */
+    public function getNamespaces()
+    {
+        if (null === $this->_namespaces) {
+            $config  = $this->getConfig();
+            $names   = isset($config->namespaces) ? $config->namespaces->toArray() : null;
+            $schemes = isset($config->uri->schemata) ? $config->uri->schemata->toArray() : null;
+            
+            require_once 'Erfurt/Namespaces.php';
+            $this->_namespaces = new Erfurt_Namespaces($this->getStore(), $names, $schemes);
+        }
+        
+        return $this->_namespaces;
     }
     
     /**

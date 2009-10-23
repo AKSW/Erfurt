@@ -60,7 +60,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function __construct($iri, Erfurt_Rdf_Model $model = null)
     {
         $this->_model = $model;
-        $namespaces   = $this->_model ? $this->_model->getNamespaces() : array();
+        $namespaces   = $this->_model ? $this->_model->getNamespacePrefixes() : array();
         $matches      = array();
         
         // parse namespace/local part

@@ -39,6 +39,12 @@ class Erfurt_Rdf_Model
     protected $_graphUri = null;
     
     /**
+     * Erfurt namespace management module
+     * @var Erfurt_Namespaces
+     */
+    protected $_namespaces = null;
+    
+    /**
      * The model's title property value
      * @var string
      */
@@ -74,6 +80,9 @@ class Erfurt_Rdf_Model
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
         }
+        
+        // namespace module
+        $this->_namespaces = Erfurt_App::getInstance()->getNamespaces();
     }
     
     /**
@@ -544,72 +553,56 @@ class Erfurt_Rdf_Model
     {    
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
-	}
-
-    /**
-     * Returns an array of namespace IRIs (keys) and prefixes defined
-     * in this model's source file.
-     *
-	 * @return array
-	 * @deprecated
-     */
-    public function getNamespaces()
-	{
-		$store = $this->getStore();
-        return array_flip($store->getNamespacePrefixes($this->_graphUri));
     }
 
-	/**
-	 * Get all namespaces with there prefix
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefixes()
-	{
-		$store = $this->getStore();
-		return $store->getNamespacePrefixes($this->_graphUri);
-	}
-	
-	/**
-	 * Get the prefix for one namespaces, will be created if no prefix exists
-	 *
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefix($namespace)
-	{
-		$store = $this->getStore();
-		return $store->getNamespacePrefix($this->_graphUri, $namespace);
-	}
+    /**
+     * Get all namespaces with there prefix
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefixes()
+    {
+        // $store = $this->getStore();
+        // return $store->getNamespacePrefixes($this->_graphUri);
+        
+        return $this->_namespaces->getNamespacePrefixes($this->getModelUri());
+    }
+    
+    /**
+     * Get the prefix for one namespaces, will be created if no prefix exists
+     *
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefix($namespace)
+    {
+        // $store = $this->getStore();
+        // return $store->getNamespacePrefix($this->_graphUri, $namespace);
+        
+        return $this->_namespaces->getNamespacePrefix($this->getModelUri(), $namespace);
+    }
 
-	/**
-	 * Add a namespace -> prefix mapping
-	 * @param $prefix a prefix to identify the namespace
-	 * @param $namespace the namespace uri
-	 * @deprecated
-	 */
-	public function addPrefix($prefix, $namespace)
-	{
-		$store = $this->getStore();
-		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
-	}
+    /**
+     * Add a namespace -> prefix mapping
+     * @param $prefix a prefix to identify the namespace
+     * @param $namespace the namespace uri
+     */
+    public function addNamespacePrefix($prefix, $namespace)
+    {
+        // $ns = $this
+        // $store = $this->getStore();
+        // $store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
+        
+        return $this->_namespaces->addNamespacePrefix($this->getModelUri(), $namespace, $prefix);
+    }
 
-	/**
-	 * Add a namespace -> prefix mapping
-	 * @param $prefix a prefix to identify the namespace
-	 * @param $namespace the namespace uri
-	 */
-	public function addNamespacePrefix($prefix, $namespace)
-	{
-		$store = $this->getStore();
-		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
-	}
-
-	/**
-	 * Delete a namespace -> prefix mapping
-	 * @param $prefix the prefix you want to remove
-	 */
-	public function deleteNamespacePrefix($prefix)
-	{
-		$store = $this->getStore();
-		$store->deleteNamespacePrefix($this->_graphUri, $prefix);
-	}
+    /**
+     * Delete a namespace -> prefix mapping
+     * @param $prefix the prefix you want to remove
+     */
+    public function deleteNamespacePrefix($prefix)
+    {
+        // $store = $this->getStore();
+        // $store->deleteNamespacePrefix($this->_graphUri, $prefix);
+        
+        return $this->_namespaces->deleteNamespacePrefix($this->getModelUri(), $prefix);
+    }
 }
