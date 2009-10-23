@@ -5,16 +5,15 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id:$
  */
 
 /**
  * Simple static class for performing regular expression-based URI checking and normalizing.
  * 
+ * @category Erfurt
+ * @package Uri
  * @copyright Copyright (c) 2009 {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @category Erfurt
- * @package uri
  * @author Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Uri
@@ -70,9 +69,9 @@ class Erfurt_Uri
         $schemaSpecific = isset($parts[1]) === true ? $parts[1] : '';
         
         // schema-only normalization
-        $normalized     = $schema
-                        . ':'
-                        . $schemaSpecific;
+        $normalized = $schema
+                    . ':'
+                    . $schemaSpecific;
         
         // check for HTTP(S) URIs
         if (strpos('http', $schema) !== false) {
@@ -80,9 +79,9 @@ class Erfurt_Uri
             $matches = array();
             preg_match('/^\/\/(.+@)?(.+?)(\/.*)?$/', $schemaSpecific, $matches);
                             
-            $authority  = $matches[1];
-            $server     = strtolower($matches[2]);
-            $path       = isset($matches[3]) ? $matches[3] : '';
+            $authority = $matches[1];
+            $server    = strtolower($matches[2]);
+            $path      = isset($matches[3]) ? $matches[3] : '';
             
             // server-part normalization
             $normalized = $schema
