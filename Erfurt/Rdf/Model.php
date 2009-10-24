@@ -554,6 +554,29 @@ class Erfurt_Rdf_Model
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
     }
+    
+    /**
+     * Returns an array of namespace IRIs (keys) and prefixes defined
+     * in this model's source file.
+     *
+	 * @return array
+	 * @deprecated
+     */
+    public function getNamespaces()
+	{
+        return array_flip($this->getNamespacePrefixes());
+    }
+    
+    /**
+	 * Add a namespace -> prefix mapping
+	 * @param $prefix a prefix to identify the namespace
+	 * @param $namespace the namespace uri
+	 * @deprecated
+	 */
+	public function addPrefix($prefix, $namespace)
+	{
+		return $this->addNamespacePrefix($prefix, $namespace);
+	}
 
     /**
      * Get all namespaces with there prefix

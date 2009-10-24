@@ -1084,7 +1084,7 @@ class Erfurt_Store
      * @return Erfurt_Rdf_Model Returns an instance of Erfurt_Rdf_Model or one of its subclasses.
      */
     public function getModel($modelIri, $useAc = true)
-    {
+    {        
         // check whether model exists and is visible
         if (!$this->isModelAvailable($modelIri, $useAc)) {
             $config = Erfurt_App::getInstance()->getConfig();
