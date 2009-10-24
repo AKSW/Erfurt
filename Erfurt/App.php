@@ -707,10 +707,12 @@ class Erfurt_App
     public function getNamespaces()
     {
         if (null === $this->_namespaces) {
+            $config = $this->getConfig();
+            
             // options            
             $namespacesOptions = array(
-                'reserved_names'    => isset($config->namespaces) ? $config->namespaces->toArray() : array(), 
-                'standard_prefixes' => isset($config->uri->schemata) ? $config->uri->schemata->toArray() : array()
+                'standard_prefixes' => isset($config->namespaces) ? $config->namespaces->toArray() : array(), 
+                'reserved_names'    => isset($config->uri->schemata) ? $config->uri->schemata->toArray() : array()
             );
             
             require_once 'Erfurt/Namespaces.php';
