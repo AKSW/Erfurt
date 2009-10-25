@@ -21,7 +21,8 @@ class Erfurt_NamespacesTest extends PHPUnit_Framework_TestCase
             'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#', 
             'owl'  => 'http://www.w3.org/2002/07/owl#', 
             'xsd'  => 'http://www.w3.org/2001/XMLSchema#', 
-            'foaf' => 'http://xmlns.com/foaf/0.1/'
+            'foaf' => 'http://xmlns.com/foaf/0.1/', 
+            'sioc' => 'http://rdfs.org/sioc/ns#'
         );
         
         $namespaceOptions = array(
@@ -142,5 +143,8 @@ class Erfurt_NamespacesTest extends PHPUnit_Framework_TestCase
         
         $prefix3 = $this->_fixture->getNamespacePrefix($this->_modelStub, 'http://xmlns.com/foaf/0.1/');
         $this->assertEquals('foaf', $prefix3);
+        
+        $prefix4 = $this->_fixture->getNamespacePrefix($this->_modelStub, 'http://rdfs.org/sioc/ns#');
+        $this->assertEquals('sioc', $prefix4);
     }
 }
