@@ -215,7 +215,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         }
 
         return self::mkVal(
-            '"' . addslashes($strValue) . '"',
+            "'" . addslashes($strValue) . "'",
             self::$typeXsdString
         );
     }//protected function createValue($tree)
@@ -309,9 +309,9 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
             }
             if (isset($tree['operand2']['language'])) {
                 $strColLanguage = $this->getLangCol($tree['operand1']);
-                $strExtra .= ' AND ' . $strColLanguage . '="'
+                $strExtra .= ' AND ' . $strColLanguage . "='"
                     . addslashes($tree['operand2']['language'])
-                    . '"';
+                    . "'";
             }
 
             if ($this->isNumber($tree['operand2'])) {
@@ -580,7 +580,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
             default:
                 //language, maybe with different subcode
                 // en -> en, en-US
-                $sql = '(' . $col . '="' . addslashes($lang) . '" OR '
+                $sql = '(' . $col . "='" . addslashes($lang) . "' OR "
                     . $col . ' LIKE "' . addslashes($lang) . '-%")';
                 break;
         }
@@ -608,11 +608,12 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                     $sql = $strVar . ' REGEXP ' . $strRegex;
                     break;
 
-                case '"i"':
+                case "'i'":
                     $sql = 'CAST(' . $strVar . ' AS CHAR) REGEXP ' . $strRegex;
                     break;
 
                 default:
+                    var_dump($strMod);exit;
                     throw new SparqlEngineDb_SqlGeneratorException(
                         'Unsupported regex modifier "'
                         . $strMod

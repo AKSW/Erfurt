@@ -174,7 +174,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 time_stamp, 
                 duration) VALUES (
                 '".$queryId."',
-                '".(str_replace("'", '"', $queryString))."', 
+                '".(str_replace("'", "\\'", $queryString))."', 
                 '".$queryResult."',
                 0,
                 0, 
@@ -281,9 +281,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @return     int     $count          count of the affected cached queries         
      */
     public function invalidate ( $modelIri, $statements = array() ) {
-
+        
         if (sizeof($statements) == 0)
             return false;
+
+        if (count($statements) > 20) {
+            return $this->invalidateAll();
+        }
 
         $qids = array();
         $clauses = array();
@@ -298,14 +302,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     }
                     $clause = array();
                     if ($subject != "") {
-                        $clause[] = "(subject = '".$subject."' OR subject IS NULL)" ;
+                        $clause[] = "(subject = '".addslashes($subject)."' OR subject IS NULL)" ;
                     }
                     if ($predicate != "") {
-                        $clause[] = "(predicate = '".$predicate."' OR predicate IS NULL)" ;
+                        $clause[] = "(predicate = '".addslashes($predicate)."' OR predicate IS NULL)" ;
                     }
 
                     if ($objectValue != null ) {
-                        $clause[] = "(object = '".$objectValue."' OR object IS NULL)" ;
+                        $clause[] = "(object = '".addslashes($objectValue)."' OR object IS NULL)" ;
                     }
                     $clauses[] = "(". (implode (" AND ", $clause)) .")";
                 
@@ -377,7 +381,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                   WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )";
 
         $qids = $this->_query ( $query );
-
+        
         foreach ($qids as $qid) {
             $qid = $qid['qid'];
 
@@ -403,10 +407,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             //delete entries in query_model
             $this->_query ( "DELETE FROM ef_cache_query_model WHERE modelIri = '".$modelIri."'" );
         }
-
-        foreach ($result as $entry) {
-            $qids[] = $entry['qid'];
+        
+        if (isset($tids)) {
+            foreach ($tids as $entry) {
+                $qids[] = $entry['tid'];
+            }
         }
+
         return $qids;
     }
 
@@ -419,7 +426,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         foreach ($oids as $oid) {
             //delete entries in query_objectKey
-            $query = "DELETE FROM ef_cache_query_objectKey WHERE objectKey = '".$oid."'" ;
+            $query = "DELETE FROM ef_cache_query_objectkey WHERE objectKey = '".$oid."'" ;
             $this->_query ( $query );
         }
     }
@@ -432,7 +439,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     public function getObjectKeys ( $qids = array() ) {
         $oKeys = array();
         foreach ($qids as $qid) {
-            $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectKey WHERE qid='".$qid."'"; ;
+            $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectkey WHERE qid='".$qid."'"; ;
             $result = $this->_query ( $query );
             foreach ($result as $entry) {
                 $oKeys[$entry['objectKey']] = $entry['objectKey'];
@@ -476,7 +483,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectKey');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
 
         return true;
 
@@ -492,11 +499,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $keys = array_keys ($transactions) ;
         foreach ($keys as $key) {
-            $query = "SELECT * FROM ef_cache_query_objectKey WHERE qid = '".$queryId."' AND objectKey = '".$key."'";
+            $query = "SELECT * FROM ef_cache_query_objectkey WHERE qid = '".$queryId."' AND objectKey = '".$key."'";
             $ret = $this->_query ($query);
         
             if (!(isset($ret[0]['qid']))) {
-                $query = "INSERT INTO ef_cache_query_objectKey (qid, objectKey) VALUES ('".$queryId."', '".$key."')" ;
+                $query = "INSERT INTO ef_cache_query_objectkey (qid, s) VALUES ('".$queryId."', '".$key."')" ;
                 $this->_query ($query);
             }
         }
@@ -798,6 +805,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 }
             } else {
                 require_once 'Erfurt/Exception.php';
+                echo($sql);exit;
                 throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage());
             }
         }
