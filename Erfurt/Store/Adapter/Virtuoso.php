@@ -23,50 +23,71 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
     
-    /** @var ODBC connection id */
+    /** 
+     * ODBC connection id 
+     * @var int
+     */
     private $_connection = null;
     
-    /** @var boolean */
+    /** 
+     * Are transactions active
+     * @var boolean
+     */
     private $_transactions = false;
     
-    /** @var array */
+    /**
+     * Graph URIs internally used by Virtuoso
+     * @var array 
+     */
     private $_virtuosoSpecialModels = array(
         'http://www.openlinksw.com/schemas/virtrdf#', 
         'http://localhost:8890/DAV'
     );
     
-    /** @var array */
+    /**
+     * Properties for graph titles
+     * @var array 
+     */
     private $_titleProperties = array(
         'http://www.w3.org/2000/01/rdf-schema#label', 
         'http://purl.org/dc/elements/1.1/title'
     );
     
-    private $_models = false;
+    /**
+     * Graph cache
+     * @var array
+     */
+    private $_models = null;
     
     /** 
      * An array of languages used in the store 
+     * @var array
      */
     private $_languages = array();
     
+    /**
+     * Special treatment of long column data (e. g. XML results)
+     * @var boolean
+     */    
     private $_longRead = false;
     
     /**
      * An array of languages appearing in
      * each model.
+     * @var array
      */
     private $_modelLanguages = array();
     
 
     /**
-     * An array that includes all necessary options for
-     * http access to virtuoso key=>value style
-     * useHTTP  
-     * endpointURI
-     * davFolder
-     * username
-     * password
-     * 
-     * 
+     * Configuration options for HTTP access to Virtuoso.
+     * The following keys are recognized:
+     * - use_http
+     * - username
+     * - password
+     * - endpoint_uri
+     * - dav_folder
+     * @var array
      */
     private $_httpConfig = array();
 
@@ -76,14 +97,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @var array
      */
     private $_importedModels = array();
-	
-	
-	/**
-	 * debug variable, if enabled prints all sparql queries 
-	 * and puts an <xmp> in front
-	 * @var boolean
-	 */
-	private $_debug_show_queries = false;
+    
+    
+    /**
+     * Debug flag, if enabled all SPARQL queries 
+     * are echo'ed.
+     * @var boolean
+     */
+    private $_debugQueries = false;
  
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -96,21 +117,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function __construct($adapterOptions = array()) 
     {    
-        $dsn        = $adapterOptions['dsn'];
-        $username   = $adapterOptions['username'];
-        $password   = $adapterOptions['password'];
+        $dsn      = $adapterOptions['dsn'];
+        $username = $adapterOptions['username'];
+        $password = $adapterOptions['password'];
         
-        if(isset($adapterOptions['useHTTP']) && $adapterOptions['useHTTP']==true){
-        	$this->_httpConfig['useHTTP'] 		= true;	
-        	$this->_httpConfig['username'] 		= $username;	
-        	$this->_httpConfig['password'] 		=  $password;	
-        	$this->_httpConfig['endpointURI'] 	=  $adapterOptions['endpointURI'];	
-        	$this->_httpConfig['davFolder'] 	=  $adapterOptions['davFolder'];	
-         }else{
-         	$this->_httpConfig['useHTTP'] 		= false;	
+        if (isset($adapterOptions['useHTTP']) && (boolean)$adapterOptions['useHTTP']) {
+            $this->_httpConfig['use_http']     = true; 
+            $this->_httpConfig['username']     = $username;    
+            $this->_httpConfig['password']     = $password;   
+            $this->_httpConfig['endpoint_uri'] = $adapterOptions['endpointURI'];  
+            $this->_httpConfig['dav_folder']   = $adapterOptions['davFolder'];    
+         } else {
+            $this->_httpConfig['use_http'] = false;    
          }
-        
-        
         
         if (!function_exists('odbc_connect')) {
             require_once 'Erfurt/Exception.php';
@@ -119,16 +138,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         // try to connect using the php plugin security if possible
-		if (function_exists ('__virt_internal_dsn')) {
-		    $this->_connection = @odbc_connect (__virt_internal_dsn(), null, null);
-		} else {
-			 // try to connect normally
+        if (function_exists('__virt_internal_dsn')) {
+            $this->_connection = @odbc_connect(__virt_internal_dsn(), null, null);
+        } else {
+             // try to connect normally
             $this->_connection = @odbc_connect($dsn, $username, $password);
-		}
+        }
         
         if (null == $this->_connection) {
+            $msg = 'Unable to connect to Virtuoso Universal Server via ODBC: ' 
+                 . $this->_getLastError();
+            
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Unable to connect to Virtuoso Universal Server via ODBC: ' . $this->_getLastError());
+            throw new Erfurt_Exception($msg);
             exit;
         }
         
@@ -138,10 +160,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $this->_titleProperties = $config->properties->title->toArray();
         }
         
-        $result = $this->_execSql('SELECT DISTINCT rl_id FROM DB.DBA.RDF_LANGUAGE');
-        while (odbc_fetch_row($result)) {
-            $this->_languages[] = odbc_result($result, 1);
-        }
+        // $result = $this->_execSql('SELECT DISTINCT rl_id FROM DB.DBA.RDF_LANGUAGE');
+        // while (odbc_fetch_row($result)) {
+        //     $this->_languages[] = odbc_result($result, 1);
+        // }
     }
     
     /**
@@ -151,7 +173,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function __destruct() 
     {
-        //
+        // check for ongoing transactions
         if ($this->_transactions) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Cannot close the connection while tranactions are open.');
@@ -349,27 +371,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
         ";
 
-        // preforming delete operations
+        // perform delete operations
         $ret = $this->_execSparql($deleteSparql);
-
-        // loading results
+        
+        // load results
         $retArray = array();
-        odbc_fetch_into($ret,$retArray);
+        odbc_fetch_into($ret, $retArray);
 
         // check how many triples have been deleted and return as int if possible
         // else return odbc resource reference (like it was before)
-        if ( is_string(reset($retArray)) ) {
-
-            $set = preg_split('/(,|triples)/',current($retArray));
-            return (int) $set[1];
-
-        } else {
-
-            return $ret;
-
+        if (is_string(reset($retArray))) {
+            $set = preg_split('/(,|triples)/', current($retArray));
+            return (int)$set[1];
         }
-            
         
+        return $ret;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -409,8 +425,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $exportFunc = 'RDF_TRIPLES_TO_RDF_XML_TEXT';
                 break;
         }
-        
-        
     }
     
     /** @see Erfurt_Store */
@@ -463,8 +477,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function getAvailableModels() {        
-        if (!$this->_models) {
+    public function getAvailableModels()
+    {        
+        if (null === $this->_models) {
             $this->_models = array();
                 
             $query = 'SELECT ?graph WHERE {
@@ -497,7 +512,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             //     }
             // }
         }
-        // var_dump($this->_models);
+        
         return $this->_models;
     }
     
@@ -745,28 +760,28 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function sparqlAsk($query)
     {        
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        if (!($sparqlResult = $queryCache->load( $query ,"plain"))){
+        if (!($sparqlResult = $queryCache->load($query, 'plain'))) {
             $sparqlResult = $this->_execSparql($query);
-
+            
             if (odbc_result($sparqlResult, 1) == '1') {
                 $sparqlResult = true;
             }
             else {
                 $sparqlResult = false;
             }
-            $queryCache->save( $query, "plain" , $sparqlResult);
+            
+            $queryCache->save($query, 'plain' , $sparqlResult);
         }
         return $sparqlResult;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $resultFormat = 'plain') 
-    {    
-    	
-    	 if($this->_httpConfig['useHTTP'] == true ){
-    	 	return  $this->_httpSelect($query, $resultFormat);
-    	 	}
-    	
+    {
+        if ($this->_httpConfig['use_http']) {
+            return $this->_httpSelect($query, $resultFormat);
+        }
+        
         $result      = array();
         $json_encode = false;
         
@@ -783,23 +798,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $query = ' define output:format "TTL" '
                    .  $query;
         }
-		
-		//this is used to filter out certain queries when working with dbpedia
-		//it should be deactivated for normal use
-		if( strpos($query, "?__resource") >0
-			&& strpos($query, "?__resource1") >0
-			&& strpos($query, "?__resource2") >0
-		){
-			$this->_debug_print($query."\n was filtered");
-			$arr['head']=array();
-			$arr['head']['vars']=array();
-			$arr['head']['vars'][]='__resource';
-			$arr['head']['vars'][]='__resource1';
-			$arr['bindings']=array();;
-			//this is used to filter out certain queries when working with dbpedia
-			//the following line should be deactivated for normal use
-			//return $arr;
-		}
+        
+        // this is used to filter out certain queries when working with dbpedia
+        // it should be deactivated for normal use
+        if (strpos($query, "?__resource") !== false
+            && strpos($query, "?__resource1") !== false
+            && strpos($query, "?__resource2") !== false
+        ) {
+            $this->printDebugMessage($query . PHP_EOL . 'was filtered');
+            $arr['head'] = array();
+            $arr['head']['vars'] = array();
+            $arr['head']['vars'][] = '__resource';
+            $arr['head']['vars'][] = '__resource1';
+            $arr['bindings'] = array();
+            
+            // this is used to filter out certain queries when working with dbpedia
+            // the following line should be deactivated for normal use
+            // return $arr;
+        }
      
         if ($result = $this->_execSparql((string)$query)) {
             $result = $this->_odbcResultToArray($result);
@@ -825,6 +841,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if ($json_encode) {
             $result = json_encode($result);
         }
+        
         return $result;
     }
     
@@ -949,7 +966,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _execSparql($sparqlQuery, $graphUri = 'NULL') 
     {
-    	//echo $sparqlQuery;
+        //echo $sparqlQuery;
         if (!is_string($graphUri) || $graphUri == '') {
             $graphUri = 'NULL';
         } else if ($graphUri != 'NULL') {
@@ -977,70 +994,94 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $result;
     }
     
-    
-    private function _httpUpdate( $sparqlQuery){
-        	$username 		= $this->_httpConfig['username'];	
-        	$password 		= $this->_httpConfig['password'];	
-        	$endpointURI 	= $this->_httpConfig['endpointURI'];	
-        	$davFolder 		= $this->_httpConfig['davFolder'];
-
-    		$url = $endpointURI.$davFolder;
-    		$client = new Zend_Http_Client($url, array());
-    		$client->setMethod(Zend_Http_Client::POST);
-    		$client->setRawData($query, 'application/sparql-query');
-			$client->setAuth($username, $password);
-			$response =  $client->request();
-			//testing below here:
-			
-			//var_dump($client);
-			echo "Answer\n";
-			echo $response->getStatus();
-			echo $response->getMessage();
+    /**
+     * Sends a SPARQL/Update query via HTTP.
+     *
+     * @param string $sparlQuery
+     */
+    private function _httpUpdate($sparqlQuery)
+    {
+        $username    = $this->_httpConfig['username'];   
+        $password    = $this->_httpConfig['password'];   
+        $endpointUri = $this->_httpConfig['endpoint_uri'];    
+        $davFolder   = $this->_httpConfig['dav_folder'];
+        
+        $url = $endpointUri
+             . $davFolder;
+        
+        $client = new Zend_Http_Client($url, array());
+        $client->setMethod(Zend_Http_Client::POST)
+               ->setRawData($query, 'application/sparql-query')
+               ->setAuth($username, $password);
+        
+        $response = $client->request();
+        
+        // testing
+        echo 'Answer' . PHP_EOL;
+        echo $response->getStatus();
+        echo $response->getMessage();
     }
     
-    /*
-		All SPARQL queries that can be sent via http
-*/
-    
-    private function _httpSelect( $sparqlQuery, $resultFormat = 'plain'){
-    		$username 		= $this->_httpConfig['username'];	
-        	$password 		= $this->_httpConfig['password'];	
-        	$endpointURI 	= $this->_httpConfig['endpointURI'];	
-        	
-    		$sparqlQuery = urlencode($sparqlQuery);
-    		$url = $endpointURI.'/sparql?query='.$sparqlQuery;
-    		require_once('Zend/Http/Client.php');
-    		$client = new Zend_Http_Client();
-    		$client->setAuth($username, $password);
-    		
-    		//FORMAT issues:
-    		$format = ($resultFormat=='plain')?'JSON':$resultFormat;
-    		$url .='&format='.$format;
-    		$client->setUri($url);
-    		
-			$response =  $client->request();
-			$result = $response->getBody();
-			
-			//TODO catch errors here
-			
-			switch ($resultFormat ){
-				case 'JSON': return $result;
-				case 'xml': return $result;
-				case 'plain' : {
-					$retval = array();
-					$j = json_decode($result,true);
-					
-					foreach ($j['results']['bindings'] as $b){
-						$tmp=array();
-						foreach ($b as $key=>$value){
-							$tmp[$key]  = $value['value'];
-						}//foreach 
-						$retval[]=$tmp;
-					}//foreach 
-				}return $retval;
-			}
-	}
-	    
+    /**
+     * Sends a SPARQL query via HTTP.
+     *
+     * @param string $sparlQuery
+     * @param string $resultFormat
+     */
+    private function _httpSelect($sparqlQuery, $resultFormat = 'plain')
+    {
+        $username    = $this->_httpConfig['username'];
+        $password    = $this->_httpConfig['password'];
+        $endpointUri = $this->_httpConfig['endpoint_uri'];
+
+        $sparqlQuery = urlencode($sparqlQuery);
+        $format      = ($resultFormat == 'plain') ? 'JSON' : $resultFormat;
+        
+        
+        $url = trim($endpointUri, '/') 
+             . '/sparql?query=' 
+             . $sparqlQuery
+             . '&format='
+             . $format;
+        
+        require_once 'Zend/Http/Client.php';
+        $client = new Zend_Http_Client();
+        $client->setAuth($username, $password)
+               ->setUri($url);
+        
+        $response = $client->request();
+        $result   = $response->getBody();
+                
+        // TODO: catch errors here
+        
+        switch (strtolower($resultFormat)) {
+            case 'json':
+                return $result;
+                break;
+            case 'xml':
+                return $result;
+                break;
+            case 'plain':
+                $retval = array();
+                $array  = json_decode($result, true);
+                
+                // rows
+                foreach ($array['results']['bindings'] as $row) {
+                    $tmp = array();
+                    
+                    // fields
+                    foreach ($row as $key => $value) {
+                        $tmp[$key] = $value['value'];
+                    }
+                    
+                    array_push($retval, $tmp);
+                }
+                
+                return $retval;
+                break;
+        }
+    }
+        
     /**
      * Executes a SQL statement and returns an ODBC result identifier.
      *
@@ -1051,12 +1092,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     private function _execSql($sqlQuery) 
     {
         $result = @odbc_exec($this->_connection, $sqlQuery);
-        $this->_longRead = true;
-        
-        if ($result && $this->_longRead) {
-            odbc_longreadlen($result, 16777216);
-            $this->_longRead = false;
-        }
         
         if (false === $result) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
@@ -1174,11 +1209,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
         }
         
-        $importSql = sprintf("CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')", $importFunc, $url, $baseUri, $graphUri);
+        $importSql = sprintf("CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')", 
+                             $importFunc, 
+                             $url, 
+                             $baseUri, 
+                             $graphUri);
         
         try {
             if ($this->_execSql($importSql)) {
-                // TODO: owl:imports
                 return $this->getModel($graphUri);
             }
         } catch (Erfurt_Store_Adapter_Exception $e) {
@@ -1236,24 +1274,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         return $logo;
     }
-	
-	 /**
-     * 
-	 * used for performance debugging of OntoWiki
-	 * w.r.t. Virtuoso.
-	 * Some queries are very slow when executed against a virtuoso store.
-	 * 
+    
+    /**
+     * Used for performance debugging of OntoWiki w/ Virtuoso.
+     * Certain queries are very slow when executed against a Virtuoso store.
      *
      * @param string $message
-     * @returns void
      */ 
-    private function _debug_print($message)
+    private function printDebugMessage($message)
     {
-		if($this->_debug_show_queries){
-			echo "<xmp> This message is shown, because the debug variable in ";
-			echo "store adapter Virtuoso.php is set to true\n";
-			echo $message."\n";
-			echo "***************\n";
-		}
-	}
+        if ($this->_debugQueries) {
+            $string = 'This message is shown, because the debug variable in store adapter '
+                    . __FILE__
+                    . ' is set to true.';
+            $line = '--------------------------------------------------------------------------------';
+            
+            echo sprintf('<xmp>%s</xmp>%s%s%s%s', $string, PHP_EOL, $message, $line, PHP_EOL);
+        }
+    }
 }
