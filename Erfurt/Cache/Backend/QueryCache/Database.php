@@ -645,12 +645,43 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     public function getMaterializedViews() {
 
-#        $pattern = $this->getUsedTriplePattern();
-#        $tblNames = mysql_list_tables();
+        $views = $viewTabels = $tripleIds = $whereClauses = array();
+        $viewTables = $this->_query('SHOW TABLES LIKE \'ef_stmt_view%\'');
+        if(!$viewTables) {
+            return array();
+        }
 
+        foreach ($viewTables as $key => $viewTable) {
+            $viewTable = array_values($viewTable);
+            $viewName = $viewTable[0];
+            $idStartPos = strrpos($viewName, "_") + 1;
+            $tripleId = substr($viewName, $idStartPos );
+            $views[$tripleId] = array(
+                'tid' => $tripleId, 
+                'tblName' => $viewName, 
+            ); 
+            $whereClauses[] = "tid = " . $tripleId; 
+        }
+        $whereClause = " WHERE " . implode (" OR ", $whereClauses);
+
+        $query = "SELECT tid, subject, predicate, object FROM ef_cache_query_triple " . $whereClause;
+        $result = $this->_query($query);
+        foreach ($result as $entry) {
+            $tripleId   = $entry['tid'];
+            $subject    = $entry['subject'];
+            $prediacte  = $entry['predicate'];
+            $object     = $entry['object'];
+            
+            if (isset($views[$tripleId])) {
+                $views[$tripleId]['subject']   = $subject ;  
+                $views[$tripleId]['predicate'] = $prediacte ;
+                $views[$tripleId]['object']    = $object ;
+
+            }
+
+        }
+        return $views;
     }
-
-
 
     //-------------------------------------------------------------------------------
     //private functions

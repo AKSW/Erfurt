@@ -1260,6 +1260,10 @@ class Erfurt_Store
     public function importRdf($modelIri, $data, $type = 'auto', $locator = Erfurt_Syntax_RdfParser::LOCATOR_FILE, 
             $useAc = true)
     {
+
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithModelIri($modelIri); 
+
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Import failed. Model <$modelIri> not found or not writable.");

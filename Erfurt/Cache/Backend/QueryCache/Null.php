@@ -63,9 +63,13 @@ class Erfurt_Cache_Backend_QueryCache_Null extends Erfurt_Cache_Backend_QueryCac
         return true;
     }
     
-    public function getObjectKeys ( $qids = array() ) 
-    {
+    public function getObjectKeys ( $qids = array() ) {
         return array();
     }
+
+    public function getMaterializedViews () {
+        return array();
+    }
+
 }
 ?>
