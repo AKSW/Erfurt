@@ -865,7 +865,7 @@ class Erfurt_Store
      * @param string $type
      * @param boolean $useAc
      * 
-     * @throws Erfurt_Exception
+     * @throws Erfurt_Store_Exception
      * 
      * @return Erfurt_Rdf_Model
      */
@@ -891,9 +891,17 @@ class Erfurt_Store
         return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
     }
     
-    public function getObjectsInferred($modelUri, $startResources, $objectProperty, $hierarchyProperty = null)
+    /**
+     * Returns inferred objects in realation to a certain set of resources.
+     *
+     * Returned objects are related to objects in the closure of start resources.
+     * Said closure is calculated using hte closure property. If no closure
+     * property is specified, the object property is used instead.
+     *
+     * @todo Implement generic version and call backend implementation if applicable.
+     */
+    public function getObjectsInferred($modelUri, $startResources, $objectProperty, $closureProperty = null)
     {
-        
     }
     
     /**
@@ -1533,8 +1541,8 @@ class Erfurt_Store
             // get sub items
             $result = $this->_backendAdapter->sparqlQuery($subSparql, 'plain');
             
-            //
-            if (count($result) < 1) {
+            // break on first empty result
+            if (empty($result)) {
                 break;
             }
             
