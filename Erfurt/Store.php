@@ -871,6 +871,7 @@ class Erfurt_Store
      */
     public function getNewModel($modelIri, $baseIri = '', $type = 'owl', $useAc = true)
     {
+        // check model availablity
         if ($this->isModelAvailable($modelIri, false)) {            
             // if debug mode is enabled create a more detailed exception description. If debug mode is disabled the
             // user should not know why this fails.
@@ -882,13 +883,34 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Failed creating the model.');
             }   
         }
-    
+        
+        // check action access
         if ($useAc && !Erfurt_App::getInstance()->isActionAllowed('ModelManagement')) {
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Failed creating the model. Action not allowed!");
         }
+        
+        
+        if (method_exists($this->_backendAdapter, 'createModel')) {
+            $owlQuery = new Erfurt_Sparql_SimpleQuery();
+            $owlQuery->setProloguePart('ASK')
+                     ->setWherePart('GRAPH <' . $modelIri . '> 
+                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}');
+            
+            if ($this->sparqlAsk($owlQuery, $modelIri)) {
+                // instantiate OWL model
+                require_once 'Erfurt/Owl/Model.php';
+                $modelInstance = new Erfurt_Owl_Model($modelIri);
+            } else {
+                // instantiate RDF-S model
+                require_once 'Erfurt/Rdfs/Model.php';
+                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+            }
+        } else {
+            $modelInstance = $this->_backendAdapter->getModel($modelIri);
+        }
 
-        return $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
+        return $modelInstance;
     }
     
     /**
