@@ -783,9 +783,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $str = stripslashes($str);
         } 
             
-        $str = str_replace('"', "'", $str);
+        $str = str_replace("'", "\\'", $str);
         
-        return '"' . $str . '"';
+        return "'" . $str . "'";
     }
 
     /**
