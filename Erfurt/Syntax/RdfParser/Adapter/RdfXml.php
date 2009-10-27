@@ -193,17 +193,17 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _addNamespacesToStore()
     {
-        $store = Erfurt_App::getInstance()->getStore();
+        $erfurtNamespaces = Erfurt_App::getInstance()->getNamespaces();
+        
         foreach ($this->_namespaces as $ns => $prefix) {
             try {
-                $store->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
-            } catch (Erfurt_Store_Exception $e) {
+                $erfurtNamespaces->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+            } catch (Erfurt_Namespaces_Exception $e) {
                 // We need to catch the store exception, for the namespace component throws exceptions in case a prefix
                 // already exists.
                 
                 // Do nothing... just continue with the next one...
             }
-            
         }
     }
     

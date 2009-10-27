@@ -33,6 +33,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
         $graph = $this->_store->getModel($graphUri, $useAc);
+        
+        $namespaces = Erfurt_App::getInstance()->getNamespaces();
 		
 		require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
@@ -42,11 +44,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $query->setOrderClause('?s');
         $query->setLimit(1000);
         
-        
         $base = $graph->getBaseUri();
         $this->setBaseUri($base);
         
-        foreach ($this->_store->getNamespacePrefixes($graphUri) as $prefix => $ns) {
+        foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->handleNamespace($prefix, $ns);
         }
 
@@ -96,6 +97,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
         $graph = $this->_store->getModel($graphUri, $useAc);
+        
+        $namespaces = Erfurt_App::getInstance()->getNamespaces();
 		
 		require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
@@ -109,7 +112,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $base = $graph->getBaseUri();
         $this->setBaseUri($base);
         
-        foreach ($this->_store->getNamespacePrefixes($graphUri) as $prefix => $ns) {
+        foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->handleNamespace($prefix, $ns);
         }
 

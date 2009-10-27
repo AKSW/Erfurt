@@ -791,14 +791,21 @@ class Erfurt_App
                 $schema = null;
             }
             
-            // Fetch backend specific options from config.
+            // fetch backend specific options from config.
             $backendOptions = array();
             if ($backendConfig = $config->store->get($backend)) {
                 $backendOptions = $backendConfig->toArray();
             }
+            
+            // store config options
+            if (isset($config->sysont)) {
+                $storeOptions = $config->sysont->toArray();
+            } else {
+                $storeOptions = array();
+            }
         
             require_once 'Erfurt/Store.php';
-            $this->_store = new Erfurt_Store($backend, $backendOptions, $schema);
+            $this->_store = new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema);
         }
         
         return $this->_store;
@@ -992,45 +999,46 @@ class Erfurt_App
         if (null === $this->_cacheBackend) {
             $config = $this->getConfig();
             
-            if (!isset($config->cache->enable) || !(boolean)$config->cache->enable) {
+            // TODO: fix cache, temporarily disabled
+            // if (!isset($config->cache->enable) || !(boolean)$config->cache->enable) {
                 require_once 'Erfurt/Cache/Backend/Null.php';
                 $this->_cacheBackend = new Erfurt_Cache_Backend_Null();
-            } 
+            // }
             // cache is enabled
-            else {
-                // check for the cache type and throw an exception if cache type is not set
-                if (!isset($config->cache->type)) {
-                    require_once 'Erfurt/Exception.php';
-                    throw new Erfurt_Exception('Cache type is not set in config.'); 
-                } else {
-                    // check the type an whether type is supported
-                    switch (strtolower($config->cache->type)) {
-                        case 'database':
-                            require_once 'Erfurt/Cache/Backend/Database.php';
-                            $this->_cacheBackend = new Erfurt_Cache_Backend_Database();
-                            break;
-                        case 'sqlite':
-                            if (isset($config->cache->sqlite->dbname)) {
-                                $backendOptions = array(
-                                    'cache_db_complete_path' => $this->getCacheDir() . $config->cache->sqlite->dbname
-                                );
-                            } else {
-                                require_once 'Erfurt/Exception.php';
-                                throw new Erfurt_Exception(
-                                    'Cache database filename must be set for sqlite cache backend'
-                                );
-                            }
-                            
-                            require_once 'Zend/Cache/Backend/Sqlite.php';
-                            $this->_cacheBackend = new Zend_Cache_Backend_Sqlite($backendOptions);
-                            
-                            break;
-                        default: 
-                            require_once 'Erfurt/Exception.php';
-                            throw new Erfurt_Exception('Cache type is not supported.');
-                    }
-                }
-            }
+            // else {
+            //     // check for the cache type and throw an exception if cache type is not set
+            //     if (!isset($config->cache->type)) {
+            //         require_once 'Erfurt/Exception.php';
+            //         throw new Erfurt_Exception('Cache type is not set in config.'); 
+            //     } else {
+            //         // check the type an whether type is supported
+            //         switch (strtolower($config->cache->type)) {
+            //             case 'database':
+            //                 require_once 'Erfurt/Cache/Backend/Database.php';
+            //                 $this->_cacheBackend = new Erfurt_Cache_Backend_Database();
+            //                 break;
+            //             case 'sqlite':
+            //                 if (isset($config->cache->sqlite->dbname)) {
+            //                     $backendOptions = array(
+            //                         'cache_db_complete_path' => $this->getCacheDir() . $config->cache->sqlite->dbname
+            //                     );
+            //                 } else {
+            //                     require_once 'Erfurt/Exception.php';
+            //                     throw new Erfurt_Exception(
+            //                         'Cache database filename must be set for sqlite cache backend'
+            //                     );
+            //                 }
+            //                 
+            //                 require_once 'Zend/Cache/Backend/Sqlite.php';
+            //                 $this->_cacheBackend = new Zend_Cache_Backend_Sqlite($backendOptions);
+            //                 
+            //                 break;
+            //             default: 
+            //                 require_once 'Erfurt/Exception.php';
+            //                 throw new Erfurt_Exception('Cache type is not supported.');
+            //         }
+            //     }
+            // }
         }
         
         return $this->_cacheBackend;

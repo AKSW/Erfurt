@@ -31,7 +31,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$base  = $graph->getBaseUri();
 		$this->_rdfWriter->setBase($base);
 		
-		foreach ($this->_store->getNamespacePrefixes($graphUri) as $prefix => $ns) {
+		$namespaces = Erfurt_App::getInstance()->getNamespaces();
+		
+		foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->_rdfWriter->addNamespacePrefix($prefix, $ns);
         }
 		
@@ -78,7 +80,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$base  = $graph->getBaseUri();
 		$this->_rdfWriter->setBase($base);
 		
-		foreach ($this->_store->getNamespacePrefixes($graphUri) as $prefix => $ns) {
+		$namespaces = Erfurt_App::getInstance()->getNamespaces();
+		
+		foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->_rdfWriter->addNamespacePrefix($prefix, $ns);
         }
 		

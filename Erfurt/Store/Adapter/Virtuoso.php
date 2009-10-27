@@ -692,8 +692,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 
                 foreach ($parser->parseNamespaces($data, $locator) as $namespaceUri => $prefix) {
                     try {
-                        $model->getStore()->addNamespacePrefix($model->getModelUri(), $prefix, $namespaceUri, false);
-                    } catch (Exception $e) {
+                        $model->addNamespacePrefix($prefix, $namespaceUri);
+                    } catch (Erfurt_Namespaces_Exception $e) {
                         // Do nothing...
                     }
                     
@@ -964,7 +964,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @return ODBC result identifier
      * @throws Erfurt_Exception
      */
-    private function _execSparql($sparqlQuery, $graphUri = 'NULL') 
+    private function _execSparql($sparqlQuery, $graphUri = 'NULL')
     {
         //echo $sparqlQuery;
         if (!is_string($graphUri) || $graphUri == '') {

@@ -1523,6 +1523,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {   
         require_once 'Erfurt/App.php';
         $cache = Erfurt_App::getInstance()->getCache();
+        
         $id = $cache->makeId($this, '_fetchModelInfos', array());
         $cachedVal = $cache->load($id);
         if ($cachedVal) {
