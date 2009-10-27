@@ -1,28 +1,10 @@
 <?php
-
+//some classes and interfaces are not in separate files
+//(-> no compliance with zend classfile naming for autoloading)
+//reason:  they are stubs and they are many
+//so we have to require them manually. irgh
 require_once 'Query2/structural-Interfaces.php';
-require_once 'Query2/ObjectHelper.php';
-require_once 'Query2/Prefix.php';
-require_once 'Query2/OrderClause.php';
-require_once 'Query2/GraphClause.php';
-require_once 'Query2/ObjectList.php';
-require_once 'Query2/Triple.php';
-require_once 'Query2/TriplesSameSubject.php';
 require_once 'Query2/Constraint.php';
-require_once 'Query2/Var.php';
-require_once 'Query2/GroupGraphPattern.php';
-require_once 'Query2/GroupOrUnionGraphPattern.php';
-require_once 'Query2/OptionalGraphPattern.php';
-require_once 'Query2/ConstructTemplate.php';
-require_once 'Query2/IriRef.php';
-require_once 'Query2/RDFLiteral.php';
-require_once 'Query2/NumericLiteral.php';
-require_once 'Query2/Nil.php';
-require_once 'Query2/BooleanLiteral.php';
-require_once 'Query2/BlankNode.php';
-require_once 'Query2/Abstraction.php';
-require_once 'Query2/A.php';
-require_once 'Query2/Filter.php';
 
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj){
