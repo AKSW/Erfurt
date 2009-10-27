@@ -122,14 +122,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
 
-        if (!in_array('ef_cache_query_objectKey', $existingTableNames)) {
+        if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
             $columnSpec = array(
                 'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
-                'objectKey'     => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectKey)',
+                'objectkey'     => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectkey)',
             );
             
-            $this->store->createTable('ef_cache_query_objectKey', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectKey_qid_objectKey ON ef_cache_query_objectKey (qid, objectKey)');
+            $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
+            $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)');
         }
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
@@ -285,10 +285,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (sizeof($statements) == 0)
             return false;
 
-        if (count($statements) > 20) {
-            return $this->invalidateAll();
-        }
-
         $qids = array();
         $clauses = array();
         foreach ( $statements as $subject => $predicates ) {
@@ -321,6 +317,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 }
             }
         }
+
+        if (count($clauses) > 20) {
+            return $this->invalidateWithModelIri( $modelIri ) ;
+        }
+
         $clauseString = implode (" OR ", $clauses);
         // retrieve List Of qids which have to vbe invalidated
         $query = "  SELECT DISTINCT (qid) 
@@ -426,7 +427,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         foreach ($oids as $oid) {
             //delete entries in query_objectKey
-            $query = "DELETE FROM ef_cache_query_objectkey WHERE objectKey = '".$oid."'" ;
+            $query = "DELETE FROM ef_cache_query_objectkey WHERE objectkey = '".$oid."'" ;
             $this->_query ( $query );
         }
     }
@@ -439,10 +440,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     public function getObjectKeys ( $qids = array() ) {
         $oKeys = array();
         foreach ($qids as $qid) {
-            $query = "SELECT DISTINCT (objectKey) FROM ef_cache_query_objectkey WHERE qid='".$qid."'"; ;
+            $query = "SELECT DISTINCT (objectkey) FROM ef_cache_query_objectkey WHERE qid='".$qid."'"; ;
             $result = $this->_query ( $query );
             foreach ($result as $entry) {
-                $oKeys[$entry['objectKey']] = $entry['objectKey'];
+                $oKeys[$entry['objectkey']] = $entry['objectkey'];
             }
         }
         return $oKeys;
@@ -499,7 +500,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $keys = array_keys ($transactions) ;
         foreach ($keys as $key) {
-            $query = "SELECT * FROM ef_cache_query_objectkey WHERE qid = '".$queryId."' AND objectKey = '".$key."'";
+            $query = "SELECT * FROM ef_cache_query_objectkey WHERE qid = '".$queryId."' AND objectkey = '".$key."'";
             $ret = $this->_query ($query);
         
             if (!(isset($ret[0]['qid']))) {
