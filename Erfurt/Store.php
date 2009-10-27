@@ -881,7 +881,7 @@ class Erfurt_Store
             } else {
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception('Failed creating the model.');
-            }   
+            }
         }
         
         // check action access
@@ -889,7 +889,6 @@ class Erfurt_Store
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Failed creating the model. Action not allowed!");
         }
-        
         
         if (method_exists($this->_backendAdapter, 'createModel')) {
             $owlQuery = new Erfurt_Sparql_SimpleQuery();
@@ -907,7 +906,7 @@ class Erfurt_Store
                 $modelInstance = new Erfurt_Rdfs_Model($modelIri);
             }
         } else {
-            $modelInstance = $this->_backendAdapter->getModel($modelIri);
+            $modelInstance = $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
         }
 
         return $modelInstance;
