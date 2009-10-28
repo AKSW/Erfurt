@@ -63,7 +63,6 @@ class Erfurt_Store
      */
     const MODEL_TYPE_RDFS = 501;
     
-    
     /**
      * OWL model identifier.
      * @var int

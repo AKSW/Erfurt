@@ -19,22 +19,16 @@
 class Erfurt_Uri
 {
     /**
+     * Regular expression to split the schema-specific part of HTTP URIs
+     * @var string
+     */
+    protected static $_httpSplit = '/^\/\/(.+@)?(.+?)(\/.*)?$/';
+    
+    /**
      * Regular expression to match the whole URI
      * @var string
      */
     protected static $_regExp = '/^([a-zA-Z][a-zA-Z0-9+.-]+):([^\x00-\x0f\x20\x7f<>{}|\[\]`"^\\\\])+$/';
-    
-    /**
-     * Regular expression to extract the schema part
-     * @var string
-     */
-    protected static $_schema = '^([a-zA-Z][a-zA-Z0-9+-.]+):';
-    
-    /**
-     * Regular expression to extract the server part in a HTTP(S) URI
-     * @var string
-     */
-    protected static $_server = '[^/]+';
     
     /**
      * Checks the general syntax of a given URI. Protocol-specific syntaxes are not checked.
@@ -77,7 +71,7 @@ class Erfurt_Uri
         if (strpos('http', $schema) !== false) {
             // here we can do more ...
             $matches = array();
-            preg_match('/^\/\/(.+@)?(.+?)(\/.*)?$/', $schemaSpecific, $matches);
+            preg_match(self::$_httpSplit, $schemaSpecific, $matches);
                             
             $authority = $matches[1];
             $server    = strtolower($matches[2]);
