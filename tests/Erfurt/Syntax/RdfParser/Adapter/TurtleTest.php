@@ -34,18 +34,22 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
     }
     
     /**
-     * @dataProvider providerTestParseFromDataString
+     * @dataProvider providerTestParseFromFileName
      */
-    public function testParseFromDataString($dataString)
-    {
+    public function testParseFromFileName($fileName)
+    {   
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
         try {
-            $result = $this->_object->parseFromDataString($dataString);
+            $result = $this->_object->parseFromDataString($data);
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
         }
     }
     
-    public function providerTestParseFromDataString()
+    public function providerTestParseFromFileName()
     {
         $dataArray = array();
         
@@ -57,10 +61,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
                     $fileName = $file->getFileName();
                     
                     if ((substr($fileName, -4) === '.ttl') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $fileHandle = fopen(self::SYNTAX_TEST_DIR . $fileName, 'r');
-                        $data = fread($fileHandle, filesize(self::SYNTAX_TEST_DIR . $fileName));
-                        fclose($fileHandle);
-                        $dataArray[] = array($data);
+                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
                     }
                 }
             }

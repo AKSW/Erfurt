@@ -165,7 +165,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     protected function _addNamespacesToStore()
     {
-        $erfurtNamespaces = Erfurt_App::getInstance()->getNamespaces()
+        $erfurtNamespaces = Erfurt_App::getInstance()->getNamespaces();
         
         foreach ($this->_namespaces as $prefix => $ns) {
             try {
@@ -933,7 +933,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             $this->_statements["$s"]["$p"] = array();
         }
         
-        if (null === $oType) {
+        if (!isset($oType)) {
             if (substr((string)$o, 0, 2) === '_:') {
                 $oType = 'bnode';
             } else {

@@ -409,7 +409,7 @@ class Erfurt_Versioning
             foreach ($result as $i) {
 
                 $type = (int) $i['action_type'];
-                $modelUri = $i['model'];
+                $modelUri = isset($i['model']) ? $i['model'] : null;
                 $payloadID = (int) $i['payload_id'];
 
                 $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
@@ -426,7 +426,12 @@ class Erfurt_Versioning
 
                 } else {
                     
-                    $payload = unserialize($payloadResult[0]['statement_hash']);
+                    if (isset($payloadResult[0]['statement_hash'])) {
+                        $payload = unserialize($payloadResult[0]['statement_hash']);
+                    } else {
+                        $payload = null;
+                    }
+                    
 
                     if ($type === self::STATEMENT_ADDED) {
                         $this->_getStore()->deleteMultipleStatements($modelUri, $payload);

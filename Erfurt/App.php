@@ -835,7 +835,8 @@ class Erfurt_App
     {
         // We use a Zend method here, for it already checks the OS.
         require_once 'Zend/Cache/Backend.php';
-        return Zend_Cache_Backend::getTmpDir();
+        $temp = new Zend_Cache_Backend();
+        return $temp->getTmpDir();
     }
     
     /**
