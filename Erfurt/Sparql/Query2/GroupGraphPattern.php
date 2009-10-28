@@ -2,7 +2,8 @@
 /**
  * Erfurt_Sparql Query - GroupGraphPattern.
  * 
- * @package    query
+ * @package    ontowiki
+ * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

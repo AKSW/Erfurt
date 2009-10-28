@@ -24,6 +24,7 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     protected static $_transactions = array();
 
+    protected static $_materializedViews;
 
 	/**
      *	setter method for the backend implementation object
@@ -181,7 +182,6 @@ class Erfurt_Cache_Frontend_QueryCache {
         return $qids;
     }
 
-
     /**
      *	starting a Caching Transaction to assign cache Objects to queryCacheResults
      *	@access     public
@@ -219,6 +219,42 @@ class Erfurt_Cache_Frontend_QueryCache {
     }
 
 
+    public function getMaterializedViewName ($subject, $predicate, $object) {
+
+        if (self::$_materializedViews == null) {
+            self::$_materializedViews = $this->getBackend()->getMaterializedViews();
+
+        }
+
+        if (!($subject instanceof Erfurt_Rdf_Resource)) {
+            $subject = null;
+        } else {
+            $subject = (string) $subject;
+        }
+
+        if (!($predicate instanceof Erfurt_Rdf_Resource)) {
+            $predicate = null;
+        } else {
+            $predicate = (string) $predicate;
+        }
+
+        if (!($object instanceof Erfurt_Rdf_Resource)) {
+            $object = null;
+        } else {
+            $object = (string) $object;
+        }
+
+        foreach (self::$_materializedViews as $view) {
+            if (    $view['subject'] == $subject &&
+                    $view['predicate'] == $predicate &&
+                    $view['object'] == $object )
+                return $view['tblName'];
+        }
+        return false;
+    }
+
+
+
     /**
      *	starting a Caching Transaction to assign cache Objects to queryCacheResults
      *	@access     public
@@ -247,10 +283,24 @@ class Erfurt_Cache_Frontend_QueryCache {
             break;
 
         }
-
         return $ret;
-
     }
+
+    public function getUsedTriplePattern($limit = null, $minOccurence = null) {
+        $patternList = $this->getBackend()->getUsedTriplePattern($limit, $minOccurence);
+        return $patternList;
+    }
+
+
+    public function createMaterializedViews($limit, $minOccurence) {
+        $pattern = $this->getUsedTriplePattern($limit, $minOccurence);
+        return $this->getBackend()->createMaterializedViews($pattern);
+    }
+
+    public function getMaterializedViews () {
+        return $this->getBackend()->getMaterializedViews();
+    }
+
 
     //----------------------------------------------------
     //private Methods                                   //

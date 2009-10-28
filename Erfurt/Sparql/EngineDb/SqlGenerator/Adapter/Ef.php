@@ -513,28 +513,31 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         /**
         *   FROM part
         */
+        //receive tableName from QueryCache ; if QueryCache dont have some special views
+        //the original tableName will be chosen
+        $tableName = $this->tblStatements;
+        if ($viewName =  Erfurt_App::getInstance()->getQueryCache()->getMaterializedViewName($subject, $predicate, $object)) {
+            $tableName = $viewName;
+        }
+
         if ($this->nUnionTriplePatternCount == 0) {
             //first FROM
-            $strFrom    = $this->tblStatements . ' as ' . $strTablePrefix;
+            $strFrom    = $tableName . ' as ' . $strTablePrefix;
         } else {
             //normal join
             if (count($this->arModelIds) == 1) {
-                $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
             } else if (count($this->arModelIds) > 1) {
                 $arIDs     = array();
                 foreach ($this->arModelIds as $nId) {
                     $arIDs[] = $strTablePrefix . '.g=' . intval($nId);
                 }
-                $strFrom  = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom  = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                           . ' ON (' . implode(' OR ', $arIDs) . ')';
             } else {
-                $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
-            }
-
-            foreach ($arRefVars as $strRefVar => $strSqlVar) {
-                $strFrom .= ' AND ' . $this->arUsedVarAssignments[$strRefVar] . '=' . $strSqlVar;
             }
             
             if ($graphPattern->getOptional() !== null) {

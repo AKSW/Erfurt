@@ -982,7 +982,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         if (false === $result) {
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . $sparqlQuery);
+            throw new Erfurt_Exception('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . htmlentities($sparqlQuery));
         }
         
         if ($this->_longRead) {
