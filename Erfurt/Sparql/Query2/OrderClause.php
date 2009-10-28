@@ -86,6 +86,10 @@ class Erfurt_Sparql_Query2_OrderClause
     	$this->exps = array();
     	return $this; //for chaining
     }
+
+    public function getExpressions(){
+        return $this->exps;
+    }
 }
 
 
