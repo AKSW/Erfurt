@@ -15,7 +15,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
     protected $id;
     protected $parents = array();
 
-    public function __construct(){
+    public function __construct() {
         $this->id = Erfurt_Sparql_Query2::getNextID();
     }
 
@@ -27,8 +27,8 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * @param Erfurt_Sparql_Query2_GroupHelper $parent
      * @return Erfurt_Sparql_Query2_ObjectHelper $this
      */
-    public function addParent(Erfurt_Sparql_Query2_GroupHelper $parent){
-        if(!in_array($parent, $this->parents))
+    public function addParent(Erfurt_Sparql_Query2_GroupHelper $parent) {
+        if (!in_array($parent, $this->parents))
                 $this->parents[] = $parent;
 
         return $this;
@@ -39,8 +39,8 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * removes this object from all parents
      * @return Erfurt_Sparql_Query2_ObjectHelper $this
      */
-    public function remove(){
-        foreach($this->parents as $parent){
+    public function remove() {
+        foreach ($this->parents as $parent) {
                 $parent->removeElement($this);
         }
 
@@ -53,10 +53,10 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * @param Erfurt_Sparql_Query2_GroupHelper $parent
      * @return Erfurt_Sparql_Query2_ObjectHelper $this
      */
-    public function removeParent(Erfurt_Sparql_Query2_GroupHelper $parent){
+    public function removeParent(Erfurt_Sparql_Query2_GroupHelper $parent) {
         $new = array();
-        foreach($this->parents as $compare){
-                if($compare != $parent){
+        foreach ($this->parents as $compare) {
+                if ($compare != $parent) {
                         $new[] = $compare;
                 }
         }
@@ -70,7 +70,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * getID
      * @return int the id of this object
      */
-    public function getID(){
+    public function getID() {
         return $this->id;
     }
 
@@ -78,7 +78,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * getParents
      * @return array an array of Erfurt_Sparql_Query2_GroupHelper
      */
-    public function getParents(){
+    public function getParents() {
         return $this->parents;
     }
 
@@ -87,19 +87,19 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
      * @param mixed $obj the object to compare with
      * @return bool true if equal, false otherwise
      */
-    public function equals($obj){
+    public function equals($obj) {
         //trivial cases
-        if($this === $obj) return true;
+        if ($this === $obj) return true;
 
-        if(!method_exists($obj, "getID")){
+        if (!method_exists($obj, "getID")) {
             return false;
         }
 
-        if($this->getID() == $obj->getID()){
+        if ($this->getID() == $obj->getID()) {
             return true;
         }
 
-        if(get_class($this) !== get_class($obj)){
+        if (get_class($this) !== get_class($obj)) {
                 return false;
         }
 

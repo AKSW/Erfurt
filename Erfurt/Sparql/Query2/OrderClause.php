@@ -2,7 +2,7 @@
 /**
  * Erfurt_Sparql Query2 - OrderClause.
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -19,8 +19,8 @@ class Erfurt_Sparql_Query2_OrderClause
      * @param Erfurt_Sparql_Query2_Expression $exp
      * @return int index of added element
      */
-    public function add(Erfurt_Sparql_Query2_Expression $exp, $order = 'ASC'){
-        if($order != 'ASC' && $order != 'DESC'){
+    public function add(Erfurt_Sparql_Query2_Expression $exp, $order = 'ASC') {
+        if ($order != 'ASC' && $order != 'DESC') {
             throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_OrderClause::add must be \'ASC\' or \'DESC\', '.$order.' (instance of '.typeHelper($order).') given');
         }
         
@@ -33,11 +33,11 @@ class Erfurt_Sparql_Query2_OrderClause
      * build a valid sparql representation of this obj - should be like 'ORDER BY ASC(?var)'
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         $sparql = 'ORDER BY';
-        for ($i = 0; $i < count($this->exps); $i++){
+        for ($i = 0; $i < count($this->exps); $i++) {
             $sparql .=' '.$this->exps[$i]['dir'].'('.$this->exps[$i]['exp']->getSparql().')';
-            if($i < (count($this->exps)-1))
+            if ($i < (count($this->exps)-1))
                 $sparql .= ' ';
         }
         $sparql .= '';
@@ -49,7 +49,7 @@ class Erfurt_Sparql_Query2_OrderClause
      * @param int $i index of element which direction should be toggled
      * @return Erfurt_Sparql_Query2_OrderClause $this
      */
-    public function toggleDirection($i){
+    public function toggleDirection($i) {
         $this->exps[$i]['dir'] = $this->exps[$i]['dir']=='ASC'?'DESC':'ASC';
         return $this; //for chaining
     }
@@ -59,7 +59,7 @@ class Erfurt_Sparql_Query2_OrderClause
      * @param int $i index of element which direction should be set to ASC
      * @return Erfurt_Sparql_Query2_OrderClause $this
      */
-    public function setAsc($i){
+    public function setAsc($i) {
         $this->exps[$i]['dir'] = 'ASC';
         return $this; //for chaining
     }
@@ -69,7 +69,7 @@ class Erfurt_Sparql_Query2_OrderClause
      * @param int $i index of element which direction should be set to DESC
      * @return Erfurt_Sparql_Query2_OrderClause $this
      */
-    public function setDesc($i){
+    public function setDesc($i) {
         $this->exps[$i]['dir'] = 'DESC';
         return $this; //for chaining
     }
@@ -78,16 +78,16 @@ class Erfurt_Sparql_Query2_OrderClause
      * used
      * @return bool true if any expressions are added
      */
-    public function used(){
+    public function used() {
         return !empty($this->exps);
     }
     
-    public function clear(){
-    	$this->exps = array();
-    	return $this; //for chaining
+    public function clear() {
+        $this->exps = array();
+        return $this; //for chaining
     }
 
-    public function getExpressions(){
+    public function getExpressions() {
         return $this->exps;
     }
 }

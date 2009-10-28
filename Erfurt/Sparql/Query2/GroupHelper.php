@@ -4,10 +4,10 @@
  */
 abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_ObjectHelper
 {
-	protected $elements = array();
+    protected $elements = array();
 
-    public function __construct(){
-    	parent::__construct();
+    public function __construct() {
+        parent::__construct();
     }
 
 
@@ -18,7 +18,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
      * @param int $i index of the element
      * @return Erfurt_Sparql_Query2_ObjectHelper the element
      */
-    public function getElement($i){
+    public function getElement($i) {
         return $this->elements[$i];
     }
 
@@ -26,7 +26,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
      * getElements
      * @return array array of Erfurt_Sparql_Query2_ObjectHelper - the elements that are contained
      */
-    public function getElements(){
+    public function getElements() {
         return $this->elements;
     }
 
@@ -39,12 +39,12 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
      * @param int $i index of the element
      * @return Erfurt_Sparql_Query2_GroupHelper $this
      */
-    public function removeElement($element, $equal = false){
+    public function removeElement($element, $equal = false) {
         $new = array();
 
-        for($i=0;$i<count($this->elements); $i++){
-                if($this->elements[$i]->getID() != $element->getID() || ($equal && $this->elements[$i]->equals($element))){
-                        if($this->elements[$i] instanceof Erfurt_Sparql_Query2_GroupHelper)
+        for ($i=0;$i<count($this->elements); $i++) {
+                if ($this->elements[$i]->getID() != $element->getID() || ($equal && $this->elements[$i]->equals($element))) {
+                        if ($this->elements[$i] instanceof Erfurt_Sparql_Query2_GroupHelper)
                                 $this->elements[$i]->removeElement($element);
                         $new[] = $this->elements[$i];
                 }
@@ -59,7 +59,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
      * removeAllElements
      * @return Erfurt_Sparql_Query2_GroupHelper $this
      */
-    public function removeAllElements(){
+    public function removeAllElements() {
         $this->elements = array();
         return $this; //for chaining
     }
@@ -70,46 +70,46 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
      * @param mixed $obj the object to compare with
      * @return bool true if equal, false otherwise
      */
-    public function equals($obj){
+    public function equals($obj) {
         //trivial cases
-        if($this===$obj) return true;
+        if ($this===$obj) return true;
 
-        if(get_class($this) !== get_class($obj)){
+        if (get_class($this) !== get_class($obj)) {
                 return false;
         }
 
 
-        if(!method_exists($obj, "getID")){
+        if (!method_exists($obj, "getID")) {
             return false;
         }
 
-        if($this->getID() == $obj->getID()){
+        if ($this->getID() == $obj->getID()) {
             return true;
         }
 
         //check for mutual inclusion
-        foreach($obj->getElements() as $his){
+        foreach ($obj->getElements() as $his) {
                 $found = false;
 
-                foreach($this->elements as $mine){
-                        if($mine->equals($his)){
+                foreach ($this->elements as $mine) {
+                        if ($mine->equals($his)) {
                                 $found = true;
                         }
                 }
 
-                if(!$found) return false;
+                if (!$found) return false;
         }
 
-        foreach($this->elements as $mine){
+        foreach ($this->elements as $mine) {
                 $found = false;
 
-                foreach($obj->getElements() as $his){
-                        if($his->equals($mine)){
+                foreach ($obj->getElements() as $his) {
+                        if ($his->equals($mine)) {
                                 $found = true;
                         }
                 }
 
-                if(!$found) return false;
+                if (!$found) return false;
         }
 
         return true;

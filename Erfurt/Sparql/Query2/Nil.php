@@ -2,7 +2,7 @@
 /**
  * Erfurt SParql Query2 - Nil
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -17,7 +17,7 @@ class Erfurt_Sparql_Query2_Nil implements Erfurt_Sparql_Query2_GraphTerm
      * build a valid sparql representation of this obj - should be "()"
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         return '()';
     }
 }

@@ -9,7 +9,7 @@ require_once 'Constraint.php';
 /**
  * Erfurt Sparql Query2 - Var.
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -24,10 +24,10 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
     /**
      * @param string $nname
      */
-    public function __construct($nname){
-        if(is_string($nname) && $nname != ''){
+    public function __construct($nname) {
+        if (is_string($nname) && $nname != '') {
             $this->name = preg_replace('/[^\w]/', '', $nname);
-        } else if($nname instanceof Erfurt_Sparql_Query2_IriRef){
+        } else if ($nname instanceof Erfurt_Sparql_Query2_IriRef) {
             $this->name = self::extractName($nname->getIri());
         } else {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_Var : string (not empty) or Erfurt_Sparql_Query2_IriRef expected. '.typeHelper($nname).' found.');
@@ -40,7 +40,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * build a valid sparql representation of this obj - should be like '?name'
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         return $this->varLabelType.$this->name;
     }
     
@@ -48,7 +48,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * getName
      * @return string the name of this var
      */
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
     
@@ -57,8 +57,8 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * @param string $nname the new name
      * @return Erfurt_Sparql_Query2_Var $this
      */
-    public function setName($nname){
-        if(is_string($nname)) 
+    public function setName($nname) {
+        if (is_string($nname)) 
             $this->name = $nname;
         return $this; //for chaining
     }
@@ -68,8 +68,8 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * @param string $ntype the new var label ('?' or '$')
      * @return Erfurt_Sparql_Query2_Var $this
      */
-    public function setVarLabelType($ntype){
-        if($ntype == '?' || $ntype == '$'){
+    public function setVarLabelType($ntype) {
+        if ($ntype == '?' || $ntype == '$') {
             $this->varLabelType = $ntype;
         } else {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_Var::setVarLabelType : $ or ? expected. '.$ntype.' found.');
@@ -81,7 +81,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * getVarLabelType
      * @return string var label ('?' or '$')
      */
-    public function getVarLabelType($ntype){
+    public function getVarLabelType($ntype) {
         return $this->varLabelType;
     }
     
@@ -89,7 +89,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * toggleVarLabelType
      * @return Erfurt_Sparql_Query2_Var $this
      */
-    public function toggleVarLabelType(){
+    public function toggleVarLabelType() {
         $this->varLabelType = $this->varLabelType == '?' ? '$' : '?';
         return $this; //for chaining
     }
@@ -106,21 +106,21 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper impleme
      * @param string $name a iri 
      * @return string string after last / or #
      */
-    public static function extractName($name){
+    public static function extractName($name) {
         $parts = preg_split('/[\/#]/', $name);
         
         $ret = '';
-        for($i=count($parts)-1; $ret == ''; $i--){
+        for ($i=count($parts)-1; $ret == ''; $i--) {
             $ret = $parts[$i];
         }
         
-        if($ret == '') $ret = $name;
+        if ($ret == '') $ret = $name;
         
         return strtolower($ret);
     }
     
     
-    public function __toString(){
+    public function __toString() {
         return $this->getSparql();
     }
 }

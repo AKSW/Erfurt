@@ -106,7 +106,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
      * @return boolean true if no problem
      */
     public function save($data, $id, $tags = array(), $specificLifetime = false) {
-	
         if (!$this->_checkStructureVersion()) {	
             $this->_buildStructure();
             if (!$this->_checkStructureVersion()) {

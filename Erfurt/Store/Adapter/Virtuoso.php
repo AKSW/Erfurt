@@ -890,7 +890,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if ($result = $this->_execSql($sqlQuery)) {
             $resultArray = $this->_odbcResultToArray($result);
         }
-        
+
         return $resultArray;
     }
     
@@ -966,7 +966,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _execSparql($sparqlQuery, $graphUri = 'NULL')
     {
-        //echo $sparqlQuery;
         if (!is_string($graphUri) || $graphUri == '') {
             $graphUri = 'NULL';
         } else if ($graphUri != 'NULL') {
@@ -981,8 +980,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $result = @odbc_exec($this->_connection, $virtuosoPl);
         
         if (false === $result) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . htmlentities($sparqlQuery));
+            //require_once 'Erfurt/Exception.php';
+            trigger_error ('SPARQL Error: ' . $this->_getLastError() . '<br />' . 'Query: ' . htmlentities($sparqlQuery));
+            exit;
         }
         
         if ($this->_longRead) {

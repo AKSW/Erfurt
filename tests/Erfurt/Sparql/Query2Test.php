@@ -10,7 +10,7 @@
  */
 define('EF_RDF_NS', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 define('EF_RDF_TYPE', EF_RDF_NS.'type');
-require_once 'Query2.php';
+require_once '../../../src/Erfurt/Sparql/Query2.php';
 
 //test graph pattern
 $query = new Erfurt_Sparql_Query2();

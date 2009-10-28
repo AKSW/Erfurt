@@ -63,7 +63,7 @@ class Erfurt_Cache_Frontend_QueryCache {
 
             //serializing the QueryResult
             $queryResult = serialize( $queryResult );
-
+            
             //retrieve TriplePattern and graphUris
             $parsedQuery = $this->parseQuery( $queryString );
             $triplePatterns = $parsedQuery['triples'];
@@ -103,7 +103,7 @@ class Erfurt_Cache_Frontend_QueryCache {
             $queryId = $this->createQueryId( $queryString, $resultFormat );
             $result = $this->getBackend()->load($queryId);
             if ($result) {
-                $result = unserialize ($result);
+                 $result = unserialize ($result);
                
                 if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
                     $this->getBackend()->incrementHitCounter($queryId);

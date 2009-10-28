@@ -2,7 +2,7 @@
 /**
  * Erfurt_Sparql Query - IriRef.
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -17,11 +17,11 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
      * @param string $nresource
      * @param Erfurt_Sparql_Query2_Prefix $prefix
      */
-    public function __construct($nresource, Erfurt_Sparql_Query2_Prefix $prefix = null){
-        if(!is_string($nresource)){throw new RuntimeException('wrong argument 1 passed to Erfurt_Sparql_Query2_Var::__construct. string expected. '.typeHelper($nresource).' found.');}
+    public function __construct($nresource, Erfurt_Sparql_Query2_Prefix $prefix = null) {
+        if (!is_string($nresource)) {throw new RuntimeException('wrong argument 1 passed to Erfurt_Sparql_Query2_Var::__construct. string expected. '.typeHelper($nresource).' found.');}
         $this->iri = $nresource;
                 
-        if($prefix != null){
+        if ($prefix != null) {
             $this->prefix = $prefix;
         }
     }
@@ -31,11 +31,11 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
      * build a valid sparql representation of this obj - should be like "<http://example.com>" or "ns:local"
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         return $this->isPrefixed() ? ($this->prefix->getPrefixName().':'.$this->iri) : ('<'.$this->iri.'>');
     }
     
-    public function __toString(){    
+    public function __toString() {    
         return $this->getSparql();
     }
     
@@ -43,7 +43,7 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
      * isPrefixed
      * check if this IriRef uses a prefix
      */
-    public function isPrefixed(){
+    public function isPrefixed() {
         return $this->prefix != null;
     }
     
@@ -53,7 +53,7 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
      * @return string
      * @see getExpanded
      */
-    public function getIri(){
+    public function getIri() {
         return $this->iri;
     }
     
@@ -62,7 +62,7 @@ class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, E
      * expand the prefix
      * @return string
      */
-    public function getExpanded(){
+    public function getExpanded() {
         return '<'.( $this->isPrefixed() ? $this->prefix->getPrefixIri()->getIri() : '') . ($this->iri.'>');
     }
 }
