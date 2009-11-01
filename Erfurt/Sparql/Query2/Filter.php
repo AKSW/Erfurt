@@ -58,6 +58,10 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
         return 'FILTER '.$constraint_str;
     }
     
+    public function __toString(){
+        return $this->getSparql();
+    }
+    
     //TODO not implemented yet
     /**
      * getVars

@@ -62,6 +62,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
      * @staticvar int id 
      */
     public static $idCounter = 0;
+    protected $idCounterSerialized;
     
     /**
      * getNextID
@@ -115,7 +116,19 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         else 
             return $ret;
     }
-   
+
+    
+    public function  __sleep()
+    {
+        $this->idCounterSerialized = self::$idCounter;
+        return array_diff(array_keys(get_object_vars($this)), array('idCounter')); //save all but the static var
+    }
+
+    public function   __wakeup()
+    {
+        self::$idCounter = $this->idCounterSerialized; //restore the static var
+    }
+    
     /**
      * getSparql
      * build a query string
@@ -742,7 +755,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         foreach ($this->projectionVars as $compare) {
             if (!$compare->equals($var)) {
                 $new[] = $compare;
-            } 
+            }  else {echo "removing: ".$compare."(id=".$compare->getID() .") matches ".$var."(id=".$var->getID().")";}
         }
         $this->projectionVars = $new;
         return $this; //for chaining

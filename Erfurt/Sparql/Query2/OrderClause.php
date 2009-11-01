@@ -43,7 +43,10 @@ class Erfurt_Sparql_Query2_OrderClause
         $sparql .= '';
         return $sparql;
     }
-    
+
+    public function __toString(){
+        return $this->getSparql();
+    }
     /**
      * toggleDirection
      * @param int $i index of element which direction should be toggled
