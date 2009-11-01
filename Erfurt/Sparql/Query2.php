@@ -755,7 +755,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         foreach ($this->projectionVars as $compare) {
             if (!$compare->equals($var)) {
                 $new[] = $compare;
-            }  else {echo "removing: ".$compare."(id=".$compare->getID() .") matches ".$var."(id=".$var->getID().")";}
+            }  
         }
         $this->projectionVars = $new;
         return $this; //for chaining
