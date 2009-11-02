@@ -1373,7 +1373,7 @@ class Erfurt_Store
                 $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);   
             } else {
-                throw new Erfurt_Store_Exception('Model ' . $graphIri . ' is not available.');
+                throw new Erfurt_Store_Exception('Model <' . $graphIri . '> is not available.');
             }
         } else {
             throw new Erfurt_Store_Exception('Count is not supported by backend.');
