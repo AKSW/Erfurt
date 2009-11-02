@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rdf:RDF [
   <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
+  <!ENTITY SysBase "http://ns.ontowiki.net/SysBase/">
   <!ENTITY LocalConfig "http://localhost/OntoWiki/Config/">
   <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
   <!ENTITY sioc "http://rdfs.org/sioc/ns#">
@@ -10,7 +11,7 @@
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
 ]>
 <rdf:RDF xml:base="&LocalConfig;"
-         xmlns:SysOnt="&SysOnt;"
+         xmlns:sysont="&SysOnt;"
          xmlns:foaf="&foaf;"
          xmlns:sioc="&sioc;"
          xmlns:owl="&owl;"
@@ -24,7 +25,7 @@
     <owl:imports>
       <owl:Ontology rdf:about="&SysOnt;"/>
     </owl:imports>
-	<owl:versionInfo>$Id: SysOntLocal.rdf 3415 2009-06-27 09:48:50Z sebastian.dietzold $</owl:versionInfo>
+	<owl:versionInfo>$Id: SysOntLocal.rdf 3811 2009-07-27 13:27:22Z sebastian.dietzold $</owl:versionInfo>
 	<owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/erfurt/src/Erfurt/include/SysOntLocal.rdf" />
   </owl:Ontology>
 
@@ -37,77 +38,79 @@
 
   <sioc:Usergroup rdf:about="AdminGroup"
               rdfs:label="AdminGroup">
-    <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;AnyAction"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:denyModelEdit rdf:resource="&SysOnt;"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;AnyAction"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>The group of all admins. If not changed, they can trigger all actions and can edit all models but the system ontology.</rdfs:comment>
     <sioc:has_member rdf:resource="Admin"/>
   </sioc:Usergroup>
 
   <sioc:Usergroup rdf:about="DefaultUserGroup"
               rdfs:label="DefaultUserGroup">
-    <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;Rollback"/>
-    <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
-    <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Rollback"/>
+    <sysont:denyModelView rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelEdit rdf:resource="&SysBase;"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
   </sioc:Usergroup>
 
   <rdf:Description rdf:about="&SysOnt;Anonymous">
-    <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
-    <SysOnt:denyAccess rdf:resource="&SysOnt;Login"/>
-    <SysOnt:denyAccess rdf:resource="&SysOnt;Rollback"/>
-    <SysOnt:denyModelView rdf:resource="&LocalConfig;"/>
-    <SysOnt:denyModelView rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:denyAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:denyAccess rdf:resource="&SysOnt;Rollback"/>
+    <sysont:denyModelView rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelView rdf:resource="&SysBase;"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;RegisterNewUser">
-    <SysOnt:rawConfig>defaultGroup=http://localhost/OntoWiki/Config/DefaultUserGroup</SysOnt:rawConfig>
-    <SysOnt:rawConfig>mailvalidation=yes</SysOnt:rawConfig>
-    <SysOnt:rawConfig>uidregexp="/^[[:alnum:]]+$/"</SysOnt:rawConfig>
-    <SysOnt:rawConfig>passregexp=""</SysOnt:rawConfig>
+    <sysont:rawConfig>defaultGroup=http://localhost/OntoWiki/Config/DefaultUserGroup</sysont:rawConfig>
+    <sysont:rawConfig>mailvalidation=yes</sysont:rawConfig>
+    <sysont:rawConfig>uidregexp="/^[[:alnum:]]+$/"</sysont:rawConfig>
+    <sysont:rawConfig>passregexp=""</sysont:rawConfig>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;Login">
-    <SysOnt:rawConfig>type=RDF</SysOnt:rawConfig>
+    <sysont:rawConfig>type=RDF</sysont:rawConfig>
   </rdf:Description>
 
   <rdf:Description rdf:about="&SysOnt;Rollback">
-    <SysOnt:rawConfig>global=on</SysOnt:rawConfig>
+    <sysont:rawConfig>global=on</sysont:rawConfig>
   </rdf:Description>
 
-  <SysOnt:Model rdf:about="&SysOnt;">
-		    <SysOnt:hidden rdf:datatype="&xsd;boolean">true</SysOnt:hidden>
-  </SysOnt:Model>
+  <sysont:Model rdf:about="&SysOnt;">
+		    <sysont:hidden rdf:datatype="&xsd;boolean">true</sysont:hidden>
+  </sysont:Model>
 
 	<!-- Statement Selector TestCase -->
-	<!--SysOnt:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
-		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s rdf:type sioc:User.}</SysOnt:sparqlWhereClause>
-		<SysOnt:model rdf:resource="&LocalConfig;" />
-	</SysOnt:StatementSelector>
+	<!--sysont:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
+		<sysont:sparqlWhereClause>{?s ?p ?o. ?s rdf:type sioc:User.}</sysont:sparqlWhereClause>
+		<sysont:model rdf:resource="&LocalConfig;" />
+	</sysont:StatementSelector>
 
-	<SysOnt:StatementSelector rdf:about="SelectAllPasswords" rdfs:label="all password statements">
-		<SysOnt:sparqlWhereClause>{?s ?p ?o. ?s SysOnt:userPassword ?o.}</SysOnt:sparqlWhereClause>
-		<SysOnt:model rdf:resource="&LocalConfig;" />
-	</SysOnt:StatementSelector>
+	<sysont:StatementSelector rdf:about="SelectAllPasswords" rdfs:label="all password statements">
+		<sysont:sparqlWhereClause>{?s ?p ?o. ?s sysont:userPassword ?o.}</sysont:sparqlWhereClause>
+		<sysont:model rdf:resource="&LocalConfig;" />
+	</sysont:StatementSelector>
 
   <sioc:Usergroup rdf:about="AdvancedACLGroup"
               rdfs:label="AdvancedACLGroup">
-    <SysOnt:grantStatementsView rdf:resource="SelectAllUserInfo"/>
-    <SysOnt:denyStatementsView rdf:resource="SelectAllPasswords"/>
+    <sysont:grantStatementsView rdf:resource="SelectAllUserInfo"/>
+    <sysont:denyStatementsView rdf:resource="SelectAllPasswords"/>
     <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models. In the local config, they can read all user info but not the passwords.</rdfs:comment>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
-    <SysOnt:grantAccess rdf:resource="&SysOnt;Login"/>
-    <SysOnt:denyModelEdit rdf:resource="&LocalConfig;"/>
-    <SysOnt:denyModelEdit rdf:resource="&SysOnt;"/>
-    <SysOnt:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
-    <SysOnt:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:denyModelEdit rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelEdit rdf:resource="&SysOnt;"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
   </sioc:Usergroup-->
 
 

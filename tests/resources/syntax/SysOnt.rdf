@@ -9,7 +9,7 @@
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
 ]>
 <rdf:RDF xml:base="&SysOnt;"
-         xmlns:SysOnt="&SysOnt;"
+         xmlns:sysont="&SysOnt;"
          xmlns="&SysOnt;"
          xmlns:foaf="&foaf;"
          xmlns:owl="&owl;"
@@ -21,7 +21,7 @@
   <owl:Ontology rdf:about=""
                 rdfs:label="OntoWiki System Ontology">
     <rdfs:comment>This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
-    <owl:versionInfo>$Id: SysOnt.rdf 3496 2009-06-29 17:13:33Z sebastian.dietzold $</owl:versionInfo>
+    <owl:versionInfo>$Id: SysOnt.rdf 3811 2009-07-27 13:27:22Z sebastian.dietzold $</owl:versionInfo>
     <owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/erfurt/src/Erfurt/include/SysOnt.rdf" />
   </owl:Ontology>
 

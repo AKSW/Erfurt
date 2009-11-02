@@ -722,10 +722,11 @@ class Erfurt_Store
 
         // filter for access control and hidden models
         foreach ($models as $graphUri => $true) {
+
             if (!$this->_checkAc($graphUri)) {
                 unset($models[$graphUri]);
             }
-            
+
             if ($withHidden === false) {
                 $graphConfig = $this->getGraphConfiguration($graphUri);
                 
@@ -1502,7 +1503,7 @@ class Erfurt_Store
                 require_once 'Erfurt/App.php';
                 $this->_ac = Erfurt_App::getInstance()->getAc();
             }
-            
+        
             return $this->_ac->isModelAllowed($accessType, $modelIri);
         }
     }
