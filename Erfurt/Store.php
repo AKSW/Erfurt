@@ -20,6 +20,8 @@ class Erfurt_Store
     // --- Public constants ---------------------------------------------------
     // ------------------------------------------------------------------------
     
+    const COUNT_NOT_SUPPORTED = -1;
+    
     /**
      * Literal type.
      * @var int

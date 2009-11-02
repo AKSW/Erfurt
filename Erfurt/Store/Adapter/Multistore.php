@@ -122,8 +122,8 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             if (method_exists($backend, 'countWhereMatches')) {
                 $fullCount += $backend->countWhereMatches(array($graphUri), $whereSpec, $countSpec);
             } else {
-                // If one backend does not support this, we need to return COUNT_NOT_SUPPORTED
-                return Erfurt_Store::COUNT_NOT_SUPPORTED;
+                // If one backend does not support this, we need to throw an exception.
+                throw new Erfurt_Store_Adapter_Exception('Count not supported by backend.');
             }
         }
         
