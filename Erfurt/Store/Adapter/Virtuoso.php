@@ -440,7 +440,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         $query->setDistinct(true);
         
-        $s_var = new Erfurt_Sparql_Query2_Var('s');
+        $s_var = new Erfurt_Sparql_Query2_Var('resourceUri');
         $p_var = new Erfurt_Sparql_Query2_Var('p');
         $o_var = new Erfurt_Sparql_Query2_Var('o');
         
@@ -465,15 +465,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 array( $o_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec) )
             )
         );
-
+        
+        /*
         $resources = array();
         if ($results = $this->sparqlQuery($query)) {
             foreach ($results as $row) {
                 array_push($resources, $row['s']);
             }
         }
+        */
         
-        return $resources;
+        return $query;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
