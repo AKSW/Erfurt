@@ -1369,9 +1369,9 @@ class Erfurt_Store
     public function countWhereMatches($graphIri, $whereSpec, $countSpec)
     {
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
-            if ($this->_checkAc($graphIri)) {
+            if ($this->isModelAvailable($graphIri)) {
                 $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
-                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
+                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);   
             } else {
                 throw new Erfurt_Store_Exception('Model ' . $graphIri . ' is not available.');
             }
