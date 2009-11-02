@@ -904,6 +904,13 @@ class Erfurt_Store
             }
         } else {
             $modelInstance = $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
+            
+            // check for edit possibility
+            if ($this->_checkAc($modelIri, 'edit', $useAc)) {
+                $modelInstance->setEditable(true);
+            } else {
+                $modelInstance->setEditable(false);
+            }
         }
 
         return $modelInstance;
