@@ -276,7 +276,7 @@ class Erfurt_Ac_Default
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user->getUri());
         $type       = strtolower($type);
-        
+
         // type = view; check whether allowed
         if ($type === 'view') {
             // explicit forbidden

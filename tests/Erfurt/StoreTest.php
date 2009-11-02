@@ -167,6 +167,26 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $this->assertEquals(181, $result);
     }
+    
+    public function testCountWhereMatchesWithNonExistingModel()
+    {
+        $this->markTestNeedsDatabase();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        try {
+            $result = $store->countWhereMatches(
+                'http://localhost/SomeModelThatDoesNotExist123456789', 
+                '{ ?s ?p ?o }',
+                '*'
+            );
+            
+            // Should fail...
+            $this->fail();
+        } catch (Erfurt_Store_Exception $e) {
+            // Nothing to do here...
+        }
+    }
 }
 
 

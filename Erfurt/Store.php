@@ -1,5 +1,4 @@
 <?php
-/* vim: sw=4:sts=4:expandtab */
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
@@ -38,12 +37,6 @@ class Erfurt_Store
      * @var int
      */
     const TYPE_BLANKNODE = 3;
-    
-    /**
-     * Denotes that counting is not supported
-     * @var int
-     */
-    const COUNT_NOT_SUPPORTED = -1;
     
     /**
      * A proeprty for hiding resources.
@@ -1379,11 +1372,12 @@ class Erfurt_Store
             if ($this->_checkAc($graphIri)) {
                 $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);
+            } else {
+                throw new Erfurt_Store_Exception('Model ' . $graphIri . ' is not available.');
             }
+        } else {
+            throw new Erfurt_Store_Exception('Count is not supported by backend.');
         }
-
-        // TODO: is it better to throw an exception in this case?
-        return self::COUNT_NOT_SUPPORTED;
     }
     
     /**
