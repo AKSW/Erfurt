@@ -13,3 +13,9 @@ set_include_path($includePath);
 // We need a session for authentication
 require_once 'Zend/Session/Namespace.php';
 $session = new Zend_Session_Namespace('Erfurt_Test');
+
+
+// Zend_Loader for class autoloading
+require_once 'Zend/Loader/Autoloader.php';
+$loader = Zend_Loader_Autoloader::getInstance();
+$loader->registerNamespace('Erfurt_');
