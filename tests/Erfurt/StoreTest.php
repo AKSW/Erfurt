@@ -1,5 +1,5 @@
 <?php
-require_once 'Erfurt/TestCase.php';
+require_once 'TestCase.php';
 require_once 'Erfurt/Syntax/RdfParser.php';
 require_once 'Erfurt/Store.php';
 

@@ -16,12 +16,13 @@ define('EF_RDF_TYPE', EF_RDF_NS.'type');
 require_once '../../test_base.php';
 
 //include the class to test
-require_once '../../../src/Erfurt/Sparql/Query2.php';
+//should be autoloaded
+//require_once '../../../src/Erfurt/Sparql/Query2.php';
 
 // PHPUnit
 require_once 'PHPUnit/Framework.php';
 
-class OntoWikiTest extends PHPUnit_Framework_TestCase
+class Query2Test extends PHPUnit_Framework_TestCase
 {
     protected $query;
 
