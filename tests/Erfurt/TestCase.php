@@ -1,5 +1,5 @@
 <?php
-require_once '../test_base.php';
+require_once 'test_base.php';
 require_once 'Erfurt/App.php';
 
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase

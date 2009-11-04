@@ -443,7 +443,13 @@ class Erfurt_Sparql_Parser
     /** FastForward until next token which is not blank. */
     protected function _fastForward()
     {
-        next($this->_tokens);
+        #next($this->_tokens);
+        #return;
+        
+        $tok = next($this->_tokens);
+        while ($tok === ' ') {
+            $tok = next($this->_tokens);
+        }
     }
 
     /**
@@ -1091,7 +1097,7 @@ class Erfurt_Sparql_Parser
             do {
                 next($this->_tokens);
                 $node = $node . current($this->_tokens);
-            } while (current($this->_tokens) != $sep);
+            } while ((current($this->_tokens) != $sep));
             $this->_checkDtypeLang($node, strlen($sep));
         } else {
             $datatype = '';
@@ -1105,8 +1111,6 @@ class Erfurt_Sparql_Parser
             $node = Erfurt_Rdf_Literal::initWithLabel($node);
             $node->setDatatype($datatype);
         }
-        
-        
     }
     
     /**
