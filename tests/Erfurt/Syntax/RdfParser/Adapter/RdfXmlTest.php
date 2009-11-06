@@ -4,7 +4,8 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
 
 class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/';
+    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    const SYNTAX_INVALID_TEST_DIR = 'resources/syntax/invalid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
@@ -178,6 +179,20 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         }
     }
     
+    /**
+     * @dataProvider providerTestParseFromInvalidDataString
+     */
+    public function testParseFromInvalidDataString($dataString)
+    {
+        try {
+            $result = $this->_object->parseFromDataString($dataString);
+            
+            $this->fail('Parser test should fail.');
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            
+        }
+    }
+    
     public function providerTestParseFromDataString()
     {
         $dataArray = array();
@@ -192,6 +207,30 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
                     if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
                         $fileHandle = fopen(self::SYNTAX_TEST_DIR . $fileName, 'r');
                         $data = fread($fileHandle, filesize(self::SYNTAX_TEST_DIR . $fileName));
+                        fclose($fileHandle);
+                        $dataArray[] = array($data);
+                    }
+                }
+            }
+        }
+        
+        return $dataArray;
+    }
+    
+    public function providerTestParseFromInvalidDataString()
+    {
+        $dataArray = array();
+        
+        if (is_readable(self::SYNTAX_INVALID_TEST_DIR)) {
+            $dirIterator = new DirectoryIterator(self::SYNTAX_INVALID_TEST_DIR);
+            
+            foreach ($dirIterator as $file) {
+                if (!$file->isDot() && !$file->isDir()) {
+                    $fileName = $file->getFileName();
+                    
+                    if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_INVALID_TEST_DIR . $fileName)) {
+                        $fileHandle = fopen(self::SYNTAX_INVALID_TEST_DIR . $fileName, 'r');
+                        $data = fread($fileHandle, filesize(self::SYNTAX_INVALID_TEST_DIR . $fileName));
                         fclose($fileHandle);
                         $dataArray[] = array($data);
                     }

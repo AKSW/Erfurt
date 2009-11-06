@@ -78,7 +78,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithFilenameAndRdfXml()
     {
         $this->_object->initializeWithFormat('rdfxml');
-        $filename = 'resources/syntax/conferences.rdf';
+        $filename = 'resources/syntax/valid/conferences.rdf';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
@@ -95,7 +95,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
         $this->markTestIncomplete();return;
         
         $this->_object->initializeWithFormat('ttl');
-        $filename = 'resources/syntax/conferences.ttl';
+        $filename = 'resources/syntax/valid/conferences.ttl';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
@@ -109,7 +109,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithFilenameAndRdfJson()
     {
         $this->_object->initializeWithFormat('rdfjson');
-        $filename = 'resources/syntax/conferences.json';
+        $filename = 'resources/syntax/valid/conferences.json';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
