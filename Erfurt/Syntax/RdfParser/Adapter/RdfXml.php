@@ -209,14 +209,16 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _startElement($parser, $name, $attrs)
     {
+        if (strpos($name, ':') === false) {
+            throw new Erfurt_Syntax_RdfParserException('Invalid element name: ' . $name . '.');
+        } 
+        
         if ($name === EF_RDF_NS.'RDF') {
             if (isset($attrs[(EF_XML_NS . 'base')])) {
                 $this->_baseUri = $attrs[(EF_XML_NS . 'base')];
             }
             return;
         }
-                
-        $this->_rdfElementParsed = true;
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
         if (($idx >= 0) && ($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
