@@ -4,7 +4,7 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
 
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/';
+    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_Turtle
@@ -55,16 +55,6 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         
         if (is_readable(self::SYNTAX_TEST_DIR)) {
             $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
-            
-            foreach ($dirIterator as $file) {
-                if (!$file->isDot() && !$file->isDir()) {
-                    $fileName = $file->getFileName();
-                    
-                    if ((substr($fileName, -4) === '.ttl') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
-                    }
-                }
-            }
         }
         
         return $dataArray;

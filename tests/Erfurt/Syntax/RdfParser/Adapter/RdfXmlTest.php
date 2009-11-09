@@ -170,10 +170,14 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
     /**
      * @dataProvider providerTestParseFromDataString
      */
-    public function testParseFromDataString($dataString)
+    public function testParseFromDataString($fileName)
     {
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
         try {
-            $result = $this->_object->parseFromDataString($dataString);
+            $result = $this->_object->parseFromDataString($data);
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
         }
@@ -182,10 +186,14 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
     /**
      * @dataProvider providerTestParseFromInvalidDataString
      */
-    public function testParseFromInvalidDataString($dataString)
+    public function testParseFromInvalidDataString($fileName)
     {
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
         try {
-            $result = $this->_object->parseFromDataString($dataString);
+            $result = $this->_object->parseFromDataString($data);
             
             $this->fail('Parser test should fail.');
         } catch (Erfurt_Syntax_RdfParserException $e) {
@@ -205,10 +213,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
                     $fileName = $file->getFileName();
                     
                     if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $fileHandle = fopen(self::SYNTAX_TEST_DIR . $fileName, 'r');
-                        $data = fread($fileHandle, filesize(self::SYNTAX_TEST_DIR . $fileName));
-                        fclose($fileHandle);
-                        $dataArray[] = array($data);
+                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
                     }
                 }
             }
@@ -229,10 +234,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
                     $fileName = $file->getFileName();
                     
                     if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_INVALID_TEST_DIR . $fileName)) {
-                        $fileHandle = fopen(self::SYNTAX_INVALID_TEST_DIR . $fileName, 'r');
-                        $data = fread($fileHandle, filesize(self::SYNTAX_INVALID_TEST_DIR . $fileName));
-                        fclose($fileHandle);
-                        $dataArray[] = array($data);
+                        $dataArray[] = array((self::SYNTAX_INVALID_TEST_DIR . $fileName));
                     }
                 }
             }
