@@ -271,6 +271,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         
     public function testAuthenticateWithAdmin()
     {
+        Erfurt_App::reset();
         $this->markTestNeedsDatabase();
         
         // Authenticate as Anonymous
@@ -567,10 +568,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetQueryCacheWithDatabaseCacheBackend()
     {   
-        // Incomplete, until Micha cleans up the constructor.
-        $this->markTestIncomplete();
-        
         Erfurt_App::reset();
+        $this->markTestNeedsDatabase();
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->query->enable = true;

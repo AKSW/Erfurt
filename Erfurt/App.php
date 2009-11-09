@@ -754,7 +754,6 @@ class Erfurt_App
     {
         if (null === $this->_queryCache) {
             $config = $this->getConfig();
-            require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
             require_once 'Erfurt/Cache/Frontend/QueryCache.php';
             $this->_queryCache = new Erfurt_Cache_Frontend_QueryCache();
             
