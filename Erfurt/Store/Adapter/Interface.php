@@ -1,13 +1,19 @@
 <?php
 
 /**
- * @package erfurt
- * @subpackage    store
- * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @author     Norman Heino <norman.heino@gmail.com>
- * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Interface.php 4057 2009-08-14 06:28:31Z pfrischmuth $
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
+ * @category Erfurt
+ * @package Store_Adapter
+ * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author Norman Heino <norman.heino@gmail.com>
+ * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 interface Erfurt_Store_Adapter_Interface
 {
@@ -31,6 +37,15 @@ interface Erfurt_Store_Adapter_Interface
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
 	public function addStatement($graphUri, $subject, $predicate, $object, array $options = array());
+	
+	/**
+	 * Creates a new empty model (named graph) with the URI specified.
+	 *
+	 * @param string $graphUri
+	 * @param int $type
+	 * @return boolean true on success, false otherwise
+	 */
+	public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL);
 	
 	/**
      * 
@@ -63,8 +78,8 @@ interface Erfurt_Store_Adapter_Interface
 	 * 
 	 * @param string $modelIri
 	 * @param string $serializationType One of:
-	 *                                          - 'xml'
-	 *                                          - 'n3' or 'nt'
+	 *        - 'xml'
+	 *        - 'n3' or 'nt'
 	 * @param mixed $filename Either a string containing a absolute filename or null. In case null is given,
 	 * this method returns a string containing the serialization.
 	 * 
@@ -84,28 +99,6 @@ interface Erfurt_Store_Adapter_Interface
 	 * @return string
 	 */
     public function getBlankNodePrefix();
-
-	/**
-	 * @param string $modelIri The IRI, which identifies the model.
-	 * @param boolean $useAc Whether to use access control or not.
-	 * 
-	 * @throws Erfurt_Exception Throws an exception if model is not available.
-	 * 
-	 * @return Erfurt_Rdf_Model Returns an instance of Erfurt_Rdf_Model or one of its subclasses.
-	 */
-	public function getModel($modelIri);
-	
-	/**
-	 * @param string $modelIri
-	 * @param string $baseIri
-	 * @param string $type
-	 * @param boolean $useAc
-	 * 
-	 * @throws Erfurt_Exception
-	 * 
-	 * @return Erfurt_Rdf_Model
-	 */
-	public function getNewModel($modelIri, $baseIri = '', $type = 'owl');
 	
 	/**
 	 * Returns the formats this store can export.
@@ -126,12 +119,12 @@ interface Erfurt_Store_Adapter_Interface
 	 * @param string $modelIri
 	 * @param string $locator Either a URL or a absolute file name.
 	 * @param string $type One of: 
-	 *                              - 'auto' => Tries to detect the type automatically in the following order:
-	 *                                              1. Detect XML by XML-Header => rdf/xml
-	 *                                              2. If this fails use the extension of the file
-	 *                                              3. If this fails throw an exception
-	 *                              - 'xml'
-	 *                              - 'n3' or 'nt'
+	 *        - 'auto' => Tries to detect the type automatically in the following order:
+	 *           1. Detect XML by XML-Header => rdf/xml
+	 *           2. If this fails use the extension of the file
+	 *           3. If this fails throw an exception
+	 *        - 'xml'
+	 *        - 'n3' or 'nt'
 	 * @param boolean $stream Denotes whether $data contains the actual data.
 	 * 
 	 * @throws Erfurt_Exception 
@@ -175,4 +168,4 @@ interface Erfurt_Store_Adapter_Interface
     public function sparqlQuery($query, $resultform = 'plain');
 }
 
-?>
+

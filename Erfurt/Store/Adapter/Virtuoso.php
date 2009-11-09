@@ -320,6 +320,29 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return 0;
     }
     
+    /**
+     * Explicitly creates a new named graph.
+     *
+     * @param string $graphUri
+     * @param string $baseUri
+     * @return boolean
+     */
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        // create empty graph
+        $createQuery = "CREATE GRAPH <$graphUri>";
+        $this->_execSparql($createQuery);
+        
+        require_once 'Erfurt/Store.php';
+        if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
+            // add statement <graph> a owl:Ontology
+            $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_NS);
+            $this->_execSparql($owlInsert);
+        }
+        
+        return true;
+    }
+    
     /** @see Erfurt_Store_Sql_Interface */
     public function createTable($tableName, array $columns)
     {
@@ -923,36 +946,51 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     private function _odbcResultToArray($odbcResult, $columnsAsKeys = true, $rowsAsArrays = true)
     {
-        $result         = $odbcResult;
-        $resultArray    = array();
-        $resultRow      = array();
-        $resultRowNamed = array();
+        // the result will be stored in here
+        $resultArray = array();
         
         // get number of fields (columns)
-        $numFields = odbc_num_fields($result);
-
-        if ($numFields === 0) {
+        $numFields = odbc_num_fields($odbcResult);
+        
+        // Return empty array on no results (0) or error (-1)
+        if ($numFields < 1) {
             return $resultArray;
-        }        
-       
-        while (odbc_fetch_into($result, $resultRow)) {
-            if ($numFields == 1 && !$rowsAsArrays) {
-                // add first row field to result array
-                array_push($resultArray, $resultRow[0]);
-            } else {
-                // copy column names to array indices
-                for ($i = 0; $i < $numFields; ++$i) {
-                    if ($columnsAsKeys) {
-                        $colName = odbc_field_name($result, $i + 1);
-                        $resultRowNamed[$colName] = $resultRow[$i];
-                    } else {
-                        $resultRowNamed[] = $resultRow[$i];
+        }
+        
+        // for all rows
+        while (odbc_fetch_row($odbcResult)) {
+            $resultRowNamed = array();
+            
+            // for all columns
+            for ($i = 1; $i <= $numFields; ++$i) {
+                $fieldName = odbc_field_name($odbcResult, $i);
+                $fieldType = odbc_field_type($odbcResult, $i);
+                $value     = '';
+                
+                if (substr($fieldType, 0, 4) == 'LONG') {
+                    // LONG VARCHAR or LONG VARBINARY
+                    // get the field value in parts
+                    while ($segment = odbc_result($odbcResult, $i)) {
+                        $value .= (string)$segment;
                     }
+                } else {
+                    // get the field value normally
+                    $value = odbc_result($odbcResult, $i);
                 }
                 
-                // add row to result array
-                array_push($resultArray, $resultRowNamed);
+                if ($rowsAsArrays) {
+                    if ($columnsAsKeys) {
+                        $resultRowNamed[$fieldName] = $value;
+                    } else {
+                        $resultRowNamed[] = $value;
+                    }
+                } else {
+                    $resultRowNamed = $value;
+                }
             }
+            
+            // add row to result array
+            array_push($resultArray, $resultRowNamed);
         }
         
         return $resultArray;
@@ -987,10 +1025,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             exit;
         }
         
-        if ($this->_longRead) {
-            odbc_longreadlen($result, 16777216);
-            $this->_longRead = false;
-        }
+        // if ($this->_longRead) {
+        //     odbc_longreadlen($result, 16777216);
+        //     $this->_longRead = false;
+        // }
        
         return $result;
     }
@@ -1103,10 +1141,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // FIXME: temp fix, always go big
         $this->_longRead = true;
         
-        if ($result && $this->_longRead) {
-            odbc_longreadlen($result, 16777216);
-            $this->_longRead = false;
-        }
+        // if ($result && $this->_longRead) {
+        //     odbc_longreadlen($result, 16777216);
+        //     $this->_longRead = false;
+        // }
         
         return $result;
     }

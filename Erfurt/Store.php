@@ -728,10 +728,11 @@ class Erfurt_Store
             }
 
             if ($withHidden === false) {
-                $graphConfig = $this->getGraphConfiguration($graphUri);
+                $graphConfig    = $this->getGraphConfiguration($graphUri);
+                $hiddenProperty = $this->getOption('propertiesHidden');
                 
-                if (isset($graphConfig[self::HIDDEN_PROPERTY])) {
-                    $hidden = current($graphConfig[self::HIDDEN_PROPERTY]);
+                if (isset($graphConfig[$hiddenProperty])) {
+                    $hidden = current($graphConfig[$hiddenProperty]);
                     if ((boolean)$hidden['value']) {
                         unset($models[$graphUri]);
                     }
@@ -805,21 +806,26 @@ class Erfurt_Store
      * @return Erfurt_Rdf_Model Returns an instance of Erfurt_Rdf_Model or one of its subclasses.
      */
     public function getModel($modelIri, $useAc = true)
-    {        
+    {
         // check whether model exists and is visible
         if (!$this->isModelAvailable($modelIri, $useAc)) {
-            if (!$useAc && (($modelIri === $this->getOption('modelUri')) || ($modelIri !== $this->getOption('schemaUri')))) {
+            $systemModelUri  = $this->getOption('modelUri');
+            $systemSchemaUri = $this->getOption('schemaUri');
+            
+            // check whether requested model is one of the schema models
+            if (!$useAc && (($modelIri === $systemModelUri) || ($modelIri !== $systemSchemaUri))) {
                 try {
                     $this->checkSetup();
                 } catch (Erfurt_Store_Exception $e) {
                     if ($e->getCode() === 20) {
-                        // Everything is fine, sys models now imported
+                        // Everything is fine, system models now imported
                     } else {
                         require_once 'Erfurt/Store/Exception.php';
-                        throw new Erfurt_Store_Exception('Check setup failed:' . $e->getMessage());
+                        throw new Erfurt_Store_Exception('Check setup failed: ' . $e->getMessage());
                     }
                 }
                 
+                // still not available?
                 if (!$this->isModelAvailable($modelIri, $useAc)) {
                     require_once 'Erfurt/Store/Exception.php';
                     throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
@@ -827,12 +833,31 @@ class Erfurt_Store
             } else {
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
-            }
-            
-            
+            }            
         }
         
-        $modelInstance = $this->_backendAdapter->getModel($modelIri);
+        // if backend adapter provides its own implementation
+        if (method_exists($this->_backendAdapter, 'getModel')) {
+            // … use it
+            $modelInstance = $this->_backendAdapter->getModel($modelIri);
+        } else {
+            // use generic implementation
+            $owlQuery = new Erfurt_Sparql_SimpleQuery();
+            $owlQuery->setProloguePart('ASK')
+                     ->setWherePart('GRAPH <' . $modelIri . '> 
+                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}');
+            
+            // TODO: cache this
+            if ($this->sparqlAsk($owlQuery, $modelIri)) {
+                // instantiate OWL model
+                require_once 'Erfurt/Owl/Model.php';
+                $modelInstance = new Erfurt_Owl_Model($modelIri);
+            } else {
+                // instantiate RDF-S model
+                require_once 'Erfurt/Rdfs/Model.php';
+                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+            }
+        }
         
         // check for edit possibility
         if ($this->_checkAc($modelIri, 'edit', $useAc)) {
@@ -887,33 +912,16 @@ class Erfurt_Store
             throw new Erfurt_Store_Exception("Failed creating the model. Action not allowed!");
         }
         
-        if (method_exists($this->_backendAdapter, 'createModel')) {
-            $owlQuery = new Erfurt_Sparql_SimpleQuery();
-            $owlQuery->setProloguePart('ASK')
-                     ->setWherePart('GRAPH <' . $modelIri . '> 
-                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}');
-            
-            if ($this->sparqlAsk($owlQuery, $modelIri)) {
-                // instantiate OWL model
-                require_once 'Erfurt/Owl/Model.php';
-                $modelInstance = new Erfurt_Owl_Model($modelIri);
-            } else {
-                // instantiate RDF-S model
-                require_once 'Erfurt/Rdfs/Model.php';
-                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
-            }
-        } else {
-            $modelInstance = $this->_backendAdapter->getNewModel($modelIri, $baseIri, $type);
-            
-            // check for edit possibility
-            if ($this->_checkAc($modelIri, 'edit', $useAc)) {
-                $modelInstance->setEditable(true);
-            } else {
-                $modelInstance->setEditable(false);
-            }
+        try {
+            $this->_backendAdapter->createModel($modelIri);
+        } catch (Erfurt_Store_Adapter_Exception $e) {
+            require_once 'Erfurt/Store/Exception.php';
+            throw new Erfurt_Store_Exception('Failed creating the model.');
         }
-
-        return $modelInstance;
+        
+        // everything ok, create new model
+        // no access control since we have already checked
+        return $this->getModel($modelIri, false);
     }
     
     /**

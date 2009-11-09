@@ -366,6 +366,69 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        $data = array(
+            'uri'  => &$graphUri
+        );
+        
+        if ($baseUri !== '') {
+            $data['base'] = $baseUri;
+        }
+
+        // insert the new model into the database
+        $this->_dbConn->insert('ef_graph', $data);
+        $graphId = $this->lastInsertId();
+        
+        $uriRef = false;
+        if (strlen($graphUri) > $this->_getSchemaRefThreshold()) {
+            $uriHash = md5($uri);
+            
+            $uriData = array(
+                'g'     => $graphid,
+                'v'     => $uri,
+                'vh'    => $uriHash);
+            
+            $uriRef = $this->_insertValueInto('ef_uri', $uriData);
+            
+            $updateData = array(
+                'uri'       => $uriHash,
+                'uri_r'     => $uriRef);
+            
+            $this->_dbConn->update('ef_graph', $updateData, "id = graphId");
+        }
+        
+        $baseRef = false;
+        if (strlen($baseUri) > $this->_getSchemaRefThreshold()) {
+            $baseHash = md5($baseUri);
+            
+            $baseData = array(
+                'g'     => $graphid,
+                'v'     => $baseUri,
+                'vh'    => $baseHash);
+            
+            $baseRef = $this->_insertValueInto('ef_uri', $baseData);
+            
+            $updateData = array(
+                'base'       => $baseHash,
+                'base_r'     => $baseRef);
+            
+            $this->_dbConn->update('ef_graph', $updateData, "id = graphId");
+        }
+        
+        // invalidate the cache and fetch model infos again
+        require_once 'Erfurt/App.php';
+        $cache = Erfurt_App::getInstance()->getCache();
+        $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
+        $this->_modelInfoCache = null;
+        
+        if ($type === 'owl') {
+            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, array('type' => 'uri', 'value' => EF_OWL_ONTOLOGY));
+            $this->_modelInfoCache = null;
+        }
+    }
+    
+    /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $modelInfoCache = $this->_getModelInfos();

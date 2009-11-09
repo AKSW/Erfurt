@@ -46,7 +46,7 @@ class Erfurt_Namespaces
     protected $_namespaces = array();
     
     /**
-     * Hasg table of names not to be used as prefixes.
+     * Hash table of names not to be used as prefixes.
      * @var array
      */
     protected $_reservedNames = array();

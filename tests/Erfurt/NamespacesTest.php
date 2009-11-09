@@ -2,7 +2,7 @@
 
 require_once 'Erfurt/TestCase.php';
 
-class Erfurt_NamespacesTest extends PHPUnit_Framework_TestCase
+class Erfurt_NamespacesTest extends Erfurt_TestCase
 {
     const TEST_GRAPH = 'http://example.com/stub/';
     

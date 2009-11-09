@@ -551,8 +551,8 @@ class Erfurt_App
      * 
      * @return Zend_Cache_Core
      */
-    public function getCache() 
-    {    
+    public function getCache()
+    {
         if (null === $this->_cache) {
             $config = $this->getConfig();
             
