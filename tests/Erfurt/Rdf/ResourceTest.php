@@ -13,7 +13,7 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      * @var    Erfurt_Rdf_Resource
      * @access protected
      */
-    protected $object;
+    protected $_object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -23,6 +23,7 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
+        $this->_object = new Erfurt_Rdf_Resource('http://example.org/resource1');
     }
 
     /**
@@ -40,10 +41,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function test__toString()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = (string)$this->_object;
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -51,10 +51,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetIri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = $this->_object->getIri();
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -62,6 +61,17 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetQualifiedName()
     {
+        // First we test with the standard object (no qname).
+        $this->assertEquals(null, $this->_object->getQualifiedName());
+        
+        // Now we test with a real qname.
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $model = Erfurt_App::getInstance()->getSysOntModel();
+        
+        $r = new Erfurt_Rdf_Resource(EF_RDF_TYPE, $model);
+        #$this->assertEquals('rdf:type', $r->getQualifiedName());
+        
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
@@ -73,6 +83,10 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetNamespace()
     {
+        $should = 'http://example.org/';
+        $is = $this->_object->getNamespace();
+        $this->assertEquals($should, $is);
+        
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
@@ -172,10 +186,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetUri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = $this->_object->getUri();
+        $this->assertEquals($should, $is);
     }
 }
 ?>
