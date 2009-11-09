@@ -1187,7 +1187,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $graphUri The model IRI
      * @param string $baseUri The base IRI
      */
-    private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = null) 
+    private function _importStatementsFromFile($file, $type, $graphUri, $baseUri = null)
     {
         // check type parameter
         switch (strtolower($type)) {
