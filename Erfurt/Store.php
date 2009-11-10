@@ -891,7 +891,7 @@ class Erfurt_Store
      * 
      * @return Erfurt_Rdf_Model
      */
-    public function getNewModel($modelIri, $baseIri = '', $type = 'owl', $useAc = true)
+    public function getNewModel($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
         // check model availablity
         if ($this->isModelAvailable($modelIri, false)) {            
@@ -913,7 +913,7 @@ class Erfurt_Store
         }
         
         try {
-            $this->_backendAdapter->createModel($modelIri);
+            $this->_backendAdapter->createModel($modelIri, $type);
         } catch (Erfurt_Store_Adapter_Exception $e) {
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('Failed creating the model.');
@@ -921,7 +921,7 @@ class Erfurt_Store
         
         // everything ok, create new model
         // no access control since we have already checked
-        return $this->getModel($modelIri, false);
+        return $this->getModel($modelIri, $useAc);
     }
     
     /**

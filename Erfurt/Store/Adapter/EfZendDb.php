@@ -423,7 +423,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelInfoCache = null;
         
-        if ($type === 'owl') {
+        if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
             $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, array('type' => 'uri', 'value' => EF_OWL_ONTOLOGY));
             $this->_modelInfoCache = null;
         }
