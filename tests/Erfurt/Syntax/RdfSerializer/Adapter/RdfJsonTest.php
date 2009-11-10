@@ -23,15 +23,20 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonTest extends Erfurt_TestCase
     
     public function testSerializeGraphToString()
     {
-        //$this->_object->serializeGraphToString('http://3ba.se/conferences/');
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
         
-        $this->markTestIncomplete('Not implemented yet.');
+        $result = $this->_object->serializeGraphToString('http://localhost/OntoWiki/Config/');
+        $this->assertTrue(is_string($result));
     }
     
     public function testSerializeResourceToString()
     {
-        //$this->_object->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 'http://3ba.se/conferences/');
-    
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        
+        $r = 'http://localhost/OntoWiki/Config/';
+        $result = $this->_object->serializeResourceToString($r, $r);
+        $this->assertTrue(is_string($result));
     }
 }

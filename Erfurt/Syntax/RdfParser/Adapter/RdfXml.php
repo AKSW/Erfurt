@@ -52,6 +52,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $this->_data = $dataString;
         xml_parse($xmlParser, $dataString);
         
+        if (xml_get_error_code($xmlParser) !== 0) {
+            throw new Erfurt_Syntax_RdfParserException(
+                'Parsing failed: ' . xml_error_string(xml_get_error_code($xmlParser))
+            );
+        }
+        
         return $this->_statements;
     }
     

@@ -166,6 +166,30 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         $result = $this->_object->parseFromDataString($xml);
     }
     
+    public function testParsingRdfXmlWithEntities()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example &lt;1234&gt;" />');
+        $result = $this->_object->parseFromDataString($xml);
+        
+        $this->assertEquals('example <1234>', $result['_:node1'][EF_RDFS_LABEL][0]['value']);
+    }
+    
+    public function testParsingRdfXmlWithCData()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class><rdfs:label>example 12345 <![CDATA[<12345>]]></rdfs:label></owl:Class>');
+        $result = $this->_object->parseFromDataString($xml);
+        
+        $this->assertEquals('example 12345 <12345>', $result['_:node1'][EF_RDFS_LABEL][0]['value']);
+    }
+    
+    /**
+     * @expectedException Erfurt_Syntax_RdfParserException
+     */
+    public function testParsingRdfXmlWithoutEntitiesUsed()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example <1234>" />');
+        $result = $this->_object->parseFromDataString($xml);
+    }
     
     /**
      * @dataProvider providerTestParseFromDataString
