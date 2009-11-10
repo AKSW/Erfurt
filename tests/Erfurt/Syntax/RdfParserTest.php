@@ -22,14 +22,10 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     }
     
     public function testParseWithUrlAndRdfXml()
-    {
-// TODO use a url, that is available on every machine
-        $this->markTestIncomplete();return;
-        
+    {        
         $this->_object->initializeWithFormat('rdfxml');
-        $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/rdfxml?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
-        
-        
+        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.rdf';
+           
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
         
         require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
@@ -40,12 +36,9 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     }
     
     public function testParseWithUrlAndN3()
-    {
-// TODO use a url, that is available on every machine
-        $this->markTestIncomplete();return;
-        
+    {   
         $this->_object->initializeWithFormat('ttl');
-        $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/n3?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
+        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.ttl';
         
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
@@ -59,11 +52,8 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     
     public function testParseWithUrlAndRdfJson()
     {
-// TODO use a url, that is available on every machine
-        $this->markTestIncomplete();return;
-        
         $this->_object->initializeWithFormat('rdfjson');
-        $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/rdfjson?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
+        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.json';
         
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
@@ -90,10 +80,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     }
     
     public function testParseWithFilenameAndN3()
-    {
-// TODO error in arc?
-        $this->markTestIncomplete();return;
-        
+    {   
         $this->_object->initializeWithFormat('ttl');
         $filename = 'resources/syntax/valid/conferences.ttl';
         

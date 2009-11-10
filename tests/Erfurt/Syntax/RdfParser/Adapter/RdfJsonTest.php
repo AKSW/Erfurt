@@ -4,6 +4,8 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
 
 class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
 {
+    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
      * @access protected
@@ -21,15 +23,41 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
         $this->_object = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();    
     }
     
-    public function testParseFromUrl()
+    /**
+     * @dataProvider providerTestParseFromFileName
+     */
+    public function testParseFromFileName($fileName)
+    {   
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
+        try {
+            $result = $this->_object->parseFromDataString($data);
+            $this->assertTrue(is_array($result));
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+    
+    public function providerTestParseFromFileName()
     {
-// TODO model has to be available
-        $this->markTestIncomplete('Not implemented yet.');
+        $dataArray = array();
         
-        $url = 'http://localhost/ontowiki_1_0/ontowiki/src/model/export/f/rdfjson?m=http%3A%2F%2F3ba.se%2Fconferences%2F';
-        $graphUri = 'http://3ba.se/conferences/3/';
+        if (is_readable(self::SYNTAX_TEST_DIR)) {
+            $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
+            
+            foreach ($dirIterator as $file) {
+                if (!$file->isDot() && !$file->isDir()) {
+                    $fileName = $file->getFileName();
+                    
+                    if ((substr($fileName, -5) === '.json') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
+                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    }
+                }
+            }
+        }
         
-        
-        $this->_object->parseFromUrl($url);
+        return $dataArray;
     }
 }

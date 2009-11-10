@@ -137,10 +137,10 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testInitWithBlankNode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123');
+        $this->assertTrue($bn instanceof Erfurt_Rdf_Resource);
+        $this->assertTrue($bn->isBlankNode());
+        $this->assertEquals('bnode123', $bn->getId());
     }
 
     /**
@@ -148,10 +148,8 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testIsBlankNode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123456789abc');
+        $this->assertTrue($bn->isBlankNode());
     }
 
     /**
@@ -159,10 +157,8 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetId()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123abcdefghjiklmnopqrstuvwxyz');
+        $this->assertEquals('bnode123abcdefghjiklmnopqrstuvwxyz', $bn->getId());
     }
 
     /**

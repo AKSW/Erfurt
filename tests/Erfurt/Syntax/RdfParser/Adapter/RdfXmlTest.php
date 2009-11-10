@@ -178,6 +178,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         
         try {
             $result = $this->_object->parseFromDataString($data);
+            $this->assertTrue(is_array($result));
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
         }

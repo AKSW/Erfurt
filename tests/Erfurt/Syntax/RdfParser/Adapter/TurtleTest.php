@@ -44,6 +44,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         
         try {
             $result = $this->_object->parseFromDataString($data);
+            $this->assertTrue(is_array($result));
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
         }
@@ -55,6 +56,16 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         
         if (is_readable(self::SYNTAX_TEST_DIR)) {
             $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
+            
+            foreach ($dirIterator as $file) {
+                if (!$file->isDot() && !$file->isDir()) {
+                    $fileName = $file->getFileName();
+                    
+                    if ((substr($fileName, -4) === '.ttl') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
+                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    }
+                }
+            }
         }
         
         return $dataArray;
