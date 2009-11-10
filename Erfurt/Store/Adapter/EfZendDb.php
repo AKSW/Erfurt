@@ -372,6 +372,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             'uri'  => &$graphUri
         );
         
+        $baseUri = $graphUri;
         if ($baseUri !== '') {
             $data['base'] = $baseUri;
         }
