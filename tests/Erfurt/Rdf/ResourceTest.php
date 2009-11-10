@@ -70,12 +70,7 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
         $model = Erfurt_App::getInstance()->getSysOntModel();
         
         $r = new Erfurt_Rdf_Resource(EF_RDF_TYPE, $model);
-        #$this->assertEquals('rdf:type', $r->getQualifiedName());
-        
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertEquals('rdf:type', $r->getQualifiedName());
     }
 
     /**
