@@ -165,7 +165,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $resource;
     }
     
-    public static function initWithNamespaceAndLocalname($namespace, $local)
+    public static function initWithNamespaceAndLocalName($namespace, $local)
     {
         $resource = new self($namespace . $local);
         return $resource;

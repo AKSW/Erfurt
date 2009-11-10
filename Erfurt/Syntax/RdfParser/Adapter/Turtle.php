@@ -699,7 +699,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
 
         
         require_once 'Erfurt/Rdf/Resource.php';
-        return Erfurt_Rdf_Resource::initWithNamespaceAndLocalname($namespace, $localName);
+        return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
     
     /*protected function _isPrefixChar($c)
