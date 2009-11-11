@@ -322,7 +322,7 @@ class Erfurt_Store
         $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $this->getOption('modelPath'));
         
         $returnValue = true;
-        
+
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
         // local config!
@@ -1223,7 +1223,7 @@ class Erfurt_Store
             'use_owl_imports'        => true,
             'use_additional_imports' => true
         );
-        
+     
         $options = array_merge($defaultOptions, $options);
 
         $useAdditional = $options['use_additional_imports'];

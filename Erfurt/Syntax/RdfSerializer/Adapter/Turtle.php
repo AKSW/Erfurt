@@ -41,7 +41,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $query->setProloguePart('SELECT ?s ?p ?o');
         $query->addFrom($graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . }');
-        $query->setOrderClause('?s');
+        $query->setOrderClause('?s ?p ?o');
         $query->setLimit(1000);
         
         $base = $graph->getBaseUri();
@@ -105,7 +105,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $query->setProloguePart('SELECT ?s ?p ?o');
         $query->addFrom($graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resource.'>))}');
-        $query->setOrderClause('?s');
+        $query->setOrderClause('?s ?p ?o');
         $query->setLimit(1000);
         
         

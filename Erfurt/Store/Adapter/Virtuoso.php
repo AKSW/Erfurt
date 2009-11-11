@@ -332,11 +332,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // create empty graph
         $createQuery = "CREATE GRAPH <$graphUri>";
         $this->_execSparql($createQuery);
+        $this->_models = null;
         
         require_once 'Erfurt/Store.php';
         if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
             // add statement <graph> a owl:Ontology
-            $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_NS);
+            $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_ONTOLOGY);
             $this->_execSparql($owlInsert);
         }
         
@@ -414,11 +415,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteModel($graphIri) 
     {
-        // $this->_execSparql('DROP GRAPH <' . $graphIri . '>');
-        return $this->_execSparql("
-            DELETE FROM GRAPH <$graphIri> {?s ?p ?o.}
-                WHERE {GRAPH <$graphIri> {?s ?p ?o.}}
-        ");
+        $this->_models = null;
+        
+        return $this->_execSparql('DROP GRAPH <' . $graphIri . '>');
+        #return $this->_execSparql("
+        #    DELETE FROM GRAPH <$graphIri> {?s ?p ?o.}
+        #        WHERE {GRAPH <$graphIri> {?s ?p ?o.}}
+        #");
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -505,37 +508,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getAvailableModels()
     {        
         if (null === $this->_models) {
-            $this->_models = array();
-                
-            $query = 'SELECT ?graph WHERE {
-                GRAPH ?graph {
-                    ?graph <' . EF_RDF_TYPE . '> ?o.
-                }
-            }';
+            $models = array();
             
-            $result = $this->_execSparql($query);
-            while (odbc_fetch_row($result)) {
-                $graph = odbc_result($result, 1);
-                if (!in_array($graph, $this->_virtuosoSpecialModels)) {
-                    if (!array_key_exists($graph, $this->_models)) {
-                            $this->_models[$graph] = true;
-                    }
-                }
+            $result = $this->_odbcResultToArray(
+                $this->_execSql('select ID_TO_IRI(REC_GRAPH_IID) as g from DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH')
+            );
+           
+            foreach ($result as $row) {
+                $uri = $row['g'];
+                $models[$uri] = true;
             }
-            
-            // TODO: this slower method must be used for graphs that do not contain statements
-            // about themselves
-            // $graphSql = 'SELECT DISTINCT ID_TO_IRI(G) FROM DB.DBA.RDF_QUAD';
-            // $result = $this->_execSql($graphSql);
-            // 
-            // while (odbc_fetch_row($result)) {
-            //     $graph = odbc_result($result, 1);
-            //     if (!in_array($graph, $this->_virtuosoSpecialModels)) {
-            //         if (!array_key_exists($graph, $this->_models)) {
-            //             $this->_models[$graph] = array('modelIri' => $graph);
-            //         }
-            //     }
-            // }
+            $this->_models = $models;       
         }
         
         return $this->_models;
@@ -603,7 +586,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $owlQuery = '
             ASK WHERE {
-                GRAPH <' . $graphIri . '> {<' . $graphIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}
+                GRAPH <' . $graphIri . '> {<' . $graphIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}
             }';
         
         if ($this->sparqlAsk($owlQuery, $graphIri)) {
@@ -640,7 +623,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */ 
-    public function getNewModel($graphIri, $baseUri = '', $type = 'rdfs') 
+    /*public function getNewModel($graphIri, $baseUri = '', $type = 'rdfs') 
     {
         if ($this->isModelAvailable($graphIri, false)) {
             require_once 'Erfurt/Exception.php';
@@ -663,6 +646,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         return $model;
     }
+    */
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function getSupportedExportFormats()
@@ -736,12 +720,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function isModelAvailable($graphIri, $useAc = true) 
+    public function isModelAvailable($graphIri) 
     {
         if (is_string($graphIri)) {
-            // check if graph exists in database
-            return $this->sparqlAsk('ASK WHERE {GRAPH <' . $graphIri . '> {?s ?p ?o.}}');
+            return array_key_exists($graphIri, $this->getAvailableModels());
         }
+        
         return false;
     }
     

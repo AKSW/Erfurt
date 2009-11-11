@@ -102,6 +102,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             else if ($this->_users[$this->_username]['userUri'] === false) {
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Unknown user identifier.'));
             } else {
+                
                 // verify the password
                 if (!$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 'sha1') 
                         && !$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 
@@ -121,7 +122,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
         }
         
         //Erfurt_App::getInstance()->getAc()->init();
-    
         return $authResult;
     }
     
@@ -155,6 +155,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
         $sparqlQuery->setWherePart($wherePart);
         
         if ($result = $this->_sparql($sparqlQuery)) {
+            
             foreach ($result as $userStatement) {
                 // set user URI
                 if (($returnVal['userUri']) === false) {
