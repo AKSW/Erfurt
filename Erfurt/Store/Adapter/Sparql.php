@@ -59,6 +59,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     }
     
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        
+    }
+    
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
 
@@ -105,12 +110,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             return false;
         }
     }
-    
-    public function getNewModel($graphUri, $baseUri = '', $type = 'owl')
-    {
         
-    }
-    
     public function getSupportedExportFormats()
     {
         return array();
@@ -214,8 +214,9 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         }
         
         $result = array();
-        $xmlDoc = @DOMDocument::loadXML($sparqlXmlResults);
-        
+        $xmlDoc = new DOMDocument();
+        $xmlDoc->loadXML($sparqlXmlResults);
+
         if ($xmlDoc === false) {
             return array(
                 'head'     => array(),
@@ -234,35 +235,47 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             
             $result['head']['vars'][] = $varElem->attributes->getNamedItem('name')->value;
         }
-        
+
         $result['bindings'] = array();
         $resultElems = $xmlDoc->getElementsByTagName('result');
         foreach ($resultElems as $resultElem) {
             $row = array();
-            
+
             $childNodes = $resultElem->childNodes;
             foreach ($childNodes as $node) {
+                if (!$node instanceof DOMNode) {
+                    continue;
+                }
+
                 if ($node->nodeName === 'binding') {
                     $var = $node->attributes->getNamedItem('name')->value;
                     
-                    $valueType = $node->childNodes->item(1)->nodeName;
-                    if ($valueType === 'uri' || $valueType === 'bnode') {
-                        $type = $valueType;
-                        $val  = $node->childNodes->item(1)->nodeValue;
-                    } else {
-                        if (null !== $node->childNodes->item(1)->attributes->getNamedItem('datatype')) {
-                            $type = 'typed-literal';
-                            $dt = $node->childNodes->item(1)->attributes->getNamedItem('datatype')->nodeValue;
+                    $valueNodes = $node->childNodes;
+                    foreach ($valueNodes as $vn) {
+                        if (!$vn instanceof DOMNode) {
+                            continue;
+                        }
+                        
+                        $valueType = $vn->nodeName;
+                        if ($valueType === 'uri' || $valueType === 'bnode') {
+                            $type = $valueType;
+                            $val  = $vn->nodeValue;
                         } else {
-                            $type = 'literal';
+                            if (null !== $vn->attributes->getNamedItem('datatype')) {
+                                $type = 'typed-literal';
+                                $dt = $vn->attributes->getNamedItem('datatype')->nodeValue;
+                            } else {
+                                $type = 'literal';
+                            }
+
+                            if (null !== $vn->attributes->getNamedItem('xml:lang')) {
+                                $lang = $vn->attributes->getNamedItem('xml:lang')->nodeValue;
+                            }
+
+                            $val = $vn->nodeValue;
                         }
                         
-                        if (null !== $node->childNodes->item(1)->attributes->getNamedItem('xml:lang')) {
-                            $lang = $node->childNodes->item(1)->attributes->getNamedItem('xml:lang')->nodeValue;
-                        }
-                        
-                        $val = $node->childNodes->item(1)->nodeValue;
-                        
+                        break;
                     }
                     
                     $row[$var] = array(
@@ -281,7 +294,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             
             $result['bindings'][] = $row;
         }
-        
+
         return $result;
     }
 }
