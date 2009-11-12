@@ -234,6 +234,11 @@ class Erfurt_Store
      */
     public function addMultipleStatements($graphUri, array $statementsArray, $useAc = true)
     {
+        if (defined('_EFDEBUG')) {
+            $logger = Erfurt_App::getInstance()->getLog();
+            $logger->info('Store: adding multiple statements: ' . print_r($statementsArray, true));
+        }
+        
         // check whether model is available
         if (!$this->isModelAvailable($graphUri, $useAc)) {
             require_once 'Erfurt/Store/Exception.php';
@@ -845,10 +850,10 @@ class Erfurt_Store
             $owlQuery = new Erfurt_Sparql_SimpleQuery();
             $owlQuery->setProloguePart('ASK')
                      ->setWherePart('GRAPH <' . $modelIri . '> 
-                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_NS . 'Ontology>.}');
+                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
             
             // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, $modelIri)) {
+            if ($this->sparqlAsk($owlQuery, $modelIri, $useAc)) {
                 // instantiate OWL model
                 require_once 'Erfurt/Owl/Model.php';
                 $modelInstance = new Erfurt_Owl_Model($modelIri);
@@ -897,13 +902,11 @@ class Erfurt_Store
         if ($this->isModelAvailable($modelIri, false)) {            
             // if debug mode is enabled create a more detailed exception description. If debug mode is disabled the
             // user should not know why this fails.
-            if (defined('_EFDEBUG')) {
-                require_once 'Erfurt/Store/Exception.php';
-                throw new Erfurt_Store_Exception("Failed creating the model. A model with the same URI already exists!");
-            } else {
-                require_once 'Erfurt/Store/Exception.php';
-                throw new Erfurt_Store_Exception('Failed creating the model.');
-            }
+            require_once 'Erfurt/Store/Exception.php';
+            $message = defined('_EFDEBUG') 
+                     ? 'Failed creating the model. Reason: A model with the same URI already exists.' 
+                     : 'Failed creating the model.';
+            throw new Erfurt_Store_Exception($message);
         }
         
         // check action access
@@ -916,7 +919,10 @@ class Erfurt_Store
             $this->_backendAdapter->createModel($modelIri, $type);
         } catch (Erfurt_Store_Adapter_Exception $e) {
             require_once 'Erfurt/Store/Exception.php';
-            throw new Erfurt_Store_Exception('Failed creating the model.');
+            $message = defined('_EFDEBUG') 
+                     ? "Failed creating the model. \nReason: {$e->getMessage()}." 
+                     : 'Failed creating the model.';
+            throw new Erfurt_Store_Exception($message);
         }
         
         // everything ok, create new model
@@ -1212,8 +1218,8 @@ class Erfurt_Store
      */
     public function sparqlQuery($queryObject, $options = array())
     {
-        if ($queryObject instanceof Erfurt_Sparql_Query2)
-            Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
+        // if ($queryObject instanceof Erfurt_Sparql_Query2)
+        //     Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
         
         self::$_queryCount++;
         
