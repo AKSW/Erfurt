@@ -94,6 +94,7 @@ class Erfurt_Sparql_Parser
     public static function tokenize($queryString) 
     {
         $inTelUri = false;
+        $inUri = false;
         
         $queryString = trim($queryString);
 
@@ -127,7 +128,7 @@ class Erfurt_Sparql_Parser
                 }
                 
                 continue;
-            } else if (in_array($queryString[$i], $specialChars) && !$inTelUri) {
+            } else if (in_array($queryString[$i], $specialChars) && !$inTelUri && !$inUri) {
                 if ($queryString[$i] === '"' || $queryString[$i] === "'") {
                     $foundChar = $queryString[$i];
                     if (!$inLiteral) {
@@ -215,8 +216,10 @@ class Erfurt_Sparql_Parser
                 // If yes, we need to start a new token.
                 if ((substr($tokens[$n], 0, 1) === '<') && ($queryString[$i] === '>')) {
                     $tokens[$n++] .= $queryString[$i];
+                    $inUri = false;
                     continue;
                 } else if ($queryString[$i] === '<') {
+                    $inUri = true;
                     if ($tokens[$n] === '') {
                         $tokens[$n] = '<';
                         continue;
@@ -1240,6 +1243,7 @@ class Erfurt_Sparql_Parser
                 }
             }
             if (substr($node, -1) != '>') {
+var_dump($this->_tokens);exit;
                 require_once 'Erfurt/Sparql/ParserException.php';
                 throw new Erfurt_Sparql_ParserException('Unclosed IRI: ' . $node, -1, key($this->_tokens));
             }

@@ -130,6 +130,14 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         return $fullCount;
     }
     
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        $this->_availableGraphs = null;
+        $this->_configuredGraphs[$graphUri] = self::DEFAULT_BACKEND;
+        
+        return $this->_backends[self::DEFAULT_BACKEND]->createModel($graphUri, $type);
+    }
+    
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $backend = $this->_getBackend($graphUri);
@@ -204,14 +212,6 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         } else {
             return false;
         }
-    }
-    
-    public function getNewModel($graphUri, $baseUri = '', $type = 'owl')
-    {
-        $this->_availableGraphs = null;
-        $this->_configuredGraphs[$graphUri] = self::DEFAULT_BACKEND;
-        
-        return $this->_backends[self::DEFAULT_BACKEND]->getNewModel($graphUri, $baseUri, $type);
     }
     
     public function getSupportedExportFormats()
