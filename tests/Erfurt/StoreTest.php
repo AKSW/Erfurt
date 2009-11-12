@@ -187,6 +187,18 @@ class Erfurt_StoreTest extends Erfurt_TestCase
             // Nothing to do here...
         }
     }
+    
+    public function testSparqlQueryWithSpecialCharUriIssue579()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        $sparql = "SELECT ?p ?o WHERE { <http://umg.kurtisrandom.com/resource/genre-Children's> ?p ?o . }";
+        $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($sparql);
+        $result = $store->sparqlQuery($simpleQuery);
+        $this->assertTrue(is_array($result));
+    }
 }
 
 

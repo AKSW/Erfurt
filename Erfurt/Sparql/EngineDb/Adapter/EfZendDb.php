@@ -218,7 +218,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      * Format depends on $resultform parameter.
      */
     public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') 
-    {
+    {   
         $this->query = $query;
 
         require_once 'Erfurt/Sparql/EngineDb/QuerySimplifier.php';
