@@ -300,7 +300,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
          
         $sqlQuery .= implode(',', $insertArray);
-
+        
+        if (defined('_EFDEBUG')) {
+            $logger = Erfurt_App::getInstance()->getLog();
+            $logger->info('ZendDb multiple statements added: ' . $counter);
+        }
+        
         if ($counter > 0) {
             $this->sqlQuery($sqlQuery);
         }
@@ -540,9 +545,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $whereString .= 'AND ot = 1 ';
                         } else {
                             $whereString .= 'AND ot = 2 ';
-                            $whereString .= isset($object['lang']) ? 'AND ol = "' . $object['lang'] . '" ' : '';
-                            $whereString .= isset($object['datatype']) ? 'AND od = "' . $object['datatype'] . 
-                                            '" ' : '';
+                            $whereString .= isset($object['lang']) ? 'AND ol = \'' . $object['lang'] . '\' ' : '';
+                            $whereString .= isset($object['datatype']) ? 'AND od = \'' . $object['datatype'] . 
+                                            '\' ' : '';
                         }
                         
                         if (strlen((string)$subject) > $this->_getSchemaRefThreshold()) {
@@ -561,9 +566,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         }
                         
 
-                        $whereString .= 'AND s = "' . $subject . '" ';
-                        $whereString .= 'AND p = "' . $predicate . '" ';
-                        $whereString .= 'AND o = "' . str_replace('"', '\"', $object) . '" ';
+                        $whereString .= 'AND s = \'' . $subject . '\' ';
+                        $whereString .= 'AND p = \'' . $predicate . '\' ';
+                        $whereString .= 'AND o = \'' . str_replace('\'', '\\\'', $object) . '\' ';
 
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
