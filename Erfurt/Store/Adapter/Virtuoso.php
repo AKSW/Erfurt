@@ -220,6 +220,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
             }';
         
+        if (defined('_EFDEBUG')) {
+            $log = Erfurt_App::getInstance()->getLog();
+            $log->debug('Add statement query: ' . PHP_EOL . $insertSparql);
+        }
+        
         return $this->_execSparql($insertSparql);
     }
     
@@ -330,7 +335,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
         // create empty graph
-        $createQuery = "CREATE GRAPH <$graphUri>";
+        $createQuery = "CREATE SILENT GRAPH <$graphUri>";
         $this->_execSparql($createQuery);
         $this->_models = null;
         
@@ -340,6 +345,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_ONTOLOGY);
             $this->_execSparql($owlInsert);
         }
+        
+        $this->_models = null;
         
         return true;
     }
@@ -415,13 +422,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteModel($graphIri) 
     {
+        $result = $this->_execSparql('DROP SILENT GRAPH <' . $graphIri . '>');
         $this->_models = null;
         
-        return $this->_execSparql('DROP GRAPH <' . $graphIri . '>');
-        #return $this->_execSparql("
-        #    DELETE FROM GRAPH <$graphIri> {?s ?p ?o.}
-        #        WHERE {GRAPH <$graphIri> {?s ?p ?o.}}
-        #");
+        return $result;
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
@@ -506,19 +510,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     
     /** @see Erfurt_Store_Adapter_Interface */
     public function getAvailableModels()
-    {        
+    {
         if (null === $this->_models) {
-            $models = array();
+            $this->_models = array();
+            $graphSql = 'SELECT ID_TO_IRI(REC_GRAPH_IID) FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH';
+            $resultId = $this->_execSql($graphSql);
             
-            $result = $this->_odbcResultToArray(
-                $this->_execSql('select ID_TO_IRI(REC_GRAPH_IID) as g from DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH')
-            );
-           
-            foreach ($result as $row) {
-                $uri = $row['g'];
-                $models[$uri] = true;
+            while (odbc_fetch_row($resultId)) {
+                $graph = odbc_result($resultId, 1);
+                
+                if (!array_key_exists($graph, $this->_models)) {
+                    $this->_models[$graph] = array('modelIri' => $graph);
+                }
             }
-            $this->_models = $models;       
         }
         
         return $this->_models;
@@ -722,11 +726,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function isModelAvailable($graphIri) 
     {
-        if (is_string($graphIri)) {
-            return array_key_exists($graphIri, $this->getAvailableModels());
-        }
-        
-        return false;
+        return array_key_exists((string)$graphIri, $this->getAvailableModels());
     }
     
     /** @see Erfurt_Store_Sql_Interface */
