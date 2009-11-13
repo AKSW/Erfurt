@@ -1,4 +1,6 @@
 <?php
+require_once 'structural-Interfaces.php';
+
 /**
  * Erfurt_Sparql Query - Triple.
  * 
@@ -115,6 +117,38 @@ class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ObjectHelper impl
         }
         
         return $vars;
+    }
+
+    public function getWeight($part = null){
+        if($part == null){
+            return ($this->s instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) +
+            ($this->p instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) +
+            ($this->o instanceof Erfurt_Sparql_Query2_ObjectList ?
+                $this->o->getNumVars() :
+                ($this->o instanceof Erfurt_Sparql_Query2_Var ?
+                    1 :
+                    0
+                )
+            );
+        } else {
+            switch($part){
+                case 0:
+                    return ($this->s instanceof Erfurt_Sparql_Query2_Var ? 1 : 0);
+                    break;
+                case 1:
+                    return ($this->p instanceof Erfurt_Sparql_Query2_Var ? 1 : 0);
+                    break;
+                case 2:
+                    if($this->o instanceof Erfurt_Sparql_Query2_ObjectList){
+                        return $this->o->getNumVars();
+                    } else if($this->o instanceof Erfurt_Sparql_Query2_Var){
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                    break;
+            }
+        }
     }
 }
 ?>

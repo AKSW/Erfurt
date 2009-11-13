@@ -6,8 +6,11 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 {
     protected $elements = array();
 
-    public function __construct() {
+    public function __construct($elements = array()) {
         parent::__construct();
+        if(is_array($elements)){
+            $this->setElements($elements);
+        }
     }
 
 
@@ -30,7 +33,22 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
         return $this->elements;
     }
 
-    abstract public function getVars();
+    /**
+     * get all variables that are contained (recursive)
+     * @return array of Erfurt_Sparql_Query2_Var
+     */
+    public function getVars() {
+        $ret = array();
+        foreach($this->elements as $element){
+            if($element instanceof Erfurt_Sparql_Query2_Var){
+                $ret[] = $element;
+            } else if ($element instanceof Erfurt_Sparql_Query2_GroupHelper){
+                $ret = array_merge($ret, $element->getVars());
+            }
+        }
+        return $ret;
+    }
+
     //abstract public function setElement($i, $member); //not used because some use typehinting some do it internally
     abstract public function setElements($elements);
 

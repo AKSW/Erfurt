@@ -133,7 +133,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
                 'an instance of integer, instance of '.typeHelper($i).' given');
         }
         $this->elements[$i] = $member;
-        $member->newUser($this);
+        $member->addParent($this);
         return $this; //for chaining
     }
     
@@ -162,7 +162,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
                         'Erfurt_Sparql_Query2_Filter');
                     return $this; //for chaining
             } else {
-                $element->newUser($this);
+                $element->addParent($this);
             }
         }
         $this->elements = $elements;
@@ -193,6 +193,9 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
                         'Erfurt_Sparql_Query2_IF_TriplesSameSubject or '.
                         'Erfurt_Sparql_Query2_Filter');
                     return $this; //for chaining
+            } else {
+                //ok
+                $element->addParent($this);
             }
         }
         $this->elements = array_merge($this->elements, $elements);
@@ -203,6 +206,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
      * optimize
      * little demo of optimization: 
      * - delete duplicate elements
+     * - sort by weight (number of vars used)
      * @return Erfurt_Sparql_Query2_GroupGraphPattern $this
      */
     public function optimize() {
@@ -255,6 +259,9 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
         foreach ($to_remove as $obj) {
             $obj->remove();
         }
+
+        //sort triples by weight
+        usort($this->elements, Erfurt_Sparql_Query2_TriplesSameSubject::compareWeight);
         
         //optimization is done on this level - proceed on deeper level
         foreach ($this->elements as $element) {
@@ -265,16 +272,27 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
         
         return $this;
     }
-    
+
+    /**
+     * remove all elements that are an Erfurt_Sparql_Query2_OptionalGraphPattern (not recursive)
+     * @return Erfurt_Sparql_Query2_GroupGraphPattern $this
+     */
     public function removeAllOptionals() {
         foreach ($this->elements as $element) {
             if ($element instanceof Erfurt_Sparql_Query2_OptionalGraphPattern) {
                 $element->remove();
-            }
+            } 
         }
         return $this;
     }
-    
+
+    /**
+     * shortcut to instantiate a new triple and add it to the pattern
+     * @param Erfurt_Sparql_Query2_VarOrTerm $s
+     * @param Erfurt_Sparql_Query2_Verb $p
+     * @param Erfurt_Sparql_Query2_IF_ObjectList $o
+     * @return Erfurt_Sparql_Query2_Triple
+     */
     public function addTriple($s, $p, $o) {
         if (is_string($p)) $p = new Erfurt_Sparql_Query2_IriRef($p);
         
@@ -282,7 +300,12 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
         $this->addElement($triple);
         return $triple;
     }
-    
+
+    /**
+     * shortcut to instantiate a new filter with a given expressio nand add it to the pattern
+     * @param Erfurt_Sparql_Query2_Constraint $exp
+     * @return Erfurt_Sparql_Query2_Filter
+     */
     public function addFilter($exp) {
         $filter = new Erfurt_Sparql_Query2_Filter($exp);
         $this->addElement($filter);

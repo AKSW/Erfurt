@@ -54,12 +54,22 @@ class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_GroupHelper i
             }
         }
     }
-    
+
     public function getVars() {
         $ret = array();
         foreach ($this->elements as $element) {
             if ($element instanceof Erfurt_Sparql_Query2_Var)
                 $ret[] = $element;
+        }
+        return $ret;
+    }
+
+    //merge?
+    public function getNumVars() {
+        $ret = 0;
+        foreach ($this->elements as $element) {
+            if ($element instanceof Erfurt_Sparql_Query2_Var)
+                $ret++;
         }
         return $ret;
     }

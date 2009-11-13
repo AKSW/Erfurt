@@ -56,7 +56,7 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
         if (!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
             throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
         $this->elements[$i] = $element;
-        $element->newUser($this);
+        $element->addParent($this);
         return $this; //for chaining
     }
     

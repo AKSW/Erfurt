@@ -54,14 +54,33 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
         return $this->subject->getSparql().' '.$propList;
     }
     
-    //TODO not implemented yet
     /**
      * getVars
      * get all vars used in this pattern (recursive)
      * @return array array of Erfurt_Sparql_Query2_Var
      */
     public function getVars() {
-        return array();
+        $ret = array();
+
+        if ($this->subject instanceof Erfurt_Sparql_Query2_Var){
+            $ret[] = $this->subject;
+        }
+
+        foreach($this->propertyList as $prop){
+            if($prop['pred'] instanceof Erfurt_Sparql_Query2_Var) {
+                $ret[] = $prop['pred'];
+            }
+
+            if($prop['obj'] instanceof Erfurt_Sparql_Query2_ObjectList){
+                $ret = array_merge($ret, $prop['obj']->getVars());
+            } else {
+                if($prop['obj'] instanceof Erfurt_Sparql_Query2_Var){
+                    $ret[] = $prop['obj'];
+                }
+            }
+        }
+        
+        return $ret;
     }
     
     /**
@@ -79,6 +98,61 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
     public function getSubject() {
         return $this->subject;
     }
-    
+
+    public function getWeight($part = null){
+        if($part == null){
+            $i = 0;
+            foreach($this->propertyList as $prop){
+                $i += ($prop['pred'] instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) + $prop['obj']->getNumVars();
+            }
+            return ($this->subject instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) + $i;
+        } else {
+            switch($part){
+                case 0:
+                    return ($this->subject instanceof Erfurt_Sparql_Query2_Var ? 1 : 0);
+                    break;
+                case 1:
+                    $i = 0;
+                    foreach($this->propertyList as $prop){
+                        $i += $prop['pred'] instanceof Erfurt_Sparql_Query2_Var ? 1 : 0;
+                    }
+                    return $i;
+                case 2:
+                    $i = 0;
+                    foreach($this->propertyList as $prop){
+                        if($prop['obj'] instanceof Erfurt_Sparql_Query2_ObjectList){
+                            $i += $prop['obj']->getNumVars();
+                        } else if($prop['obj'] instanceof Erfurt_Sparql_Query2_Var){
+                            $i++;
+                        }
+                    }
+                    return $i;
+                    break;
+            }
+        }
+    }
+
+    public static function compareWeight($c1, $c2){
+        if (!($c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && $c2 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject)) {
+                return 0;
+        }
+
+        $res = $c1->getWeight() - $c2->getWeight();
+        switch ($res){
+            case $res == 0:
+                // go deeper 
+                
+                
+                break;
+            case $res < 0:
+                $ret = -1;
+                break;
+            case $res > 0:
+                $ret = 1;
+                break;
+        }
+
+        return $ret;
+    }
 }
 ?>

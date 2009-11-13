@@ -182,12 +182,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
             $sparql .= 'FROM '.$from->getSparql()." \n";
         }
         
-        if (
-            !(
-                $this->type == self::typeDescribe
-                && count($this->where->getElements()) == 0
-            )
-        ){
+        if ($this->type != self::typeDescribe){
             $sparql .= 'WHERE '.$this->where->getSparql();
         }
 
