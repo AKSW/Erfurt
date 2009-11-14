@@ -140,10 +140,13 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -162,10 +165,13 @@ class Erfurt_Versioning
 		$sql = 'SELECT useruri, resource, MAX(tstamp) FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
                 GROUP BY useruri, resource
-                ORDER BY 3 DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY 3 DESC';
 				
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
 
         return $result;
     }
@@ -218,10 +224,13 @@ class Erfurt_Versioning
                 model = \'' . $graphUri . '\' AND 
                 resource = \'' . $resourceUri . '\' AND
                 parent IS NULL
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -234,9 +243,13 @@ class Erfurt_Versioning
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND ( resource = \'' . implode ('\' OR resource = \'' ,$resources) . '\' )
                 AND parent IS NULL
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ( ( $page - 1) * $this->getLimit() );
-        $result = $this->_sqlQuery($sql);
+                ORDER BY tstamp DESC';
+        
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            ($page - 1) * $this->getLimit()
+        );
         
         return $result;
     } 
@@ -248,10 +261,13 @@ class Erfurt_Versioning
         $sql = 'SELECT id, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -266,10 +282,13 @@ class Erfurt_Versioning
         $sql = 'SELECT DISTINCT resource ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -694,15 +713,15 @@ class Erfurt_Versioning
         }        
     }
     
-    protected function _sqlQuery($sql)
+    protected function _sqlQuery($sql, $limit = PHP_INT_MAX, $offset = 0)
     {
         try {
-            $result = $this->_getStore()->sqlQuery($sql);
+            $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
         } catch (Erfurt_Exception $e) {
             $this->_checkSetup();
             
             try {
-                $result = $this->_getStore()->sqlQuery($sql);
+                $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Exception $e2) {
                 throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage() . $sql);
             }

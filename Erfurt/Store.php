@@ -818,7 +818,7 @@ class Erfurt_Store
             $systemSchemaUri = $this->getOption('schemaUri');
             
             // check whether requested model is one of the schema models
-            if (!$useAc && (($modelIri === $systemModelUri) || ($modelIri !== $systemSchemaUri))) {
+            if (!$useAc && (($modelIri === $systemModelUri) || ($modelIri === $systemSchemaUri))) {
                 try {
                     $this->checkSetup();
                 } catch (Erfurt_Store_Exception $e) {
@@ -849,11 +849,11 @@ class Erfurt_Store
             // use generic implementation
             $owlQuery = new Erfurt_Sparql_SimpleQuery();
             $owlQuery->setProloguePart('ASK')
-                     ->setWherePart('GRAPH <' . $modelIri . '> 
-                                    {<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+                     ->addFrom($modelIri)
+                     ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
             
             // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, $modelIri, $useAc)) {
+            if ($this->sparqlAsk($owlQuery, $useAc)) {
                 // instantiate OWL model
                 require_once 'Erfurt/Owl/Model.php';
                 $modelInstance = new Erfurt_Owl_Model($modelIri);
@@ -1099,7 +1099,7 @@ class Erfurt_Store
      * @return boolean Returns true if model exists and is available for the user ($useAc === true). 
      */ 
     public function isModelAvailable($modelIri, $useAc = true)
-    {
+    {        
         if ($this->_backendAdapter->isModelAvailable($modelIri) && $this->_checkAc($modelIri, 'view', $useAc)) {
             return true;
         }
@@ -1314,10 +1314,10 @@ class Erfurt_Store
      * @throws Erfurt_Store_Exception
      * @return array
      */
-    public function sqlQuery($sqlQuery)
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-            return $this->_backendAdapter->sqlQuery($sqlQuery);
+            return $this->_backendAdapter->sqlQuery($sqlQuery, $limit, $offset);
         }
         
         // TODO: will throw an exception
@@ -1341,45 +1341,45 @@ class Erfurt_Store
             $queryObject->setProloguePart('SELECT ?s ?p ?o');
             $queryObject->setFrom(array($sysOntModelUri));
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
-
-            $result = $this->sparqlQuery($queryObject, 
-                array(
-                    'use_ac' => false, 
-                    'result_format' => 'extended',
-                    'use_additional_imports' => false
-                )
+            
+            $queryoptions = array(
+                'use_ac'                 => false, 
+                'result_format'          => 'extended',
+                'use_additional_imports' => false
             );
-        
+            
             $stmtArray = array();
-            foreach ($result['bindings'] as $row) {
-                if (!isset($stmtArray[$row['s']['value']])) {
-                    $stmtArray[$row['s']['value']] = array();
+            if ($result = $this->sparqlQuery($queryObject, $queryoptions)) {                
+                foreach ($result['bindings'] as $row) {
+                    if (!isset($stmtArray[$row['s']['value']])) {
+                        $stmtArray[$row['s']['value']] = array();
+                    }
+
+                    if (!isset($stmtArray[$row['s']['value']][$row['p']['value']])) {
+                        $stmtArray[$row['s']['value']][$row['p']['value']] = array();
+                    }
+
+                    if ($row['o']['type'] === 'typed-literal') {
+                        $row['o']['type'] = 'literal';
+                    }
+
+                    if (isset($row['o']['xml:lang'])) {
+                        $row['o']['lang'] = $row['o']['xml:lang'];
+                        unset($row['o']['xml:lang']);
+                    }
+
+                    $stmtArray[$row['s']['value']][$row['p']['value']][] = $row['o'];
                 }
-                
-                if (!isset($stmtArray[$row['s']['value']][$row['p']['value']])) {
-                    $stmtArray[$row['s']['value']][$row['p']['value']] = array();
-                }
-                
-                if ($row['o']['type'] === 'typed-literal') {
-                    $row['o']['type'] = 'literal';
-                }
-                
-                if (isset($row['o']['xml:lang'])) {
-                    $row['o']['lang'] = $row['o']['xml:lang'];
-                    unset($row['o']['xml:lang']);
-                }
-                
-                $stmtArray[$row['s']['value']][$row['p']['value']][] = $row['o'];
             }
             
-            $this->_graphConfigurations = $stmtArray;    
+            $this->_graphConfigurations = $stmtArray;
         }
         
         if (isset($this->_graphConfigurations[$graphUri])) {
             return $this->_graphConfigurations[$graphUri];
-        } else {
-            return array();
         }
+        
+        return array();
     }
     
     // ------------------------------------------------------------------------

@@ -1084,9 +1084,15 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Sql_Interface */
-    public function sqlQuery($sqlQuery)
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         $start = microtime(true);
+        
+        // add limit/offset
+        if ($limit < PHP_INT_MAX) {
+            $sqlQuery = sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
+        }
+        
         $queryType = strtolower(substr($sqlQuery, 0, 6));
         if ( $queryType  === 'insert' ||  
              $queryType  === 'update' ||

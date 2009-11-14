@@ -456,10 +456,10 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         return $defaultBackend->listTables($prefix);
     }
     
-    public function sqlQuery($sqlQuery)
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
-        return $defaultBackend->sqlQuery($sqlQuery);
+        return $defaultBackend->sqlQuery($sqlQuery, $limit, $offset);
     }
     
     
