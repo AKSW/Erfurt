@@ -56,6 +56,8 @@ interface Erfurt_Store_Adapter_Interface
      * @param array $options
      * 
      * @throws Erfurt_Exception
+     *
+     * @return int The number of statements deleted
      */
 	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array());
 	
@@ -127,7 +129,9 @@ interface Erfurt_Store_Adapter_Interface
 	 *        - 'n3' or 'nt'
 	 * @param boolean $stream Denotes whether $data contains the actual data.
 	 * 
-	 * @throws Erfurt_Exception 
+	 * @throws Erfurt_Exception
+	 *
+	 * @return boolean On success
 	 */
 	public function importRdf($modelIri, $data, $type, $locator);
 	
