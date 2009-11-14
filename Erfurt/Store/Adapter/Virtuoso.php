@@ -855,51 +855,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Sql_Interface */
-    public function sqlQuery($sqlQuery)
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $selectAdd = '';
-        
-        $parts = array(
-            'limit' => '', 
-            'offset' => ''
-        );
-        
-        $tokens = array(
-            'limit'  => '/LIMIT\s+(\d+)/i', 
-            'offset' => '/OFFSET\s+(\d+)/i'
-        );
-        
-        foreach ($tokens as $key => $pattern) {
-            preg_match_all($pattern, $sqlQuery, $parts[$key]);
+        // replacings needed?
+        if ($limit < PHP_INT_MAX) {
+            $selectRegex   = '/SELECT(\s+DISTINCT)?/i';
+            $selectReplace = sprintf('$0 TOP %d, %d', (int)$offset, (int)$limit);
+            $sqlQuery      = preg_replace($selectRegex, $selectReplace, (string)$sqlQuery);
         }
         
-        if (isset($parts['limit'][1][0])) {
-            $selectAdd = 'TOP ' . $parts['limit'][1][0];
-            
-            if (isset($parts['offset'][1][0]) && ((int) $parts['offset'][1][0] > 0)) {
-                $selectAdd = 'TOP ' . $parts['offset'][1][0] . ' , ' . $parts['limit'][1][0];
-            }
-        }
-        
-        $replacings = array(
-            '/LIMIT\s+(\d+)/i'  => '', 
-            '/OFFSET\s+(\d+)/i' => ''
-        );
-
-        // Need to distinguish between SELECT and SELECT DISTINCT for LIMIT-OFFSET conversion
-        if ( preg_match('/DISTINCT/i',$sqlQuery) ) {
-            $replacings['/SELECT\s+DISTINCT/i'] = 'SELECT DISTINCT ' . $selectAdd;
-        } else {
-            $replacings['/SELECT/i'] = 'SELECT ' . $selectAdd;
-        }
-
-        $sqlQuery = preg_replace(array_keys($replacings), array_values($replacings), $sqlQuery);
         $resultArray = array();
-        
-        if ($result = $this->_execSql($sqlQuery)) {
+        if ($result = $this->_execSql((string)$sqlQuery)) {
             $resultArray = $this->_odbcResultToArray($result);
         }
-
+        
         return $resultArray;
     }
     
