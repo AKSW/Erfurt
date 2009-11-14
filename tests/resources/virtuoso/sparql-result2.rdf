@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rs="http://www.w3.org/2005/sparql-results#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <rs:results rdf:nodeID="rset">
+        <rs:result rdf:nodeID="sol53471">
+            <rs:binding rdf:nodeID="sol53471-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Cordoba"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53471-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53471-2" rs:name="o">
+                <rs:value xml:lang="es">Córdoba</rs:value>
+            </rs:binding>
+        </rs:result>
+    </rs:results>
+</rdf:RDF>

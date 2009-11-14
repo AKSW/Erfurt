@@ -1,0 +1,1600 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rs="http://www.w3.org/2005/sparql-results#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <rs:results rdf:nodeID="rset">
+        <rs:result rdf:nodeID="sol193">
+            <rs:binding rdf:nodeID="sol193-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol193-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol193-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol649">
+            <rs:binding rdf:nodeID="sol649-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol649-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol649-2" rs:name="o">
+                <rs:value xml:lang="en">label</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol1065">
+            <rs:binding rdf:nodeID="sol1065-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1065-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1065-2" rs:name="o">
+                <rs:value xml:lang="de">Bezeichner</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol1490">
+            <rs:binding rdf:nodeID="sol1490-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1490-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1490-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol1952">
+            <rs:binding rdf:nodeID="sol1952-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1952-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol1952-2" rs:name="o">
+                <rs:value xml:lang="en">comment</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol2376">
+            <rs:binding rdf:nodeID="sol2376-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol2376-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol2376-2" rs:name="o">
+                <rs:value xml:lang="de">Kommentar</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol2802">
+            <rs:binding rdf:nodeID="sol2802-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol2802-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol2802-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol3241">
+            <rs:binding rdf:nodeID="sol3241-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol3241-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol3241-2" rs:name="o">
+                <rs:value>Philosopher's Ontology</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol3657">
+            <rs:binding rdf:nodeID="sol3657-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol3657-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol3657-2" rs:name="o">
+                <rs:value>AKSW demo knowledge base about philosophers. It demonstrates various OntoWiki features such as arbitrary object hierarchies, geoinformation reasoning, semantic plug-ins adn blank node usage.</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol4239">
+            <rs:binding rdf:nodeID="sol4239-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol4239-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#versionInfo"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol4239-2" rs:name="o">
+                <rs:value>$Id$</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol4632">
+            <rs:binding rdf:nodeID="sol4632-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol4632-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol4632-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol5079">
+            <rs:binding rdf:nodeID="sol5079-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5079-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5079-2" rs:name="o">
+                <rs:value xml:lang="en">Philisopher</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol5505">
+            <rs:binding rdf:nodeID="sol5505-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5505-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5505-2" rs:name="o">
+                <rs:value xml:lang="de">Philisoph</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol5929">
+            <rs:binding rdf:nodeID="sol5929-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5929-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol5929-2" rs:name="o">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol6373">
+            <rs:binding rdf:nodeID="sol6373-0" rs:name="s">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol6373-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol6373-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol6810">
+            <rs:binding rdf:nodeID="sol6810-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/GreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol6810-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol6810-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol7262">
+            <rs:binding rdf:nodeID="sol7262-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/GreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol7262-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol7262-2" rs:name="o">
+                <rs:value xml:lang="en">Greek Philosopher</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol7699">
+            <rs:binding rdf:nodeID="sol7699-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/GreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol7699-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol7699-2" rs:name="o">
+                <rs:value xml:lang="de">Griechischer Philisoph</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol8141">
+            <rs:binding rdf:nodeID="sol8141-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/GreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol8141-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol8141-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol8600">
+            <rs:binding rdf:nodeID="sol8600-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol8600-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol8600-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol9061">
+            <rs:binding rdf:nodeID="sol9061-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9061-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9061-2" rs:name="o">
+                <rs:value xml:lang="en">Classical Greek Philosopher</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol9517">
+            <rs:binding rdf:nodeID="sol9517-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9517-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9517-2" rs:name="o">
+                <rs:value xml:lang="de">Klassischer Griechischer Philisoph</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol9980">
+            <rs:binding rdf:nodeID="sol9980-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9980-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol9980-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/GreekPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol10453">
+            <rs:binding rdf:nodeID="sol10453-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MuslimPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol10453-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol10453-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol10910">
+            <rs:binding rdf:nodeID="sol10910-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MuslimPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol10910-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol10910-2" rs:name="o">
+                <rs:value xml:lang="en">Muslim Philosopher</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol11353">
+            <rs:binding rdf:nodeID="sol11353-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MuslimPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol11353-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol11353-2" rs:name="o">
+                <rs:value xml:lang="de">Muslimischer Philisoph</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol11800">
+            <rs:binding rdf:nodeID="sol11800-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MuslimPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol11800-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol11800-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol12264">
+            <rs:binding rdf:nodeID="sol12264-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MediaevalPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol12264-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol12264-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol12724">
+            <rs:binding rdf:nodeID="sol12724-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MediaevalPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol12724-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol12724-2" rs:name="o">
+                <rs:value xml:lang="en">Mediaeval Philosopher</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol13173">
+            <rs:binding rdf:nodeID="sol13173-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MediaevalPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol13173-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol13173-2" rs:name="o">
+                <rs:value xml:lang="de">Mittelalterlicher Philisoph</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol13628">
+            <rs:binding rdf:nodeID="sol13628-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MediaevalPhilosopher"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol13628-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol13628-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol14095">
+            <rs:binding rdf:nodeID="sol14095-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14095-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14095-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol14543">
+            <rs:binding rdf:nodeID="sol14543-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14543-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14543-2" rs:name="o">
+                <rs:value xml:lang="en">Location</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol14967">
+            <rs:binding rdf:nodeID="sol14967-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14967-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol14967-2" rs:name="o">
+                <rs:value xml:lang="de">Ort</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol15386">
+            <rs:binding rdf:nodeID="sol15386-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol15386-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol15386-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol15851">
+            <rs:binding rdf:nodeID="sol15851-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol15851-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol15851-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol16312">
+            <rs:binding rdf:nodeID="sol16312-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Town"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol16312-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol16312-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol16756">
+            <rs:binding rdf:nodeID="sol16756-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Town"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol16756-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol16756-2" rs:name="o">
+                <rs:value xml:lang="en">Ton</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol17171">
+            <rs:binding rdf:nodeID="sol17171-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Town"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol17171-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol17171-2" rs:name="o">
+                <rs:value xml:lang="de">Stadt</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol17588">
+            <rs:binding rdf:nodeID="sol17588-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Town"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol17588-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol17588-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol18036">
+            <rs:binding rdf:nodeID="sol18036-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Street"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18036-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18036-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol18482">
+            <rs:binding rdf:nodeID="sol18482-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Street"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18482-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18482-2" rs:name="o">
+                <rs:value xml:lang="en">Street</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol18902">
+            <rs:binding rdf:nodeID="sol18902-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Street"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18902-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol18902-2" rs:name="o">
+                <rs:value xml:lang="de">Straße</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol19325">
+            <rs:binding rdf:nodeID="sol19325-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Street"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol19325-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol19325-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Town"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol19771">
+            <rs:binding rdf:nodeID="sol19771-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/StreetNumber"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol19771-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol19771-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol20223">
+            <rs:binding rdf:nodeID="sol20223-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/StreetNumber"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol20223-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol20223-2" rs:name="o">
+                <rs:value xml:lang="en">Street number</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol20656">
+            <rs:binding rdf:nodeID="sol20656-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/StreetNumber"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol20656-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol20656-2" rs:name="o">
+                <rs:value xml:lang="de">Hausnummer</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol21086">
+            <rs:binding rdf:nodeID="sol21086-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/StreetNumber"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol21086-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol21086-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Street"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol21540">
+            <rs:binding rdf:nodeID="sol21540-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol21540-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol21540-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol22001">
+            <rs:binding rdf:nodeID="sol22001-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22001-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22001-2" rs:name="o">
+                <rs:value xml:lang="en">was influenced by</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol22438">
+            <rs:binding rdf:nodeID="sol22438-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22438-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22438-2" rs:name="o">
+                <rs:value xml:lang="de">wurde beeinflusst durch</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol22881">
+            <rs:binding rdf:nodeID="sol22881-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22881-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol22881-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol23336">
+            <rs:binding rdf:nodeID="sol23336-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol23336-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol23336-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Philosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol23790">
+            <rs:binding rdf:nodeID="sol23790-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol23790-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol23790-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol24247">
+            <rs:binding rdf:nodeID="sol24247-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol24247-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol24247-2" rs:name="o">
+                <rs:value xml:lang="en">was taught by</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol24676">
+            <rs:binding rdf:nodeID="sol24676-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol24676-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol24676-2" rs:name="o">
+                <rs:value xml:lang="de">wurde gelehrt von</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol25109">
+            <rs:binding rdf:nodeID="sol25109-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25109-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#subPropertyOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25109-2" rs:name="o">
+                <rs:value rdf:nodeID="b10035"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol25522">
+            <rs:binding rdf:nodeID="sol25522-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25522-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25522-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol25977">
+            <rs:binding rdf:nodeID="sol25977-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25977-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol25977-2" rs:name="o">
+                <rs:value xml:lang="en">was born in</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol26402">
+            <rs:binding rdf:nodeID="sol26402-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol26402-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol26402-2" rs:name="o">
+                <rs:value xml:lang="de">wurde geboren in</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol26832">
+            <rs:binding rdf:nodeID="sol26832-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol26832-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol26832-2" rs:name="o">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol27271">
+            <rs:binding rdf:nodeID="sol27271-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol27271-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol27271-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol27716">
+            <rs:binding rdf:nodeID="sol27716-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol27716-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol27716-2" rs:name="o">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/based_near"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol28166">
+            <rs:binding rdf:nodeID="sol28166-0" rs:name="s">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol28166-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol28166-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol28619">
+            <rs:binding rdf:nodeID="sol28619-0" rs:name="s">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol28619-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol28619-2" rs:name="o">
+                <rs:value xml:lang="en">depiction</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol29040">
+            <rs:binding rdf:nodeID="sol29040-0" rs:name="s">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29040-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29040-2" rs:name="o">
+                <rs:value xml:lang="de">Abbildung</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol29461">
+            <rs:binding rdf:nodeID="sol29461-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29461-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29461-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol29923">
+            <rs:binding rdf:nodeID="sol29923-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29923-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol29923-2" rs:name="o">
+                <rs:value xml:lang="en">year of birth</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol30355">
+            <rs:binding rdf:nodeID="sol30355-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol30355-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol30355-2" rs:name="o">
+                <rs:value xml:lang="de">Geburtsjahr</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol30785">
+            <rs:binding rdf:nodeID="sol30785-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol30785-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol30785-2" rs:name="o">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol31229">
+            <rs:binding rdf:nodeID="sol31229-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol31229-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol31229-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2001/XMLSchema#year"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol31677">
+            <rs:binding rdf:nodeID="sol31677-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol31677-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol31677-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol32139">
+            <rs:binding rdf:nodeID="sol32139-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32139-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32139-2" rs:name="o">
+                <rs:value xml:lang="en">year of death</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol32571">
+            <rs:binding rdf:nodeID="sol32571-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32571-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32571-2" rs:name="o">
+                <rs:value xml:lang="de">Todesjahr</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol32999">
+            <rs:binding rdf:nodeID="sol32999-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32999-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol32999-2" rs:name="o">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol33443">
+            <rs:binding rdf:nodeID="sol33443-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol33443-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol33443-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2001/XMLSchema#year"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol33891">
+            <rs:binding rdf:nodeID="sol33891-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol33891-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol33891-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol34354">
+            <rs:binding rdf:nodeID="sol34354-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol34354-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol34354-2" rs:name="o">
+                <rs:value>latitude</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol34768">
+            <rs:binding rdf:nodeID="sol34768-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol34768-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol34768-2" rs:name="o">
+                <rs:value xml:lang="en">latitude</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol35196">
+            <rs:binding rdf:nodeID="sol35196-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol35196-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol35196-2" rs:name="o">
+                <rs:value xml:lang="de">Geografische Breite</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol35635">
+            <rs:binding rdf:nodeID="sol35635-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol35635-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol35635-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol36087">
+            <rs:binding rdf:nodeID="sol36087-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol36087-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol36087-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol36537">
+            <rs:binding rdf:nodeID="sol36537-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol36537-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol36537-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol37001">
+            <rs:binding rdf:nodeID="sol37001-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37001-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37001-2" rs:name="o">
+                <rs:value>longitude</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol37417">
+            <rs:binding rdf:nodeID="sol37417-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37417-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37417-2" rs:name="o">
+                <rs:value xml:lang="en">latitude</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol37846">
+            <rs:binding rdf:nodeID="sol37846-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37846-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol37846-2" rs:name="o">
+                <rs:value xml:lang="de">Geografische Länge</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol38288">
+            <rs:binding rdf:nodeID="sol38288-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol38288-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol38288-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol38741">
+            <rs:binding rdf:nodeID="sol38741-0" rs:name="s">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol38741-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol38741-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol39192">
+            <rs:binding rdf:nodeID="sol39192-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol39192-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol39192-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol39661">
+            <rs:binding rdf:nodeID="sol39661-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol39661-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol39661-2" rs:name="o">
+                <rs:value xml:lang="en">Socrates</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol40085">
+            <rs:binding rdf:nodeID="sol40085-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40085-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40085-2" rs:name="o">
+                <rs:value xml:lang="de">Sokrates</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol40504">
+            <rs:binding rdf:nodeID="sol40504-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40504-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40504-2" rs:name="o">
+                <rs:value rdf:resource="http://upload.wikimedia.org/wikipedia/commons/a/a4/Socrates_Louvre.jpg"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol40975">
+            <rs:binding rdf:nodeID="sol40975-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40975-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol40975-2" rs:name="o">
+                <rs:value>-470</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol41381">
+            <rs:binding rdf:nodeID="sol41381-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol41381-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol41381-2" rs:name="o">
+                <rs:value>-399</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol41787">
+            <rs:binding rdf:nodeID="sol41787-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol41787-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol41787-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol42253">
+            <rs:binding rdf:nodeID="sol42253-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol42253-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol42253-2" rs:name="o">
+                <rs:value xml:lang="en">Plato</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol42671">
+            <rs:binding rdf:nodeID="sol42671-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol42671-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol42671-2" rs:name="o">
+                <rs:value xml:lang="de">Platon</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol43085">
+            <rs:binding rdf:nodeID="sol43085-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43085-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43085-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol43526">
+            <rs:binding rdf:nodeID="sol43526-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43526-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43526-2" rs:name="o">
+                <rs:value rdf:resource="http://upload.wikimedia.org/wikipedia/en/d/dc/Platon-2b.jpg"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol43983">
+            <rs:binding rdf:nodeID="sol43983-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43983-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol43983-2" rs:name="o">
+                <rs:value>-423</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol44386">
+            <rs:binding rdf:nodeID="sol44386-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol44386-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol44386-2" rs:name="o">
+                <rs:value>-347</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol44789">
+            <rs:binding rdf:nodeID="sol44789-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol44789-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol44789-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ClassicalGreekPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol45259">
+            <rs:binding rdf:nodeID="sol45259-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol45259-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol45259-2" rs:name="o">
+                <rs:value xml:lang="en">Aristotle</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol45685">
+            <rs:binding rdf:nodeID="sol45685-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol45685-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol45685-2" rs:name="o">
+                <rs:value xml:lang="de">Aristoteles</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol46108">
+            <rs:binding rdf:nodeID="sol46108-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46108-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46108-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Socrates"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol46557">
+            <rs:binding rdf:nodeID="sol46557-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46557-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/taughtBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46557-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Plato"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol46999">
+            <rs:binding rdf:nodeID="sol46999-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46999-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol46999-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Stageira"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol47442">
+            <rs:binding rdf:nodeID="sol47442-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol47442-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol47442-2" rs:name="o">
+                <rs:value rdf:resource="http://upload.wikimedia.org/wikipedia/commons/a/a4/Aristoteles_Louvre.jpg"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol47917">
+            <rs:binding rdf:nodeID="sol47917-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol47917-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol47917-2" rs:name="o">
+                <rs:value>-384</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol48324">
+            <rs:binding rdf:nodeID="sol48324-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol48324-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol48324-2" rs:name="o">
+                <rs:value>-322</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol48731">
+            <rs:binding rdf:nodeID="sol48731-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Stageira"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol48731-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol48731-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol49183">
+            <rs:binding rdf:nodeID="sol49183-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Stageira"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49183-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49183-2" rs:name="o">
+                <rs:value>Stageira</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol49588">
+            <rs:binding rdf:nodeID="sol49588-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Stageira"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49588-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/based_near"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49588-2" rs:name="o">
+                <rs:value rdf:nodeID="b10036"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol49994">
+            <rs:binding rdf:nodeID="sol49994-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49994-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol49994-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MuslimPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol50455">
+            <rs:binding rdf:nodeID="sol50455-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol50455-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol50455-2" rs:name="o">
+                <rs:value xml:lang="en">Averroes</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol50879">
+            <rs:binding rdf:nodeID="sol50879-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol50879-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol50879-2" rs:name="o">
+                <rs:value xml:lang="de">Averroes</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol51298">
+            <rs:binding rdf:nodeID="sol51298-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol51298-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol51298-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Cordoba"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol51739">
+            <rs:binding rdf:nodeID="sol51739-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol51739-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol51739-2" rs:name="o">
+                <rs:value rdf:resource="http://upload.wikimedia.org/wikipedia/commons/8/82/AverroesColor.jpg"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol52208">
+            <rs:binding rdf:nodeID="sol52208-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol52208-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol52208-2" rs:name="o">
+                <rs:value>1126</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol52614">
+            <rs:binding rdf:nodeID="sol52614-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol52614-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol52614-2" rs:name="o">
+                <rs:value>1198</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol53020">
+            <rs:binding rdf:nodeID="sol53020-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Cordoba"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53020-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53020-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol53471">
+            <rs:binding rdf:nodeID="sol53471-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Cordoba"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53471-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53471-2" rs:name="o">
+                <rs:value>Córdoba</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol53882">
+            <rs:binding rdf:nodeID="sol53882-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Cordoba"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53882-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/based_near"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol53882-2" rs:name="o">
+                <rs:value rdf:nodeID="b10037"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol54287">
+            <rs:binding rdf:nodeID="sol54287-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol54287-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol54287-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/MediaevalPhilosopher"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol54756">
+            <rs:binding rdf:nodeID="sol54756-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol54756-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol54756-2" rs:name="o">
+                <rs:value xml:lang="en">Thomas Aquinas</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol55191">
+            <rs:binding rdf:nodeID="sol55191-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol55191-1" rs:name="p">
+                <rs:value rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol55191-2" rs:name="o">
+                <rs:value xml:lang="de">Thomas von Aquin</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol55623">
+            <rs:binding rdf:nodeID="sol55623-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol55623-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol55623-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Aristotle"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol56077">
+            <rs:binding rdf:nodeID="sol56077-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56077-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/influencedBy"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56077-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Averroes"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol56530">
+            <rs:binding rdf:nodeID="sol56530-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56530-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/bornIn"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56530-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Roccasecca"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol56979">
+            <rs:binding rdf:nodeID="sol56979-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56979-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/depiction"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol56979-2" rs:name="o">
+                <rs:value rdf:resource="http://upload.wikimedia.org/wikipedia/commons/e/e3/St-thomas-aquinas.jpg"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol57457">
+            <rs:binding rdf:nodeID="sol57457-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol57457-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfBirth"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol57457-2" rs:name="o">
+                <rs:value>1225</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol57868">
+            <rs:binding rdf:nodeID="sol57868-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/ThomasAquinas"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol57868-1" rs:name="p">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/yearOfDeath"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol57868-2" rs:name="o">
+                <rs:value>1275</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol58279">
+            <rs:binding rdf:nodeID="sol58279-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Roccasecca"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol58279-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol58279-2" rs:name="o">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Location"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol58733">
+            <rs:binding rdf:nodeID="sol58733-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Roccasecca"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol58733-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol58733-2" rs:name="o">
+                <rs:value>Roccasecca</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol59147">
+            <rs:binding rdf:nodeID="sol59147-0" rs:name="s">
+                <rs:value rdf:resource="http://localhost/OntoWiki/phil/Roccasecca"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59147-1" rs:name="p">
+                <rs:value rdf:resource="http://xmlns.com/foaf/0.1/based_near"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59147-2" rs:name="o">
+                <rs:value rdf:nodeID="b10038"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol59555">
+            <rs:binding rdf:nodeID="sol59555-0" rs:name="s">
+                <rs:value rdf:nodeID="b10035"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59555-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#resource"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59555-2" rs:name="o">
+                <rs:value>http://localhost/OntoWiki/phil/influencedBy</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol59968">
+            <rs:binding rdf:nodeID="sol59968-0" rs:name="s">
+                <rs:value rdf:nodeID="b10036"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59968-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol59968-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#Point"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol60391">
+            <rs:binding rdf:nodeID="sol60391-0" rs:name="s">
+                <rs:value rdf:nodeID="b10036"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol60391-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol60391-2" rs:name="o">
+                <rs:value>40.530278</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol60768">
+            <rs:binding rdf:nodeID="sol60768-0" rs:name="s">
+                <rs:value rdf:nodeID="b10036"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol60768-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol60768-2" rs:name="o">
+                <rs:value>23.751389</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol61146">
+            <rs:binding rdf:nodeID="sol61146-0" rs:name="s">
+                <rs:value rdf:nodeID="b10037"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61146-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61146-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#Point"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol61569">
+            <rs:binding rdf:nodeID="sol61569-0" rs:name="s">
+                <rs:value rdf:nodeID="b10037"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61569-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61569-2" rs:name="o">
+                <rs:value>37.883333</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol61946">
+            <rs:binding rdf:nodeID="sol61946-0" rs:name="s">
+                <rs:value rdf:nodeID="b10037"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61946-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol61946-2" rs:name="o">
+                <rs:value>-4.766667</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol62324">
+            <rs:binding rdf:nodeID="sol62324-0" rs:name="s">
+                <rs:value rdf:nodeID="b10038"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol62324-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol62324-2" rs:name="o">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#Point"/>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol62747">
+            <rs:binding rdf:nodeID="sol62747-0" rs:name="s">
+                <rs:value rdf:nodeID="b10038"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol62747-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#lat"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol62747-2" rs:name="o">
+                <rs:value>41.55</rs:value>
+            </rs:binding>
+        </rs:result>
+        <rs:result rdf:nodeID="sol63120">
+            <rs:binding rdf:nodeID="sol63120-0" rs:name="s">
+                <rs:value rdf:nodeID="b10038"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol63120-1" rs:name="p">
+                <rs:value rdf:resource="http://www.w3.org/2003/01/geo/wgs84_pos#long"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol63120-2" rs:name="o">
+                <rs:value>13.666667</rs:value>
+            </rs:binding>
+        </rs:result>
+    </rs:results>
+</rdf:RDF>
