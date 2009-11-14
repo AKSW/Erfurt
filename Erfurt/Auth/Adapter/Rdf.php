@@ -16,7 +16,8 @@ require_once 'Zend/Auth/Result.php';
  * @license
  * @version $Id: Rdf.php 4191 2009-09-25 10:32:03Z c.riess.dev $
  */
-class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
+class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
+{
     
     private $_config = null;
     
@@ -30,7 +31,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     protected $_acModelUri = null;
 
     /** @var array */
-    protected $users = array();
+    protected $_users = array();
     
     /** @var boolean */
     protected $_userDataFetched = false;
@@ -66,16 +67,18 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      * @throws Zend_Auth_Adapter_Exception If authentication cannot be performed
      * @return Zend_Auth_Result
      */
-    public function authenticate() {
+    public function authenticate() 
+    {
         
         if ($this->_isLoginDisabled() === true || $this->_username === 'Anonymous') {
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getAnonymousUser());
-        // super admin
-        } else if ($this->_isDbUserAllowed() && $this->_username === $this->_getDbUsername() && $this->_password === $this->_getDbPassword()) {
+        } else if ($this->_isDbUserAllowed() && $this->_username === $this->_getDbUsername() && 
+            // super admin
+            $this->_password === $this->_getDbPassword()) {
+            
             $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $this->_getSuperAdmin());
-        
-        // normal user from system ontology
         } else {
+            // normal user from system ontology
             $identity = array(
                 'username'  => $this->_username, 
                 'uri'       => '', 
@@ -97,18 +100,17 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
             // if login is denied return failure auth result
             if ($this->_users[$this->_username]['denyLogin'] === true) {
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Login not allowed!'));
-            } 
-            // does user not exist?
-            else if ($this->_users[$this->_username]['userUri'] === false) {
+            } else if ($this->_users[$this->_username]['userUri'] === false) {
+                // does user not exist?
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Unknown user identifier.'));
             } else {
-                
                 // verify the password
                 if (!$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 'sha1') 
-                        && !$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 
-                        '')) {
+                    && !$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], '')) {
                     
-                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Wrong password entered!'));
+                    $authResult = new Zend_Auth_Result(
+                        Zend_Auth_Result::FAILURE, null, array('Wrong password entered!')
+                    );
                 } else {
                     $identity['uri'] = $this->_users[$this->_username]['userUri'];
                     $identity['email'] = $this->_users[$this->_username]['userEmail'];
@@ -134,7 +136,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *
      * @return array
      */
-    private function _fetchDataForUser($username) {
+    private function _fetchDataForUser($username) 
+    {
         
         $returnVal = array(
             'userUri'       => false,
@@ -236,7 +239,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *
      * @return array
      */
-    public function getUsers() {
+    public function getUsers() 
+    {
         if (!$this->_userDataFetched) {
             $this->fetchDataForAllUsers();
         }
@@ -255,7 +259,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *                Defaults to "md5".
      * @return bool   True, if the passwords match
      */
-    private function _verifyPassword($password1, $password2, $cryptType = 'md5') {
+    private function _verifyPassword($password1, $password2, $cryptType = 'md5') 
+    {
         switch ($cryptType) {
         case 'md5':
             return ((string) md5($password1) === (string) $password2);
@@ -286,7 +291,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *
      * @return array|null 
      */
-    private function _sparql($sparqlQuery) {
+    private function _sparql($sparqlQuery) 
+    {
         try {
             $sparqlQuery->addFrom($this->_getAcModelUri());
             $result = $this->_getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
@@ -303,7 +309,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *
      * @return array 
      */
-    private function _getAnonymousUser() {
+    private function _getAnonymousUser() 
+    {
         $uris = $this->_getUris();
         
         $user = array(
@@ -325,7 +332,8 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
      *
      * @return array  
      */
-    private function _getSuperAdmin() {
+    private function _getSuperAdmin() 
+    {
         $uris = $this->_getUris();
         
         $user = array(

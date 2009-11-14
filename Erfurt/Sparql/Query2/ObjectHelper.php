@@ -105,4 +105,11 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 
         return $this->getSparql() === $obj->getSparql();
     }
+
+    abstract public function getSparql();
+
+    public function  __toString()
+    {
+        return $this->getSparql();
+    }
 }

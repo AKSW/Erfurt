@@ -256,6 +256,10 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
     
     public function sparqlQuery($query, $resultform = 'plain')
     {   
+        if(!($query instanceof Erfurt_Sparql_SimpleQuery)) {
+            $query = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
+        }
+        
         $limit  = $query->getLimit();
         $offset = $query->getOffset();
         

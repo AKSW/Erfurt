@@ -606,15 +606,11 @@ class Erfurt_Store
      * @param string|array $graphUris One or more graph URIs to be searched
      * @param array option array
      */
-    public function findResourcesWithPropertyValue($stringSpec, $graphUris, $options = array())
+    public function getSearchPattern($stringSpec, $graphUris, $options = array())
     {
-        if (empty($graphUris)) {
-            $graphUris = array_keys($this->getAvailableModels(true));
-        }
-
+        
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
-        $graphUris  = (array) $graphUris;
 
         $options = array_merge(array(
             'case_sensitive'    => false, 
@@ -623,94 +619,40 @@ class Erfurt_Store
             'with_imports'      => true
         ), $options);
         
-        if ($options['with_imports'] === true) {
-        
-            // load imports for each graph
-            foreach ($graphUris as $graphUri) {
-            
-                // get imports
-                $importUris = $this->getImportsClosure($graphUri);
-                
-                // check if imports should be added else they are already present
-                foreach ($importUris as $importUri) {
-                
-                    if ( !in_array($importUri,$graphUris) ) {
-                        $graphUris[] = $importUri;
-                    } else {
-                        // do nothing
-                    }
-                    
-                }
-                 
-            }
-            
-        } else {
-            // do nothing (leave the graphUris-array as is)
-        }
-        
         // execute backend-specific search if available
-        if (method_exists($this->_backendAdapter, 'findResourcesWithPropertyValue')) 
+        if (method_exists($this->_backendAdapter, 'getSearchPattern'))
         {
-            return $this->_backendAdapter->findResourcesWithPropertyValue($stringSpec, $graphUris, $options);   
+            return $this->_backendAdapter->getSearchPattern($stringSpec, $graphUris, $options);
         }
         // else execute Sparql Regex Fallback 
         else {
-            // New query object (Erfurt_Sparql_Query2)
-            require_once 'Erfurt/Sparql/Query2.php';
-            $query = new Erfurt_Sparql_Query2();
-            
-            foreach ($graphUris as $graphUri) {
-                $query->addFrom($graphUri);
-            }
-            
-            $query->setDistinct(true);
+            $ret = array();
             
             $s_var = new Erfurt_Sparql_Query2_Var('resourceUri');
             $p_var = new Erfurt_Sparql_Query2_Var('p');
             $o_var = new Erfurt_Sparql_Query2_Var('o');
-            
-            $query->addProjectionVar($s_var);
-            
+
             $default_tpattern = new Erfurt_Sparql_Query2_Triple($s_var, $p_var, $o_var);
-            
-            $query->getWhere()->addElement($default_tpattern);
-            
+            $ret[] = $default_tpattern;
+
             if ($options['filter_properties']) {
                 $ss_var = new Erfurt_Sparql_Query2_var('ss');
                 $oo_var = new Erfurt_Sparql_Query2_var('oo');
                 
                 $filterprop_tpattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
-                
-                $query->getWhere()->addElement($filterprop_tpattern);
+                $ret[] = $filterprop_tpattern;
             }
             
-            if ($options['case_sensitive']) {
-                $query->addFilter(
-                    new Erfurt_Sparql_Query2_Regex(
-                        $o_var, 
-                        new Erfurt_Sparql_Query2_RDFLiteral($stringSpec)
-                    )
-                );
-            } else {
-                $query->addFilter(
-                    new Erfurt_Sparql_Query2_Regex(
-                        $o_var, 
-                        new Erfurt_Sparql_Query2_RDFLiteral($stringSpec), 
-                        new Erfurt_Sparql_Query2_RDFLiteral('i')
-                    )
-                );
-            }
-            
-            /*
-            $resources = array();
-            if ($results = $this->sparqlQuery($query)) {
-                foreach ($results as $row) {
-                    array_push($resources, $row['s']);
-                }
-            }
-            */
+            $filter = new Erfurt_Sparql_Query2_Filter(
+                new Erfurt_Sparql_Query2_Regex(
+                    $o_var,
+                    new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
+                    $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
+                )
+            );
+            $ret[] = $filter;
 
-            return $query;
+            return $ret;
 
         }
     }
