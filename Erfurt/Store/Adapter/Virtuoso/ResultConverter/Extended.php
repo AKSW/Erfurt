@@ -195,16 +195,20 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
     protected function _addLiteralBinding($variable, $value)
     {
         // this is going to be a literal
-        $type = 'literal';
+        $binding = array(
+            'type'  => 'literal', 
+            'value' => $value
+        );
         
         // datatype or language set?
         if (null !== $this->_currentDatatype) {
-            $datatype = $this->_currentDatatype;
+            $binding['datatype'] = $this->_currentDatatype;
+            $binding['type'] = 'typed-literal';
+            $this->_currentDatatype = null;
         } else if (null !== $this->_currentLanguage) {
-            $lang = $this->_currentLanguage;
+            $binding['xml:lang'] = $this->_currentLanguage;
+            $this->_currentLanguage = null;
         }
-        
-        $binding = compact('type', 'value', 'datatype', 'lang');
         
         $this->_currentRow[$variable] = $binding;
     }

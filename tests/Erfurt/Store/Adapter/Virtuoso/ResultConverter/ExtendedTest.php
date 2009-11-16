@@ -112,7 +112,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
         );
         
         $this->assertEquals(
-            array('type' => 'literal', 'value' => 'Córdoba', 'lang' => 'es'), 
+            array('type' => 'literal', 'value' => 'Córdoba', 'xml:lang' => 'es'), 
             $row['o']
         );
     }
@@ -148,7 +148,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
         );
         
         $expected = array(
-            'type' => 'literal', 
+            'type' => 'typed-literal', 
             'datatype' => 'http://www.w3.org/2001/XMLSchema#string', 
             'value' => 'AKSW demo knowledge base about philosophers. It demonstrates various OntoWiki features such as arbitrary object hierarchies, geoinformation reasoning, semantic plug-ins adn blank node usage.'
         );
