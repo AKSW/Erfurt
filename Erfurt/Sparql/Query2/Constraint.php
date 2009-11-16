@@ -202,10 +202,10 @@ class Erfurt_Sparql_Query2_Larger extends Erfurt_Sparql_Query2_RelHelper impleme
 
     /**
      *
-     * @param <type> $e1
-     * @param <type> $e2
+     * @param Erfurt_Sparql_Query2_Expression $e1
+     * @param Erfurt_Sparql_Query2_Expression $e2
      */
-    public function __construct($e1, $e2) {
+    public function __construct(Erfurt_Sparql_Query2_Expression $e1, Erfurt_Sparql_Query2_Expression $e2) {
         parent::__construct();
     }
 }

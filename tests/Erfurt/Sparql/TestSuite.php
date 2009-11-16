@@ -11,7 +11,7 @@ class Erfurt_Sparql_TestSuite extends PHPUnit_Framework_TestSuite
         
         $suite->addTestSuite('Erfurt_Sparql_ParserTest');
         $suite->addTestSuite('Erfurt_Sparql_SimpleQueryTest');
-        
+        $suite->addTestSuite('Erfurt_Sparql_Query2Test');
         $suite->addTestSuite('Erfurt_Sparql_EngineDb_ResultRenderer_ExtendedTest');
         
         return $suite;

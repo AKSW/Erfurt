@@ -261,7 +261,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
         }
 
         //sort triples by weight
-        usort($this->elements, Erfurt_Sparql_Query2_TriplesSameSubject::compareWeight);
+        usort($this->elements, array("Erfurt_Sparql_Query2_TriplesSameSubject", "compareWeight"));
         
         //optimization is done on this level - proceed on deeper level
         foreach ($this->elements as $element) {

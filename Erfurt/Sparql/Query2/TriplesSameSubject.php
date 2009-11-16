@@ -103,7 +103,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Objec
         if($part == null){
             $i = 0;
             foreach($this->propertyList as $prop){
-                $i += ($prop['pred'] instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) + $prop['obj']->getNumVars();
+                $i += ($prop['pred'] instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) + ($prop['obj'] instanceof Erfurt_Sparql_Query2_ObjectList ? $prop['obj']->getNumVars() : 0 );
             }
             return ($this->subject instanceof Erfurt_Sparql_Query2_Var ? 1 : 0) + $i;
         } else {

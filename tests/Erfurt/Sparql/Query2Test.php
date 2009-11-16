@@ -9,20 +9,7 @@
  * @version    $Id$
  */
 
-//erfurt should be required, but as long as there are only 2 constant-dependencies...
-define('EF_RDF_NS', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-define('EF_RDF_TYPE', EF_RDF_NS.'type');
-
-require_once '../../test_base.php';
-
-//include the class to test
-//should be autoloaded
-//require_once '../../../src/Erfurt/Sparql/Query2.php';
-
-// PHPUnit
-require_once 'PHPUnit/Framework.php';
-
-class Query2Test extends PHPUnit_Framework_TestCase
+class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 {
     protected $query;
 
@@ -138,8 +125,26 @@ class Query2Test extends PHPUnit_Framework_TestCase
         //$query->getConstructTemplate()->addElement(new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $name));
 
         //echo '<h3>Basic Query Building</h3><pre>'.htmlentities($query->getSparql()).'</pre>';
+
+        //no errors
     }
 
+    public function testProjectionVars(){
+        $var = new Erfurt_Sparql_Query2_Var('s');
+        $this->query->addProjectionVar($var);
+        $this->assertContains($var, $this->query->getProjectionVars());
+        $vars = $this->query->getProjectionVars();
+        $this->assertTrue( count($vars) == 1 );
+        $this->assertEquals('s', $vars[0]->getName());
 
+        $this->query->removeProjectionVar($var);
+        $vars = $this->query->getProjectionVars();
+        $this->assertTrue(empty($vars));
+
+        $this->query->addProjectionVar($var);
+        $this->query->removeAllProjectionVars();
+        $vars = $this->query->getProjectionVars();
+        $this->assertTrue(empty($vars));
+    }
 }
 ?>
