@@ -8,8 +8,16 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function setUp()
     {   
-        $this->markTestNeedsVirtuoso();
-        $this->fixture = new Erfurt_Store_Adapter_Virtuoso($this->getTestConfig()->store->virtuoso->toArray());
+        // $this->markTestNeedsVirtuoso();
+        // $config = $this->getTestConfig()->store->virtuoso->toArray();
+        
+        $config = array(
+            'dsn' => 'VOS', 
+            'username' => 'dba', 
+            'password' => 'dba'
+        );
+        
+        $this->fixture = new Erfurt_Store_Adapter_Virtuoso($config);
     }
     
     public function testInstantiation()
@@ -27,9 +35,13 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
         $g = 'http://example.com/';
         $s = 'http://example.com/';
         $p = 'http://example.com/property1';
-        $o = 'http:/example.com/resource1';
         
-        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o));
+        $oSpec = array(
+            'value' => 'http:/example.com/resource1', 
+            'type' => 'uri'
+        );
+        
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $oSpec));
     }
     
     public function testAddStatementsWithLiteralObject()
