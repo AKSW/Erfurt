@@ -23,7 +23,7 @@ foreach ($tokens->getTokens() as $t) {
 		echo $t."\n";
 }
 
-//$parser = new TestParser($tokens);
-//$parser->query();
+$parser = new TestParser($tokens);
+$parser->query();
 
 ?>
