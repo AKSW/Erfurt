@@ -635,21 +635,39 @@ class Erfurt_Store
             $default_tpattern = new Erfurt_Sparql_Query2_Triple($s_var, $p_var, $o_var);
             $ret[] = $default_tpattern;
 
+            
+            
+            $filter = new Erfurt_Sparql_Query2_Filter(
+                new Erfurt_Sparql_Query2_ConditionalOrExpression(
+                    array(
+                        /*new Erfurt_Sparql_Query2_Regex(
+                            $s_var,
+                            new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
+                            $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
+                        ),*/
+                        new Erfurt_Sparql_Query2_Regex(
+                            $o_var,
+                            new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
+                            $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
+                        )
+                    )
+                )
+            );
             if ($options['filter_properties']) {
                 $ss_var = new Erfurt_Sparql_Query2_var('ss');
                 $oo_var = new Erfurt_Sparql_Query2_var('oo');
-                
+
                 $filterprop_tpattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
                 $ret[] = $filterprop_tpattern;
+                /*
+                $filter->getConstraint()->addElement(
+                    new Erfurt_Sparql_Query2_Regex(
+                            $oo_var,
+                            new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
+                            $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
+                        )
+                );*/
             }
-            
-            $filter = new Erfurt_Sparql_Query2_Filter(
-                new Erfurt_Sparql_Query2_Regex(
-                    $o_var,
-                    new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
-                    $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
-                )
-            );
             $ret[] = $filter;
 
             return $ret;

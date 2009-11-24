@@ -367,23 +367,40 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple($subjectVariable, $predicateVariable, $objectVariable);
         $searchPattern[] = $defaultTriplePattern;
         
+        $bifPrefix = new Erfurt_Sparql_Query2_Prefix('bif', new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow'));
+        $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
+
+        $filter = new Erfurt_Sparql_Query2_Filter(
+            new Erfurt_Sparql_Query2_ConditionalOrExpression(
+                array(
+                    /*new Erfurt_Sparql_Query2_Function(
+                        $bifContains,
+                        array($subjectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
+                    ),*/ //why doesnt this work???
+                    new Erfurt_Sparql_Query2_Function(
+                        $bifContains,
+                        array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
+                    )
+                )
+            )
+        );
+
         if ($options['filter_properties']) {
             $ss_var = new Erfurt_Sparql_Query2_Var('ss');
             $oo_var = new Erfurt_Sparql_Query2_Var('oo');
-            
+
             $propertyFilterTriplePattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
             $searchPattern[] = $propertyFilterTriplePattern;
+
+            /*
+            $filter->getConstraint()->addElement(
+                new Erfurt_Sparql_Query2_Function(
+                    $bifContains,
+                    array($oo_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
+                )
+            );*/
         }
-        
-        require_once 'Erfurt/Sparql/Query2/Filter.php';
-        require_once 'Erfurt/Sparql/Query2/RDFLiteral.php';
-        $filter = new Erfurt_Sparql_Query2_Filter(
-            new Erfurt_Sparql_Query2_Function(
-                'bif:contains',
-                array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-            )
-        );
-        
+
         $searchPattern[] = $filter;
 
         return $searchPattern;
