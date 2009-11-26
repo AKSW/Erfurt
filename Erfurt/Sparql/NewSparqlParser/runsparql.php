@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 
-require_once './runtime/Php/antlr.php';
+require_once 'runtime/Php/antlr.php';
 require_once 'Iri.php';
 require_once 'TestParser.php';
 

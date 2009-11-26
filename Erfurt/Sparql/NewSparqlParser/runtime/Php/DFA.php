@@ -209,6 +209,21 @@ class DFA {
 		return $data;
 	}
 
+	public static function unpackEncodedStringToUnsignedChars($encodedString) {
+		$data = array();
+		$di = 0;
+		for ($i=0,$len=strlen($encodedString); $i<$len; $i+=2) {
+			$n = charAt($encodedString, $i);
+			$v = charAt($encodedString, $i+1);
+			// add v n times to data
+			for ($j=1; $j<=$n; $j++) {
+				if($v==0xff) $v=255;
+				$data[$di++] = $v;
+			}
+		}
+		return $data;
+	}
+
 	/**  GetToken is used as a wrap arround getToken method in recognizer,
 	 *   because of code generation details in Php.stg
 	 *

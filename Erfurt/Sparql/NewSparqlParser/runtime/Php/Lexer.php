@@ -51,7 +51,6 @@ abstract class AntlrLexer extends BaseRecognizer{
 				$this->mTokens();
 				if ( $this->state->token==null ) {
 					$this->emit();
-					// var_dump($this->state->token);
 				}
 				else if ( $this->state->token==Token::$SKIP_TOKEN ) {
 					continue;
