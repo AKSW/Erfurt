@@ -131,9 +131,9 @@ abstract class Erfurt_Sparql_Query2_RelHelper extends Erfurt_Sparql_Query2_Objec
      * @param Erfurt_Sparql_Query2_Expression $e2
      */
     public function __construct(Erfurt_Sparql_Query2_Expression $e1, Erfurt_Sparql_Query2_Expression $e2) {
+        parent::__construct();
         $this->element1 = $e1;
         $this->element2 = $e2;
-        parent::__construct();
     }
 
     /**
@@ -206,7 +206,7 @@ class Erfurt_Sparql_Query2_Larger extends Erfurt_Sparql_Query2_RelHelper impleme
      * @param Erfurt_Sparql_Query2_Expression $e2
      */
     public function __construct(Erfurt_Sparql_Query2_Expression $e1, Erfurt_Sparql_Query2_Expression $e2) {
-        parent::__construct();
+        parent::__construct($e1, $e2);
     }
 }
 class Erfurt_Sparql_Query2_Smaller extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
