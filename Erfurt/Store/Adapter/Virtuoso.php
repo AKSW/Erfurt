@@ -242,7 +242,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $objectSpec = $this->buildLiteralString(
                     $object['value'], 
                     array_key_exists('datatype', $object) ? $object['datatype'] : null, 
-                    array_key_exists('lang', $object) ? $object['datatype'] : null
+                    array_key_exists('lang', $object) ? $object['lang'] : null
                 );
             }
         } else {
@@ -258,7 +258,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $subjectSpec, 
             $predicateSpec, 
             $objectSpec
-        );
+        );     
         
         // perform delete
         if ($rid = $this->_execSparql($deleteSparql)) {
