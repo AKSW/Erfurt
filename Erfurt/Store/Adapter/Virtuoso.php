@@ -474,7 +474,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             
             // store namespace prefixes
             while (list($namespaceUri, $prefix) = each($namespacePrefixes)) {
-                $namespaces->addNamespacePrefix($graphUri, $namespaceUri, $prefix);
+                try {
+                    $namespaces->addNamespacePrefix($graphUri, $namespaceUri, $prefix);
+                } catch (Erfurt_Namespaces_Exception $e) {
+                    // ignore
+                }
             }
         } catch (Erfurt_Store_Adapter_Exception $e) {
             throw new Erfurt_Store_Adapter_Exception('Error importing statements: ' . $e->getMessage());
