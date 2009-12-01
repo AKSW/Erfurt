@@ -117,6 +117,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
                 return $arResult;
                 break;
             case 'count':
+            case 'count-distinct':
             case 'ask':
                 if (count($arRecordSets) > 1) {
                     require_once 'Erfurt/Exception.php';

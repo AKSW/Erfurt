@@ -1352,12 +1352,12 @@ class Erfurt_Store
      * @param string $graphUri
      * @param string $whereSpec
      */
-    public function countWhereMatches($graphIri, $whereSpec, $countSpec)
+    public function countWhereMatches($graphIri, $whereSpec, $countSpec, $distinct = false)
     {
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
             if ($this->isModelAvailable($graphIri)) {
                 $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
-                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec);   
+                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
             } else {
                 throw new Erfurt_Store_Exception('Model <' . $graphIri . '> is not available.');
             }

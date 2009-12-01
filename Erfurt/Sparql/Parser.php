@@ -1419,6 +1419,9 @@ var_dump($this->_tokens);exit;
                 case 'count':
                     $this->_parseAsk('count');
                     break;
+                case 'count-distinct':
+                    $this->_parseAsk('count-distinct');
+                    break;
                 case 'from':
                     $this->_parseFrom();
                     break;

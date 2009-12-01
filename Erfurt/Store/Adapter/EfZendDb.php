@@ -346,13 +346,17 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function countWhereMatches($graphIris, $whereSpec, $countSpec)
+    public function countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct = false)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart("COUNT DISTINCT $countSpec")
-              ->setFrom($graphIris)
+        if(!$distinct){
+            $query->setProloguePart("COUNT DISTINCT $countSpec"); // old way: distinct has no effect !!!
+        } else {
+            $query->setProloguePart("COUNT-DISTINCT $countSpec"); // i made a (unccol) hack to fix this, the "-" ist there because i didnt want to change tokenization
+        }
+        $query->setFrom($graphIris)
               ->setWherePart($whereSpec);
-
+        
         $result = $this->sparqlQuery($query);
 
         if ($result) {
