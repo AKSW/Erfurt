@@ -7,7 +7,7 @@
 		return $arr;
 	}
 	
-	function charAt($str, $i){
-		return ord(substr($str, $i, 1));
-	}
+	// function charAt($str, $i){
+	// 	return ord(substr($str, $i, 1));
+	// }
 ?>

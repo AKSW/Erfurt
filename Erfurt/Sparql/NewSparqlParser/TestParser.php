@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 Test.g 2009-11-26 02:24:17
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 Test.g 2009-11-30 17:01:47
 
 
 # for convenience in actions
@@ -7,7 +7,7 @@ if (!defined('HIDDEN')) define('HIDDEN', BaseRecognizer::$HIDDEN);
 
 class TestParser extends AntlrParser {
     public static $tokenNames = array(
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LESS", "GREATER", "OPEN_CURLY_BRACE", "CLOSE_CURLY_BRACE", "IRI_REF", "EOL", "WS", "BASE", "PREFIX", "SELECT", "DISTINCT", "REDUCED", "CONSTRUCT", "DESCRIBE", "ASK", "FROM", "NAMED", "WHERE", "ORDER", "BY", "ASC", "DESC", "LIMIT", "OFFSET", "OPTIONAL", "GRAPH", "UNION", "FILTER", "A", "STR", "LANG", "LANGMATCHES", "DATATYPE", "BOUND", "SAMETERM", "ISIRI", "ISURI", "ISBLANK", "ISLITERAL", "REGEX", "TRUE", "FALSE", "PNAME_NS", "PN_LOCAL", "PNAME_LN", "PN_PREFIX", "PN_CHARS_BASE", "PN_CHARS", "DOT", "PN_CHARS_U", "DIGIT", "VARNAME", "MINUS", "SEMICOLON", "PLUS", "ASTERISK", "COMMA", "NOT", "DIVIDE", "EQUAL", "VAR1", "VAR2", "ECHAR", "STRING_LITERAL1", "STRING_LITERAL2", "STRING_LITERAL_LONG1", "STRING_LITERAL_LONG2", "OPEN_BRACE", "CLOSE_BRACE", "REFERENCE", "LESS_EQUAL", "GREATER_EQUAL", "NOT_EQUAL", "AND", "OR", "BLANK_NODE_LABEL", "LANGTAG", "INTEGER", "DECIMAL", "EXPONENT", "DOUBLE", "INTEGER_POSITIVE", "DECIMAL_POSITIVE", "DOUBLE_POSITIVE", "INTEGER_NEGATIVE", "DECIMAL_NEGATIVE", "DOUBLE_NEGATIVE", "OPEN_SQUARE_BRACE", "CLOSE_SQUARE_BRACE"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "LESS", "GREATER", "OPEN_CURLY_BRACE", "CLOSE_CURLY_BRACE", "IRI_REF", "EOL", "WS", "BASE", "PREFIX", "SELECT", "DISTINCT", "REDUCED", "CONSTRUCT", "DESCRIBE", "ASK", "FROM", "NAMED", "WHERE", "ORDER", "BY", "ASC", "DESC", "LIMIT", "OFFSET", "OPTIONAL", "GRAPH", "UNION", "FILTER", "A", "STR", "LANG", "LANGMATCHES", "DATATYPE", "BOUND", "SAMETERM", "ISIRI", "ISURI", "ISBLANK", "ISLITERAL", "REGEX", "TRUE", "FALSE", "PNAME_NS", "PN_LOCAL", "PNAME_LN", "PN_PREFIX", "PN_CHARS_BASE", "PN_CHARS", "DOT", "PN_CHARS_U", "DIGIT", "VARNAME", "MINUS", "SEMICOLON", "PLUS", "ASTERISK", "COMMA", "NOT", "DIVIDE", "EQUAL", "VAR1", "VAR2", "ECHAR", "STRING_LITERAL1", "STRING_LITERAL2", "STRING_LITERAL_LONG1", "STRING_LITERAL_LONG2", "OPEN_BRACE", "CLOSE_BRACE", "REFERENCE", "LESS_EQUAL", "GREATER_EQUAL", "NOT_EQUAL", "AND", "OR", "BLANK_NODE_LABEL", "LANGTAG", "INTEGER", "DECIMAL", "EXPONENT", "DOUBLE", "INTEGER_POSITIVE", "DECIMAL_POSITIVE", "DOUBLE_POSITIVE", "INTEGER_NEGATIVE", "DECIMAL_NEGATIVE", "DOUBLE_NEGATIVE", "OPEN_SQUARE_BRACE", "CLOSE_SQUARE_BRACE", "COMMENT"
     );
     public $PREFIX=12;
     public $EXPONENT=83;
@@ -28,6 +28,7 @@ class TestParser extends AntlrParser {
     public $DOUBLE=84;
     public $BASE=11;
     public $PN_CHARS_U=53;
+    public $COMMENT=93;
     public $OPEN_CURLY_BRACE=6;
     public $SELECT=13;
     public $CLOSE_CURLY_BRACE=7;
@@ -104,269 +105,269 @@ class TestParser extends AntlrParser {
     // delegators
 
     
-    static $FOLLOW_prologue_in_query38;
-    static $FOLLOW_selectQuery_in_query42;
-    static $FOLLOW_constructQuery_in_query46;
-    static $FOLLOW_describeQuery_in_query50;
-    static $FOLLOW_askQuery_in_query54;
-    static $FOLLOW_EOF_in_query58;
-    static $FOLLOW_baseDecl_in_prologue75;
-    static $FOLLOW_prefixDecl_in_prologue78;
-    static $FOLLOW_BASE_in_baseDecl96;
-    static $FOLLOW_IRI_REF_in_baseDecl98;
-    static $FOLLOW_PREFIX_in_prefixDecl115;
-    static $FOLLOW_PNAME_NS_in_prefixDecl117;
-    static $FOLLOW_IRI_REF_in_prefixDecl119;
-    static $FOLLOW_SELECT_in_selectQuery136;
-    static $FOLLOW_set_in_selectQuery138;
-    static $FOLLOW_variable_in_selectQuery151;
-    static $FOLLOW_ASTERISK_in_selectQuery156;
-    static $FOLLOW_datasetClause_in_selectQuery160;
-    static $FOLLOW_whereClause_in_selectQuery163;
-    static $FOLLOW_solutionModifier_in_selectQuery165;
-    static $FOLLOW_CONSTRUCT_in_constructQuery182;
-    static $FOLLOW_constructTemplate_in_constructQuery184;
-    static $FOLLOW_datasetClause_in_constructQuery186;
-    static $FOLLOW_whereClause_in_constructQuery189;
-    static $FOLLOW_solutionModifier_in_constructQuery191;
-    static $FOLLOW_DESCRIBE_in_describeQuery208;
-    static $FOLLOW_varOrIRIref_in_describeQuery212;
-    static $FOLLOW_ASTERISK_in_describeQuery217;
-    static $FOLLOW_datasetClause_in_describeQuery221;
-    static $FOLLOW_whereClause_in_describeQuery224;
-    static $FOLLOW_solutionModifier_in_describeQuery227;
-    static $FOLLOW_ASK_in_askQuery244;
-    static $FOLLOW_datasetClause_in_askQuery246;
-    static $FOLLOW_whereClause_in_askQuery249;
-    static $FOLLOW_FROM_in_datasetClause266;
-    static $FOLLOW_defaultGraphClause_in_datasetClause270;
-    static $FOLLOW_namedGraphClause_in_datasetClause274;
-    static $FOLLOW_sourceSelector_in_defaultGraphClause293;
-    static $FOLLOW_NAMED_in_namedGraphClause310;
-    static $FOLLOW_sourceSelector_in_namedGraphClause312;
-    static $FOLLOW_iriRef_in_sourceSelector329;
-    static $FOLLOW_WHERE_in_whereClause346;
-    static $FOLLOW_groupGraphPattern_in_whereClause349;
-    static $FOLLOW_orderClause_in_solutionModifier366;
-    static $FOLLOW_limitOffsetClauses_in_solutionModifier369;
-    static $FOLLOW_limitClause_in_limitOffsetClauses389;
-    static $FOLLOW_offsetClause_in_limitOffsetClauses391;
-    static $FOLLOW_offsetClause_in_limitOffsetClauses396;
-    static $FOLLOW_limitClause_in_limitOffsetClauses398;
-    static $FOLLOW_ORDER_in_orderClause418;
-    static $FOLLOW_BY_in_orderClause420;
-    static $FOLLOW_orderCondition_in_orderClause422;
-    static $FOLLOW_set_in_orderCondition442;
-    static $FOLLOW_brackettedExpression_in_orderCondition452;
-    static $FOLLOW_constraint_in_orderCondition464;
-    static $FOLLOW_variable_in_orderCondition468;
-    static $FOLLOW_LIMIT_in_limitClause487;
-    static $FOLLOW_INTEGER_in_limitClause489;
-    static $FOLLOW_OFFSET_in_offsetClause506;
-    static $FOLLOW_INTEGER_in_offsetClause508;
-    static $FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern525;
-    static $FOLLOW_triplesBlock_in_groupGraphPattern527;
-    static $FOLLOW_graphPatternNotTriples_in_groupGraphPattern534;
-    static $FOLLOW_filter_in_groupGraphPattern538;
-    static $FOLLOW_DOT_in_groupGraphPattern542;
-    static $FOLLOW_triplesBlock_in_groupGraphPattern545;
-    static $FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern551;
-    static $FOLLOW_triplesSameSubject_in_triplesBlock568;
-    static $FOLLOW_DOT_in_triplesBlock572;
-    static $FOLLOW_triplesBlock_in_triplesBlock574;
-    static $FOLLOW_optionalGraphPattern_in_graphPatternNotTriples595;
-    static $FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples599;
-    static $FOLLOW_graphGraphPattern_in_graphPatternNotTriples603;
-    static $FOLLOW_OPTIONAL_in_optionalGraphPattern620;
-    static $FOLLOW_groupGraphPattern_in_optionalGraphPattern622;
-    static $FOLLOW_GRAPH_in_graphGraphPattern639;
-    static $FOLLOW_varOrIRIref_in_graphGraphPattern641;
-    static $FOLLOW_groupGraphPattern_in_graphGraphPattern643;
-    static $FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern660;
-    static $FOLLOW_UNION_in_groupOrUnionGraphPattern664;
-    static $FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern666;
-    static $FOLLOW_FILTER_in_filter686;
-    static $FOLLOW_constraint_in_filter688;
-    static $FOLLOW_brackettedExpression_in_constraint705;
-    static $FOLLOW_builtInCall_in_constraint709;
-    static $FOLLOW_functionCall_in_constraint713;
-    static $FOLLOW_iriRef_in_functionCall730;
-    static $FOLLOW_argList_in_functionCall732;
-    static $FOLLOW_OPEN_BRACE_in_argList751;
-    static $FOLLOW_CLOSE_BRACE_in_argList753;
-    static $FOLLOW_OPEN_BRACE_in_argList757;
-    static $FOLLOW_expression_in_argList759;
-    static $FOLLOW_COMMA_in_argList763;
-    static $FOLLOW_expression_in_argList765;
-    static $FOLLOW_CLOSE_BRACE_in_argList770;
-    static $FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate789;
-    static $FOLLOW_constructTriples_in_constructTemplate791;
-    static $FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate794;
-    static $FOLLOW_triplesSameSubject_in_constructTriples811;
-    static $FOLLOW_DOT_in_constructTriples815;
-    static $FOLLOW_constructTriples_in_constructTriples817;
-    static $FOLLOW_varOrTerm_in_triplesSameSubject838;
-    static $FOLLOW_propertyListNotEmpty_in_triplesSameSubject840;
-    static $FOLLOW_triplesNode_in_triplesSameSubject844;
-    static $FOLLOW_propertyList_in_triplesSameSubject846;
-    static $FOLLOW_verb_in_propertyListNotEmpty863;
-    static $FOLLOW_objectList_in_propertyListNotEmpty865;
-    static $FOLLOW_SEMICOLON_in_propertyListNotEmpty869;
-    static $FOLLOW_verb_in_propertyListNotEmpty873;
-    static $FOLLOW_objectList_in_propertyListNotEmpty875;
-    static $FOLLOW_propertyListNotEmpty_in_propertyList898;
-    static $FOLLOW_object_in_objectList916;
-    static $FOLLOW_COMMA_in_objectList920;
-    static $FOLLOW_object_in_objectList922;
-    static $FOLLOW_graphNode_in_object942;
-    static $FOLLOW_varOrIRIref_in_verb959;
-    static $FOLLOW_A_in_verb967;
-    static $FOLLOW_collection_in_triplesNode984;
-    static $FOLLOW_blankNodePropertyList_in_triplesNode992;
-    static $FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1009;
-    static $FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1011;
-    static $FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1013;
-    static $FOLLOW_OPEN_BRACE_in_collection1030;
-    static $FOLLOW_graphNode_in_collection1032;
-    static $FOLLOW_CLOSE_BRACE_in_collection1035;
-    static $FOLLOW_varOrTerm_in_graphNode1052;
-    static $FOLLOW_triplesNode_in_graphNode1056;
-    static $FOLLOW_variable_in_varOrTerm1073;
-    static $FOLLOW_graphTerm_in_varOrTerm1081;
-    static $FOLLOW_variable_in_varOrIRIref1098;
-    static $FOLLOW_iriRef_in_varOrIRIref1102;
+    static $FOLLOW_prologue_in_query37;
+    static $FOLLOW_selectQuery_in_query41;
+    static $FOLLOW_constructQuery_in_query45;
+    static $FOLLOW_describeQuery_in_query49;
+    static $FOLLOW_askQuery_in_query53;
+    static $FOLLOW_EOF_in_query57;
+    static $FOLLOW_baseDecl_in_prologue74;
+    static $FOLLOW_prefixDecl_in_prologue77;
+    static $FOLLOW_BASE_in_baseDecl95;
+    static $FOLLOW_IRI_REF_in_baseDecl97;
+    static $FOLLOW_PREFIX_in_prefixDecl114;
+    static $FOLLOW_PNAME_NS_in_prefixDecl116;
+    static $FOLLOW_IRI_REF_in_prefixDecl118;
+    static $FOLLOW_SELECT_in_selectQuery135;
+    static $FOLLOW_set_in_selectQuery137;
+    static $FOLLOW_variable_in_selectQuery150;
+    static $FOLLOW_ASTERISK_in_selectQuery155;
+    static $FOLLOW_datasetClause_in_selectQuery159;
+    static $FOLLOW_whereClause_in_selectQuery162;
+    static $FOLLOW_solutionModifier_in_selectQuery164;
+    static $FOLLOW_CONSTRUCT_in_constructQuery181;
+    static $FOLLOW_constructTemplate_in_constructQuery183;
+    static $FOLLOW_datasetClause_in_constructQuery185;
+    static $FOLLOW_whereClause_in_constructQuery188;
+    static $FOLLOW_solutionModifier_in_constructQuery190;
+    static $FOLLOW_DESCRIBE_in_describeQuery207;
+    static $FOLLOW_varOrIRIref_in_describeQuery211;
+    static $FOLLOW_ASTERISK_in_describeQuery216;
+    static $FOLLOW_datasetClause_in_describeQuery220;
+    static $FOLLOW_whereClause_in_describeQuery223;
+    static $FOLLOW_solutionModifier_in_describeQuery226;
+    static $FOLLOW_ASK_in_askQuery243;
+    static $FOLLOW_datasetClause_in_askQuery245;
+    static $FOLLOW_whereClause_in_askQuery248;
+    static $FOLLOW_FROM_in_datasetClause265;
+    static $FOLLOW_defaultGraphClause_in_datasetClause269;
+    static $FOLLOW_namedGraphClause_in_datasetClause273;
+    static $FOLLOW_sourceSelector_in_defaultGraphClause292;
+    static $FOLLOW_NAMED_in_namedGraphClause309;
+    static $FOLLOW_sourceSelector_in_namedGraphClause311;
+    static $FOLLOW_iriRef_in_sourceSelector328;
+    static $FOLLOW_WHERE_in_whereClause345;
+    static $FOLLOW_groupGraphPattern_in_whereClause348;
+    static $FOLLOW_orderClause_in_solutionModifier365;
+    static $FOLLOW_limitOffsetClauses_in_solutionModifier368;
+    static $FOLLOW_limitClause_in_limitOffsetClauses388;
+    static $FOLLOW_offsetClause_in_limitOffsetClauses390;
+    static $FOLLOW_offsetClause_in_limitOffsetClauses395;
+    static $FOLLOW_limitClause_in_limitOffsetClauses397;
+    static $FOLLOW_ORDER_in_orderClause417;
+    static $FOLLOW_BY_in_orderClause419;
+    static $FOLLOW_orderCondition_in_orderClause421;
+    static $FOLLOW_set_in_orderCondition441;
+    static $FOLLOW_brackettedExpression_in_orderCondition451;
+    static $FOLLOW_constraint_in_orderCondition463;
+    static $FOLLOW_variable_in_orderCondition467;
+    static $FOLLOW_LIMIT_in_limitClause486;
+    static $FOLLOW_INTEGER_in_limitClause488;
+    static $FOLLOW_OFFSET_in_offsetClause505;
+    static $FOLLOW_INTEGER_in_offsetClause507;
+    static $FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern524;
+    static $FOLLOW_triplesBlock_in_groupGraphPattern526;
+    static $FOLLOW_graphPatternNotTriples_in_groupGraphPattern533;
+    static $FOLLOW_filter_in_groupGraphPattern537;
+    static $FOLLOW_DOT_in_groupGraphPattern541;
+    static $FOLLOW_triplesBlock_in_groupGraphPattern544;
+    static $FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern550;
+    static $FOLLOW_triplesSameSubject_in_triplesBlock567;
+    static $FOLLOW_DOT_in_triplesBlock571;
+    static $FOLLOW_triplesBlock_in_triplesBlock573;
+    static $FOLLOW_optionalGraphPattern_in_graphPatternNotTriples594;
+    static $FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples598;
+    static $FOLLOW_graphGraphPattern_in_graphPatternNotTriples602;
+    static $FOLLOW_OPTIONAL_in_optionalGraphPattern619;
+    static $FOLLOW_groupGraphPattern_in_optionalGraphPattern621;
+    static $FOLLOW_GRAPH_in_graphGraphPattern638;
+    static $FOLLOW_varOrIRIref_in_graphGraphPattern640;
+    static $FOLLOW_groupGraphPattern_in_graphGraphPattern642;
+    static $FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern659;
+    static $FOLLOW_UNION_in_groupOrUnionGraphPattern663;
+    static $FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern665;
+    static $FOLLOW_FILTER_in_filter685;
+    static $FOLLOW_constraint_in_filter687;
+    static $FOLLOW_brackettedExpression_in_constraint704;
+    static $FOLLOW_builtInCall_in_constraint708;
+    static $FOLLOW_functionCall_in_constraint712;
+    static $FOLLOW_iriRef_in_functionCall729;
+    static $FOLLOW_argList_in_functionCall731;
+    static $FOLLOW_OPEN_BRACE_in_argList750;
+    static $FOLLOW_CLOSE_BRACE_in_argList752;
+    static $FOLLOW_OPEN_BRACE_in_argList756;
+    static $FOLLOW_expression_in_argList758;
+    static $FOLLOW_COMMA_in_argList762;
+    static $FOLLOW_expression_in_argList764;
+    static $FOLLOW_CLOSE_BRACE_in_argList769;
+    static $FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate788;
+    static $FOLLOW_constructTriples_in_constructTemplate790;
+    static $FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate793;
+    static $FOLLOW_triplesSameSubject_in_constructTriples810;
+    static $FOLLOW_DOT_in_constructTriples814;
+    static $FOLLOW_constructTriples_in_constructTriples816;
+    static $FOLLOW_varOrTerm_in_triplesSameSubject837;
+    static $FOLLOW_propertyListNotEmpty_in_triplesSameSubject839;
+    static $FOLLOW_triplesNode_in_triplesSameSubject843;
+    static $FOLLOW_propertyList_in_triplesSameSubject845;
+    static $FOLLOW_verb_in_propertyListNotEmpty862;
+    static $FOLLOW_objectList_in_propertyListNotEmpty864;
+    static $FOLLOW_SEMICOLON_in_propertyListNotEmpty868;
+    static $FOLLOW_verb_in_propertyListNotEmpty872;
+    static $FOLLOW_objectList_in_propertyListNotEmpty874;
+    static $FOLLOW_propertyListNotEmpty_in_propertyList897;
+    static $FOLLOW_object_in_objectList915;
+    static $FOLLOW_COMMA_in_objectList919;
+    static $FOLLOW_object_in_objectList921;
+    static $FOLLOW_graphNode_in_object941;
+    static $FOLLOW_varOrIRIref_in_verb958;
+    static $FOLLOW_A_in_verb966;
+    static $FOLLOW_collection_in_triplesNode983;
+    static $FOLLOW_blankNodePropertyList_in_triplesNode991;
+    static $FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1008;
+    static $FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1010;
+    static $FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1012;
+    static $FOLLOW_OPEN_BRACE_in_collection1029;
+    static $FOLLOW_graphNode_in_collection1031;
+    static $FOLLOW_CLOSE_BRACE_in_collection1034;
+    static $FOLLOW_varOrTerm_in_graphNode1051;
+    static $FOLLOW_triplesNode_in_graphNode1055;
+    static $FOLLOW_variable_in_varOrTerm1072;
+    static $FOLLOW_graphTerm_in_varOrTerm1080;
+    static $FOLLOW_variable_in_varOrIRIref1097;
+    static $FOLLOW_iriRef_in_varOrIRIref1101;
     static $FOLLOW_set_in_variable0;
-    static $FOLLOW_iriRef_in_graphTerm1144;
-    static $FOLLOW_rdfLiteral_in_graphTerm1152;
-    static $FOLLOW_numericLiteral_in_graphTerm1160;
-    static $FOLLOW_booleanLiteral_in_graphTerm1168;
-    static $FOLLOW_blankNode_in_graphTerm1176;
-    static $FOLLOW_OPEN_BRACE_in_graphTerm1184;
-    static $FOLLOW_CLOSE_BRACE_in_graphTerm1186;
-    static $FOLLOW_conditionalOrExpression_in_expression1203;
-    static $FOLLOW_conditionalAndExpression_in_conditionalOrExpression1220;
-    static $FOLLOW_OR_in_conditionalOrExpression1224;
-    static $FOLLOW_conditionalAndExpression_in_conditionalOrExpression1226;
-    static $FOLLOW_valueLogical_in_conditionalAndExpression1246;
-    static $FOLLOW_AND_in_conditionalAndExpression1250;
-    static $FOLLOW_valueLogical_in_conditionalAndExpression1252;
-    static $FOLLOW_relationalExpression_in_valueLogical1272;
-    static $FOLLOW_numericExpression_in_relationalExpression1289;
-    static $FOLLOW_EQUAL_in_relationalExpression1293;
-    static $FOLLOW_numericExpression_in_relationalExpression1295;
-    static $FOLLOW_NOT_EQUAL_in_relationalExpression1299;
-    static $FOLLOW_numericExpression_in_relationalExpression1301;
-    static $FOLLOW_LESS_in_relationalExpression1305;
-    static $FOLLOW_numericExpression_in_relationalExpression1307;
-    static $FOLLOW_GREATER_in_relationalExpression1311;
-    static $FOLLOW_numericExpression_in_relationalExpression1313;
-    static $FOLLOW_LESS_EQUAL_in_relationalExpression1317;
-    static $FOLLOW_numericExpression_in_relationalExpression1319;
-    static $FOLLOW_GREATER_EQUAL_in_relationalExpression1323;
-    static $FOLLOW_numericExpression_in_relationalExpression1325;
-    static $FOLLOW_additiveExpression_in_numericExpression1345;
-    static $FOLLOW_multiplicativeExpression_in_additiveExpression1362;
-    static $FOLLOW_PLUS_in_additiveExpression1366;
-    static $FOLLOW_multiplicativeExpression_in_additiveExpression1368;
-    static $FOLLOW_MINUS_in_additiveExpression1372;
-    static $FOLLOW_multiplicativeExpression_in_additiveExpression1374;
-    static $FOLLOW_numericLiteralPositive_in_additiveExpression1378;
-    static $FOLLOW_numericLiteralNegative_in_additiveExpression1382;
-    static $FOLLOW_unaryExpression_in_multiplicativeExpression1402;
-    static $FOLLOW_ASTERISK_in_multiplicativeExpression1406;
-    static $FOLLOW_unaryExpression_in_multiplicativeExpression1408;
-    static $FOLLOW_DIVIDE_in_multiplicativeExpression1412;
-    static $FOLLOW_unaryExpression_in_multiplicativeExpression1414;
-    static $FOLLOW_NOT_in_unaryExpression1434;
-    static $FOLLOW_primaryExpression_in_unaryExpression1436;
-    static $FOLLOW_PLUS_in_unaryExpression1444;
-    static $FOLLOW_primaryExpression_in_unaryExpression1446;
-    static $FOLLOW_MINUS_in_unaryExpression1454;
-    static $FOLLOW_primaryExpression_in_unaryExpression1456;
-    static $FOLLOW_primaryExpression_in_unaryExpression1464;
-    static $FOLLOW_brackettedExpression_in_primaryExpression1481;
-    static $FOLLOW_builtInCall_in_primaryExpression1485;
-    static $FOLLOW_iriRefOrFunction_in_primaryExpression1489;
-    static $FOLLOW_rdfLiteral_in_primaryExpression1493;
-    static $FOLLOW_numericLiteral_in_primaryExpression1497;
-    static $FOLLOW_booleanLiteral_in_primaryExpression1501;
-    static $FOLLOW_variable_in_primaryExpression1505;
-    static $FOLLOW_OPEN_BRACE_in_brackettedExpression1522;
-    static $FOLLOW_expression_in_brackettedExpression1524;
-    static $FOLLOW_CLOSE_BRACE_in_brackettedExpression1526;
-    static $FOLLOW_STR_in_builtInCall1543;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1545;
-    static $FOLLOW_expression_in_builtInCall1547;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1549;
-    static $FOLLOW_LANG_in_builtInCall1557;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1559;
-    static $FOLLOW_expression_in_builtInCall1561;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1563;
-    static $FOLLOW_LANGMATCHES_in_builtInCall1571;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1573;
-    static $FOLLOW_expression_in_builtInCall1575;
-    static $FOLLOW_COMMA_in_builtInCall1577;
-    static $FOLLOW_expression_in_builtInCall1579;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1581;
-    static $FOLLOW_DATATYPE_in_builtInCall1589;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1591;
-    static $FOLLOW_expression_in_builtInCall1593;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1595;
-    static $FOLLOW_BOUND_in_builtInCall1603;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1605;
-    static $FOLLOW_variable_in_builtInCall1607;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1609;
-    static $FOLLOW_SAMETERM_in_builtInCall1617;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1619;
-    static $FOLLOW_expression_in_builtInCall1621;
-    static $FOLLOW_COMMA_in_builtInCall1623;
-    static $FOLLOW_expression_in_builtInCall1625;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1627;
-    static $FOLLOW_ISIRI_in_builtInCall1635;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1637;
-    static $FOLLOW_expression_in_builtInCall1639;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1641;
-    static $FOLLOW_ISURI_in_builtInCall1649;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1651;
-    static $FOLLOW_expression_in_builtInCall1653;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1655;
-    static $FOLLOW_ISBLANK_in_builtInCall1663;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1665;
-    static $FOLLOW_expression_in_builtInCall1667;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1669;
-    static $FOLLOW_ISLITERAL_in_builtInCall1677;
-    static $FOLLOW_OPEN_BRACE_in_builtInCall1679;
-    static $FOLLOW_expression_in_builtInCall1681;
-    static $FOLLOW_CLOSE_BRACE_in_builtInCall1683;
-    static $FOLLOW_regexExpression_in_builtInCall1691;
-    static $FOLLOW_REGEX_in_regexExpression1708;
-    static $FOLLOW_OPEN_BRACE_in_regexExpression1710;
-    static $FOLLOW_expression_in_regexExpression1712;
-    static $FOLLOW_COMMA_in_regexExpression1714;
-    static $FOLLOW_expression_in_regexExpression1716;
-    static $FOLLOW_COMMA_in_regexExpression1720;
-    static $FOLLOW_expression_in_regexExpression1722;
-    static $FOLLOW_CLOSE_BRACE_in_regexExpression1727;
-    static $FOLLOW_iriRef_in_iriRefOrFunction1744;
-    static $FOLLOW_argList_in_iriRefOrFunction1746;
-    static $FOLLOW_string_in_rdfLiteral1764;
-    static $FOLLOW_LANGTAG_in_rdfLiteral1768;
-    static $FOLLOW_REFERENCE_in_rdfLiteral1774;
-    static $FOLLOW_iriRef_in_rdfLiteral1776;
-    static $FOLLOW_numericLiteralUnsigned_in_numericLiteral1798;
-    static $FOLLOW_numericLiteralPositive_in_numericLiteral1802;
-    static $FOLLOW_numericLiteralNegative_in_numericLiteral1806;
+    static $FOLLOW_iriRef_in_graphTerm1143;
+    static $FOLLOW_rdfLiteral_in_graphTerm1151;
+    static $FOLLOW_numericLiteral_in_graphTerm1159;
+    static $FOLLOW_booleanLiteral_in_graphTerm1167;
+    static $FOLLOW_blankNode_in_graphTerm1175;
+    static $FOLLOW_OPEN_BRACE_in_graphTerm1183;
+    static $FOLLOW_CLOSE_BRACE_in_graphTerm1185;
+    static $FOLLOW_conditionalOrExpression_in_expression1202;
+    static $FOLLOW_conditionalAndExpression_in_conditionalOrExpression1219;
+    static $FOLLOW_OR_in_conditionalOrExpression1223;
+    static $FOLLOW_conditionalAndExpression_in_conditionalOrExpression1225;
+    static $FOLLOW_valueLogical_in_conditionalAndExpression1245;
+    static $FOLLOW_AND_in_conditionalAndExpression1249;
+    static $FOLLOW_valueLogical_in_conditionalAndExpression1251;
+    static $FOLLOW_relationalExpression_in_valueLogical1271;
+    static $FOLLOW_numericExpression_in_relationalExpression1288;
+    static $FOLLOW_EQUAL_in_relationalExpression1292;
+    static $FOLLOW_numericExpression_in_relationalExpression1294;
+    static $FOLLOW_NOT_EQUAL_in_relationalExpression1298;
+    static $FOLLOW_numericExpression_in_relationalExpression1300;
+    static $FOLLOW_LESS_in_relationalExpression1304;
+    static $FOLLOW_numericExpression_in_relationalExpression1306;
+    static $FOLLOW_GREATER_in_relationalExpression1310;
+    static $FOLLOW_numericExpression_in_relationalExpression1312;
+    static $FOLLOW_LESS_EQUAL_in_relationalExpression1316;
+    static $FOLLOW_numericExpression_in_relationalExpression1318;
+    static $FOLLOW_GREATER_EQUAL_in_relationalExpression1322;
+    static $FOLLOW_numericExpression_in_relationalExpression1324;
+    static $FOLLOW_additiveExpression_in_numericExpression1344;
+    static $FOLLOW_multiplicativeExpression_in_additiveExpression1361;
+    static $FOLLOW_PLUS_in_additiveExpression1365;
+    static $FOLLOW_multiplicativeExpression_in_additiveExpression1367;
+    static $FOLLOW_MINUS_in_additiveExpression1371;
+    static $FOLLOW_multiplicativeExpression_in_additiveExpression1373;
+    static $FOLLOW_numericLiteralPositive_in_additiveExpression1377;
+    static $FOLLOW_numericLiteralNegative_in_additiveExpression1381;
+    static $FOLLOW_unaryExpression_in_multiplicativeExpression1401;
+    static $FOLLOW_ASTERISK_in_multiplicativeExpression1405;
+    static $FOLLOW_unaryExpression_in_multiplicativeExpression1407;
+    static $FOLLOW_DIVIDE_in_multiplicativeExpression1411;
+    static $FOLLOW_unaryExpression_in_multiplicativeExpression1413;
+    static $FOLLOW_NOT_in_unaryExpression1433;
+    static $FOLLOW_primaryExpression_in_unaryExpression1435;
+    static $FOLLOW_PLUS_in_unaryExpression1443;
+    static $FOLLOW_primaryExpression_in_unaryExpression1445;
+    static $FOLLOW_MINUS_in_unaryExpression1453;
+    static $FOLLOW_primaryExpression_in_unaryExpression1455;
+    static $FOLLOW_primaryExpression_in_unaryExpression1463;
+    static $FOLLOW_brackettedExpression_in_primaryExpression1480;
+    static $FOLLOW_builtInCall_in_primaryExpression1484;
+    static $FOLLOW_iriRefOrFunction_in_primaryExpression1488;
+    static $FOLLOW_rdfLiteral_in_primaryExpression1492;
+    static $FOLLOW_numericLiteral_in_primaryExpression1496;
+    static $FOLLOW_booleanLiteral_in_primaryExpression1500;
+    static $FOLLOW_variable_in_primaryExpression1504;
+    static $FOLLOW_OPEN_BRACE_in_brackettedExpression1521;
+    static $FOLLOW_expression_in_brackettedExpression1523;
+    static $FOLLOW_CLOSE_BRACE_in_brackettedExpression1525;
+    static $FOLLOW_STR_in_builtInCall1542;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1544;
+    static $FOLLOW_expression_in_builtInCall1546;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1548;
+    static $FOLLOW_LANG_in_builtInCall1556;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1558;
+    static $FOLLOW_expression_in_builtInCall1560;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1562;
+    static $FOLLOW_LANGMATCHES_in_builtInCall1570;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1572;
+    static $FOLLOW_expression_in_builtInCall1574;
+    static $FOLLOW_COMMA_in_builtInCall1576;
+    static $FOLLOW_expression_in_builtInCall1578;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1580;
+    static $FOLLOW_DATATYPE_in_builtInCall1588;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1590;
+    static $FOLLOW_expression_in_builtInCall1592;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1594;
+    static $FOLLOW_BOUND_in_builtInCall1602;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1604;
+    static $FOLLOW_variable_in_builtInCall1606;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1608;
+    static $FOLLOW_SAMETERM_in_builtInCall1616;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1618;
+    static $FOLLOW_expression_in_builtInCall1620;
+    static $FOLLOW_COMMA_in_builtInCall1622;
+    static $FOLLOW_expression_in_builtInCall1624;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1626;
+    static $FOLLOW_ISIRI_in_builtInCall1634;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1636;
+    static $FOLLOW_expression_in_builtInCall1638;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1640;
+    static $FOLLOW_ISURI_in_builtInCall1648;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1650;
+    static $FOLLOW_expression_in_builtInCall1652;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1654;
+    static $FOLLOW_ISBLANK_in_builtInCall1662;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1664;
+    static $FOLLOW_expression_in_builtInCall1666;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1668;
+    static $FOLLOW_ISLITERAL_in_builtInCall1676;
+    static $FOLLOW_OPEN_BRACE_in_builtInCall1678;
+    static $FOLLOW_expression_in_builtInCall1680;
+    static $FOLLOW_CLOSE_BRACE_in_builtInCall1682;
+    static $FOLLOW_regexExpression_in_builtInCall1690;
+    static $FOLLOW_REGEX_in_regexExpression1707;
+    static $FOLLOW_OPEN_BRACE_in_regexExpression1709;
+    static $FOLLOW_expression_in_regexExpression1711;
+    static $FOLLOW_COMMA_in_regexExpression1713;
+    static $FOLLOW_expression_in_regexExpression1715;
+    static $FOLLOW_COMMA_in_regexExpression1719;
+    static $FOLLOW_expression_in_regexExpression1721;
+    static $FOLLOW_CLOSE_BRACE_in_regexExpression1726;
+    static $FOLLOW_iriRef_in_iriRefOrFunction1743;
+    static $FOLLOW_argList_in_iriRefOrFunction1745;
+    static $FOLLOW_string_in_rdfLiteral1763;
+    static $FOLLOW_LANGTAG_in_rdfLiteral1767;
+    static $FOLLOW_REFERENCE_in_rdfLiteral1773;
+    static $FOLLOW_iriRef_in_rdfLiteral1775;
+    static $FOLLOW_numericLiteralUnsigned_in_numericLiteral1797;
+    static $FOLLOW_numericLiteralPositive_in_numericLiteral1801;
+    static $FOLLOW_numericLiteralNegative_in_numericLiteral1805;
     static $FOLLOW_set_in_numericLiteralUnsigned0;
     static $FOLLOW_set_in_numericLiteralPositive0;
     static $FOLLOW_set_in_numericLiteralNegative0;
     static $FOLLOW_set_in_booleanLiteral0;
     static $FOLLOW_set_in_string0;
-    static $FOLLOW_IRI_REF_in_iriRef1988;
-    static $FOLLOW_prefixedName_in_iriRef1996;
+    static $FOLLOW_IRI_REF_in_iriRef1987;
+    static $FOLLOW_prefixedName_in_iriRef1995;
     static $FOLLOW_set_in_prefixedName0;
-    static $FOLLOW_BLANK_NODE_LABEL_in_blankNode2038;
-    static $FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2046;
-    static $FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2048;
+    static $FOLLOW_BLANK_NODE_LABEL_in_blankNode2037;
+    static $FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2045;
+    static $FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2047;
 
     
     
@@ -388,18 +389,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "query"
-    // Test.g:12:1: query : prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF ; 
+    // Test.g:11:1: query : prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF ; 
     public function query(){
         try {
-            // Test.g:13:5: ( prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF ) 
-            // Test.g:13:7: prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF 
+            // Test.g:12:5: ( prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF ) 
+            // Test.g:12:7: prologue ( selectQuery | constructQuery | describeQuery | askQuery ) EOF 
             {
-            $this->pushFollow(self::$FOLLOW_prologue_in_query38);
+            $this->pushFollow(self::$FOLLOW_prologue_in_query37);
             $this->prologue();
 
             $this->state->_fsp--;
 
-            // Test.g:13:16: ( selectQuery | constructQuery | describeQuery | askQuery ) 
+            // Test.g:12:16: ( selectQuery | constructQuery | describeQuery | askQuery ) 
             $alt1=4;
             $LA1 = $this->input->LA(1);
             if($this->getToken('SELECT')== $LA1)
@@ -427,9 +428,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt1) {
                 case 1 :
-                    // Test.g:13:18: selectQuery 
+                    // Test.g:12:18: selectQuery 
                     {
-                    $this->pushFollow(self::$FOLLOW_selectQuery_in_query42);
+                    $this->pushFollow(self::$FOLLOW_selectQuery_in_query41);
                     $this->selectQuery();
 
                     $this->state->_fsp--;
@@ -438,9 +439,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:13:32: constructQuery 
+                    // Test.g:12:32: constructQuery 
                     {
-                    $this->pushFollow(self::$FOLLOW_constructQuery_in_query46);
+                    $this->pushFollow(self::$FOLLOW_constructQuery_in_query45);
                     $this->constructQuery();
 
                     $this->state->_fsp--;
@@ -449,9 +450,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:13:49: describeQuery 
+                    // Test.g:12:49: describeQuery 
                     {
-                    $this->pushFollow(self::$FOLLOW_describeQuery_in_query50);
+                    $this->pushFollow(self::$FOLLOW_describeQuery_in_query49);
                     $this->describeQuery();
 
                     $this->state->_fsp--;
@@ -460,9 +461,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // Test.g:13:65: askQuery 
+                    // Test.g:12:65: askQuery 
                     {
-                    $this->pushFollow(self::$FOLLOW_askQuery_in_query54);
+                    $this->pushFollow(self::$FOLLOW_askQuery_in_query53);
                     $this->askQuery();
 
                     $this->state->_fsp--;
@@ -473,7 +474,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            $this->match($this->input,$this->getToken('EOF'),self::$FOLLOW_EOF_in_query58); 
+            $this->match($this->input,$this->getToken('EOF'),self::$FOLLOW_EOF_in_query57); 
 
             }
 
@@ -492,13 +493,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "prologue"
-    // Test.g:16:1: prologue : ( baseDecl )? ( prefixDecl )* ; 
+    // Test.g:15:1: prologue : ( baseDecl )? ( prefixDecl )* ; 
     public function prologue(){
         try {
-            // Test.g:17:5: ( ( baseDecl )? ( prefixDecl )* ) 
-            // Test.g:17:7: ( baseDecl )? ( prefixDecl )* 
+            // Test.g:16:5: ( ( baseDecl )? ( prefixDecl )* ) 
+            // Test.g:16:7: ( baseDecl )? ( prefixDecl )* 
             {
-            // Test.g:17:7: ( baseDecl )? 
+            // Test.g:16:7: ( baseDecl )? 
             $alt2=2;
             $LA2_0 = $this->input->LA(1);
 
@@ -507,9 +508,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt2) {
                 case 1 :
-                    // Test.g:17:7: baseDecl 
+                    // Test.g:16:7: baseDecl 
                     {
-                    $this->pushFollow(self::$FOLLOW_baseDecl_in_prologue75);
+                    $this->pushFollow(self::$FOLLOW_baseDecl_in_prologue74);
                     $this->baseDecl();
 
                     $this->state->_fsp--;
@@ -520,7 +521,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            // Test.g:17:17: ( prefixDecl )* 
+            // Test.g:16:17: ( prefixDecl )* 
             //loop3:
             do {
                 $alt3=2;
@@ -533,9 +534,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt3) {
             	case 1 :
-            	    // Test.g:17:17: prefixDecl 
+            	    // Test.g:16:17: prefixDecl 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_prefixDecl_in_prologue78);
+            	    $this->pushFollow(self::$FOLLOW_prefixDecl_in_prologue77);
             	    $this->prefixDecl();
 
             	    $this->state->_fsp--;
@@ -567,14 +568,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "baseDecl"
-    // Test.g:20:1: baseDecl : BASE IRI_REF ; 
+    // Test.g:19:1: baseDecl : BASE IRI_REF ; 
     public function baseDecl(){
         try {
-            // Test.g:21:5: ( BASE IRI_REF ) 
-            // Test.g:21:7: BASE IRI_REF 
+            // Test.g:20:5: ( BASE IRI_REF ) 
+            // Test.g:20:7: BASE IRI_REF 
             {
-            $this->match($this->input,$this->getToken('BASE'),self::$FOLLOW_BASE_in_baseDecl96); 
-            $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_baseDecl98); 
+            $this->match($this->input,$this->getToken('BASE'),self::$FOLLOW_BASE_in_baseDecl95); 
+            $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_baseDecl97); 
 
             }
 
@@ -593,15 +594,15 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "prefixDecl"
-    // Test.g:24:1: prefixDecl : PREFIX PNAME_NS IRI_REF ; 
+    // Test.g:23:1: prefixDecl : PREFIX PNAME_NS IRI_REF ; 
     public function prefixDecl(){
         try {
-            // Test.g:25:5: ( PREFIX PNAME_NS IRI_REF ) 
-            // Test.g:25:7: PREFIX PNAME_NS IRI_REF 
+            // Test.g:24:5: ( PREFIX PNAME_NS IRI_REF ) 
+            // Test.g:24:7: PREFIX PNAME_NS IRI_REF 
             {
-            $this->match($this->input,$this->getToken('PREFIX'),self::$FOLLOW_PREFIX_in_prefixDecl115); 
-            $this->match($this->input,$this->getToken('PNAME_NS'),self::$FOLLOW_PNAME_NS_in_prefixDecl117); 
-            $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_prefixDecl119); 
+            $this->match($this->input,$this->getToken('PREFIX'),self::$FOLLOW_PREFIX_in_prefixDecl114); 
+            $this->match($this->input,$this->getToken('PNAME_NS'),self::$FOLLOW_PNAME_NS_in_prefixDecl116); 
+            $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_prefixDecl118); 
 
             }
 
@@ -620,14 +621,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "selectQuery"
-    // Test.g:28:1: selectQuery : SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier ; 
+    // Test.g:27:1: selectQuery : SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier ; 
     public function selectQuery(){
         try {
-            // Test.g:29:5: ( SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier ) 
-            // Test.g:29:7: SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier 
+            // Test.g:28:5: ( SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier ) 
+            // Test.g:28:7: SELECT ( DISTINCT | REDUCED )? ( ( variable )+ | ASTERISK ) ( datasetClause )* whereClause solutionModifier 
             {
-            $this->match($this->input,$this->getToken('SELECT'),self::$FOLLOW_SELECT_in_selectQuery136); 
-            // Test.g:29:14: ( DISTINCT | REDUCED )? 
+            $this->match($this->input,$this->getToken('SELECT'),self::$FOLLOW_SELECT_in_selectQuery135); 
+            // Test.g:28:14: ( DISTINCT | REDUCED )? 
             $alt4=2;
             $LA4_0 = $this->input->LA(1);
 
@@ -653,7 +654,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            // Test.g:29:38: ( ( variable )+ | ASTERISK ) 
+            // Test.g:28:38: ( ( variable )+ | ASTERISK ) 
             $alt6=2;
             $LA6_0 = $this->input->LA(1);
 
@@ -670,9 +671,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt6) {
                 case 1 :
-                    // Test.g:29:40: ( variable )+ 
+                    // Test.g:28:40: ( variable )+ 
                     {
-                    // Test.g:29:40: ( variable )+ 
+                    // Test.g:28:40: ( variable )+ 
                     $cnt5=0;
                     //loop5:
                     do {
@@ -686,9 +687,9 @@ class TestParser extends AntlrParser {
 
                         switch ($alt5) {
                     	case 1 :
-                    	    // Test.g:29:40: variable 
+                    	    // Test.g:28:40: variable 
                     	    {
-                    	    $this->pushFollow(self::$FOLLOW_variable_in_selectQuery151);
+                    	    $this->pushFollow(self::$FOLLOW_variable_in_selectQuery150);
                     	    $this->variable();
 
                     	    $this->state->_fsp--;
@@ -710,16 +711,16 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:29:52: ASTERISK 
+                    // Test.g:28:52: ASTERISK 
                     {
-                    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_selectQuery156); 
+                    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_selectQuery155); 
 
                     }
                     break;
 
             }
 
-            // Test.g:29:63: ( datasetClause )* 
+            // Test.g:28:63: ( datasetClause )* 
             //loop7:
             do {
                 $alt7=2;
@@ -732,9 +733,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt7) {
             	case 1 :
-            	    // Test.g:29:63: datasetClause 
+            	    // Test.g:28:63: datasetClause 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_selectQuery160);
+            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_selectQuery159);
             	    $this->datasetClause();
 
             	    $this->state->_fsp--;
@@ -748,12 +749,12 @@ class TestParser extends AntlrParser {
                 }
             } while (true);
 
-            $this->pushFollow(self::$FOLLOW_whereClause_in_selectQuery163);
+            $this->pushFollow(self::$FOLLOW_whereClause_in_selectQuery162);
             $this->whereClause();
 
             $this->state->_fsp--;
 
-            $this->pushFollow(self::$FOLLOW_solutionModifier_in_selectQuery165);
+            $this->pushFollow(self::$FOLLOW_solutionModifier_in_selectQuery164);
             $this->solutionModifier();
 
             $this->state->_fsp--;
@@ -776,19 +777,19 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "constructQuery"
-    // Test.g:32:1: constructQuery : CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier ; 
+    // Test.g:31:1: constructQuery : CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier ; 
     public function constructQuery(){
         try {
-            // Test.g:33:5: ( CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier ) 
-            // Test.g:33:7: CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier 
+            // Test.g:32:5: ( CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier ) 
+            // Test.g:32:7: CONSTRUCT constructTemplate ( datasetClause )* whereClause solutionModifier 
             {
-            $this->match($this->input,$this->getToken('CONSTRUCT'),self::$FOLLOW_CONSTRUCT_in_constructQuery182); 
-            $this->pushFollow(self::$FOLLOW_constructTemplate_in_constructQuery184);
+            $this->match($this->input,$this->getToken('CONSTRUCT'),self::$FOLLOW_CONSTRUCT_in_constructQuery181); 
+            $this->pushFollow(self::$FOLLOW_constructTemplate_in_constructQuery183);
             $this->constructTemplate();
 
             $this->state->_fsp--;
 
-            // Test.g:33:35: ( datasetClause )* 
+            // Test.g:32:35: ( datasetClause )* 
             //loop8:
             do {
                 $alt8=2;
@@ -801,9 +802,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt8) {
             	case 1 :
-            	    // Test.g:33:35: datasetClause 
+            	    // Test.g:32:35: datasetClause 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_constructQuery186);
+            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_constructQuery185);
             	    $this->datasetClause();
 
             	    $this->state->_fsp--;
@@ -817,12 +818,12 @@ class TestParser extends AntlrParser {
                 }
             } while (true);
 
-            $this->pushFollow(self::$FOLLOW_whereClause_in_constructQuery189);
+            $this->pushFollow(self::$FOLLOW_whereClause_in_constructQuery188);
             $this->whereClause();
 
             $this->state->_fsp--;
 
-            $this->pushFollow(self::$FOLLOW_solutionModifier_in_constructQuery191);
+            $this->pushFollow(self::$FOLLOW_solutionModifier_in_constructQuery190);
             $this->solutionModifier();
 
             $this->state->_fsp--;
@@ -845,14 +846,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "describeQuery"
-    // Test.g:36:1: describeQuery : DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier ; 
+    // Test.g:35:1: describeQuery : DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier ; 
     public function describeQuery(){
         try {
-            // Test.g:37:5: ( DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier ) 
-            // Test.g:37:7: DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier 
+            // Test.g:36:5: ( DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier ) 
+            // Test.g:36:7: DESCRIBE ( ( varOrIRIref )+ | ASTERISK ) ( datasetClause )* ( whereClause )? solutionModifier 
             {
-            $this->match($this->input,$this->getToken('DESCRIBE'),self::$FOLLOW_DESCRIBE_in_describeQuery208); 
-            // Test.g:37:16: ( ( varOrIRIref )+ | ASTERISK ) 
+            $this->match($this->input,$this->getToken('DESCRIBE'),self::$FOLLOW_DESCRIBE_in_describeQuery207); 
+            // Test.g:36:16: ( ( varOrIRIref )+ | ASTERISK ) 
             $alt10=2;
             $LA10_0 = $this->input->LA(1);
 
@@ -869,9 +870,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt10) {
                 case 1 :
-                    // Test.g:37:18: ( varOrIRIref )+ 
+                    // Test.g:36:18: ( varOrIRIref )+ 
                     {
-                    // Test.g:37:18: ( varOrIRIref )+ 
+                    // Test.g:36:18: ( varOrIRIref )+ 
                     $cnt9=0;
                     //loop9:
                     do {
@@ -885,9 +886,9 @@ class TestParser extends AntlrParser {
 
                         switch ($alt9) {
                     	case 1 :
-                    	    // Test.g:37:18: varOrIRIref 
+                    	    // Test.g:36:18: varOrIRIref 
                     	    {
-                    	    $this->pushFollow(self::$FOLLOW_varOrIRIref_in_describeQuery212);
+                    	    $this->pushFollow(self::$FOLLOW_varOrIRIref_in_describeQuery211);
                     	    $this->varOrIRIref();
 
                     	    $this->state->_fsp--;
@@ -909,16 +910,16 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:37:33: ASTERISK 
+                    // Test.g:36:33: ASTERISK 
                     {
-                    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_describeQuery217); 
+                    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_describeQuery216); 
 
                     }
                     break;
 
             }
 
-            // Test.g:37:44: ( datasetClause )* 
+            // Test.g:36:44: ( datasetClause )* 
             //loop11:
             do {
                 $alt11=2;
@@ -931,9 +932,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt11) {
             	case 1 :
-            	    // Test.g:37:44: datasetClause 
+            	    // Test.g:36:44: datasetClause 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_describeQuery221);
+            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_describeQuery220);
             	    $this->datasetClause();
 
             	    $this->state->_fsp--;
@@ -947,7 +948,7 @@ class TestParser extends AntlrParser {
                 }
             } while (true);
 
-            // Test.g:37:59: ( whereClause )? 
+            // Test.g:36:59: ( whereClause )? 
             $alt12=2;
             $LA12_0 = $this->input->LA(1);
 
@@ -956,9 +957,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt12) {
                 case 1 :
-                    // Test.g:37:59: whereClause 
+                    // Test.g:36:59: whereClause 
                     {
-                    $this->pushFollow(self::$FOLLOW_whereClause_in_describeQuery224);
+                    $this->pushFollow(self::$FOLLOW_whereClause_in_describeQuery223);
                     $this->whereClause();
 
                     $this->state->_fsp--;
@@ -969,7 +970,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_solutionModifier_in_describeQuery227);
+            $this->pushFollow(self::$FOLLOW_solutionModifier_in_describeQuery226);
             $this->solutionModifier();
 
             $this->state->_fsp--;
@@ -992,14 +993,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "askQuery"
-    // Test.g:40:1: askQuery : ASK ( datasetClause )* whereClause ; 
+    // Test.g:39:1: askQuery : ASK ( datasetClause )* whereClause ; 
     public function askQuery(){
         try {
-            // Test.g:41:5: ( ASK ( datasetClause )* whereClause ) 
-            // Test.g:41:7: ASK ( datasetClause )* whereClause 
+            // Test.g:40:5: ( ASK ( datasetClause )* whereClause ) 
+            // Test.g:40:7: ASK ( datasetClause )* whereClause 
             {
-            $this->match($this->input,$this->getToken('ASK'),self::$FOLLOW_ASK_in_askQuery244); 
-            // Test.g:41:11: ( datasetClause )* 
+            $this->match($this->input,$this->getToken('ASK'),self::$FOLLOW_ASK_in_askQuery243); 
+            // Test.g:40:11: ( datasetClause )* 
             //loop13:
             do {
                 $alt13=2;
@@ -1012,9 +1013,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt13) {
             	case 1 :
-            	    // Test.g:41:11: datasetClause 
+            	    // Test.g:40:11: datasetClause 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_askQuery246);
+            	    $this->pushFollow(self::$FOLLOW_datasetClause_in_askQuery245);
             	    $this->datasetClause();
 
             	    $this->state->_fsp--;
@@ -1028,7 +1029,7 @@ class TestParser extends AntlrParser {
                 }
             } while (true);
 
-            $this->pushFollow(self::$FOLLOW_whereClause_in_askQuery249);
+            $this->pushFollow(self::$FOLLOW_whereClause_in_askQuery248);
             $this->whereClause();
 
             $this->state->_fsp--;
@@ -1051,14 +1052,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "datasetClause"
-    // Test.g:44:1: datasetClause : FROM ( defaultGraphClause | namedGraphClause ) ; 
+    // Test.g:43:1: datasetClause : FROM ( defaultGraphClause | namedGraphClause ) ; 
     public function datasetClause(){
         try {
-            // Test.g:45:5: ( FROM ( defaultGraphClause | namedGraphClause ) ) 
-            // Test.g:45:7: FROM ( defaultGraphClause | namedGraphClause ) 
+            // Test.g:44:5: ( FROM ( defaultGraphClause | namedGraphClause ) ) 
+            // Test.g:44:7: FROM ( defaultGraphClause | namedGraphClause ) 
             {
-            $this->match($this->input,$this->getToken('FROM'),self::$FOLLOW_FROM_in_datasetClause266); 
-            // Test.g:45:12: ( defaultGraphClause | namedGraphClause ) 
+            $this->match($this->input,$this->getToken('FROM'),self::$FOLLOW_FROM_in_datasetClause265); 
+            // Test.g:44:12: ( defaultGraphClause | namedGraphClause ) 
             $alt14=2;
             $LA14_0 = $this->input->LA(1);
 
@@ -1075,9 +1076,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt14) {
                 case 1 :
-                    // Test.g:45:14: defaultGraphClause 
+                    // Test.g:44:14: defaultGraphClause 
                     {
-                    $this->pushFollow(self::$FOLLOW_defaultGraphClause_in_datasetClause270);
+                    $this->pushFollow(self::$FOLLOW_defaultGraphClause_in_datasetClause269);
                     $this->defaultGraphClause();
 
                     $this->state->_fsp--;
@@ -1086,9 +1087,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:45:35: namedGraphClause 
+                    // Test.g:44:35: namedGraphClause 
                     {
-                    $this->pushFollow(self::$FOLLOW_namedGraphClause_in_datasetClause274);
+                    $this->pushFollow(self::$FOLLOW_namedGraphClause_in_datasetClause273);
                     $this->namedGraphClause();
 
                     $this->state->_fsp--;
@@ -1117,13 +1118,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "defaultGraphClause"
-    // Test.g:48:1: defaultGraphClause : sourceSelector ; 
+    // Test.g:47:1: defaultGraphClause : sourceSelector ; 
     public function defaultGraphClause(){
         try {
-            // Test.g:49:5: ( sourceSelector ) 
-            // Test.g:49:7: sourceSelector 
+            // Test.g:48:5: ( sourceSelector ) 
+            // Test.g:48:7: sourceSelector 
             {
-            $this->pushFollow(self::$FOLLOW_sourceSelector_in_defaultGraphClause293);
+            $this->pushFollow(self::$FOLLOW_sourceSelector_in_defaultGraphClause292);
             $this->sourceSelector();
 
             $this->state->_fsp--;
@@ -1146,14 +1147,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "namedGraphClause"
-    // Test.g:52:1: namedGraphClause : NAMED sourceSelector ; 
+    // Test.g:51:1: namedGraphClause : NAMED sourceSelector ; 
     public function namedGraphClause(){
         try {
-            // Test.g:53:5: ( NAMED sourceSelector ) 
-            // Test.g:53:7: NAMED sourceSelector 
+            // Test.g:52:5: ( NAMED sourceSelector ) 
+            // Test.g:52:7: NAMED sourceSelector 
             {
-            $this->match($this->input,$this->getToken('NAMED'),self::$FOLLOW_NAMED_in_namedGraphClause310); 
-            $this->pushFollow(self::$FOLLOW_sourceSelector_in_namedGraphClause312);
+            $this->match($this->input,$this->getToken('NAMED'),self::$FOLLOW_NAMED_in_namedGraphClause309); 
+            $this->pushFollow(self::$FOLLOW_sourceSelector_in_namedGraphClause311);
             $this->sourceSelector();
 
             $this->state->_fsp--;
@@ -1176,13 +1177,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "sourceSelector"
-    // Test.g:56:1: sourceSelector : iriRef ; 
+    // Test.g:55:1: sourceSelector : iriRef ; 
     public function sourceSelector(){
         try {
-            // Test.g:57:5: ( iriRef ) 
-            // Test.g:57:7: iriRef 
+            // Test.g:56:5: ( iriRef ) 
+            // Test.g:56:7: iriRef 
             {
-            $this->pushFollow(self::$FOLLOW_iriRef_in_sourceSelector329);
+            $this->pushFollow(self::$FOLLOW_iriRef_in_sourceSelector328);
             $this->iriRef();
 
             $this->state->_fsp--;
@@ -1205,13 +1206,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "whereClause"
-    // Test.g:60:1: whereClause : ( WHERE )? groupGraphPattern ; 
+    // Test.g:59:1: whereClause : ( WHERE )? groupGraphPattern ; 
     public function whereClause(){
         try {
-            // Test.g:61:5: ( ( WHERE )? groupGraphPattern ) 
-            // Test.g:61:7: ( WHERE )? groupGraphPattern 
+            // Test.g:60:5: ( ( WHERE )? groupGraphPattern ) 
+            // Test.g:60:7: ( WHERE )? groupGraphPattern 
             {
-            // Test.g:61:7: ( WHERE )? 
+            // Test.g:60:7: ( WHERE )? 
             $alt15=2;
             $LA15_0 = $this->input->LA(1);
 
@@ -1220,16 +1221,16 @@ class TestParser extends AntlrParser {
             }
             switch ($alt15) {
                 case 1 :
-                    // Test.g:61:7: WHERE 
+                    // Test.g:60:7: WHERE 
                     {
-                    $this->match($this->input,$this->getToken('WHERE'),self::$FOLLOW_WHERE_in_whereClause346); 
+                    $this->match($this->input,$this->getToken('WHERE'),self::$FOLLOW_WHERE_in_whereClause345); 
 
                     }
                     break;
 
             }
 
-            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_whereClause349);
+            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_whereClause348);
             $this->groupGraphPattern();
 
             $this->state->_fsp--;
@@ -1252,13 +1253,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "solutionModifier"
-    // Test.g:64:1: solutionModifier : ( orderClause )? ( limitOffsetClauses )? ; 
+    // Test.g:63:1: solutionModifier : ( orderClause )? ( limitOffsetClauses )? ; 
     public function solutionModifier(){
         try {
-            // Test.g:65:5: ( ( orderClause )? ( limitOffsetClauses )? ) 
-            // Test.g:65:7: ( orderClause )? ( limitOffsetClauses )? 
+            // Test.g:64:5: ( ( orderClause )? ( limitOffsetClauses )? ) 
+            // Test.g:64:7: ( orderClause )? ( limitOffsetClauses )? 
             {
-            // Test.g:65:7: ( orderClause )? 
+            // Test.g:64:7: ( orderClause )? 
             $alt16=2;
             $LA16_0 = $this->input->LA(1);
 
@@ -1267,9 +1268,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt16) {
                 case 1 :
-                    // Test.g:65:7: orderClause 
+                    // Test.g:64:7: orderClause 
                     {
-                    $this->pushFollow(self::$FOLLOW_orderClause_in_solutionModifier366);
+                    $this->pushFollow(self::$FOLLOW_orderClause_in_solutionModifier365);
                     $this->orderClause();
 
                     $this->state->_fsp--;
@@ -1280,7 +1281,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            // Test.g:65:20: ( limitOffsetClauses )? 
+            // Test.g:64:20: ( limitOffsetClauses )? 
             $alt17=2;
             $LA17_0 = $this->input->LA(1);
 
@@ -1289,9 +1290,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt17) {
                 case 1 :
-                    // Test.g:65:20: limitOffsetClauses 
+                    // Test.g:64:20: limitOffsetClauses 
                     {
-                    $this->pushFollow(self::$FOLLOW_limitOffsetClauses_in_solutionModifier369);
+                    $this->pushFollow(self::$FOLLOW_limitOffsetClauses_in_solutionModifier368);
                     $this->limitOffsetClauses();
 
                     $this->state->_fsp--;
@@ -1320,13 +1321,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "limitOffsetClauses"
-    // Test.g:68:1: limitOffsetClauses : ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) ; 
+    // Test.g:67:1: limitOffsetClauses : ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) ; 
     public function limitOffsetClauses(){
         try {
-            // Test.g:69:5: ( ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) ) 
-            // Test.g:69:7: ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) 
+            // Test.g:68:5: ( ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) ) 
+            // Test.g:68:7: ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) 
             {
-            // Test.g:69:7: ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) 
+            // Test.g:68:7: ( limitClause ( offsetClause )? | offsetClause ( limitClause )? ) 
             $alt20=2;
             $LA20_0 = $this->input->LA(1);
 
@@ -1343,14 +1344,14 @@ class TestParser extends AntlrParser {
             }
             switch ($alt20) {
                 case 1 :
-                    // Test.g:69:9: limitClause ( offsetClause )? 
+                    // Test.g:68:9: limitClause ( offsetClause )? 
                     {
-                    $this->pushFollow(self::$FOLLOW_limitClause_in_limitOffsetClauses389);
+                    $this->pushFollow(self::$FOLLOW_limitClause_in_limitOffsetClauses388);
                     $this->limitClause();
 
                     $this->state->_fsp--;
 
-                    // Test.g:69:21: ( offsetClause )? 
+                    // Test.g:68:21: ( offsetClause )? 
                     $alt18=2;
                     $LA18_0 = $this->input->LA(1);
 
@@ -1359,9 +1360,9 @@ class TestParser extends AntlrParser {
                     }
                     switch ($alt18) {
                         case 1 :
-                            // Test.g:69:21: offsetClause 
+                            // Test.g:68:21: offsetClause 
                             {
-                            $this->pushFollow(self::$FOLLOW_offsetClause_in_limitOffsetClauses391);
+                            $this->pushFollow(self::$FOLLOW_offsetClause_in_limitOffsetClauses390);
                             $this->offsetClause();
 
                             $this->state->_fsp--;
@@ -1376,14 +1377,14 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:69:37: offsetClause ( limitClause )? 
+                    // Test.g:68:37: offsetClause ( limitClause )? 
                     {
-                    $this->pushFollow(self::$FOLLOW_offsetClause_in_limitOffsetClauses396);
+                    $this->pushFollow(self::$FOLLOW_offsetClause_in_limitOffsetClauses395);
                     $this->offsetClause();
 
                     $this->state->_fsp--;
 
-                    // Test.g:69:50: ( limitClause )? 
+                    // Test.g:68:50: ( limitClause )? 
                     $alt19=2;
                     $LA19_0 = $this->input->LA(1);
 
@@ -1392,9 +1393,9 @@ class TestParser extends AntlrParser {
                     }
                     switch ($alt19) {
                         case 1 :
-                            // Test.g:69:50: limitClause 
+                            // Test.g:68:50: limitClause 
                             {
-                            $this->pushFollow(self::$FOLLOW_limitClause_in_limitOffsetClauses398);
+                            $this->pushFollow(self::$FOLLOW_limitClause_in_limitOffsetClauses397);
                             $this->limitClause();
 
                             $this->state->_fsp--;
@@ -1429,15 +1430,15 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "orderClause"
-    // Test.g:72:1: orderClause : ORDER BY ( orderCondition )+ ; 
+    // Test.g:71:1: orderClause : ORDER BY ( orderCondition )+ ; 
     public function orderClause(){
         try {
-            // Test.g:73:5: ( ORDER BY ( orderCondition )+ ) 
-            // Test.g:73:7: ORDER BY ( orderCondition )+ 
+            // Test.g:72:5: ( ORDER BY ( orderCondition )+ ) 
+            // Test.g:72:7: ORDER BY ( orderCondition )+ 
             {
-            $this->match($this->input,$this->getToken('ORDER'),self::$FOLLOW_ORDER_in_orderClause418); 
-            $this->match($this->input,$this->getToken('BY'),self::$FOLLOW_BY_in_orderClause420); 
-            // Test.g:73:16: ( orderCondition )+ 
+            $this->match($this->input,$this->getToken('ORDER'),self::$FOLLOW_ORDER_in_orderClause417); 
+            $this->match($this->input,$this->getToken('BY'),self::$FOLLOW_BY_in_orderClause419); 
+            // Test.g:72:16: ( orderCondition )+ 
             $cnt21=0;
             //loop21:
             do {
@@ -1451,9 +1452,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt21) {
             	case 1 :
-            	    // Test.g:73:16: orderCondition 
+            	    // Test.g:72:16: orderCondition 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_orderCondition_in_orderClause422);
+            	    $this->pushFollow(self::$FOLLOW_orderCondition_in_orderClause421);
             	    $this->orderCondition();
 
             	    $this->state->_fsp--;
@@ -1489,10 +1490,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "orderCondition"
-    // Test.g:76:1: orderCondition : ( ( ( ASC | DESC ) brackettedExpression ) | ( constraint | variable ) ); 
+    // Test.g:75:1: orderCondition : ( ( ( ASC | DESC ) brackettedExpression ) | ( constraint | variable ) ); 
     public function orderCondition(){
         try {
-            // Test.g:77:5: ( ( ( ASC | DESC ) brackettedExpression ) | ( constraint | variable ) ) 
+            // Test.g:76:5: ( ( ( ASC | DESC ) brackettedExpression ) | ( constraint | variable ) ) 
             $alt23=2;
             $LA23_0 = $this->input->LA(1);
 
@@ -1509,10 +1510,10 @@ class TestParser extends AntlrParser {
             }
             switch ($alt23) {
                 case 1 :
-                    // Test.g:77:7: ( ( ASC | DESC ) brackettedExpression ) 
+                    // Test.g:76:7: ( ( ASC | DESC ) brackettedExpression ) 
                     {
-                    // Test.g:77:7: ( ( ASC | DESC ) brackettedExpression ) 
-                    // Test.g:77:9: ( ASC | DESC ) brackettedExpression 
+                    // Test.g:76:7: ( ( ASC | DESC ) brackettedExpression ) 
+                    // Test.g:76:9: ( ASC | DESC ) brackettedExpression 
                     {
                     if ( ($this->input->LA(1)>=$this->getToken('ASC') && $this->input->LA(1)<=$this->getToken('DESC')) ) {
                         $this->input->consume();
@@ -1523,7 +1524,7 @@ class TestParser extends AntlrParser {
                         throw mse;
                     }
 
-                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_orderCondition452);
+                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_orderCondition451);
                     $this->brackettedExpression();
 
                     $this->state->_fsp--;
@@ -1535,9 +1536,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:78:7: ( constraint | variable ) 
+                    // Test.g:77:7: ( constraint | variable ) 
                     {
-                    // Test.g:78:7: ( constraint | variable ) 
+                    // Test.g:77:7: ( constraint | variable ) 
                     $alt22=2;
                     $LA22_0 = $this->input->LA(1);
 
@@ -1554,9 +1555,9 @@ class TestParser extends AntlrParser {
                     }
                     switch ($alt22) {
                         case 1 :
-                            // Test.g:78:9: constraint 
+                            // Test.g:77:9: constraint 
                             {
-                            $this->pushFollow(self::$FOLLOW_constraint_in_orderCondition464);
+                            $this->pushFollow(self::$FOLLOW_constraint_in_orderCondition463);
                             $this->constraint();
 
                             $this->state->_fsp--;
@@ -1565,9 +1566,9 @@ class TestParser extends AntlrParser {
                             }
                             break;
                         case 2 :
-                            // Test.g:78:22: variable 
+                            // Test.g:77:22: variable 
                             {
-                            $this->pushFollow(self::$FOLLOW_variable_in_orderCondition468);
+                            $this->pushFollow(self::$FOLLOW_variable_in_orderCondition467);
                             $this->variable();
 
                             $this->state->_fsp--;
@@ -1598,14 +1599,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "limitClause"
-    // Test.g:81:1: limitClause : LIMIT INTEGER ; 
+    // Test.g:80:1: limitClause : LIMIT INTEGER ; 
     public function limitClause(){
         try {
-            // Test.g:82:5: ( LIMIT INTEGER ) 
-            // Test.g:82:7: LIMIT INTEGER 
+            // Test.g:81:5: ( LIMIT INTEGER ) 
+            // Test.g:81:7: LIMIT INTEGER 
             {
-            $this->match($this->input,$this->getToken('LIMIT'),self::$FOLLOW_LIMIT_in_limitClause487); 
-            $this->match($this->input,$this->getToken('INTEGER'),self::$FOLLOW_INTEGER_in_limitClause489); 
+            $this->match($this->input,$this->getToken('LIMIT'),self::$FOLLOW_LIMIT_in_limitClause486); 
+            $this->match($this->input,$this->getToken('INTEGER'),self::$FOLLOW_INTEGER_in_limitClause488); 
 
             }
 
@@ -1624,14 +1625,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "offsetClause"
-    // Test.g:85:1: offsetClause : OFFSET INTEGER ; 
+    // Test.g:84:1: offsetClause : OFFSET INTEGER ; 
     public function offsetClause(){
         try {
-            // Test.g:86:5: ( OFFSET INTEGER ) 
-            // Test.g:86:7: OFFSET INTEGER 
+            // Test.g:85:5: ( OFFSET INTEGER ) 
+            // Test.g:85:7: OFFSET INTEGER 
             {
-            $this->match($this->input,$this->getToken('OFFSET'),self::$FOLLOW_OFFSET_in_offsetClause506); 
-            $this->match($this->input,$this->getToken('INTEGER'),self::$FOLLOW_INTEGER_in_offsetClause508); 
+            $this->match($this->input,$this->getToken('OFFSET'),self::$FOLLOW_OFFSET_in_offsetClause505); 
+            $this->match($this->input,$this->getToken('INTEGER'),self::$FOLLOW_INTEGER_in_offsetClause507); 
 
             }
 
@@ -1650,14 +1651,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "groupGraphPattern"
-    // Test.g:89:1: groupGraphPattern : OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE ; 
+    // Test.g:88:1: groupGraphPattern : OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE ; 
     public function groupGraphPattern(){
         try {
-            // Test.g:90:5: ( OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE ) 
-            // Test.g:90:7: OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE 
+            // Test.g:89:5: ( OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE ) 
+            // Test.g:89:7: OPEN_CURLY_BRACE ( triplesBlock )? ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* CLOSE_CURLY_BRACE 
             {
-            $this->match($this->input,$this->getToken('OPEN_CURLY_BRACE'),self::$FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern525); 
-            // Test.g:90:24: ( triplesBlock )? 
+            $this->match($this->input,$this->getToken('OPEN_CURLY_BRACE'),self::$FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern524); 
+            // Test.g:89:24: ( triplesBlock )? 
             $alt24=2;
             $LA24_0 = $this->input->LA(1);
 
@@ -1666,9 +1667,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt24) {
                 case 1 :
-                    // Test.g:90:24: triplesBlock 
+                    // Test.g:89:24: triplesBlock 
                     {
-                    $this->pushFollow(self::$FOLLOW_triplesBlock_in_groupGraphPattern527);
+                    $this->pushFollow(self::$FOLLOW_triplesBlock_in_groupGraphPattern526);
                     $this->triplesBlock();
 
                     $this->state->_fsp--;
@@ -1679,7 +1680,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            // Test.g:90:38: ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* 
+            // Test.g:89:38: ( ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? )* 
             //loop28:
             do {
                 $alt28=2;
@@ -1692,9 +1693,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt28) {
             	case 1 :
-            	    // Test.g:90:40: ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? 
+            	    // Test.g:89:40: ( graphPatternNotTriples | filter ) ( DOT )? ( triplesBlock )? 
             	    {
-            	    // Test.g:90:40: ( graphPatternNotTriples | filter ) 
+            	    // Test.g:89:40: ( graphPatternNotTriples | filter ) 
             	    $alt25=2;
             	    $LA25_0 = $this->input->LA(1);
 
@@ -1711,9 +1712,9 @@ class TestParser extends AntlrParser {
             	    }
             	    switch ($alt25) {
             	        case 1 :
-            	            // Test.g:90:42: graphPatternNotTriples 
+            	            // Test.g:89:42: graphPatternNotTriples 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_graphPatternNotTriples_in_groupGraphPattern534);
+            	            $this->pushFollow(self::$FOLLOW_graphPatternNotTriples_in_groupGraphPattern533);
             	            $this->graphPatternNotTriples();
 
             	            $this->state->_fsp--;
@@ -1722,9 +1723,9 @@ class TestParser extends AntlrParser {
             	            }
             	            break;
             	        case 2 :
-            	            // Test.g:90:67: filter 
+            	            // Test.g:89:67: filter 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_filter_in_groupGraphPattern538);
+            	            $this->pushFollow(self::$FOLLOW_filter_in_groupGraphPattern537);
             	            $this->filter();
 
             	            $this->state->_fsp--;
@@ -1735,7 +1736,7 @@ class TestParser extends AntlrParser {
 
             	    }
 
-            	    // Test.g:90:76: ( DOT )? 
+            	    // Test.g:89:76: ( DOT )? 
             	    $alt26=2;
             	    $LA26_0 = $this->input->LA(1);
 
@@ -1744,16 +1745,16 @@ class TestParser extends AntlrParser {
             	    }
             	    switch ($alt26) {
             	        case 1 :
-            	            // Test.g:90:76: DOT 
+            	            // Test.g:89:76: DOT 
             	            {
-            	            $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_groupGraphPattern542); 
+            	            $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_groupGraphPattern541); 
 
             	            }
             	            break;
 
             	    }
 
-            	    // Test.g:90:81: ( triplesBlock )? 
+            	    // Test.g:89:81: ( triplesBlock )? 
             	    $alt27=2;
             	    $LA27_0 = $this->input->LA(1);
 
@@ -1762,9 +1763,9 @@ class TestParser extends AntlrParser {
             	    }
             	    switch ($alt27) {
             	        case 1 :
-            	            // Test.g:90:81: triplesBlock 
+            	            // Test.g:89:81: triplesBlock 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_triplesBlock_in_groupGraphPattern545);
+            	            $this->pushFollow(self::$FOLLOW_triplesBlock_in_groupGraphPattern544);
             	            $this->triplesBlock();
 
             	            $this->state->_fsp--;
@@ -1784,7 +1785,7 @@ class TestParser extends AntlrParser {
                 }
             } while (true);
 
-            $this->match($this->input,$this->getToken('CLOSE_CURLY_BRACE'),self::$FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern551); 
+            $this->match($this->input,$this->getToken('CLOSE_CURLY_BRACE'),self::$FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern550); 
 
             }
 
@@ -1803,18 +1804,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "triplesBlock"
-    // Test.g:93:1: triplesBlock : triplesSameSubject ( DOT ( triplesBlock )? )? ; 
+    // Test.g:92:1: triplesBlock : triplesSameSubject ( DOT ( triplesBlock )? )? ; 
     public function triplesBlock(){
         try {
-            // Test.g:94:5: ( triplesSameSubject ( DOT ( triplesBlock )? )? ) 
-            // Test.g:94:7: triplesSameSubject ( DOT ( triplesBlock )? )? 
+            // Test.g:93:5: ( triplesSameSubject ( DOT ( triplesBlock )? )? ) 
+            // Test.g:93:7: triplesSameSubject ( DOT ( triplesBlock )? )? 
             {
-            $this->pushFollow(self::$FOLLOW_triplesSameSubject_in_triplesBlock568);
+            $this->pushFollow(self::$FOLLOW_triplesSameSubject_in_triplesBlock567);
             $this->triplesSameSubject();
 
             $this->state->_fsp--;
 
-            // Test.g:94:26: ( DOT ( triplesBlock )? )? 
+            // Test.g:93:26: ( DOT ( triplesBlock )? )? 
             $alt30=2;
             $LA30_0 = $this->input->LA(1);
 
@@ -1823,10 +1824,10 @@ class TestParser extends AntlrParser {
             }
             switch ($alt30) {
                 case 1 :
-                    // Test.g:94:28: DOT ( triplesBlock )? 
+                    // Test.g:93:28: DOT ( triplesBlock )? 
                     {
-                    $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_triplesBlock572); 
-                    // Test.g:94:32: ( triplesBlock )? 
+                    $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_triplesBlock571); 
+                    // Test.g:93:32: ( triplesBlock )? 
                     $alt29=2;
                     $LA29_0 = $this->input->LA(1);
 
@@ -1835,9 +1836,9 @@ class TestParser extends AntlrParser {
                     }
                     switch ($alt29) {
                         case 1 :
-                            // Test.g:94:32: triplesBlock 
+                            // Test.g:93:32: triplesBlock 
                             {
-                            $this->pushFollow(self::$FOLLOW_triplesBlock_in_triplesBlock574);
+                            $this->pushFollow(self::$FOLLOW_triplesBlock_in_triplesBlock573);
                             $this->triplesBlock();
 
                             $this->state->_fsp--;
@@ -1872,10 +1873,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "graphPatternNotTriples"
-    // Test.g:97:1: graphPatternNotTriples : ( optionalGraphPattern | groupOrUnionGraphPattern | graphGraphPattern ); 
+    // Test.g:96:1: graphPatternNotTriples : ( optionalGraphPattern | groupOrUnionGraphPattern | graphGraphPattern ); 
     public function graphPatternNotTriples(){
         try {
-            // Test.g:98:5: ( optionalGraphPattern | groupOrUnionGraphPattern | graphGraphPattern ) 
+            // Test.g:97:5: ( optionalGraphPattern | groupOrUnionGraphPattern | graphGraphPattern ) 
             $alt31=3;
             $LA31 = $this->input->LA(1);
             if($this->getToken('OPTIONAL')== $LA31)
@@ -1899,9 +1900,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt31) {
                 case 1 :
-                    // Test.g:98:7: optionalGraphPattern 
+                    // Test.g:97:7: optionalGraphPattern 
                     {
-                    $this->pushFollow(self::$FOLLOW_optionalGraphPattern_in_graphPatternNotTriples595);
+                    $this->pushFollow(self::$FOLLOW_optionalGraphPattern_in_graphPatternNotTriples594);
                     $this->optionalGraphPattern();
 
                     $this->state->_fsp--;
@@ -1910,9 +1911,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:98:30: groupOrUnionGraphPattern 
+                    // Test.g:97:30: groupOrUnionGraphPattern 
                     {
-                    $this->pushFollow(self::$FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples599);
+                    $this->pushFollow(self::$FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples598);
                     $this->groupOrUnionGraphPattern();
 
                     $this->state->_fsp--;
@@ -1921,9 +1922,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:98:57: graphGraphPattern 
+                    // Test.g:97:57: graphGraphPattern 
                     {
-                    $this->pushFollow(self::$FOLLOW_graphGraphPattern_in_graphPatternNotTriples603);
+                    $this->pushFollow(self::$FOLLOW_graphGraphPattern_in_graphPatternNotTriples602);
                     $this->graphGraphPattern();
 
                     $this->state->_fsp--;
@@ -1948,14 +1949,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "optionalGraphPattern"
-    // Test.g:101:1: optionalGraphPattern : OPTIONAL groupGraphPattern ; 
+    // Test.g:100:1: optionalGraphPattern : OPTIONAL groupGraphPattern ; 
     public function optionalGraphPattern(){
         try {
-            // Test.g:102:5: ( OPTIONAL groupGraphPattern ) 
-            // Test.g:102:7: OPTIONAL groupGraphPattern 
+            // Test.g:101:5: ( OPTIONAL groupGraphPattern ) 
+            // Test.g:101:7: OPTIONAL groupGraphPattern 
             {
-            $this->match($this->input,$this->getToken('OPTIONAL'),self::$FOLLOW_OPTIONAL_in_optionalGraphPattern620); 
-            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_optionalGraphPattern622);
+            $this->match($this->input,$this->getToken('OPTIONAL'),self::$FOLLOW_OPTIONAL_in_optionalGraphPattern619); 
+            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_optionalGraphPattern621);
             $this->groupGraphPattern();
 
             $this->state->_fsp--;
@@ -1978,19 +1979,19 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "graphGraphPattern"
-    // Test.g:105:1: graphGraphPattern : GRAPH varOrIRIref groupGraphPattern ; 
+    // Test.g:104:1: graphGraphPattern : GRAPH varOrIRIref groupGraphPattern ; 
     public function graphGraphPattern(){
         try {
-            // Test.g:106:5: ( GRAPH varOrIRIref groupGraphPattern ) 
-            // Test.g:106:7: GRAPH varOrIRIref groupGraphPattern 
+            // Test.g:105:5: ( GRAPH varOrIRIref groupGraphPattern ) 
+            // Test.g:105:7: GRAPH varOrIRIref groupGraphPattern 
             {
-            $this->match($this->input,$this->getToken('GRAPH'),self::$FOLLOW_GRAPH_in_graphGraphPattern639); 
-            $this->pushFollow(self::$FOLLOW_varOrIRIref_in_graphGraphPattern641);
+            $this->match($this->input,$this->getToken('GRAPH'),self::$FOLLOW_GRAPH_in_graphGraphPattern638); 
+            $this->pushFollow(self::$FOLLOW_varOrIRIref_in_graphGraphPattern640);
             $this->varOrIRIref();
 
             $this->state->_fsp--;
 
-            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_graphGraphPattern643);
+            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_graphGraphPattern642);
             $this->groupGraphPattern();
 
             $this->state->_fsp--;
@@ -2013,18 +2014,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "groupOrUnionGraphPattern"
-    // Test.g:109:1: groupOrUnionGraphPattern : groupGraphPattern ( UNION groupGraphPattern )* ; 
+    // Test.g:108:1: groupOrUnionGraphPattern : groupGraphPattern ( UNION groupGraphPattern )* ; 
     public function groupOrUnionGraphPattern(){
         try {
-            // Test.g:110:5: ( groupGraphPattern ( UNION groupGraphPattern )* ) 
-            // Test.g:110:7: groupGraphPattern ( UNION groupGraphPattern )* 
+            // Test.g:109:5: ( groupGraphPattern ( UNION groupGraphPattern )* ) 
+            // Test.g:109:7: groupGraphPattern ( UNION groupGraphPattern )* 
             {
-            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern660);
+            $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern659);
             $this->groupGraphPattern();
 
             $this->state->_fsp--;
 
-            // Test.g:110:25: ( UNION groupGraphPattern )* 
+            // Test.g:109:25: ( UNION groupGraphPattern )* 
             //loop32:
             do {
                 $alt32=2;
@@ -2037,10 +2038,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt32) {
             	case 1 :
-            	    // Test.g:110:27: UNION groupGraphPattern 
+            	    // Test.g:109:27: UNION groupGraphPattern 
             	    {
-            	    $this->match($this->input,$this->getToken('UNION'),self::$FOLLOW_UNION_in_groupOrUnionGraphPattern664); 
-            	    $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern666);
+            	    $this->match($this->input,$this->getToken('UNION'),self::$FOLLOW_UNION_in_groupOrUnionGraphPattern663); 
+            	    $this->pushFollow(self::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern665);
             	    $this->groupGraphPattern();
 
             	    $this->state->_fsp--;
@@ -2072,14 +2073,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "filter"
-    // Test.g:113:1: filter : FILTER constraint ; 
+    // Test.g:112:1: filter : FILTER constraint ; 
     public function filter(){
         try {
-            // Test.g:114:5: ( FILTER constraint ) 
-            // Test.g:114:7: FILTER constraint 
+            // Test.g:113:5: ( FILTER constraint ) 
+            // Test.g:113:7: FILTER constraint 
             {
-            $this->match($this->input,$this->getToken('FILTER'),self::$FOLLOW_FILTER_in_filter686); 
-            $this->pushFollow(self::$FOLLOW_constraint_in_filter688);
+            $this->match($this->input,$this->getToken('FILTER'),self::$FOLLOW_FILTER_in_filter685); 
+            $this->pushFollow(self::$FOLLOW_constraint_in_filter687);
             $this->constraint();
 
             $this->state->_fsp--;
@@ -2102,10 +2103,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "constraint"
-    // Test.g:117:1: constraint : ( brackettedExpression | builtInCall | functionCall ); 
+    // Test.g:116:1: constraint : ( brackettedExpression | builtInCall | functionCall ); 
     public function constraint(){
         try {
-            // Test.g:118:5: ( brackettedExpression | builtInCall | functionCall ) 
+            // Test.g:117:5: ( brackettedExpression | builtInCall | functionCall ) 
             $alt33=3;
             $LA33 = $this->input->LA(1);
             if($this->getToken('OPEN_BRACE')== $LA33)
@@ -2129,9 +2130,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt33) {
                 case 1 :
-                    // Test.g:118:7: brackettedExpression 
+                    // Test.g:117:7: brackettedExpression 
                     {
-                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_constraint705);
+                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_constraint704);
                     $this->brackettedExpression();
 
                     $this->state->_fsp--;
@@ -2140,9 +2141,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:118:30: builtInCall 
+                    // Test.g:117:30: builtInCall 
                     {
-                    $this->pushFollow(self::$FOLLOW_builtInCall_in_constraint709);
+                    $this->pushFollow(self::$FOLLOW_builtInCall_in_constraint708);
                     $this->builtInCall();
 
                     $this->state->_fsp--;
@@ -2151,9 +2152,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:118:44: functionCall 
+                    // Test.g:117:44: functionCall 
                     {
-                    $this->pushFollow(self::$FOLLOW_functionCall_in_constraint713);
+                    $this->pushFollow(self::$FOLLOW_functionCall_in_constraint712);
                     $this->functionCall();
 
                     $this->state->_fsp--;
@@ -2178,18 +2179,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "functionCall"
-    // Test.g:121:1: functionCall : iriRef argList ; 
+    // Test.g:120:1: functionCall : iriRef argList ; 
     public function functionCall(){
         try {
-            // Test.g:122:5: ( iriRef argList ) 
-            // Test.g:122:7: iriRef argList 
+            // Test.g:121:5: ( iriRef argList ) 
+            // Test.g:121:7: iriRef argList 
             {
-            $this->pushFollow(self::$FOLLOW_iriRef_in_functionCall730);
+            $this->pushFollow(self::$FOLLOW_iriRef_in_functionCall729);
             $this->iriRef();
 
             $this->state->_fsp--;
 
-            $this->pushFollow(self::$FOLLOW_argList_in_functionCall732);
+            $this->pushFollow(self::$FOLLOW_argList_in_functionCall731);
             $this->argList();
 
             $this->state->_fsp--;
@@ -2212,13 +2213,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "argList"
-    // Test.g:125:1: argList : ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) ; 
+    // Test.g:124:1: argList : ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) ; 
     public function argList(){
         try {
-            // Test.g:126:5: ( ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) ) 
-            // Test.g:126:7: ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) 
+            // Test.g:125:5: ( ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) ) 
+            // Test.g:125:7: ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) 
             {
-            // Test.g:126:7: ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) 
+            // Test.g:125:7: ( OPEN_BRACE CLOSE_BRACE | OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE ) 
             $alt35=2;
             $LA35_0 = $this->input->LA(1);
 
@@ -2244,23 +2245,23 @@ class TestParser extends AntlrParser {
             }
             switch ($alt35) {
                 case 1 :
-                    // Test.g:126:9: OPEN_BRACE CLOSE_BRACE 
+                    // Test.g:125:9: OPEN_BRACE CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_argList751); 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_argList753); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_argList750); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_argList752); 
 
                     }
                     break;
                 case 2 :
-                    // Test.g:126:34: OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE 
+                    // Test.g:125:34: OPEN_BRACE expression ( COMMA expression )* CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_argList757); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_argList759);
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_argList756); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_argList758);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    // Test.g:126:56: ( COMMA expression )* 
+                    // Test.g:125:56: ( COMMA expression )* 
                     //loop34:
                     do {
                         $alt34=2;
@@ -2273,10 +2274,10 @@ class TestParser extends AntlrParser {
 
                         switch ($alt34) {
                     	case 1 :
-                    	    // Test.g:126:58: COMMA expression 
+                    	    // Test.g:125:58: COMMA expression 
                     	    {
-                    	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_argList763); 
-                    	    $this->pushFollow(self::$FOLLOW_expression_in_argList765);
+                    	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_argList762); 
+                    	    $this->pushFollow(self::$FOLLOW_expression_in_argList764);
                     	    $this->expression();
 
                     	    $this->state->_fsp--;
@@ -2290,7 +2291,7 @@ class TestParser extends AntlrParser {
                         }
                     } while (true);
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_argList770); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_argList769); 
 
                     }
                     break;
@@ -2315,14 +2316,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "constructTemplate"
-    // Test.g:129:1: constructTemplate : OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE ; 
+    // Test.g:128:1: constructTemplate : OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE ; 
     public function constructTemplate(){
         try {
-            // Test.g:130:5: ( OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE ) 
-            // Test.g:130:7: OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE 
+            // Test.g:129:5: ( OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE ) 
+            // Test.g:129:7: OPEN_CURLY_BRACE ( constructTriples )? CLOSE_CURLY_BRACE 
             {
-            $this->match($this->input,$this->getToken('OPEN_CURLY_BRACE'),self::$FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate789); 
-            // Test.g:130:24: ( constructTriples )? 
+            $this->match($this->input,$this->getToken('OPEN_CURLY_BRACE'),self::$FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate788); 
+            // Test.g:129:24: ( constructTriples )? 
             $alt36=2;
             $LA36_0 = $this->input->LA(1);
 
@@ -2331,9 +2332,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt36) {
                 case 1 :
-                    // Test.g:130:24: constructTriples 
+                    // Test.g:129:24: constructTriples 
                     {
-                    $this->pushFollow(self::$FOLLOW_constructTriples_in_constructTemplate791);
+                    $this->pushFollow(self::$FOLLOW_constructTriples_in_constructTemplate790);
                     $this->constructTriples();
 
                     $this->state->_fsp--;
@@ -2344,7 +2345,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            $this->match($this->input,$this->getToken('CLOSE_CURLY_BRACE'),self::$FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate794); 
+            $this->match($this->input,$this->getToken('CLOSE_CURLY_BRACE'),self::$FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate793); 
 
             }
 
@@ -2363,18 +2364,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "constructTriples"
-    // Test.g:133:1: constructTriples : triplesSameSubject ( DOT ( constructTriples )? )? ; 
+    // Test.g:132:1: constructTriples : triplesSameSubject ( DOT ( constructTriples )? )? ; 
     public function constructTriples(){
         try {
-            // Test.g:134:5: ( triplesSameSubject ( DOT ( constructTriples )? )? ) 
-            // Test.g:134:7: triplesSameSubject ( DOT ( constructTriples )? )? 
+            // Test.g:133:5: ( triplesSameSubject ( DOT ( constructTriples )? )? ) 
+            // Test.g:133:7: triplesSameSubject ( DOT ( constructTriples )? )? 
             {
-            $this->pushFollow(self::$FOLLOW_triplesSameSubject_in_constructTriples811);
+            $this->pushFollow(self::$FOLLOW_triplesSameSubject_in_constructTriples810);
             $this->triplesSameSubject();
 
             $this->state->_fsp--;
 
-            // Test.g:134:26: ( DOT ( constructTriples )? )? 
+            // Test.g:133:26: ( DOT ( constructTriples )? )? 
             $alt38=2;
             $LA38_0 = $this->input->LA(1);
 
@@ -2383,10 +2384,10 @@ class TestParser extends AntlrParser {
             }
             switch ($alt38) {
                 case 1 :
-                    // Test.g:134:28: DOT ( constructTriples )? 
+                    // Test.g:133:28: DOT ( constructTriples )? 
                     {
-                    $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_constructTriples815); 
-                    // Test.g:134:32: ( constructTriples )? 
+                    $this->match($this->input,$this->getToken('DOT'),self::$FOLLOW_DOT_in_constructTriples814); 
+                    // Test.g:133:32: ( constructTriples )? 
                     $alt37=2;
                     $LA37_0 = $this->input->LA(1);
 
@@ -2395,9 +2396,9 @@ class TestParser extends AntlrParser {
                     }
                     switch ($alt37) {
                         case 1 :
-                            // Test.g:134:32: constructTriples 
+                            // Test.g:133:32: constructTriples 
                             {
-                            $this->pushFollow(self::$FOLLOW_constructTriples_in_constructTriples817);
+                            $this->pushFollow(self::$FOLLOW_constructTriples_in_constructTriples816);
                             $this->constructTriples();
 
                             $this->state->_fsp--;
@@ -2432,10 +2433,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "triplesSameSubject"
-    // Test.g:137:1: triplesSameSubject : ( varOrTerm propertyListNotEmpty | triplesNode propertyList ); 
+    // Test.g:136:1: triplesSameSubject : ( varOrTerm propertyListNotEmpty | triplesNode propertyList ); 
     public function triplesSameSubject(){
         try {
-            // Test.g:138:5: ( varOrTerm propertyListNotEmpty | triplesNode propertyList ) 
+            // Test.g:137:5: ( varOrTerm propertyListNotEmpty | triplesNode propertyList ) 
             $alt39=2;
             $LA39 = $this->input->LA(1);
             if($this->getToken('IRI_REF')== $LA39||$this->getToken('TRUE')== $LA39||$this->getToken('FALSE')== $LA39||$this->getToken('PNAME_NS')== $LA39||$this->getToken('PNAME_LN')== $LA39||$this->getToken('VAR1')== $LA39||$this->getToken('VAR2')== $LA39||$this->getToken('STRING_LITERAL1')== $LA39||$this->getToken('STRING_LITERAL2')== $LA39||$this->getToken('STRING_LITERAL_LONG1')== $LA39||$this->getToken('STRING_LITERAL_LONG2')== $LA39||$this->getToken('BLANK_NODE_LABEL')== $LA39||$this->getToken('INTEGER')== $LA39||$this->getToken('DECIMAL')== $LA39||$this->getToken('DOUBLE')== $LA39||$this->getToken('INTEGER_POSITIVE')== $LA39||$this->getToken('DECIMAL_POSITIVE')== $LA39||$this->getToken('DOUBLE_POSITIVE')== $LA39||$this->getToken('INTEGER_NEGATIVE')== $LA39||$this->getToken('DECIMAL_NEGATIVE')== $LA39||$this->getToken('DOUBLE_NEGATIVE')== $LA39)
@@ -2483,14 +2484,14 @@ class TestParser extends AntlrParser {
 
             switch ($alt39) {
                 case 1 :
-                    // Test.g:138:7: varOrTerm propertyListNotEmpty 
+                    // Test.g:137:7: varOrTerm propertyListNotEmpty 
                     {
-                    $this->pushFollow(self::$FOLLOW_varOrTerm_in_triplesSameSubject838);
+                    $this->pushFollow(self::$FOLLOW_varOrTerm_in_triplesSameSubject837);
                     $this->varOrTerm();
 
                     $this->state->_fsp--;
 
-                    $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_triplesSameSubject840);
+                    $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_triplesSameSubject839);
                     $this->propertyListNotEmpty();
 
                     $this->state->_fsp--;
@@ -2499,14 +2500,14 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:138:40: triplesNode propertyList 
+                    // Test.g:137:40: triplesNode propertyList 
                     {
-                    $this->pushFollow(self::$FOLLOW_triplesNode_in_triplesSameSubject844);
+                    $this->pushFollow(self::$FOLLOW_triplesNode_in_triplesSameSubject843);
                     $this->triplesNode();
 
                     $this->state->_fsp--;
 
-                    $this->pushFollow(self::$FOLLOW_propertyList_in_triplesSameSubject846);
+                    $this->pushFollow(self::$FOLLOW_propertyList_in_triplesSameSubject845);
                     $this->propertyList();
 
                     $this->state->_fsp--;
@@ -2531,23 +2532,23 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "propertyListNotEmpty"
-    // Test.g:141:1: propertyListNotEmpty : verb objectList ( SEMICOLON ( verb objectList )? )* ; 
+    // Test.g:140:1: propertyListNotEmpty : verb objectList ( SEMICOLON ( verb objectList )? )* ; 
     public function propertyListNotEmpty(){
         try {
-            // Test.g:142:5: ( verb objectList ( SEMICOLON ( verb objectList )? )* ) 
-            // Test.g:142:7: verb objectList ( SEMICOLON ( verb objectList )? )* 
+            // Test.g:141:5: ( verb objectList ( SEMICOLON ( verb objectList )? )* ) 
+            // Test.g:141:7: verb objectList ( SEMICOLON ( verb objectList )? )* 
             {
-            $this->pushFollow(self::$FOLLOW_verb_in_propertyListNotEmpty863);
+            $this->pushFollow(self::$FOLLOW_verb_in_propertyListNotEmpty862);
             $this->verb();
 
             $this->state->_fsp--;
 
-            $this->pushFollow(self::$FOLLOW_objectList_in_propertyListNotEmpty865);
+            $this->pushFollow(self::$FOLLOW_objectList_in_propertyListNotEmpty864);
             $this->objectList();
 
             $this->state->_fsp--;
 
-            // Test.g:142:23: ( SEMICOLON ( verb objectList )? )* 
+            // Test.g:141:23: ( SEMICOLON ( verb objectList )? )* 
             //loop41:
             do {
                 $alt41=2;
@@ -2560,10 +2561,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt41) {
             	case 1 :
-            	    // Test.g:142:25: SEMICOLON ( verb objectList )? 
+            	    // Test.g:141:25: SEMICOLON ( verb objectList )? 
             	    {
-            	    $this->match($this->input,$this->getToken('SEMICOLON'),self::$FOLLOW_SEMICOLON_in_propertyListNotEmpty869); 
-            	    // Test.g:142:35: ( verb objectList )? 
+            	    $this->match($this->input,$this->getToken('SEMICOLON'),self::$FOLLOW_SEMICOLON_in_propertyListNotEmpty868); 
+            	    // Test.g:141:35: ( verb objectList )? 
             	    $alt40=2;
             	    $LA40_0 = $this->input->LA(1);
 
@@ -2572,14 +2573,14 @@ class TestParser extends AntlrParser {
             	    }
             	    switch ($alt40) {
             	        case 1 :
-            	            // Test.g:142:37: verb objectList 
+            	            // Test.g:141:37: verb objectList 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_verb_in_propertyListNotEmpty873);
+            	            $this->pushFollow(self::$FOLLOW_verb_in_propertyListNotEmpty872);
             	            $this->verb();
 
             	            $this->state->_fsp--;
 
-            	            $this->pushFollow(self::$FOLLOW_objectList_in_propertyListNotEmpty875);
+            	            $this->pushFollow(self::$FOLLOW_objectList_in_propertyListNotEmpty874);
             	            $this->objectList();
 
             	            $this->state->_fsp--;
@@ -2617,13 +2618,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "propertyList"
-    // Test.g:145:1: propertyList : ( propertyListNotEmpty )? ; 
+    // Test.g:144:1: propertyList : ( propertyListNotEmpty )? ; 
     public function propertyList(){
         try {
-            // Test.g:146:5: ( ( propertyListNotEmpty )? ) 
-            // Test.g:146:7: ( propertyListNotEmpty )? 
+            // Test.g:145:5: ( ( propertyListNotEmpty )? ) 
+            // Test.g:145:7: ( propertyListNotEmpty )? 
             {
-            // Test.g:146:7: ( propertyListNotEmpty )? 
+            // Test.g:145:7: ( propertyListNotEmpty )? 
             $alt42=2;
             $LA42_0 = $this->input->LA(1);
 
@@ -2632,9 +2633,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt42) {
                 case 1 :
-                    // Test.g:146:7: propertyListNotEmpty 
+                    // Test.g:145:7: propertyListNotEmpty 
                     {
-                    $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_propertyList898);
+                    $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_propertyList897);
                     $this->propertyListNotEmpty();
 
                     $this->state->_fsp--;
@@ -2663,18 +2664,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "objectList"
-    // Test.g:149:1: objectList : object ( COMMA object )* ; 
+    // Test.g:148:1: objectList : object ( COMMA object )* ; 
     public function objectList(){
         try {
-            // Test.g:150:5: ( object ( COMMA object )* ) 
-            // Test.g:150:7: object ( COMMA object )* 
+            // Test.g:149:5: ( object ( COMMA object )* ) 
+            // Test.g:149:7: object ( COMMA object )* 
             {
-            $this->pushFollow(self::$FOLLOW_object_in_objectList916);
+            $this->pushFollow(self::$FOLLOW_object_in_objectList915);
             $this->object();
 
             $this->state->_fsp--;
 
-            // Test.g:150:14: ( COMMA object )* 
+            // Test.g:149:14: ( COMMA object )* 
             //loop43:
             do {
                 $alt43=2;
@@ -2687,10 +2688,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt43) {
             	case 1 :
-            	    // Test.g:150:16: COMMA object 
+            	    // Test.g:149:16: COMMA object 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectList920); 
-            	    $this->pushFollow(self::$FOLLOW_object_in_objectList922);
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectList919); 
+            	    $this->pushFollow(self::$FOLLOW_object_in_objectList921);
             	    $this->object();
 
             	    $this->state->_fsp--;
@@ -2722,13 +2723,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "object"
-    // Test.g:153:1: object : graphNode ; 
+    // Test.g:152:1: object : graphNode ; 
     public function object(){
         try {
-            // Test.g:154:5: ( graphNode ) 
-            // Test.g:154:7: graphNode 
+            // Test.g:153:5: ( graphNode ) 
+            // Test.g:153:7: graphNode 
             {
-            $this->pushFollow(self::$FOLLOW_graphNode_in_object942);
+            $this->pushFollow(self::$FOLLOW_graphNode_in_object941);
             $this->graphNode();
 
             $this->state->_fsp--;
@@ -2751,10 +2752,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "verb"
-    // Test.g:157:1: verb : ( varOrIRIref | A ); 
+    // Test.g:156:1: verb : ( varOrIRIref | A ); 
     public function verb(){
         try {
-            // Test.g:158:5: ( varOrIRIref | A ) 
+            // Test.g:157:5: ( varOrIRIref | A ) 
             $alt44=2;
             $LA44_0 = $this->input->LA(1);
 
@@ -2771,9 +2772,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt44) {
                 case 1 :
-                    // Test.g:158:7: varOrIRIref 
+                    // Test.g:157:7: varOrIRIref 
                     {
-                    $this->pushFollow(self::$FOLLOW_varOrIRIref_in_verb959);
+                    $this->pushFollow(self::$FOLLOW_varOrIRIref_in_verb958);
                     $this->varOrIRIref();
 
                     $this->state->_fsp--;
@@ -2782,9 +2783,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:159:7: A 
+                    // Test.g:158:7: A 
                     {
-                    $this->match($this->input,$this->getToken('A'),self::$FOLLOW_A_in_verb967); 
+                    $this->match($this->input,$this->getToken('A'),self::$FOLLOW_A_in_verb966); 
 
                     }
                     break;
@@ -2805,10 +2806,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "triplesNode"
-    // Test.g:162:1: triplesNode : ( collection | blankNodePropertyList ); 
+    // Test.g:161:1: triplesNode : ( collection | blankNodePropertyList ); 
     public function triplesNode(){
         try {
-            // Test.g:163:5: ( collection | blankNodePropertyList ) 
+            // Test.g:162:5: ( collection | blankNodePropertyList ) 
             $alt45=2;
             $LA45_0 = $this->input->LA(1);
 
@@ -2825,9 +2826,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt45) {
                 case 1 :
-                    // Test.g:163:7: collection 
+                    // Test.g:162:7: collection 
                     {
-                    $this->pushFollow(self::$FOLLOW_collection_in_triplesNode984);
+                    $this->pushFollow(self::$FOLLOW_collection_in_triplesNode983);
                     $this->collection();
 
                     $this->state->_fsp--;
@@ -2836,9 +2837,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:164:7: blankNodePropertyList 
+                    // Test.g:163:7: blankNodePropertyList 
                     {
-                    $this->pushFollow(self::$FOLLOW_blankNodePropertyList_in_triplesNode992);
+                    $this->pushFollow(self::$FOLLOW_blankNodePropertyList_in_triplesNode991);
                     $this->blankNodePropertyList();
 
                     $this->state->_fsp--;
@@ -2863,19 +2864,19 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "blankNodePropertyList"
-    // Test.g:167:1: blankNodePropertyList : OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE ; 
+    // Test.g:166:1: blankNodePropertyList : OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE ; 
     public function blankNodePropertyList(){
         try {
-            // Test.g:168:5: ( OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE ) 
-            // Test.g:168:7: OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE 
+            // Test.g:167:5: ( OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE ) 
+            // Test.g:167:7: OPEN_SQUARE_BRACE propertyListNotEmpty CLOSE_SQUARE_BRACE 
             {
-            $this->match($this->input,$this->getToken('OPEN_SQUARE_BRACE'),self::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1009); 
-            $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1011);
+            $this->match($this->input,$this->getToken('OPEN_SQUARE_BRACE'),self::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1008); 
+            $this->pushFollow(self::$FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1010);
             $this->propertyListNotEmpty();
 
             $this->state->_fsp--;
 
-            $this->match($this->input,$this->getToken('CLOSE_SQUARE_BRACE'),self::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1013); 
+            $this->match($this->input,$this->getToken('CLOSE_SQUARE_BRACE'),self::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1012); 
 
             }
 
@@ -2894,14 +2895,14 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "collection"
-    // Test.g:171:1: collection : OPEN_BRACE ( graphNode )+ CLOSE_BRACE ; 
+    // Test.g:170:1: collection : OPEN_BRACE ( graphNode )+ CLOSE_BRACE ; 
     public function collection(){
         try {
-            // Test.g:172:5: ( OPEN_BRACE ( graphNode )+ CLOSE_BRACE ) 
-            // Test.g:172:7: OPEN_BRACE ( graphNode )+ CLOSE_BRACE 
+            // Test.g:171:5: ( OPEN_BRACE ( graphNode )+ CLOSE_BRACE ) 
+            // Test.g:171:7: OPEN_BRACE ( graphNode )+ CLOSE_BRACE 
             {
-            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_collection1030); 
-            // Test.g:172:18: ( graphNode )+ 
+            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_collection1029); 
+            // Test.g:171:18: ( graphNode )+ 
             $cnt46=0;
             //loop46:
             do {
@@ -2915,9 +2916,9 @@ class TestParser extends AntlrParser {
 
                 switch ($alt46) {
             	case 1 :
-            	    // Test.g:172:18: graphNode 
+            	    // Test.g:171:18: graphNode 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_graphNode_in_collection1032);
+            	    $this->pushFollow(self::$FOLLOW_graphNode_in_collection1031);
             	    $this->graphNode();
 
             	    $this->state->_fsp--;
@@ -2935,7 +2936,7 @@ class TestParser extends AntlrParser {
                 $cnt46++;
             } while (true);
 
-            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_collection1035); 
+            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_collection1034); 
 
             }
 
@@ -2954,10 +2955,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "graphNode"
-    // Test.g:175:1: graphNode : ( varOrTerm | triplesNode ); 
+    // Test.g:174:1: graphNode : ( varOrTerm | triplesNode ); 
     public function graphNode(){
         try {
-            // Test.g:176:5: ( varOrTerm | triplesNode ) 
+            // Test.g:175:5: ( varOrTerm | triplesNode ) 
             $alt47=2;
             $LA47 = $this->input->LA(1);
             if($this->getToken('IRI_REF')== $LA47||$this->getToken('TRUE')== $LA47||$this->getToken('FALSE')== $LA47||$this->getToken('PNAME_NS')== $LA47||$this->getToken('PNAME_LN')== $LA47||$this->getToken('VAR1')== $LA47||$this->getToken('VAR2')== $LA47||$this->getToken('STRING_LITERAL1')== $LA47||$this->getToken('STRING_LITERAL2')== $LA47||$this->getToken('STRING_LITERAL_LONG1')== $LA47||$this->getToken('STRING_LITERAL_LONG2')== $LA47||$this->getToken('BLANK_NODE_LABEL')== $LA47||$this->getToken('INTEGER')== $LA47||$this->getToken('DECIMAL')== $LA47||$this->getToken('DOUBLE')== $LA47||$this->getToken('INTEGER_POSITIVE')== $LA47||$this->getToken('DECIMAL_POSITIVE')== $LA47||$this->getToken('DOUBLE_POSITIVE')== $LA47||$this->getToken('INTEGER_NEGATIVE')== $LA47||$this->getToken('DECIMAL_NEGATIVE')== $LA47||$this->getToken('DOUBLE_NEGATIVE')== $LA47)
@@ -3005,9 +3006,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt47) {
                 case 1 :
-                    // Test.g:176:7: varOrTerm 
+                    // Test.g:175:7: varOrTerm 
                     {
-                    $this->pushFollow(self::$FOLLOW_varOrTerm_in_graphNode1052);
+                    $this->pushFollow(self::$FOLLOW_varOrTerm_in_graphNode1051);
                     $this->varOrTerm();
 
                     $this->state->_fsp--;
@@ -3016,9 +3017,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:176:19: triplesNode 
+                    // Test.g:175:19: triplesNode 
                     {
-                    $this->pushFollow(self::$FOLLOW_triplesNode_in_graphNode1056);
+                    $this->pushFollow(self::$FOLLOW_triplesNode_in_graphNode1055);
                     $this->triplesNode();
 
                     $this->state->_fsp--;
@@ -3043,10 +3044,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "varOrTerm"
-    // Test.g:179:1: varOrTerm : ( variable | graphTerm ); 
+    // Test.g:178:1: varOrTerm : ( variable | graphTerm ); 
     public function varOrTerm(){
         try {
-            // Test.g:180:5: ( variable | graphTerm ) 
+            // Test.g:179:5: ( variable | graphTerm ) 
             $alt48=2;
             $LA48_0 = $this->input->LA(1);
 
@@ -3063,9 +3064,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt48) {
                 case 1 :
-                    // Test.g:180:7: variable 
+                    // Test.g:179:7: variable 
                     {
-                    $this->pushFollow(self::$FOLLOW_variable_in_varOrTerm1073);
+                    $this->pushFollow(self::$FOLLOW_variable_in_varOrTerm1072);
                     $this->variable();
 
                     $this->state->_fsp--;
@@ -3074,9 +3075,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:181:7: graphTerm 
+                    // Test.g:180:7: graphTerm 
                     {
-                    $this->pushFollow(self::$FOLLOW_graphTerm_in_varOrTerm1081);
+                    $this->pushFollow(self::$FOLLOW_graphTerm_in_varOrTerm1080);
                     $this->graphTerm();
 
                     $this->state->_fsp--;
@@ -3101,10 +3102,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "varOrIRIref"
-    // Test.g:184:1: varOrIRIref : ( variable | iriRef ); 
+    // Test.g:183:1: varOrIRIref : ( variable | iriRef ); 
     public function varOrIRIref(){
         try {
-            // Test.g:185:5: ( variable | iriRef ) 
+            // Test.g:184:5: ( variable | iriRef ) 
             $alt49=2;
             $LA49_0 = $this->input->LA(1);
 
@@ -3121,9 +3122,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt49) {
                 case 1 :
-                    // Test.g:185:7: variable 
+                    // Test.g:184:7: variable 
                     {
-                    $this->pushFollow(self::$FOLLOW_variable_in_varOrIRIref1098);
+                    $this->pushFollow(self::$FOLLOW_variable_in_varOrIRIref1097);
                     $this->variable();
 
                     $this->state->_fsp--;
@@ -3132,9 +3133,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:185:18: iriRef 
+                    // Test.g:184:18: iriRef 
                     {
-                    $this->pushFollow(self::$FOLLOW_iriRef_in_varOrIRIref1102);
+                    $this->pushFollow(self::$FOLLOW_iriRef_in_varOrIRIref1101);
                     $this->iriRef();
 
                     $this->state->_fsp--;
@@ -3159,10 +3160,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "variable"
-    // Test.g:188:1: variable : ( VAR1 | VAR2 ); 
+    // Test.g:187:1: variable : ( VAR1 | VAR2 ); 
     public function variable(){
         try {
-            // Test.g:189:5: ( VAR1 | VAR2 ) 
+            // Test.g:188:5: ( VAR1 | VAR2 ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('VAR1') && $this->input->LA(1)<=$this->getToken('VAR2')) ) {
@@ -3192,10 +3193,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "graphTerm"
-    // Test.g:193:1: graphTerm : ( iriRef | rdfLiteral | numericLiteral | booleanLiteral | blankNode | OPEN_BRACE CLOSE_BRACE ); 
+    // Test.g:192:1: graphTerm : ( iriRef | rdfLiteral | numericLiteral | booleanLiteral | blankNode | OPEN_BRACE CLOSE_BRACE ); 
     public function graphTerm(){
         try {
-            // Test.g:194:5: ( iriRef | rdfLiteral | numericLiteral | booleanLiteral | blankNode | OPEN_BRACE CLOSE_BRACE ) 
+            // Test.g:193:5: ( iriRef | rdfLiteral | numericLiteral | booleanLiteral | blankNode | OPEN_BRACE CLOSE_BRACE ) 
             $alt50=6;
             $LA50 = $this->input->LA(1);
             if($this->getToken('IRI_REF')== $LA50||$this->getToken('PNAME_NS')== $LA50||$this->getToken('PNAME_LN')== $LA50)
@@ -3231,9 +3232,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt50) {
                 case 1 :
-                    // Test.g:194:7: iriRef 
+                    // Test.g:193:7: iriRef 
                     {
-                    $this->pushFollow(self::$FOLLOW_iriRef_in_graphTerm1144);
+                    $this->pushFollow(self::$FOLLOW_iriRef_in_graphTerm1143);
                     $this->iriRef();
 
                     $this->state->_fsp--;
@@ -3242,9 +3243,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:195:7: rdfLiteral 
+                    // Test.g:194:7: rdfLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_rdfLiteral_in_graphTerm1152);
+                    $this->pushFollow(self::$FOLLOW_rdfLiteral_in_graphTerm1151);
                     $this->rdfLiteral();
 
                     $this->state->_fsp--;
@@ -3253,9 +3254,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:196:7: numericLiteral 
+                    // Test.g:195:7: numericLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_numericLiteral_in_graphTerm1160);
+                    $this->pushFollow(self::$FOLLOW_numericLiteral_in_graphTerm1159);
                     $this->numericLiteral();
 
                     $this->state->_fsp--;
@@ -3264,9 +3265,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // Test.g:197:7: booleanLiteral 
+                    // Test.g:196:7: booleanLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_booleanLiteral_in_graphTerm1168);
+                    $this->pushFollow(self::$FOLLOW_booleanLiteral_in_graphTerm1167);
                     $this->booleanLiteral();
 
                     $this->state->_fsp--;
@@ -3275,9 +3276,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 5 :
-                    // Test.g:198:7: blankNode 
+                    // Test.g:197:7: blankNode 
                     {
-                    $this->pushFollow(self::$FOLLOW_blankNode_in_graphTerm1176);
+                    $this->pushFollow(self::$FOLLOW_blankNode_in_graphTerm1175);
                     $this->blankNode();
 
                     $this->state->_fsp--;
@@ -3286,10 +3287,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 6 :
-                    // Test.g:199:7: OPEN_BRACE CLOSE_BRACE 
+                    // Test.g:198:7: OPEN_BRACE CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_graphTerm1184); 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_graphTerm1186); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_graphTerm1183); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_graphTerm1185); 
 
                     }
                     break;
@@ -3310,13 +3311,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "expression"
-    // Test.g:202:1: expression : conditionalOrExpression ; 
+    // Test.g:201:1: expression : conditionalOrExpression ; 
     public function expression(){
         try {
-            // Test.g:203:5: ( conditionalOrExpression ) 
-            // Test.g:203:7: conditionalOrExpression 
+            // Test.g:202:5: ( conditionalOrExpression ) 
+            // Test.g:202:7: conditionalOrExpression 
             {
-            $this->pushFollow(self::$FOLLOW_conditionalOrExpression_in_expression1203);
+            $this->pushFollow(self::$FOLLOW_conditionalOrExpression_in_expression1202);
             $this->conditionalOrExpression();
 
             $this->state->_fsp--;
@@ -3339,18 +3340,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "conditionalOrExpression"
-    // Test.g:206:1: conditionalOrExpression : conditionalAndExpression ( OR conditionalAndExpression )* ; 
+    // Test.g:205:1: conditionalOrExpression : conditionalAndExpression ( OR conditionalAndExpression )* ; 
     public function conditionalOrExpression(){
         try {
-            // Test.g:207:5: ( conditionalAndExpression ( OR conditionalAndExpression )* ) 
-            // Test.g:207:7: conditionalAndExpression ( OR conditionalAndExpression )* 
+            // Test.g:206:5: ( conditionalAndExpression ( OR conditionalAndExpression )* ) 
+            // Test.g:206:7: conditionalAndExpression ( OR conditionalAndExpression )* 
             {
-            $this->pushFollow(self::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1220);
+            $this->pushFollow(self::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1219);
             $this->conditionalAndExpression();
 
             $this->state->_fsp--;
 
-            // Test.g:207:32: ( OR conditionalAndExpression )* 
+            // Test.g:206:32: ( OR conditionalAndExpression )* 
             //loop51:
             do {
                 $alt51=2;
@@ -3363,10 +3364,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt51) {
             	case 1 :
-            	    // Test.g:207:34: OR conditionalAndExpression 
+            	    // Test.g:206:34: OR conditionalAndExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('OR'),self::$FOLLOW_OR_in_conditionalOrExpression1224); 
-            	    $this->pushFollow(self::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1226);
+            	    $this->match($this->input,$this->getToken('OR'),self::$FOLLOW_OR_in_conditionalOrExpression1223); 
+            	    $this->pushFollow(self::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1225);
             	    $this->conditionalAndExpression();
 
             	    $this->state->_fsp--;
@@ -3398,18 +3399,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "conditionalAndExpression"
-    // Test.g:210:1: conditionalAndExpression : valueLogical ( AND valueLogical )* ; 
+    // Test.g:209:1: conditionalAndExpression : valueLogical ( AND valueLogical )* ; 
     public function conditionalAndExpression(){
         try {
-            // Test.g:211:5: ( valueLogical ( AND valueLogical )* ) 
-            // Test.g:211:7: valueLogical ( AND valueLogical )* 
+            // Test.g:210:5: ( valueLogical ( AND valueLogical )* ) 
+            // Test.g:210:7: valueLogical ( AND valueLogical )* 
             {
-            $this->pushFollow(self::$FOLLOW_valueLogical_in_conditionalAndExpression1246);
+            $this->pushFollow(self::$FOLLOW_valueLogical_in_conditionalAndExpression1245);
             $this->valueLogical();
 
             $this->state->_fsp--;
 
-            // Test.g:211:20: ( AND valueLogical )* 
+            // Test.g:210:20: ( AND valueLogical )* 
             //loop52:
             do {
                 $alt52=2;
@@ -3422,10 +3423,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt52) {
             	case 1 :
-            	    // Test.g:211:22: AND valueLogical 
+            	    // Test.g:210:22: AND valueLogical 
             	    {
-            	    $this->match($this->input,$this->getToken('AND'),self::$FOLLOW_AND_in_conditionalAndExpression1250); 
-            	    $this->pushFollow(self::$FOLLOW_valueLogical_in_conditionalAndExpression1252);
+            	    $this->match($this->input,$this->getToken('AND'),self::$FOLLOW_AND_in_conditionalAndExpression1249); 
+            	    $this->pushFollow(self::$FOLLOW_valueLogical_in_conditionalAndExpression1251);
             	    $this->valueLogical();
 
             	    $this->state->_fsp--;
@@ -3457,13 +3458,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "valueLogical"
-    // Test.g:214:1: valueLogical : relationalExpression ; 
+    // Test.g:213:1: valueLogical : relationalExpression ; 
     public function valueLogical(){
         try {
-            // Test.g:215:5: ( relationalExpression ) 
-            // Test.g:215:7: relationalExpression 
+            // Test.g:214:5: ( relationalExpression ) 
+            // Test.g:214:7: relationalExpression 
             {
-            $this->pushFollow(self::$FOLLOW_relationalExpression_in_valueLogical1272);
+            $this->pushFollow(self::$FOLLOW_relationalExpression_in_valueLogical1271);
             $this->relationalExpression();
 
             $this->state->_fsp--;
@@ -3486,18 +3487,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "relationalExpression"
-    // Test.g:218:1: relationalExpression : numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? ; 
+    // Test.g:217:1: relationalExpression : numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? ; 
     public function relationalExpression(){
         try {
-            // Test.g:219:5: ( numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? ) 
-            // Test.g:219:7: numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? 
+            // Test.g:218:5: ( numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? ) 
+            // Test.g:218:7: numericExpression ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? 
             {
-            $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1289);
+            $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1288);
             $this->numericExpression();
 
             $this->state->_fsp--;
 
-            // Test.g:219:25: ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? 
+            // Test.g:218:25: ( EQUAL numericExpression | NOT_EQUAL numericExpression | LESS numericExpression | GREATER numericExpression | LESS_EQUAL numericExpression | GREATER_EQUAL numericExpression )? 
             $alt53=7;
             $LA53 = $this->input->LA(1);
             if($this->getToken('EQUAL')== $LA53)
@@ -3527,10 +3528,10 @@ class TestParser extends AntlrParser {
 
             switch ($alt53) {
                 case 1 :
-                    // Test.g:219:27: EQUAL numericExpression 
+                    // Test.g:218:27: EQUAL numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('EQUAL'),self::$FOLLOW_EQUAL_in_relationalExpression1293); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1295);
+                    $this->match($this->input,$this->getToken('EQUAL'),self::$FOLLOW_EQUAL_in_relationalExpression1292); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1294);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3539,10 +3540,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:219:53: NOT_EQUAL numericExpression 
+                    // Test.g:218:53: NOT_EQUAL numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('NOT_EQUAL'),self::$FOLLOW_NOT_EQUAL_in_relationalExpression1299); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1301);
+                    $this->match($this->input,$this->getToken('NOT_EQUAL'),self::$FOLLOW_NOT_EQUAL_in_relationalExpression1298); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1300);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3551,10 +3552,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:219:83: LESS numericExpression 
+                    // Test.g:218:83: LESS numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('LESS'),self::$FOLLOW_LESS_in_relationalExpression1305); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1307);
+                    $this->match($this->input,$this->getToken('LESS'),self::$FOLLOW_LESS_in_relationalExpression1304); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1306);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3563,10 +3564,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // Test.g:219:108: GREATER numericExpression 
+                    // Test.g:218:108: GREATER numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('GREATER'),self::$FOLLOW_GREATER_in_relationalExpression1311); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1313);
+                    $this->match($this->input,$this->getToken('GREATER'),self::$FOLLOW_GREATER_in_relationalExpression1310); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1312);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3575,10 +3576,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 5 :
-                    // Test.g:219:136: LESS_EQUAL numericExpression 
+                    // Test.g:218:136: LESS_EQUAL numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('LESS_EQUAL'),self::$FOLLOW_LESS_EQUAL_in_relationalExpression1317); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1319);
+                    $this->match($this->input,$this->getToken('LESS_EQUAL'),self::$FOLLOW_LESS_EQUAL_in_relationalExpression1316); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1318);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3587,10 +3588,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 6 :
-                    // Test.g:219:167: GREATER_EQUAL numericExpression 
+                    // Test.g:218:167: GREATER_EQUAL numericExpression 
                     {
-                    $this->match($this->input,$this->getToken('GREATER_EQUAL'),self::$FOLLOW_GREATER_EQUAL_in_relationalExpression1323); 
-                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1325);
+                    $this->match($this->input,$this->getToken('GREATER_EQUAL'),self::$FOLLOW_GREATER_EQUAL_in_relationalExpression1322); 
+                    $this->pushFollow(self::$FOLLOW_numericExpression_in_relationalExpression1324);
                     $this->numericExpression();
 
                     $this->state->_fsp--;
@@ -3619,13 +3620,13 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "numericExpression"
-    // Test.g:222:1: numericExpression : additiveExpression ; 
+    // Test.g:221:1: numericExpression : additiveExpression ; 
     public function numericExpression(){
         try {
-            // Test.g:223:5: ( additiveExpression ) 
-            // Test.g:223:7: additiveExpression 
+            // Test.g:222:5: ( additiveExpression ) 
+            // Test.g:222:7: additiveExpression 
             {
-            $this->pushFollow(self::$FOLLOW_additiveExpression_in_numericExpression1345);
+            $this->pushFollow(self::$FOLLOW_additiveExpression_in_numericExpression1344);
             $this->additiveExpression();
 
             $this->state->_fsp--;
@@ -3648,18 +3649,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "additiveExpression"
-    // Test.g:226:1: additiveExpression : multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* ; 
+    // Test.g:225:1: additiveExpression : multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* ; 
     public function additiveExpression(){
         try {
-            // Test.g:227:5: ( multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* ) 
-            // Test.g:227:7: multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* 
+            // Test.g:226:5: ( multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* ) 
+            // Test.g:226:7: multiplicativeExpression ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* 
             {
-            $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1362);
+            $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1361);
             $this->multiplicativeExpression();
 
             $this->state->_fsp--;
 
-            // Test.g:227:32: ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* 
+            // Test.g:226:32: ( PLUS multiplicativeExpression | MINUS multiplicativeExpression | numericLiteralPositive | numericLiteralNegative )* 
             //loop54:
             do {
                 $alt54=5;
@@ -3685,10 +3686,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt54) {
             	case 1 :
-            	    // Test.g:227:34: PLUS multiplicativeExpression 
+            	    // Test.g:226:34: PLUS multiplicativeExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('PLUS'),self::$FOLLOW_PLUS_in_additiveExpression1366); 
-            	    $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1368);
+            	    $this->match($this->input,$this->getToken('PLUS'),self::$FOLLOW_PLUS_in_additiveExpression1365); 
+            	    $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1367);
             	    $this->multiplicativeExpression();
 
             	    $this->state->_fsp--;
@@ -3697,10 +3698,10 @@ class TestParser extends AntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // Test.g:227:66: MINUS multiplicativeExpression 
+            	    // Test.g:226:66: MINUS multiplicativeExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('MINUS'),self::$FOLLOW_MINUS_in_additiveExpression1372); 
-            	    $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1374);
+            	    $this->match($this->input,$this->getToken('MINUS'),self::$FOLLOW_MINUS_in_additiveExpression1371); 
+            	    $this->pushFollow(self::$FOLLOW_multiplicativeExpression_in_additiveExpression1373);
             	    $this->multiplicativeExpression();
 
             	    $this->state->_fsp--;
@@ -3709,9 +3710,9 @@ class TestParser extends AntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // Test.g:227:99: numericLiteralPositive 
+            	    // Test.g:226:99: numericLiteralPositive 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_numericLiteralPositive_in_additiveExpression1378);
+            	    $this->pushFollow(self::$FOLLOW_numericLiteralPositive_in_additiveExpression1377);
             	    $this->numericLiteralPositive();
 
             	    $this->state->_fsp--;
@@ -3720,9 +3721,9 @@ class TestParser extends AntlrParser {
             	    }
             	    break;
             	case 4 :
-            	    // Test.g:227:124: numericLiteralNegative 
+            	    // Test.g:226:124: numericLiteralNegative 
             	    {
-            	    $this->pushFollow(self::$FOLLOW_numericLiteralNegative_in_additiveExpression1382);
+            	    $this->pushFollow(self::$FOLLOW_numericLiteralNegative_in_additiveExpression1381);
             	    $this->numericLiteralNegative();
 
             	    $this->state->_fsp--;
@@ -3754,18 +3755,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "multiplicativeExpression"
-    // Test.g:230:1: multiplicativeExpression : unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* ; 
+    // Test.g:229:1: multiplicativeExpression : unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* ; 
     public function multiplicativeExpression(){
         try {
-            // Test.g:231:5: ( unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* ) 
-            // Test.g:231:7: unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* 
+            // Test.g:230:5: ( unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* ) 
+            // Test.g:230:7: unaryExpression ( ASTERISK unaryExpression | DIVIDE unaryExpression )* 
             {
-            $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1402);
+            $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1401);
             $this->unaryExpression();
 
             $this->state->_fsp--;
 
-            // Test.g:231:23: ( ASTERISK unaryExpression | DIVIDE unaryExpression )* 
+            // Test.g:230:23: ( ASTERISK unaryExpression | DIVIDE unaryExpression )* 
             //loop55:
             do {
                 $alt55=3;
@@ -3781,10 +3782,10 @@ class TestParser extends AntlrParser {
 
                 switch ($alt55) {
             	case 1 :
-            	    // Test.g:231:25: ASTERISK unaryExpression 
+            	    // Test.g:230:25: ASTERISK unaryExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_multiplicativeExpression1406); 
-            	    $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1408);
+            	    $this->match($this->input,$this->getToken('ASTERISK'),self::$FOLLOW_ASTERISK_in_multiplicativeExpression1405); 
+            	    $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1407);
             	    $this->unaryExpression();
 
             	    $this->state->_fsp--;
@@ -3793,10 +3794,10 @@ class TestParser extends AntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // Test.g:231:52: DIVIDE unaryExpression 
+            	    // Test.g:230:52: DIVIDE unaryExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('DIVIDE'),self::$FOLLOW_DIVIDE_in_multiplicativeExpression1412); 
-            	    $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1414);
+            	    $this->match($this->input,$this->getToken('DIVIDE'),self::$FOLLOW_DIVIDE_in_multiplicativeExpression1411); 
+            	    $this->pushFollow(self::$FOLLOW_unaryExpression_in_multiplicativeExpression1413);
             	    $this->unaryExpression();
 
             	    $this->state->_fsp--;
@@ -3828,10 +3829,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "unaryExpression"
-    // Test.g:234:1: unaryExpression : ( NOT primaryExpression | PLUS primaryExpression | MINUS primaryExpression | primaryExpression ); 
+    // Test.g:233:1: unaryExpression : ( NOT primaryExpression | PLUS primaryExpression | MINUS primaryExpression | primaryExpression ); 
     public function unaryExpression(){
         try {
-            // Test.g:235:5: ( NOT primaryExpression | PLUS primaryExpression | MINUS primaryExpression | primaryExpression ) 
+            // Test.g:234:5: ( NOT primaryExpression | PLUS primaryExpression | MINUS primaryExpression | primaryExpression ) 
             $alt56=4;
             $LA56 = $this->input->LA(1);
             if($this->getToken('NOT')== $LA56)
@@ -3859,10 +3860,10 @@ class TestParser extends AntlrParser {
 
             switch ($alt56) {
                 case 1 :
-                    // Test.g:235:7: NOT primaryExpression 
+                    // Test.g:234:7: NOT primaryExpression 
                     {
-                    $this->match($this->input,$this->getToken('NOT'),self::$FOLLOW_NOT_in_unaryExpression1434); 
-                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1436);
+                    $this->match($this->input,$this->getToken('NOT'),self::$FOLLOW_NOT_in_unaryExpression1433); 
+                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1435);
                     $this->primaryExpression();
 
                     $this->state->_fsp--;
@@ -3871,10 +3872,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:236:7: PLUS primaryExpression 
+                    // Test.g:235:7: PLUS primaryExpression 
                     {
-                    $this->match($this->input,$this->getToken('PLUS'),self::$FOLLOW_PLUS_in_unaryExpression1444); 
-                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1446);
+                    $this->match($this->input,$this->getToken('PLUS'),self::$FOLLOW_PLUS_in_unaryExpression1443); 
+                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1445);
                     $this->primaryExpression();
 
                     $this->state->_fsp--;
@@ -3883,10 +3884,10 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:237:7: MINUS primaryExpression 
+                    // Test.g:236:7: MINUS primaryExpression 
                     {
-                    $this->match($this->input,$this->getToken('MINUS'),self::$FOLLOW_MINUS_in_unaryExpression1454); 
-                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1456);
+                    $this->match($this->input,$this->getToken('MINUS'),self::$FOLLOW_MINUS_in_unaryExpression1453); 
+                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1455);
                     $this->primaryExpression();
 
                     $this->state->_fsp--;
@@ -3895,9 +3896,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // Test.g:238:7: primaryExpression 
+                    // Test.g:237:7: primaryExpression 
                     {
-                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1464);
+                    $this->pushFollow(self::$FOLLOW_primaryExpression_in_unaryExpression1463);
                     $this->primaryExpression();
 
                     $this->state->_fsp--;
@@ -3922,10 +3923,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "primaryExpression"
-    // Test.g:241:1: primaryExpression : ( brackettedExpression | builtInCall | iriRefOrFunction | rdfLiteral | numericLiteral | booleanLiteral | variable ); 
+    // Test.g:240:1: primaryExpression : ( brackettedExpression | builtInCall | iriRefOrFunction | rdfLiteral | numericLiteral | booleanLiteral | variable ); 
     public function primaryExpression(){
         try {
-            // Test.g:242:5: ( brackettedExpression | builtInCall | iriRefOrFunction | rdfLiteral | numericLiteral | booleanLiteral | variable ) 
+            // Test.g:241:5: ( brackettedExpression | builtInCall | iriRefOrFunction | rdfLiteral | numericLiteral | booleanLiteral | variable ) 
             $alt57=7;
             $LA57 = $this->input->LA(1);
             if($this->getToken('OPEN_BRACE')== $LA57)
@@ -3965,9 +3966,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt57) {
                 case 1 :
-                    // Test.g:242:7: brackettedExpression 
+                    // Test.g:241:7: brackettedExpression 
                     {
-                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_primaryExpression1481);
+                    $this->pushFollow(self::$FOLLOW_brackettedExpression_in_primaryExpression1480);
                     $this->brackettedExpression();
 
                     $this->state->_fsp--;
@@ -3976,9 +3977,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:242:30: builtInCall 
+                    // Test.g:241:30: builtInCall 
                     {
-                    $this->pushFollow(self::$FOLLOW_builtInCall_in_primaryExpression1485);
+                    $this->pushFollow(self::$FOLLOW_builtInCall_in_primaryExpression1484);
                     $this->builtInCall();
 
                     $this->state->_fsp--;
@@ -3987,9 +3988,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:242:44: iriRefOrFunction 
+                    // Test.g:241:44: iriRefOrFunction 
                     {
-                    $this->pushFollow(self::$FOLLOW_iriRefOrFunction_in_primaryExpression1489);
+                    $this->pushFollow(self::$FOLLOW_iriRefOrFunction_in_primaryExpression1488);
                     $this->iriRefOrFunction();
 
                     $this->state->_fsp--;
@@ -3998,9 +3999,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // Test.g:242:63: rdfLiteral 
+                    // Test.g:241:63: rdfLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_rdfLiteral_in_primaryExpression1493);
+                    $this->pushFollow(self::$FOLLOW_rdfLiteral_in_primaryExpression1492);
                     $this->rdfLiteral();
 
                     $this->state->_fsp--;
@@ -4009,9 +4010,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 5 :
-                    // Test.g:242:76: numericLiteral 
+                    // Test.g:241:76: numericLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_numericLiteral_in_primaryExpression1497);
+                    $this->pushFollow(self::$FOLLOW_numericLiteral_in_primaryExpression1496);
                     $this->numericLiteral();
 
                     $this->state->_fsp--;
@@ -4020,9 +4021,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 6 :
-                    // Test.g:242:93: booleanLiteral 
+                    // Test.g:241:93: booleanLiteral 
                     {
-                    $this->pushFollow(self::$FOLLOW_booleanLiteral_in_primaryExpression1501);
+                    $this->pushFollow(self::$FOLLOW_booleanLiteral_in_primaryExpression1500);
                     $this->booleanLiteral();
 
                     $this->state->_fsp--;
@@ -4031,9 +4032,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 7 :
-                    // Test.g:242:110: variable 
+                    // Test.g:241:110: variable 
                     {
-                    $this->pushFollow(self::$FOLLOW_variable_in_primaryExpression1505);
+                    $this->pushFollow(self::$FOLLOW_variable_in_primaryExpression1504);
                     $this->variable();
 
                     $this->state->_fsp--;
@@ -4058,19 +4059,19 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "brackettedExpression"
-    // Test.g:245:1: brackettedExpression : OPEN_BRACE expression CLOSE_BRACE ; 
+    // Test.g:244:1: brackettedExpression : OPEN_BRACE expression CLOSE_BRACE ; 
     public function brackettedExpression(){
         try {
-            // Test.g:246:5: ( OPEN_BRACE expression CLOSE_BRACE ) 
-            // Test.g:246:7: OPEN_BRACE expression CLOSE_BRACE 
+            // Test.g:245:5: ( OPEN_BRACE expression CLOSE_BRACE ) 
+            // Test.g:245:7: OPEN_BRACE expression CLOSE_BRACE 
             {
-            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_brackettedExpression1522); 
-            $this->pushFollow(self::$FOLLOW_expression_in_brackettedExpression1524);
+            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_brackettedExpression1521); 
+            $this->pushFollow(self::$FOLLOW_expression_in_brackettedExpression1523);
             $this->expression();
 
             $this->state->_fsp--;
 
-            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_brackettedExpression1526); 
+            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_brackettedExpression1525); 
 
             }
 
@@ -4089,10 +4090,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "builtInCall"
-    // Test.g:249:1: builtInCall : ( STR OPEN_BRACE expression CLOSE_BRACE | LANG OPEN_BRACE expression CLOSE_BRACE | LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE | DATATYPE OPEN_BRACE expression CLOSE_BRACE | BOUND OPEN_BRACE variable CLOSE_BRACE | SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE | ISIRI OPEN_BRACE expression CLOSE_BRACE | ISURI OPEN_BRACE expression CLOSE_BRACE | ISBLANK OPEN_BRACE expression CLOSE_BRACE | ISLITERAL OPEN_BRACE expression CLOSE_BRACE | regexExpression ); 
+    // Test.g:248:1: builtInCall : ( STR OPEN_BRACE expression CLOSE_BRACE | LANG OPEN_BRACE expression CLOSE_BRACE | LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE | DATATYPE OPEN_BRACE expression CLOSE_BRACE | BOUND OPEN_BRACE variable CLOSE_BRACE | SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE | ISIRI OPEN_BRACE expression CLOSE_BRACE | ISURI OPEN_BRACE expression CLOSE_BRACE | ISBLANK OPEN_BRACE expression CLOSE_BRACE | ISLITERAL OPEN_BRACE expression CLOSE_BRACE | regexExpression ); 
     public function builtInCall(){
         try {
-            // Test.g:250:5: ( STR OPEN_BRACE expression CLOSE_BRACE | LANG OPEN_BRACE expression CLOSE_BRACE | LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE | DATATYPE OPEN_BRACE expression CLOSE_BRACE | BOUND OPEN_BRACE variable CLOSE_BRACE | SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE | ISIRI OPEN_BRACE expression CLOSE_BRACE | ISURI OPEN_BRACE expression CLOSE_BRACE | ISBLANK OPEN_BRACE expression CLOSE_BRACE | ISLITERAL OPEN_BRACE expression CLOSE_BRACE | regexExpression ) 
+            // Test.g:249:5: ( STR OPEN_BRACE expression CLOSE_BRACE | LANG OPEN_BRACE expression CLOSE_BRACE | LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE | DATATYPE OPEN_BRACE expression CLOSE_BRACE | BOUND OPEN_BRACE variable CLOSE_BRACE | SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE | ISIRI OPEN_BRACE expression CLOSE_BRACE | ISURI OPEN_BRACE expression CLOSE_BRACE | ISBLANK OPEN_BRACE expression CLOSE_BRACE | ISLITERAL OPEN_BRACE expression CLOSE_BRACE | regexExpression ) 
             $alt58=11;
             $LA58 = $this->input->LA(1);
             if($this->getToken('STR')== $LA58)
@@ -4148,161 +4149,161 @@ class TestParser extends AntlrParser {
 
             switch ($alt58) {
                 case 1 :
-                    // Test.g:250:7: STR OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:249:7: STR OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('STR'),self::$FOLLOW_STR_in_builtInCall1543); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1545); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1547);
+                    $this->match($this->input,$this->getToken('STR'),self::$FOLLOW_STR_in_builtInCall1542); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1544); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1546);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1549); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1548); 
 
                     }
                     break;
                 case 2 :
-                    // Test.g:251:7: LANG OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:250:7: LANG OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('LANG'),self::$FOLLOW_LANG_in_builtInCall1557); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1559); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1561);
+                    $this->match($this->input,$this->getToken('LANG'),self::$FOLLOW_LANG_in_builtInCall1556); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1558); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1560);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1563); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1562); 
 
                     }
                     break;
                 case 3 :
-                    // Test.g:252:7: LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE 
+                    // Test.g:251:7: LANGMATCHES OPEN_BRACE expression COMMA expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('LANGMATCHES'),self::$FOLLOW_LANGMATCHES_in_builtInCall1571); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1573); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1575);
+                    $this->match($this->input,$this->getToken('LANGMATCHES'),self::$FOLLOW_LANGMATCHES_in_builtInCall1570); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1572); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1574);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_builtInCall1577); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1579);
+                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_builtInCall1576); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1578);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1581); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1580); 
 
                     }
                     break;
                 case 4 :
-                    // Test.g:253:7: DATATYPE OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:252:7: DATATYPE OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('DATATYPE'),self::$FOLLOW_DATATYPE_in_builtInCall1589); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1591); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1593);
+                    $this->match($this->input,$this->getToken('DATATYPE'),self::$FOLLOW_DATATYPE_in_builtInCall1588); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1590); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1592);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1595); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1594); 
 
                     }
                     break;
                 case 5 :
-                    // Test.g:254:7: BOUND OPEN_BRACE variable CLOSE_BRACE 
+                    // Test.g:253:7: BOUND OPEN_BRACE variable CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('BOUND'),self::$FOLLOW_BOUND_in_builtInCall1603); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1605); 
-                    $this->pushFollow(self::$FOLLOW_variable_in_builtInCall1607);
+                    $this->match($this->input,$this->getToken('BOUND'),self::$FOLLOW_BOUND_in_builtInCall1602); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1604); 
+                    $this->pushFollow(self::$FOLLOW_variable_in_builtInCall1606);
                     $this->variable();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1609); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1608); 
 
                     }
                     break;
                 case 6 :
-                    // Test.g:255:7: SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE 
+                    // Test.g:254:7: SAMETERM OPEN_BRACE expression COMMA expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('SAMETERM'),self::$FOLLOW_SAMETERM_in_builtInCall1617); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1619); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1621);
+                    $this->match($this->input,$this->getToken('SAMETERM'),self::$FOLLOW_SAMETERM_in_builtInCall1616); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1618); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1620);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_builtInCall1623); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1625);
+                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_builtInCall1622); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1624);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1627); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1626); 
 
                     }
                     break;
                 case 7 :
-                    // Test.g:256:7: ISIRI OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:255:7: ISIRI OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('ISIRI'),self::$FOLLOW_ISIRI_in_builtInCall1635); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1637); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1639);
+                    $this->match($this->input,$this->getToken('ISIRI'),self::$FOLLOW_ISIRI_in_builtInCall1634); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1636); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1638);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1641); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1640); 
 
                     }
                     break;
                 case 8 :
-                    // Test.g:257:7: ISURI OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:256:7: ISURI OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('ISURI'),self::$FOLLOW_ISURI_in_builtInCall1649); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1651); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1653);
+                    $this->match($this->input,$this->getToken('ISURI'),self::$FOLLOW_ISURI_in_builtInCall1648); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1650); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1652);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1655); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1654); 
 
                     }
                     break;
                 case 9 :
-                    // Test.g:258:7: ISBLANK OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:257:7: ISBLANK OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('ISBLANK'),self::$FOLLOW_ISBLANK_in_builtInCall1663); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1665); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1667);
+                    $this->match($this->input,$this->getToken('ISBLANK'),self::$FOLLOW_ISBLANK_in_builtInCall1662); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1664); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1666);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1669); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1668); 
 
                     }
                     break;
                 case 10 :
-                    // Test.g:259:7: ISLITERAL OPEN_BRACE expression CLOSE_BRACE 
+                    // Test.g:258:7: ISLITERAL OPEN_BRACE expression CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('ISLITERAL'),self::$FOLLOW_ISLITERAL_in_builtInCall1677); 
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1679); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1681);
+                    $this->match($this->input,$this->getToken('ISLITERAL'),self::$FOLLOW_ISLITERAL_in_builtInCall1676); 
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_builtInCall1678); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_builtInCall1680);
                     $this->expression();
 
                     $this->state->_fsp--;
 
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1683); 
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_builtInCall1682); 
 
                     }
                     break;
                 case 11 :
-                    // Test.g:260:7: regexExpression 
+                    // Test.g:259:7: regexExpression 
                     {
-                    $this->pushFollow(self::$FOLLOW_regexExpression_in_builtInCall1691);
+                    $this->pushFollow(self::$FOLLOW_regexExpression_in_builtInCall1690);
                     $this->regexExpression();
 
                     $this->state->_fsp--;
@@ -4327,26 +4328,26 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "regexExpression"
-    // Test.g:263:1: regexExpression : REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE ; 
+    // Test.g:262:1: regexExpression : REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE ; 
     public function regexExpression(){
         try {
-            // Test.g:264:5: ( REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE ) 
-            // Test.g:264:7: REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE 
+            // Test.g:263:5: ( REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE ) 
+            // Test.g:263:7: REGEX OPEN_BRACE expression COMMA expression ( COMMA expression )? CLOSE_BRACE 
             {
-            $this->match($this->input,$this->getToken('REGEX'),self::$FOLLOW_REGEX_in_regexExpression1708); 
-            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_regexExpression1710); 
-            $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1712);
+            $this->match($this->input,$this->getToken('REGEX'),self::$FOLLOW_REGEX_in_regexExpression1707); 
+            $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_regexExpression1709); 
+            $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1711);
             $this->expression();
 
             $this->state->_fsp--;
 
-            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_regexExpression1714); 
-            $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1716);
+            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_regexExpression1713); 
+            $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1715);
             $this->expression();
 
             $this->state->_fsp--;
 
-            // Test.g:264:52: ( COMMA expression )? 
+            // Test.g:263:52: ( COMMA expression )? 
             $alt59=2;
             $LA59_0 = $this->input->LA(1);
 
@@ -4355,10 +4356,10 @@ class TestParser extends AntlrParser {
             }
             switch ($alt59) {
                 case 1 :
-                    // Test.g:264:54: COMMA expression 
+                    // Test.g:263:54: COMMA expression 
                     {
-                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_regexExpression1720); 
-                    $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1722);
+                    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_regexExpression1719); 
+                    $this->pushFollow(self::$FOLLOW_expression_in_regexExpression1721);
                     $this->expression();
 
                     $this->state->_fsp--;
@@ -4369,7 +4370,7 @@ class TestParser extends AntlrParser {
 
             }
 
-            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_regexExpression1727); 
+            $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_regexExpression1726); 
 
             }
 
@@ -4388,18 +4389,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "iriRefOrFunction"
-    // Test.g:267:1: iriRefOrFunction : iriRef ( argList )? ; 
+    // Test.g:266:1: iriRefOrFunction : iriRef ( argList )? ; 
     public function iriRefOrFunction(){
         try {
-            // Test.g:268:5: ( iriRef ( argList )? ) 
-            // Test.g:268:7: iriRef ( argList )? 
+            // Test.g:267:5: ( iriRef ( argList )? ) 
+            // Test.g:267:7: iriRef ( argList )? 
             {
-            $this->pushFollow(self::$FOLLOW_iriRef_in_iriRefOrFunction1744);
+            $this->pushFollow(self::$FOLLOW_iriRef_in_iriRefOrFunction1743);
             $this->iriRef();
 
             $this->state->_fsp--;
 
-            // Test.g:268:14: ( argList )? 
+            // Test.g:267:14: ( argList )? 
             $alt60=2;
             $LA60_0 = $this->input->LA(1);
 
@@ -4408,9 +4409,9 @@ class TestParser extends AntlrParser {
             }
             switch ($alt60) {
                 case 1 :
-                    // Test.g:268:14: argList 
+                    // Test.g:267:14: argList 
                     {
-                    $this->pushFollow(self::$FOLLOW_argList_in_iriRefOrFunction1746);
+                    $this->pushFollow(self::$FOLLOW_argList_in_iriRefOrFunction1745);
                     $this->argList();
 
                     $this->state->_fsp--;
@@ -4439,18 +4440,18 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "rdfLiteral"
-    // Test.g:271:1: rdfLiteral : string ( LANGTAG | ( REFERENCE iriRef ) )? ; 
+    // Test.g:270:1: rdfLiteral : string ( LANGTAG | ( REFERENCE iriRef ) )? ; 
     public function rdfLiteral(){
         try {
-            // Test.g:272:5: ( string ( LANGTAG | ( REFERENCE iriRef ) )? ) 
-            // Test.g:272:7: string ( LANGTAG | ( REFERENCE iriRef ) )? 
+            // Test.g:271:5: ( string ( LANGTAG | ( REFERENCE iriRef ) )? ) 
+            // Test.g:271:7: string ( LANGTAG | ( REFERENCE iriRef ) )? 
             {
-            $this->pushFollow(self::$FOLLOW_string_in_rdfLiteral1764);
+            $this->pushFollow(self::$FOLLOW_string_in_rdfLiteral1763);
             $this->string();
 
             $this->state->_fsp--;
 
-            // Test.g:272:14: ( LANGTAG | ( REFERENCE iriRef ) )? 
+            // Test.g:271:14: ( LANGTAG | ( REFERENCE iriRef ) )? 
             $alt61=3;
             $LA61_0 = $this->input->LA(1);
 
@@ -4462,20 +4463,20 @@ class TestParser extends AntlrParser {
             }
             switch ($alt61) {
                 case 1 :
-                    // Test.g:272:16: LANGTAG 
+                    // Test.g:271:16: LANGTAG 
                     {
-                    $this->match($this->input,$this->getToken('LANGTAG'),self::$FOLLOW_LANGTAG_in_rdfLiteral1768); 
+                    $this->match($this->input,$this->getToken('LANGTAG'),self::$FOLLOW_LANGTAG_in_rdfLiteral1767); 
 
                     }
                     break;
                 case 2 :
-                    // Test.g:272:26: ( REFERENCE iriRef ) 
+                    // Test.g:271:26: ( REFERENCE iriRef ) 
                     {
-                    // Test.g:272:26: ( REFERENCE iriRef ) 
-                    // Test.g:272:28: REFERENCE iriRef 
+                    // Test.g:271:26: ( REFERENCE iriRef ) 
+                    // Test.g:271:28: REFERENCE iriRef 
                     {
-                    $this->match($this->input,$this->getToken('REFERENCE'),self::$FOLLOW_REFERENCE_in_rdfLiteral1774); 
-                    $this->pushFollow(self::$FOLLOW_iriRef_in_rdfLiteral1776);
+                    $this->match($this->input,$this->getToken('REFERENCE'),self::$FOLLOW_REFERENCE_in_rdfLiteral1773); 
+                    $this->pushFollow(self::$FOLLOW_iriRef_in_rdfLiteral1775);
                     $this->iriRef();
 
                     $this->state->_fsp--;
@@ -4507,10 +4508,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "numericLiteral"
-    // Test.g:275:1: numericLiteral : ( numericLiteralUnsigned | numericLiteralPositive | numericLiteralNegative ); 
+    // Test.g:274:1: numericLiteral : ( numericLiteralUnsigned | numericLiteralPositive | numericLiteralNegative ); 
     public function numericLiteral(){
         try {
-            // Test.g:276:5: ( numericLiteralUnsigned | numericLiteralPositive | numericLiteralNegative ) 
+            // Test.g:275:5: ( numericLiteralUnsigned | numericLiteralPositive | numericLiteralNegative ) 
             $alt62=3;
             $LA62 = $this->input->LA(1);
             if($this->getToken('INTEGER')== $LA62||$this->getToken('DECIMAL')== $LA62||$this->getToken('DOUBLE')== $LA62)
@@ -4534,9 +4535,9 @@ class TestParser extends AntlrParser {
 
             switch ($alt62) {
                 case 1 :
-                    // Test.g:276:7: numericLiteralUnsigned 
+                    // Test.g:275:7: numericLiteralUnsigned 
                     {
-                    $this->pushFollow(self::$FOLLOW_numericLiteralUnsigned_in_numericLiteral1798);
+                    $this->pushFollow(self::$FOLLOW_numericLiteralUnsigned_in_numericLiteral1797);
                     $this->numericLiteralUnsigned();
 
                     $this->state->_fsp--;
@@ -4545,9 +4546,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // Test.g:276:32: numericLiteralPositive 
+                    // Test.g:275:32: numericLiteralPositive 
                     {
-                    $this->pushFollow(self::$FOLLOW_numericLiteralPositive_in_numericLiteral1802);
+                    $this->pushFollow(self::$FOLLOW_numericLiteralPositive_in_numericLiteral1801);
                     $this->numericLiteralPositive();
 
                     $this->state->_fsp--;
@@ -4556,9 +4557,9 @@ class TestParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // Test.g:276:57: numericLiteralNegative 
+                    // Test.g:275:57: numericLiteralNegative 
                     {
-                    $this->pushFollow(self::$FOLLOW_numericLiteralNegative_in_numericLiteral1806);
+                    $this->pushFollow(self::$FOLLOW_numericLiteralNegative_in_numericLiteral1805);
                     $this->numericLiteralNegative();
 
                     $this->state->_fsp--;
@@ -4583,10 +4584,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "numericLiteralUnsigned"
-    // Test.g:279:1: numericLiteralUnsigned : ( INTEGER | DECIMAL | DOUBLE ); 
+    // Test.g:278:1: numericLiteralUnsigned : ( INTEGER | DECIMAL | DOUBLE ); 
     public function numericLiteralUnsigned(){
         try {
-            // Test.g:280:5: ( INTEGER | DECIMAL | DOUBLE ) 
+            // Test.g:279:5: ( INTEGER | DECIMAL | DOUBLE ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('INTEGER') && $this->input->LA(1)<=$this->getToken('DECIMAL'))||$this->input->LA(1)==$this->getToken('DOUBLE') ) {
@@ -4616,10 +4617,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "numericLiteralPositive"
-    // Test.g:285:1: numericLiteralPositive : ( INTEGER_POSITIVE | DECIMAL_POSITIVE | DOUBLE_POSITIVE ); 
+    // Test.g:284:1: numericLiteralPositive : ( INTEGER_POSITIVE | DECIMAL_POSITIVE | DOUBLE_POSITIVE ); 
     public function numericLiteralPositive(){
         try {
-            // Test.g:286:5: ( INTEGER_POSITIVE | DECIMAL_POSITIVE | DOUBLE_POSITIVE ) 
+            // Test.g:285:5: ( INTEGER_POSITIVE | DECIMAL_POSITIVE | DOUBLE_POSITIVE ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('INTEGER_POSITIVE') && $this->input->LA(1)<=$this->getToken('DOUBLE_POSITIVE')) ) {
@@ -4649,10 +4650,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "numericLiteralNegative"
-    // Test.g:291:1: numericLiteralNegative : ( INTEGER_NEGATIVE | DECIMAL_NEGATIVE | DOUBLE_NEGATIVE ); 
+    // Test.g:290:1: numericLiteralNegative : ( INTEGER_NEGATIVE | DECIMAL_NEGATIVE | DOUBLE_NEGATIVE ); 
     public function numericLiteralNegative(){
         try {
-            // Test.g:292:5: ( INTEGER_NEGATIVE | DECIMAL_NEGATIVE | DOUBLE_NEGATIVE ) 
+            // Test.g:291:5: ( INTEGER_NEGATIVE | DECIMAL_NEGATIVE | DOUBLE_NEGATIVE ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('INTEGER_NEGATIVE') && $this->input->LA(1)<=$this->getToken('DOUBLE_NEGATIVE')) ) {
@@ -4682,10 +4683,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "booleanLiteral"
-    // Test.g:297:1: booleanLiteral : ( TRUE | FALSE ); 
+    // Test.g:296:1: booleanLiteral : ( TRUE | FALSE ); 
     public function booleanLiteral(){
         try {
-            // Test.g:298:5: ( TRUE | FALSE ) 
+            // Test.g:297:5: ( TRUE | FALSE ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('TRUE') && $this->input->LA(1)<=$this->getToken('FALSE')) ) {
@@ -4715,10 +4716,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "string"
-    // Test.g:302:1: string : ( STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2 ); 
+    // Test.g:301:1: string : ( STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2 ); 
     public function string(){
         try {
-            // Test.g:303:5: ( STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2 ) 
+            // Test.g:302:5: ( STRING_LITERAL1 | STRING_LITERAL2 | STRING_LITERAL_LONG1 | STRING_LITERAL_LONG2 ) 
             // Test.g: 
             {
             if ( ($this->input->LA(1)>=$this->getToken('STRING_LITERAL1') && $this->input->LA(1)<=$this->getToken('STRING_LITERAL_LONG2')) ) {
@@ -4748,10 +4749,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "iriRef"
-    // Test.g:309:1: iriRef : ( IRI_REF | prefixedName ); 
+    // Test.g:308:1: iriRef : ( IRI_REF | prefixedName ); 
     public function iriRef(){
         try {
-            // Test.g:310:5: ( IRI_REF | prefixedName ) 
+            // Test.g:309:5: ( IRI_REF | prefixedName ) 
             $alt63=2;
             $LA63_0 = $this->input->LA(1);
 
@@ -4768,16 +4769,16 @@ class TestParser extends AntlrParser {
             }
             switch ($alt63) {
                 case 1 :
-                    // Test.g:310:7: IRI_REF 
+                    // Test.g:309:7: IRI_REF 
                     {
-                    $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_iriRef1988); 
+                    $this->match($this->input,$this->getToken('IRI_REF'),self::$FOLLOW_IRI_REF_in_iriRef1987); 
 
                     }
                     break;
                 case 2 :
-                    // Test.g:311:7: prefixedName 
+                    // Test.g:310:7: prefixedName 
                     {
-                    $this->pushFollow(self::$FOLLOW_prefixedName_in_iriRef1996);
+                    $this->pushFollow(self::$FOLLOW_prefixedName_in_iriRef1995);
                     $this->prefixedName();
 
                     $this->state->_fsp--;
@@ -4802,10 +4803,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "prefixedName"
-    // Test.g:314:1: prefixedName : ( PNAME_LN | PNAME_NS ); 
+    // Test.g:313:1: prefixedName : ( PNAME_LN | PNAME_NS ); 
     public function prefixedName(){
         try {
-            // Test.g:315:5: ( PNAME_LN | PNAME_NS ) 
+            // Test.g:314:5: ( PNAME_LN | PNAME_NS ) 
             // Test.g: 
             {
             if ( $this->input->LA(1)==$this->getToken('PNAME_NS')||$this->input->LA(1)==$this->getToken('PNAME_LN') ) {
@@ -4835,10 +4836,10 @@ class TestParser extends AntlrParser {
 
 
     // $ANTLR start "blankNode"
-    // Test.g:319:1: blankNode : ( BLANK_NODE_LABEL | OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE ); 
+    // Test.g:318:1: blankNode : ( BLANK_NODE_LABEL | OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE ); 
     public function blankNode(){
         try {
-            // Test.g:320:5: ( BLANK_NODE_LABEL | OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE ) 
+            // Test.g:319:5: ( BLANK_NODE_LABEL | OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE ) 
             $alt64=2;
             $LA64_0 = $this->input->LA(1);
 
@@ -4855,17 +4856,17 @@ class TestParser extends AntlrParser {
             }
             switch ($alt64) {
                 case 1 :
-                    // Test.g:320:7: BLANK_NODE_LABEL 
+                    // Test.g:319:7: BLANK_NODE_LABEL 
                     {
-                    $this->match($this->input,$this->getToken('BLANK_NODE_LABEL'),self::$FOLLOW_BLANK_NODE_LABEL_in_blankNode2038); 
+                    $this->match($this->input,$this->getToken('BLANK_NODE_LABEL'),self::$FOLLOW_BLANK_NODE_LABEL_in_blankNode2037); 
 
                     }
                     break;
                 case 2 :
-                    // Test.g:321:7: OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE 
+                    // Test.g:320:7: OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('OPEN_SQUARE_BRACE'),self::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2046); 
-                    $this->match($this->input,$this->getToken('CLOSE_SQUARE_BRACE'),self::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2048); 
+                    $this->match($this->input,$this->getToken('OPEN_SQUARE_BRACE'),self::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2045); 
+                    $this->match($this->input,$this->getToken('CLOSE_SQUARE_BRACE'),self::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2047); 
 
                     }
                     break;
@@ -4894,268 +4895,268 @@ class TestParser extends AntlrParser {
 
 
 
-TestParser::$FOLLOW_prologue_in_query38 = new Set(array(13, 16, 17, 18));
-TestParser::$FOLLOW_selectQuery_in_query42 = new Set(array());
-TestParser::$FOLLOW_constructQuery_in_query46 = new Set(array());
-TestParser::$FOLLOW_describeQuery_in_query50 = new Set(array());
-TestParser::$FOLLOW_askQuery_in_query54 = new Set(array());
-TestParser::$FOLLOW_EOF_in_query58 = new Set(array(1));
-TestParser::$FOLLOW_baseDecl_in_prologue75 = new Set(array(1, 12));
-TestParser::$FOLLOW_prefixDecl_in_prologue78 = new Set(array(1, 12));
-TestParser::$FOLLOW_BASE_in_baseDecl96 = new Set(array(8));
-TestParser::$FOLLOW_IRI_REF_in_baseDecl98 = new Set(array(1));
-TestParser::$FOLLOW_PREFIX_in_prefixDecl115 = new Set(array(46));
-TestParser::$FOLLOW_PNAME_NS_in_prefixDecl117 = new Set(array(8));
-TestParser::$FOLLOW_IRI_REF_in_prefixDecl119 = new Set(array(1));
-TestParser::$FOLLOW_SELECT_in_selectQuery136 = new Set(array(14, 15, 59, 64, 65));
-TestParser::$FOLLOW_set_in_selectQuery138 = new Set(array(59, 64, 65));
-TestParser::$FOLLOW_variable_in_selectQuery151 = new Set(array(6, 19, 21, 64, 65));
-TestParser::$FOLLOW_ASTERISK_in_selectQuery156 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_datasetClause_in_selectQuery160 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_whereClause_in_selectQuery163 = new Set(array(22, 26, 27));
-TestParser::$FOLLOW_solutionModifier_in_selectQuery165 = new Set(array(1));
-TestParser::$FOLLOW_CONSTRUCT_in_constructQuery182 = new Set(array(6));
-TestParser::$FOLLOW_constructTemplate_in_constructQuery184 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_datasetClause_in_constructQuery186 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_whereClause_in_constructQuery189 = new Set(array(22, 26, 27));
-TestParser::$FOLLOW_solutionModifier_in_constructQuery191 = new Set(array(1));
-TestParser::$FOLLOW_DESCRIBE_in_describeQuery208 = new Set(array(8, 46, 48, 59, 64, 65));
-TestParser::$FOLLOW_varOrIRIref_in_describeQuery212 = new Set(array(6, 8, 19, 21, 22, 26, 27, 46, 48, 64, 65));
-TestParser::$FOLLOW_ASTERISK_in_describeQuery217 = new Set(array(6, 19, 21, 22, 26, 27));
-TestParser::$FOLLOW_datasetClause_in_describeQuery221 = new Set(array(6, 19, 21, 22, 26, 27));
-TestParser::$FOLLOW_whereClause_in_describeQuery224 = new Set(array(22, 26, 27));
-TestParser::$FOLLOW_solutionModifier_in_describeQuery227 = new Set(array(1));
-TestParser::$FOLLOW_ASK_in_askQuery244 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_datasetClause_in_askQuery246 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_whereClause_in_askQuery249 = new Set(array(1));
-TestParser::$FOLLOW_FROM_in_datasetClause266 = new Set(array(8, 20, 46, 48, 64, 65));
-TestParser::$FOLLOW_defaultGraphClause_in_datasetClause270 = new Set(array(1));
-TestParser::$FOLLOW_namedGraphClause_in_datasetClause274 = new Set(array(1));
-TestParser::$FOLLOW_sourceSelector_in_defaultGraphClause293 = new Set(array(1));
-TestParser::$FOLLOW_NAMED_in_namedGraphClause310 = new Set(array(8, 46, 48, 64, 65));
-TestParser::$FOLLOW_sourceSelector_in_namedGraphClause312 = new Set(array(1));
-TestParser::$FOLLOW_iriRef_in_sourceSelector329 = new Set(array(1));
-TestParser::$FOLLOW_WHERE_in_whereClause346 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_groupGraphPattern_in_whereClause349 = new Set(array(1));
-TestParser::$FOLLOW_orderClause_in_solutionModifier366 = new Set(array(1, 26, 27));
-TestParser::$FOLLOW_limitOffsetClauses_in_solutionModifier369 = new Set(array(1));
-TestParser::$FOLLOW_limitClause_in_limitOffsetClauses389 = new Set(array(1, 26, 27));
-TestParser::$FOLLOW_offsetClause_in_limitOffsetClauses391 = new Set(array(1));
-TestParser::$FOLLOW_offsetClause_in_limitOffsetClauses396 = new Set(array(1, 26));
-TestParser::$FOLLOW_limitClause_in_limitOffsetClauses398 = new Set(array(1));
-TestParser::$FOLLOW_ORDER_in_orderClause418 = new Set(array(23));
-TestParser::$FOLLOW_BY_in_orderClause420 = new Set(array(8, 24, 25, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
-TestParser::$FOLLOW_orderCondition_in_orderClause422 = new Set(array(1, 8, 24, 25, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
-TestParser::$FOLLOW_set_in_orderCondition442 = new Set(array(71));
-TestParser::$FOLLOW_brackettedExpression_in_orderCondition452 = new Set(array(1));
-TestParser::$FOLLOW_constraint_in_orderCondition464 = new Set(array(1));
-TestParser::$FOLLOW_variable_in_orderCondition468 = new Set(array(1));
-TestParser::$FOLLOW_LIMIT_in_limitClause487 = new Set(array(81));
-TestParser::$FOLLOW_INTEGER_in_limitClause489 = new Set(array(1));
-TestParser::$FOLLOW_OFFSET_in_offsetClause506 = new Set(array(81));
-TestParser::$FOLLOW_INTEGER_in_offsetClause508 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern525 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_triplesBlock_in_groupGraphPattern527 = new Set(array(6, 7, 19, 21, 28, 29, 31));
-TestParser::$FOLLOW_graphPatternNotTriples_in_groupGraphPattern534 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 52, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_filter_in_groupGraphPattern538 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 52, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_DOT_in_groupGraphPattern542 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_triplesBlock_in_groupGraphPattern545 = new Set(array(6, 7, 19, 21, 28, 29, 31));
-TestParser::$FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern551 = new Set(array(1));
-TestParser::$FOLLOW_triplesSameSubject_in_triplesBlock568 = new Set(array(1, 52));
-TestParser::$FOLLOW_DOT_in_triplesBlock572 = new Set(array(1, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_triplesBlock_in_triplesBlock574 = new Set(array(1));
-TestParser::$FOLLOW_optionalGraphPattern_in_graphPatternNotTriples595 = new Set(array(1));
-TestParser::$FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples599 = new Set(array(1));
-TestParser::$FOLLOW_graphGraphPattern_in_graphPatternNotTriples603 = new Set(array(1));
-TestParser::$FOLLOW_OPTIONAL_in_optionalGraphPattern620 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_groupGraphPattern_in_optionalGraphPattern622 = new Set(array(1));
-TestParser::$FOLLOW_GRAPH_in_graphGraphPattern639 = new Set(array(8, 46, 48, 64, 65));
-TestParser::$FOLLOW_varOrIRIref_in_graphGraphPattern641 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_groupGraphPattern_in_graphGraphPattern643 = new Set(array(1));
-TestParser::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern660 = new Set(array(1, 30));
-TestParser::$FOLLOW_UNION_in_groupOrUnionGraphPattern664 = new Set(array(6, 19, 21));
-TestParser::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern666 = new Set(array(1, 30));
-TestParser::$FOLLOW_FILTER_in_filter686 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
-TestParser::$FOLLOW_constraint_in_filter688 = new Set(array(1));
-TestParser::$FOLLOW_brackettedExpression_in_constraint705 = new Set(array(1));
-TestParser::$FOLLOW_builtInCall_in_constraint709 = new Set(array(1));
-TestParser::$FOLLOW_functionCall_in_constraint713 = new Set(array(1));
-TestParser::$FOLLOW_iriRef_in_functionCall730 = new Set(array(71));
-TestParser::$FOLLOW_argList_in_functionCall732 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_BRACE_in_argList751 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_argList753 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_BRACE_in_argList757 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_argList759 = new Set(array(60, 72));
-TestParser::$FOLLOW_COMMA_in_argList763 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_argList765 = new Set(array(60, 72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_argList770 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate789 = new Set(array(7, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_constructTriples_in_constructTemplate791 = new Set(array(7));
-TestParser::$FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate794 = new Set(array(1));
-TestParser::$FOLLOW_triplesSameSubject_in_constructTriples811 = new Set(array(1, 52));
-TestParser::$FOLLOW_DOT_in_constructTriples815 = new Set(array(1, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_constructTriples_in_constructTriples817 = new Set(array(1));
-TestParser::$FOLLOW_varOrTerm_in_triplesSameSubject838 = new Set(array(8, 32, 46, 48, 64, 65));
-TestParser::$FOLLOW_propertyListNotEmpty_in_triplesSameSubject840 = new Set(array(1));
-TestParser::$FOLLOW_triplesNode_in_triplesSameSubject844 = new Set(array(8, 32, 46, 48, 64, 65));
-TestParser::$FOLLOW_propertyList_in_triplesSameSubject846 = new Set(array(1));
-TestParser::$FOLLOW_verb_in_propertyListNotEmpty863 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_objectList_in_propertyListNotEmpty865 = new Set(array(1, 57));
-TestParser::$FOLLOW_SEMICOLON_in_propertyListNotEmpty869 = new Set(array(1, 8, 32, 46, 48, 57, 64, 65));
-TestParser::$FOLLOW_verb_in_propertyListNotEmpty873 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_objectList_in_propertyListNotEmpty875 = new Set(array(1, 57));
-TestParser::$FOLLOW_propertyListNotEmpty_in_propertyList898 = new Set(array(1));
-TestParser::$FOLLOW_object_in_objectList916 = new Set(array(1, 60));
-TestParser::$FOLLOW_COMMA_in_objectList920 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_object_in_objectList922 = new Set(array(1, 60));
-TestParser::$FOLLOW_graphNode_in_object942 = new Set(array(1));
-TestParser::$FOLLOW_varOrIRIref_in_verb959 = new Set(array(1));
-TestParser::$FOLLOW_A_in_verb967 = new Set(array(1));
-TestParser::$FOLLOW_collection_in_triplesNode984 = new Set(array(1));
-TestParser::$FOLLOW_blankNodePropertyList_in_triplesNode992 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1009 = new Set(array(8, 32, 46, 48, 64, 65));
-TestParser::$FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1011 = new Set(array(92));
-TestParser::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1013 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_BRACE_in_collection1030 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_graphNode_in_collection1032 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 72, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
-TestParser::$FOLLOW_CLOSE_BRACE_in_collection1035 = new Set(array(1));
-TestParser::$FOLLOW_varOrTerm_in_graphNode1052 = new Set(array(1));
-TestParser::$FOLLOW_triplesNode_in_graphNode1056 = new Set(array(1));
-TestParser::$FOLLOW_variable_in_varOrTerm1073 = new Set(array(1));
-TestParser::$FOLLOW_graphTerm_in_varOrTerm1081 = new Set(array(1));
-TestParser::$FOLLOW_variable_in_varOrIRIref1098 = new Set(array(1));
-TestParser::$FOLLOW_iriRef_in_varOrIRIref1102 = new Set(array(1));
+TestParser::$FOLLOW_prologue_in_query37 = new Set(array(13, 16, 17, 18));
+TestParser::$FOLLOW_selectQuery_in_query41 = new Set(array());
+TestParser::$FOLLOW_constructQuery_in_query45 = new Set(array());
+TestParser::$FOLLOW_describeQuery_in_query49 = new Set(array());
+TestParser::$FOLLOW_askQuery_in_query53 = new Set(array());
+TestParser::$FOLLOW_EOF_in_query57 = new Set(array(1));
+TestParser::$FOLLOW_baseDecl_in_prologue74 = new Set(array(1, 12));
+TestParser::$FOLLOW_prefixDecl_in_prologue77 = new Set(array(1, 12));
+TestParser::$FOLLOW_BASE_in_baseDecl95 = new Set(array(8));
+TestParser::$FOLLOW_IRI_REF_in_baseDecl97 = new Set(array(1));
+TestParser::$FOLLOW_PREFIX_in_prefixDecl114 = new Set(array(46));
+TestParser::$FOLLOW_PNAME_NS_in_prefixDecl116 = new Set(array(8));
+TestParser::$FOLLOW_IRI_REF_in_prefixDecl118 = new Set(array(1));
+TestParser::$FOLLOW_SELECT_in_selectQuery135 = new Set(array(14, 15, 59, 64, 65));
+TestParser::$FOLLOW_set_in_selectQuery137 = new Set(array(59, 64, 65));
+TestParser::$FOLLOW_variable_in_selectQuery150 = new Set(array(6, 19, 21, 64, 65));
+TestParser::$FOLLOW_ASTERISK_in_selectQuery155 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_datasetClause_in_selectQuery159 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_whereClause_in_selectQuery162 = new Set(array(22, 26, 27));
+TestParser::$FOLLOW_solutionModifier_in_selectQuery164 = new Set(array(1));
+TestParser::$FOLLOW_CONSTRUCT_in_constructQuery181 = new Set(array(6));
+TestParser::$FOLLOW_constructTemplate_in_constructQuery183 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_datasetClause_in_constructQuery185 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_whereClause_in_constructQuery188 = new Set(array(22, 26, 27));
+TestParser::$FOLLOW_solutionModifier_in_constructQuery190 = new Set(array(1));
+TestParser::$FOLLOW_DESCRIBE_in_describeQuery207 = new Set(array(8, 46, 48, 59, 64, 65));
+TestParser::$FOLLOW_varOrIRIref_in_describeQuery211 = new Set(array(6, 8, 19, 21, 22, 26, 27, 46, 48, 64, 65));
+TestParser::$FOLLOW_ASTERISK_in_describeQuery216 = new Set(array(6, 19, 21, 22, 26, 27));
+TestParser::$FOLLOW_datasetClause_in_describeQuery220 = new Set(array(6, 19, 21, 22, 26, 27));
+TestParser::$FOLLOW_whereClause_in_describeQuery223 = new Set(array(22, 26, 27));
+TestParser::$FOLLOW_solutionModifier_in_describeQuery226 = new Set(array(1));
+TestParser::$FOLLOW_ASK_in_askQuery243 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_datasetClause_in_askQuery245 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_whereClause_in_askQuery248 = new Set(array(1));
+TestParser::$FOLLOW_FROM_in_datasetClause265 = new Set(array(8, 20, 46, 48, 64, 65));
+TestParser::$FOLLOW_defaultGraphClause_in_datasetClause269 = new Set(array(1));
+TestParser::$FOLLOW_namedGraphClause_in_datasetClause273 = new Set(array(1));
+TestParser::$FOLLOW_sourceSelector_in_defaultGraphClause292 = new Set(array(1));
+TestParser::$FOLLOW_NAMED_in_namedGraphClause309 = new Set(array(8, 46, 48, 64, 65));
+TestParser::$FOLLOW_sourceSelector_in_namedGraphClause311 = new Set(array(1));
+TestParser::$FOLLOW_iriRef_in_sourceSelector328 = new Set(array(1));
+TestParser::$FOLLOW_WHERE_in_whereClause345 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_groupGraphPattern_in_whereClause348 = new Set(array(1));
+TestParser::$FOLLOW_orderClause_in_solutionModifier365 = new Set(array(1, 26, 27));
+TestParser::$FOLLOW_limitOffsetClauses_in_solutionModifier368 = new Set(array(1));
+TestParser::$FOLLOW_limitClause_in_limitOffsetClauses388 = new Set(array(1, 26, 27));
+TestParser::$FOLLOW_offsetClause_in_limitOffsetClauses390 = new Set(array(1));
+TestParser::$FOLLOW_offsetClause_in_limitOffsetClauses395 = new Set(array(1, 26));
+TestParser::$FOLLOW_limitClause_in_limitOffsetClauses397 = new Set(array(1));
+TestParser::$FOLLOW_ORDER_in_orderClause417 = new Set(array(23));
+TestParser::$FOLLOW_BY_in_orderClause419 = new Set(array(8, 24, 25, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
+TestParser::$FOLLOW_orderCondition_in_orderClause421 = new Set(array(1, 8, 24, 25, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
+TestParser::$FOLLOW_set_in_orderCondition441 = new Set(array(71));
+TestParser::$FOLLOW_brackettedExpression_in_orderCondition451 = new Set(array(1));
+TestParser::$FOLLOW_constraint_in_orderCondition463 = new Set(array(1));
+TestParser::$FOLLOW_variable_in_orderCondition467 = new Set(array(1));
+TestParser::$FOLLOW_LIMIT_in_limitClause486 = new Set(array(81));
+TestParser::$FOLLOW_INTEGER_in_limitClause488 = new Set(array(1));
+TestParser::$FOLLOW_OFFSET_in_offsetClause505 = new Set(array(81));
+TestParser::$FOLLOW_INTEGER_in_offsetClause507 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_CURLY_BRACE_in_groupGraphPattern524 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_triplesBlock_in_groupGraphPattern526 = new Set(array(6, 7, 19, 21, 28, 29, 31));
+TestParser::$FOLLOW_graphPatternNotTriples_in_groupGraphPattern533 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 52, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_filter_in_groupGraphPattern537 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 52, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_DOT_in_groupGraphPattern541 = new Set(array(6, 7, 8, 19, 21, 28, 29, 31, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_triplesBlock_in_groupGraphPattern544 = new Set(array(6, 7, 19, 21, 28, 29, 31));
+TestParser::$FOLLOW_CLOSE_CURLY_BRACE_in_groupGraphPattern550 = new Set(array(1));
+TestParser::$FOLLOW_triplesSameSubject_in_triplesBlock567 = new Set(array(1, 52));
+TestParser::$FOLLOW_DOT_in_triplesBlock571 = new Set(array(1, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_triplesBlock_in_triplesBlock573 = new Set(array(1));
+TestParser::$FOLLOW_optionalGraphPattern_in_graphPatternNotTriples594 = new Set(array(1));
+TestParser::$FOLLOW_groupOrUnionGraphPattern_in_graphPatternNotTriples598 = new Set(array(1));
+TestParser::$FOLLOW_graphGraphPattern_in_graphPatternNotTriples602 = new Set(array(1));
+TestParser::$FOLLOW_OPTIONAL_in_optionalGraphPattern619 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_groupGraphPattern_in_optionalGraphPattern621 = new Set(array(1));
+TestParser::$FOLLOW_GRAPH_in_graphGraphPattern638 = new Set(array(8, 46, 48, 64, 65));
+TestParser::$FOLLOW_varOrIRIref_in_graphGraphPattern640 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_groupGraphPattern_in_graphGraphPattern642 = new Set(array(1));
+TestParser::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern659 = new Set(array(1, 30));
+TestParser::$FOLLOW_UNION_in_groupOrUnionGraphPattern663 = new Set(array(6, 19, 21));
+TestParser::$FOLLOW_groupGraphPattern_in_groupOrUnionGraphPattern665 = new Set(array(1, 30));
+TestParser::$FOLLOW_FILTER_in_filter685 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 46, 48, 64, 65, 71));
+TestParser::$FOLLOW_constraint_in_filter687 = new Set(array(1));
+TestParser::$FOLLOW_brackettedExpression_in_constraint704 = new Set(array(1));
+TestParser::$FOLLOW_builtInCall_in_constraint708 = new Set(array(1));
+TestParser::$FOLLOW_functionCall_in_constraint712 = new Set(array(1));
+TestParser::$FOLLOW_iriRef_in_functionCall729 = new Set(array(71));
+TestParser::$FOLLOW_argList_in_functionCall731 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_BRACE_in_argList750 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_argList752 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_BRACE_in_argList756 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_argList758 = new Set(array(60, 72));
+TestParser::$FOLLOW_COMMA_in_argList762 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_argList764 = new Set(array(60, 72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_argList769 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_CURLY_BRACE_in_constructTemplate788 = new Set(array(7, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_constructTriples_in_constructTemplate790 = new Set(array(7));
+TestParser::$FOLLOW_CLOSE_CURLY_BRACE_in_constructTemplate793 = new Set(array(1));
+TestParser::$FOLLOW_triplesSameSubject_in_constructTriples810 = new Set(array(1, 52));
+TestParser::$FOLLOW_DOT_in_constructTriples814 = new Set(array(1, 8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_constructTriples_in_constructTriples816 = new Set(array(1));
+TestParser::$FOLLOW_varOrTerm_in_triplesSameSubject837 = new Set(array(8, 32, 46, 48, 64, 65));
+TestParser::$FOLLOW_propertyListNotEmpty_in_triplesSameSubject839 = new Set(array(1));
+TestParser::$FOLLOW_triplesNode_in_triplesSameSubject843 = new Set(array(8, 32, 46, 48, 64, 65));
+TestParser::$FOLLOW_propertyList_in_triplesSameSubject845 = new Set(array(1));
+TestParser::$FOLLOW_verb_in_propertyListNotEmpty862 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_objectList_in_propertyListNotEmpty864 = new Set(array(1, 57));
+TestParser::$FOLLOW_SEMICOLON_in_propertyListNotEmpty868 = new Set(array(1, 8, 32, 46, 48, 57, 64, 65));
+TestParser::$FOLLOW_verb_in_propertyListNotEmpty872 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_objectList_in_propertyListNotEmpty874 = new Set(array(1, 57));
+TestParser::$FOLLOW_propertyListNotEmpty_in_propertyList897 = new Set(array(1));
+TestParser::$FOLLOW_object_in_objectList915 = new Set(array(1, 60));
+TestParser::$FOLLOW_COMMA_in_objectList919 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_object_in_objectList921 = new Set(array(1, 60));
+TestParser::$FOLLOW_graphNode_in_object941 = new Set(array(1));
+TestParser::$FOLLOW_varOrIRIref_in_verb958 = new Set(array(1));
+TestParser::$FOLLOW_A_in_verb966 = new Set(array(1));
+TestParser::$FOLLOW_collection_in_triplesNode983 = new Set(array(1));
+TestParser::$FOLLOW_blankNodePropertyList_in_triplesNode991 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNodePropertyList1008 = new Set(array(8, 32, 46, 48, 64, 65));
+TestParser::$FOLLOW_propertyListNotEmpty_in_blankNodePropertyList1010 = new Set(array(92));
+TestParser::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNodePropertyList1012 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_BRACE_in_collection1029 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_graphNode_in_collection1031 = new Set(array(8, 44, 45, 46, 48, 64, 65, 67, 68, 69, 70, 71, 72, 79, 81, 82, 84, 85, 86, 87, 88, 89, 90, 91));
+TestParser::$FOLLOW_CLOSE_BRACE_in_collection1034 = new Set(array(1));
+TestParser::$FOLLOW_varOrTerm_in_graphNode1051 = new Set(array(1));
+TestParser::$FOLLOW_triplesNode_in_graphNode1055 = new Set(array(1));
+TestParser::$FOLLOW_variable_in_varOrTerm1072 = new Set(array(1));
+TestParser::$FOLLOW_graphTerm_in_varOrTerm1080 = new Set(array(1));
+TestParser::$FOLLOW_variable_in_varOrIRIref1097 = new Set(array(1));
+TestParser::$FOLLOW_iriRef_in_varOrIRIref1101 = new Set(array(1));
 TestParser::$FOLLOW_set_in_variable0 = new Set(array(1));
-TestParser::$FOLLOW_iriRef_in_graphTerm1144 = new Set(array(1));
-TestParser::$FOLLOW_rdfLiteral_in_graphTerm1152 = new Set(array(1));
-TestParser::$FOLLOW_numericLiteral_in_graphTerm1160 = new Set(array(1));
-TestParser::$FOLLOW_booleanLiteral_in_graphTerm1168 = new Set(array(1));
-TestParser::$FOLLOW_blankNode_in_graphTerm1176 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_BRACE_in_graphTerm1184 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_graphTerm1186 = new Set(array(1));
-TestParser::$FOLLOW_conditionalOrExpression_in_expression1203 = new Set(array(1));
-TestParser::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1220 = new Set(array(1, 78));
-TestParser::$FOLLOW_OR_in_conditionalOrExpression1224 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1226 = new Set(array(1, 78));
-TestParser::$FOLLOW_valueLogical_in_conditionalAndExpression1246 = new Set(array(1, 77));
-TestParser::$FOLLOW_AND_in_conditionalAndExpression1250 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_valueLogical_in_conditionalAndExpression1252 = new Set(array(1, 77));
-TestParser::$FOLLOW_relationalExpression_in_valueLogical1272 = new Set(array(1));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1289 = new Set(array(1, 4, 5, 63, 74, 75, 76));
-TestParser::$FOLLOW_EQUAL_in_relationalExpression1293 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1295 = new Set(array(1));
-TestParser::$FOLLOW_NOT_EQUAL_in_relationalExpression1299 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1301 = new Set(array(1));
-TestParser::$FOLLOW_LESS_in_relationalExpression1305 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1307 = new Set(array(1));
-TestParser::$FOLLOW_GREATER_in_relationalExpression1311 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1313 = new Set(array(1));
-TestParser::$FOLLOW_LESS_EQUAL_in_relationalExpression1317 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1319 = new Set(array(1));
-TestParser::$FOLLOW_GREATER_EQUAL_in_relationalExpression1323 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericExpression_in_relationalExpression1325 = new Set(array(1));
-TestParser::$FOLLOW_additiveExpression_in_numericExpression1345 = new Set(array(1));
-TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1362 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_PLUS_in_additiveExpression1366 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1368 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_MINUS_in_additiveExpression1372 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1374 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericLiteralPositive_in_additiveExpression1378 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_numericLiteralNegative_in_additiveExpression1382 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1402 = new Set(array(1, 59, 62));
-TestParser::$FOLLOW_ASTERISK_in_multiplicativeExpression1406 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1408 = new Set(array(1, 59, 62));
-TestParser::$FOLLOW_DIVIDE_in_multiplicativeExpression1412 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1414 = new Set(array(1, 59, 62));
-TestParser::$FOLLOW_NOT_in_unaryExpression1434 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_primaryExpression_in_unaryExpression1436 = new Set(array(1));
-TestParser::$FOLLOW_PLUS_in_unaryExpression1444 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_primaryExpression_in_unaryExpression1446 = new Set(array(1));
-TestParser::$FOLLOW_MINUS_in_unaryExpression1454 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_primaryExpression_in_unaryExpression1456 = new Set(array(1));
-TestParser::$FOLLOW_primaryExpression_in_unaryExpression1464 = new Set(array(1));
-TestParser::$FOLLOW_brackettedExpression_in_primaryExpression1481 = new Set(array(1));
-TestParser::$FOLLOW_builtInCall_in_primaryExpression1485 = new Set(array(1));
-TestParser::$FOLLOW_iriRefOrFunction_in_primaryExpression1489 = new Set(array(1));
-TestParser::$FOLLOW_rdfLiteral_in_primaryExpression1493 = new Set(array(1));
-TestParser::$FOLLOW_numericLiteral_in_primaryExpression1497 = new Set(array(1));
-TestParser::$FOLLOW_booleanLiteral_in_primaryExpression1501 = new Set(array(1));
-TestParser::$FOLLOW_variable_in_primaryExpression1505 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_BRACE_in_brackettedExpression1522 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_brackettedExpression1524 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_brackettedExpression1526 = new Set(array(1));
-TestParser::$FOLLOW_STR_in_builtInCall1543 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1545 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1547 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1549 = new Set(array(1));
-TestParser::$FOLLOW_LANG_in_builtInCall1557 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1559 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1561 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1563 = new Set(array(1));
-TestParser::$FOLLOW_LANGMATCHES_in_builtInCall1571 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1573 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1575 = new Set(array(60));
-TestParser::$FOLLOW_COMMA_in_builtInCall1577 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1579 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1581 = new Set(array(1));
-TestParser::$FOLLOW_DATATYPE_in_builtInCall1589 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1591 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1593 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1595 = new Set(array(1));
-TestParser::$FOLLOW_BOUND_in_builtInCall1603 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1605 = new Set(array(64, 65));
-TestParser::$FOLLOW_variable_in_builtInCall1607 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1609 = new Set(array(1));
-TestParser::$FOLLOW_SAMETERM_in_builtInCall1617 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1619 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1621 = new Set(array(60));
-TestParser::$FOLLOW_COMMA_in_builtInCall1623 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1625 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1627 = new Set(array(1));
-TestParser::$FOLLOW_ISIRI_in_builtInCall1635 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1637 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1639 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1641 = new Set(array(1));
-TestParser::$FOLLOW_ISURI_in_builtInCall1649 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1651 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1653 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1655 = new Set(array(1));
-TestParser::$FOLLOW_ISBLANK_in_builtInCall1663 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1665 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1667 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1669 = new Set(array(1));
-TestParser::$FOLLOW_ISLITERAL_in_builtInCall1677 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1679 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_builtInCall1681 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1683 = new Set(array(1));
-TestParser::$FOLLOW_regexExpression_in_builtInCall1691 = new Set(array(1));
-TestParser::$FOLLOW_REGEX_in_regexExpression1708 = new Set(array(71));
-TestParser::$FOLLOW_OPEN_BRACE_in_regexExpression1710 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_regexExpression1712 = new Set(array(60));
-TestParser::$FOLLOW_COMMA_in_regexExpression1714 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_regexExpression1716 = new Set(array(60, 72));
-TestParser::$FOLLOW_COMMA_in_regexExpression1720 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
-TestParser::$FOLLOW_expression_in_regexExpression1722 = new Set(array(72));
-TestParser::$FOLLOW_CLOSE_BRACE_in_regexExpression1727 = new Set(array(1));
-TestParser::$FOLLOW_iriRef_in_iriRefOrFunction1744 = new Set(array(1, 71));
-TestParser::$FOLLOW_argList_in_iriRefOrFunction1746 = new Set(array(1));
-TestParser::$FOLLOW_string_in_rdfLiteral1764 = new Set(array(1, 73, 80));
-TestParser::$FOLLOW_LANGTAG_in_rdfLiteral1768 = new Set(array(1));
-TestParser::$FOLLOW_REFERENCE_in_rdfLiteral1774 = new Set(array(8, 46, 48, 64, 65));
-TestParser::$FOLLOW_iriRef_in_rdfLiteral1776 = new Set(array(1));
-TestParser::$FOLLOW_numericLiteralUnsigned_in_numericLiteral1798 = new Set(array(1));
-TestParser::$FOLLOW_numericLiteralPositive_in_numericLiteral1802 = new Set(array(1));
-TestParser::$FOLLOW_numericLiteralNegative_in_numericLiteral1806 = new Set(array(1));
+TestParser::$FOLLOW_iriRef_in_graphTerm1143 = new Set(array(1));
+TestParser::$FOLLOW_rdfLiteral_in_graphTerm1151 = new Set(array(1));
+TestParser::$FOLLOW_numericLiteral_in_graphTerm1159 = new Set(array(1));
+TestParser::$FOLLOW_booleanLiteral_in_graphTerm1167 = new Set(array(1));
+TestParser::$FOLLOW_blankNode_in_graphTerm1175 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_BRACE_in_graphTerm1183 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_graphTerm1185 = new Set(array(1));
+TestParser::$FOLLOW_conditionalOrExpression_in_expression1202 = new Set(array(1));
+TestParser::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1219 = new Set(array(1, 78));
+TestParser::$FOLLOW_OR_in_conditionalOrExpression1223 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_conditionalAndExpression_in_conditionalOrExpression1225 = new Set(array(1, 78));
+TestParser::$FOLLOW_valueLogical_in_conditionalAndExpression1245 = new Set(array(1, 77));
+TestParser::$FOLLOW_AND_in_conditionalAndExpression1249 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_valueLogical_in_conditionalAndExpression1251 = new Set(array(1, 77));
+TestParser::$FOLLOW_relationalExpression_in_valueLogical1271 = new Set(array(1));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1288 = new Set(array(1, 4, 5, 63, 74, 75, 76));
+TestParser::$FOLLOW_EQUAL_in_relationalExpression1292 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1294 = new Set(array(1));
+TestParser::$FOLLOW_NOT_EQUAL_in_relationalExpression1298 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1300 = new Set(array(1));
+TestParser::$FOLLOW_LESS_in_relationalExpression1304 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1306 = new Set(array(1));
+TestParser::$FOLLOW_GREATER_in_relationalExpression1310 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1312 = new Set(array(1));
+TestParser::$FOLLOW_LESS_EQUAL_in_relationalExpression1316 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1318 = new Set(array(1));
+TestParser::$FOLLOW_GREATER_EQUAL_in_relationalExpression1322 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericExpression_in_relationalExpression1324 = new Set(array(1));
+TestParser::$FOLLOW_additiveExpression_in_numericExpression1344 = new Set(array(1));
+TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1361 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_PLUS_in_additiveExpression1365 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1367 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_MINUS_in_additiveExpression1371 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_multiplicativeExpression_in_additiveExpression1373 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericLiteralPositive_in_additiveExpression1377 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_numericLiteralNegative_in_additiveExpression1381 = new Set(array(1, 56, 58, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1401 = new Set(array(1, 59, 62));
+TestParser::$FOLLOW_ASTERISK_in_multiplicativeExpression1405 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1407 = new Set(array(1, 59, 62));
+TestParser::$FOLLOW_DIVIDE_in_multiplicativeExpression1411 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_unaryExpression_in_multiplicativeExpression1413 = new Set(array(1, 59, 62));
+TestParser::$FOLLOW_NOT_in_unaryExpression1433 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_primaryExpression_in_unaryExpression1435 = new Set(array(1));
+TestParser::$FOLLOW_PLUS_in_unaryExpression1443 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_primaryExpression_in_unaryExpression1445 = new Set(array(1));
+TestParser::$FOLLOW_MINUS_in_unaryExpression1453 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_primaryExpression_in_unaryExpression1455 = new Set(array(1));
+TestParser::$FOLLOW_primaryExpression_in_unaryExpression1463 = new Set(array(1));
+TestParser::$FOLLOW_brackettedExpression_in_primaryExpression1480 = new Set(array(1));
+TestParser::$FOLLOW_builtInCall_in_primaryExpression1484 = new Set(array(1));
+TestParser::$FOLLOW_iriRefOrFunction_in_primaryExpression1488 = new Set(array(1));
+TestParser::$FOLLOW_rdfLiteral_in_primaryExpression1492 = new Set(array(1));
+TestParser::$FOLLOW_numericLiteral_in_primaryExpression1496 = new Set(array(1));
+TestParser::$FOLLOW_booleanLiteral_in_primaryExpression1500 = new Set(array(1));
+TestParser::$FOLLOW_variable_in_primaryExpression1504 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_BRACE_in_brackettedExpression1521 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_brackettedExpression1523 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_brackettedExpression1525 = new Set(array(1));
+TestParser::$FOLLOW_STR_in_builtInCall1542 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1544 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1546 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1548 = new Set(array(1));
+TestParser::$FOLLOW_LANG_in_builtInCall1556 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1558 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1560 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1562 = new Set(array(1));
+TestParser::$FOLLOW_LANGMATCHES_in_builtInCall1570 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1572 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1574 = new Set(array(60));
+TestParser::$FOLLOW_COMMA_in_builtInCall1576 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1578 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1580 = new Set(array(1));
+TestParser::$FOLLOW_DATATYPE_in_builtInCall1588 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1590 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1592 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1594 = new Set(array(1));
+TestParser::$FOLLOW_BOUND_in_builtInCall1602 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1604 = new Set(array(64, 65));
+TestParser::$FOLLOW_variable_in_builtInCall1606 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1608 = new Set(array(1));
+TestParser::$FOLLOW_SAMETERM_in_builtInCall1616 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1618 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1620 = new Set(array(60));
+TestParser::$FOLLOW_COMMA_in_builtInCall1622 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1624 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1626 = new Set(array(1));
+TestParser::$FOLLOW_ISIRI_in_builtInCall1634 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1636 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1638 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1640 = new Set(array(1));
+TestParser::$FOLLOW_ISURI_in_builtInCall1648 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1650 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1652 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1654 = new Set(array(1));
+TestParser::$FOLLOW_ISBLANK_in_builtInCall1662 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1664 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1666 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1668 = new Set(array(1));
+TestParser::$FOLLOW_ISLITERAL_in_builtInCall1676 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_builtInCall1678 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_builtInCall1680 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_builtInCall1682 = new Set(array(1));
+TestParser::$FOLLOW_regexExpression_in_builtInCall1690 = new Set(array(1));
+TestParser::$FOLLOW_REGEX_in_regexExpression1707 = new Set(array(71));
+TestParser::$FOLLOW_OPEN_BRACE_in_regexExpression1709 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_regexExpression1711 = new Set(array(60));
+TestParser::$FOLLOW_COMMA_in_regexExpression1713 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_regexExpression1715 = new Set(array(60, 72));
+TestParser::$FOLLOW_COMMA_in_regexExpression1719 = new Set(array(8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 56, 58, 61, 64, 65, 67, 68, 69, 70, 71, 81, 82, 84, 85, 86, 87, 88, 89, 90));
+TestParser::$FOLLOW_expression_in_regexExpression1721 = new Set(array(72));
+TestParser::$FOLLOW_CLOSE_BRACE_in_regexExpression1726 = new Set(array(1));
+TestParser::$FOLLOW_iriRef_in_iriRefOrFunction1743 = new Set(array(1, 71));
+TestParser::$FOLLOW_argList_in_iriRefOrFunction1745 = new Set(array(1));
+TestParser::$FOLLOW_string_in_rdfLiteral1763 = new Set(array(1, 73, 80));
+TestParser::$FOLLOW_LANGTAG_in_rdfLiteral1767 = new Set(array(1));
+TestParser::$FOLLOW_REFERENCE_in_rdfLiteral1773 = new Set(array(8, 46, 48, 64, 65));
+TestParser::$FOLLOW_iriRef_in_rdfLiteral1775 = new Set(array(1));
+TestParser::$FOLLOW_numericLiteralUnsigned_in_numericLiteral1797 = new Set(array(1));
+TestParser::$FOLLOW_numericLiteralPositive_in_numericLiteral1801 = new Set(array(1));
+TestParser::$FOLLOW_numericLiteralNegative_in_numericLiteral1805 = new Set(array(1));
 TestParser::$FOLLOW_set_in_numericLiteralUnsigned0 = new Set(array(1));
 TestParser::$FOLLOW_set_in_numericLiteralPositive0 = new Set(array(1));
 TestParser::$FOLLOW_set_in_numericLiteralNegative0 = new Set(array(1));
 TestParser::$FOLLOW_set_in_booleanLiteral0 = new Set(array(1));
 TestParser::$FOLLOW_set_in_string0 = new Set(array(1));
-TestParser::$FOLLOW_IRI_REF_in_iriRef1988 = new Set(array(1));
-TestParser::$FOLLOW_prefixedName_in_iriRef1996 = new Set(array(1));
+TestParser::$FOLLOW_IRI_REF_in_iriRef1987 = new Set(array(1));
+TestParser::$FOLLOW_prefixedName_in_iriRef1995 = new Set(array(1));
 TestParser::$FOLLOW_set_in_prefixedName0 = new Set(array(1));
-TestParser::$FOLLOW_BLANK_NODE_LABEL_in_blankNode2038 = new Set(array(1));
-TestParser::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2046 = new Set(array(92));
-TestParser::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2048 = new Set(array(1));
+TestParser::$FOLLOW_BLANK_NODE_LABEL_in_blankNode2037 = new Set(array(1));
+TestParser::$FOLLOW_OPEN_SQUARE_BRACE_in_blankNode2045 = new Set(array(92));
+TestParser::$FOLLOW_CLOSE_SQUARE_BRACE_in_blankNode2047 = new Set(array(1));
 
 ?>

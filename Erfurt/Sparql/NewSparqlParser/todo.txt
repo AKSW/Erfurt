@@ -3,3 +3,5 @@ TODOS:
 2. url http://example.org> GREATER muss weg DONE
 3. OPTION doesn't work as expected
 4. Fix DFA->predict should solve 1 and 2
+5. dfa.numberOfStates in php runtime is limited to 255!!!
+	-> move to unicode?

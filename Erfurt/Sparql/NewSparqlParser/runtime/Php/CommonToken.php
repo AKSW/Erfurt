@@ -26,6 +26,7 @@
 			
 			$this->start = $start;
 			$this->stop = $stop;
+			$this->line = 0;
 		}
 		
 		public static function forType($type){
