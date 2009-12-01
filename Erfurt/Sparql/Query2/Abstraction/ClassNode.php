@@ -125,7 +125,7 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
             )
         );
 
-        $query->getWhere()->addElement($filter);
+        $optionalpart->addElement($filter);
 
         $query->addProjectionVar($var);
         
