@@ -1270,9 +1270,9 @@ class Erfurt_Store
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $resultFormat);
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
-				$logger = $this->_getQueryLogger();
-				$logger->debug("*****************\n".$queryObject);
-        	}
+                $logger = $this->_getQueryLogger();
+                $logger->debug("SPARQL ***************** ".round((1000 * $duration),2)." msec \n".$queryObject);
+            }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
         return $sparqlResult;
@@ -1288,7 +1288,14 @@ class Erfurt_Store
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         if ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface) {
-            return $this->_backendAdapter->sqlQuery($sqlQuery, $limit, $offset);
+            $startTime = microtime(true);
+            $result = $this->_backendAdapter->sqlQuery($sqlQuery, $limit, $offset);
+            $duration = microtime(true) - $startTime;
+            if (defined('_EFDEBUG')) {
+                $logger = $this->_getQueryLogger();
+                $logger->debug("SQL ***************** ".round((1000 * $duration),2)." msec \n". $sqlQuery);
+            }
+            return $result;
         }
         
         // TODO: will throw an exception
@@ -1596,11 +1603,10 @@ class Erfurt_Store
      * @return object Zend Logger, which writes to logs/queries.log
      */
     protected function _getQueryLogger(){
-	 	if(null === $this->_queryLogger){
-			
-			$this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
-			}
-		return $this->_queryLogger;
-	}
+        if(null === $this->_queryLogger){
+            $this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
+        }
+        return $this->_queryLogger;
+    }
 }
 
