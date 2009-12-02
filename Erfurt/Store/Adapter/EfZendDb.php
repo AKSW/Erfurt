@@ -1062,8 +1062,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlQuery($query, $resultform = 'plain') 
+    public function sparqlQuery($query, $options=array()) 
     {
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        
         $start = microtime(true);
         
         require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';

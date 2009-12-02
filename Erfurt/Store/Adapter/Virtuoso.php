@@ -524,8 +524,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /**
      * @see Erfurt_Store_Adapter_Interface 
      */
-    public function sparqlQuery($query, $resultFormat = 'plain')
+    public function sparqlQuery($query, $options=array())
     {
+        
+        $resultFormat =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
         

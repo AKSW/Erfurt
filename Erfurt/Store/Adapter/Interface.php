@@ -162,14 +162,20 @@ interface Erfurt_Store_Adapter_Interface
      * @param array $modelIris An additional array of modelIris to query against. If a non empty array is given, the 
      * values in this array will overwrite all FROM and FROM NAMED clauses in the query. If the array contains no 
      * element, the FROM and FROM NAMED is evaluated. If non of them is present, all available models are queried.
-     * @param string $resultform Currently supported are: 'plain' and 'xml'
+     * @param array Option array to push down parameters to adapters
+     * feel free to add anything you want. put the store name in front for special options, but use macros
+     *      'result_format' => ['plain' | 'xml']
+     *      'timeout' => 1000 (in msec)
+     * I included some define macros at the top of Store.php
+     * 
+     * deprecated: @param string $resultform Currently supported are: 'plain' and 'xml'
      * @param boolean $useAc Whether to check for access control or not.
      * 
      * @throws Erfurt_Exception Throws an exception if query is no string.
      * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
      */
-    public function sparqlQuery($query, $resultform = 'plain');
+    public function sparqlQuery($query, $options = array());
 }
 
 

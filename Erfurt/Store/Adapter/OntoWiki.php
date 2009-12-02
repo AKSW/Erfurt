@@ -79,8 +79,9 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
 // TODO ?    
     }
     
-    public function sparqlQuery($query, $resultform = 'plain')
+    public function sparqlQuery($query, $options=array())
     {   
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         // Support for FOAF+SSL only when user is authenticated via WebID.
         $identity = Erfurt_App::getInstance()->getAuth()->getIdentity();
         if (!$identity->isWebId()) {
