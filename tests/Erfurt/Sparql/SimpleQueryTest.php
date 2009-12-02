@@ -81,4 +81,30 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
+    
+    public function testInitWithString2()
+    {
+        $queryString = '
+            PREFIX vakp: <http://vakantieland.nl/model/properties/>
+            PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+            SELECT DISTINCT ?poi
+            FROM <http://vakantieland.nl/model/>
+            WHERE {
+             ?poi vakp:isPublicPoi "true"^^xsd:boolean .
+            ?poi wgs84:long ?long .
+            FILTER (?long >= 5.804).
+            FILTER (?long <= 6.3478).
+            ?poi wgs84:lat ?lat .
+            FILTER (?lat >= 52.3393) .
+            FILTER (?lat <= 52.6704). 
+                   ?poi vakp:ranking ?ranking
+            }
+            ORDER BY DESC(?ranking) ASC(?poi)
+            LIMIT 10 
+            OFFSET 0';
+        
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
 }
