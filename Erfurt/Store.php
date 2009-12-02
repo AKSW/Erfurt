@@ -14,6 +14,18 @@
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
+
+// ------------------------------------------------------------------------
+// --- Macros ---------------------------------------------------
+// ------------------------------------------------------------------------
+define('STORE_RESULTFORMAT','result_format');
+define('STORE_RESULTFORMAT_PLAIN','plain');
+define('STORE_RESULTFORMAT_XML','xml');
+define('STORE_USE_AC','use_ac');
+define('STORE_USE_OWL_IMPORTS','use_owl_imports');
+define('STORE_USE_ADDITIONAL_IMPORTS','use_additional_imports');
+define('STORE_TIMEOUT','timeout');
+
 class Erfurt_Store
 {   
     // ------------------------------------------------------------------------
@@ -1191,16 +1203,16 @@ class Erfurt_Store
         self::$_queryCount++;
         
         $defaultOptions = array(
-            'result_format'          => 'plain',
-            'use_ac'                 => true,
-            'use_owl_imports'        => true,
-            'use_additional_imports' => true
+            STORE_RESULTFORMAT           => STORE_RESULTFORMAT_PLAIN,
+            STORE_USE_AC                 => true,
+            STORE_USE_OWL_IMPORTS        => true,
+            STORE_USE_ADDITIONAL_IMPORTS => true
         );
      
         $options = array_merge($defaultOptions, $options);
 
-        $useAdditional = $options['use_additional_imports'];
-        if ($options['use_owl_imports'] === true) {
+        $useAdditional = $options[STORE_USE_ADDITIONAL_IMPORTS];
+        if ($options[STORE_USE_OWL_IMPORTS] === true) {
             // add owl:imports
             if ($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
                 //new way, "
@@ -1224,7 +1236,7 @@ class Erfurt_Store
         }
         
         // if using accesss control, filter FROM (NAMED) for allowed models
-        if ($options['use_ac'] === true) {
+        if ($options[STORE_USE_AC] === true) {
             if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
                 //new way
                 $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
@@ -1260,14 +1272,15 @@ class Erfurt_Store
             }
         }
 
-        //queriing SparqlEngine or retrieving Result from QueryCache
-        $resultFormat = $options['result_format'];
+        //querying SparqlEngine or retrieving Result from QueryCache
+        //TODO for query cache, please refactor
+        $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
         if (!($sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat ))){
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $resultFormat);
+            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();

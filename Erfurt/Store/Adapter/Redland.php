@@ -134,8 +134,10 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Abstract */
-    public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $resultform = 'plain') 
-    {    
+    public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $options=array()) 
+    {   
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+         
         $q = librdf_new_query($this->_librdf_world, 'sparql', null, $query, null);
 	
 	$result = librdf_model_query_execute($this->_librdf_model, $q);
