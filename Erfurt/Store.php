@@ -100,7 +100,14 @@ class Erfurt_Store
      * @var array
      */
     protected $_prefixes = null;
-
+    
+    /**
+     * Special zend logger, which protocolls all queries
+     * Call with function to initialize
+     * @var Zend Logger
+     */
+	protected $_queryLogger = null;
+	
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1262,6 +1269,10 @@ class Erfurt_Store
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $resultFormat);
             $duration = microtime(true) - $startTime;
+            if (defined('_EFDEBUG')) {
+				$logger = $this->_getQueryLogger();
+				$logger->debug("*****************\n".$queryObject);
+        	}
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
         return $sparqlResult;
@@ -1578,5 +1589,18 @@ class Erfurt_Store
         
         return $closure;
     }
+    
+    /**
+     * Returns the query logger, lazy initialization
+     *  
+     * @return object Zend Logger, which writes to logs/queries.log
+     */
+    protected function _getQueryLogger(){
+	 	if(null === $this->_queryLogger){
+			
+			$this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
+			}
+		return $this->_queryLogger;
+	}
 }
 
