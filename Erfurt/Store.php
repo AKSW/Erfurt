@@ -1146,9 +1146,7 @@ class Erfurt_Store
      * @param boolean $useAc Whether to check for access control.
      */
     public function sparqlAsk(Erfurt_Sparql_SimpleQuery $queryObject, $useAc = true)
-    {
-        self::$_queryCount++;
-        
+    {        
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
             foreach ($this->getImportsClosure($fromGraphUri) as $importedGraphUri) {
@@ -1179,6 +1177,7 @@ class Erfurt_Store
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
+            self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             $queryCache->save( (string) $queryObject, 'plain' , $sparqlResult, $duration);
         }
@@ -1199,8 +1198,6 @@ class Erfurt_Store
     {
         // if ($queryObject instanceof Erfurt_Sparql_Query2)
         //     Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
-        
-        self::$_queryCount++;
         
         $defaultOptions = array(
             STORE_RESULTFORMAT           => STORE_RESULTFORMAT_PLAIN,
@@ -1281,6 +1278,7 @@ class Erfurt_Store
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
+            self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();
