@@ -8,6 +8,7 @@
  */
 
 require_once 'Erfurt/Store/Adapter/Interface.php';
+require_once 'Erfurt/Store.php';
 
 /**
  * This class acts as a backend for SPARQL endpoints.
@@ -146,7 +147,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     }
     
     public function sparqlQuery($query, $options=array())
-    {   
+    {
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$query) . '&maxrows=10';
