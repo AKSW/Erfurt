@@ -1282,7 +1282,7 @@ class Erfurt_Store
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();
-                $logger->debug("SPARQL ***************** ".round((1000 * $duration),2)." msec \n".$queryObject);
+                $logger->debug("SPARQL ***************** ".round((1000 * $duration),2)." msec ".(($duration >1 )?" WARNING SLOW ":"")."\n".$queryObject);
             }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
