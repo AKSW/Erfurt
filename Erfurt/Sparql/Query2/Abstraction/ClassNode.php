@@ -119,7 +119,8 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
         $optionalpart->addElement($triple);
         $query->getWhere()->addElement($optionalpart);
 
-        /*$filter = new Erfurt_Sparql_Query2_Filter(
+        /* filtered now in php
+          $filter = new Erfurt_Sparql_Query2_Filter(
             new Erfurt_Sparql_Query2_UnaryExpressionNot(
                 new Erfurt_Sparql_Query2_isBlank($var)
             )
