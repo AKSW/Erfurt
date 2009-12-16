@@ -119,17 +119,17 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
         $optionalpart->addElement($triple);
         $query->getWhere()->addElement($optionalpart);
 
-        $filter = new Erfurt_Sparql_Query2_Filter(
+        /*$filter = new Erfurt_Sparql_Query2_Filter(
             new Erfurt_Sparql_Query2_UnaryExpressionNot(
                 new Erfurt_Sparql_Query2_isBlank($var)
             )
-        );
+        );*/
 
-        $optionalpart->addElement($filter);
+        //$optionalpart->addElement($filter);
 
         $query->addProjectionVar($var);
         
-        return array('optional' => $optionalpart, 'var' => $var, 'filter' => $filter);
+        return array('optional' => $optionalpart, 'var' => $var, 'filter' => null);
     }
     
     public function addLink($predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){
