@@ -1619,13 +1619,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         WHERE s2.g = g.id 
                         AND s2.s = g.uri 
                         AND s2.st = 0 
-                        AND s2.p = "' . EF_RDF_TYPE . '" 
-                        AND s2.o = "' . EF_OWL_ONTOLOGY . '" 
+                        AND s2.p = \'' . EF_RDF_TYPE . '\'
+                        AND s2.o = \'' . EF_OWL_ONTOLOGY . '\'
                         AND s2.ot = 0) as is_owl_ontology 
                     FROM ef_graph g 
                     LEFT JOIN ef_stmt s ON (g.id = s.g
                         AND g.uri = s.s 
-                        AND s.p = "' . EF_OWL_IMPORTS. '" 
+                        AND s.p = \'' . EF_OWL_IMPORTS. '\'
                         AND s.ot = 0) 
                     LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
                         
