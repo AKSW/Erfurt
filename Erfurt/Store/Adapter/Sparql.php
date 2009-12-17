@@ -255,7 +255,8 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                     
                     $valueNodes = $node->childNodes;
                     foreach ($valueNodes as $vn) {
-                        if (!$vn instanceof DOMNode) {
+                        if (!$vn instanceof DOMNode
+                               || '' === trim($vn->nodeValue)) {
                             continue;
                         }
                         
