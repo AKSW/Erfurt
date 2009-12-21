@@ -951,7 +951,7 @@ class Erfurt_App
             }
         }
 
-        // merge with injected config iff given
+        // merge with injected config if given
         if (null !== $config) {
             try {
                 $this->_config->merge($config);
