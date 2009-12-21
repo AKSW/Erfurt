@@ -92,6 +92,14 @@
     <rdfs:range rdf:resource="&xsd;boolean"/>
   </owl:DatatypeProperty>
 
+  <owl:DatatypeProperty rdf:about="isLarge"
+                        rdfs:label="is large">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:comment>When models are too big counting can be disabled and limits are added</rdfs:comment>
+    <rdfs:domain rdf:resource="&owl;Ontology"/>
+    <rdfs:range rdf:resource="&xsd;boolean"/>
+  </owl:DatatypeProperty>
+
   <owl:DatatypeProperty rdf:about="rawConfig"
                         rdfs:label="config">
     <rdfs:comment>This property holds action configuration values beyond the rdf schema.</rdfs:comment>

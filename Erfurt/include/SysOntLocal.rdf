@@ -88,6 +88,9 @@
   <sysont:Model rdf:about="&SysOnt;">
 		    <sysont:hidden rdf:datatype="&xsd;boolean">true</sysont:hidden>
   </sysont:Model>
+  <sysont:Model rdf:about="&SysOnt;">
+		    <sysont:isLarge rdf:datatype="&xsd;boolean">true</sysont:hidden>
+  </sysont:Model>
 
 	<!-- Statement Selector TestCase -->
 	<!--sysont:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
