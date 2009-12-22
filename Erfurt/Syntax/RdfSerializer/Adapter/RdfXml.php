@@ -63,7 +63,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		return $this->_rdfWriter->getContentString();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true, array $additional = array())
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
@@ -94,6 +94,19 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         }
 		
 		$this->_rdfWriter->setMaxLevel(1);
+		
+		foreach ($additional as $s=>$pArray) {
+            foreach($pArray as $p=>$oArray) {
+                foreach ($oArray as $o) {
+                    $sType = (substr($s, 0, 2) === '_:') ? 'bnode' : 'uri';
+                    $lang  = isset($o['lang']) ? $o['lang'] : null; 
+                    $dType = isset($o['datatype']) ? $o['datatype'] : null;
+                    
+                    $this->_handleStatement($s, $p, $o['value'], $sType, $o['type'], $lang, $dType);
+                }
+            }
+        }
+		$this->_rdfWriter->resetState();
 		
 		$this->_serializeResource($resource, $useAc);
 		

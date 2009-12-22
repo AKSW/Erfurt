@@ -58,7 +58,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $this->startRdf();
         }
         
-        
         $offset = 0;
         while (true) {
             $query->setOffset($offset);
@@ -92,7 +91,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         return $this->endRdf();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true, array $additional = array())
     {
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
@@ -123,6 +122,17 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $this->startRdf();
         }
         
+        foreach ($additional as $s=>$pArray) {
+            foreach($pArray as $p=>$oArray) {
+                foreach ($oArray as $o) {
+                    $sType = (substr($s, 0, 2) === '_:') ? 'bnode' : 'uri';
+                    $lang  = isset($o['lang']) ? $o['lang'] : null; 
+                    $dType = isset($o['datatype']) ? $o['datatype'] : null;
+                    
+                    $this->handleStatement($s, $p, $o['value'], $sType, $o['type'], $lang, $dType);
+                }
+            }
+        }
         
         $offset = 0;
         while (true) {
