@@ -10,7 +10,7 @@
  * @version    $Id: TriplesSameSubject.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
 
-class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
+class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
 {
     protected $subject;
     protected $propertyList = array();

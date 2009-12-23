@@ -11,7 +11,7 @@ require_once 'structural-Interfaces.php';
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
+class Erfurt_Sparql_Query2_Triple extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
 {
     protected $s;
     protected $p;
