@@ -13,7 +13,7 @@
  * @version    $Id$
  */
  
-class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
+class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
 {
     protected $element;
     

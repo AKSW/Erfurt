@@ -1,8 +1,8 @@
 <?php
 /**
- * Erfurt_Sparql_Query2_GroupHelper
+ * Erfurt_Sparql_Query2_ContainerHelper
  */
-abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_ObjectHelper
+abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2_ElementHelper
 {
     protected $elements = array();
 
@@ -19,7 +19,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
     /**
      * getElement
      * @param int $i index of the element
-     * @return Erfurt_Sparql_Query2_ObjectHelper the element
+     * @return Erfurt_Sparql_Query2_ElementHelper the element
      */
     public function getElement($i) {
         return $this->elements[$i];
@@ -27,7 +27,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 
     /**
      * getElements
-     * @return array array of Erfurt_Sparql_Query2_ObjectHelper - the elements that are contained
+     * @return array array of Erfurt_Sparql_Query2_ElementHelper - the elements that are contained
      */
     public function getElements() {
         return $this->elements;
@@ -42,7 +42,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
         foreach($this->elements as $element){
             if($element instanceof Erfurt_Sparql_Query2_Var){
                 $ret[] = $element;
-            } else if ($element instanceof Erfurt_Sparql_Query2_GroupHelper){
+            } else if ($element instanceof Erfurt_Sparql_Query2_ContainerHelper){
                 $ret = array_merge($ret, $element->getVars());
             }
         }
@@ -55,14 +55,14 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
     /**
      * removeElement
      * @param int $i index of the element
-     * @return Erfurt_Sparql_Query2_GroupHelper $this
+     * @return Erfurt_Sparql_Query2_ContainerHelper $this
      */
     public function removeElement($element, $equal = false) {
         $new = array();
 
         for ($i=0;$i<count($this->elements); $i++) {
                 if ($this->elements[$i]->getID() != $element->getID() || ($equal && $this->elements[$i]->equals($element))) {
-                        if ($this->elements[$i] instanceof Erfurt_Sparql_Query2_GroupHelper)
+                        if ($this->elements[$i] instanceof Erfurt_Sparql_Query2_ContainerHelper)
                                 $this->elements[$i]->removeElement($element);
                         $new[] = $this->elements[$i];
                 }
@@ -75,7 +75,7 @@ abstract class Erfurt_Sparql_Query2_GroupHelper extends Erfurt_Sparql_Query2_Obj
 
     /**
      * removeAllElements
-     * @return Erfurt_Sparql_Query2_GroupHelper $this
+     * @return Erfurt_Sparql_Query2_ContainerHelper $this
      */
     public function removeAllElements() {
         $this->elements = array();

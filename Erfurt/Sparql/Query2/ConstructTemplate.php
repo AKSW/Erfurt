@@ -4,7 +4,8 @@
  * 
  * is like a GroupGraphPattern but you can only add triples
  * 
- * @package    
+ * @package    erfurt
+ * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)

@@ -25,7 +25,7 @@ function typeHelper($obj)
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
+class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 {
     /**
      * @staticvar string a constant for select type

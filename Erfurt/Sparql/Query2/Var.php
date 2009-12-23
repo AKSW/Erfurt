@@ -16,7 +16,7 @@ require_once 'Constraint.php';
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ObjectHelper implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm, Erfurt_Sparql_Query2_PrimaryExpression
+class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_VarOrTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
     protected $name;
     protected $varLabelType = '?';

@@ -10,7 +10,7 @@
  * @version    $Id: ObjectList.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
 
-class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_GroupHelper implements Erfurt_Sparql_Query2_IF_ObjectList
+class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_ContainerHelper implements Erfurt_Sparql_Query2_IF_ObjectList
 {
     /**
      * @param array array of Erfurt_Sparql_Query2_GraphNode

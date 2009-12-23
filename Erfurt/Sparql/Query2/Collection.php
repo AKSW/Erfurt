@@ -5,7 +5,7 @@ require_once 'ObjectList.php';
 /**
  * Erfurt Sparql Query2 - Collection
  * 
- * @package   ontowiki
+ * @package   erfurt
  * @subpackage query2 
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}

@@ -1,17 +1,18 @@
 <?php
 /**
- * OntoWiki Sparql Query ObjectHelper
+ * OntoWiki Sparql Query ElementHelper
  * 
  * a abstract helper class for objects that are elements of groups. i.e.: Triples but also GroupGraphPatterns
  * 
- * @package    
+ * @package    erfurt
+ * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: ObjectHelper.php 4246 2009-10-06 09:57:37Z jonas.brekle@gmail.com $
+ * @version    $Id: ElementHelper.php 4246 2009-10-06 09:57:37Z jonas.brekle@gmail.com $
  * @abstract
  */
-abstract class Erfurt_Sparql_Query2_ObjectHelper{
+abstract class Erfurt_Sparql_Query2_ElementHelper {
     protected $id;
     protected $parents = array();
 
@@ -23,11 +24,11 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 
     /**
      * addParent
-     * when a ObjectHelper-object is added to a GroupHelper-object this method is called. lets the child know of the new parent
-     * @param Erfurt_Sparql_Query2_GroupHelper $parent
-     * @return Erfurt_Sparql_Query2_ObjectHelper $this
+     * when a ElementHelper-object is added to a ContainerHelper-object this method is called. lets the child know of the new parent
+     * @param Erfurt_Sparql_Query2_ContainerHelper $parent
+     * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
-    public function addParent(Erfurt_Sparql_Query2_GroupHelper $parent) {
+    public function addParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
         if (!in_array($parent, $this->parents))
                 $this->parents[] = $parent;
 
@@ -37,7 +38,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
     /**
      * remove
      * removes this object from all parents
-     * @return Erfurt_Sparql_Query2_ObjectHelper $this
+     * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function remove() {
         foreach ($this->parents as $parent) {
@@ -50,10 +51,10 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
     /**
      * removeParent
      * removes a parent
-     * @param Erfurt_Sparql_Query2_GroupHelper $parent
-     * @return Erfurt_Sparql_Query2_ObjectHelper $this
+     * @param Erfurt_Sparql_Query2_ContainerHelper $parent
+     * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
-    public function removeParent(Erfurt_Sparql_Query2_GroupHelper $parent) {
+    public function removeParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
         $new = array();
         foreach ($this->parents as $compare) {
                 if ($compare != $parent) {
@@ -76,7 +77,7 @@ abstract class Erfurt_Sparql_Query2_ObjectHelper{
 
     /**
      * getParents
-     * @return array an array of Erfurt_Sparql_Query2_GroupHelper
+     * @return array an array of Erfurt_Sparql_Query2_ContainerHelper
      */
     public function getParents() {
         return $this->parents;

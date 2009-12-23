@@ -9,7 +9,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupHelper
+class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_ContainerHelper
 {
     public function __construct() {
         parent::__construct();
@@ -221,7 +221,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_GroupH
                         $to_remove[] = $this->elements[$i];
                         
                         //cant delete one without deleting both - need to copy first 
-                        if ($this->elements[$j] instanceof Erfurt_Sparql_Query2_GroupHelper) {
+                        if ($this->elements[$j] instanceof Erfurt_Sparql_Query2_ContainerHelper) {
                             $copy = $this->elements[$j];
                             $classname = get_class($this->elements[$j]);
                             $this->elements[$j] = new $classname;
