@@ -132,5 +132,21 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
 
         return true;
     }
+
+    public function contains($element, $recursive = false) {
+        foreach ($this->elements as $mine) {
+            if($recursive && $mine instanceof Erfurt_Sparql_Query2_ContainerHelper){
+                if($mine->contains($element, true)){
+                    return true;
+                }
+                continue;
+            }
+            if ($element->equals($mine)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 ?>
