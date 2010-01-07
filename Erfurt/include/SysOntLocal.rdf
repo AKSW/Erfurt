@@ -89,7 +89,7 @@
 		    <sysont:hidden rdf:datatype="&xsd;boolean">true</sysont:hidden>
   </sysont:Model>
   <sysont:Model rdf:about="&SysOnt;">
-		    <sysont:isLarge rdf:datatype="&xsd;boolean">true</sysont:hidden>
+		    <sysont:isLarge rdf:datatype="&xsd;boolean">true</sysont:isLarge>
   </sysont:Model>
 
 	<!-- Statement Selector TestCase -->
