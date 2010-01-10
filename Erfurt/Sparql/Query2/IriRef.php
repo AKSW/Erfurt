@@ -9,7 +9,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_IriRef implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_IriRefOrFunction{
+class Erfurt_Sparql_Query2_IriRef extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_VarOrIriRef, Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_IriRefOrFunction {
     protected $iri;
     protected $prefix = null;
     
