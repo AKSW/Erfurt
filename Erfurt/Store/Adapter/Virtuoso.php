@@ -637,10 +637,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         $resultArray = array();
+
         if ($result = $this->_execSql((string)$sqlQuery)) {
             $resultArray = $this->_odbcResultToArray($result);
         }
-        
         return $resultArray;
     }
     
