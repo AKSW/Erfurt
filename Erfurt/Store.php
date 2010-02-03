@@ -1205,7 +1205,7 @@ class Erfurt_Store
             STORE_USE_OWL_IMPORTS        => true,
             STORE_USE_ADDITIONAL_IMPORTS => true
         );
-     
+        $noBindings = false;
         $options = array_merge($defaultOptions, $options);
 
         $useAdditional = $options[STORE_USE_ADDITIONAL_IMPORTS];
@@ -1243,29 +1243,50 @@ class Erfurt_Store
                     $uri = $graphClause->getGraphIri()->getIri();
                     $from_strings[] = $uri;
                 }
+                if(count($from_strings)>0){
+                    $hasFroms;
+                }
 
                 $modelsFiltered = $this->_filterModels($from_strings);
 
-                // query contained a non-allowed non-existent model
-                if (empty($modelsFiltered)) {
-                    return false;
-                }
+                // query contained only non-allowed or non-existent models
+                if (empty($modelsFiltered) && $hasFroms) {
+                    $noBindings = true;
+                } 
 
                 $queryObject->setFroms($modelsFiltered);
             } else {
-                $modelsFiltered = $this->_filterModels($queryObject->getFrom());
-
-                // query contained a non-allowed non-existent model
-                if (empty($modelsFiltered)) {
-                    return false;
+                $from_strings = $queryObject->getFrom();
+                if(count($from_strings)>0){
+                    $hasFroms;
                 }
+
+                $modelsFiltered = $this->_filterModels($from_strings);
 
                 $queryObject->setFrom($modelsFiltered);
                 // from named only if it was set
                 $fromNamed = $queryObject->getFromNamed();
-                if (count($fromNamed)) {
-                    $queryObject->setFromNamed($this->_filterModels($fromNamed));
+                if(count($fromNamed)>0){
+                    $hasFromsNamed;
                 }
+                $fromNamedFiltered = $this->_filterModels($fromNamed);
+
+                $queryObject->setFromNamed($this->_filterModels($fromNamedFiltered));
+
+                // query contained only non-allowed or non-existent models
+                if (empty($modelsFiltered) && empty($fromNamedFiltered) && ($hasFroms || $hasFromsNamed)) {
+                    $noBindings = true;
+                }
+            }
+        } 
+
+       if($noBindings){
+            if($queryObject instanceof Erfurt_Sparql_SimpleQuery){
+                $queryObject->setWherePart('{FILTER(false)}');
+            } else if ($queryObject instanceof Erfurt_Sparql_Query2){
+                $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
+                $ggp->addFilter(false); //unsatisfiable
+                $queryObject->setWhere($ggp);
             }
         }
 

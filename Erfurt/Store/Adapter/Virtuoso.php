@@ -526,8 +526,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function sparqlQuery($query, $options=array())
     {
-        
-        $resultFormat =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        $resultFormat = isset($options[STORE_RESULTFORMAT]) ?
+                            $options[STORE_RESULTFORMAT] :
+                            STORE_RESULTFORMAT_PLAIN;
         
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
@@ -536,8 +537,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $query = $queryPrefix
                . PHP_EOL
                . (string)$query;
-        
+        //echo htmlentities($query);
         if ($rid = $this->_execSparql($query)) {
+
             $result = $this->_odbcResultToArray($rid);
             
             // map single field to complete result
@@ -871,7 +873,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $resultId = @odbc_exec($this->_connection, $virtuosoPl);
         
         if (false === $resultId) {
-            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), $sparqlQuery);
+            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
