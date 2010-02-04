@@ -44,7 +44,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch (strtolower($this->store->getBackendName())) {
             case 'zenddb' :
             case 'mysql' :
-                $vocabulary['col_utf8_bin'] = "character set ascii     collate ascii_bin";
+                $vocabulary['col_utf8_bin'] = "character set utf8     collate utf8_bin";
                 $vocabulary['col_ascii_bin'] = "character set ascii     collate ascii_bin";
             break;
             case 'virtuoso':
