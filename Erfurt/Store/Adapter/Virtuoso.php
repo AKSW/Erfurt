@@ -420,9 +420,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getSupportedImportFormats()
     {
         return array(
-            'n3'     => 'N3', 
-            'nt'     => 'N-Triple', 
-            'rdfxml' => 'RDF/XML'
+            'rdfxml' => 'RDF/XML',
+            'n3'     => 'N3'
         );
     }
     
@@ -434,8 +433,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // check type parameter
         switch (strtolower($type)) {
             case 'n3':  // N3
-            case 'nt':  // N-Triple
-                $type = 'ttl';
+            case 'nt':  // N-Triple (is N3 Subset)
+            case 'ttl': // Turtle (is N3 Subset)
+                $type = 'n3';
                 break;
             case 'rdf': // RDF-XML
             case 'rdfxml':
@@ -448,18 +448,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         switch ($locator) {
             case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
                 $importSql = $this->_getImportSql('file', $data, $type, $graphUri);
-            break;
+                break;
+                
             case Erfurt_Syntax_RdfParser::LOCATOR_URL:
                 // do some type guesswork
-                if (substr($url, -2) == 'n3' or substr($url, -2) == 'nt') {
+                if ( 
+                    substr($url, -2) == 'n3' ||
+                    substr($url, -2) == 'nt' ||
+                    substr($url, -3) == 'ttl'
+                ) {
                     $type = 'n3';
                 }
                 $importSql = $this->_getImportSql('url', $data, $type, $graphUri);
-            break;
+                break;
+                
             default:
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
-            break;
+                break;
         }
         
         try {
@@ -972,7 +978,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // check type parameter
         switch (strtolower($type)) {
             case 'n3':  // N3
-            case 'nt':  // N-Triple
+            case 'nt':  // N-Triple (is N3 subset)
+            case 'ttl': // Turtle   (is N3 subset)
+                // use TTLP function from Virtuoso (is N3 capable)
                 $importFunc = 'TTLP';
                 break;
             case 'rdf': // RDF-XML

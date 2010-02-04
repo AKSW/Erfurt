@@ -962,8 +962,8 @@ class Erfurt_Store
     {
         $supportedFormats = array(
             'rdfxml'    => 'RDF/XML',
-            'ttl'       => 'Turtle',
-            'rdfjson'   => 'RDF/JSON (Talis)'
+            'rdfjson'   => 'RDF/JSON (Talis)',
+            'ttl'       => 'Turtle'
         );
         
         return array_merge($supportedFormats, $this->_backendAdapter->getSupportedImportFormats());
@@ -1054,8 +1054,7 @@ class Erfurt_Store
                 }
             }
         }
-        
-        
+
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
             $this->_backendAdapter->init();

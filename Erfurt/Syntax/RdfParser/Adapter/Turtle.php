@@ -305,7 +305,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         
         #$c = $this->_skipWS();
          
-        $uri = $this->_resolveUri($token);
+        $uri = $this->_resolveUri( $this->_decodeString($token, true) );
         require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
@@ -1082,7 +1082,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         }
     }
     
-    protected function _decodeString($value)
+    /**
+     * Decodes escape sequences on a string
+     * (Including Unicode escape via \u and \U)
+     * @param String $value the string to decode escape sequences from
+     * @pram boolean $isUrl whether the input escapes should be encoded url compatible
+     * @return String with decoded escape sequences
+     */
+    protected function _decodeString($value, $isUrl = false)
     {
         $backSlashIdx = strpos((string)$value, "\\");
         
@@ -1112,28 +1119,28 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case '"':
-                    $result .= '"';
+                    $result .= $isUrl ? urlencode('"') : '"';
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case '>':
-                    $result .= '>';
+                    $result .= $isUrl ? urlencode('>') : '>';
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case "\\":
-                    $result .= "\\";
+                    $result .= $isUrl ? urlencode("\\") : "\\";
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case 'u':
                     $xx = substr((string)$value, $backSlashIdx+2, 4);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 6;
-                    $result .= $c;
+                    $result .= $isUrl ? urlencode($c) : $c;
                     break;
                 case 'U':
                     $xx = substr((string)$value, $backSlashIdx+2, 8);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 10;
-                    $result .= $c;
+                    $result .= $isUrl ? urlencode($c) : $c;
                     break;
             }
             
