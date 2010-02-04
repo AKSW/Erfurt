@@ -752,10 +752,12 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-    public function getImportsClosure($modelIri, $withHiddenImports = true)
+            public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
-        
+        if($currentLevel == array($modelIri)) {
+            return $currentLevel;
+        }
         if ($withHiddenImports === true) {
             $importsUri = $this->getOption('propertiesHiddenImports');
             
@@ -1148,7 +1150,7 @@ class Erfurt_Store
     {        
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->getImportsClosure($fromGraphUri) as $importedGraphUri) {
+            foreach ($this->getImportsClosure($fromGraphUri, $useAc) as $importedGraphUri) {
                 $queryObject->addFrom($importedGraphUri);
             }
         }
@@ -1204,81 +1206,107 @@ class Erfurt_Store
             STORE_USE_OWL_IMPORTS        => true,
             STORE_USE_ADDITIONAL_IMPORTS => true
         );
-        $noBindings = false;
         $options = array_merge($defaultOptions, $options);
+        $noBindings = false;
 
-        $useAdditional = $options[STORE_USE_ADDITIONAL_IMPORTS];
-        if ($options[STORE_USE_OWL_IMPORTS] === true) {
-            // add owl:imports
-            if ($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
-                //new way, "
-                $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
-                $from_strings = array();
-                foreach ($queryObject->getFroms() as $graphClause) {
-                    $uri = $graphClause->getGraphIri()->getIri();
-                    //$from_strings[] = $uri;
-                    foreach ($this->getImportsClosure($uri, $useAdditional) as $importedGraphUri) {
-                        $queryObject->addFrom($importedGraphUri);
-                    }
-                }
+        //typechecking
+        if (is_string($queryObject)) {
+            require_once 'Erfurt/Sparql/SimpleQuery.php';
+            $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryObject);
+        }
+        if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)){
+            throw new Exception("Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string", 1);
+        }
 
-            } else {
-                foreach ($queryObject->getFrom() as $fromGraphUri) {
-                    foreach ($this->getImportsClosure($fromGraphUri, $useAdditional) as $importedGraphUri) {
-                        $queryObject->addFrom($importedGraphUri);
-                    }
+        //clone
+        if ($queryObject instanceof Erfurt_Sparql_Query2){ //always clone?
+            $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere, could have side-effects
+        }
+        $debug = false;
+        if(strstr((string) $queryObject, "xyz")){
+            echo "before : " .htmlentities((string) $queryObject)."<br/>";
+            $debug = true;
+        }
+
+        //get all models
+        $all = array();
+        $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
+        foreach ($allpre as $key => $true) {
+            $all[] = array('uri' => $key, 'named' => false);
+        }
+        
+        //get available models (readable)
+        $available = array();
+        if($options[STORE_USE_AC] === true){
+            $availablepre = $this->getAvailableModels(true);
+            foreach ($availablepre as $key => $true) {
+                $available[] = array('uri' => $key, 'named' => false);
+            }
+        } else {
+            $available =$all;
+        }
+
+        // examine froms (for access control and imports) in 5 steps
+        // 1. extract froms for easier handling
+        $froms = array();
+        if ($queryObject instanceof Erfurt_Sparql_Query2){
+            foreach ($queryObject->getFroms() as $graphClause) {
+                $uri = $graphClause->getGraphIri()->getIri();
+                $froms[] = array('uri' => $uri, 'named' => $graphClause->isNamed());
+            }
+        } else { //SimpleQuery
+            foreach ($queryObject->getFrom() as $graphClause) {
+                $froms[] = array('uri' => $graphClause, 'named' => false);
+            }
+            foreach ($queryObject->getFromNamed() as $graphClause) {
+                $froms[] = array('uri' => $graphClause, 'named' => true);
+            }
+        }
+        // 2. no froms in query -> froms = availableModels
+        if(empty($froms)){
+            $froms = $all;
+        } else {
+            // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
+            if ($options[STORE_USE_AC] === true) {
+                $froms = array_intersect($froms, $available);
+                if(empty($froms)){
+                    $noBindings = true;
                 }
             }
         }
         
-        // if using accesss control, filter FROM (NAMED) for allowed models
-        if ($options[STORE_USE_AC] === true) {
-            if($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_Query2_Abstraction){
-                //new way
-                $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere
-
-                $from_strings = array();
-                foreach ($queryObject->getFroms() as $graphClause) {
-                    $uri = $graphClause->getGraphIri()->getIri();
-                    $from_strings[] = $uri;
-                }
-                if(count($from_strings)>0){
-                    $hasFroms;
-                }
-
-                $modelsFiltered = $this->_filterModels($from_strings);
-
-                // query contained only non-allowed or non-existent models
-                if (empty($modelsFiltered) && $hasFroms) {
-                    $noBindings = true;
-                } 
-
-                $queryObject->setFroms($modelsFiltered);
-            } else {
-                $from_strings = $queryObject->getFrom();
-                if(count($from_strings)>0){
-                    $hasFroms;
-                }
-
-                $modelsFiltered = $this->_filterModels($from_strings);
-
-                $queryObject->setFrom($modelsFiltered);
-                // from named only if it was set
-                $fromNamed = $queryObject->getFromNamed();
-                if(count($fromNamed)>0){
-                    $hasFromsNamed;
-                }
-                $fromNamedFiltered = $this->_filterModels($fromNamed);
-
-                $queryObject->setFromNamed($this->_filterModels($fromNamedFiltered));
-
-                // query contained only non-allowed or non-existent models
-                if (empty($modelsFiltered) && empty($fromNamedFiltered) && ($hasFroms || $hasFromsNamed)) {
-                    $noBindings = true;
+        // 4. get import closure for every remaining from
+        if ($options[STORE_USE_OWL_IMPORTS] === true) {
+            foreach ($froms as $from) {
+                foreach ($this->getImportsClosure($from['uri'], $options[STORE_USE_ADDITIONAL_IMPORTS], $options[STORE_USE_AC]) as $importedGraphUri) {
+                    $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
+                    if(in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false){
+                        $froms[] = $addCandidate;
+                    }
                 }
             }
-        } 
+        }
+        // 5. put froms back
+        if ($queryObject instanceof Erfurt_Sparql_Query2){
+            $queryObject->setFroms(array());
+            foreach ($froms as $from) {
+                $queryObject->addFrom($from['uri'], $from['named']);
+            }
+        } else {
+             $queryObject->setFrom(array());
+             $queryObject->setFromNamed(array());
+             foreach ($froms as $from) {
+                if(!$from['named']){
+                    $queryObject->addFrom($from['uri']);
+                } else {
+                    $queryObject->addFromNamed($from['uri']);
+                }
+            }
+        }
 
+       // if there were froms and all got deleted due to access controll - give back empty result set
+       // this is achieved by replacing the where-part with an unsatisfiable one
+       // i think this is efficient because otherwise we would have to deal with result formating und variables
        if($noBindings){
             if($queryObject instanceof Erfurt_Sparql_SimpleQuery){
                 $queryObject->setWherePart('{FILTER(false)}');
@@ -1288,7 +1316,9 @@ class Erfurt_Store
                 $queryObject->setWhere($ggp);
             }
         }
-
+        if($debug){
+            echo "after : " .htmlentities((string) $queryObject)."<br/>";
+        }
         //querying SparqlEngine or retrieving Result from QueryCache
         //TODO for query cache, please refactor
         $resultFormat = $options[STORE_RESULTFORMAT];
@@ -1306,6 +1336,7 @@ class Erfurt_Store
             }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
+        
         return $sparqlResult;
     }
     
@@ -1549,15 +1580,8 @@ class Erfurt_Store
         foreach ($this->getAvailableModels(true) as $key => $true) {
             $allowedModels[] = $key;
         }
-        
-        $modelIrisFiltered = array();
-        if (count($modelIris)) {
-            $modelIrisFiltered = array_intersect($modelIris, $allowedModels);
-        } else {
-            $modelIrisFiltered = $allowedModels;
-        }
-        
-        return $modelIrisFiltered;
+               
+        return array_intersect($modelIris, $allowedModels);
     }
     
     /**

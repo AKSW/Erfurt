@@ -701,7 +701,7 @@ class Erfurt_Ac_Default
     private function _sparql($model, $sparqlQuery) 
     {
         $sparqlQuery->addFrom($model->getModelUri());
-        $result = $model->getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
+        $result = $model->getStore()->sparqlQuery($sparqlQuery, array(STORE_USE_AC => false));
         
         return $result;
     }

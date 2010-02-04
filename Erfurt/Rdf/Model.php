@@ -534,8 +534,13 @@ class Erfurt_Rdf_Model
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
         }
-        
-        $query->addFrom($this->_graphUri);
+
+        // restrict to this model
+        if($query instanceof Erfurt_Sparql_SimpleQuery){
+            $query->setFrom(array($this->_graphUri));
+        } else if($query instanceof Erfurt_Sparql_Query2){
+            $query->setFroms(array($this->_graphUri));
+        }
         
         return $this->getStore()->sparqlQuery($query, $options);
     }
