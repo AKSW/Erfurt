@@ -15,14 +15,21 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm,
     protected $datatype;
     protected $lang;
     protected $mode = 0;
+    protected $delimiter = '"';
     
     public static $knownShortcuts = array('int','boolean','float','decimal','string','time','date');
     
     /**
      * @param string $str the literal value
-     * @param null|string|Erfurt_Sparql_Query2_IriRef $meta if is null: untyped literal with no language tag. if is IriRef: typed literal. if is string: when string is one of ('int','boolean','float','decimal','string','time','date') convert to IriRef with XMLSchema#%s. else use as language tag.
+     * @param null|string|Erfurt_Sparql_Query2_IriRef $meta if is null: untyped literal with no language tag.
+     *  If is IriRef: typed literal. if is string: when string is one of
+     *  ('int','boolean','float','decimal','string','time','date') convert to IriRef with XMLSchema#%s.
+     *  Else use as language tag.
+     * @param String $delimiter string to delimit the literal prepended and appended (in reverse order)
+     *  in Sparql ouput.
      */
-    public function __construct($str, $meta = null) {
+    public function __construct($str, $meta = null, $delimiter = '"') {
+        $this->delimiter = $delimiter;
         if (!is_string($str)) {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be a string, instance of '.typeHelper($str).' given');
         }
@@ -56,7 +63,7 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm,
      * @return string
      */
     public function getSparql() {
-        $sparql = '"'.$this->value.'"';
+        $sparql = $this->delimiter . $this->value . strrev($this->delimiter);
         
         switch($this->mode) {
             case 0:

@@ -376,10 +376,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     /*new Erfurt_Sparql_Query2_Function(
                         $bifContains,
                         array($subjectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-                    ),*/ //why doesnt this work???
+                    ),
+                    // why doesnt this work???
+                    // ANSWER: bif:contains uses virtuoso specific fulltext index only 
+                    // available for object column uris could only be treated as codepoint representation
+                    // of themselves -> Solution again is IRI (maybe not before PHP 6)
+                    */
                     new Erfurt_Sparql_Query2_Function(
                         $bifContains,
-                        array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
+                        array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '\'"'))
                     )
                 )
             )
