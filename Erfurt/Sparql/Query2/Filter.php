@@ -20,7 +20,13 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
     /**
      * @param Erfurt_Sparql_Query2_Constraint $element
      */
-    public function __construct(Erfurt_Sparql_Query2_Constraint $element) {
+    public function __construct($element) {
+        if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
+            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+        }
+        if(is_bool($element)){
+            $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);
+        }
         $this->element = $element;
         parent::__construct();
     }
@@ -38,7 +44,13 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
      * @param Erfurt_Sparql_Query2_Constraint $element
      * @return Erfurt_Sparql_Query2_Filter $this
      */
-    public function setConstraint(Erfurt_Sparql_Query2_Constraint $element) {
+    public function setConstraint($element) {
+       if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
+            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+       }
+       if(is_bool($element)){
+            $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);
+        }
        $this->element = $element;
        return $this;
     }
