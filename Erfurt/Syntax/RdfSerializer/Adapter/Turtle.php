@@ -27,149 +27,104 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     
     protected $_store = null;
     protected $_graphUri = null;
-    
-    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
-    {
-        $this->_store = Erfurt_App::getInstance()->getStore();
-        $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri, $useAc);
-        
-        $namespaces = Erfurt_App::getInstance()->getNamespaces();
-		
-		require_once 'Erfurt/Sparql/SimpleQuery.php';
-        $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?p ?o');
-        $query->addFrom($graphUri);
-        $query->setWherePart('WHERE { ?s ?p ?o . }');
-        $query->setOrderClause('?s ?p ?o');
-        $query->setLimit(1000);
-        
-        $base = $graph->getBaseUri();
-        $this->setBaseUri($base);
-        
-        foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
-            $this->handleNamespace($prefix, $ns);
-        }
 
+    public function  __construct() {
+        $this->_store = Erfurt_App::getInstance()->getStore();
+    }
+
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
+    {
+        $this->handleGraph($graphUri, $useAc);
+        
+        $query->setLimit(1000); //needed?
+        if(!strstr((string)$query, '?resourceUri ?p ?o')){
+            if($query instanceof Erfurt_Sparql_Query2){
+                $s = new Erfurt_Sparql_Query2_Var('resourceUri');
+                $p = new Erfurt_Sparql_Query2_Var('p');
+                $o = new Erfurt_Sparql_Query2_Var('o');
+                $query->addTriple($s,$p,$o);
+                $query->removeAllProjectionVars();
+                $query->addProjectionVar($s);
+                $query->addProjectionVar($p);
+                $query->addProjectionVar($o);
+            } else {
+                //should not happen
+                throw new OntoWiki_Exception('serializeQueryResultToString expects a Erfurt_Sparql_Query2 object');
+            }
+        }
+        
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->serializer->ad)) {
             $this->startRdf($config->serializer->ad);
         } else {
             $this->startRdf();
         }
-        
+
         $offset = 0;
         while (true) {
             $query->setOffset($offset);
-            
+
             $result = $this->_store->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
 		        'use_additional_imports' => false,
 		        'use_ac' => $useAc
 		    ));
-            
+
             foreach ($result['bindings'] as $row) {
-                $s     = $row['s']['value'];
+                $s     = $row['resourceUri']['value'];
                 $p     = $row['p']['value'];
                 $o     = $row['o']['value'];
-                $sType = $row['s']['type'];
+                $sType = $row['resourceUri']['type'];
                 $oType = $row['o']['type'];
                 $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
                 $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
 
                 $this->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
-            
+
             if (count($result['bindings']) < 1000) {
     	        break;
     		}
-    		
+
     		$offset += 1000;
         }
-        
+
         return $this->endRdf();
+    }
+
+    public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
+    {
+        //construct query
+	require_once 'Erfurt/Sparql/SimpleQuery.php';
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        $query->addFrom($graphUri);
+        $query->setWherePart('WHERE { ?resourceUri ?p ?o . }');
+        $query->setOrderClause('?resourceUri ?p ?o');
+  
+        return $this->serializeQueryResultToString($query, $graphUri, $pretty, $useAc);
     }
     
     public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true, array $additional = array())
     {
-        $this->_store = Erfurt_App::getInstance()->getStore();
-        $this->_graphUri = $graphUri;
-        $graph = $this->_store->getModel($graphUri, $useAc);
-        
-        $namespaces = Erfurt_App::getInstance()->getNamespaces();
-		
-		require_once 'Erfurt/Sparql/SimpleQuery.php';
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
-        $query->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resource.'>))}');
-        $query->setOrderClause('?s ?p ?o');
-        $query->setLimit(1000);
-        
-        
-        $base = $graph->getBaseUri();
-        $this->setBaseUri($base);
-        
+        $query->setWherePart('WHERE { ?resourceUri ?p ?o . FILTER (sameTerm(?resourceUri, <'.$resource.'>))}'); //why not as subject
+        $query->setOrderClause('?resourceUri ?p ?o');
+
+        return $this->serializeQueryResultToString($query, $graphUri, $pretty, $useAc);
+    }
+
+    public function handleGraph($graphUri, $useAc){
+        $this->_graphUri = $graphUri;
+        $namespaces = Erfurt_App::getInstance()->getNamespaces();
         foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->handleNamespace($prefix, $ns);
         }
-
-        $config = Erfurt_App::getInstance()->getConfig();
-        if (isset($config->serializer->ad)) {
-            $this->startRdf($config->serializer->ad);
-        } else {
-            $this->startRdf();
-        }
-        
-        foreach ($additional as $s=>$pArray) {
-            foreach($pArray as $p=>$oArray) {
-                foreach ($oArray as $o) {
-                    $sType = (substr($s, 0, 2) === '_:') ? 'bnode' : 'uri';
-                    $lang  = isset($o['lang']) ? $o['lang'] : null; 
-                    $dType = isset($o['datatype']) ? $o['datatype'] : null;
-                    
-                    $this->handleStatement($s, $p, $o['value'], $sType, $o['type'], $lang, $dType);
-                }
-            }
-        }
-        
-        $offset = 0;
-        while (true) {
-            $query->setOffset($offset);
-            
-            $result = $this->_store->sparqlQuery($query, array(
-		        'result_format'   => 'extended',
-		        'use_owl_imports' => false,
-		        'use_additional_imports' => false,
-		        'use_ac' => $useAc
-		    ));
-            
-            foreach ($result['bindings'] as $row) {
-                $s     = $row['s']['value'];
-                $p     = $row['p']['value'];
-                $o     = $row['o']['value'];
-                $sType = $row['s']['type'];
-                $oType = $row['o']['type'];
-                $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
-                $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
-
-                $this->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
-            }
-            
-            if (count($result['bindings']) < 1000) {
-    	        break;
-    		}
-    		
-    		$offset += 1000;
-        }
-        
-        return $this->endRdf();
-    }
-    
-    public function setBaseUri($baseUri)
-    {
-        $this->_baseUri = $baseUri;
+        $this->_baseUri = $this->_store->getModel($graphUri, $useAc)->getBaseUri();
     }
      
     public function startRdf($ad = null)

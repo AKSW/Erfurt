@@ -65,7 +65,6 @@ class Erfurt_Syntax_RdfSerializer
     public function initializeWithFormat($format)
     {
         $format = self::normalizeFormat($format);
-        
         switch ($format) {
             case 'rdfxml':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
@@ -89,6 +88,11 @@ class Erfurt_Syntax_RdfSerializer
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         return $this->_serializerAdapter->serializeGraphToString($graphUri, $pretty, $useAc);
+    }
+
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
+    {
+        return $this->_serializerAdapter->serializeQueryResultToString($query, $graphUri, $pretty, $useAc);
     }
     
     public function serializeResourceToString($resourceUri, $graphUri, $pretty = false, $useAc = true, array $additional = array())
