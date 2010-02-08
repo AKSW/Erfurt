@@ -34,6 +34,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         //yes, this does not work with multiple time zones.
         'http://www.w3.org/2001/XMLSchema#dateTime' => 'CHAR',
         'http://www.w3.org/2001/XMLSchema#date'     => 'CHAR',
+        'http://www.w3.org/2001/XMLSchema#anyURI'   => 'CHAR',
     );
 
     protected $_engine;
