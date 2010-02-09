@@ -1639,8 +1639,6 @@ var_dump($this->_tokens);exit;
                     break;
                 default:
                     if ($needsDot === true) {
-                        trigger_error("needs dot",E_USER_ERROR);
-                        exit;
                         require_once 'Erfurt/Sparql/ParserException.php';
                         throw new Erfurt_Sparql_ParserException('Two triple pattern need to be seperated by a dot. In Query: '.htmlentities($this->_query), -1,
                                         key($this->_tokens));

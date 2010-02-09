@@ -235,7 +235,7 @@ class Erfurt_Store
         // check interface conformance
         if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
             require_once 'Erfurt/Store/Exception.php';
-            throw new Erfurt_Store_Exception('Adpater class must implement Erfurt_Store_Adapter_Interface.');
+            throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
         }
     }
     
@@ -752,7 +752,7 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-            public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
+    public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if($currentLevel == array($modelIri)) {
@@ -817,6 +817,7 @@ class Erfurt_Store
                     throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
                 }
             } else {
+                exit;
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }            
@@ -1223,9 +1224,11 @@ class Erfurt_Store
             $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere, could have side-effects
         }
         $debug = false;
-        if(strstr((string) $queryObject, "xyz")){
-            echo "before : " .htmlentities((string) $queryObject)."<br/>";
-            $debug = true;
+        if(strstr((string) $queryObject, "property")){
+            //$debug = true;
+        }
+        if($debug){
+             echo "before : " .htmlentities((string) $queryObject)."<br/>";
         }
 
         //get all models
@@ -1234,6 +1237,7 @@ class Erfurt_Store
         foreach ($allpre as $key => $true) {
             $all[] = array('uri' => $key, 'named' => false);
         }
+        if($debug) print_r($all);
         
         //get available models (readable)
         $available = array();
@@ -1336,7 +1340,7 @@ class Erfurt_Store
             }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
-        
+        if($debug) print_r($sparqlResult);
         return $sparqlResult;
     }
     
