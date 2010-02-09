@@ -120,7 +120,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     
     public function  __sleep()
     {
-        $this->idCounterSerialized = self::$idCounter;
+        $this->idCounterSerialized = isset(self::$idCounter) ? self::$idCounter : rand(10000, getrandmax());
         return array_diff(array_keys(get_object_vars($this)), array('idCounter')); //save all but the static var
     }
 
