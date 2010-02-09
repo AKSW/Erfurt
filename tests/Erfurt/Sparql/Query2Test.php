@@ -73,9 +73,21 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
         $one2 = new Erfurt_Sparql_Query2_RDFLiteral('1', 'int');
 
         $st = new Erfurt_Sparql_Query2_sameTerm($one1, $one2);
+        $additiv = new Erfurt_Sparql_Query2_AdditiveExpression();
+        $additiv -> setElements(
+            array(
+                array(
+                    "op" => Erfurt_Sparql_Query2_AdditiveExpression::invOperator,
+                    "exp" => $one1
+                ),
+                array(
+                    "op" => Erfurt_Sparql_Query2_AdditiveExpression::operator,
+                    "exp" => $one2)
+            )
+        );
 
         $nst = new Erfurt_Sparql_Query2_UnaryExpressionNot($st);
-        $and= new Erfurt_Sparql_Query2_ConditionalAndExpression();
+        $and = new Erfurt_Sparql_Query2_ConditionalAndExpression();
         $regex = new Erfurt_Sparql_Query2_Regex(new Erfurt_Sparql_Query2_Str($mbox), new Erfurt_Sparql_Query2_RDFLiteral('/home/'),new Erfurt_Sparql_Query2_RDFLiteral('i'));
         $filter = new Erfurt_Sparql_Query2_Filter($or);
 
@@ -91,8 +103,9 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
                 )
                 ->addElement($filter
                         ->setConstraint($or
-                                ->addElement($and
+                                ->addElement( $and
                                         ->addElement($nst)
+                                        ->addElement($additiv)
                                         ->addElement(new Erfurt_Sparql_Query2_isLiteral($mbox))
                                         ->addElement(new Erfurt_Sparql_Query2_Function($iri3,array($mbox)))
                                 )
@@ -101,7 +114,6 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
                 )
         );
         $query->optimize();
-
         $nst->remove();
         // or
         // $and->removeElement($nst->getID());
@@ -124,8 +136,7 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
         //$query->getWhere()->removeAllElements();
         //$query->getConstructTemplate()->addElement(new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $name));
 
-        //echo '<h3>Basic Query Building</h3><pre>'.htmlentities($query->getSparql()).'</pre>';
-
+        //echo '<h3>Basic Query Building</h3><pre>'.$query->getSparql().'</pre>';
         //no errors
     }
 

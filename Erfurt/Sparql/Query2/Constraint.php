@@ -30,7 +30,7 @@ interface Erfurt_Sparql_Query2_IF_ConditionalOrExpression extends Erfurt_Sparql_
  */
 class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_ContainerHelper implements Erfurt_Sparql_Query2_IF_ConditionalOrExpression
 {
-    protected $conjuction;
+    protected $conjunction;
 
     /**
      *
@@ -53,6 +53,7 @@ class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_ContainerHel
         }
         if (!($element instanceof Erfurt_Sparql_Query2_Expression)) {
              throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be an instance of Erfurt_Sparql_Query2_Expression or string, instance of '.typeHelper($element).' given');
+             exit;
         }
         $element->addParent($this);
         $this->elements[] = $element;
@@ -302,6 +303,8 @@ interface Erfurt_Sparql_Query2_IF_AdditiveExpression extends Erfurt_Sparql_Query
 
 abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_ContainerHelper{
 
+    const operator = null;
+    const invOperator = null;
     /**
      *
      */
@@ -317,9 +320,8 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_C
      */
     public function getSparql() {
         $sparql = '';
-        
         for ($i=0; $i<count($this->elements); $i++) {
-            if ($i!=0) {
+            if ($i != 0 || $this->elements[$i]['op'] == self::invOperator) {
                 $sparql .= ' '.$this->elements[$i]['op'].' ';
             }
             $sparql .= $this->elements[$i]['exp']->getSparql();
@@ -341,12 +343,14 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_C
         }
         
         foreach ($elements as $element) {
-            if (!($element instanceof Erfurt_Sparql_Query2_Expression)) {
-                throw new RuntimeException('Argument 1 passed to '.__CLASS__.'::setElements : must be an array of instances of Erfurt_Sparql_Query2_Expression');
+            if (!($element['exp'] instanceof Erfurt_Sparql_Query2_Expression) || !isset($element['op'])) {
+                throw new RuntimeException('Argument 1 passed to '.__CLASS__.'::setElements : must be an array of arrays consisting of a field "exp" with type Erfurt_Sparql_Query2_Expression and a field "op" containing the operator (+,-,*,/) as string');
                 return $this; //for chaining
+            } else {
+                $this->addElement($element['op'], $element['exp']);
             }
         }
-        $this->elements = $elements;
+
         return $this; //for chaining
     }
 }
@@ -357,8 +361,8 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_C
  */
 class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMultHelper implements Erfurt_Sparql_Query2_IF_AdditiveExpression
 {    
-    const minus = '-';
-    const plus = '+';
+    const operator = '+';
+    const invOperator = '-';
 
     /**
      *
@@ -374,15 +378,15 @@ class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMu
      * @return Erfurt_Sparql_Query2_AdditiveExpression $this
      */
     public function addElement($op, Erfurt_Sparql_Query2_Expression $exp) {
-        if ($op == self::minus || $op == self::plus ) {
+        if ($op == self::operator || $op == self::invOperator ) {
             //a hack to convert a expression that is added first when added with a minus as operator - would be omitted otherwise. maybe not usefull?!
-            if ($op == self::minus && count($this->elements)==0) {
+            if ($op == self::invOperator && count($this->elements)==0) {
                 if ($exp instanceof Erfurt_Sparql_Query2_RDFLiteral) {
-                    $exp->setValue('-'.$exp->getValue());
-                } else if ($exp instanceof Efurt_Sparql_Query2_NumericLiteral) {
+                    $exp->setValue( invOperator . $exp->getValue() );
+                } else if ($exp instanceof Erfurt_Sparql_Query2_NumericLiteral) {
                     $exp->setValue((-1)*$exp->getValue());
                 } else {
-                    $exp = new Erfurt_Sparql_Query2_UnaryExpression(Erfurt_Sparql_Query2_UnaryExpression::minus, $exp);
+                    $exp = new Erfurt_Sparql_Query2_UnaryExpressionMinus($exp);
                 }    
             }
             $this->elements[] = array('op'=>$op, 'exp'=>$exp);
@@ -406,8 +410,8 @@ interface Erfurt_Sparql_Query2_IF_MultiplicativeExpression extends Erfurt_Sparql
  */
 class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2_AddMultHelper implements Erfurt_Sparql_Query2_IF_MultiplicativeExpression
 {    
-    const times = '*';
-    const divided = '/';
+    const operator = '*';
+    const invOperator = '/';
 
     /**
      *
@@ -423,13 +427,36 @@ class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2
      * @return Erfurt_Sparql_Query2_MultiplicativeExpression $this
      */
     public function addElement($op, Erfurt_Sparql_Query2_Expression $exp) {
-        if ($op == self::times || $op == self::divided ) {
+        if ($op == self::operator || $op == self::invOperator ) {
             $this->elements[] = array('op'=>$op, 'exp'=>$exp);
         } else {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_UnaryExpression::__construct must be Erfurt_Sparql_Query2_AdditiveExpression::times or Erfurt_Sparql_Query2_AdditiveExpression::divided');
         }
         $exp->addParent($this);
         return $this; //for chaining
+    }
+
+        /**
+     * get string representation
+     * @return string
+     */
+    public function getSparql() {
+        $sparql = '';
+
+        for ($i=0; $i<count($this->elements); $i++) {
+            if ($i == 0) {
+                if($this->elements[$i]['op'] == self::invOperator){
+                    $sparql .= ' 1'.$this->elements[$i]['op'].' '; // => 1/x
+                }
+            } else {
+                $sparql .= ' '.$this->elements[$i]['op'].' ';
+            }
+            $sparql .= $this->elements[$i]['exp']->getSparql();
+        }
+        if (count($this->elements) > 1) {
+            $sparql = '('.$sparql.')';
+        }
+        return $sparql;
     }
 }
 

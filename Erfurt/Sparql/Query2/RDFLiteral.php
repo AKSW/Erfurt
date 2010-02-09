@@ -9,7 +9,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */ 
-class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
+class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
     protected $value = '';
     protected $datatype;
@@ -89,10 +89,10 @@ class Erfurt_Sparql_Query2_RDFLiteral implements Erfurt_Sparql_Query2_GraphTerm,
      * @return Erfurt_Sparql_Query2_RDFLiteral $this
      */
     public function setValue($val) {
-        if (is_string($val)) {
+        if (is_string($val) || is_numeric($val)) {
             $this->value = $val;
         } else {
-            //throw
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_RDFLiteral::setValue must be string, instance of '.typeHelper($val).' given');
         }
         return $this;
     }

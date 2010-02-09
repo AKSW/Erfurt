@@ -33,6 +33,10 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
         return $this->elements;
     }
 
+    public function size() {
+        return count($this->elements);
+    }
+
     /**
      * get all variables that are contained (recursive)
      * @return array of Erfurt_Sparql_Query2_Var
@@ -57,17 +61,34 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
      * @param int $i index of the element
      * @return Erfurt_Sparql_Query2_ContainerHelper $this
      */
-    public function removeElement($element, $equal = false) {
+    public function removeElement($toDelete, $equal = false) {
         $new = array();
-
-        for ($i=0;$i<count($this->elements); $i++) {
-                if ($this->elements[$i]->getID() != $element->getID() || ($equal && $this->elements[$i]->equals($element))) {
-                        if ($this->elements[$i] instanceof Erfurt_Sparql_Query2_ContainerHelper)
-                                $this->elements[$i]->removeElement($element);
-                        $new[] = $this->elements[$i];
+        foreach ($this->elements as $element) {
+            $inExp = false;
+            if(!($element instanceof Erfurt_Sparql_Query2_ElementHelper)){
+                if(isset($element['exp']) && $element['exp'] instanceof Erfurt_Sparql_Query2_ElementHelper){
+                     //this is used in Erfurt_Sparql_Query2_AdditiveExpression
+                     $inExp = true;
+                } else {
+                    throw new RuntimeException("Element of a Erfurt_Sparql_Query2_ContainerHelper must be of type Erfurt_Sparql_Query2_ElementHelper", E_USER_ERROR);
                 }
+            }
+            if ($toDelete->getID() == ($inExp ? $element["exp"]->getID() :  $element->getID()) || ($equal && $toDelete->equals($inExp ? $element["exp"] :  $element))) {
+                //matched - dont keep
+            } else {
+                //not matched - keep
+                $new[] = $element;
+                //recursive
+                if (($inExp ? $element["exp"] :  $element) instanceof Erfurt_Sparql_Query2_ContainerHelper){
+                    if($inExp){
+                        $element["exp"]->removeElement($toDelete, $equal);
+                    } else {
+                        $element->removeElement($toDelete, $equal);
+                    }
+                }
+            }
         }
-        $element->removeParent($this);
+        $toDelete->removeParent($this);
         $this->elements = $new;
 
         return $this; //for chaining
