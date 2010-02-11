@@ -49,6 +49,8 @@ class Erfurt_Versioning
     protected $_limit = 10;
     
     protected $_store = null;
+    
+    protected $_user = null;
 
     /**
      * Constructor registers with Erfurt_Event_Dispatcher
@@ -492,6 +494,11 @@ class Erfurt_Versioning
             // do nothing
         }
     }
+    
+    public function setUserUri($uri)
+    {
+        $this->_user = $uri;
+    }
 
     /**
      * Loading Details for a specified ActionId and returns it as array.
@@ -593,8 +600,10 @@ class Erfurt_Versioning
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
-        $user = $this->_getAuth()->getIdentity();
-        $userUri = $user->getUri();
+        if ($this->_user === null) {
+            $this->_user = $this->_getAuth()->getIdentity()->getUri();
+        } 
+        $userUri = $this->_user;
         
         $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent';
         
