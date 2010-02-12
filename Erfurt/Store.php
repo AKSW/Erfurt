@@ -817,7 +817,6 @@ class Erfurt_Store
                     throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
                 }
             } else {
-                exit;
                 require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }            
@@ -1016,7 +1015,7 @@ class Erfurt_Store
                         'header' => "Accept: application/rdf+xml, appliaction/json, text/rdf+n3, text/plain"
                 )));
 
-                $headers = get_headers($data, 1);
+                $headers = @get_headers($data, 1);
                 stream_context_get_default(array(
                     'http' => array(
                         'header' => ""
@@ -1058,6 +1057,10 @@ class Erfurt_Store
             }
         }
 
+        if($type == "auto"){
+            return array(); //will throw an error otherwise and probably the file doesnt exist - nothing to import
+        }
+
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
             $this->_backendAdapter->init();
@@ -1065,10 +1068,8 @@ class Erfurt_Store
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
-
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
             $this->_backendAdapter->init();
-            
             return $retVal;
         }
     }
