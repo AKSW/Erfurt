@@ -45,5 +45,9 @@ class Erfurt_Sparql_Query2_BlankNode implements Erfurt_Sparql_Query2_GraphTerm
     public function isAnon() {
         return empty($this->name);
     }
+
+    public function __toString(){
+        return $this->getSparql();
+    }
 }
 ?>

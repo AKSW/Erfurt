@@ -495,6 +495,9 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         if ($base->isPrefixed()) {
             throw new RuntimeException('Trying to add base with a prefix');
         }
+        if($this->base !== null){
+            $this->base->removeParent($this);
+        }
         $this->base = $base;
         $base->addParent($this);
         return $this; //for chaining

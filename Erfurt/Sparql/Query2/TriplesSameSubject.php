@@ -13,25 +13,18 @@
 class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_IF_TriplesSameSubject
 {
     protected $subject;
-    protected $propertyList = array();
+    protected $propertyList;
     
     /**
      * @param Erfurt_Sparql_Query2_VarOrTerm $subject
      * @param array $propList array of (Erfurt_Sparql_Query2_Verb, Erfurt_Sparql_Query2_IF_ObjectList)-pairs
      */
-    public function __construct(Erfurt_Sparql_Query2_VarOrTerm $subject, $propList = array()) {
-        $this->subject = $subject;
-        if (!is_array($propList)) {
-            throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_TriplesSameSubject::__construct must be an array of [Erfurt_Sparql_Query2_Verb, Erfurt_Sparql_Query2_IF_ObjectList]-pairs, instance of '.typeHelper($propList).' given');
-        } else {
-            foreach ($propList as $prop) {
-                if (!($prop['pred'] instanceof Erfurt_Sparql_Query2_Verb && $prop['obj'] instanceof Erfurt_Sparql_Query2_IF_ObjectList)) {
-                    throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_TriplesSameSubject::__construct must be an array of [Erfurt_Sparql_Query2_Verb, Erfurt_Sparql_Query2_IF_ObjectList]-pairs, instance of '.typeHelper($prop).' given');
-                } else {
-                    $this->propertyList[] = $prop;
-                }
-            }
+    public function __construct($subject, Erfurt_Sparql_Query2_PropertyList $propList) {
+        if(!($subject instanceof Erfurt_Sparql_Query2_VarOrTerm) && !($subject instanceof Erfurt_Sparql_Query2_TriplesNode)){
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_TriplesSameSubject::__construct must be instance of Erfurt_Sparql_Query2_VarOrTerm or Erfurt_Sparql_Query2_TriplesNode', E_USER_ERROR);
         }
+        $this->subject = $subject;
+        $this->propertyList = $propList;
         
         parent::__construct();
     }
@@ -43,15 +36,8 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
      */
     public function getSparql() {
         $propList = '';
-        
-        for ($i=0; $i<count($this->propertyList); $i++) {
-            $propList .= "\t".$this->propertyList[$i]['pred']->getSparql(). ' '.$this->propertyList[$i]['obj']->getSparql();
-            if ($i<(count($this->propertyList)-1)) {
-                $propList .=" ;\n";
-            }
-        }
-        
-        return $this->subject->getSparql().' '.$propList;
+                
+        return $this->subject->getSparql().' '.$this->propertyList->getSparql();
     }
     
     /**
@@ -66,19 +52,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
             $ret[] = $this->subject;
         }
 
-        foreach($this->propertyList as $prop){
-            if($prop['pred'] instanceof Erfurt_Sparql_Query2_Var) {
-                $ret[] = $prop['pred'];
-            }
-
-            if($prop['obj'] instanceof Erfurt_Sparql_Query2_ObjectList){
-                $ret = array_merge($ret, $prop['obj']->getVars());
-            } else {
-                if($prop['obj'] instanceof Erfurt_Sparql_Query2_Var){
-                    $ret[] = $prop['obj'];
-                }
-            }
-        }
+        $ret = array_merge($ret, $this->propertyList->getVars());
         
         return $ret;
     }
@@ -98,6 +72,10 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
     public function getSubject() {
         return $this->subject;
     }
+    public function setSubject($subject) {
+        $this->subject = $subject;
+    }
+
 
     public function getWeight($part = null){
         if($part == null){

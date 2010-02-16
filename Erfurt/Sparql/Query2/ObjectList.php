@@ -43,7 +43,7 @@ class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_ContainerHelp
     
     public function setElements($elements) {
         if (!is_array($elements)) {
-            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::setElements must be an array of Erfurt_Sparql_Query2_GraphNode\'s, instance of '.typeHelper($objects).' given');
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::setElements must be an array of Erfurt_Sparql_Query2_GraphNode\'s, instance of '.typeHelper($elements).' given');
         } else {
             foreach ($elements as $object) {
                 if (!($object instanceof Erfurt_Sparql_Query2_GraphNode)) {
