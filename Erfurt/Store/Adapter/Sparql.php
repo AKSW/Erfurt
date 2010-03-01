@@ -150,7 +150,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     {
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         
-        $url = $this->_serviceUrl . '?query=' . urlencode((string)$query) . '&maxrows=10';
+        $url = $this->_serviceUrl . '?query=' . urlencode((string)$query);
                 
         require_once 'Zend/Http/Client.php';
         $client = new Zend_Http_Client($url, array(
