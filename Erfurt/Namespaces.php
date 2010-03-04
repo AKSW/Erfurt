@@ -106,6 +106,9 @@ class Erfurt_Namespaces
         $prefix    = (string)$prefix;
         $namespace = (string)$namespace;
         
+        //lowercase prefix always (for best compatibility)
+        $prefix = strtolower($prefix);
+        
         $graphPrefixes = $this->getNamespacesForGraph($graph);
         
         // check if namespace is a valid URI

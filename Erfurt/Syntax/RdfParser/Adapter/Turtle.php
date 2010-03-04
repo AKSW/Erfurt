@@ -169,7 +169,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         
         foreach ($this->_namespaces as $prefix => $ns) {
             try {
-                $erfurtNamespaces->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+                $erfurtNamespaces->addNamespacePrefix($this->_graphUri,  $ns, $prefix, $this->_useAc);
             } catch (Erfurt_Namespaces_Exception $e) {
                 // We need to catch the store exception, for the namespace component throws exceptions in case a prefix
                 // already exists.
@@ -275,7 +275,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_skipWS();
         
         $ns = $this->_parseUri();
-
         $this->_addNamespace($token, $ns);
     }
     
@@ -1043,15 +1042,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             if ($count > 1) {
                 $val = substr((string)$this->_data, $this->_pos, $count);
                 $this->_pos += $count;
-#echo $val;
                 return $val;
             } else {
-#echo $this->_data[$this->_pos];
                 return $this->_data[$this->_pos++];
             }
             
         } else {
-#echo ('STOP');
             return -1;
         }
     }
