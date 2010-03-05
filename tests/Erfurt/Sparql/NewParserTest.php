@@ -1,8 +1,8 @@
 <?php
 ini_set('error_reporting', E_ALL | E_STRICT);
-set_include_path(get_include_path() . PATH_SEPARATOR . '/Applications/MAMP/htdocs/rollxx-sparql2-parser-new/ontowiki/src/libraries/');
+set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
 require_once 'Erfurt/TestCase.php';
-require_once '/Users/roll/Documents/projects/antlr-php-runtime/runtime/Php/antlr.php';
+require_once 'antlr/Php/antlr.php';
 require_once 'Erfurt/Sparql/Sparql10Lexer.php';
 require_once 'Erfurt/Sparql/Sparql10/Tokens.php';
 require_once 'Erfurt/Sparql/Sparql10Parser.php';
@@ -124,12 +124,12 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
         // 1. ow tests 
         $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
         
-        // // 2. erfurt tests
+        // 2. erfurt tests
         $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
-        // 
-        // // 3. rap tests
+        
+        // 3. rap tests
         $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
-        //     
+            
         // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = new Erfurt_Syntax_RdfParser();
