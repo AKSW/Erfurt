@@ -32,5 +32,10 @@ class Erfurt_Sparql_Query2_BlankNodePropertyList implements Erfurt_Sparql_Query2
         }
         $this->propertyList = $propertyList;
     }
+
+    public function __toString(){
+        return $this->getSparql();
+    }
+
 }
 ?>
