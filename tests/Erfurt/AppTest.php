@@ -271,6 +271,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         
     public function testAuthenticateWithAdmin()
     {
+        Erfurt_App::reset();
         $this->markTestNeedsDatabase();
         
         // Authenticate as Anonymous
@@ -411,27 +412,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);
     }
     
-    public function testGetCacheWithNoCacheType()
-    {   
-        Erfurt_App::reset();
-        $app = Erfurt_App::getInstance();
-        $config = $app->getConfig();
-        $config->cache->enable = true;
-        
-        try {
-            $app->getCache();
-            
-            $this->fail('Failure expected');
-        } catch (Erfurt_Exception $e) {
-            
-        }
-    }
-    
     public function testGetCacheWithDatabaseCacheBackend()
     {   
-// TODO How to use the new cache in Erfurt?
-        $this->markTestIncomplete();        
-        
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->enable = true;
@@ -439,23 +421,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
         
         $cache = $app->getCache();
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);
-    }
-    
-    public function testGetCacheWithSqliteCacheBackendFail()
-    {   
-        Erfurt_App::reset();
-        $app = Erfurt_App::getInstance();
-        $config = $app->getConfig();
-        $config->cache->enable = true;
-        $config->cache->type   = 'sqlite';
-        
-        try {
-            $app->getCache();
-            
-            $this->fail('Failure expected');
-        } catch (Erfurt_Exception $e) {
-            
-        }
     }
     
     public function testGetCacheWithSqliteCacheBackendSuccess()
@@ -483,42 +448,17 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);
     }
     
-    public function testGetCacheWithNonExistingCacheBackend()
-    {
-        Erfurt_App::reset();
-        $app = Erfurt_App::getInstance();
-        $config = $app->getConfig();
-        $config->cache->enable = true;
-        $config->cache->type   = 'doesnotexist';
-        
-        try {
-            $app->getCache();
-            
-            $this->fail('Failure expected');
-        } catch (Erfurt_Exception $e) {
-            
-        }
-    }
-    
     public function testGetCacheDir()
     {
         $app    = Erfurt_App::getInstance();
         $config = $app->getConfig(); 
         
-        $config->cache->path = 'cache';
-        $expectedPath = $app->getTmpDir();
-        $resolvedPath = $app->getCacheDir();
-        $this->assertEquals($expectedPath, $resolvedPath);
+        $cachePath = $app->getCacheDir();
+        $this->assertFalse($cachePath);
         
-        $config->cache->path = '/tmp';
-        $expectedPath = '/tmp';
-        $resolvedPath = $app->getCacheDir();
-        $this->assertEquals($expectedPath, $resolvedPath);
-        
-        unset($config->cache->path);
-        $expectedPath = $app->getTmpDir();
-        $resolvedPath = $app->getCacheDir();
-        $this->assertEquals($expectedPath, $resolvedPath);
+        $config->cache->path = 'cache/';
+        $cachePath = $app->getCacheDir();
+        $this->assertEquals(EF_BASE.'cache/', $cachePath);
     }
     
     public function testGetConfig()
@@ -628,10 +568,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetQueryCacheWithDatabaseCacheBackend()
     {   
-        // Incomplete, until Micha cleans up the constructor.
-        $this->markTestIncomplete();
-        
         Erfurt_App::reset();
+        $this->markTestNeedsDatabase();
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->query->enable = true;

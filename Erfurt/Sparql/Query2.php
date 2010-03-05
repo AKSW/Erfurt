@@ -25,7 +25,7 @@ function typeHelper($obj)
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
+class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 {
     /**
      * @staticvar string a constant for select type
@@ -62,6 +62,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
      * @staticvar int id 
      */
     public static $idCounter = 0;
+    protected $idCounterSerialized;
     
     /**
      * getNextID
@@ -115,7 +116,19 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         else 
             return $ret;
     }
-   
+
+    
+    public function  __sleep()
+    {
+        $this->idCounterSerialized = isset(self::$idCounter) ? self::$idCounter : rand(10000, getrandmax());
+        return array_diff(array_keys(get_object_vars($this)), array('idCounter')); //save all but the static var
+    }
+
+    public function   __wakeup()
+    {
+        self::$idCounter = $this->idCounterSerialized; //restore the static var
+    }
+    
     /**
      * getSparql
      * build a query string
@@ -169,12 +182,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
             $sparql .= 'FROM '.$from->getSparql()." \n";
         }
         
-        if (
-            !(
-                $this->type == self::typeDescribe
-                && count($this->where->getElements()) == 0
-            )
-        ){
+        if ($this->type != self::typeDescribe){
             $sparql .= 'WHERE '.$this->where->getSparql();
         }
 
@@ -487,6 +495,9 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         if ($base->isPrefixed()) {
             throw new RuntimeException('Trying to add base with a prefix');
         }
+        if($this->base !== null){
+            $this->base->removeParent($this);
+        }
         $this->base = $base;
         $base->addParent($this);
         return $this; //for chaining
@@ -742,7 +753,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_GroupHelper
         foreach ($this->projectionVars as $compare) {
             if (!$compare->equals($var)) {
                 $new[] = $compare;
-            } 
+            }  
         }
         $this->projectionVars = $new;
         return $this; //for chaining

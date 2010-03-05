@@ -403,7 +403,7 @@ private $subjects;
 		return false;
 	}
 	
-	private function resetState() {
+	public function resetState() {
 		
 		$this->bNodes = array();
 		$this->bNodeCount = array();

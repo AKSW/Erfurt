@@ -10,7 +10,7 @@
  * @version    $Id: ObjectList.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
 
-class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_GroupHelper implements Erfurt_Sparql_Query2_IF_ObjectList
+class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_ContainerHelper implements Erfurt_Sparql_Query2_IF_ObjectList
 {
     /**
      * @param array array of Erfurt_Sparql_Query2_GraphNode
@@ -43,7 +43,7 @@ class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_GroupHelper i
     
     public function setElements($elements) {
         if (!is_array($elements)) {
-            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::setElements must be an array of Erfurt_Sparql_Query2_GraphNode\'s, instance of '.typeHelper($objects).' given');
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_ObjectList::setElements must be an array of Erfurt_Sparql_Query2_GraphNode\'s, instance of '.typeHelper($elements).' given');
         } else {
             foreach ($elements as $object) {
                 if (!($object instanceof Erfurt_Sparql_Query2_GraphNode)) {
@@ -54,12 +54,22 @@ class Erfurt_Sparql_Query2_ObjectList extends Erfurt_Sparql_Query2_GroupHelper i
             }
         }
     }
-    
+
     public function getVars() {
         $ret = array();
         foreach ($this->elements as $element) {
             if ($element instanceof Erfurt_Sparql_Query2_Var)
                 $ret[] = $element;
+        }
+        return $ret;
+    }
+
+    //merge?
+    public function getNumVars() {
+        $ret = 0;
+        foreach ($this->elements as $element) {
+            if ($element instanceof Erfurt_Sparql_Query2_Var)
+                $ret++;
         }
         return $ret;
     }

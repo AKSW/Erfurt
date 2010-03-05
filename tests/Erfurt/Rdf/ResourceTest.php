@@ -13,7 +13,7 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      * @var    Erfurt_Rdf_Resource
      * @access protected
      */
-    protected $object;
+    protected $_object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -23,6 +23,7 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
+        $this->_object = new Erfurt_Rdf_Resource('http://example.org/resource1');
     }
 
     /**
@@ -40,10 +41,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function test__toString()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = (string)$this->_object;
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -51,10 +51,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetIri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = $this->_object->getIri();
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -62,10 +61,16 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetQualifiedName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        // First we test with the standard object (no qname).
+        $this->assertEquals(null, $this->_object->getQualifiedName());
+        
+        // Now we test with a real qname.
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $model = Erfurt_App::getInstance()->getSysOntModel();
+        
+        $r = new Erfurt_Rdf_Resource(EF_RDF_TYPE, $model);
+        $this->assertEquals('rdf:type', $r->getQualifiedName());
     }
 
     /**
@@ -73,10 +78,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetNamespace()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/';
+        $is = $this->_object->getNamespace();
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -84,21 +88,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetLocalName()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @todo Implement testGetTitle().
-     */
-    public function testGetTitle()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'resource1';
+        $is = $this->_object->getLocalName();
+        $this->assertEquals($should, $is);
     }
 
     /**
@@ -106,10 +98,11 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testInitWithIri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $r = Erfurt_Rdf_Resource::initWithIri('http://example.org/resourceXX');
+        $this->assertTrue($r instanceof Erfurt_Rdf_Resource);
+        $this->assertEquals('http://example.org/resourceXX', $r->getUri());
+        $this->assertEquals('http://example.org/', $r->getNamespace());
+        $this->assertEquals('resourceXX', $r->getLocalName());
     }
 
     /**
@@ -117,10 +110,11 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testInitWithUri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $r = Erfurt_Rdf_Resource::initWithUri('http://example.org/resource123');
+        $this->assertTrue($r instanceof Erfurt_Rdf_Resource);
+        $this->assertEquals('http://example.org/resource123', $r->getUri());
+        $this->assertEquals('http://example.org/', $r->getNamespace());
+        $this->assertEquals('resource123', $r->getLocalName());
     }
 
     /**
@@ -128,10 +122,14 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testInitWithNamespaceAndLocalname()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $ns = 'http://example.org/';
+        $l  = 'resourceLocal123abc';
+        
+        $r = Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($ns, $l);
+        $this->assertTrue($r instanceof Erfurt_Rdf_Resource);
+        $this->assertEquals('http://example.org/resourceLocal123abc', $r->getUri());
+        $this->assertEquals('http://example.org/', $r->getNamespace());
+        $this->assertEquals('resourceLocal123abc', $r->getLocalName());
     }
 
     /**
@@ -139,10 +137,10 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testInitWithBlankNode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123');
+        $this->assertTrue($bn instanceof Erfurt_Rdf_Resource);
+        $this->assertTrue($bn->isBlankNode());
+        $this->assertEquals('bnode123', $bn->getId());
     }
 
     /**
@@ -150,10 +148,8 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testIsBlankNode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123456789abc');
+        $this->assertTrue($bn->isBlankNode());
     }
 
     /**
@@ -161,10 +157,8 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetId()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $bn = Erfurt_Rdf_Resource::initWithBlankNode('bnode123abcdefghjiklmnopqrstuvwxyz');
+        $this->assertEquals('bnode123abcdefghjiklmnopqrstuvwxyz', $bn->getId());
     }
 
     /**
@@ -172,10 +166,9 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
      */
     public function testGetUri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $should = 'http://example.org/resource1';
+        $is = $this->_object->getUri();
+        $this->assertEquals($should, $is);
     }
 }
 ?>

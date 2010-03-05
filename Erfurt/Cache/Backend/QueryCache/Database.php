@@ -44,7 +44,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch (strtolower($this->store->getBackendName())) {
             case 'zenddb' :
             case 'mysql' :
-                $vocabulary['col_utf8_bin'] = "character set ascii     collate ascii_bin";
+                $vocabulary['col_utf8_bin'] = "character set utf8     collate utf8_bin";
                 $vocabulary['col_ascii_bin'] = "character set ascii     collate ascii_bin";
             break;
             case 'virtuoso':
@@ -530,9 +530,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     public function getUsedTriplePattern($limit = NULL, $minOccurence = NULL) {
 
-        $limiter = "";
-        if ($limit) {
-            $limiter = "Limit ".$limit;
+        if (null === $limit) {
+            $limit = PHP_INT_MAX;
         }
 
         $filter = "";
@@ -560,7 +559,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             ORDER BY tripleCount DESC 
             ".$limiter."
         ";
-        $result = $this->_query ($query);
+        $result = $this->_query ($query, (int)$limit);
         return $result;
     }
 
@@ -811,11 +810,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      string          $queryId        the Hash of the Query
      *  @return     resultSet       $result         the result of the SQL Query
      */	
-	private function _query($sql) 
+	private function _query($sql, $limit = PHP_INT_MAX, $offset = 0) 
 	{    
         $result = false;
         try {
-            $result = $this->store->sqlQuery($sql); 
+            $result = $this->store->sqlQuery($sql, $limit, $offset); 
         } catch (Erfurt_Store_Adapter_Exception $e){
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->debug($e->getMessage());
@@ -827,7 +826,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 // If this fails, something else is wrong, so we re-throw the error!
                 try {
                     $this->createCacheStructure();
-                    $result = $this->store->sqlQuery($sql);
+                    $result = $this->store->sqlQuery($sql, $limit, $offset);
                 } catch (Erfurt_Store_Adapter_Exception $e2) {
                     $logger->debug($e2->getMessage());
                     require_once 'Erfurt/Exception.php';

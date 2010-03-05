@@ -60,7 +60,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function __construct($iri, Erfurt_Rdf_Model $model = null)
     {
         $this->_model = $model;
-        $namespaces   = $this->_model ? $this->_model->getNamespacePrefixes() : array();
+        $namespaces   = $this->_model ? $this->_model->getNamespaces() : array();
         $matches      = array();
         
         // parse namespace/local part
@@ -96,6 +96,24 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     {
         return $this->getIri();
     }
+
+/**
+     * returns the serialized representation (string) of this resource according
+     * to the notation parameter. It always uses the pretty format option
+     * and the access control.
+     *
+     * @param string $notation the specified notation (see Erfurt_Syntax_RdfSerializer
+     *  for possible arguments)
+     *
+     * @return string the representation of this resource in a specified notation
+     */
+    public function serialize($notation = 'xml') {
+
+        require_once('Erfurt/Syntax/RdfSerializer.php');
+        $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($notation);
+        return $serializer->serializeResourceToString($this->getIri(), $this->_model->getModelIri(), true);
+    }
+
     
     /**
      * Returns the resource's IRI
@@ -147,7 +165,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $resource;
     }
     
-    public static function initWithNamespaceAndLocalname($namespace, $local)
+    public static function initWithNamespaceAndLocalName($namespace, $local)
     {
         $resource = new self($namespace . $local);
         return $resource;

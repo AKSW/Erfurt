@@ -169,7 +169,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         
         foreach ($this->_namespaces as $prefix => $ns) {
             try {
-                $erfurtNamespaces->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+                $erfurtNamespaces->addNamespacePrefix($this->_graphUri,  $ns, $prefix, $this->_useAc);
             } catch (Erfurt_Namespaces_Exception $e) {
                 // We need to catch the store exception, for the namespace component throws exceptions in case a prefix
                 // already exists.
@@ -275,7 +275,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_skipWS();
         
         $ns = $this->_parseUri();
-
         $this->_addNamespace($token, $ns);
     }
     
@@ -305,7 +304,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         
         #$c = $this->_skipWS();
          
-        $uri = $this->_resolveUri($token);
+        $uri = $this->_resolveUri( $this->_decodeString($token, true) );
         require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
@@ -699,7 +698,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
 
         
         require_once 'Erfurt/Rdf/Resource.php';
-        return Erfurt_Rdf_Resource::initWithNamespaceAndLocalname($namespace, $localName);
+        return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
     
     /*protected function _isPrefixChar($c)
@@ -1043,15 +1042,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             if ($count > 1) {
                 $val = substr((string)$this->_data, $this->_pos, $count);
                 $this->_pos += $count;
-#echo $val;
                 return $val;
             } else {
-#echo $this->_data[$this->_pos];
                 return $this->_data[$this->_pos++];
             }
             
         } else {
-#echo ('STOP');
             return -1;
         }
     }
@@ -1082,7 +1078,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         }
     }
     
-    protected function _decodeString($value)
+    /**
+     * Decodes escape sequences on a string
+     * (Including Unicode escape via \u and \U)
+     * @param String $value the string to decode escape sequences from
+     * @pram boolean $isUrl whether the input escapes should be encoded url compatible
+     * @return String with decoded escape sequences
+     */
+    protected function _decodeString($value, $isUrl = false)
     {
         $backSlashIdx = strpos((string)$value, "\\");
         
@@ -1112,28 +1115,28 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case '"':
-                    $result .= '"';
+                    $result .= $isUrl ? urlencode('"') : '"';
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case '>':
-                    $result .= '>';
+                    $result .= $isUrl ? urlencode('>') : '>';
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case "\\":
-                    $result .= "\\";
+                    $result .= $isUrl ? urlencode("\\") : "\\";
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case 'u':
                     $xx = substr((string)$value, $backSlashIdx+2, 4);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 6;
-                    $result .= $c;
+                    $result .= $isUrl ? urlencode($c) : $c;
                     break;
                 case 'U':
                     $xx = substr((string)$value, $backSlashIdx+2, 8);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 10;
-                    $result .= $c;
+                    $result .= $isUrl ? urlencode($c) : $c;
                     break;
             }
             

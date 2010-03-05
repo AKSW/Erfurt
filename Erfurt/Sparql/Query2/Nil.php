@@ -20,5 +20,10 @@ class Erfurt_Sparql_Query2_Nil implements Erfurt_Sparql_Query2_GraphTerm
     public function getSparql() {
         return '()';
     }
+
+    public function __toString(){
+        return $this->getSparql();
+    }
+
 }
 ?>

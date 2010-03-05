@@ -97,7 +97,7 @@ class Erfurt_Sparql_SimpleQuery
             'from'       => '/FROM\s+<(.+?)>/i', 
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
             'where'      => '/(WHERE\s+)?\{.*\}/si', 
-            'order'      => '/ORDER\s+BY\s+(.+)/i', 
+            'order'      => '/ORDER\s+BY\s+(.+\))+/i', 
             'limit'      => '/LIMIT\s+(\d+)/i', 
             'offset'     => '/OFFSET\s+(\d+)/i'
         );

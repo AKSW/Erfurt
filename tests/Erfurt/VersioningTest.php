@@ -131,20 +131,18 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
 
     public function testGetLastModifiedForResource() 
     {   
-        
         // We need a mocked versioning object here.
         $result = $this->_object->getLastModifiedForResource('http://example.org/resource1', 'http://example.org/');
         
         // Result should contain the following keys.
-        $this->assertArrayHasKey('id', $result);
-        $this->assertArrayHasKey('useruri', $result);
-        $this->assertArrayHasKey('tstamp', $result);
-        $this->assertArrayHasKey('action_type', $result);
+        $this->assertArrayHasKey('v2.id', $result);
+        $this->assertArrayHasKey('v2.useruri', $result);
+        $this->assertArrayHasKey('v2.tstamp', $result);
+        $this->assertArrayHasKey('v2.action_type', $result);
     }
 
     public function testGetHistoryForGraph() 
     { 
-        
         $result = $this->_object->getHistoryForGraph('http://example.org/');
         
         // Result should contain maximum n elements, where n is the limit set for the object.
@@ -170,10 +168,10 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
     
         // Each result row should contain the following keys.
         foreach ($result as $row) {
-            $this->assertArrayHasKey('id', $row);
-            $this->assertArrayHasKey('useruri', $row);
-            $this->assertArrayHasKey('tstamp', $row);
-            $this->assertArrayHasKey('action_type', $row);
+            $this->assertArrayHasKey('v2.id', $row);
+            $this->assertArrayHasKey('v2.useruri', $row);
+            $this->assertArrayHasKey('v2.tstamp', $row);
+            $this->assertArrayHasKey('v2.action_type', $row);
         }
     }
 
@@ -221,19 +219,16 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onAddStatement');
         $event->graphUri = 'http://example.org/';
-        $event->statement = array('http://example.org/resource1/' => array(
-            'http://example.org/property1/' => array(
-                    array(
-                        'type'  => 'literal',
-                        'value' => 'Value1'
-                    )
-            )
-        ));
+        $statement = array();
+        $statement['subject'] = 'http://example.org/resource1/';
+        $statement['predicate'] = 'http://example.org/property1/';
+        $statement['object'] = 'Value1';
+        $event->statement = $statement;
         
         try {
             $this->_object->onAddStatement($event);
         } catch (Exception $e) {
-            $this->fail();
+            $this->fail($e->getMessage());
         }
     }
 

@@ -388,7 +388,7 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         
         $modelUri = 'http://example.org/updateTest/';
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getNewModel($modelUri, false);
+        $model = $store->getNewModel($modelUri);
         
         $turtle1 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .

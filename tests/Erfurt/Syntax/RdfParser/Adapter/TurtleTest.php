@@ -4,7 +4,7 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
 
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/';
+    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_Turtle
@@ -44,6 +44,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         
         try {
             $result = $this->_object->parseFromDataString($data);
+            $this->assertTrue(is_array($result));
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
         }

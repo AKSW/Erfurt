@@ -43,14 +43,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         } else {
             $this->_rdfWriter->startDocument();
         }
-		
+	
 		$this->_rdfWriter->setMaxLevel(10);
 		
 		$this->_serializeType('Ontology specific informations', EF_OWL_ONTOLOGY);
-		
 		$this->_rdfWriter->setMaxLevel(1);
 		
 		$this->_serializeType('Classes', EF_OWL_CLASS);
+
 		$this->_serializeType('Datatypes', EF_RDFS_DATATYPE);
 		$this->_serializeType('Annotation properties', EF_OWL_ANNOTATION_PROPERTY);
 		$this->_serializeType('Datatype properties', EF_OWL_DATATYPE_PROPERTY);
@@ -63,7 +63,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		return $this->_rdfWriter->getContentString();
     }
     
-    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true)
+    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true, array $additional = array())
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
@@ -94,6 +94,19 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         }
 		
 		$this->_rdfWriter->setMaxLevel(1);
+		
+		foreach ($additional as $s=>$pArray) {
+            foreach($pArray as $p=>$oArray) {
+                foreach ($oArray as $o) {
+                    $sType = (substr($s, 0, 2) === '_:') ? 'bnode' : 'uri';
+                    $lang  = isset($o['lang']) ? $o['lang'] : null; 
+                    $dType = isset($o['datatype']) ? $o['datatype'] : null;
+                    
+                    $this->_handleStatement($s, $p, $o['value'], $sType, $o['type'], $lang, $dType);
+                }
+            }
+        }
+		$this->_rdfWriter->resetState();
 		
 		$this->_serializeResource($resource, $useAc);
 		
@@ -183,7 +196,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
 		$query->addFrom($this->_graphUri);
 		$query->setWherePart('WHERE { ?s ?p ?o . ?s <' . EF_RDF_TYPE . '> <' . $class . '> }');
-		$query->setOrderClause('?s');
+		$query->setOrderClause('?s ?p ?o');
 		$query->setLimit(1000);
 		
 		$offset = 0;
@@ -195,7 +208,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		        'use_owl_imports' => false,
 		        'use_additional_imports' => false
 		    ));
-
+		    
     		if ($offset === 0 && count($result['bindings']) > 0) {
     		    $this->_rdfWriter->addComment($description);
     		}
@@ -247,7 +260,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 		$where .= '))}';
 		
 		$query->setWherePart($where);
-		$query->setOrderClause('?s');
+		$query->setOrderClause('?s ?p ?o');
 	    $query->setLimit(1000);
 
 		$offset = 0;

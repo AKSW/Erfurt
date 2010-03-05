@@ -314,8 +314,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
         try {
             $result = $this->store->sqlQuery( $sql );        
         } catch (Erfurt_Store_Adapter_Exception $e){
-var_dump($sql);
-var_dump($e);
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->log($e->getMessage(), $e->getCode());
             return false;

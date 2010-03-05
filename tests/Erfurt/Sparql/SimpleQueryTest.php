@@ -10,10 +10,28 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $expectedStripped = preg_replace('/\s|#.*\n/', '', $expected);
         $actualStripped   = preg_replace('/\s|#.*\n/', '', $actual);
         
-        return $this->assertEquals($expectedStripped, $actualStripped);
+        return parent::assertEquals($expectedStripped, $actualStripped);
     }
     
-    public function testInitWithString()
+    public function testInitWithStringSimple()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource ?author ?comment ?content ?date #?alabel
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+                ?comment a <http://rdfs.org/sioc/types#Comment>.
+                ?comment <http://rdfs.org/sioc/ns#has_creator> ?author.
+                ?comment <http://rdfs.org/sioc/ns#content> ?content.
+                ?comment <http://purl.org/dc/terms/created> ?date.
+            }
+            ORDER BY DESC(?date)
+            LIMIT 6';
+        
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+    
+    public function testInitWithStringComplex()
     {
         $queryString = '
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -47,23 +65,46 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
             }';
         
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+    
+    public function testInitWithStringUnusuallyFormatted()
+    {        
+        $queryString = '
+            SELECT DISTINCT ?resourceUri FROM
+            <http://sebastian.dietzold.de/rdf/foaf.rdf> WHERE {
+            <http://sebastian.dietzold.de/terms/me>
+            <http://xmlns.com/foaf/0.1/pastProject> ?resourceUri FILTER
+            (isURI(?resourceUri) && !isBLANK(?resourceUri)) } ORDER BY
+            ASC(?resourceUri) LIMIT 10';
         
-        $this->assertQueryEquals($queryString, (string) $queryObject);
-        
-        $queryString2 = '
-            SELECT DISTINCT ?resource ?author ?comment ?content ?date #?alabel
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+    
+    public function testInitWithString2()
+    {
+        $queryString = '
+            PREFIX vakp: <http://vakantieland.nl/model/properties/>
+            PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+            SELECT DISTINCT ?poi
+            FROM <http://vakantieland.nl/model/>
             WHERE {
-                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
-                ?comment a <http://rdfs.org/sioc/types#Comment>.
-                ?comment <http://rdfs.org/sioc/ns#has_creator> ?author.
-                ?comment <http://rdfs.org/sioc/ns#content> ?content.
-                ?comment <http://purl.org/dc/terms/created> ?date.
+             ?poi vakp:isPublicPoi "true"^^xsd:boolean .
+            ?poi wgs84:long ?long .
+            FILTER (?long >= 5.804).
+            FILTER (?long <= 6.3478).
+            ?poi wgs84:lat ?lat .
+            FILTER (?lat >= 52.3393) .
+            FILTER (?lat <= 52.6704). 
+                   ?poi vakp:ranking ?ranking
             }
-            ORDER BY DESC(?date)
-            LIMIT 6';
+            ORDER BY DESC(?ranking) ASC(?poi)
+            LIMIT 10 
+            OFFSET 0';
         
-        $queryObject2 = Erfurt_Sparql_SimpleQuery::initWithString($queryString2);
-        
-        $this->assertQueryEquals($queryString2, (string) $queryObject2);
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
     }
 }

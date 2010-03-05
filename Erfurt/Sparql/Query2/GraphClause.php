@@ -11,7 +11,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-class Erfurt_Sparql_Query2_GraphClause extends Erfurt_Sparql_Query2_ObjectHelper
+class Erfurt_Sparql_Query2_GraphClause extends Erfurt_Sparql_Query2_ElementHelper
 {
     protected $graphIri;
     protected $named = false;

@@ -4,7 +4,8 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
 
 class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/';
+    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    const SYNTAX_INVALID_TEST_DIR = 'resources/syntax/invalid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
@@ -165,16 +166,63 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         $result = $this->_object->parseFromDataString($xml);
     }
     
+    public function testParsingRdfXmlWithEntities()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example &lt;1234&gt;" />');
+        $result = $this->_object->parseFromDataString($xml);
+        
+        $this->assertEquals('example <1234>', $result['_:node1'][EF_RDFS_LABEL][0]['value']);
+    }
+    
+    public function testParsingRdfXmlWithCData()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class><rdfs:label>example 12345 <![CDATA[<12345>]]></rdfs:label></owl:Class>');
+        $result = $this->_object->parseFromDataString($xml);
+        
+        $this->assertEquals('example 12345 <12345>', $result['_:node1'][EF_RDFS_LABEL][0]['value']);
+    }
+    
+    /**
+     * @expectedException Erfurt_Syntax_RdfParserException
+     */
+    public function testParsingRdfXmlWithoutEntitiesUsed()
+    {
+        $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example <1234>" />');
+        $result = $this->_object->parseFromDataString($xml);
+    }
     
     /**
      * @dataProvider providerTestParseFromDataString
      */
-    public function testParseFromDataString($dataString)
+    public function testParseFromDataString($fileName)
     {
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
         try {
-            $result = $this->_object->parseFromDataString($dataString);
+            $result = $this->_object->parseFromDataString($data);
+            $this->assertTrue(is_array($result));
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
+        }
+    }
+    
+    /**
+     * @dataProvider providerTestParseFromInvalidDataString
+     */
+    public function testParseFromInvalidDataString($fileName)
+    {
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+        
+        try {
+            $result = $this->_object->parseFromDataString($data);
+            
+            $this->fail('Parser test should fail.');
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            
         }
     }
     
@@ -190,10 +238,28 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
                     $fileName = $file->getFileName();
                     
                     if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $fileHandle = fopen(self::SYNTAX_TEST_DIR . $fileName, 'r');
-                        $data = fread($fileHandle, filesize(self::SYNTAX_TEST_DIR . $fileName));
-                        fclose($fileHandle);
-                        $dataArray[] = array($data);
+                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    }
+                }
+            }
+        }
+        
+        return $dataArray;
+    }
+    
+    public function providerTestParseFromInvalidDataString()
+    {
+        $dataArray = array();
+        
+        if (is_readable(self::SYNTAX_INVALID_TEST_DIR)) {
+            $dirIterator = new DirectoryIterator(self::SYNTAX_INVALID_TEST_DIR);
+            
+            foreach ($dirIterator as $file) {
+                if (!$file->isDot() && !$file->isDir()) {
+                    $fileName = $file->getFileName();
+                    
+                    if ((substr($fileName, -4) === '.rdf') && is_readable(self::SYNTAX_INVALID_TEST_DIR . $fileName)) {
+                        $dataArray[] = array((self::SYNTAX_INVALID_TEST_DIR . $fileName));
                     }
                 }
             }

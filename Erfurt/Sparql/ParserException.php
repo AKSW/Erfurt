@@ -42,4 +42,9 @@ class Erfurt_Sparql_ParserException extends Erfurt_Exception
 		echo "at token: ".$this->tokenPointer;
 		if ($pre) print '</pre>';
 	}
+
+    public function __toString()
+    {
+        return $this->display(false);
+    }
 }

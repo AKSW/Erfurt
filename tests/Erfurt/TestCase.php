@@ -129,11 +129,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsVirtuoso()
     {
+        $this->markTestNeedsTestConfig();
+        $this->_testConfig->store->backend = 'virtuoso';
         $this->markTestNeedsDatabase();
-        
-        if ($this->_testConfig->store->backend !== 'virtuoso') {
-            $this->markTestSkipped();
-        }
     }
     
     public function markTestNeedsZendDb()

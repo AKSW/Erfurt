@@ -218,7 +218,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      * Format depends on $resultform parameter.
      */
     public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') 
-    {
+    {   
         $this->query = $query;
 
         require_once 'Erfurt/Sparql/EngineDb/QuerySimplifier.php';
@@ -304,7 +304,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 #var_dump($nLimit, $nOffset);
-#echo $strSql;exit;
+#echo $strSql;
         if ($strSql === '()') {
             return array();
         }
@@ -316,7 +316,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         } else {
             $ret = $this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
         }
-#var_dump($ret->fetchAll());exit;
+
         return $ret->fetchAll();
     }
 

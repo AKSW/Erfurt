@@ -52,6 +52,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $this->_data = $dataString;
         xml_parse($xmlParser, $dataString);
         
+        if (xml_get_error_code($xmlParser) !== 0) {
+            throw new Erfurt_Syntax_RdfParserException(
+                'Parsing failed: ' . xml_error_string(xml_get_error_code($xmlParser))
+            );
+        }
+        
         return $this->_statements;
     }
     
@@ -194,10 +200,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     protected function _addNamespacesToStore()
     {
         $erfurtNamespaces = Erfurt_App::getInstance()->getNamespaces();
-        
         foreach ($this->_namespaces as $ns => $prefix) {
             try {
-                $erfurtNamespaces->addNamespacePrefix($this->_graphUri, $prefix, $ns, $this->_useAc);
+                $erfurtNamespaces->addNamespacePrefix($this->_graphUri, $ns, $prefix);
             } catch (Erfurt_Namespaces_Exception $e) {
                 // We need to catch the store exception, for the namespace component throws exceptions in case a prefix
                 // already exists.
@@ -209,17 +214,19 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected function _startElement($parser, $name, $attrs)
     {
+        if (strpos($name, ':') === false) {
+            throw new Erfurt_Syntax_RdfParserException('Invalid element name: ' . $name . '.');
+        } 
+        
         if ($name === EF_RDF_NS.'RDF') {
             if (isset($attrs[(EF_XML_NS . 'base')])) {
                 $this->_baseUri = $attrs[(EF_XML_NS . 'base')];
             }
             return;
         }
-                
-        $this->_rdfElementParsed = true;
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
-        if ((count($this->_data) > $idx+2) && ($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
+        if (($idx >= 0) && ($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
             $this->_currentElementIsEmpty = true;
         } else {
             $this->_currentElementIsEmpty = false;

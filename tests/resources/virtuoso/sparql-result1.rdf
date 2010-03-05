@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rs="http://www.w3.org/2005/sparql-results#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <rs:results rdf:nodeID="rset">
+        <rs:result rdf:nodeID="sol193">
+            <rs:binding rdf:nodeID="sol193-0" rs:name="__resource">
+                <rs:value rdf:resource="http://localhost/OntoWiki/Config/"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol193-1" rs:name="property">
+                <rs:value rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+            </rs:binding>
+            <rs:binding rdf:nodeID="sol193-2" rs:name="value">
+                <rs:value>OntoWiki System Configuration</rs:value>
+            </rs:binding>
+        </rs:result>
+    </rs:results>
+</rdf:RDF>

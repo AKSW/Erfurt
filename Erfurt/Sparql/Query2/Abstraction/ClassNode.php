@@ -97,11 +97,11 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
         }
         
         if(!is_string($name)){
-            throw new RuntimeException('Argument 4 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addShownPropertyHelper must be an instance of string, instance of '.typeHelper($predicate).' given');
+            throw new RuntimeException('Argument 4 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addShownPropertyHelper must be an instance of string, instance of '.typeHelper($name).' given');
         }
         
         if(!is_bool($inverse)){
-            throw new RuntimeException('Argument 5 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addShownPropertyHelper must be an instance of bool, instance of '.typeHelper($predicate).' given');
+            throw new RuntimeException('Argument 5 passed to Erfurt_Sparql_Query2_Abstraction_ClassNode::addShownPropertyHelper must be an instance of bool, instance of '.typeHelper($inverse).' given ('.$inverse.')');
         }
         
         $optionalpart = new Erfurt_Sparql_Query2_OptionalGraphPattern();
@@ -118,10 +118,19 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
             
         $optionalpart->addElement($triple);
         $query->getWhere()->addElement($optionalpart);
-        
+
+        /* filtered now in php
+          $filter = new Erfurt_Sparql_Query2_Filter(
+            new Erfurt_Sparql_Query2_UnaryExpressionNot(
+                new Erfurt_Sparql_Query2_isBlank($var)
+            )
+        );*/
+
+        //$optionalpart->addElement($filter);
+
         $query->addProjectionVar($var);
         
-        return array('optional' => $optionalpart, 'var' => $var);
+        return array('optional' => $optionalpart, 'var' => $var, 'filter' => null);
     }
     
     public function addLink($predicate, Erfurt_Sparql_Query2_Abstraction_ClassNode $target){

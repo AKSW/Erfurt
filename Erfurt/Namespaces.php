@@ -46,7 +46,7 @@ class Erfurt_Namespaces
     protected $_namespaces = array();
     
     /**
-     * Hasg table of names not to be used as prefixes.
+     * Hash table of names not to be used as prefixes.
      * @var array
      */
     protected $_reservedNames = array();
@@ -105,6 +105,9 @@ class Erfurt_Namespaces
         // safety
         $prefix    = (string)$prefix;
         $namespace = (string)$namespace;
+        
+        //lowercase prefix always (for best compatibility)
+        $prefix = strtolower($prefix);
         
         $graphPrefixes = $this->getNamespacesForGraph($graph);
         

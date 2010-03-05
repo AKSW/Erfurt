@@ -22,8 +22,8 @@
  * @subpackage app
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_App 
-{   
+class Erfurt_App
+{
     // ------------------------------------------------------------------------
     // --- Class constants ----------------------------------------------------
     // ------------------------------------------------------------------------
@@ -551,8 +551,8 @@ class Erfurt_App
      * 
      * @return Zend_Cache_Core
      */
-    public function getCache() 
-    {    
+    public function getCache()
+    {
         if (null === $this->_cache) {
             $config = $this->getConfig();
             
@@ -754,7 +754,6 @@ class Erfurt_App
     {
         if (null === $this->_queryCache) {
             $config = $this->getConfig();
-            require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
             require_once 'Erfurt/Cache/Frontend/QueryCache.php';
             $this->_queryCache = new Erfurt_Cache_Frontend_QueryCache();
             
@@ -952,7 +951,7 @@ class Erfurt_App
             }
         }
 
-        // merge with injected config iff given
+        // merge with injected config if given
         if (null !== $config) {
             try {
                 $this->_config->merge($config);
@@ -1059,16 +1058,15 @@ class Erfurt_App
             if (!isset($config->cache->query->enable) || ((boolean)$config->cache->query->enable === false)) {
                 require_once 'Erfurt/Cache/Backend/QueryCache/Null.php';
                 $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Null();
-            } 
-            // cache is enabled
-            else {
+            } else {
+                // cache is enabled
                 // check for the cache type and throw an exception if cache type is not set
                 if (!isset($config->cache->query->type)) {
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('Cache type is not set in config.'); 
-                } 
-                else {
+                } else {
                     // check the type an whether type is supported
+                    
                     switch (strtolower($config->cache->query->type)) {
                         case 'database':
                             require_once 'Erfurt/Cache/Backend/QueryCache/Database.php';
@@ -1078,6 +1076,7 @@ class Erfurt_App
 #                            require_once 'Erfurt/Cache/Backend/QueryCache/File.php';
 #                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_File();
 #                            break;
+#
 #                       case 'memory':
 #                            require_once 'Erfurt/Cache/Backend/QueryCache/Memory.php';
 #                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Memory();
@@ -1106,8 +1105,8 @@ class Erfurt_App
             define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
 
             // Update the include path, such that libraries like e.g. Zend are available.  
-            $include_path  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
-            set_include_path($include_path);
+            $includePath  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
+            set_include_path($includePath);
         }
 
         // Check whether Zend is loaded with the right version.

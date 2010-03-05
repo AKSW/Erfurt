@@ -11,7 +11,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id: NumericLiteral.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
-class Erfurt_Sparql_Query2_NumericLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
+class Erfurt_Sparql_Query2_NumericLiteral extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
     protected $value;
     
@@ -37,6 +37,28 @@ class Erfurt_Sparql_Query2_NumericLiteral implements Erfurt_Sparql_Query2_GraphT
     }
     public function __toString() {    
         return $this->getSparql();
+    }
+
+        /**
+     * setValue
+     * @param string $val
+     * @return Erfurt_Sparql_Query2_NumricLiteral $this
+     */
+    public function setValue($val) {
+        if (is_numeric($val)) {
+            $this->value = $val;
+        } else {
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_NumericLiteral::setValue must be numeric, instance of '.typeHelper($val).' given');
+        }
+        return $this;
+    }
+
+    /**
+     * getValue
+     * @return string the value of the literal
+     */
+    public function getValue() {
+        return $this->value;
     }
 }
 ?>

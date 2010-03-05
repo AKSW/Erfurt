@@ -65,7 +65,7 @@
     <sysont:denyAccess rdf:resource="&SysOnt;Rollback"/>
     <sysont:denyModelView rdf:resource="&LocalConfig;"/>
     <sysont:denyModelView rdf:resource="&SysOnt;"/>
-    <sysont:denyModelView rdf:resource="&SysBase;"/>
+    <sysont:grantModelView rdf:resource="&SysBase;"/>
     <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
     <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
   </rdf:Description>
@@ -87,6 +87,9 @@
 
   <sysont:Model rdf:about="&SysOnt;">
 		    <sysont:hidden rdf:datatype="&xsd;boolean">true</sysont:hidden>
+  </sysont:Model>
+  <sysont:Model rdf:about="&SysOnt;">
+		    <sysont:isLarge rdf:datatype="&xsd;boolean">true</sysont:isLarge>
   </sysont:Model>
 
 	<!-- Statement Selector TestCase -->

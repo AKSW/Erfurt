@@ -321,7 +321,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             case 'count':
                 $arStrSelect = array('SELECT COUNT(*) as count');
                 break;
-
+            case 'count-distinct':
+                $arStrSelect = array('SELECT COUNT(DISTINCT(t0.s)) as count');
+                break;
             default:
                 require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
@@ -332,15 +334,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arSqls = array();
         foreach ($arStrSelect as $nUnionCount => $arSelectPart) {
             $arSqls[] = array(
-                'select'    => $arStrSelect[$nUnionCount],
+                'select'    => $arSelectPart,
                 'from'      => ' FROM '  . implode(' '    , $this->removeNull($arFrom[$nUnionCount])),
                 'where'     => ' WHERE ' . $this->fixWhere(
                             implode(' '  , $this->removeNull($arWhere[$nUnionCount]))
                 )
             );
         }
-        
-
         
         return $arSqls;
     }//function createSql()

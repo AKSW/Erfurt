@@ -11,7 +11,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id: BooleanLiteral.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
-class Erfurt_Sparql_Query2_BooleanLiteral implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
+class Erfurt_Sparql_Query2_BooleanLiteral extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_GraphTerm, Erfurt_Sparql_Query2_PrimaryExpression
 {
 
     protected $value;
