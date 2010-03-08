@@ -49,7 +49,11 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
             case 'select distinct':
                 $result = array();
                 $result['head'] = $this->_getResultHeader();
+                
+                // incorrect format (used by erfurt for a long time so this is legacy stuff)
                 $result['bindings'] = $this->_getVariableArrayFromRecordSets($arRecordSets, $strResultForm, true);
+                // correct format (see http://www.w3.org/TR/rdf-sparql-json-res/)
+                $result['results']['bindings'] = $this->_getVariableArrayFromRecordSets($arRecordSets, $strResultForm, true);
 
                 return $result;
                 break;
