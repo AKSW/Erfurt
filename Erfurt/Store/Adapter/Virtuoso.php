@@ -104,17 +104,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             exit;
         }
         
-        // options
         extract($adapterOptions);
-        $this->_user = (string)$username;
+        
+        // determine connection function
+        if (isset($use_persistent_connection) && (boolean)$use_persistent_connection === true) {
+            $odbcConnectFunction = 'odbc_pconnect';
+        } else {
+            $odbcConnectFunction = 'odbc_connect';
+        }
         
         // try to connect
         if (function_exists('__virt_internal_dsn')) {
             // via Virtuoso hosting
-            $this->_connection = @odbc_connect(__virt_internal_dsn(), null, null);
-        } else {
+            $this->_connection = @call_user_func($odbcConnectFunction, __virt_internal_dsn(), null, null);
+        } else {            
             // via php_odbc
-            $this->_connection = @odbc_connect($dsn, $this->_user, $password);
+            $this->_connection = @call_user_func($odbcConnectFunction, (string)$dsn, (string)$username, (string)$password);
+            
+            $this->_user = (string)$username;
         }
         
         // success?
