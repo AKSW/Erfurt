@@ -1008,14 +1008,31 @@ class Erfurt_Store
             } 
             
             if ($locator === Erfurt_Syntax_RdfParser::LOCATOR_URL) {
-                $flag = false;
-                // try content-type
+                $headers['Location'] = true;
+                
+                // set default content-type header
                 stream_context_get_default(array(
                     'http' => array(
-                        'header' => "Accept: application/rdf+xml, appliaction/json, text/rdf+n3, text/plain"
+                        'header' => 'Accept: application/rdf+xml, application/json, text/rdf+n3, text/plain', 
+                        'max_redirects' => 1 // no redirects as we need the 303 URI
                 )));
-
-                $headers = @get_headers($data, 1);
+                
+                do { // follow redirects
+                    $flag       = false;
+                    $isRedirect = false;
+                    $headers    = @get_headers($data, 1);
+                    
+                    if (is_array($headers)) {
+                        $http = $headers[0];
+                        
+                        if (false !== strpos($http, '303')) {
+                            $data = (string)$headers['Location'];
+                            $isRedirect = true;
+                        }
+                    }
+                } while ($isRedirect);
+                
+                // restore default empty headers
                 stream_context_get_default(array(
                     'http' => array(
                         'header' => ""
@@ -1040,6 +1057,10 @@ class Erfurt_Store
                     } else if (substr($ct, 0, strlen('application/json')) === 'application/json') {
                         $type = 'rdfjson';
                         $flag = true;
+                    } else {
+                        // RDF/XML is default
+                        $type = 'rdfxml';
+                        $flag = true;
                     }
                 } 
                 
@@ -1055,10 +1076,6 @@ class Erfurt_Store
                     }
                 }
             }
-        }
-
-        if($type == "auto"){
-            return array(); //will throw an error otherwise and probably the file doesnt exist - nothing to import
         }
 
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {

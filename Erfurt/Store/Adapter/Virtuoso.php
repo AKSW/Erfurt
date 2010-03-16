@@ -458,9 +458,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             case Erfurt_Syntax_RdfParser::LOCATOR_URL:
                 // do some type guesswork
                 if ( 
-                    substr($url, -2) == 'n3' ||
-                    substr($url, -2) == 'nt' ||
-                    substr($url, -3) == 'ttl'
+                    substr($data, -2) == 'n3' ||
+                    substr($data, -2) == 'nt' ||
+                    substr($data, -3) == 'ttl'
                 ) {
                     $type = 'n3';
                 }
