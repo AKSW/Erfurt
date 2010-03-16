@@ -153,12 +153,17 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         foreach ($query->getFromPart() as $from) {
             if (isset($arModelIdMapping[$from])) {
                 $this->arModelIds[] = $arModelIdMapping[$from]['modelId'];
+            } else {
+                $this->arModelIds[] = -1;
             }
         }    
-                
+        
         foreach ($query->getFromNamedPart() as $from) {
             if (isset($arModelIdMapping[$from])) {
                 $this->arModelIds[] = $arModelIdMapping[$from]['modelId'];
+            } else {
+                $this->arModelIds[] = -1;
+                
             }
         }
     }
