@@ -137,7 +137,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
      * @param string $xmlSparqlResults The Virtuoso RDF/XML SPARQL result
      * @return array
      */
-    public function toArray($xmlSparqlResults)
+    public function convert($xmlSparqlResults)
     {        
         // parse the data
         if (xml_parse($this->_parser, (string)$xmlSparqlResults) !== 1) {

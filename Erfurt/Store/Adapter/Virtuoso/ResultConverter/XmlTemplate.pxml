@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<sparql xmlns="http://www.w3.org/2005/sparql-results#">
+  
+  <head>
+  <?php foreach ($this->head->vars as $var): ?>
+    <variable name="<?php echo $var ?>" />
+  <?php endforeach; // $var ?>
+  </head>
+  
+  <results>
+  <?php foreach ($this->results as $bindings): ?>
+    <?php foreach ($bindings as $binding): ?>
+      <result>
+      <?php foreach ($binding as $key => $varSpec): ?>
+        <binding name="<?php echo $key ?>">            
+        <?php if ($varSpec['type'] == 'uri'): ?>
+          <uri><?php echo $varSpec['value'] ?></uri>
+        <?php elseif ($varSpec['type'] == 'literal'):   ?>
+          <literal
+          <?php if (isset($varSpec['datatype'])): ?>
+            datatype="<?php echo $varSpec['datatype'] ?>"
+          <?php elseif (isset($varSpec['xml:lang'])): ?>
+            xml:lang="<?php echo $varSpec['xml:lang'] ?>"
+          <?php endif; ?>><?php echo $varSpec['value'] ?></literal>
+        <?php endif; ?>
+        </binding>
+      <?php endforeach; // $varSpec ?>
+      </result>
+    <?php endforeach; // $binding ?>
+  <?php endforeach; // $bindings ?>
+  </results>
+  
+</sparql>

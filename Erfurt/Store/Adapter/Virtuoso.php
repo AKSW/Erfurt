@@ -568,12 +568,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             
             // convert XML result
             if (null !== $converter) {
-                $converter = ucfirst(strtolower($converter));
-                $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $converter;
-                
-                require_once str_replace('_', '/', $converterClass) . '.php';
-                $converter = new $converterClass();
-                $result = $converter->toArray($result);
+                foreach ((array) $converter as $currentConverter) {
+                    $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;
+                    
+                    require_once str_replace('_', '/', $converterClass) . '.php';
+                    $converter = new $converterClass();
+                    $result = $converter->convert($result);
+                }
             }
             
             // encode as JSON string
@@ -932,19 +933,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $queryConfigs = array(
             'json' => array(
                 'singleField' => true, 
-                'converter'   => 'extended',
+                'converter'   => 'Extended',
                 'jsonEncode'  => true, 
                 'queryPrefix' => 'define output:format "RDF/XML"'
             ), 
             'extended' => array(
                 'singleField' => true, 
-                'converter'   => 'extended',
+                'converter'   => 'Extended',
                 'jsonEncode'  => false, 
                 'queryPrefix' => 'define output:format "RDF/XML"'
             ), 
             'xml' => array(
                 'singleField' => true, 
-                'converter'   => null,
+                'converter'   => array('Extended', 'SparqlResultsXml'),
                 'jsonEncode'  => false, 
                 'queryPrefix' => 'define output:format "RDF/XML"'
             ), 
