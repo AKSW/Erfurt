@@ -285,14 +285,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $arConstraints = $graphPattern->getConstraints();
 
             if ($arConstraints != null) {
-
-                foreach ($arConstraints as $constraint) {
-                    $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
-                     .= $filterGen->createFilterSql(
-                        $constraint->getTree(),
-                        $graphPattern->getOptional() !== null,
-                        $this->nUnionCount
-                    );
+                if(isset($arWhere[$this->nUnionCount])){
+                    foreach ($arConstraints as $constraint) {
+                        $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
+                         .= $filterGen->createFilterSql(
+                            $constraint->getTree(),
+                            $graphPattern->getOptional() !== null,
+                            $this->nUnionCount
+                        );
+                    }
                 }
             }
             ++$this->nGraphPatternCount;
