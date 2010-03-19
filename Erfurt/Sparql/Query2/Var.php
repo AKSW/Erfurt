@@ -81,7 +81,7 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ElementHelper implem
      * getVarLabelType
      * @return string var label ('?' or '$')
      */
-    public function getVarLabelType($ntype) {
+    public function getVarLabelType() {
         return $this->varLabelType;
     }
     

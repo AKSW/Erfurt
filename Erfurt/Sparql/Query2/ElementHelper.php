@@ -92,7 +92,7 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
         //trivial cases
         if ($this === $obj) return true;
 
-        if (!method_exists($obj, "getID")) {
+        if (!method_exists($obj, 'getID')) {
             return false;
         }
 

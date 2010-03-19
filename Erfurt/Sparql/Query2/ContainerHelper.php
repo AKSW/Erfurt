@@ -58,7 +58,8 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
 
     /**
      * removeElement
-     * @param int $i index of the element
+     * @param Erfurt_Sparql_Query2_ElementHelper $toDelete
+     * @param boolean $equal
      * @return Erfurt_Sparql_Query2_ContainerHelper $this
      */
     public function removeElement($toDelete, $equal = false) {

@@ -19,12 +19,19 @@ class Erfurt_Sparql_Query2_GraphClause extends Erfurt_Sparql_Query2_ElementHelpe
     /**
      * @param Erfurt_Sparql_Query2_IriRef $iri
      */
-    public function __construct(Erfurt_Sparql_Query2_IriRef $iri, $named = false) {
+    public function __construct($iri, $named = false) {
+        if(is_string($iri)){
+            $iri = new Erfurt_Sparql_Query2_IriRef($iri);
+        }
+        if(!($iri instanceof Erfurt_Sparql_Query2_IriRef)){
+            throw new RuntimeException("Argument 1 passed to Erfurt_Sparql_Query2_GraphClause::__construct must be instance of Erfurt_Sparql_Query2_IriRef or string", E_USER_ERROR);
+        }
         $this->graphIri = $iri;
         
-        if (is_bool($named))
+        if (is_bool($named)){
             $this->named = $named;
-            
+        }
+
         parent::__construct();
     }
     
@@ -42,8 +49,9 @@ class Erfurt_Sparql_Query2_GraphClause extends Erfurt_Sparql_Query2_ElementHelpe
      * @return Erfurt_Sparql_Query2_GraphClause $this
      */
     public function setNamed($bool = true) {
-        if (is_bool($bool))
+        if (is_bool($bool)){
             $this->named = $bool;
+        }
         return $this; // for chaining
     }
     

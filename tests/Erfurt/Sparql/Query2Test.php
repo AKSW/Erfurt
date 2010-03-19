@@ -8,7 +8,7 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
- require_once 'Erfurt/TestCase.php';
+require_once 'Erfurt/TestCase.php';
 
 class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 {
@@ -40,10 +40,11 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 
     /**
      * copy&pasted from the old "test"-script
-     * no real unit test yet
+     * no real unit test, just a use lot of classes so errors reveal themselves :)
      */
-    public function testBuilding ()
+    public function old1 ()
     {
+
         try {
             //test graph pattern
             $query = new Erfurt_Sparql_Query2();
@@ -166,6 +167,65 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
             //$query->getConstructTemplate()->addElement(new Erfurt_Sparql_Query2_Triple($s, $prefixedUri1, $name));
 
             //echo $query->getSparql();
+            
+            $usagebefore = memory_get_usage();
+            //$query2 = new Erfurt_Sparql_Query2();
+            //for($i=0;$i<1000; $i++){
+            //    ${"x".$i} = "new";
+            //}
+            $x = "new";
+            $usageafter = memory_get_usage();
+            echo "used " . ($usageafter - $usagebefore) . " bytes for 1 new var";
+        } catch(Exception $e){
+            throw $e;
+            $this->assertTrue(false);
+        }
+    }
+    
+
+    public function old2 ()
+    {function microtime_float()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
+    }
+        try {
+            $timesum = (float) 0;
+            $memorysum = (float) 0;
+            for($i=0;$i<100; $i++){
+                $usagebefore = memory_get_usage(true);
+                $timebefore = microtime_float();
+
+                //test graph pattern
+                $query = new Erfurt_Sparql_Query2();
+                $iri3 = new Erfurt_Sparql_Query2_IriRef('http://example.com/');
+                $exPrefix =new Erfurt_Sparql_Query2_Prefix('abc',$iri3);
+                $prefixedUri1 = new Erfurt_Sparql_Query2_IriRef('xyz', $exPrefix);
+                $var =  new Erfurt_Sparql_Query2_Var('var');
+                $triple = new Erfurt_Sparql_Query2_Triple($var, new Erfurt_Sparql_Query2_Var("p"), new Erfurt_Sparql_Query2_Var("o"));
+
+                // Query building
+                $query->setBase(new Erfurt_Sparql_Query2_IriRef('http://base.com'));
+                $query->addPrefix($exPrefix);
+                $query->addFrom($prefixedUri1);
+                $query->addProjectionVar($var);
+                $query->setLimit(10);
+                $query->setOffset(20);
+                $query->getOrder()->add($var);
+                $query->addElement($triple);
+
+                $timeafter = microtime_float();
+                $timediff = $timeafter - $timebefore;
+                $usageafter = memory_get_usage(true);
+                $usagediff = $usageafter - $usagebefore;
+                
+                $memorysum += $usagediff;
+                $timesum += $timediff;
+                //echo "used " . ($usageafter - $usagebefore) . " bytes and " . $timediff . " sec.";
+                echo $usagediff."\n";
+                
+            }
+            echo "$i used avg ".($memorysum/$i) . " bytes and avg " .(number_format($timesum/$i, 9))." seconds";
         } catch(Exception $e){
             throw $e;
             $this->assertTrue(false);
@@ -174,7 +234,9 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 
     public function testProjectionVars(){
         $var = new Erfurt_Sparql_Query2_Var('s');
+        $this->assertFalse($this->query->hasProjectionVars());
         $this->query->addProjectionVar($var);
+        $this->assertTrue($this->query->hasProjectionVars());
         $this->assertContains($var, $this->query->getProjectionVars());
         $vars = $this->query->getProjectionVars();
         $this->assertTrue( count($vars) == 1 );
@@ -188,6 +250,74 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
         $this->query->removeAllProjectionVars();
         $vars = $this->query->getProjectionVars();
         $this->assertTrue(empty($vars));
+    }
+
+    public function testFroms(){
+        $from = new Erfurt_Sparql_Query2_GraphClause("http://test.com");
+        $this->query->addFrom($from);
+        $this->assertTrue($this->query->hasFroms());
+        $this->assertContains($from, $this->query->getFroms());
+
+        $froms = $this->query->getFroms();
+        $this->assertTrue( count($froms) == 1 );
+        $this->assertEquals($from, $froms[0]);
+
+        $this->query->removeFroms();
+        $froms = $this->query->getFroms();
+        $this->assertTrue(empty($froms));
+
+        $this->query->addFrom($from);
+        $this->query->removeFrom(0);
+        $froms = $this->query->getFroms();
+        $this->assertTrue(empty($froms));
+    }
+
+    public function testPrefixes(){
+        $prefix = new Erfurt_Sparql_Query2_Prefix("pre", "http://test.com");
+        $this->query->addPrefix($prefix);
+        $this->assertTrue($this->query->hasPrefix());
+        $this->assertContains($prefix, $this->query->getPrefixes());
+
+        $prefixes = $this->query->getPrefixes();
+        $this->assertTrue( count($prefixes) == 1 );
+        $this->assertEquals($prefix, $prefixes[0]);
+
+        $this->query->removePrefixes();
+        $prefixes = $this->query->getPrefixes();
+        $this->assertTrue(empty($prefixes));
+
+        $this->query->addPrefix($prefix);
+        $this->query->removePrefix(0);
+        $prefixes = $this->query->getPrefixes();
+        $this->assertTrue(empty($prefixes));
+    }
+
+    public function testBase(){
+        $base = new Erfurt_Sparql_Query2_IriRef("http://example.com");
+        $this->query->setBase($base);
+        $this->assertEquals($base, $this->query->getBase());
+        $this->assertTrue($this->query->hasBase());
+        $this->query->removeBase();
+        $this->assertFalse($this->query->hasBase());
+    }
+
+    public function testDistinctReduced(){
+        $this->assertFalse($this->query->isReduced());
+        $this->assertFalse($this->query->isDistinct());
+
+        $this->query->setDistinct(false);
+        $this->assertFalse($this->query->isDistinct());
+
+        $this->query->setReduced(false);
+        $this->assertFalse($this->query->isReduced());
+
+        $this->query->setDistinct();
+        $this->assertTrue($this->query->isDistinct());
+        $this->assertFalse($this->query->isReduced());
+        
+        $this->query->setReduced();
+        $this->assertTrue($this->query->isReduced());
+        $this->assertFalse($this->query->isDistinct());
     }
 }
 ?>

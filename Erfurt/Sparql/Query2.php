@@ -61,7 +61,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     /**
      * @staticvar int id 
      */
-    public static $idCounter = 0;
+    protected static $idCounter = 0;
     protected $idCounterSerialized;
     
     /**
@@ -74,15 +74,17 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         return self::$idCounter++;
     }
     
-    public function __construct()
+    public function __construct($type = null)
     {
+        parent::__construct();
         $this->order = new Erfurt_Sparql_Query2_OrderClause();
         $this->where = new Erfurt_Sparql_Query2_GroupGraphPattern;
-        $type = self::typeSelect;
-        if (func_num_args()>0) {
-            $type = func_get_arg(0);
+
+        if ($type !== null) {
+            $this->setQueryType($type);
+        } else {
+            $this->setQueryType(self::typeSelect);
         }
-        $this->setQueryType($type);
     }
     
     public function __clone()
@@ -517,7 +519,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      * getBase
      * @return Erfurt_Sparql_Query2_IriRef base
      */
-    public function getBase($base)
+    public function getBase()
     {
         return $this->base;
     }
@@ -536,7 +538,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      * @param Erfurt_Sparql_Query2_GraphClause|Erfurt_Sparql_Query2_IriRef|string $from
      * @return Erfurt_Sparql_Query2 $this
      */
-    public function addFrom($from, $name = false)
+    public function addFrom($from, $named = false)
     {
         if (!(
                 $from instanceof Erfurt_Sparql_Query2_GraphClause 
@@ -547,7 +549,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
             throw new RuntimeException('Argument 1 passed to '.
                 'Erfurt_Sparql_Query2::addFrom must be an instance of '.
                 'Erfurt_Sparql_Query2_GraphClause or Erfurt_Sparql_Query2_IriRef'.
-                ' or string, instance of '.typeHelper($setNamed).' given');
+                ' or string, instance of '.typeHelper($from).' given');
         }
         
         $named = false;
@@ -621,9 +623,9 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
                 'instance of '.typeHelper($needle).' given');
         }
         $new = array();
-        for ($i=0;$i<count($this->froms); $i++) {
-            if ($i != $needle)
-                $new[] = $this->froms[$i];
+        foreach ($this->froms as $key => $from) {
+            if ($from->equals($needle) && $key !== $needle)
+                $new[] = $from;
         }
         
         $this->froms = $new;
@@ -785,17 +787,49 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      * @param Erfurt_Sparql_Query2_Prefix $var 
      * @return Erfurt_Sparql_Query2 $this
      */
-    public function removePrefix(Erfurt_Sparql_Query2_Prefix $pre)
+    public function removePrefix($needle)
     {
         $new = array();
         
-        foreach ($this->prefixes as $compare) {
-            if (!$compare->equals($pre)) {
+        foreach ($this->prefixes as $key => $compare) {
+            if (!$compare->equals($needle) && $key !== $needle) {
                 $new[] = $compare;
             } 
         }
         $this->prefixes = $new;
         return $this; //for chaining
+    }
+
+    /**
+     * getPrefixes
+     * @return array array of prefixes
+     */
+    public function getPrefixes()
+    {
+        return $this->prefixes;
+    }
+    /**
+     * getPrefix
+     * @param $needle int
+     * @return Erfurt_Sparql_Query2_Prefix
+     */
+    public function getPrefix($needle)
+    {
+        return $this->prefixes[$needle];
+    }
+
+    /**
+     * getPrefixes
+     * @return Erfurt_Sparql_Query2
+     */
+    public function removePrefixes()
+    {
+        $this->prefixes = array();
+        return $this;
+    }
+
+    public function hasPrefix(){
+        return count($this->prefixes) > 0;
     }
     
     /**
@@ -806,7 +840,11 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     {
         return $this->projectionVars;
     }
-    
+
+    public function hasProjectionVars(){
+        return count($this->projectionVars) > 0;
+    }
+
     /**
      * getVars
      * @return array array of Erfurt_Sparql_Query2_Var - all vars used in the where pattern
