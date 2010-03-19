@@ -142,5 +142,17 @@ class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_ElementHelper
         }
         return $this;
     }
+
+    public function isPlain(){
+        return $this->mode == 0;
+    }
+
+    public function isLangTagged(){
+        return $this->mode == 1;
+    }
+
+    public function isTyped(){
+        return $this->mode == 2;
+    }
 }
 ?>
