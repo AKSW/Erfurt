@@ -118,7 +118,14 @@ class Erfurt_Store
      * Call with function to initialize
      * @var Zend Logger
      */
-	protected $_queryLogger = null;
+    protected $_queryLogger = null;
+
+    /**
+     * Special zend logger, which protocolls erfurt messages
+     * Call with function to initialize
+     * @var Zend Logger
+     */
+    protected $_erfurtLogger = null;
 	
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
@@ -1169,7 +1176,7 @@ class Erfurt_Store
     {        
         // add owl:imports
         foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->getImportsClosure($fromGraphUri, $useAc) as $importedGraphUri) {
+            foreach ($this->getImportsClosure($fromGraphUri, true, $useAc) as $importedGraphUri) {
                 $queryObject->addFrom($importedGraphUri);
             }
         }
@@ -1233,20 +1240,16 @@ class Erfurt_Store
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryObject);
         }
-        if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)){
+        if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)) {
             throw new Exception("Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string", 1);
         }
 
-        //clone
-        if ($queryObject instanceof Erfurt_Sparql_Query2){ //always clone?
-            $queryObject = clone $queryObject; // we dont want to modify the query itself - could be used elsewhere, could have side-effects
-        }
-        $debug = false;
-        if(strstr((string) $queryObject, "property")){
-            //$debug = true;
-        }
-        if($debug){
-             echo "before : " .htmlentities((string) $queryObject)."<br/>";
+        /*
+         * clone the Query2 Object to not modify the original one
+         * could be used elsewhere, could have side-effects
+         */
+        if ($queryObject instanceof Erfurt_Sparql_Query2) { //always clone?
+            $queryObject = clone $queryObject;
         }
 
         //get all models
@@ -1255,23 +1258,22 @@ class Erfurt_Store
         foreach ($allpre as $key => $true) {
             $all[] = array('uri' => $key, 'named' => false);
         }
-        if($debug) print_r($all);
-        
+
         //get available models (readable)
         $available = array();
-        if($options[STORE_USE_AC] === true){
+        if ($options[STORE_USE_AC] === true) {
             $availablepre = $this->getAvailableModels(true);
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         } else {
-            $available =$all;
+            $available = $all;
         }
 
         // examine froms (for access control and imports) in 5 steps
         // 1. extract froms for easier handling
         $froms = array();
-        if ($queryObject instanceof Erfurt_Sparql_Query2){
+        if ($queryObject instanceof Erfurt_Sparql_Query2) {
             foreach ($queryObject->getFroms() as $graphClause) {
                 $uri = $graphClause->getGraphIri()->getIri();
                 $froms[] = array('uri' => $uri, 'named' => $graphClause->isNamed());
@@ -1284,32 +1286,35 @@ class Erfurt_Store
                 $froms[] = array('uri' => $graphClause, 'named' => true);
             }
         }
+
         // 2. no froms in query -> froms = availableModels
-        if(empty($froms)){
+        if (empty($froms)) {
             $froms = $all;
-        } else {
-            // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
-            if ($options[STORE_USE_AC] === true) {
-                $froms = array_intersect($froms, $available);
-                if(empty($froms)){
-                    $noBindings = true;
-                }
+        }
+        
+        // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
+        if ($options[STORE_USE_AC] === true) {
+            $froms = $this->_maskModelList($froms, $available);
+            if (empty($froms)) {
+                $noBindings = true;
             }
         }
         
         // 4. get import closure for every remaining from
         if ($options[STORE_USE_OWL_IMPORTS] === true) {
             foreach ($froms as $from) {
-                foreach ($this->getImportsClosure($from['uri'], $options[STORE_USE_ADDITIONAL_IMPORTS], $options[STORE_USE_AC]) as $importedGraphUri) {
+                $importsClosure = $this->getImportsClosure($from['uri'], $options[STORE_USE_ADDITIONAL_IMPORTS], $options[STORE_USE_AC]);
+                foreach ($importsClosure as $importedGraphUri) {
                     $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
-                    if(in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false){
+                    if (in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false) {
                         $froms[] = $addCandidate;
                     }
                 }
             }
         }
+
         // 5. put froms back
-        if ($queryObject instanceof Erfurt_Sparql_Query2){
+        if ($queryObject instanceof Erfurt_Sparql_Query2) {
             $queryObject->setFroms(array());
             foreach ($froms as $from) {
                 $queryObject->addFrom($from['uri'], $from['named']);
@@ -1318,7 +1323,7 @@ class Erfurt_Store
              $queryObject->setFrom(array());
              $queryObject->setFromNamed(array());
              foreach ($froms as $from) {
-                if(!$from['named']){
+                if (!$from['named']) {
                     $queryObject->addFrom($from['uri']);
                 } else {
                     $queryObject->addFromNamed($from['uri']);
@@ -1329,24 +1334,21 @@ class Erfurt_Store
        // if there were froms and all got deleted due to access controll - give back empty result set
        // this is achieved by replacing the where-part with an unsatisfiable one
        // i think this is efficient because otherwise we would have to deal with result formating und variables
-       if($noBindings){
-            if($queryObject instanceof Erfurt_Sparql_SimpleQuery){
+       if ($noBindings) {
+            if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
                 $queryObject->setWherePart('{FILTER(false)}');
-            } else if ($queryObject instanceof Erfurt_Sparql_Query2){
+            } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
                 $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
                 $ggp->addFilter(false); //unsatisfiable
                 $queryObject->setWhere($ggp);
             }
-        }
-        if($debug){
-            echo "after : " .htmlentities((string) $queryObject)."<br/>";
         }
         //querying SparqlEngine or retrieving Result from QueryCache
         //TODO for query cache, please refactor
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        if (!($sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat ))){
+        if (!($sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat ))) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
@@ -1354,11 +1356,17 @@ class Erfurt_Store
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();
-                $logger->debug("SPARQL ***************** ".round((1000 * $duration),2)." msec ".(($duration >1 )?" WARNING SLOW ":"")."\n".$queryObject);
+
+                if ($duration > 1) {
+                    $slow = " WARNING SLOW ";
+                } else {
+                    $slow = "";
+                }
+
+                $logger->debug("SPARQL *****************" . round((1000 * $duration),2) . " msec " . $slow . "\n" . $queryObject);
             }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
-        if($debug) print_r($sparqlResult);
         return $sparqlResult;
     }
     
@@ -1580,6 +1588,9 @@ class Erfurt_Store
     {
         // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
         if ($useAc === false) {
+            $logger = $this->_getErfurtLogger();
+            $logger->warn("Store.php->_checkAc: Doing something without Access Controll!!!");
+            $logger->debug("Store.php->_checkAc: ModelIri: " . $modelIri . " accessType: " . $accessType);
             return true;
         } else {
             if ($this->_ac === null) {
@@ -1605,6 +1616,41 @@ class Erfurt_Store
                
         return array_intersect($modelIris, $allowedModels);
     }
+
+
+    /**
+     * This function is nearly like _filterModels, but you specify the mask and
+     * the list parameter is an 2D-Array of the format:
+     * array(
+     *     array('uri' => 'http://the.model.uri/1', 'names' => boolean),
+     *     array('uri' => 'http://the.model.uri/2', 'names' => boolean),
+     *     ...
+     * )
+     * while in _filterModels the list is a plain list of uris.
+     * We need this function because array_intersect doesn't work on 2D-Arrays.
+     * @param array $list a 2D-Array where the uris are available with $list[<index>]['uri']
+     * @param array $maskIn the mask to apply on the list of the same format as the list
+     * @return array the list witout uri missing in $maskIn
+     */
+    private function _maskModelList (array $list, array $maskIn = null) {
+        $mask = array();
+        if ($maskIn === null) {
+            foreach ($this->getAvailableModels(true) as $key => $true) {
+                $mask[] = $key;
+            }
+        } else {
+            for ($i = 0; $i < count($maskIn); $i++) {
+                $mask[] = $maskIn[$i]['uri'];
+            }
+        }
+        for ($i = 0; $i < count($list); $i++) {
+            if (array_search($list[$i]['uri'], $mask) === false) {
+                unset($list[$i]);
+            }
+        }
+        return $list;
+    }
+
     
     /**
      * Calculates the transitive closure for a given property and a set of starting nodes.
@@ -1673,7 +1719,7 @@ class Erfurt_Store
         
         return $closure;
     }
-    
+
     /**
      * Returns the query logger, lazy initialization
      *  
@@ -1685,5 +1731,16 @@ class Erfurt_Store
         }
         return $this->_queryLogger;
     }
-}
 
+    /**
+     * Returns the erfurt logger, lazy initialization
+     *
+     * @return object Zend Logger, which writes to logs/erfurt.log
+     */
+    protected function _getErfurtLogger(){
+        if(null === $this->_erfurtLogger){
+            $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
+        }
+        return $this->_erfurtLogger;
+    }
+}
