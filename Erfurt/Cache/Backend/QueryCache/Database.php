@@ -504,7 +504,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $ret = $this->_query ($query);
         
             if (!(isset($ret[0]['qid']))) {
-                $query = "INSERT INTO ef_cache_query_objectkey (qid, s) VALUES ('".$queryId."', '".$key."')" ;
+                $query = "INSERT INTO ef_cache_query_objectkey (qid, objectkey) VALUES ('".$queryId."', '".$key."')" ;
                 $this->_query ($query);
             }
         }

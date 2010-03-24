@@ -1348,7 +1348,8 @@ class Erfurt_Store
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        if (!($sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat ))) {
+        $sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat );
+        if (!is_array($sparqlResult)) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
