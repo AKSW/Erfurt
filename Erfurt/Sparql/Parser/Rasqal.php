@@ -22,8 +22,6 @@ class Erfurt_Sparql_Parser_Rasqal_Rasqal implements Erfurt_Sparql_Parser_Interfa
 	 */
 	protected $_fallback = 'sparql10';
 	
-	protected $_parseFunction = 'parse';
-	
 	protected $_toString = 'toString';
 	
 	private $_parserName = null;

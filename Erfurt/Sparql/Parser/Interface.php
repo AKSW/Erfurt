@@ -11,7 +11,7 @@
  * @category Erfurt
  * @package Sparql_Parser
  * @author Rolland Brunec <rollxx@gmail.com>
- * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2010 {@link http://aksw.org aksw}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 interface Erfurt_Sparql_Parser_Interface
