@@ -749,8 +749,7 @@ abstract class BaseRecognizer{
 		if ( $this->state->ruleMemo[$ruleIndex]==null ) {
 			$this->state->ruleMemo[$ruleIndex] = array();
 		}
-		$stopIndexI =
-		$this->state->ruleMemo[$ruleIndex][$ruleStartIndex];
+		$stopIndexI = array_key_exists($ruleStartIndex, $this->state->ruleMemo[$ruleIndex]) ? $this->state->ruleMemo[$ruleIndex][$ruleStartIndex] : null;
 		if ( $stopIndexI==null ) {
 			return self::$MEMO_RULE_UNKNOWN;
 		}
@@ -788,7 +787,7 @@ abstract class BaseRecognizer{
 	public function memoize($input, $ruleIndex, $ruleStartIndex){
 		$stopTokenIndex = $this->state->failed?self::$MEMO_RULE_FAILED:$input->index()-1;
 		if ( $this->state->ruleMemo==null ) {
-			echo("!!!!!!!!! memo array is null for ". getGrammarFileName());
+			echo("!!!!!!!!! memo array is null for ". $this->getGrammarFileName());
 		}
 		if ( $ruleIndex >= sizeof($this->state->ruleMemo) ) {
 			echo("!!!!!!!!! memo size is ".sizeof($this->state->ruleMemo).", but rule index is ".$ruleIndex);

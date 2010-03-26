@@ -3,15 +3,15 @@
 
 	class ANTLRStringStream implements CharStream {
 
-		private $p;
+		protected $p;
 		public  $line;
 		public  $charPositionInLine;
 		public  $markDepth;
 		public  $markers;
 		public  $lastMarker;
 		private $name;
-		private $data;
-		private $n;
+		protected $data;
+		protected $n;
 
 		/** Copy data in string to a local char array */
 		public function __construct($input) {
