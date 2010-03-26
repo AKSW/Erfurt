@@ -56,7 +56,8 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     boolean $result         state of the saving process true/false
     */
     public function save( $queryString, $resultFormat = "plain" , $queryResult, $duration = 0 ) {
-        if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
+
+    if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
         
             //create QueryId
             $queryId = $this->createQueryId( $queryString, $resultFormat );
@@ -99,12 +100,15 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     String  $result         Resultset of the Query or false if no result exists
     */
     public function load( $queryString, $resultFormat = "plain" ) {
+        
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
             $queryId = $this->createQueryId( $queryString, $resultFormat );
+
             $result = $this->getBackend()->load($queryId);
+
             if ($result) {
                  $result = unserialize ($result);
-               
+
                 if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
                     $this->getBackend()->incrementHitCounter($queryId);
 
@@ -113,6 +117,7 @@ class Erfurt_Cache_Frontend_QueryCache {
                 if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
                     $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
                 }
+#var_dump($result);
                 return $result;
             }
             else {

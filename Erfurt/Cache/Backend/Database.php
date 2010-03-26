@@ -18,6 +18,7 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 	public function __construct($options = array()) {
 		
 		parent::__construct($options);
+                
         $this->store = Erfurt_App::getInstance()->getStore();
 	}
 	
@@ -168,7 +169,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 	 * This method will build the database structure.
 	 */
 	private function _buildStructure() {
-
 #		$this->_query('DROP INDEX ef_cache_tag_id_index');
 #        $this->_query('DROP INDEX ef_cache_tag_name_index');
 #        $this->_query('DROP INDEX ef_cache_id_expire_index');
