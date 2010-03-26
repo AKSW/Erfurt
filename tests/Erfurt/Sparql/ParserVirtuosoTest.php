@@ -2,133 +2,55 @@
 ini_set('error_reporting', E_ALL | E_STRICT);
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
 require_once 'Erfurt/TestCase.php';
-require_once 'antlr/Php/antlr.php';
-require_once 'Erfurt/Sparql/Sparql10Lexer.php';
-require_once 'Erfurt/Sparql/Sparql10/Tokens.php';
-require_once 'Erfurt/Sparql/Sparql10Parser.php';
-ini_set("memory_limit","1G");
 
-class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
+require_once 'Erfurt/Sparql/Parser/Virtuoso.php';
+class Erfurt_Sparql_ParserVirtuosoTest extends Erfurt_TestCase
 {
     const RAP_TEST_DIR = 'resources/sparql/rap/';
     const OW_TEST_DIR = 'resources/sparql/ontowiki/';
     const EF_TEST_DIR = 'resources/sparql/erfurt/';
     const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
-    protected $_parser = null;
-    
-    public function setUp()
-    {
-        // $this->_parser = new Erfurt_Sparql_NewParser();
-    }
-
-
-	//     /**
-	//      * @dataProvider providerTestParse
-	//      */
-	//    	public function testParse($querySpec)
-	//     {
-	// 	$input = new ANTLRStringStream($querySpec['query']);
-	// 	$lexer = new Erfurt_Sparql_Sparql10Lexer($input);
-	// 	$tokens = new CommonTokenStream($lexer);
-	// 	$parser = new Erfurt_Sparql_Sparql10Parser($tokens);
-	// 	try {
-	// 		$q = $parser->start();
-	// 		// If query type is negative, we should not reach this code...
-	// 		if ($querySpec['type'] === 'negative') {
-	// 		    $e = new Exception('Query parsing should fail.');
-	// 		    $this->fail($this->_createErrorMsg($querySpec, $e));
-	// 		}
-	// 		$this->assertTrue($q instanceof Erfurt_Sparql_Query2);			
-	// 	} catch (Exception $e) {
-	//             if ($querySpec['type'] === 'positive') {
-	//                 $this->fail($this->_createErrorMsg($querySpec, $e));			
-	// 	}
-	// }
-	// $parser = null;
-	// $lexer = null;
-	// $tokens = null;
-	// $input = null;
-	//         // 
-	//         // $queryObject = null;
-	//         // try {
-	//         //     $queryObject = $this->_parser->parse($querySpec['query']);
-	//         //     
-	//         //     // If query type is negative, we should not reach this code...
-	//         //     if ($querySpec['type'] === 'negative') {
-	//         //         $e = new Exception('Query parsing should fail.');
-	//         //         $this->fail($this->_createErrorMsg($querySpec, $e));
-	//         //     }
-	//         //     
-	//         //     $this->assertTrue($queryObject instanceof Erfurt_Sparql_Query);
-	//         // } catch (Exception $e) {
-	//         //     
-	//         //     if ($querySpec['type'] === 'positive') {
-	//         //         $this->fail($this->_createErrorMsg($querySpec, $e));
-	//         //     } 
-	//         // }    
-	//     }
+	protected function tearDown()
+	{
+		gc_collect_cycles();
+	}
 
     /**
      * @dataProvider providerTestParse
      */
-   	public function testParseCached($querySpec)
+   	public function testParse($querySpec)
     {
-		$input = new ANTLRStringStream($querySpec['query']);
-		$lexer = new Erfurt_Sparql_Sparql10Lexer($input);
-		// $tokens = new CommonTokenStream($lexer);
-		// $parser = new Erfurt_Sparql_Sparql10Parser($tokens);
-	// 	try {
-	// 		$q = $parser->start();
-	// 		// If query type is negative, we should not reach this code...
-	// 		if ($querySpec['type'] === 'negative') {
-	// 		    $e = new Exception('Query parsing should fail.');
-	// 		    $this->fail($this->_createErrorMsg($querySpec, $e));
-	// 		}
-	// 		$this->assertTrue($q instanceof Erfurt_Sparql_Query2);			
-	// 	} catch (Exception $e) {
-	//             if ($querySpec['type'] === 'positive') {
-	//                 $this->fail($this->_createErrorMsg($querySpec, $e));			
-	// 	}
-	// }
-	// unset($parser);
-	unset($lexer);
-	unset($input);
-	// $tokens = null;
-        // 
-        // $queryObject = null;
-        // try {
-        //     $queryObject = $this->_parser->parse($querySpec['query']);
-        //     
-        //     // If query type is negative, we should not reach this code...
-        //     if ($querySpec['type'] === 'negative') {
-        //         $e = new Exception('Query parsing should fail.');
-        //         $this->fail($this->_createErrorMsg($querySpec, $e));
-        //     }
-        //     
-        //     $this->assertTrue($queryObject instanceof Erfurt_Sparql_Query);
-        // } catch (Exception $e) {
-        //     
-        //     if ($querySpec['type'] === 'positive') {
-        //         $this->fail($this->_createErrorMsg($querySpec, $e));
-        //     } 
-        // }    
+		$parser = new Erfurt_Sparql_Parser_Virtuoso();
+		try {
+			$q= $parser->initFromString($querySpec["query"]);			
+			// If query type is negative, we should not reach this code...
+			if ($querySpec['type'] === 'negative') {
+				echo $querySpec['type'] . "\n";				
+			    $e = new Exception('Query parsing should fail.');
+			    $this->fail($this->_createErrorMsg($querySpec, $e));
+			}
+			$this->assertTrue($q instanceof Erfurt_Sparql_Query2);			
+		} catch (Exception $e) {
+			if ($querySpec['type'] === 'positive') {
+			    $this->fail($this->_createErrorMsg($querySpec, $e));			
+		}
     }
-
+}
 
 
     public function providerTestParse()
     {
         $queryArray = array();
         
-        // 1. ow tests 
-        $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
-        
-        // 2. erfurt tests
-        $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
-        
-        // 3. rap tests
-        $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
+        // // 1. ow tests 
+        // $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
+        // 
+        // // 2. erfurt tests
+        // $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
+        // // 
+        // // 3. rap tests
+        // $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
             
         // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
