@@ -1289,7 +1289,7 @@ class Erfurt_Store
 
         // 2. no froms in query -> froms = availableModels
         if (empty($froms)) {
-            $froms = $all;
+            $froms = $available;
         }
         
         // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
@@ -1598,7 +1598,7 @@ class Erfurt_Store
                 require_once 'Erfurt/App.php';
                 $this->_ac = Erfurt_App::getInstance()->getAc();
             }
-        
+
             return $this->_ac->isModelAllowed($accessType, $modelIri);
         }
     }
