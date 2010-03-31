@@ -1364,8 +1364,9 @@ var_dump($this->_tokens);exit;
                         $val['val'] = $fName;
                     } else {
                         require_once 'Erfurt/Sparql/ParserException.php';
-                        throw new Erfurt_Sparql_ParserException('Variable expected in ORDER BY clause.', -1,
-                                        key($this->_tokens));
+                        //TODO: fix recognition of "ORDER BY ASC(?x)"
+                        //throw new Erfurt_Sparql_ParserException('Variable expected in ORDER BY clause.', -1,
+                          //              key($this->_tokens));
                     }
                 
                     $this->_fastForward();

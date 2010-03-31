@@ -888,7 +888,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-        
+
         $resultId = @odbc_exec($this->_connection, $virtuosoPl);
         
         if (false === $resultId) {

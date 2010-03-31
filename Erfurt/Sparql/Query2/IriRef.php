@@ -24,6 +24,7 @@ class Erfurt_Sparql_Query2_IriRef extends Erfurt_Sparql_Query2_ElementHelper imp
         if ($prefix != null) {
             $this->prefix = $prefix;
         }
+        parent::__construct();
     }
        
     /**

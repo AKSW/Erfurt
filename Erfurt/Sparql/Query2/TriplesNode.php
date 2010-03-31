@@ -1,13 +1,8 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Represents The TriplesNode Rule
+ * Represents the TriplesNode Rule
  *
- * @author jonas
+ * @author jonas.brekle@gmail.com
  */
 interface Erfurt_Sparql_Query2_TriplesNode {}
 ?>
