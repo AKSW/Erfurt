@@ -21,6 +21,7 @@
 define('STORE_RESULTFORMAT','result_format');
 define('STORE_RESULTFORMAT_PLAIN','plain');
 define('STORE_RESULTFORMAT_XML','xml');
+define('STORE_RESULTFORMAT_EXTENDED','extended');
 define('STORE_USE_AC','use_ac');
 define('STORE_USE_OWL_IMPORTS','use_owl_imports');
 define('STORE_USE_ADDITIONAL_IMPORTS','use_additional_imports');
