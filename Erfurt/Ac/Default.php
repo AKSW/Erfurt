@@ -295,7 +295,7 @@ class Erfurt_Ac_Default
                 return true;
             }
         }
-            
+                  
         // type = edit; check whether allowed
         if ($type === 'edit') {
             // explicit forbidden
@@ -466,7 +466,8 @@ class Erfurt_Ac_Default
         }
         
         // Update the array that contains the right for the user.
-        $this->_userRights[$user->getUri()][$right][] = $modelUri;
+        //$this->_userRights[$user->getUri()][$right][] = $modelUri;
+        unset($this->_userRights[$user->getUri()]);
 
 // TODO set the right cache tags, such that cache is invalidated!!!
         $store = Erfurt_App::getInstance()->getStore();
@@ -554,7 +555,7 @@ class Erfurt_Ac_Default
             if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
             }
-            
+          
             // Now check for forbidden anyModel.
             // view
             if (in_array($this->_uris['propAnyModel'], $userRights['denyModelView'])) {
@@ -585,7 +586,7 @@ class Erfurt_Ac_Default
     {
     
         $allActions = array();
-    
+#var_dump($resultList);
         foreach ($resultList as $entry) {
             // any action allowed?
             if (($entry['o'] === $this->_uris['propAnyAction']) 
