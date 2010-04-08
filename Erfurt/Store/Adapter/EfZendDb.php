@@ -692,7 +692,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         // if model is already in cache return the cached value
         if (isset($this->_modelCache[$modelIri])) {
-            return $this->_modelCache[$modelIri];
+            return clone $this->_modelCache[$modelIri];
         }
 
         $modelInfoCache = $this->_getModelInfos();
