@@ -37,7 +37,8 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
 
     /**
      * remove
-     * removes this object from all parents
+     * removes this object from a query
+     * @param $query 
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function remove($query) {
@@ -49,8 +50,8 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
 //        foreach ($this->parents as $parent) {
 //                $parent->removeElement($this);
 //        }
-//
-//        return $this;
+
+        return $this;
     }
 
     /**
