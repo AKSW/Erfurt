@@ -13,7 +13,21 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
         }
     }
 
+    public function getParentContainer($needle){
+        $parents = array();
 
+        if(in_array($needle, $this->elements)){
+            $parents[] = $this;
+        }
+
+        foreach($this->elements as $element){
+            if($element instanceof Erfurt_Sparql_Query2_ContainerHelper){
+                $parents = array_merge($parents, $element->getParentContainer($needle));
+            }
+        }
+
+        return $parents;
+    }
     //abstract public function addElement($member); //not used because some use typehinting some do it internally for multiple types
 
     /**

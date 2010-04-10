@@ -144,7 +144,7 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
                     )
             );
             $query->optimize();
-            $nst->remove();
+            $nst->remove($query);
             // or
             // $and->removeElement($nst->getID());
             // but the 2nd command removes only occurences of $nst in add, while $nst->remove() removes all ocurrences

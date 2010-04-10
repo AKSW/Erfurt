@@ -899,7 +899,18 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
             $this->constructTemplate->optimize();
         return $this;
     }
-    
+
+     public function getParentContainer($needle){
+        $parents = array();
+
+        if(in_array($needle, array_merge($this->prefixes, $this->froms, $this->projectionVars))){
+            $parents[] = $this;
+        }
+        
+        $parents = array_merge($parents, $this->where->getParentContainer($needle));
+
+        return $parents;
+    }
     public function removeElement($element, $equal = false)
     {
         if ($element instanceof Erfurt_Sparql_Query2_Var) {

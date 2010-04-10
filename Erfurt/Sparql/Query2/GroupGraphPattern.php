@@ -201,6 +201,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
         $this->elements = array_merge($this->elements, $elements);
         return $this; //for chaining
     }
+
     
     /**
      * optimize
@@ -257,7 +258,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
             }
         }
         foreach ($to_remove as $obj) {
-            $obj->remove();
+            $this->removeElement($obj);
         }
 
         //sort triples by weight
@@ -280,7 +281,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
     public function removeAllOptionals() {
         foreach ($this->elements as $element) {
             if ($element instanceof Erfurt_Sparql_Query2_OptionalGraphPattern) {
-                $element->remove();
+                $this->removeElement($element);
             } 
         }
         return $this;

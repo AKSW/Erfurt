@@ -29,8 +29,8 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function addParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
-        if (!in_array($parent, $this->parents))
-                $this->parents[] = $parent;
+//        if (!in_array($parent, $this->parents))
+//                $this->parents[] = $parent;
 
         return $this;
     }
@@ -40,12 +40,17 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
      * removes this object from all parents
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
-    public function remove() {
-        foreach ($this->parents as $parent) {
-                $parent->removeElement($this);
+    public function remove($query) {
+        //remove from this query
+        foreach($query->getParentContainer($this) as $parent){
+            $parent->removeElement($this);
         }
 
-        return $this;
+//        foreach ($this->parents as $parent) {
+//                $parent->removeElement($this);
+//        }
+//
+//        return $this;
     }
 
     /**
