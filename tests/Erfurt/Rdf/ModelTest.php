@@ -497,7 +497,29 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
 
         $this->assertEquals($optionIn, $optionOut);
     }
+    
+    public function testIsEditableWithZendDbAndAnonymousUserIssue774()
+    {
+        $this->markTestNeedsZendDb();
+        
+        //$this->authenticateDbUser();
+        $store = Erfurt_App::getInstance()->getStore();
+        $store->getNewModel('http://example.org/', 'http://example.org/', 'owl', false);
+        $ac = Erfurt_App::getInstance()->getAc();
+        $ac->setUserModelRight('http://example.org/', 'edit', 'deny');
+        
+        $this->authenticateAnonymous();
+        $model = $store->getModel('http://example.org/');
+        $this->assertTrue($model instanceof Erfurt_Rdf_Model);
+        $this->assertFalse($model->isEditable());
+        
+        $ac->setUserModelRight('http://example.org/', 'view', 'deny');
+        try {
+            $model = $store->getModel('http://example.org/');
+            
+            $this->fail('Model should not be readable here.');
+        } catch (Exception $e) {
+            
+        }
+    }
 }
-
-
-
