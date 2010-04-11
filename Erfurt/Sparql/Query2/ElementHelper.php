@@ -61,14 +61,14 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function removeParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
-        $new = array();
-        foreach ($this->parents as $compare) {
-                if ($compare->equals($parent)) {
-                        $new[] = $compare;
-                }
-        }
-
-        $this->parents = $new;
+//        $new = array();
+//        foreach ($this->parents as $compare) {
+//                if ($compare->equals($parent)) {
+//                        $new[] = $compare;
+//                }
+//        }
+//
+//        $this->parents = $new;
 
         return $this;
     }

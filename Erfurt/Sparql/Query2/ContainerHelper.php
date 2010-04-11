@@ -103,7 +103,7 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
                 }
             }
         }
-        $toDelete->removeParent($this);
+        //$toDelete->removeParent($this);
         $this->elements = $new;
 
         return $this; //for chaining
