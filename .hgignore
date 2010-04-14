@@ -19,4 +19,6 @@ ontowiki/src/extensions/modules/navigation/module.ini
 ontowiki/src/extensions/components/navigation/component.ini
 ontowiki/src/extensions/components/foafedit/component.ini
 ontowiki/src/extensions/components/map/component.ini
+ontowiki/src/import*
 models/NepomukFileOntology/nfo-test.rdf
+
