@@ -2,7 +2,8 @@
 ini_set('memory_limit', '1G');
 ini_set('error_reporting', E_ALL | E_STRICT);
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
-require_once 'Erfurt/TestCase.php';
+// require_once 'Erfurt/TestCase.php';
+require_once 'test_base.php';
 
 require_once 'Erfurt/Sparql/Parser/Sparql10.php';
 class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
@@ -12,33 +13,68 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
     const EF_TEST_DIR = 'resources/sparql/erfurt/';
     const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
-	protected function tearDown()
+
+public function setUp()
+{
+	// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+	
+}
+
+	// protected function tearDown()
+	// {
+	// 	gc_collect_cycles();
+	// }
+
+	//     /**
+	//      * @dataProvider providerTestParse
+	//      */
+	//    	public function testParse($querySpec)
+	//     {
+	// 	$q;
+	// 	$parser = new Erfurt_Sparql_Parser_Sparql10();
+	// 	try {
+	// 		$q= $parser->initFromString($querySpec["query"]);
+	// 		if ($q['errors']) {
+	// 			$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
+	// 			$this->fail($this->_createErrorMsg($querySpec, $e));
+	// 		}
+	// 		$this->assertTrue($q['retval'] instanceof Erfurt_Sparql_Query2);		
+	// 	} catch (Exception $e) {
+	// 		if ($querySpec['type'] === 'positive') {
+	// 		    $this->fail($this->_createErrorMsg($querySpec, $e));		
+	// 		}
+	//     	}
+	// 	unset($parser);
+	// }
+
+
+	public function testTest1()
 	{
-		//gc_collect_cycles();
+		$q1 = new Erfurt_Sparql_Query2();
+		$q2 = $q1->initFromString("SELECT * WHERE {?s ?p ?o} LIMIT 10 ");
+		var_dump($q2);
 	}
+	
 
-    /**
-     * @dataProvider providerTestParse
-     */
-   	public function testParse($querySpec)
-    {
-		$q;
-		$parser = new Erfurt_Sparql_Parser_Sparql10();
-		try {
-			$q= $parser->initFromString($querySpec["query"]);
-			if ($q['errors']) {
-				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
-				$this->fail($this->_createErrorMsg($querySpec, $e));
-			}
-			$this->assertTrue($q['retval'] instanceof Erfurt_Sparql_Query2);		
-		} catch (Exception $e) {
-			if ($querySpec['type'] === 'positive') {
-			    $this->fail($this->_createErrorMsg($querySpec, $e));		
-			}
-    	}
-		unset($parser);
-	}
-
+	// public function testTest()
+	// {
+	// 		$q;
+	// 		$parser = new Erfurt_Sparql_Parser_Sparql10();
+	// 		try {
+	// 			$q= $parser->initFromString("selet *}");
+	// 			var_dump($q);
+	// 			if ($q['errors']) {
+	// 				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
+	// 				$this->fail($this->_createErrorMsg($querySpec, $e));
+	// 			}
+	// 			$this->assertTrue($q['retval'] instanceof Erfurt_Sparql_Query2);		
+	// 		} catch (Exception $e) {
+	// 			// if ($querySpec['type'] === 'positive') {
+	// 			//     $this->fail($this->_createErrorMsg($querySpec, $e));		
+	// 			// }
+	// 	    	}
+	// 	
+	// }
 
     public function providerTestParse()
     {
