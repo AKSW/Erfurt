@@ -923,5 +923,16 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     {
         //throw
     }
+
+    public static function initFromString($queryString){
+        $parser = new Erfurt_Sparql_Parser_Sparql10();
+        $fromParser = $parser->initFromString($queryString, array());
+        if($fromParser['retval'] instanceof Erfurt_Sparql_Query2){
+            return $fromParser['retval'];
+        } else {
+            throw new Exception("Error in parser: ". print_r($fromParser['errors'], true));
+            return null;
+        }
+    }
 }
 ?>

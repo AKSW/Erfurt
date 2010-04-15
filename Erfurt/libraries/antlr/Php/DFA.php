@@ -53,7 +53,7 @@ class DFA {
     /** Which recognizer encloses this DFA?  Needed to check backtracking */
     protected $recognizer;
 
-    public $debug = false;
+    public $debug = true;
 
     /** From the input stream, predict what alternative will succeed
      *  using this DFA (representing the covering regular approximation

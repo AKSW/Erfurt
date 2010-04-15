@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '1G');
 ini_set('error_reporting', E_ALL | E_STRICT);
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
 require_once 'Erfurt/TestCase.php';
@@ -13,7 +14,7 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
     
 	protected function tearDown()
 	{
-		gc_collect_cycles();
+		//gc_collect_cycles();
 	}
 
     /**
