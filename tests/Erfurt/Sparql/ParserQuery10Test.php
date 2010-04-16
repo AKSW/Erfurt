@@ -5,8 +5,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libra
 // require_once 'Erfurt/TestCase.php';
 require_once 'test_base.php';
 
-require_once 'Erfurt/Sparql/Parser/Sparql10.php';
-class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
+// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+class Erfurt_Sparql_ParserQuery10Test extends PHPUnit_Framework_TestCase
 {
     const RAP_TEST_DIR = 'resources/sparql/rap/';
     const OW_TEST_DIR = 'resources/sparql/ontowiki/';
@@ -16,14 +16,12 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 
 public function setUp()
 {
-	// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
-	
 }
 
-	// protected function tearDown()
-	// {
-	// 	gc_collect_cycles();
-	// }
+	protected function tearDown()
+	{
+		gc_collect_cycles();
+	}
 
 	//     /**
 	//      * @dataProvider providerTestParse
@@ -51,8 +49,8 @@ public function setUp()
 	public function testTest1()
 	{
 		$q1 = new Erfurt_Sparql_Query2();
-		$q2 = $q1->initFromString("SELECT * WHERE {?s ?p ?o} LIMIT 10 ");
-		var_dump($q2);
+		$q2 = $q1->initFromString("select * {}");
+		$this->assertTrue($q2 instanceof Erfurt_Sparql_Query2);
 	}
 	
 
