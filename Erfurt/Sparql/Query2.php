@@ -3,9 +3,14 @@
 //(-> no compliance with zend classfile naming for autoloading)
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
+
+// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+// require_once 'antlr.php';
+// require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
+// require_once 'Erfurt/Sparql10/Parser/Sparql10.php';
+
 require_once 'Query2/structural-Interfaces.php';
 require_once 'Query2/Constraint.php';
-// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
 
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj)
@@ -935,7 +940,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         //     throw new Exception("Error in parser: ". print_r($fromParser['errors'], true));
         //     return null;
         // }
-		//require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
 
 		$q;
 		$parser = new Erfurt_Sparql_Parser_Sparql10();
