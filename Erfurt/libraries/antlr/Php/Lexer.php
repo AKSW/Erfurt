@@ -140,7 +140,7 @@ abstract class AntlrLexer extends BaseRecognizer{
 		}
 	}
 	
-	public function matchAny($x=null) {
+	public function matchAny($x) {
 		$this->input->consume();
 	}
 	
