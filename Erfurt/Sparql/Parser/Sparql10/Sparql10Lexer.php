@@ -126,6 +126,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10Lexer extends AntlrLexer {
 
     function __construct($input, $state=null){
         parent::__construct($input,$state);
+		// require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
         $this->gTokenizer = new Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer($input, $state);
         
     }

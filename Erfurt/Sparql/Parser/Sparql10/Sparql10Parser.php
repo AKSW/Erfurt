@@ -18,16 +18,16 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Sparql/Query2/structural-Interfaces.php';
-require_once 'Erfurt/Sparql/Query2/ElementHelper.php';
-require_once 'Erfurt/Sparql/Query2/ContainerHelper.php';
-require_once 'Erfurt/Sparql/Query2/Constraint.php';
-require_once 'Erfurt/Sparql/Query2/IriRef.php';
-require_once 'Erfurt/Sparql/Query2/OrderClause.php';
-require_once 'Erfurt/Sparql/Query2/GroupGraphPattern.php';
-require_once 'Erfurt/Sparql/Query2/GraphClause.php';
-require_once 'Erfurt/Sparql/Query2.php';
-
+// require_once 'Erfurt/Sparql/Query2/structural-Interfaces.php';
+// require_once 'Erfurt/Sparql/Query2/ElementHelper.php';
+// require_once 'Erfurt/Sparql/Query2/ContainerHelper.php';
+// require_once 'Erfurt/Sparql/Query2/Constraint.php';
+// require_once 'Erfurt/Sparql/Query2/IriRef.php';
+// require_once 'Erfurt/Sparql/Query2/OrderClause.php';
+// require_once 'Erfurt/Sparql/Query2/GroupGraphPattern.php';
+// require_once 'Erfurt/Sparql/Query2/GraphClause.php';
+// require_once 'Erfurt/Sparql/Query2.php';
+// 
 
 
 # for convenience in actions
