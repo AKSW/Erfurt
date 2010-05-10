@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Exported with the Erfurt API - http://aksw.org/Projects/Erfurt -->
+
+<!DOCTYPE rdf:RDF [
+  <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+
+<rdf:RDF xml:base="http://od.fmi.uni-leipzig.de/model/"
+  xmlns:foaf="&foaf;"
+  xmlns:owl="&owl;"
+  xmlns:rdf="&rdf;"
+  xmlns:rdfs="&rdfs;"
+  xmlns:xsd="&xsd;">
+
+
+<!-- Ontology specific informations -->
+  <owl:Ontology rdf:about="http://od.fmi.uni-leipzig.de/model/"
+    rdfs:label="FMI Model">
+    <rdfs:comment>This vocabulary is used for structuring information about the faculty of mathematics and computer science of the University of Leipzig.</rdfs:comment>
+  </owl:Ontology>
+
+<!-- Classes -->
+  <owl:Class rdf:about="Block"
+    rdfs:label="Block" />
+
+  <owl:Class rdf:about="Extern">
+    <rdfs:label xml:lang="de">Externer Termin</rdfs:label>
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="LV"
+    rdfs:label="Lehrveranstaltung" />
+
+  <owl:Class rdf:about="Modul"
+    rdfs:label="Modul" />
+
+  <owl:Class rdf:about="Oberseminar"
+    rdfs:label="Oberseminar">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="Onlinekurs"
+    rdfs:label="Onlinekurs">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="Person"
+    rdfs:label="Verantwortliche(r)" />
+
+  <owl:Class rdf:about="Praktikum"
+    rdfs:label="Praktikum">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="Room"
+    rdfs:label="Raum" />
+
+  <owl:Class rdf:about="Seminar"
+    rdfs:label="Seminar">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="StudiengangSemester"
+    rdfs:label="Studiengang und Semester" />
+
+  <owl:Class rdf:about="Uebung"
+    rdfs:label="Übung">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="Vorlesung"
+    rdfs:label="Vorlesung">
+    <rdfs:subClassOf rdf:resource="LV" />
+  </owl:Class>
+
+  <owl:Class rdf:about="Zeitfenster"
+    rdfs:label="Zeitfenster" />
+
+</rdf:RDF>
