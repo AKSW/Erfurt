@@ -1,0 +1,5779 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Exported with the Erfurt API - http://aksw.org/Projects/Erfurt -->
+
+<!DOCTYPE rdf:RDF [
+  <!ENTITY od "http://od.fmi.uni-leipzig.de/model/">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+
+<rdf:RDF xml:base="http://od.fmi.uni-leipzig.de/s10/"
+  xmlns:od="&od;"
+  xmlns:owl="&owl;"
+  xmlns:rdf="&rdf;"
+  xmlns:rdfs="&rdfs;"
+  xmlns:xsd="&xsd;">
+
+
+<!-- Ontology specific informations -->
+  <owl:Ontology rdf:about="http://od.fmi.uni-leipzig.de/s10/"
+    rdfs:label="s10 - Lehrplanung Sommersemester 2010">
+    <rdfs:comment>Generated from S10.xml at 2010-04-9-133753</rdfs:comment>
+    <owl:imports rdf:resource="&od;" />
+  </owl:Ontology>
+
+<!-- Instances and untyped data -->
+  <od:Modul rdf:about="07-101-2102" />
+
+  <od:Modul rdf:about="07-203-2102" />
+
+  <od:Modul rdf:about="10-201-1015" />
+
+  <od:Modul rdf:about="10-201-2001-2" />
+
+  <od:Modul rdf:about="10-201-2005-2" />
+
+  <od:Modul rdf:about="10-201-2006" />
+
+  <od:Modul rdf:about="10-201-2009" />
+
+  <od:Modul rdf:about="10-201-2010" />
+
+  <od:Modul rdf:about="10-201-2011" />
+
+  <od:Modul rdf:about="10-201-2103" />
+
+  <od:Modul rdf:about="10-201-2106" />
+
+  <od:Modul rdf:about="10-201-2107" />
+
+  <od:Modul rdf:about="10-201-2209" />
+
+  <od:Modul rdf:about="10-201-2210" />
+
+  <od:Modul rdf:about="10-201-2212" />
+
+  <od:Modul rdf:about="10-201-2316" />
+
+  <od:Modul rdf:about="10-201-2317" />
+
+  <od:Modul rdf:about="10-201-2320" />
+
+  <od:Modul rdf:about="10-201-2324" />
+
+  <od:Modul rdf:about="10-201-2333" />
+
+  <od:Modul rdf:about="10-201-4102" />
+
+  <od:Modul rdf:about="10-201-4104" />
+
+  <od:Modul rdf:about="10-202-2011" />
+
+  <od:Modul rdf:about="10-202-2012" />
+
+  <od:Modul rdf:about="10-202-2104" />
+
+  <od:Modul rdf:about="10-202-2105" />
+
+  <od:Modul rdf:about="10-202-2106" />
+
+  <od:Modul rdf:about="10-202-2107" />
+
+  <od:Modul rdf:about="10-202-2110" />
+
+  <od:Modul rdf:about="10-202-2110-Gym" />
+
+  <od:Modul rdf:about="10-202-2110-MS" />
+
+  <od:Modul rdf:about="10-202-2113" />
+
+  <od:Modul rdf:about="10-202-2115" />
+
+  <od:Modul rdf:about="10-202-2204" />
+
+  <od:Modul rdf:about="10-202-2205" />
+
+  <od:Modul rdf:about="10-202-2208" />
+
+  <od:Modul rdf:about="10-202-2213" />
+
+  <od:Modul rdf:about="10-202-2214" />
+
+  <od:Modul rdf:about="10-202-2218" />
+
+  <od:Modul rdf:about="10-202-2220" />
+
+  <od:Modul rdf:about="10-202-2222" />
+
+  <od:Modul rdf:about="10-202-2307" />
+
+  <od:Modul rdf:about="10-202-2308" />
+
+  <od:Modul rdf:about="10-202-2309" />
+
+  <od:Modul rdf:about="10-202-2310" />
+
+  <od:Modul rdf:about="10-202-2319" />
+
+  <od:Modul rdf:about="10-202-2322" />
+
+  <od:Modul rdf:about="10-202-2327" />
+
+  <od:Modul rdf:about="10-202-2328" />
+
+  <od:Modul rdf:about="10-202-2329" />
+
+  <od:Modul rdf:about="10-202-2333" />
+
+  <od:Modul rdf:about="10-202-2408" />
+
+  <od:Modul rdf:about="10-202-2411" />
+
+  <od:Modul rdf:about="10-202-2413" />
+
+  <od:Modul rdf:about="10-202-4107" />
+
+  <od:Modul rdf:about="10-202-4108" />
+
+  <od:Modul rdf:about="10-202-4109" />
+
+  <od:Modul rdf:about="10-203-2001-2" />
+
+  <od:Modul rdf:about="10-203-2005-2" />
+
+  <od:Modul rdf:about="10-203-2006-2" />
+
+  <od:Modul rdf:about="10-203-2007" />
+
+  <od:Modul rdf:about="10-204-2203-Gym" />
+
+  <od:Modul rdf:about="10-204-2327-Gym" />
+
+  <od:Modul rdf:about="10-206-2203-MS" />
+
+  <od:Modul rdf:about="10-206-2327-MS" />
+
+  <od:Modul rdf:about="10-GRMATH-1012" />
+
+  <od:Modul rdf:about="10-GRMATH-1015" />
+
+  <od:Modul rdf:about="10-MATHB-1003" />
+
+  <od:Modul rdf:about="10-MATHB-1004" />
+
+  <od:Modul rdf:about="10-MATHB-1018" />
+
+  <od:Modul rdf:about="10-MATHB-1021" />
+
+  <od:Modul rdf:about="10-MATHB-1022" />
+
+  <od:Modul rdf:about="10-MATHB-1602" />
+
+  <od:Modul rdf:about="10-MATHB-1802" />
+
+  <od:Modul rdf:about="10-MATHMM-1021-Gym" />
+
+  <od:Modul rdf:about="10-MATHMM-1021-MS" />
+
+  <od:Block rdf:about="ALGI.Algorithmik"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2V+2U+2S"
+    od:planung="fmi"
+    rdfs:comment="2V+2V+(2U o 2S)">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.B" />
+    <od:containsLV rdf:resource="ALGI.Algorithmik.1" />
+    <od:containsLV rdf:resource="ALGI.Algorithmik.2" />
+    <od:containsLV rdf:resource="ALGI.Algorithmik.3" />
+    <od:containsLV rdf:resource="ALGI.Algorithmik.4" />
+    <od:hasMaintainer rdf:resource="Lohrey_Markus" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.4" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.4" />
+    <od:relatedModule rdf:resource="10-202-2110" />
+    <od:relatedModule rdf:resource="10-202-2110-Gym" />
+    <od:relatedModule rdf:resource="10-202-2110-MS" />
+    <rdfs:label>Algorithmische Strukturen in Algebra und Logik</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="ALGI.Algorithmik.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Lohrey_Markus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Spieltheoretische Methoden in der Logik - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ALGI.Algorithmik.2"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Lohrey_Markus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Verifikation unendlicher Systeme - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ALGI.Algorithmik.3"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Lohrey_Markus" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Automaten und Logiken für semistrukturierte Daten (XML) - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ALGI.Algorithmik.4"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Lohrey_Markus" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmische Strukturen in Algebra und Logik - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="ASV.IR"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Information Retrieval">
+    <od:containsLV rdf:resource="ASV.IR.1" />
+    <od:containsLV rdf:resource="ASV.IR.2" />
+    <od:hasMaintainer rdf:resource="Quasthoff_Uwe" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:relatedModule rdf:resource="10-201-2316" />
+  </od:Block>
+
+  <od:LV rdf:about="ASV.IR.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="9:00"
+    od:startTime="7:30">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Quasthoff_Uwe" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Information Retrieval - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ASV.IR.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Quasthoff_Uwe" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Kernmodul Information Retrieval - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="ASV.LingInf-1"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Linguistische Informatik">
+    <od:containsLV rdf:resource="ASV.LingInf-1.1" />
+    <od:containsLV rdf:resource="ASV.LingInf-1.2" />
+    <od:hasMaintainer rdf:resource="Heyer_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:relatedModule rdf:resource="10-201-2317" />
+  </od:Block>
+
+  <od:LV rdf:about="ASV.LingInf-1.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Heyer_Gerhard" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Linguistische Informatik - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ASV.LingInf-1.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Heyer_Gerhard" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Kernmodul Linguistische Informatik - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="ASV.LingInf-2"
+    od:hasLevel="3"
+    od:hasUmfang="2S+1U"
+    od:planung="fmi">
+    <od:containsLV rdf:resource="ASV.LingInf-2.1" />
+    <od:containsLV rdf:resource="ASV.LingInf-2.2" />
+    <od:hasMaintainer rdf:resource="Heyer_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2307" />
+    <rdfs:label>Seminarmodul Anwendungen Linguistische Informatik</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="ASV.LingInf-2.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Heyer_Gerhard" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Seminarmodul Anwendungen Linguistische Informatik - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ASV.LingInf-2.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Heyer_Gerhard" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Seminarmodul Anwendungen Linguistische Informatik - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="ASV.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Seminare ASV">
+    <od:containsLV rdf:resource="ASV.Seminare.1" />
+    <od:containsLV rdf:resource="ASV.Seminare.2" />
+    <od:hasMaintainer rdf:resource="Heyer_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+  </od:Block>
+
+  <od:LV rdf:about="ASV.Seminare.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="11:00"
+    od:startTime="9:30"
+    rdfs:label="Bachelorseminar - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Quasthoff_Uwe" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="ASV.Seminare.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Masterseminar - Seminar">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Heyer_Gerhard" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="ASV.TextDatenbanken"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2U"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Textdatenbanken">
+    <od:containsLV rdf:resource="ASV.TextDatenbanken.1" />
+    <od:containsLV rdf:resource="ASV.TextDatenbanken.2" />
+    <od:hasMaintainer rdf:resource="Quasthoff_Uwe" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2322" />
+  </od:Block>
+
+  <od:LV rdf:about="ASV.TextDatenbanken.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Kernmodul Textdatenbanken - Vorlesung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Quasthoff_Uwe" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="ASV.TextDatenbanken.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Kernmodul Textdatenbanken - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Quasthoff_Uwe" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Person rdf:about="Ackermann_Stefan"
+    rdfs:label="Ackermann, Stefan" />
+
+  <od:Block rdf:about="Algebra.AT-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Algebraische Topologie 2">
+    <od:containsLV rdf:resource="Algebra.AT-2.1" />
+    <od:containsLV rdf:resource="Algebra.AT-2.2" />
+    <od:containsLV rdf:resource="Algebra.AT-2.3" />
+    <od:hasMaintainer rdf:resource="Thom_Andreas" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Algebra.AT-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Algebraische Topologie 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.AT-2.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Algebraische Topologie 2 - Vorlesung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.AT-2.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Algebraische Topologie 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Schlicht_Peter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Algebra.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Algebra">
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.2" />
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.3" />
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.4" />
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.5" />
+    <od:containsLV rdf:resource="Algebra.Schwerpunkt.6" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.1"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Graduierte Strukturen - Vorlesung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Stueckrad_Juergen" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Graduierte Strukturen - Vorlesung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Stueckrad_Juergen" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.3"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Geometrische Gruppentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Geometrische Gruppentheorie - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.5"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Oberseminar Algebra - Seminar">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Stueckrad_Juergen" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="Algebra.Schwerpunkt.6"
+    od:dayOfWeek="freitags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Algebraische Geometrie - Seminar">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Herzog_Bernd" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="Analysis.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Analysis">
+    <od:containsLV rdf:resource="Analysis.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="Analysis.Schwerpunkt.2" />
+    <od:containsLV rdf:resource="Analysis.Schwerpunkt.3" />
+    <od:containsLV rdf:resource="Analysis.Schwerpunkt.4" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Analysis.Schwerpunkt.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Klotz_LutzPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Probleme der Matrizenrechnung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Analysis.Schwerpunkt.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Fachseminar Analysis - Seminar">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Miersemann_Erich" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="Analysis.Schwerpunkt.3"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Heyde_Frank" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Entscheidungen unter Unsicherheit - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Analysis.Schwerpunkt.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Oberseminar Analysis - Oberseminar">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Guenther_Matthias" />
+    <od:servedBy rdf:resource="Miersemann_Erich" />
+    <rdf:type rdf:resource="&od;Oberseminar" />
+  </od:LV>
+
+  <od:Person rdf:about="Anwander_Alfred"
+    rdfs:label="Anwander, Alfred" />
+
+  <od:Block rdf:about="AuS.AAT"
+    od:hasLevel="3"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="KM Angewandte Automatentheorie">
+    <od:hasMaintainer rdf:resource="Droste_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2107" />
+    <rdfs:comment>Im Sommersemester 2010 nicht angeboten, statt dessen AuS.VAT.</rdfs:comment>
+  </od:Block>
+
+  <od:Block rdf:about="AuS.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="AuS"
+    rdfs:label="Seminare Automatentheorie">
+    <od:containsLV rdf:resource="AuS.Seminare.1" />
+    <od:containsLV rdf:resource="AuS.Seminare.2" />
+    <od:containsLV rdf:resource="AuS.Seminare.3" />
+    <od:hasMaintainer rdf:resource="Droste_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+    <od:relatedModule rdf:resource="10-202-2115" />
+    <rdfs:comment>Für den Seminarmodul 10-202-2115 sind zwei Seminare zu
+    belegen.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="AuS.Seminare.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Joh_26_442" />
+    <od:servedBy rdf:resource="Droste_Manfred" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Bachelorseminar Automatentheorie - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="AuS.Seminare.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Joh_26_442" />
+    <od:servedBy rdf:resource="Droste_Manfred" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Masterseminar Automatentheorie - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="AuS.Seminare.3"
+    od:dayOfWeek="n.V.">
+    <od:locatedAt rdf:resource="Joh_26_442" />
+    <od:servedBy rdf:resource="Droste_Manfred" />
+    <od:servedBy rdf:resource="Lohrey_Markus" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Forschungsseminar Automatentheorie - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="AuS.VAT"
+    od:hasLevel="3"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Vertiefungsmodul Automatentheorie">
+    <od:containsLV rdf:resource="AuS.VAT.1" />
+    <od:containsLV rdf:resource="AuS.VAT.2" />
+    <od:containsLV rdf:resource="AuS.VAT.3" />
+    <od:containsLV rdf:resource="AuS.VAT.4" />
+    <od:hasMaintainer rdf:resource="Droste_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2106" />
+    <rdfs:comment>Ausnahmsweise im Sommersemester, da im WS 09/10 nicht angeboten
+    (Freisemester Prof. Droste).  Daher wird sie voraussichtlich auch im WS
+    2010/11 nicht stattfinden.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="AuS.VAT.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Automatentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Droste_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="AuS.VAT.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Automatentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Droste_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="AuS.VAT.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Automatentheorie - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Weidner_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="AuS.VAT.4"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Automatentheorie - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Meinecke_Ingmar" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Person rdf:about="Auer_Soeren"
+    rdfs:label="Auer, Sören" />
+
+  <od:Person rdf:about="Aumueller_David"
+    rdfs:label="Aumüller, David" />
+
+  <od:Person rdf:about="Ay_Nihat"
+    rdfs:label="Ay, Nihat" />
+
+  <od:Block rdf:about="BI.Netze"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1V+1S+3P"
+    od:planung="imise"
+    rdfs:label="Graphen und biologische Netze">
+    <od:containsLV rdf:resource="BI.Netze.1" />
+    <od:containsLV rdf:resource="BI.Netze.2" />
+    <od:containsLV rdf:resource="BI.Netze.3" />
+    <od:containsLV rdf:resource="BI.Netze.4" />
+    <od:hasMaintainer rdf:resource="Stadler_Peter" />
+    <od:recommendedFor rdf:resource="Bio.Bachelor.all" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2205" />
+    <rdfs:comment>Der genaue Terminplan der Vorlesungen ist auf der Webseite
+      http://www.bioinf.uni-leipzig.de/teaching/currentClasses.html
+      ersichtlich.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="BI.Netze.1"
+    od:dayOfWeek="freitags"
+    od:endTime="18:00"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Klemm_Konstantin" />
+    <od:servedBy rdf:resource="Stadler_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Graphentheorie (erster Teil des Semesters) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Netze.2"
+    od:dayOfWeek="freitags"
+    od:endTime="18:00"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Klemm_Konstantin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Genregulationsnetzwerke und Modelle (zweiter Teil des
+      Semesters) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Netze.3"
+    od:dayOfWeek="n.V.">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Biologische Netzwerke und Graphen - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Netze.4"
+    od:dayOfWeek="28.6.-9.7.2010">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Biologische Netzwerke und Graphen - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BI.Strukturen"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1V+1S+3P"
+    od:planung="imise">
+    <od:containsLV rdf:resource="BI.Strukturen.1" />
+    <od:containsLV rdf:resource="BI.Strukturen.2" />
+    <od:containsLV rdf:resource="BI.Strukturen.3" />
+    <od:containsLV rdf:resource="BI.Strukturen.4" />
+    <od:containsLV rdf:resource="BI.Strukturen.5" />
+    <od:containsLV rdf:resource="BI.Strukturen.6" />
+    <od:containsLV rdf:resource="BI.Strukturen.7" />
+    <od:containsLV rdf:resource="BI.Strukturen.8" />
+    <od:hasMaintainer rdf:resource="Stadler_Peter" />
+    <od:recommendedFor rdf:resource="Bio.Bachelor.all" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2208" />
+    <rdfs:label>VM Bioinformatik von RNA- und Proteinstrukturen</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="BI.Strukturen.1"
+    od:dayOfWeek="montags"
+    od:endTime="18:00"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <od:servedBy rdf:resource="Stadler_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Bioinformatik der RNA- und Proteinstrukturen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.2"
+    od:dayOfWeek="freitags"
+    od:endTime="15:00"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Räumliche Organisation molekularbiologischer Prozesse - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.3"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Stadler_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Formale Modelle von Evolutionsprozessen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.4"
+    od:dayOfWeek="montags"
+    od:endTime="15:00"
+    od:startTime="14:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Krausz_Veiko" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Molekulare Spuren der Evolution - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.5"
+    od:dayOfWeek="n.V.">
+    <od:servedBy rdf:resource="Krausz_Veiko" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Molekulare Spuren der Evolution - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.6"
+    od:dayOfWeek="freitags"
+    od:endTime="12:30"
+    od:startTime="10:00">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Evolution und Funktion nicht Protein kodierender RNA - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.7"
+    od:dayOfWeek="28.6.-9.7.2010"
+    rdfs:label="RNA- und Proteinstrukturen - Praktikum">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BI.Strukturen.8"
+    od:dayOfWeek="n.V."
+    rdfs:label="RNA- und Proteinstrukturen - Seminar">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Hackermueller_Joerg" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="BIS.BIS-V"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2V+2S+2P"
+    od:planung="fmi"
+    rdfs:comment="2V+2V+(2S o 2P)"
+    rdfs:label="VM Betriebliche Informationssysteme">
+    <od:containsLV rdf:resource="BIS.BIS-V.1" />
+    <od:containsLV rdf:resource="BIS.BIS-V.2" />
+    <od:containsLV rdf:resource="BIS.BIS-V.3" />
+    <od:hasMaintainer rdf:resource="Faehnrich_KlausPeter" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2308" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.BIS-V.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <od:servedBy rdf:resource="Kuehne_Stefan" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Betriebliche Informationssysteme - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BIS.BIS-V.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="20:45"
+    od:startTime="19:15"
+    rdfs:label="Einführung in XML - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <od:servedBy rdf:resource="Kuehne_Stefan" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.BIS-V.3"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>VM Betriebliche Informationssysteme - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BIS.CA"
+    od:hasLevel="3"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Gröbnerbasen und Anwendungen">
+    <od:hasMaintainer rdf:resource="Graebe_HansGert" />
+    <od:recommendedFor rdf:resource="LA.MMath-H.2" />
+    <od:recommendedFor rdf:resource="LA.MMath-H.4" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <rdfs:comment>Abgesetzt wegen zu geringer Teilnehmerzahl.</rdfs:comment>
+  </od:Block>
+
+  <od:Block rdf:about="BIS.SWM"
+    od:hasLevel="3"
+    od:hasUmfang="6V"
+    od:planung="fmi"
+    rdfs:label="Vertiefungsmodul Software-Management">
+    <od:containsLV rdf:resource="BIS.SWM.1" />
+    <od:containsLV rdf:resource="BIS.SWM.2" />
+    <od:containsLV rdf:resource="BIS.SWM.3" />
+    <od:hasMaintainer rdf:resource="Faehnrich_KlausPeter" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="07-203-2102" />
+    <od:relatedModule rdf:resource="10-202-2319" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.SWM.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Software-Management - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <od:servedBy rdf:resource="Riechert_Thomas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SWM.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Graebe_HansGert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Software-Qualitätsmanagement - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SWM.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Boettcher_Martin" />
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <od:servedBy rdf:resource="Meyer_Kyrill" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Engineering IT-basierter Dienstleistungen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BIS.SWT-Praktikum"
+    od:hasLevel="3"
+    od:hasUmfang="5P"
+    od:planung="fmi"
+    rdfs:label="Softwaretechnik-Praktikum">
+    <od:containsLV rdf:resource="BIS.SWT-Praktikum.1" />
+    <od:containsLV rdf:resource="BIS.SWT-Praktikum.2" />
+    <od:containsLV rdf:resource="BIS.SWT-Praktikum.3" />
+    <od:containsLV rdf:resource="BIS.SWT-Praktikum.4" />
+    <od:hasMaintainer rdf:resource="Graebe_HansGert" />
+    <od:hasMaintainer rdf:resource="Ngonga_Axel" />
+    <od:hasMaintainer rdf:resource="Riechert_Thomas" />
+    <od:hasMaintainer rdf:resource="Schumacher_Frank" />
+    <od:hasMaintainer rdf:resource="Tramp_Sebastian" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:relatedModule rdf:resource="10-201-2320" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.SWT-Praktikum.1"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Softwaretechnik-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Ngonga_Axel" />
+    <od:servedBy rdf:resource="Schumacher_Frank" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SWT-Praktikum.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Softwaretechnik-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Riechert_Thomas" />
+    <od:servedBy rdf:resource="Tramp_Sebastian" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SWT-Praktikum.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Softwaretechnik-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Graebe_HansGert" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SWT-Praktikum.4"
+    od:dayOfWeek="n.V."
+    rdfs:label="Softwaretechnik-Praktikum - Praktikum">
+    <od:servedBy rdf:resource="Graebe_HansGert" />
+    <od:servedBy rdf:resource="Ngonga_Axel" />
+    <od:servedBy rdf:resource="Riechert_Thomas" />
+    <od:servedBy rdf:resource="Schumacher_Frank" />
+    <od:servedBy rdf:resource="Tramp_Sebastian" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="BIS.SemanticWeb"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2S+2P"
+    od:planung="fmi"
+    rdfs:label="VM Semantic Web">
+    <od:containsLV rdf:resource="BIS.SemanticWeb.1" />
+    <od:containsLV rdf:resource="BIS.SemanticWeb.2" />
+    <od:containsLV rdf:resource="BIS.SemanticWeb.3" />
+    <od:hasMaintainer rdf:resource="Auer_Soeren" />
+    <od:hasMaintainer rdf:resource="Brewka_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="Inf.Master.4" />
+    <od:relatedModule rdf:resource="10-202-2309" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.SemanticWeb.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Semantic Web - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Auer_Soeren" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SemanticWeb.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Praktikum Semantic Web - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Riechert_Thomas" />
+    <od:servedBy rdf:resource="Tramp_Sebastian" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.SemanticWeb.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="Brewka_Gerhard" />
+    <od:servedBy rdf:resource="Loebe_Frank" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Seminar Semantic Web Technologien - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BIS.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Seminare BIS">
+    <od:containsLV rdf:resource="BIS.Seminare.1" />
+    <od:containsLV rdf:resource="BIS.Seminare.2" />
+    <od:containsLV rdf:resource="BIS.Seminare.3" />
+    <od:hasMaintainer rdf:resource="Faehnrich_KlausPeter" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.Seminare.1"
+    od:dayOfWeek="offen"
+    rdfs:label="Bachelorseminar BIS - Seminar">
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.Seminare.2"
+    od:dayOfWeek="offen"
+    rdfs:label="Masterseminar BIS - Seminar">
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="BIS.Seminare.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Forschungsseminar BIS - Seminar">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Faehnrich_KlausPeter" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="BIS.WMG"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Wissen in der modernen Gesellschaft">
+    <od:containsLV rdf:resource="BIS.WMG.1" />
+    <od:hasMaintainer rdf:resource="Graebe_HansGert" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:relatedModule rdf:resource="10-201-2333" />
+  </od:Block>
+
+  <od:LV rdf:about="BIS.WMG.1"
+    od:dayOfWeek="montags"
+    od:endTime="20:30"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Graebe_HansGert" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Wissen in der modernen Gesellschaft - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BSV.Bildverarbeitung"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2V+2S"
+    od:planung="fmi"
+    rdfs:comment="Modul gemeinsam mit dem MPI CBS.">
+    <od:containsLV rdf:resource="BSV.Bildverarbeitung.1" />
+    <od:containsLV rdf:resource="BSV.Bildverarbeitung.2" />
+    <od:containsLV rdf:resource="BSV.Bildverarbeitung.3" />
+    <od:containsLV rdf:resource="BSV.Bildverarbeitung.4" />
+    <od:hasMaintainer rdf:resource="Scheuermann_Gerik" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:relatedModule rdf:resource="10-202-2204" />
+    <rdfs:label>VM Medizinische Bildverarbeitung und bildgebende Verfahren in der
+      Medizin</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="BSV.Bildverarbeitung.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:30"
+    od:startTime="11:00">
+    <od:locatedAt rdf:resource="MPI_fuer_Kognitions_und_Neurowissenschaften_Stephanstrasze_1a__WilhelmWundtRaum_4_Etage" />
+    <od:servedBy rdf:resource="Anwander_Alfred" />
+    <od:servedBy rdf:resource="Mueller_Karsten" />
+    <od:servedBy rdf:resource="Neumann_Jane" />
+    <od:servedBy rdf:resource="Sacher_Julia" />
+    <od:servedBy rdf:resource="Schaefer_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Analyse von Bild- und Signaldaten: Tomographie in den
+	Neurowissenschaften - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Bildverarbeitung.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:00"
+    od:startTime="14:00"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Joh_26_310" />
+    <od:servedBy rdf:resource="Lepsien_Joeran" />
+    <od:servedBy rdf:resource="Mueller_Karsten" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Analysis of structural and functional MRI data using SPM and
+	FSL - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Bildverarbeitung.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Scheuermann_Gerik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Medizinische Bildverarbeitung und bildgebende Verfahren in der
+      Medizin - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Bildverarbeitung.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Scheuermann_Gerik" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>VM Medizinische Bildverarbeitung und bildgebende Verfahren in der
+      Medizin - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="BSV.Computergrafik"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2P"
+    od:planung="fmi"
+    rdfs:comment="Beginn Vorlesung am 16.4."
+    rdfs:label="Kernmodul Computergrafik">
+    <od:containsLV rdf:resource="BSV.Computergrafik.1" />
+    <od:containsLV rdf:resource="BSV.Computergrafik.2" />
+    <od:containsLV rdf:resource="BSV.Computergrafik.3" />
+    <od:containsLV rdf:resource="BSV.Computergrafik.4" />
+    <od:containsLV rdf:resource="BSV.Computergrafik.5" />
+    <od:hasMaintainer rdf:resource="Scheuermann_Gerik" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <od:relatedModule rdf:resource="10-201-2209" />
+  </od:Block>
+
+  <od:LV rdf:about="BSV.Computergrafik.1"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Computergrafik - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Scheuermann_Gerik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Computergrafik.2"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Kernmodul Computergrafik - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_524_Pool" />
+    <od:servedBy rdf:resource="Schlegel_Steven" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Computergrafik.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Kernmodul Computergrafik - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_524_Pool" />
+    <od:servedBy rdf:resource="Schlegel_Steven" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Computergrafik.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Kernmodul Computergrafik - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_524_Pool" />
+    <od:servedBy rdf:resource="Schlegel_Steven" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Computergrafik.5"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Kernmodul Computergrafik - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_524_Pool" />
+    <od:servedBy rdf:resource="Schlegel_Steven" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="BSV.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Seminare BSV">
+    <od:containsLV rdf:resource="BSV.Seminare.1" />
+    <od:hasMaintainer rdf:resource="Scheuermann_Gerik" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+  </od:Block>
+
+  <od:LV rdf:about="BSV.Seminare.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Forschungsseminar BSV - Seminar">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Scheuermann_Gerik" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="BSV.Signalverarbeitung"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Signalverarbeitung">
+    <od:containsLV rdf:resource="BSV.Signalverarbeitung.1" />
+    <od:containsLV rdf:resource="BSV.Signalverarbeitung.2" />
+    <od:containsLV rdf:resource="BSV.Signalverarbeitung.3" />
+    <od:hasMaintainer rdf:resource="Scheuermann_Gerik" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <od:relatedModule rdf:resource="10-202-2222" />
+  </od:Block>
+
+  <od:LV rdf:about="BSV.Signalverarbeitung.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="20:45"
+    od:startTime="19:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Scheuermann_Gerik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Signalverarbeitung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Signalverarbeitung.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A"
+    rdfs:label="Kernmodul Signalverarbeitung - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Reich_Wieland" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="BSV.Signalverarbeitung.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B"
+    rdfs:label="Kernmodul Signalverarbeitung - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Reich_Wieland" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Person rdf:about="Baumann_Ringo"
+    rdfs:label="Baumann, Ringo" />
+
+  <od:Person rdf:about="Becker_Mathias"
+    rdfs:label="Becker, Mathias" />
+
+  <od:Person rdf:about="Berger_Guenter"
+    rdfs:label="Berger, Günter" />
+
+  <od:StudiengangSemester rdf:about="Bio.Bachelor.all"
+    rdfs:label="Bio.Bachelor.all" />
+
+  <od:Person rdf:about="Bock_Benjamin"
+    rdfs:label="Bock, Benjamin" />
+
+  <od:Person rdf:about="Boettcher_Martin"
+    rdfs:label="Böttcher, Martin" />
+
+  <od:Person rdf:about="Bogdan_Martin"
+    rdfs:label="Bogdan, Martin" />
+
+  <od:Person rdf:about="Brewka_Gerhard"
+    rdfs:label="Brewka, Gerhard" />
+
+  <od:Room rdf:about="CLI_gr_Hs"
+    rdfs:label="CLI gr. Hs." />
+
+  <od:Block rdf:about="DB.DB-Praktikum"
+    od:hasLevel="3"
+    od:hasUmfang="4P"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Datenbankpraktikum">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.B" />
+    <od:containsLV rdf:resource="DB.DB-Praktikum.1" />
+    <od:hasMaintainer rdf:resource="Rahm_Erhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.4" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.4" />
+    <od:relatedModule rdf:resource="10-201-2210" />
+    <od:relatedModule rdf:resource="10-204-2203-Gym" />
+    <od:relatedModule rdf:resource="10-206-2203-MS" />
+  </od:Block>
+
+  <od:LV rdf:about="DB.DB-Praktikum.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Aumueller_David" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Kernmodul Datenbankpraktikum - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="DB.DBS-2"
+    od:hasLevel="G"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Datenbanksysteme 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.B" />
+    <od:containsLV rdf:resource="DB.DBS-2.1" />
+    <od:containsLV rdf:resource="DB.DBS-2.2" />
+    <od:containsLV rdf:resource="DB.DBS-2.3" />
+    <od:containsLV rdf:resource="DB.DBS-2.4" />
+    <od:containsLV rdf:resource="DB.DBS-2.5" />
+    <od:hasMaintainer rdf:resource="Rahm_Erhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-B.2" />
+    <od:relatedModule rdf:resource="10-201-2212" />
+    <od:relatedModule rdf:resource="10-204-2203-Gym" />
+    <od:relatedModule rdf:resource="10-206-2203-MS" />
+    <rdfs:comment>10-204-2203-Gym und 10-206-2203-MS 2V+1U+4P
+    (DB.DB-Praktikum)</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="DB.DBS-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Datenbanksysteme 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_10" />
+    <od:servedBy rdf:resource="Hartung_Michael" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="DB.DBS-2.2"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="A"
+    rdfs:label="Datenbanksysteme 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Aumueller_David" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="DB.DBS-2.3"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="B"
+    rdfs:label="Datenbanksysteme 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Aumueller_David" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="DB.DBS-2.4"
+    od:dayOfWeek="montags"
+    od:endTime="20:45"
+    od:startTime="19:15"
+    od:typeOfWeek="A"
+    rdfs:label="Datenbanksysteme 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Kolb_Lars" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="DB.DBS-2.5"
+    od:dayOfWeek="montags"
+    od:endTime="20:45"
+    od:startTime="19:15"
+    od:typeOfWeek="B"
+    rdfs:label="Datenbanksysteme 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Kolb_Lars" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="DB.Datenbankkonzepte"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2V+2V"
+    od:planung="fmi"
+    rdfs:label="Anwendungsbezogene Datenbankkonzepte">
+    <od:containsLV rdf:resource="DB.Datenbankkonzepte.1" />
+    <od:containsLV rdf:resource="DB.Datenbankkonzepte.2" />
+    <od:hasMaintainer rdf:resource="Rahm_Erhard" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2213" />
+    <od:relatedModule rdf:resource="10-202-2214" />
+    <rdfs:comment>Kernmodul 10-202-2213 2V+2V, Vertiefungsmodul 10-202-2214
+      2V+2V+2V. Im Sommersemster 2010 nur als Kernmodul im Angebot.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="DB.Datenbankkonzepte.1"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Bio-Datenbanken - Vorlesung">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_017" />
+    <od:servedBy rdf:resource="Kirsten_Toralf" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="DB.Datenbankkonzepte.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Data-Warehouse-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Kolb_Lars" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Person rdf:about="Diem_Claus"
+    rdfs:label="Diem, Claus" />
+
+  <od:Person rdf:about="Dittrich_Thomas"
+    rdfs:label="Dittrich, Thomas" />
+
+  <od:Person rdf:about="Droste_Manfred"
+    rdfs:label="Droste, Manfred" />
+
+  <od:Block rdf:about="EBUS.AT"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2P+2S"
+    od:planung="fmi"
+    rdfs:label="Angewandte Telematik">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.B" />
+    <od:hasMaintainer rdf:resource="Gruhn_Volker" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-Gym.4" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.2" />
+    <od:recommendedFor rdf:resource="LA.MInf-MS.4" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2327" />
+    <od:relatedModule rdf:resource="10-202-2328" />
+    <od:relatedModule rdf:resource="10-202-2329" />
+    <od:relatedModule rdf:resource="10-204-2327-Gym" />
+    <od:relatedModule rdf:resource="10-206-2327-MS" />
+    <rdfs:comment>Vertiefungsmodul 10-202-2327 2V+2S+2P, Kernmodul 10-202-2328
+    2V+2S, Kernmodul 10-202-2329 2P. Die Module werden im Sommersemester 2010
+    nicht angeboten.</rdfs:comment>
+  </od:Block>
+
+  <od:Block rdf:about="EBUS.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Forschungsseminar EBUS">
+    <od:containsLV rdf:resource="EBUS.Seminare.1" />
+    <od:hasMaintainer rdf:resource="Gruhn_Volker" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+  </od:Block>
+
+  <od:LV rdf:about="EBUS.Seminare.1"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Gruhn_Volker" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Forschungsseminar (Bachelor,Master,Diplom) - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Person rdf:about="Etzold_Heiko"
+    rdfs:label="Etzold, Heiko" />
+
+  <od:Block rdf:about="Extra"
+    od:hasLevel="G"
+    od:planung="offen">
+    <od:containsLV rdf:resource="Extra.1" />
+    <od:containsLV rdf:resource="Extra.2" />
+    <od:containsLV rdf:resource="Extra.3" />
+    <od:containsLV rdf:resource="Extra.4" />
+    <od:containsLV rdf:resource="Extra.5" />
+    <od:hasMaintainer rdf:resource="Zeit_geblockt" />
+  </od:Block>
+
+  <od:Extern rdf:about="Extra.1"
+    od:dayOfWeek="montags"
+    od:endTime="22:00"
+    od:startTime="17:00"
+    rdfs:label="Fakultätsrat - Extern">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Zeit_geblockt" />
+    <rdf:type rdf:resource="&od;LV" />
+  </od:Extern>
+
+  <od:Extern rdf:about="Extra.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="22:00"
+    od:startTime="18:00"
+    rdfs:label="Hochschulsport (Jusek) - Extern">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Zeit_geblockt" />
+    <rdf:type rdf:resource="&od;LV" />
+  </od:Extern>
+
+  <od:Extern rdf:about="Extra.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:00"
+    od:startTime="14:00"
+    rdfs:label="Graduiertenkolleg - Extern">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Zeit_geblockt" />
+    <rdf:type rdf:resource="&od;LV" />
+  </od:Extern>
+
+  <od:Extern rdf:about="Extra.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Herderinstitut - Extern">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Zeit_geblockt" />
+    <rdf:type rdf:resource="&od;LV" />
+  </od:Extern>
+
+  <od:Extern rdf:about="Extra.5"
+    od:dayOfWeek="mittwochs"
+    od:endTime="20:00"
+    od:startTime="16:00"
+    rdfs:label="Verteidigungen - Extern">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Zeit_geblockt" />
+    <rdf:type rdf:resource="&od;LV" />
+  </od:Extern>
+
+  <od:Person rdf:about="Faehnrich_KlausPeter"
+    rdfs:label="Fähnrich, Klaus-Peter" />
+
+  <od:Person rdf:about="Frey_Ruediger"
+    rdfs:label="Frey, Rüdiger" />
+
+  <od:Person rdf:about="Fritzsche_Bernd"
+    rdfs:label="Fritzsche, Bernd" />
+
+  <od:Person rdf:about="Gawel_Erik"
+    rdfs:label="Gawel, Erik" />
+
+  <od:Block rdf:about="Geometrie.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Geometrie">
+    <od:containsLV rdf:resource="Geometrie.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="Geometrie.Schwerpunkt.2" />
+    <od:containsLV rdf:resource="Geometrie.Schwerpunkt.3" />
+    <od:containsLV rdf:resource="Geometrie.Schwerpunkt.4" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Geometrie.Schwerpunkt.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Symplektische Geometrie - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Schwarz_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Geometrie.Schwerpunkt.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Symplektische Geometrie - Vorlesung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Schwarz_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Geometrie.Schwerpunkt.3"
+    od:dayOfWeek="montags"
+    od:endTime="16:30"
+    od:startTime="15:00">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Rademacher_HansBert" />
+    <od:servedBy rdf:resource="Schwarz_Matthias" />
+    <od:servedBy rdf:resource="Thom_Andreas" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Fachseminar Transformationsgruppen - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Geometrie.Schwerpunkt.4"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Rademacher_HansBert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Morse theory and closed geodesics - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Person rdf:about="Gittel_HansPeter"
+    rdfs:label="Gittel, Hans-Peter" />
+
+  <od:Person rdf:about="Graebe_HansGert"
+    rdfs:label="Gräbe, Hans-Gert" />
+
+  <od:Person rdf:about="Gruender_W_Biophysik"
+    rdfs:label="Gründer, W. (Biophysik)" />
+
+  <od:Person rdf:about="Gruhn_Volker"
+    rdfs:label="Gruhn, Volker" />
+
+  <od:Person rdf:about="Grundmann_Marius"
+    rdfs:label="Grundmann, Marius" />
+
+  <od:Person rdf:about="Guenther_Matthias"
+    rdfs:label="Günther, Matthias" />
+
+  <od:Person rdf:about="Guettler_Frank"
+    rdfs:label="Güttler, Frank" />
+
+  <od:Person rdf:about="Gyoengyoesi_Thomas"
+    rdfs:label="Gyöngyösi, Thomas" />
+
+  <od:Person rdf:about="Hackbusch_Wolfgang"
+    rdfs:label="Hackbusch, Wolfgang" />
+
+  <od:Person rdf:about="Hackermueller_Joerg"
+    rdfs:label="Hackermüller, Jörg" />
+
+  <od:Room rdf:about="Haertelstrasze_R_017"
+    rdfs:label="Härtelstraße, R 017" />
+
+  <od:Room rdf:about="Haertelstrasze_R_018"
+    rdfs:label="Härtelstraße, R 018" />
+
+  <od:Room rdf:about="Haertelstrasze_R_109"
+    rdfs:label="Härtelstraße, R 109" />
+
+  <od:Room rdf:about="Haertelstrasze_R_110"
+    rdfs:label="Härtelstraße, R 110" />
+
+  <od:Person rdf:about="Haertling_Silvia"
+    rdfs:label="Härtling, Silvia" />
+
+  <od:Person rdf:about="Hartung_Michael"
+    rdfs:label="Hartung, Michael" />
+
+  <od:Person rdf:about="Hasenclever_Dirk"
+    rdfs:label="Hasenclever, Dirk" />
+
+  <od:Person rdf:about="Hecht_Michael"
+    rdfs:label="Hecht, Michael" />
+
+  <od:Person rdf:about="Heine_Christian"
+    rdfs:label="Heine, Christian" />
+
+  <od:Person rdf:about="Hellmund_Meik"
+    rdfs:label="Hellmund, Meik" />
+
+  <od:Person rdf:about="Herre_Heinrich"
+    rdfs:label="Herre, Heinrich" />
+
+  <od:Person rdf:about="Herzog_Bernd"
+    rdfs:label="Herzog, Bernd" />
+
+  <od:Person rdf:about="Heyde_Frank"
+    rdfs:label="Heyde, Frank" />
+
+  <od:Person rdf:about="Heyer_Gerhard"
+    rdfs:label="Heyer, Gerhard" />
+
+  <od:Person rdf:about="Hoffmann_Rico"
+    rdfs:label="Hoffmann, Rico" />
+
+  <od:Room rdf:about="Hs_1"
+    rdfs:label="Hs 1" />
+
+  <od:Room rdf:about="Hs_10"
+    rdfs:label="Hs 10" />
+
+  <od:Room rdf:about="Hs_12"
+    rdfs:label="Hs 12" />
+
+  <od:Room rdf:about="Hs_14"
+    rdfs:label="Hs 14" />
+
+  <od:Room rdf:about="Hs_15"
+    rdfs:label="Hs 15" />
+
+  <od:Room rdf:about="Hs_19"
+    rdfs:label="Hs 19" />
+
+  <od:Room rdf:about="Hs_3"
+    rdfs:label="Hs 3" />
+
+  <od:Room rdf:about="Hs_4"
+    rdfs:label="Hs 4" />
+
+  <od:Room rdf:about="Hs_5"
+    rdfs:label="Hs 5" />
+
+  <od:Room rdf:about="Hs_6"
+    rdfs:label="Hs 6" />
+
+  <od:Block rdf:about="ICCAS.MMS"
+    od:hasLevel="3"
+    od:hasUmfang="2S"
+    od:planung="iccas">
+    <od:containsLV rdf:resource="ICCAS.MMS.1" />
+    <od:containsLV rdf:resource="ICCAS.MMS.2" />
+    <od:containsLV rdf:resource="ICCAS.MMS.3" />
+    <od:hasMaintainer rdf:resource="NN" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="Inf.Master.4" />
+    <od:relatedModule rdf:resource="10-202-4109" />
+    <rdfs:label>VM Mensch-Maschine-Schnittstelle und Usability für die
+    Medizin</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="ICCAS.MMS.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Human Factors - Vorlesung">
+    <od:locatedAt rdf:resource="ICCAS_Seminarraum" />
+    <od:servedBy rdf:resource="Korb_Werner" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="ICCAS.MMS.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="15:45"
+    od:startTime="14:15"
+    rdfs:label="Informatik in der Chirurgie - Seminar">
+    <od:locatedAt rdf:resource="ICCAS_Seminarraum" />
+    <od:servedBy rdf:resource="Neumuth_Thomas" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="ICCAS.MMS.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Virtuelle Realität - Vorlesung">
+    <od:locatedAt rdf:resource="ICCAS_Seminarraum" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Room rdf:about="ICCAS_Seminarraum"
+    rdfs:label="ICCAS, Seminarraum" />
+
+  <od:Block rdf:about="IPSP.Calculus-2"
+    od:hasLevel="E"
+    od:hasUmfang="4V+2U"
+    od:planung="physik"
+    rdfs:label="Calculus 2 für Physiker (englisch)">
+    <od:containsLV rdf:resource="IPSP.Calculus-2.1" />
+    <od:containsLV rdf:resource="IPSP.Calculus-2.2" />
+    <od:containsLV rdf:resource="IPSP.Calculus-2.3" />
+    <od:hasMaintainer rdf:resource="Kuehn_Thomas" />
+    <od:recommendedFor rdf:resource="Phys.IPSP.2" />
+  </od:Block>
+
+  <od:LV rdf:about="IPSP.Calculus-2.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Ph_SR_218" />
+    <od:servedBy rdf:resource="Kuehn_Thomas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Calculus 2 für Physiker (englisch) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="IPSP.Calculus-2.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Ph_SR_221" />
+    <od:servedBy rdf:resource="Kuehn_Thomas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Calculus 2 für Physiker (englisch) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="IPSP.Calculus-2.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:30"
+    od:startTime="11:00">
+    <od:locatedAt rdf:resource="Ph_SR_221" />
+    <od:servedBy rdf:resource="Kuehn_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Calculus 2 für Physiker (englisch) - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="IPSP.ODE"
+    od:hasLevel="E"
+    od:hasUmfang="2V+2U"
+    od:planung="physik"
+    rdfs:label="ODE für Physiker (englisch)">
+    <od:containsLV rdf:resource="IPSP.ODE.1" />
+    <od:containsLV rdf:resource="IPSP.ODE.2" />
+    <od:hasMaintainer rdf:resource="Kuehn_Thomas" />
+    <od:recommendedFor rdf:resource="Phys.IPSP.2" />
+  </od:Block>
+
+  <od:LV rdf:about="IPSP.ODE.1"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Ph_SR_218" />
+    <od:servedBy rdf:resource="Kuehn_Thomas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>ODE für Physiker (englisch) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="IPSP.ODE.2"
+    od:dayOfWeek="freitags"
+    od:endTime="9:00"
+    od:startTime="7:30"
+    rdfs:label="ODE für Physiker (englisch) - Uebung">
+    <od:locatedAt rdf:resource="Ph_SR_218" />
+    <od:servedBy rdf:resource="Kuehn_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="IPSP.PDE"
+    od:hasLevel="E"
+    od:hasUmfang="4V+2U"
+    od:planung="physik"
+    rdfs:label="PDE für Physiker (englisch)">
+    <od:containsLV rdf:resource="IPSP.PDE.1" />
+    <od:containsLV rdf:resource="IPSP.PDE.2" />
+    <od:containsLV rdf:resource="IPSP.PDE.3" />
+    <od:hasMaintainer rdf:resource="Heyde_Frank" />
+    <od:recommendedFor rdf:resource="Phys.IPSP.4" />
+  </od:Block>
+
+  <od:LV rdf:about="IPSP.PDE.1"
+    od:dayOfWeek="montags"
+    od:endTime="15:00"
+    od:startTime="13:30">
+    <od:locatedAt rdf:resource="Ph_SR_224" />
+    <od:servedBy rdf:resource="Heyde_Frank" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>PDE für Physiker (englisch) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="IPSP.PDE.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Ph_SR_224" />
+    <od:servedBy rdf:resource="Heyde_Frank" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>PDE für Physiker (englisch) - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="IPSP.PDE.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:30"
+    od:startTime="11:00"
+    rdfs:label="PDE für Physiker (englisch) - Uebung">
+    <od:locatedAt rdf:resource="Ph_SR_224" />
+    <od:servedBy rdf:resource="Heyde_Frank" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="ISys.Neuroscience"
+    od:hasLevel="3"
+    od:hasUmfang="4V+4P"
+    od:planung="fmi">
+    <od:containsLV rdf:resource="ISys.Neuroscience.1" />
+    <od:containsLV rdf:resource="ISys.Neuroscience.2" />
+    <od:containsLV rdf:resource="ISys.Neuroscience.3" />
+    <od:hasMaintainer rdf:resource="Schierwagen_Andreas" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2310" />
+    <rdfs:label>Vertiefungsmodul Computational Neuroscience</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="ISys.Neuroscience.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Schierwagen_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Vertiefungsmodul Computational Neuroscience - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ISys.Neuroscience.2"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Schierwagen_Andreas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Vertiefungsmodul Computational Neuroscience - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ISys.Neuroscience.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:00"
+    od:startTime="9:00"
+    rdfs:label="NEURON-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_302" />
+    <od:servedBy rdf:resource="Schierwagen_Andreas" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="ISys.Seminare"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Seminare Intelligente Systeme">
+    <od:containsLV rdf:resource="ISys.Seminare.1" />
+    <od:hasMaintainer rdf:resource="Brewka_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-201-2010" />
+    <od:relatedModule rdf:resource="10-202-2011" />
+  </od:Block>
+
+  <od:LV rdf:about="ISys.Seminare.1"
+    od:dayOfWeek="n.V."
+    rdfs:label="Seminare Intelligente Systeme - Seminar">
+    <od:locatedAt rdf:resource="nV" />
+    <od:servedBy rdf:resource="Brewka_Gerhard" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="ISys.WBS"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Kernmodul Wissensbasierte Systeme">
+    <od:containsLV rdf:resource="ISys.WBS.1" />
+    <od:containsLV rdf:resource="ISys.WBS.2" />
+    <od:hasMaintainer rdf:resource="Brewka_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.6" />
+    <od:relatedModule rdf:resource="10-201-2324" />
+  </od:Block>
+
+  <od:LV rdf:about="ISys.WBS.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Brewka_Gerhard" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Wissensbasierte Systeme - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="ISys.WBS.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Baumann_Ringo" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Kernmodul Wissensbasierte Systeme - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="Inf.ADS-2"
+    od:hasLevel="1"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Algorithmen und Datenstrukturen 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.I" />
+    <od:containsLV rdf:resource="Inf.ADS-2.1" />
+    <od:containsLV rdf:resource="Inf.ADS-2.2" />
+    <od:containsLV rdf:resource="Inf.ADS-2.3" />
+    <od:containsLV rdf:resource="Inf.ADS-2.4" />
+    <od:containsLV rdf:resource="Inf.ADS-2.5" />
+    <od:containsLV rdf:resource="Inf.ADS-2.6" />
+    <od:containsLV rdf:resource="Inf.ADS-2.7" />
+    <od:containsLV rdf:resource="Inf.ADS-2.8" />
+    <od:containsLV rdf:resource="Inf.ADS-2.9" />
+    <od:hasMaintainer rdf:resource="Stadler_Peter" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.2" />
+    <od:recommendedFor rdf:resource="LA.BInf.4" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-B.4" />
+    <od:relatedModule rdf:resource="10-201-2001-2" />
+    <od:relatedModule rdf:resource="10-203-2001-2" />
+  </od:Block>
+
+  <od:LV rdf:about="Inf.ADS-2.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Hs_3" />
+    <od:servedBy rdf:resource="Klemm_Konstantin" />
+    <od:servedBy rdf:resource="Stadler_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.2"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Rose_Dominic" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.3"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Rose_Dominic" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.4"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Rose_Dominic" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.5"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Rose_Dominic" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.6"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.7"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Prohaska_Sonja" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.8"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Klemm_Konstantin" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.ADS-2.9"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Klemm_Konstantin" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Algorithmen und Datenstrukturen 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Inf.Bachelor.2"
+    rdfs:label="Inf.Bachelor.2" />
+
+  <od:StudiengangSemester rdf:about="Inf.Bachelor.4"
+    rdfs:label="Inf.Bachelor.4" />
+
+  <od:StudiengangSemester rdf:about="Inf.Bachelor.6"
+    rdfs:label="Inf.Bachelor.6" />
+
+  <od:Block rdf:about="Inf.Berechenbarkeit"
+    od:hasLevel="1"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Berechenbarkeit">
+    <od:containsLV rdf:resource="Inf.Berechenbarkeit.1" />
+    <od:containsLV rdf:resource="Inf.Berechenbarkeit.2" />
+    <od:containsLV rdf:resource="Inf.Berechenbarkeit.3" />
+    <od:containsLV rdf:resource="Inf.Berechenbarkeit.4" />
+    <od:containsLV rdf:resource="Inf.Berechenbarkeit.5" />
+    <od:hasMaintainer rdf:resource="Brewka_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:relatedModule rdf:resource="10-201-2009" />
+  </od:Block>
+
+  <od:LV rdf:about="Inf.Berechenbarkeit.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Berechenbarkeit - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Brewka_Gerhard" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Inf.Berechenbarkeit.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="A"
+    rdfs:label="Berechenbarkeit - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Loebe_Frank" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Inf.Berechenbarkeit.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="B"
+    rdfs:label="Berechenbarkeit - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Loebe_Frank" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Inf.Berechenbarkeit.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="A"
+    rdfs:label="Berechenbarkeit - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Loebe_Frank" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Inf.Berechenbarkeit.5"
+    od:dayOfWeek="donnerstags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    od:typeOfWeek="B"
+    rdfs:label="Berechenbarkeit - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Loebe_Frank" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Inf.Diplom.ab_6"
+    rdfs:label="Inf.Diplom.ab 6" />
+
+  <od:Block rdf:about="Inf.IM"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:comment="nicht wöchentlich"
+    rdfs:label="Kernmodul Informationsmanagement">
+    <od:containsLV rdf:resource="Inf.IM.1" />
+    <od:containsLV rdf:resource="Inf.IM.2" />
+    <od:containsLV rdf:resource="Inf.IM.3" />
+    <od:hasMaintainer rdf:resource="Schlottke_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2333" />
+  </od:Block>
+
+  <od:LV rdf:about="Inf.IM.1"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Schlottke_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Informationsmanagement - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.IM.2"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Schlottke_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Kernmodul Informationsmanagement - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.IM.3"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Schlottke_Manfred" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Kernmodul Informationsmanagement - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="Inf.LinAlg"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Lineare Algebra für Informatiker">
+    <od:containsLV rdf:resource="Inf.LinAlg.1" />
+    <od:containsLV rdf:resource="Inf.LinAlg.2" />
+    <od:containsLV rdf:resource="Inf.LinAlg.3" />
+    <od:containsLV rdf:resource="Inf.LinAlg.4" />
+    <od:containsLV rdf:resource="Inf.LinAlg.5" />
+    <od:containsLV rdf:resource="Inf.LinAlg.6" />
+    <od:hasMaintainer rdf:resource="Pruefer_Friedbert" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.2" />
+    <od:relatedModule rdf:resource="10-201-1015" />
+  </od:Block>
+
+  <od:LV rdf:about="Inf.LinAlg.1"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Pruefer_Friedbert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.LinAlg.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Hs_4" />
+    <od:servedBy rdf:resource="Pruefer_Friedbert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.LinAlg.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Netzer_Tim" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.LinAlg.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Netzer_Tim" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.LinAlg.5"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.LinAlg.6"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Lineare Algebra für Informatiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Inf.Master.2"
+    rdfs:label="Inf.Master.2" />
+
+  <od:StudiengangSemester rdf:about="Inf.Master.4"
+    rdfs:label="Inf.Master.4" />
+
+  <od:Block rdf:about="Inf.MuP-2"
+    od:hasLevel="1"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Modellierung und Programmierung 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.H" />
+    <od:containsLV rdf:resource="Inf.MuP-2.1" />
+    <od:containsLV rdf:resource="Inf.MuP-2.10" />
+    <od:containsLV rdf:resource="Inf.MuP-2.11" />
+    <od:containsLV rdf:resource="Inf.MuP-2.2" />
+    <od:containsLV rdf:resource="Inf.MuP-2.3" />
+    <od:containsLV rdf:resource="Inf.MuP-2.4" />
+    <od:containsLV rdf:resource="Inf.MuP-2.5" />
+    <od:containsLV rdf:resource="Inf.MuP-2.6" />
+    <od:containsLV rdf:resource="Inf.MuP-2.7" />
+    <od:containsLV rdf:resource="Inf.MuP-2.8" />
+    <od:containsLV rdf:resource="Inf.MuP-2.9" />
+    <od:hasMaintainer rdf:resource="Laue_Ralf" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.2" />
+    <od:recommendedFor rdf:resource="LA.BInf.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+    <od:relatedModule rdf:resource="10-201-2005-2" />
+    <od:relatedModule rdf:resource="10-203-2005-2" />
+    <rdfs:comment>Achtung VL neuer Termin. Beginn am 15.04.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="Inf.MuP-2.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Laue_Ralf" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.10"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.11"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.2"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Heine_Christian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.3"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Heine_Christian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.4"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.5"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.6"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Heine_Christian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.7"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Heine_Christian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.8"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.MuP-2.9"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Modellierung und Programmierung 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="Inf.OO-Praktikum"
+    od:hasLevel="1"
+    od:hasUmfang="1V+3P"
+    od:planung="fmi">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.H" />
+    <od:containsLV rdf:resource="Inf.OO-Praktikum.1" />
+    <od:containsLV rdf:resource="Inf.OO-Praktikum.2" />
+    <od:containsLV rdf:resource="Inf.OO-Praktikum.3" />
+    <od:containsLV rdf:resource="Inf.OO-Praktikum.4" />
+    <od:hasMaintainer rdf:resource="Meiler_Monika" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.2" />
+    <od:recommendedFor rdf:resource="LA.BInf.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.4" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+    <od:relatedModule rdf:resource="10-201-2011" />
+    <od:relatedModule rdf:resource="10-203-2005-2" />
+    <rdfs:comment>Wegen HiWi-Einsatz kann das Praktikum nicht vor 13 Uhr beginnen. 
+      Siehe http://www.informatik.uni-leipzig.de/~meiler/Jprak.dir</rdfs:comment>
+    <rdfs:label>Praktikum Objektorientierte Programmierung</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="Inf.OO-Praktikum.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="9:00"
+    od:startTime="7:30">
+    <od:locatedAt rdf:resource="Hs_4" />
+    <od:servedBy rdf:resource="Meiler_Monika" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Praktikum Objektorientierte Programmierung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.OO-Praktikum.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:00"
+    od:startTime="13:00">
+    <od:locatedAt rdf:resource="Joh_26_305310311_Pool" />
+    <od:servedBy rdf:resource="Meiler_Monika" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Praktikum Objektorientierte Programmierung - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.OO-Praktikum.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="19:00"
+    od:startTime="16:00">
+    <od:locatedAt rdf:resource="Joh_26_305310311_Pool" />
+    <od:servedBy rdf:resource="Meiler_Monika" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Praktikum Objektorientierte Programmierung - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.OO-Praktikum.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="22:00"
+    od:startTime="19:00">
+    <od:locatedAt rdf:resource="Joh_26_305310311_Pool" />
+    <od:servedBy rdf:resource="Meiler_Monika" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Praktikum Objektorientierte Programmierung - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Inf.SQ.all"
+    rdfs:label="Inf.SQ.all" />
+
+  <od:Block rdf:about="Inf.Trends"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="imise"
+    rdfs:label="Aktuelle Trends der Informatik">
+    <od:containsLV rdf:resource="Inf.Trends.1" />
+    <od:containsLV rdf:resource="Inf.Trends.2" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2012" />
+    <rdfs:comment>Bei Durchführung eines zusätzlichen Praktikums werden 10 LP
+      vergeben werden.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="Inf.Trends.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Herre_Heinrich" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Ontologie für Informationssysteme - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Inf.Trends.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:00"
+    od:startTime="15:30">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_018" />
+    <od:servedBy rdf:resource="Herre_Heinrich" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Ontologien und das Semantic Web - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Person rdf:about="Jahn_Franziska"
+    rdfs:label="Jahn, Franziska" />
+
+  <od:Room rdf:about="Joh_26_122"
+    rdfs:label="Joh 26, 1-22" />
+
+  <od:Room rdf:about="Joh_26_216_Pool"
+    rdfs:label="Joh 26, 2-16 (Pool)" />
+
+  <od:Room rdf:about="Joh_26_302"
+    rdfs:label="Joh 26, 3-02" />
+
+  <od:Room rdf:about="Joh_26_305310311_Pool"
+    rdfs:label="Joh 26, 3-05/3-10/3-11 (Pool)" />
+
+  <od:Room rdf:about="Joh_26_310"
+    rdfs:label="Joh 26, 3-10" />
+
+  <od:Room rdf:about="Joh_26_435"
+    rdfs:label="Joh 26, 4-35" />
+
+  <od:Room rdf:about="Joh_26_442"
+    rdfs:label="Joh 26, 4-42" />
+
+  <od:Room rdf:about="Joh_26_524_Pool"
+    rdfs:label="Joh 26, 5-24 (Pool)" />
+
+  <od:Room rdf:about="Joh_26_FK_Hs"
+    rdfs:label="Joh 26, FK Hs." />
+
+  <od:Person rdf:about="Jost_Juergen"
+    rdfs:label="Jost, Jürgen" />
+
+  <od:Person rdf:about="Kaes_Josef_Alfons"
+    rdfs:label="Käs, Josef Alfons" />
+
+  <od:Person rdf:about="Kahle_Thomas"
+    rdfs:label="Kahle, Thomas" />
+
+  <od:Person rdf:about="Kirstein_Bernd"
+    rdfs:label="Kirstein, Bernd" />
+
+  <od:Person rdf:about="Kirsten_Toralf"
+    rdfs:label="Kirsten, Toralf" />
+
+  <od:Person rdf:about="Klemm_Konstantin"
+    rdfs:label="Klemm, Konstantin" />
+
+  <od:Person rdf:about="Klotz_LutzPeter"
+    rdfs:label="Klotz, Lutz-Peter" />
+
+  <od:Person rdf:about="Kolb_Lars"
+    rdfs:label="Kolb, Lars" />
+
+  <od:Person rdf:about="Korb_Werner"
+    rdfs:label="Korb, Werner" />
+
+  <od:Person rdf:about="Krausz_Veiko"
+    rdfs:label="Krauß, Veiko" />
+
+  <od:Person rdf:about="Kripfganz_Anita"
+    rdfs:label="Kripfganz, Anita" />
+
+  <od:Person rdf:about="Kuehn_Thomas"
+    rdfs:label="Kühn, Thomas" />
+
+  <od:Person rdf:about="Kuehne_Stefan"
+    rdfs:label="Kühne, Stefan" />
+
+  <od:Person rdf:about="Kuersten_KlausDetlef"
+    rdfs:label="Kürsten, Klaus-Detlef" />
+
+  <od:Person rdf:about="Kunkel_Peter"
+    rdfs:label="Kunkel, Peter" />
+
+  <od:Block rdf:about="LA.Analysis"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Höhere Analysis f. Master LA Math.">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.G" />
+    <od:containsLV rdf:resource="LA.Analysis.1" />
+    <od:containsLV rdf:resource="LA.Analysis.2" />
+    <od:containsLV rdf:resource="LA.Analysis.3" />
+    <od:containsLV rdf:resource="LA.Analysis.4" />
+    <od:hasMaintainer rdf:resource="Klotz_LutzPeter" />
+    <od:recommendedFor rdf:resource="LA.MMath-H.2" />
+    <od:recommendedFor rdf:resource="LA.MMath-MF.2" />
+    <od:relatedModule rdf:resource="10-MATHMM-1021-Gym" />
+    <od:relatedModule rdf:resource="10-MATHMM-1021-MS" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.Analysis.1"
+    od:dayOfWeek="montags (ZL)"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Hs_15" />
+    <od:servedBy rdf:resource="Klotz_LutzPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Höhere Analysis f. Master LA Math. - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.Analysis.2"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Hs_15" />
+    <od:servedBy rdf:resource="Klotz_LutzPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Höhere Analysis f. Master LA Math. - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.Analysis.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Klotz_LutzPeter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Höhere Analysis f. Master LA Math. - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.Analysis.4"
+    od:dayOfWeek="mittwochs"
+    od:endTime="20:30"
+    od:startTime="19:00">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Klotz_LutzPeter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Höhere Analysis f. Master LA Math. - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="LA.BInf.2"
+    rdfs:label="LA.BInf.2" />
+
+  <od:StudiengangSemester rdf:about="LA.BInf.4"
+    rdfs:label="LA.BInf.4" />
+
+  <od:StudiengangSemester rdf:about="LA.BInf.6"
+    rdfs:label="LA.BInf.6" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-G.2"
+    rdfs:label="LA.BMath-G.2" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-G.4"
+    rdfs:label="LA.BMath-G.4" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H-MF.2"
+    rdfs:label="LA.BMath-H-MF.2" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H-MF.4"
+    rdfs:label="LA.BMath-H-MF.4" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H-MF.6"
+    rdfs:label="LA.BMath-H-MF.6" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H.2"
+    rdfs:label="LA.BMath-H.2" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H.4"
+    rdfs:label="LA.BMath-H.4" />
+
+  <od:StudiengangSemester rdf:about="LA.BMath-H.6"
+    rdfs:label="LA.BMath-H.6" />
+
+  <od:Block rdf:about="LA.D-Inf"
+    od:hasLevel="offen"
+    od:hasUmfang="2V+2U+1SPS"
+    od:planung="fmi"
+    rdfs:comment="Kontakt: mail@dittrich-leipzig.de"
+    rdfs:label="Grundlagen der Didaktik der Informatik">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.G" />
+    <od:containsLV rdf:resource="LA.D-Inf.1" />
+    <od:containsLV rdf:resource="LA.D-Inf.2" />
+    <od:containsLV rdf:resource="LA.D-Inf.3" />
+    <od:hasMaintainer rdf:resource="Dittrich_Thomas" />
+    <od:recommendedFor rdf:resource="LA.BInf.6" />
+    <od:relatedModule rdf:resource="10-203-2007" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.D-Inf.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:00"
+    od:startTime="8:00">
+    <od:locatedAt rdf:resource="Sportgymnasium" />
+    <od:servedBy rdf:resource="Dittrich_Thomas" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Grundlagen der Didaktik der Informatik - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.D-Inf.2"
+    od:dayOfWeek="freitags"
+    od:endTime="10:00"
+    od:startTime="8:00">
+    <od:locatedAt rdf:resource="Sportgymnasium" />
+    <od:servedBy rdf:resource="Dittrich_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundlagen der Didaktik der Informatik - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.D-Inf.3"
+    od:dayOfWeek="n.V."
+    rdfs:label="Schulpraktische Übung - Seminar">
+    <od:locatedAt rdf:resource="Sportgymnasium" />
+    <od:servedBy rdf:resource="Dittrich_Thomas" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.D-Math"
+    od:hasLevel="offen"
+    od:hasUmfang="2S"
+    od:planung="fmi"
+    rdfs:label="Didaktik der Mathematik">
+    <od:containsLV rdf:resource="LA.D-Math.1" />
+    <od:hasMaintainer rdf:resource="Etzold_Heiko" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.6" />
+    <od:recommendedFor rdf:resource="LA.MMath-H.2" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.D-Math.1"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Didaktik der Mathematik - Seminar">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Etzold_Heiko" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.GDgl"
+    od:hasLevel="1"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.E" />
+    <od:containsLV rdf:resource="LA.GDgl.1" />
+    <od:containsLV rdf:resource="LA.GDgl.2" />
+    <od:containsLV rdf:resource="LA.GDgl.3" />
+    <od:hasMaintainer rdf:resource="Kuersten_KlausDetlef" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.4" />
+    <od:relatedModule rdf:resource="10-MATHB-1004" />
+    <rdfs:label>Gewöhnliche Differentialgleichungen LA Gymnasien</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="LA.GDgl.1"
+    od:dayOfWeek="mittwochs (ZL)"
+    od:endTime="20:45"
+    od:startTime="19:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Kuersten_KlausDetlef" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Gewöhnliche Differentialgleichungen LA Gymnasien - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GDgl.2"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Kuersten_KlausDetlef" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Gewöhnliche Differentialgleichungen LA Gymnasien - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GDgl.3"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Kuersten_KlausDetlef" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Gewöhnliche Differentialgleichungen LA Gymnasien - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="LA.GW-Algebra"
+    od:hasLevel="1"
+    od:hasUmfang="6V+2U"
+    od:planung="fmi"
+    rdfs:label="Grundwissen Algebra und Anwendungen">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.D" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.1" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.2" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.3" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.4" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.5" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.6" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.7" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.8" />
+    <od:containsLV rdf:resource="LA.GW-Algebra.9" />
+    <od:recommendedFor rdf:resource="LA.BMath-G.2" />
+    <od:recommendedFor rdf:resource="LA.BMath-H-MF.2" />
+    <od:relatedModule rdf:resource="10-GRMATH-1015" />
+    <rdfs:comment>Übung im Wechsel Analyt. Geometrie und
+    Algebra/Zahlentheorie</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="LA.GW-Algebra.1"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="9:00"
+    od:startTime="7:30"
+    rdfs:label="Analytische Geometrie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.2"
+    od:dayOfWeek="montags (ZL)"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Algebra/Zahlentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Rademacher_HansBert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.3"
+    od:dayOfWeek="mittwochs (ZL)"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Algebra/Zahlentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Rademacher_HansBert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.4"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundwissen Algebra und Anwendungen - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.5"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundwissen Algebra und Anwendungen - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.6"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundwissen Algebra und Anwendungen - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.7"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Quapp_Wolfgang" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundwissen Algebra und Anwendungen - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.8"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Algebra.9"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.GW-Analysis-2-MF"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Grundwissen Analysis 2 (MF)">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.E" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-2-MF.1" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-2-MF.2" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-2-MF.3" />
+    <od:hasMaintainer rdf:resource="Berger_Guenter" />
+    <od:recommendedFor rdf:resource="LA.BMath-H-MF.4" />
+    <od:relatedModule rdf:resource="10-MATHB-1018" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.GW-Analysis-2-MF.1"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Grundwissen Analysis 2 (MF) - Vorlesung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Analysis-2-MF.2"
+    od:dayOfWeek="donnerstags (ZL)"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Grundwissen Analysis 2 (MF) - Vorlesung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Analysis-2-MF.3"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Grundwissen Analysis 2 (MF) - Uebung">
+    <od:locatedAt rdf:resource="SG_310" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.GW-Analysis-GS"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Grundwissen Analysis (GS)">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.E" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-GS.1" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-GS.2" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-GS.3" />
+    <od:containsLV rdf:resource="LA.GW-Analysis-GS.4" />
+    <od:hasMaintainer rdf:resource="Guenther_Matthias" />
+    <od:recommendedFor rdf:resource="LA.BMath-G.4" />
+    <od:relatedModule rdf:resource="10-GRMATH-1012" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.GW-Analysis-GS.1"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Grundwissen Analysis (GS) - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Guenther_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Analysis-GS.2"
+    od:dayOfWeek="donnerstags (ZL)"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Grundwissen Analysis (GS) - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Guenther_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Analysis-GS.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Grundwissen Analysis (GS) - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.GW-Analysis-GS.4"
+    od:dayOfWeek="mittwochs"
+    od:endTime="20:45"
+    od:startTime="19:15"
+    rdfs:label="Grundwissen Analysis (GS) - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.Geometrie"
+    od:hasLevel="1"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="Analytische Geometrie">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.D" />
+    <od:containsLV rdf:resource="LA.Geometrie.1" />
+    <od:containsLV rdf:resource="LA.Geometrie.2" />
+    <od:containsLV rdf:resource="LA.Geometrie.3" />
+    <od:containsLV rdf:resource="LA.Geometrie.4" />
+    <od:containsLV rdf:resource="LA.Geometrie.5" />
+    <od:hasMaintainer rdf:resource="Diem_Claus" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.2" />
+    <od:relatedModule rdf:resource="10-MATHB-1003" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.Geometrie.1"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Analytische Geometrie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Diem_Claus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Geometrie.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    od:typeOfWeek="A"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Geometrie.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    od:typeOfWeek="B"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Geometrie.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="A"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Geometrie.5"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="B"
+    rdfs:label="Analytische Geometrie - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="LA.MInf-Gym.2"
+    rdfs:label="LA.MInf-Gym.2" />
+
+  <od:StudiengangSemester rdf:about="LA.MInf-Gym.4"
+    rdfs:label="LA.MInf-Gym.4" />
+
+  <od:StudiengangSemester rdf:about="LA.MInf-MS.2"
+    rdfs:label="LA.MInf-MS.2" />
+
+  <od:StudiengangSemester rdf:about="LA.MInf-MS.4"
+    rdfs:label="LA.MInf-MS.4" />
+
+  <od:StudiengangSemester rdf:about="LA.MMath-H.2"
+    rdfs:label="LA.MMath-H.2" />
+
+  <od:StudiengangSemester rdf:about="LA.MMath-H.4"
+    rdfs:label="LA.MMath-H.4" />
+
+  <od:StudiengangSemester rdf:about="LA.MMath-MF.2"
+    rdfs:label="LA.MMath-MF.2" />
+
+  <od:StudiengangSemester rdf:about="LA.Math.all"
+    rdfs:label="LA.Math.all" />
+
+  <od:Block rdf:about="LA.Numerik"
+    od:hasLevel="1"
+    od:hasUmfang="3V+1U"
+    od:planung="fmi"
+    rdfs:label="Numerik für LA">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.F" />
+    <od:containsLV rdf:resource="LA.Numerik.1" />
+    <od:containsLV rdf:resource="LA.Numerik.2" />
+    <od:containsLV rdf:resource="LA.Numerik.3" />
+    <od:containsLV rdf:resource="LA.Numerik.4" />
+    <od:hasMaintainer rdf:resource="Berger_Guenter" />
+    <od:recommendedFor rdf:resource="LA.BMath-H-MF.6" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.6" />
+    <od:relatedModule rdf:resource="10-MATHB-1602" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.Numerik.1"
+    od:dayOfWeek="mittwochs (ZL)"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Numerik für LA - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Numerik.2"
+    od:dayOfWeek="freitags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A"
+    rdfs:label="Numerik für LA - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Numerik.3"
+    od:dayOfWeek="freitags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B"
+    rdfs:label="Numerik für LA - Uebung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="LA.Numerik.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B"
+    rdfs:label="Numerik für LA - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Berger_Guenter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="LA.WT"
+    od:hasLevel="1"
+    od:hasUmfang="3V+1U"
+    od:planung="fmi"
+    rdfs:label="Wahrscheinlichkeitstheorie für LA">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.F" />
+    <od:containsLV rdf:resource="LA.WT.1" />
+    <od:containsLV rdf:resource="LA.WT.2" />
+    <od:containsLV rdf:resource="LA.WT.3" />
+    <od:containsLV rdf:resource="LA.WT.4" />
+    <od:hasMaintainer rdf:resource="Riedel_Manfred" />
+    <od:recommendedFor rdf:resource="LA.BMath-H-MF.6" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.6" />
+    <od:relatedModule rdf:resource="10-MATHB-1802" />
+  </od:Block>
+
+  <od:LV rdf:about="LA.WT.1"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Riedel_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie für LA - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.WT.2"
+    od:dayOfWeek="freitags (ZL)"
+    od:endTime="9:00"
+    od:startTime="7:30"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Riedel_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie für LA - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.WT.3"
+    od:dayOfWeek="freitags"
+    od:endTime="9:00"
+    od:startTime="7:30"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Becker_Mathias" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie für LA - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="LA.WT.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Becker_Mathias" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie für LA - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="LSGM"
+    od:hasLevel="G"
+    od:planung="offen"
+    rdfs:label="LSGM">
+    <od:containsLV rdf:resource="LSGM.1" />
+    <od:containsLV rdf:resource="LSGM.2" />
+    <od:containsLV rdf:resource="LSGM.3" />
+    <od:containsLV rdf:resource="LSGM.4" />
+    <od:containsLV rdf:resource="LSGM.5" />
+    <od:containsLV rdf:resource="LSGM.6" />
+    <od:containsLV rdf:resource="LSGM.7" />
+    <od:containsLV rdf:resource="LSGM.8" />
+    <od:containsLV rdf:resource="LSGM.9" />
+    <od:hasMaintainer rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Person" />
+  </od:Block>
+
+  <od:LV rdf:about="LSGM.1"
+    od:dayOfWeek="montags"
+    od:endTime="18:00"
+    od:startTime="16:30"
+    rdfs:label="Schülerzirkel 5-1 - Seminar">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:00"
+    od:startTime="15:30"
+    rdfs:label="Schülerzirkel 5-2 - Seminar">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="17:30"
+    od:startTime="16:00"
+    rdfs:label="Schülerzirkel 5-3 - Seminar">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.4"
+    od:dayOfWeek="freitags"
+    od:endTime="17:00"
+    od:startTime="15:30"
+    rdfs:label="Schülerzirkel 6-1 - Seminar">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.5"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:30"
+    od:startTime="16:00"
+    rdfs:label="Schülerzirkel 6-2 - Seminar">
+    <od:locatedAt rdf:resource="SG_114" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.6"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:45"
+    od:startTime="16:15"
+    rdfs:label="Schülerzirkel 7 - Seminar">
+    <od:locatedAt rdf:resource="SG_111" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.7"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:00"
+    od:startTime="16:30"
+    rdfs:label="Schülerzirkel 8-1 - Seminar">
+    <od:locatedAt rdf:resource="SG_115" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.8"
+    od:dayOfWeek="mittwochs"
+    od:endTime="17:45"
+    od:startTime="16:15"
+    rdfs:label="Schülerzirkel 9/10 - Seminar">
+    <od:locatedAt rdf:resource="SG_415" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="LSGM.9"
+    od:dayOfWeek="donnerstags"
+    od:endTime="19:00"
+    od:startTime="17:30"
+    rdfs:label="Schülerzirkel 11/12 - Seminar">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="LSGM" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Person rdf:about="Laue_Ralf"
+    rdfs:label="Laue, Ralf" />
+
+  <od:Person rdf:about="Lepsien_Joeran"
+    rdfs:label="Lepsien, Jöran" />
+
+  <od:Room rdf:about="Liebigstrasze_20_Raum_0015_Glaskasten">
+    <rdfs:label>Liebigstraße 20, Raum 0015 (Glaskasten)</rdfs:label>
+  </od:Room>
+
+  <od:Person rdf:about="Lieske_HansJoachim"
+    rdfs:label="Lieske, Hans-Joachim" />
+
+  <od:Person rdf:about="Lindemann_Christoph"
+    rdfs:label="Lindemann, Christoph" />
+
+  <od:Person rdf:about="Loebe_Frank"
+    rdfs:label="Loebe, Frank" />
+
+  <od:Person rdf:about="Loeffler_Markus"
+    rdfs:label="Löffler, Markus" />
+
+  <od:Person rdf:about="Lohrey_Markus"
+    rdfs:label="Lohrey, Markus" />
+
+  <od:Person rdf:about="Luckhaus_Stephan"
+    rdfs:label="Luckhaus, Stephan" />
+
+  <od:Block rdf:about="MI.Bildgebung"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1P"
+    od:planung="biophysik"
+    rdfs:comment="Ergänzungsfach Medizinische Informatik">
+    <od:containsLV rdf:resource="MI.Bildgebung.1" />
+    <od:containsLV rdf:resource="MI.Bildgebung.2" />
+    <od:hasMaintainer rdf:resource="Gruender_W_Biophysik" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:relatedModule rdf:resource="10-201-4102" />
+    <rdfs:label>Physikalische Grundlagen der Signal- und Bildgebung in der
+    Medizin</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.Bildgebung.1"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Gruender_W_Biophysik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Physikalische Grundlagen der Signal- und Bildgebung in der
+    Medizin  - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.Bildgebung.2"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Gruender_W_Biophysik" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+    <rdfs:label>Physikalische Grundlagen der Signal- und Bildgebung in der
+    Medizin  - Praktikum</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.Biometrie-1"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="imise"
+    rdfs:comment="Ergänzungsfach Medizinische Informatik">
+    <od:containsLV rdf:resource="MI.Biometrie-1.1" />
+    <od:containsLV rdf:resource="MI.Biometrie-1.2" />
+    <od:hasMaintainer rdf:resource="Strimmer_Korbinian" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:relatedModule rdf:resource="10-201-4104" />
+    <rdfs:label>Einführung in die medizinische Biometrie und Epidemiologie</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.Biometrie-1.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Strimmer_Korbinian" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Einführung in die medizinische Biometrie und Epidemiologie - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.Biometrie-1.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Strimmer_Korbinian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Einführung in die medizinische Biometrie und Epidemiologie - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.Datenanalyse"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2U+2V+2S+2P"
+    od:planung="imise">
+    <od:containsLV rdf:resource="MI.Datenanalyse.1" />
+    <od:containsLV rdf:resource="MI.Datenanalyse.2" />
+    <od:containsLV rdf:resource="MI.Datenanalyse.3" />
+    <od:hasMaintainer rdf:resource="Loeffler_Markus" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:relatedModule rdf:resource="10-202-2413" />
+    <rdfs:label>VM Statistische Aspekte der Analyse molekularbiologischer und
+      genetischer Daten</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.Datenanalyse.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_109" />
+    <od:servedBy rdf:resource="Strimmer_Korbinian" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Aktuelle Kapitel der Analyse molekularbiologischer und
+	genetischer Daten - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.Datenanalyse.2"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Hasenclever_Dirk" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Statistische Analyse von High-Throughput-Daten - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.Datenanalyse.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Hasenclever_Dirk" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Statistische Analyse von High-Throughput-Daten - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.IM-GW"
+    od:hasLevel="3"
+    od:hasUmfang="3V+3P"
+    od:planung="imise">
+    <od:containsLV rdf:resource="MI.IM-GW.1" />
+    <od:containsLV rdf:resource="MI.IM-GW.2" />
+    <od:containsLV rdf:resource="MI.IM-GW.3" />
+    <od:hasMaintainer rdf:resource="Winter_Alfred" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2408" />
+    <rdfs:comment>1. Hälfte des Semesters als Vorlesung, 2. Hälfte als
+    Praktikum</rdfs:comment>
+    <rdfs:label>VM Management von Informationssystemen im Gesundheitswesen</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.IM-GW.1"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Jahn_Franziska" />
+    <od:servedBy rdf:resource="Winter_Alfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Management von Informationssystemen im Gesundheitswesen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.IM-GW.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Jahn_Franziska" />
+    <od:servedBy rdf:resource="Winter_Alfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Management von Informationssystemen im Gesundheitswesen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.IM-GW.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Jahn_Franziska" />
+    <od:servedBy rdf:resource="Winter_Alfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Management von Informationssystemen im Gesundheitswesen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.IM-Klinisch"
+    od:hasLevel="3"
+    od:hasUmfang="3V+3P"
+    od:planung="imise">
+    <od:containsLV rdf:resource="MI.IM-Klinisch.1" />
+    <od:containsLV rdf:resource="MI.IM-Klinisch.2" />
+    <od:hasMaintainer rdf:resource="Loeffler_Markus" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2411" />
+    <rdfs:label>VM Informationsmanagement in der klinischen Forschung</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.IM-Klinisch.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Loeffler_Markus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Informationsmanagement in der klinischen Forschung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.IM-Klinisch.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Loeffler_Markus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>VM Informationsmanagement in der klinischen Forschung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.MGV"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="imise">
+    <od:containsLV rdf:resource="MI.MGV.1" />
+    <od:containsLV rdf:resource="MI.MGV.2" />
+    <od:hasMaintainer rdf:resource="Rasche_Maximilian" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-4107" />
+    <rdfs:label>Medizin und Gesundheitsversorgung für Nichtmediziner</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.MGV.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:30"
+    od:startTime="15:00">
+    <od:locatedAt rdf:resource="Liebigstrasze_20_Raum_0015_Glaskasten" />
+    <od:servedBy rdf:resource="Rasche_Maximilian" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Medizin und Gesundheitsversorgung für Nichtmediziner - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.MGV.2"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Rasche_Maximilian" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Medizin und Gesundheitsversorgung für Nichtmediziner - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MI.Studien"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:comment="Ergänzungsfach MI">
+    <od:containsLV rdf:resource="MI.Studien.1" />
+    <od:containsLV rdf:resource="MI.Studien.2" />
+    <od:hasMaintainer rdf:resource="Hasenclever_Dirk" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-4108" />
+    <rdfs:label>Klinische Studien und Evidenz in der Medizin</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="MI.Studien.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Hasenclever_Dirk" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Klinische Studien und Evidenz in der Medizin - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="MI.Studien.2"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Haertelstrasze_R_110" />
+    <od:servedBy rdf:resource="Hasenclever_Dirk" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Klinische Studien und Evidenz in der Medizin - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="MP.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Mathematische Physik">
+    <od:containsLV rdf:resource="MP.Schwerpunkt.1" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="MP.Schwerpunkt.1"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Rudolph_Gerd" />
+    <od:servedBy rdf:resource="Schmuedgen_Konrad" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Fachseminar Mathematische Physik - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Room rdf:about="MPI_MIS_A02"
+    rdfs:label="MPI MIS, A02" />
+
+  <od:Room rdf:about="MPI_MIS_G10"
+    rdfs:label="MPI MIS, G10" />
+
+  <od:Room rdf:about="MPI_fuer_Kognitions_und_Neurowissenschaften_Stephanstrasze_1a__WilhelmWundtRaum_4_Etage">
+    <rdfs:label>MPI für Kognitions- und Neurowissenschaften, Stephanstraße 1a,  Wilhelm-Wundt-Raum (4. Etage)</rdfs:label>
+  </od:Room>
+
+  <od:Person rdf:about="Maedler_Conrad"
+    rdfs:label="Mädler, Conrad" />
+
+  <od:Block rdf:about="Math.Algebra-2"
+    od:hasLevel="1"
+    od:hasUmfang="2V+2U"
+    od:planung="fmi"
+    rdfs:label="Algebra 2">
+    <od:containsLV rdf:resource="Math.Algebra-2.1" />
+    <od:containsLV rdf:resource="Math.Algebra-2.2" />
+    <od:containsLV rdf:resource="Math.Algebra-2.3" />
+    <od:hasMaintainer rdf:resource="Stueckrad_Juergen" />
+    <od:recommendedFor rdf:resource="Math.Diplom.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Algebra-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Algebra 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Stueckrad_Juergen" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Algebra-2.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Algebra 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Stueckrad_Juergen" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Algebra-2.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Neumann_Marco" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.Analysis-2"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Analysis 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.E" />
+    <od:containsLV rdf:resource="Math.Analysis-2.1" />
+    <od:containsLV rdf:resource="Math.Analysis-2.10" />
+    <od:containsLV rdf:resource="Math.Analysis-2.11" />
+    <od:containsLV rdf:resource="Math.Analysis-2.2" />
+    <od:containsLV rdf:resource="Math.Analysis-2.3" />
+    <od:containsLV rdf:resource="Math.Analysis-2.4" />
+    <od:containsLV rdf:resource="Math.Analysis-2.5" />
+    <od:containsLV rdf:resource="Math.Analysis-2.6" />
+    <od:containsLV rdf:resource="Math.Analysis-2.7" />
+    <od:containsLV rdf:resource="Math.Analysis-2.8" />
+    <od:containsLV rdf:resource="Math.Analysis-2.9" />
+    <od:hasMaintainer rdf:resource="Luckhaus_Stephan" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.4" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+    <od:relatedModule rdf:resource="10-MATHB-1021" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Analysis-2.1"
+    od:dayOfWeek="dienstags (ZL)"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Analysis 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Luckhaus_Stephan" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.10"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.11"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="Joh_26_122" />
+    <od:servedBy rdf:resource="Thomys_Oliver" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Analysis 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Luckhaus_Stephan" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.3"
+    od:dayOfWeek="donnerstags (ZL - Reserve)"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Analysis 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Luckhaus_Stephan" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.4"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Ackermann_Stefan" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.5"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Hecht_Michael" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.6"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Schlichting_André" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.7"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.8"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Analysis-2.9"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Analysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.DiffGeo-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Differentialgeometrie 2">
+    <od:containsLV rdf:resource="Math.DiffGeo-2.1" />
+    <od:containsLV rdf:resource="Math.DiffGeo-2.2" />
+    <od:hasMaintainer rdf:resource="Pruefer_Friedbert" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.DiffGeo-2.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Differentialgeometrie 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Pruefer_Friedbert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.DiffGeo-2.2"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Differentialgeometrie 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Pruefer_Friedbert" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Math.Diplom.2"
+    rdfs:label="Math.Diplom.2" />
+
+  <od:StudiengangSemester rdf:about="Math.Diplom.4"
+    rdfs:label="Math.Diplom.4" />
+
+  <od:StudiengangSemester rdf:about="Math.Diplom.6"
+    rdfs:label="Math.Diplom.6" />
+
+  <od:StudiengangSemester rdf:about="Math.Diplom.ab_6"
+    rdfs:label="Math.Diplom.ab 6" />
+
+  <od:Block rdf:about="Math.FA-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Funktionalanalysis 2">
+    <od:containsLV rdf:resource="Math.FA-2.1" />
+    <od:containsLV rdf:resource="Math.FA-2.2" />
+    <od:containsLV rdf:resource="Math.FA-2.3" />
+    <od:hasMaintainer rdf:resource="Schmuedgen_Konrad" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.FA-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Funktionalanalysis 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Schmuedgen_Konrad" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FA-2.2"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Funktionalanalysis 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Schmuedgen_Konrad" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FA-2.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Funktionalanalysis 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="Savchuk_Yuriy" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.FM-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:comment="Wird nicht angeboten - Freisemester"
+    rdfs:label="Finanzmathematik 2">
+    <od:hasMaintainer rdf:resource="Frey_Ruediger" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:Block rdf:about="Math.FT-1"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Funktionentheorie 1">
+    <od:containsLV rdf:resource="Math.FT-1.1" />
+    <od:containsLV rdf:resource="Math.FT-1.2" />
+    <od:containsLV rdf:resource="Math.FT-1.3" />
+    <od:containsLV rdf:resource="Math.FT-1.4" />
+    <od:containsLV rdf:resource="Math.FT-1.5" />
+    <od:hasMaintainer rdf:resource="Schwarz_Matthias" />
+    <od:recommendedFor rdf:resource="LA.Math.all" />
+    <od:recommendedFor rdf:resource="Math.Diplom.4" />
+    <od:recommendedFor rdf:resource="Math.WiMa.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.FT-1.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Funktionentheorie 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Schwarz_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FT-1.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Funktionentheorie 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_5" />
+    <od:servedBy rdf:resource="Schwarz_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FT-1.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Funktionentheorie 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FT-1.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Funktionentheorie 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.FT-1.5"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Funktionentheorie 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.FT-2"
+    od:hasLevel="2"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Funktionentheorie 2">
+    <od:containsLV rdf:resource="Math.FT-2.1" />
+    <od:hasMaintainer rdf:resource="Herzog_Bernd" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.FT-2.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Funktionentheorie 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Herzog_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.KM"
+    od:hasLevel="2"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Kontinuumsmechanik">
+    <od:containsLV rdf:resource="Math.KM.1" />
+    <od:hasMaintainer rdf:resource="Gittel_HansPeter" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.KM.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Kontinuumsmechanik - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Gittel_HansPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.LinAlg-2"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Lineare Algebra 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.D" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.1" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.2" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.3" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.4" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.5" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.6" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.7" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.8" />
+    <od:containsLV rdf:resource="Math.LinAlg-2.9" />
+    <od:hasMaintainer rdf:resource="Diem_Claus" />
+    <od:recommendedFor rdf:resource="LA.BMath-H.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+    <od:relatedModule rdf:resource="10-MATHB-1022" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.LinAlg-2.1"
+    od:dayOfWeek="montags (ZL)"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Lineare Algebra 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Diem_Claus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.2"
+    od:dayOfWeek="mittwochs (ZL)"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Lineare Algebra 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Diem_Claus" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.5"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.6"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.7"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.8"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_110" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.LinAlg-2.9"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Lineare Algebra 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.MPI-MIS"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="mpi"
+    rdfs:label="Angebote des MPI MIS">
+    <od:containsLV rdf:resource="Math.MPI-MIS.1" />
+    <od:containsLV rdf:resource="Math.MPI-MIS.2" />
+    <od:containsLV rdf:resource="Math.MPI-MIS.3" />
+    <od:containsLV rdf:resource="Math.MPI-MIS.4" />
+    <od:containsLV rdf:resource="Math.MPI-MIS.5" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.MPI-MIS.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="11:45"
+    od:startTime="10:15">
+    <od:locatedAt rdf:resource="MPI_MIS_A02" />
+    <od:servedBy rdf:resource="Ay_Nihat" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Stochastische Differentialgleichungen - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Math.MPI-MIS.2"
+    od:dayOfWeek="freitags (Beginn 07. Mai)"
+    od:endTime="15:00"
+    od:startTime="13:30">
+    <od:locatedAt rdf:resource="MPI_MIS_A02" />
+    <od:servedBy rdf:resource="Jost_Juergen" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Qualitative Aspects of Complex Systems - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Math.MPI-MIS.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Tensor Approximations - Vorlesung">
+    <od:locatedAt rdf:resource="MPI_MIS_G10" />
+    <od:servedBy rdf:resource="Hackbusch_Wolfgang" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.MPI-MIS.4"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Tensor Approximations - Vorlesung">
+    <od:locatedAt rdf:resource="MPI_MIS_G10" />
+    <od:servedBy rdf:resource="Hackbusch_Wolfgang" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.MPI-MIS.5"
+    od:dayOfWeek="dienstags (Beginn 11. Mai)"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="MPI_MIS_A02" />
+    <od:servedBy rdf:resource="Kahle_Thomas" />
+    <od:servedBy rdf:resource="Rauh_Johannes" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Binomial Ideals, Combinatorics, and Statistics - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="Math.Numerik-1"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Numerik 1">
+    <od:containsLV rdf:resource="Math.Numerik-1.1" />
+    <od:containsLV rdf:resource="Math.Numerik-1.2" />
+    <od:containsLV rdf:resource="Math.Numerik-1.3" />
+    <od:containsLV rdf:resource="Math.Numerik-1.4" />
+    <od:containsLV rdf:resource="Math.Numerik-1.5" />
+    <od:containsLV rdf:resource="Math.Numerik-1.6" />
+    <od:hasMaintainer rdf:resource="Kunkel_Peter" />
+    <od:recommendedFor rdf:resource="Math.Diplom.4" />
+    <od:recommendedFor rdf:resource="Math.WiMa.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Numerik-1.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="9:00"
+    od:startTime="7:30"
+    rdfs:label="Numerik 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_4" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-1.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Numerik 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-1.3"
+    od:dayOfWeek="montags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Numerik 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Ackermann_Stefan" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-1.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Numerik 1 - Uebung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Hoffmann_Rico" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-1.5"
+    od:dayOfWeek="freitags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Numerik 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Ackermann_Stefan" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-1.6"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Joh_26_216_Pool" />
+    <od:servedBy rdf:resource="Hellmund_Meik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Einführung in das wiss. Programmieren - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="Math.Numerik-PDgl"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Numerik partieller Dgl.">
+    <od:containsLV rdf:resource="Math.Numerik-PDgl.1" />
+    <od:containsLV rdf:resource="Math.Numerik-PDgl.2" />
+    <od:hasMaintainer rdf:resource="Guenther_Matthias" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Numerik-PDgl.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Numerik partieller Dgl. - Vorlesung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Guenther_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Numerik-PDgl.2"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Numerik partieller Dgl. - Vorlesung">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Guenther_Matthias" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.Optimierung-1"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Optimierung 1">
+    <od:containsLV rdf:resource="Math.Optimierung-1.1" />
+    <od:containsLV rdf:resource="Math.Optimierung-1.2" />
+    <od:containsLV rdf:resource="Math.Optimierung-1.3" />
+    <od:containsLV rdf:resource="Math.Optimierung-1.4" />
+    <od:containsLV rdf:resource="Math.Optimierung-1.5" />
+    <od:hasMaintainer rdf:resource="Kripfganz_Anita" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+    <od:recommendedFor rdf:resource="Math.WiMa.2" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Optimierung-1.1"
+    od:dayOfWeek="montags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Optimierung 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_12" />
+    <od:servedBy rdf:resource="Kripfganz_Anita" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Optimierung-1.2"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Optimierung 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_10" />
+    <od:servedBy rdf:resource="Kripfganz_Anita" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Optimierung-1.3"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Optimierung 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Kripfganz_Anita" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Optimierung-1.4"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Optimierung 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Optimierung-1.5"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Optimierung 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Haertling_Silvia" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.PDgl-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Partielle DGLn 2">
+    <od:containsLV rdf:resource="Math.PDgl-2.1" />
+    <od:containsLV rdf:resource="Math.PDgl-2.2" />
+    <od:containsLV rdf:resource="Math.PDgl-2.3" />
+    <od:hasMaintainer rdf:resource="Schumann_Rainer" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.PDgl-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Partielle DGLn 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Schumann_Rainer" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.PDgl-2.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Partielle DGLn 2 - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Schumann_Rainer" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.PDgl-2.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Partielle DGLn 2 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Schumann_Rainer" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.Risiko-1"
+    od:hasLevel="3"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Risikotheorie I">
+    <od:containsLV rdf:resource="Math.Risiko-1.1" />
+    <od:hasMaintainer rdf:resource="Riedel_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <rdfs:comment>Studienschwerpunkt Informatik im Versicherungswesen</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="Math.Risiko-1.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Risikotheorie I - Vorlesung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Riedel_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.Statistik-1"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Mathematische Statistik 1">
+    <od:containsLV rdf:resource="Math.Statistik-1.1" />
+    <od:containsLV rdf:resource="Math.Statistik-1.2" />
+    <od:hasMaintainer rdf:resource="Kirstein_Bernd" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.Statistik-1.1"
+    od:dayOfWeek="montags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Mathematische Statistik 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Kirstein_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.Statistik-1.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="18:45"
+    od:startTime="17:15"
+    rdfs:label="Mathematische Statistik 1 - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Kirstein_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.VM-1"
+    od:hasLevel="3"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Versicherungsmathematik I">
+    <od:containsLV rdf:resource="Math.VM-1.1" />
+    <od:hasMaintainer rdf:resource="Riedel_Manfred" />
+    <od:recommendedFor rdf:resource="Inf.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <rdfs:comment>Studienschwerpunkt Informatik im Versicherungswesen</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="Math.VM-1.1"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Versicherungsmathematik I - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Riedel_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.VR-2"
+    od:hasLevel="2"
+    od:hasUmfang="4V"
+    od:planung="fmi"
+    rdfs:label="Variationsrechnung">
+    <od:containsLV rdf:resource="Math.VR-2.1" />
+    <od:containsLV rdf:resource="Math.VR-2.2" />
+    <od:containsLV rdf:resource="Math.VR-2.3" />
+    <od:hasMaintainer rdf:resource="Miersemann_Erich" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.VR-2.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Variationsrechnung - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Miersemann_Erich" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.VR-2.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Variationsrechnung - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Miersemann_Erich" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.VR-2.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Variationsrechnung - Uebung">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Miersemann_Erich" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Math.WT-1"
+    od:hasLevel="1"
+    od:hasUmfang="4V+2U"
+    od:planung="fmi"
+    rdfs:label="Wahrscheinlichkeitstheorie 1">
+    <od:containsLV rdf:resource="Math.WT-1.1" />
+    <od:containsLV rdf:resource="Math.WT-1.2" />
+    <od:containsLV rdf:resource="Math.WT-1.3" />
+    <od:containsLV rdf:resource="Math.WT-1.4" />
+    <od:hasMaintainer rdf:resource="Fritzsche_Bernd" />
+    <od:recommendedFor rdf:resource="Math.Diplom.4" />
+    <od:recommendedFor rdf:resource="Math.WiMa.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.WT-1.1"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie 1 - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Math.WT-1.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Hs_6" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Wahrscheinlichkeitstheorie 1 - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Math.WT-1.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Wahrscheinlichkeitstheorie 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Maedler_Conrad" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.WT-1.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Wahrscheinlichkeitstheorie 1 - Uebung">
+    <od:locatedAt rdf:resource="SG_313" />
+    <od:servedBy rdf:resource="Maedler_Conrad" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Math.WiMa.2"
+    rdfs:label="Math.WiMa.2" />
+
+  <od:StudiengangSemester rdf:about="Math.WiMa.4"
+    rdfs:label="Math.WiMa.4" />
+
+  <od:StudiengangSemester rdf:about="Math.WiMa.6"
+    rdfs:label="Math.WiMa.6" />
+
+  <od:StudiengangSemester rdf:about="Math.WiMa.ab_6"
+    rdfs:label="Math.WiMa.ab 6" />
+
+  <od:Block rdf:about="Math.ZT"
+    od:hasLevel="2"
+    od:hasUmfang="2V"
+    od:planung="fmi"
+    rdfs:label="Zahlentheorie">
+    <od:containsLV rdf:resource="Math.ZT.1" />
+    <od:containsLV rdf:resource="Math.ZT.2" />
+    <od:hasMaintainer rdf:resource="Herzog_Bernd" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Math.ZT.1"
+    od:dayOfWeek="freitags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Zahlentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Herzog_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Math.ZT.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Zahlentheorie - Vorlesung">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="Herzog_Bernd" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Person rdf:about="Meiler_Monika"
+    rdfs:label="Meiler, Monika" />
+
+  <od:Person rdf:about="Meinecke_Ingmar"
+    rdfs:label="Meinecke, Ingmar" />
+
+  <od:Person rdf:about="Meyer_Kyrill"
+    rdfs:label="Meyer, Kyrill" />
+
+  <od:Person rdf:about="Middendorf_Martin"
+    rdfs:label="Middendorf, Martin" />
+
+  <od:Person rdf:about="Miersemann_Erich"
+    rdfs:label="Miersemann, Erich" />
+
+  <od:Person rdf:about="Mueller_Karsten"
+    rdfs:label="Müller, Karsten" />
+
+  <od:Person rdf:about="NN"
+    rdfs:label="NN" />
+
+  <od:Person rdf:about="Netzer_Tim"
+    rdfs:label="Netzer, Tim" />
+
+  <od:Person rdf:about="Neumann_Jane"
+    rdfs:label="Neumann, Jane" />
+
+  <od:Person rdf:about="Neumann_Marco"
+    rdfs:label="Neumann, Marco" />
+
+  <od:Person rdf:about="Neumuth_Thomas"
+    rdfs:label="Neumuth, Thomas" />
+
+  <od:Person rdf:about="Ngonga_Axel"
+    rdfs:label="Ngonga, Axel" />
+
+  <od:Block rdf:about="Numerik.Praktikum"
+    od:hasLevel="3"
+    od:hasUmfang="4P"
+    od:planung="fmi"
+    rdfs:label="Numerisches Praktikum">
+    <od:containsLV rdf:resource="Numerik.Praktikum.1" />
+    <od:hasMaintainer rdf:resource="Kunkel_Peter" />
+    <od:recommendedFor rdf:resource="Math.Diplom.6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.6" />
+  </od:Block>
+
+  <od:LV rdf:about="Numerik.Praktikum.1"
+    od:dayOfWeek="n.V."
+    rdfs:label="Numerisches Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="nV" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="Numerik.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Numerik">
+    <od:containsLV rdf:resource="Numerik.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="Numerik.Schwerpunkt.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Numerik.Schwerpunkt.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Einführung in die Intervallrechnung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Numerik.Schwerpunkt.2"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Numerik gewöhnlicher Dgl. - Seminar">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:Block rdf:about="Optimierung.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi"
+    rdfs:label="Schwerpunkt Optimierung">
+    <od:containsLV rdf:resource="Optimierung.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="Optimierung.Schwerpunkt.2" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+  </od:Block>
+
+  <od:LV rdf:about="Optimierung.Schwerpunkt.1"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Diskrete Optimierung - Vorlesung">
+    <od:locatedAt rdf:resource="SG_112" />
+    <od:servedBy rdf:resource="Kripfganz_Anita" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Optimierung.Schwerpunkt.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Frey_Ruediger" />
+    <od:servedBy rdf:resource="Kunkel_Peter" />
+    <od:servedBy rdf:resource="Luckhaus_Stephan" />
+    <rdf:type rdf:resource="&od;Oberseminar" />
+    <rdfs:label>Oberseminar Optimierung, Finanzmathematik, Numerik - Oberseminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="PV.KS"
+    od:hasLevel="3"
+    od:hasUmfang="6V+2S+2U+2P"
+    od:planung="fmi"
+    rdfs:label="Komplexe Systeme">
+    <od:containsLV rdf:resource="PV.KS.1" />
+    <od:containsLV rdf:resource="PV.KS.2" />
+    <od:containsLV rdf:resource="PV.KS.3" />
+    <od:hasMaintainer rdf:resource="Middendorf_Martin" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2218" />
+    <od:relatedModule rdf:resource="10-202-2220" />
+    <rdfs:comment>Kernmodul 10-202-2218 2V+2S, Vertiefungsmodul 10-202-2220
+    4V+2S</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="PV.KS.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="Diskrete Simulation - Vorlesung">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Middendorf_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="PV.KS.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="18:45"
+    od:startTime="17:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Middendorf_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Verfahren der Schwarmintelligenz - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="PV.KS.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Middendorf_Martin" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Parallelverarbeitung und komplexe Systeme - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Room rdf:about="Ph_Gr_Hs"
+    rdfs:label="Ph Gr. Hs." />
+
+  <od:Room rdf:about="Ph_SR_218"
+    rdfs:label="Ph, SR 218" />
+
+  <od:Room rdf:about="Ph_SR_221"
+    rdfs:label="Ph, SR 221" />
+
+  <od:Room rdf:about="Ph_SR_224"
+    rdfs:label="Ph, SR 224" />
+
+  <od:Room rdf:about="Ph_Th_Hs"
+    rdfs:label="Ph, Th. Hs." />
+
+  <od:Room rdf:about="Ph_kl_Hs"
+    rdfs:label="Ph, kl. Hs." />
+
+  <od:Block rdf:about="Phys.Analysis-2"
+    od:hasLevel="E"
+    od:hasUmfang="4V+2U"
+    od:planung="physik"
+    rdfs:label="Analysis 2 f. Physiker">
+    <od:containsLV rdf:resource="Phys.Analysis-2.1" />
+    <od:containsLV rdf:resource="Phys.Analysis-2.2" />
+    <od:containsLV rdf:resource="Phys.Analysis-2.3" />
+    <od:containsLV rdf:resource="Phys.Analysis-2.4" />
+    <od:hasMaintainer rdf:resource="Gittel_HansPeter" />
+    <od:recommendedFor rdf:resource="Phys.Phys-B.2" />
+  </od:Block>
+
+  <od:LV rdf:about="Phys.Analysis-2.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:30"
+    od:startTime="11:00"
+    rdfs:label="Analysis 2 f. Physiker - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="Gittel_HansPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Phys.Analysis-2.2"
+    od:dayOfWeek="freitags"
+    od:endTime="12:30"
+    od:startTime="11:00"
+    rdfs:label="Analysis 2 f. Physiker - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="Gittel_HansPeter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Phys.Analysis-2.3"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Analysis 2 f. Physiker - Uebung">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="Gittel_HansPeter" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:LV rdf:about="Phys.Analysis-2.4"
+    od:dayOfWeek="montags"
+    od:endTime="15:00"
+    od:startTime="13:30"
+    rdfs:label="Analysis 2 f. Physiker - Uebung">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="NN" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="Phys.ExPhys-2"
+    od:hasLevel="G"
+    od:hasUmfang="2V"
+    od:planung="physik"
+    rdfs:label="Experimentalphysik">
+    <od:containsLV rdf:resource="Phys.ExPhys-2.1" />
+    <od:containsLV rdf:resource="Phys.ExPhys-2.2" />
+    <od:hasMaintainer rdf:resource="Grundmann_Marius" />
+    <od:recommendedFor rdf:resource="Math.Diplom.2" />
+  </od:Block>
+
+  <od:LV rdf:about="Phys.ExPhys-2.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Experimentalphysik - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Gr_Hs" />
+    <od:servedBy rdf:resource="Grundmann_Marius" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Phys.ExPhys-2.2"
+    od:dayOfWeek="freitags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Experimentalphysik - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Gr_Hs" />
+    <od:servedBy rdf:resource="Grundmann_Marius" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Phys.ExPhys-4"
+    od:hasLevel="G"
+    od:hasUmfang="2VW"
+    od:planung="physik"
+    rdfs:label="Experimentalphysik">
+    <od:containsLV rdf:resource="Phys.ExPhys-4.1" />
+    <od:containsLV rdf:resource="Phys.ExPhys-4.2" />
+    <od:hasMaintainer rdf:resource="Kaes_Josef_Alfons" />
+    <od:recommendedFor rdf:resource="Math.Diplom.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Phys.ExPhys-4.1"
+    od:dayOfWeek="montags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Experimentalphysik - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Gr_Hs" />
+    <od:servedBy rdf:resource="Kaes_Josef_Alfons" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="Phys.ExPhys-4.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Experimentalphysik - Vorlesung">
+    <od:locatedAt rdf:resource="Ph_Gr_Hs" />
+    <od:servedBy rdf:resource="Kaes_Josef_Alfons" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:Block rdf:about="Phys.GDgl"
+    od:hasLevel="E"
+    od:hasUmfang="2V+2U"
+    od:planung="physik"
+    rdfs:label="Gewöhnl. Differentialgl f. Physiker">
+    <od:containsLV rdf:resource="Phys.GDgl.1" />
+    <od:containsLV rdf:resource="Phys.GDgl.2" />
+    <od:containsLV rdf:resource="Phys.GDgl.3" />
+    <od:hasMaintainer rdf:resource="Schumann_Rainer" />
+    <od:recommendedFor rdf:resource="Phys.Phys-B.2" />
+  </od:Block>
+
+  <od:LV rdf:about="Phys.GDgl.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:30"
+    od:startTime="11:00">
+    <od:locatedAt rdf:resource="Ph_kl_Hs" />
+    <od:servedBy rdf:resource="Schumann_Rainer" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Gewöhnl. Differentialgl f. Physiker - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Phys.GDgl.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15">
+    <od:locatedAt rdf:resource="Ph_kl_Hs" />
+    <od:servedBy rdf:resource="Gyoengyoesi_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Gewöhnl. Differentialgl f. Physiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Phys.GDgl.3"
+    od:dayOfWeek="freitags"
+    od:endTime="9:00"
+    od:startTime="7:30">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="Gyoengyoesi_Thomas" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Gewöhnl. Differentialgl f. Physiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Phys.IPSP.2"
+    rdfs:label="Phys.IPSP.2" />
+
+  <od:StudiengangSemester rdf:about="Phys.IPSP.4"
+    rdfs:label="Phys.IPSP.4" />
+
+  <od:Block rdf:about="Phys.PDgl"
+    od:hasLevel="E"
+    od:hasUmfang="4V+2U"
+    od:planung="physik"
+    rdfs:label="Partielle Differentialgl. f. Physiker">
+    <od:containsLV rdf:resource="Phys.PDgl.1" />
+    <od:containsLV rdf:resource="Phys.PDgl.2" />
+    <od:containsLV rdf:resource="Phys.PDgl.3" />
+    <od:containsLV rdf:resource="Phys.PDgl.4" />
+    <od:hasMaintainer rdf:resource="Kuersten_KlausDetlef" />
+    <od:recommendedFor rdf:resource="Phys.Phys-B.4" />
+  </od:Block>
+
+  <od:LV rdf:about="Phys.PDgl.1"
+    od:dayOfWeek="montags"
+    od:endTime="12:30"
+    od:startTime="11:00">
+    <od:locatedAt rdf:resource="Ph_kl_Hs" />
+    <od:servedBy rdf:resource="Kuersten_KlausDetlef" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Partielle Differentialgl. f. Physiker - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Phys.PDgl.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="Ph_Th_Hs" />
+    <od:servedBy rdf:resource="Kuersten_KlausDetlef" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Partielle Differentialgl. f. Physiker - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Phys.PDgl.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="9:00"
+    od:startTime="7:30">
+    <od:locatedAt rdf:resource="Ph_SR_224" />
+    <od:servedBy rdf:resource="Savchuk_Yuriy" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Partielle Differentialgl. f. Physiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="Phys.PDgl.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="15:00"
+    od:startTime="13:30">
+    <od:locatedAt rdf:resource="Ph_SR_218" />
+    <od:servedBy rdf:resource="Savchuk_Yuriy" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Partielle Differentialgl. f. Physiker - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="Phys.Phys-B.2"
+    rdfs:label="Phys.Phys-B.2" />
+
+  <od:StudiengangSemester rdf:about="Phys.Phys-B.4"
+    rdfs:label="Phys.Phys-B.4" />
+
+  <od:Person rdf:about="Prohaska_Sonja"
+    rdfs:label="Prohaska, Sonja" />
+
+  <od:Person rdf:about="Pruefer_Friedbert"
+    rdfs:label="Prüfer, Friedbert" />
+
+  <od:Person rdf:about="Quapp_Wolfgang"
+    rdfs:label="Quapp, Wolfgang" />
+
+  <od:Person rdf:about="Quasthoff_Uwe"
+    rdfs:label="Quasthoff, Uwe" />
+
+  <od:Block rdf:about="RN.RN-I"
+    od:hasLevel="2"
+    od:hasUmfang="2V+1P+2V+1P"
+    od:planung="fmi"
+    rdfs:label="Rechnernetze und Internetanwendungen">
+    <od:containsLV rdf:resource="RN.RN-I.1" />
+    <od:containsLV rdf:resource="RN.RN-I.2" />
+    <od:containsLV rdf:resource="RN.RN-I.3" />
+    <od:containsLV rdf:resource="RN.RN-I.4" />
+    <od:hasMaintainer rdf:resource="Lindemann_Christoph" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.4" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-201-2103" />
+    <od:relatedModule rdf:resource="10-201-2106" />
+    <od:relatedModule rdf:resource="10-201-2107" />
+    <rdfs:comment>Vertiefungsmodul 10-201-2103 - beide Blöcke, Kernmodul
+    10-201-2106 und Kernmodul 10-201-2107 jeweils ein Block</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="RN.RN-I.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="Rechnernetze - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Lindemann_Christoph" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="RN.RN-I.2"
+    od:dayOfWeek="offen"
+    rdfs:label="Rechnernetze - Praktikum">
+    <od:servedBy rdf:resource="Lindemann_Christoph" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="RN.RN-I.3"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Internetanwendungen - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Lindemann_Christoph" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="RN.RN-I.4"
+    od:dayOfWeek="offen"
+    rdfs:label="Internetanwendungen - Praktikum">
+    <od:servedBy rdf:resource="Lindemann_Christoph" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Person rdf:about="Rademacher_HansBert"
+    rdfs:label="Rademacher, Hans-Bert" />
+
+  <od:Person rdf:about="Rahm_Erhard"
+    rdfs:label="Rahm, Erhard" />
+
+  <od:Person rdf:about="Rasche_Maximilian"
+    rdfs:label="Rasche, Maximilian" />
+
+  <od:Person rdf:about="Rauh_Johannes"
+    rdfs:label="Rauh, Johannes" />
+
+  <od:Person rdf:about="Reich_Wieland"
+    rdfs:label="Reich, Wieland" />
+
+  <od:Person rdf:about="Richter_Peter"
+    rdfs:label="Richter, Peter" />
+
+  <od:Person rdf:about="Riechert_Thomas"
+    rdfs:label="Riechert, Thomas" />
+
+  <od:Person rdf:about="Riedel_Manfred"
+    rdfs:label="Riedel, Manfred" />
+
+  <od:Person rdf:about="Rose_Dominic"
+    rdfs:label="Rose, Dominic" />
+
+  <od:Person rdf:about="Rudolph_Gerd"
+    rdfs:label="Rudolph, Gerd" />
+
+  <od:Room rdf:about="SG_110"
+    rdfs:label="SG 1-10" />
+
+  <od:Room rdf:about="SG_111"
+    rdfs:label="SG 1-11" />
+
+  <od:Room rdf:about="SG_112"
+    rdfs:label="SG 1-12" />
+
+  <od:Room rdf:about="SG_114"
+    rdfs:label="SG 1-14" />
+
+  <od:Room rdf:about="SG_115"
+    rdfs:label="SG 1-15" />
+
+  <od:Room rdf:about="SG_310"
+    rdfs:label="SG 3-10" />
+
+  <od:Room rdf:about="SG_311"
+    rdfs:label="SG 3-11" />
+
+  <od:Room rdf:about="SG_312"
+    rdfs:label="SG 3-12" />
+
+  <od:Room rdf:about="SG_313"
+    rdfs:label="SG 3-13" />
+
+  <od:Room rdf:about="SG_314"
+    rdfs:label="SG 3-14" />
+
+  <od:Room rdf:about="SG_415"
+    rdfs:label="SG 4-15" />
+
+  <od:Modul rdf:about="SQ 10" />
+
+  <od:Modul rdf:about="SQ 11" />
+
+  <od:Block rdf:about="SQ.10-CM"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="fmi"
+    rdfs:label="SQ 10: Content Management">
+    <od:containsLV rdf:resource="SQ.10-CM.1" />
+    <od:containsLV rdf:resource="SQ.10-CM.2" />
+    <od:hasMaintainer rdf:resource="Heyer_Gerhard" />
+    <od:recommendedFor rdf:resource="Inf.SQ.all" />
+    <od:relatedModule rdf:resource="SQ 10" />
+  </od:Block>
+
+  <od:LV rdf:about="SQ.10-CM.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="SQ 10: Content Management - Vorlesung">
+    <od:locatedAt rdf:resource="Joh_26_310" />
+    <od:servedBy rdf:resource="Bock_Benjamin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="SQ.10-CM.2"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    od:typeOfWeek="A"
+    rdfs:label="SQ 10: Content Management - Uebung">
+    <od:locatedAt rdf:resource="Joh_26_310" />
+    <od:servedBy rdf:resource="Bock_Benjamin" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:Block rdf:about="SQ.11-DigInf"
+    od:hasLevel="1"
+    od:hasUmfang="2V"
+    od:planung="fmi">
+    <od:containsLV rdf:resource="SQ.11-DigInf.1" />
+    <od:hasMaintainer rdf:resource="Richter_Peter" />
+    <od:recommendedFor rdf:resource="Bio.Bachelor.all" />
+    <od:recommendedFor rdf:resource="Inf.SQ.all" />
+    <od:relatedModule rdf:resource="SQ 11" />
+    <rdfs:label>SQ 11: Digitale Informationsverarbeitung</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="SQ.11-DigInf.1"
+    od:dayOfWeek="montags"
+    od:endTime="9:00"
+    od:startTime="7:30">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Richter_Peter" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>SQ 11: Digitale Informationsverarbeitung - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:Person rdf:about="Sacher_Julia"
+    rdfs:label="Sacher, Julia" />
+
+  <od:Person rdf:about="Savchuk_Yuriy"
+    rdfs:label="Savchuk, Yuriy" />
+
+  <od:Person rdf:about="Schaefer_Andreas"
+    rdfs:label="Schäfer, Andreas" />
+
+  <od:Person rdf:about="Scheuermann_Gerik"
+    rdfs:label="Scheuermann, Gerik" />
+
+  <od:Person rdf:about="Schierwagen_Andreas"
+    rdfs:label="Schierwagen, Andreas" />
+
+  <od:Person rdf:about="Schlegel_Steven"
+    rdfs:label="Schlegel, Steven" />
+
+  <od:Person rdf:about="Schlicht_Peter"
+    rdfs:label="Schlicht, Peter" />
+
+  <od:Person rdf:about="Schlichting_Andr??"
+    rdfs:label="Schlichting, André" />
+
+  <od:Person rdf:about="Schlottke_Manfred"
+    rdfs:label="Schlottke, Manfred" />
+
+  <od:Person rdf:about="Schmuedgen_Konrad"
+    rdfs:label="Schmüdgen, Konrad" />
+
+  <od:Person rdf:about="Schumacher_Frank"
+    rdfs:label="Schumacher, Frank" />
+
+  <od:Person rdf:about="Schumann_Rainer"
+    rdfs:label="Schumann, Rainer" />
+
+  <od:Person rdf:about="Schwarz_Matthias"
+    rdfs:label="Schwarz, Matthias" />
+
+  <od:Room rdf:about="Sportgymnasium"
+    rdfs:label="Sportgymnasium" />
+
+  <od:Person rdf:about="Spruth_Wilhelm_G"
+    rdfs:label="Spruth, Wilhelm G." />
+
+  <od:Person rdf:about="Stadler_Peter"
+    rdfs:label="Stadler, Peter" />
+
+  <od:Person rdf:about="Strimmer_Korbinian"
+    rdfs:label="Strimmer, Korbinian" />
+
+  <od:Person rdf:about="Stueckrad_Juergen"
+    rdfs:label="Stückrad, Jürgen" />
+
+  <od:Block rdf:about="TI.ES"
+    od:hasLevel="3"
+    od:hasUmfang="2V+2P"
+    od:planung="fmi"
+    rdfs:label="KM Eingebettete Systeme">
+    <od:containsLV rdf:resource="TI.ES.1" />
+    <od:containsLV rdf:resource="TI.ES.2" />
+    <od:hasMaintainer rdf:resource="Bogdan_Martin" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:relatedModule rdf:resource="10-202-2105" />
+  </od:Block>
+
+  <od:LV rdf:about="TI.ES.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15"
+    rdfs:label="KM Eingebettete Systeme - Vorlesung">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Bogdan_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.ES.2"
+    od:dayOfWeek="n.V."
+    rdfs:label="KM Eingebettete Systeme - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Guettler_Frank" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="TI.GTI-2"
+    od:hasLevel="1"
+    od:hasUmfang="1V+1U+2P"
+    od:planung="fmi"
+    rdfs:label="Grundlagen der Technischen Informatik 2">
+    <od:beachteZeitfenster rdf:resource="Zeitfenster.H" />
+    <od:containsLV rdf:resource="TI.GTI-2.1" />
+    <od:containsLV rdf:resource="TI.GTI-2.2" />
+    <od:containsLV rdf:resource="TI.GTI-2.3" />
+    <od:containsLV rdf:resource="TI.GTI-2.4" />
+    <od:containsLV rdf:resource="TI.GTI-2.5" />
+    <od:containsLV rdf:resource="TI.GTI-2.6" />
+    <od:containsLV rdf:resource="TI.GTI-2.7" />
+    <od:containsLV rdf:resource="TI.GTI-2.8" />
+    <od:containsLV rdf:resource="TI.GTI-2.9" />
+    <od:hasMaintainer rdf:resource="Middendorf_Martin" />
+    <od:recommendedFor rdf:resource="Inf.Bachelor.2" />
+    <od:recommendedFor rdf:resource="LA.BInf.2" />
+    <od:relatedModule rdf:resource="10-201-2006" />
+    <od:relatedModule rdf:resource="10-203-2006-2" />
+    <rdfs:comment>1U als Hörsaalübung mit je 50 Teilnehmern.</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="TI.GTI-2.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="Hs_1" />
+    <od:servedBy rdf:resource="Middendorf_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Grundlagen der Technischen Informatik 2 - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.2"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="A">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundlagen der Technischen Informatik 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    od:typeOfWeek="B">
+    <od:locatedAt rdf:resource="Hs_14" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Grundlagen der Technischen Informatik 2 - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.4"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="A"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.5"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="B"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.6"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="A"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.7"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="B"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.8"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="A"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.GTI-2.9"
+    od:dayOfWeek="freitags"
+    od:endTime="12:45"
+    od:startTime="8:45"
+    od:typeOfWeek="B"
+    rdfs:label="Hardware-Praktikum - Praktikum">
+    <od:locatedAt rdf:resource="Joh_26_435" />
+    <od:servedBy rdf:resource="Lieske_HansJoachim" />
+    <rdf:type rdf:resource="&od;Praktikum" />
+  </od:LV>
+
+  <od:Block rdf:about="TI.NII"
+    od:hasLevel="3"
+    od:hasUmfang="4V+2S"
+    od:planung="fmi">
+    <od:containsLV rdf:resource="TI.NII.1" />
+    <od:containsLV rdf:resource="TI.NII.2" />
+    <od:containsLV rdf:resource="TI.NII.3" />
+    <od:hasMaintainer rdf:resource="Bogdan_Martin" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2104" />
+    <rdfs:label>VM Neuroinspirierte Informationsverarbeitung</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="TI.NII.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="10:45"
+    od:startTime="9:15"
+    rdfs:label="Neuronal Computing - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Bogdan_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.NII.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="16:45"
+    od:startTime="15:15"
+    rdfs:label="(Neuro-) Bionische Systeme - Vorlesung">
+    <od:locatedAt rdf:resource="Hs_19" />
+    <od:servedBy rdf:resource="Bogdan_Martin" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="TI.NII.3"
+    od:dayOfWeek="mittwochs"
+    od:endTime="10:45"
+    od:startTime="9:15">
+    <od:locatedAt rdf:resource="SG_312" />
+    <od:servedBy rdf:resource="Bogdan_Martin" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Bioanaloge System- und Signalverarbeitung - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:Block rdf:about="TI.zOS"
+    od:hasLevel="3"
+    od:hasUmfang="2V+1U"
+    od:planung="offen"
+    rdfs:label="KM Einführung in z/OS">
+    <od:containsLV rdf:resource="TI.zOS.1" />
+    <od:hasMaintainer rdf:resource="Bogdan_Martin" />
+    <od:hasMaintainer rdf:resource="Spruth_Wilhelm_G" />
+    <od:recommendedFor rdf:resource="Inf.Master.2" />
+    <od:recommendedFor rdf:resource="WiFa.WInf-M.2" />
+    <od:relatedModule rdf:resource="10-202-2113" />
+    <rdfs:comment>Moodle-Onlinekurs, Einführung als Präsenzveranstaltung am
+      16. April ab 9:15 Uhr im Raum Joh26, 1-02 (FKH)</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="TI.zOS.1"
+    od:dayOfWeek="offen">
+    <od:servedBy rdf:resource="Bogdan_Martin" />
+    <od:servedBy rdf:resource="Spruth_Wilhelm_G" />
+    <rdf:type rdf:resource="&od;Onlinekurs" />
+    <rdfs:label>Mainframe Internet Integration - Onlinekurs</rdfs:label>
+  </od:LV>
+
+  <od:Person rdf:about="Thom_Andreas"
+    rdfs:label="Thom, Andreas" />
+
+  <od:Person rdf:about="Thomys_Oliver"
+    rdfs:label="Thomys, Oliver" />
+
+  <od:Person rdf:about="Tramp_Sebastian"
+    rdfs:label="Tramp, Sebastian" />
+
+  <od:Block rdf:about="WMS.Schwerpunkt"
+    od:hasLevel="3"
+    od:planung="fmi">
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.1" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.2" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.3" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.4" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.5" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.6" />
+    <od:containsLV rdf:resource="WMS.Schwerpunkt.7" />
+    <od:recommendedFor rdf:resource="Math.Diplom.ab_6" />
+    <od:recommendedFor rdf:resource="Math.WiMa.ab_6" />
+    <rdfs:comment>von Renesse: Seminar Stochastische Algorithmen 
+    Vorbesprechung zur Seminarzeit am 08. April; Vorlesung Stochastische
+    Analysis und Zeitstet. Finanzmathematik, Beginn am 08. April</rdfs:comment>
+    <rdfs:label>Schwerpunkt Wirtschaftsmathematik/Stochastik</rdfs:label>
+  </od:Block>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.1"
+    od:dayOfWeek="dienstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_114" />
+    <od:servedBy rdf:resource="von_Renesse_Max" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Stochastische Analysis und zeitstetige Finanzmathematik - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.2"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_114" />
+    <od:servedBy rdf:resource="von_Renesse_Max" />
+    <rdf:type rdf:resource="&od;Uebung" />
+    <rdfs:label>Stochastische Analysis und zeitstetige Finanzmathematik - Uebung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.3"
+    od:dayOfWeek="donnerstags"
+    od:endTime="12:45"
+    od:startTime="11:15">
+    <od:locatedAt rdf:resource="SG_114" />
+    <od:servedBy rdf:resource="von_Renesse_Max" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Stochastische Analysis und zeitstetige Finanzmathematik - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.4"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Stochastische Algorithmen - Seminar">
+    <od:locatedAt rdf:resource="SG_114" />
+    <od:servedBy rdf:resource="von_Renesse_Max" />
+    <rdf:type rdf:resource="&od;Seminar" />
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.5"
+    od:dayOfWeek="montags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_311" />
+    <od:servedBy rdf:resource="Riedel_Manfred" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+    <rdfs:label>Quantitative Methoden/Simulation - Vorlesung</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.6"
+    od:dayOfWeek="dienstags"
+    od:endTime="14:45"
+    od:startTime="13:15">
+    <od:locatedAt rdf:resource="SG_314" />
+    <od:servedBy rdf:resource="Kirstein_Bernd" />
+    <rdf:type rdf:resource="&od;Seminar" />
+    <rdfs:label>Fachseminar Stochastische Analysis - Seminar</rdfs:label>
+  </od:LV>
+
+  <od:LV rdf:about="WMS.Schwerpunkt.7"
+    od:dayOfWeek="donnerstags"
+    od:endTime="14:45"
+    od:startTime="13:15"
+    rdfs:label="Oberseminar Schuranalysis - Oberseminar">
+    <od:locatedAt rdf:resource="Joh_26_FK_Hs" />
+    <od:servedBy rdf:resource="Fritzsche_Bernd" />
+    <od:servedBy rdf:resource="Kirstein_Bernd" />
+    <rdf:type rdf:resource="&od;Oberseminar" />
+  </od:LV>
+
+  <od:Person rdf:about="Weidner_Thomas"
+    rdfs:label="Weidner, Thomas" />
+
+  <od:Block rdf:about="WiFa.MikroOekonomik"
+    od:hasLevel="G"
+    od:hasUmfang="4V+2U"
+    od:planung="wifa"
+    rdfs:label="Mikroökonomik">
+    <od:containsLV rdf:resource="WiFa.MikroOekonomik.1" />
+    <od:containsLV rdf:resource="WiFa.MikroOekonomik.2" />
+    <od:hasMaintainer rdf:resource="Gawel_Erik" />
+    <od:recommendedFor rdf:resource="Math.WiMa.4" />
+    <od:relatedModule rdf:resource="07-101-2102" />
+    <rdfs:comment>Übungstermine und weitere Hinweise im
+      WiFa-Stundenplan</rdfs:comment>
+  </od:Block>
+
+  <od:LV rdf:about="WiFa.MikroOekonomik.1"
+    od:dayOfWeek="mittwochs"
+    od:endTime="13:45"
+    od:startTime="10:15"
+    rdfs:label="Mikroökonomik - Vorlesung">
+    <od:locatedAt rdf:resource="CLI_gr_Hs" />
+    <od:servedBy rdf:resource="Gawel_Erik" />
+    <rdf:type rdf:resource="&od;Vorlesung" />
+  </od:LV>
+
+  <od:LV rdf:about="WiFa.MikroOekonomik.2"
+    od:dayOfWeek="offen"
+    rdfs:label="Mikroökonomik - Uebung">
+    <od:servedBy rdf:resource="Gawel_Erik" />
+    <rdf:type rdf:resource="&od;Uebung" />
+  </od:LV>
+
+  <od:StudiengangSemester rdf:about="WiFa.WInf-B.2"
+    rdfs:label="WiFa.WInf-B.2" />
+
+  <od:StudiengangSemester rdf:about="WiFa.WInf-B.4"
+    rdfs:label="WiFa.WInf-B.4" />
+
+  <od:StudiengangSemester rdf:about="WiFa.WInf-M.2"
+    rdfs:label="WiFa.WInf-M.2" />
+
+  <od:Person rdf:about="Winter_Alfred"
+    rdfs:label="Winter, Alfred" />
+
+  <od:Person rdf:about="Zeit_geblockt"
+    rdfs:label="Zeit geblockt" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.B"
+    rdfs:label="mo 11-13, do 9-11, fr 9-11" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.D"
+    rdfs:label="mo 13-15, di 7-9, mi 9-11" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.E"
+    rdfs:label="di 11-13, mi 19-21, do 17-19" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.F"
+    rdfs:label="di 17-19, mi 15-17, fr 7-9" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.G"
+    rdfs:label="mo 15-17, di 13-15, mi 7-9" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.H"
+    rdfs:label="mo 9-11, di 19-21, mi 11-13" />
+
+  <od:Zeitfenster rdf:about="Zeitfenster.I"
+    rdfs:label="mi 17-19, do 11-13, fr 11-13" />
+
+  <od:Room rdf:about="nV"
+    rdfs:label="n.V." />
+
+  <od:Person rdf:about="von_Renesse_Max"
+    rdfs:label="von Renesse, Max" />
+
+</rdf:RDF>
