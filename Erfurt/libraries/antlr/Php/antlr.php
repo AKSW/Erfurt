@@ -14,6 +14,7 @@
 	require_once 'CommonToken.php';
 	require_once 'TokenStream.php';
 	require_once 'CommonTokenStream.php';
+	require_once 'ParserRuleReturnScope.php';
 
 	# Exceptions
 	require_once 'RecognitionException.php';
