@@ -136,6 +136,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -151,6 +152,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountAndFromIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
