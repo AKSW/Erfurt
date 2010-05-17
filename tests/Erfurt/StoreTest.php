@@ -165,7 +165,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $result = $store->sparqlQuery($simpleQuery);
         
-        $this->assertEquals(181, $result);
+        $this->assertEquals(191, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()
