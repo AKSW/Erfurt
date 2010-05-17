@@ -5,8 +5,12 @@ class Erfurt_Versioning_StoreStub
     const ROLLBACK_ACTION_QUERY1 = 'SELECT action_type, payload_id, model, parent FROM ef_versioning_actions WHERE ( id = ';
     const ROLLBACK_ACTION_QUERY2 = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ';
 
-    public function sqlQuery($sql)
+    public function sqlQuery($sql, $limit, $offset)
     {
+        if (strpos($sql, 'INSERT') !== false) {
+            return array();
+        }
+        
         if (strpos($sql, self::ROLLBACK_ACTION_QUERY1) === 0) {
             if (substr($sql, (strpos($sql, 'id = ')+5)) == 1) { // Should work
                 return array(
@@ -61,8 +65,15 @@ class Erfurt_Versioning_StoreStub
         $result = array();
         
         preg_match('/(LIMIT ){1,1}(\d{1,})/', $sql, $match);
-        
-        if (!isset($match[2])) {
+    
+        if ($limit !== null) {
+            $match[2] = $limit;
+            
+            if ($limit === PHP_INT_MAX) {
+                $match[2] = 10000;
+            }
+            
+        } else if (!isset($match[2])) {
             $match[2] = 100;
         }
         

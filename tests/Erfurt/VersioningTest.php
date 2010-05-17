@@ -62,7 +62,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
 
 
     public function testIsVersioningEnabledByDefault() 
-    {
+    {    
         $this->assertTrue($this->_object->isVersioningEnabled());
     }
     
