@@ -16,17 +16,14 @@
  */
 
 require_once 'antlr/Php/antlr.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10Lexer.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10Parser.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
 
 class Erfurt_Sparql_Parser_Sparql10 implements Erfurt_Sparql_Parser_Interface
 {
 		
-	function __construct($parserOptions=array())
-	{
-		// TODO pass options?
-	}
+	// function __construct($parserOptions=array())
+	// {
+	// 	// TODO pass options?
+	// }
 
 	public function initFromString($queryString, $parserOptions = array()){
 		$retval=null;
