@@ -362,8 +362,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @see Erfurt_Store
      */
     public function getSearchPattern($stringSpec, $graphUris, $options)
-    {        
+    {
         $searchPattern = array();
+        
+        if (false === strpos($stringSpec, '*')) {
+            $stringSpec .= '*';
+        }
         
         require_once 'Erfurt/Sparql/Query2/Var.php';
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
