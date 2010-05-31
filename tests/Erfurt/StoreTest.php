@@ -136,6 +136,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -151,6 +152,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountAndFromIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -165,7 +167,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $result = $store->sparqlQuery($simpleQuery);
         
-        $this->assertEquals(181, $result);
+        $this->assertEquals(191, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()

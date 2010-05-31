@@ -189,7 +189,7 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
-    require_once '../../../dBug.php';
+    //require_once '../../../dBug.php';
         try {
             $timesum = (float) 0;
             $memorysum = (float) 0;
@@ -224,7 +224,7 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
                 $timesum += $timediff;
                 //echo "used " . ($usageafter - $usagebefore) . " bytes and " . $timediff . " sec.";
                 //echo $usagediff."\n";
-                echo "<pre>"; var_dump($query); echo "</pre>";
+                //echo "<pre>"; var_dump($query); echo "</pre>";
             }
             //echo "$i used avg ".($memorysum/$i) . " bytes and avg " .(number_format($timesum/$i, 9))." seconds";
         } catch(Exception $e){

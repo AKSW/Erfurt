@@ -15,10 +15,10 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     /**
      * @expectedException Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception
      */
-    public function testIvalid()
+    public function testInvalid()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-invalid.rdf');
-        $array = $this->_fixture->toArray($contents);
+        $array = $this->_fixture->convert($contents);
     }
     
     /**
@@ -27,13 +27,13 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     public function testError()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-error.rdf');
-        $array = $this->_fixture->toArray($contents);
+        $array = $this->_fixture->convert($contents);
     }
     
     public function testTitleResultEmpty()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-empty.rdf');
-        $converted = $this->_fixture->toArray($contents);
+        $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
         $this->assertArrayHasKey('vars', $converted['head']);
@@ -48,7 +48,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     public function testTitleResult1()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-result1.rdf');
-        $converted = $this->_fixture->toArray($contents);
+        $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
         $this->assertArrayHasKey('vars', $converted['head']);
@@ -84,7 +84,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     public function testTitleResult2()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-result2.rdf');
-        $converted = $this->_fixture->toArray($contents);
+        $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
         $this->assertArrayHasKey('vars', $converted['head']);
@@ -120,7 +120,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     public function testTitleResult3()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-result3.rdf');
-        $converted = $this->_fixture->toArray($contents);
+        $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
         $this->assertArrayHasKey('vars', $converted['head']);
@@ -159,7 +159,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     public function testTitleResult4()
     {
         $contents = file_get_contents('resources/virtuoso/sparql-result4.rdf');
-        $converted = $this->_fixture->toArray($contents);
+        $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
         $this->assertArrayHasKey('vars', $converted['head']);

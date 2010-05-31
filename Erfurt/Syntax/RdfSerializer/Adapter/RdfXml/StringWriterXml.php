@@ -479,7 +479,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 	private function replaceEntities($value) {
 		
 		if ((strpos($value, $this->base) !== false) && ($value !== $this->base)) {
-			return str_replace($this->base, '', $value);
+		    $newValue = str_replace($this->base, '', $value);
+		    if (strpos($newValue, '/') === false) {
+		        return $newValue;
+		    }
 		}
 
 		foreach ($this->entities as $entityName=>$entityValue) {
