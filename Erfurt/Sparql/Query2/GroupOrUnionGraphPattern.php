@@ -22,7 +22,7 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      */
      public function getSparql() {
         $sparql = '';
-        
+
         for ($i = 0; $i < count($this->elements); $i++) {
             if($this->elements[$i] instanceof Erfurt_Sparql_Query2_OptionalGraphPattern){
                $sparql .= ' { ';
@@ -44,7 +44,9 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      * @param Erfurt_Sparql_Query2_GroupGraphPattern $element
      * @return Erfurt_Sparql_Query2_GroupOrUnionGraphPattern $this
      */
-    public function addElement(Erfurt_Sparql_Query2_GroupGraphPattern $element) {
+    public function addElement($element) {
+        if (!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
         $this->elements[] = $element;
         $element->addParent($this);
         return $this; //for chaining
