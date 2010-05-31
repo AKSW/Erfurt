@@ -18,7 +18,9 @@ class Erfurt_Sparql_Query2_IriRef extends Erfurt_Sparql_Query2_ElementHelper imp
      * @param Erfurt_Sparql_Query2_Prefix $prefix
      */
     public function __construct($nresource, Erfurt_Sparql_Query2_Prefix $prefix = null) {
-        if (!is_string($nresource)) {throw new RuntimeException('wrong argument 1 passed to Erfurt_Sparql_Query2_Var::__construct. string expected. '.typeHelper($nresource).' found.');}
+        if (!is_string($nresource)) {
+            throw new RuntimeException('wrong argument 1 passed to Erfurt_Sparql_Query2_IriRef::__construct. string expected. '.typeHelper($nresource).' found.');
+        }
         $this->iri = $nresource;
                 
         if ($prefix != null) {
