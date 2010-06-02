@@ -29,7 +29,7 @@ class Erfurt_Sparql_Parser_Sparql11query implements Erfurt_Sparql_Parser_Interfa
 	{
 	}
 		
-	public function initFromString($queryString, $parserOptions = array()){
+	public static function initFromString($queryString, $parserOptions = array()){
 		
 		$input = new Erfurt_Sparql_Parser_Util_CaseInsensitiveStream($queryString);
 		$lexer = new Erfurt_Sparql_Parser_Sparql11_QueryLexer($input);
