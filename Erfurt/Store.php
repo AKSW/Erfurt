@@ -836,6 +836,7 @@ class Erfurt_Store
             $modelInstance = $this->_backendAdapter->getModel($modelIri);
         } else {
             // use generic implementation
+            require_once("Erfurt/Sparql/SimpleQuery.php");
             $owlQuery = new Erfurt_Sparql_SimpleQuery();
             $owlQuery->setProloguePart('ASK')
                      ->addFrom($modelIri)
