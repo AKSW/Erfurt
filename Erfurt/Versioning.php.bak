@@ -696,71 +696,41 @@ class Erfurt_Versioning
         }
         
         $existingTableNames = $this->_getStore()->listTables();
-//SQLSRV CHANGE _ ABFRAGEN WELCHES BACKEND
 
-        $this->_config = Erfurt_App::getInstance()->getConfig();
-        if(!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype=='sqlsrv')
-        {
-
-            if (!in_array('ef_versioning_actions', $existingTableNames)) {
-                $columnSpec = array(
-                        'id'          => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
-                        'model'       => 'VARCHAR(255) NOT NULL',
-                        'useruri'     => 'VARCHAR(255) NOT NULL',
-                        'resource'    => 'VARCHAR(255)',
-                        'tstamp'      => 'INT NOT NULL',
-                        'action_type' => 'INT NOT NULL',
-                        'parent'      => 'INT DEFAULT NULL',
-                        'payload_id'  => 'INT DEFAULT NULL'
-                );
-                $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
-            }
-
-            if (!in_array('ef_versioning_payloads', $existingTableNames)) {
-                $columnSpec = array(
-                        'id'             => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
-                        'statement_hash' => 'TEXT'
-                );
-                $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
-            }
-
-            }
-            else {
-                if (!in_array('ef_versioning_actions', $existingTableNames)) {
-                    $columnSpec = array(
-                            'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
-                            'model'       => 'VARCHAR(255) NOT NULL',
-                            'useruri'     => 'VARCHAR(255) NOT NULL',
-                            'resource'    => 'VARCHAR(255)',
-                            'tstamp'      => 'INT NOT NULL',
-                            'action_type' => 'INT NOT NULL',
-                            'parent'      => 'INT DEFAULT NULL',
-                            'payload_id'  => 'INT DEFAULT NULL'
-                    );
-
-                    $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
-                }
-
-                if (!in_array('ef_versioning_payloads', $existingTableNames)) {
-                    $columnSpec = array(
-                            'id'             => 'INT PRIMARY KEY AUTO_INCREMENT',
-                            'statement_hash' => 'LONGTEXT'
-                    );
-                    $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
-                }
-
-            }       
+        if (!in_array('ef_versioning_actions', $existingTableNames)) {
+            $columnSpec = array(
+                'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
+                'model'       => 'VARCHAR(255) NOT NULL',
+                'useruri'     => 'VARCHAR(255) NOT NULL',
+                'resource'    => 'VARCHAR(255)',
+                'tstamp'      => 'INT NOT NULL',
+                'action_type' => 'INT NOT NULL',
+                'parent'      => 'INT DEFAULT NULL',
+                'payload_id'  => 'INT DEFAULT NULL'
+            );
+            
+            $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
+        }
+        
+        if (!in_array('ef_versioning_payloads', $existingTableNames)) {
+            $columnSpec = array(
+                'id'             => 'INT PRIMARY KEY AUTO_INCREMENT',
+                'statement_hash' => 'LONGTEXT'
+            );
+            
+            $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
+        }        
     }
     
     protected function _sqlQuery($sql, $limit = PHP_INT_MAX, $offset = 0)
     {
         try {
-          //  $result = $this->_getStore()->sqlQuery($sql, $limit, $offset); sqlchange versioning
+            $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
         } catch (Erfurt_Exception $e) {
             $this->_checkSetup();
             
             try {
-              //  $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
+                $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Exception $e2) {
                 throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage() . $sql);
             }

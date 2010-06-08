@@ -244,11 +244,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 . ' as "' . $strSparqlVar . '-type"';
         }
 
-        //SQLSRVCHANGE - Problems with distinct and orderby
-
-        //Check for Backend Adapter
-        $this->_config = Erfurt_App::getInstance()->getConfig();
-
+        
         $sql      = 'SELECT DISTINCT ' . implode(',', $arSel) . ' ' . $strFrom . $strWhere;
 
         $arResult = $this->_engine->sqlQuery($sql);
@@ -521,7 +517,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                             $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                             . '=\'\')';//Sqlsrvchange
+                                . '="")';
                         } else {
                             $strWhereTypes .= $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
@@ -536,7 +532,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                               . '=\'\')'; //Sqlsrvchange
+                                 . '="")';
                          } else {
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
