@@ -15,6 +15,8 @@ ontowiki/src/libraries/RDFauthor
 ontowiki/src/libraries/Zend*
 ontowiki/src/libraries/getid3/*
 ontowiki/src/libraries/mm2rdf/tests/testfiles
+ontowiki/src/libraries/mm2rdf/libraries/Erfurt
+ontowiki/src/libraries/mm2rdf/libraries/Zend
 erfurt/src/Erfurt/libraries/Zend
 ontowiki/src/extensions/modules/minimap/module.ini
 ontowiki/src/extensions/modules/navigation/module.ini
