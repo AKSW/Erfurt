@@ -31,4 +31,4 @@ ontowiki/src/extensions/modules/poitypes
 ontowiki/src/extensions/components/searchindex
 ontowiki/src/extensions/components/poi
 models/NepomukFileOntology/nfo-test.rdf
-
+ontowiki/src/extensions/wrapper/multimedia/wrapper.ini
