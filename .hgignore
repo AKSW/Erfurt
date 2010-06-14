@@ -24,6 +24,9 @@ ontowiki/src/extensions/components/navigation/component.ini
 ontowiki/src/extensions/components/foafedit/component.ini
 ontowiki/src/extensions/components/map/component.ini
 ontowiki/src/extensions/components/directorymodel/test/
+ontowiki/src/extensions/components/download/component.ini
+ontowiki/src/extensions/components/files/component.ini
+ontowiki/src/extensions/plugins/download/plugin.ini
 ontowiki/src/extensions/components/pdfimport
 ontowiki/src/import*
 ontowiki/src/extensions/modules/searchindex
