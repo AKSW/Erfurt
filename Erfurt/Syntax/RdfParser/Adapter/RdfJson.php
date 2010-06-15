@@ -42,7 +42,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
     
     public function parseFromUrl($url) 
     {
-        
+        // replace all whitespaces (prevent possible CRLF Injection attacks)
+        // http://www.acunetix.com/websitesecurity/crlf-injection.htm
+        $url = preg_replace('/\\s+/', '', $url);
+
         $handle = fopen($url, 'r');
         
         if ($handle === false) {
