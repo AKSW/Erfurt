@@ -13,14 +13,14 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
     const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
 
-public function setUp()
-{
-}
+// public function setUp()
+// {
+// }
 
-	protected function tearDown()
-	{
-		gc_collect_cycles();
-	}
+	// protected function tearDown()
+	// {
+	// 	gc_collect_cycles();
+	// }
 
 	    /**
 	     * @dataProvider providerTestParse
@@ -31,7 +31,8 @@ public function setUp()
 		try {
 			$q= Erfurt_Sparql_Query2::initFromString($querySpec["query"]);
 			if (!($q instanceof Erfurt_Sparql_Query2)) {
-				echo ($q->getMessage());
+				throw new Exception($q->getMessage(), 1);
+				
 			}
 			$this->assertTrue($q instanceof Erfurt_Sparql_Query2);	
 		} catch (Exception $e) {
@@ -78,13 +79,13 @@ public function setUp()
     {
         $queryArray = array();
         
-        // // 1. ow tests 
-        // $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
+        // 1. ow tests 
+        $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
         
-        // // 2. erfurt tests
-        // $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
+        // 2. erfurt tests
+        $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
         // // 
-        // // 3. rap tests
+        // 3. rap tests
         // $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
         //     
         // 4. dawg2
