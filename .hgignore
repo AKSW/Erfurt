@@ -31,6 +31,7 @@ ontowiki/src/extensions/components/pdfimport
 ontowiki/src/import*
 ontowiki/src/extensions/modules/searchindex
 ontowiki/src/extensions/modules/poitypes
+ontowiki/src/extensions/modules/aggregation/module.ini
 ontowiki/src/extensions/components/searchindex
 ontowiki/src/extensions/components/poi
 models/NepomukFileOntology/nfo-test.rdf
