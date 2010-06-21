@@ -1236,7 +1236,7 @@ class Erfurt_Store
         );
         $options = array_merge($defaultOptions, $options);
         $noBindings = false;
-
+	
         //typechecking
         if (is_string($queryObject)) {
             require_once 'Erfurt/Sparql/SimpleQuery.php';
