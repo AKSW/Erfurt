@@ -241,7 +241,7 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT id, useruri, tstamp, action_type ' .
+        $sql = 'SELECT id, resource, useruri, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND ( resource = \'' . implode ('\' OR resource = \'' ,$resources) . '\' )
                 AND parent IS NULL
