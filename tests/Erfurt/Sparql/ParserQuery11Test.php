@@ -1,5 +1,5 @@
 <?php
-ini_set('error_reporting', E_ALL | E_STRICT);
+// ini_set('error_reporting', E_ALL | E_STRICT);
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
 require_once 'Erfurt/TestCase.php';
 

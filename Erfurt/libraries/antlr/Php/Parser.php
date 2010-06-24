@@ -85,11 +85,11 @@ class AntlrParser extends BaseRecognizer {
 		return $this->input->getSourceName();
 	}
 
-	public function traceIn($ruleName, $ruleIndex, $inputSymbol=null)  {
+	public function traceIn($ruleName, $ruleIndex, $inputSymbol)  {
 		parent::traceIn($ruleName, $ruleIndex, $this->input->LT(1));
 	}
 
-	public function traceOut($ruleName, $ruleIndex, $inputSymbol=null)  {
+	public function traceOut($ruleName, $ruleIndex, $inputSymbol)  {
 		parent::traceOut($ruleName, $ruleIndex, $this->input->LT(1));
 	}
 	
