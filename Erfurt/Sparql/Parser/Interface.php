@@ -23,6 +23,6 @@ interface Erfurt_Sparql_Parser_Interface
 	 * @throws Parser Exception, if there was a poblem parsing the query 
 	 * @return Returns Erfurt_Sparql_Query2 object
 	 */
-	public function initFromString($queryString, $parserOptions = array());
+	public static function initFromString($queryString, $parserOptions = array());
 	
 }
