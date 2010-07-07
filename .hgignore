@@ -18,6 +18,7 @@ ontowiki/src/libraries/mm2rdf/tests/testfiles
 ontowiki/src/libraries/mm2rdf/libraries/Erfurt
 ontowiki/src/libraries/mm2rdf/libraries/Zend
 erfurt/src/Erfurt/libraries/Zend
+OntoWiki.tmproj
 ontowiki/src/extensions/modules/minimap/module.ini
 ontowiki/src/extensions/modules/navigation/module.ini
 ontowiki/src/extensions/components/navigation/component.ini
