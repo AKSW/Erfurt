@@ -10,6 +10,8 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
         parent::__construct();
         if(is_array($elements)){
             $this->setElements($elements);
+        } else if($elements instanceof Erfurt_Sparql_Query2_ElementHelper){
+             $this->addElement($elements);
         }
     }
 

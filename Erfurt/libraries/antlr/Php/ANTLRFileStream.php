@@ -61,4 +61,3 @@ class ANTLRFileStream extends ANTLRStringStream {
 	}
 }
 ?>
-

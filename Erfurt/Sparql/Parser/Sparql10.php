@@ -16,26 +16,21 @@
  */
 
 require_once 'antlr/Php/antlr.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10Lexer.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10Parser.php';
-require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
 
 class Erfurt_Sparql_Parser_Sparql10 implements Erfurt_Sparql_Parser_Interface
 {
-		
-	function __construct($parserOptions=array())
-	{
-		// TODO pass options?
-	}
-
-	public function initFromString($queryString, $parserOptions = array()){
+	public static function initFromString($queryString, $parsePartial = null){
 		$retval=null;
 		$input = new Erfurt_Sparql_Parser_Util_CaseInsensitiveStream($queryString);
 		$lexer = new Erfurt_Sparql_Parser_Sparql10_Sparql10Lexer($input);
 		if (!count($lexer->getErrors())) {
 			$tokens = new CommonTokenStream($lexer);
 			$parser = new Erfurt_Sparql_Parser_Sparql10_Sparql10Parser($tokens);
-			$retval =  $parser->parse();
+			if($parsePartial != null && is_string($parsePartial) && method_exists($parser, $parsePartial)){
+                            $retval =  call_user_func( array( $parser, $parsePartial ) );
+                        } else {
+                            $retval =  $parser->parse();
+                        }
 		}
 		return array('retval' =>$retval, 'errors'=>array_merge($lexer->getErrors(), $parser?$parser->getErrors():array()));
 	}

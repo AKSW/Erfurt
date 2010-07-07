@@ -24,6 +24,7 @@ ontowiki/src/extensions/modules/navigation/module.ini
 ontowiki/src/extensions/components/navigation/component.ini
 ontowiki/src/extensions/components/foafedit/component.ini
 ontowiki/src/extensions/components/map/component.ini
+<<<<<<< local
 ontowiki/src/extensions/components/directorymodel/test/
 ontowiki/src/extensions/components/download/component.ini
 ontowiki/src/extensions/components/files/component.ini
@@ -37,3 +38,8 @@ ontowiki/src/extensions/components/searchindex
 ontowiki/src/extensions/components/poi
 models/NepomukFileOntology/nfo-test.rdf
 ontowiki/src/extensions/wrapper/multimedia/wrapper.ini
+=======
+ontowiki/src/libraries/ZendFramework-1.9.4-minimal
+ontowiki/src/extensions/modules/hierarchy/module.ini
+
+>>>>>>> other
