@@ -1,9 +1,10 @@
 <?php
+ini_set('memory_limit', '1G');
 ini_set('error_reporting', E_ALL | E_STRICT);
 set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
 require_once 'Erfurt/TestCase.php';
+require_once 'test_base.php';
 
-require_once 'Erfurt/Sparql/Parser/Sparql10.php';
 class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 {
     const RAP_TEST_DIR = 'resources/sparql/rap/';
@@ -11,33 +12,68 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
     const EF_TEST_DIR = 'resources/sparql/erfurt/';
     const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
     
-	protected function tearDown()
-	{
-		gc_collect_cycles();
-	}
 
-    /**
-     * @dataProvider providerTestParse
-     */
-   	public function testParse($querySpec)
-    {
+// public function setUp()
+// {
+// }
+
+	// protected function tearDown()
+	// {
+	// 	gc_collect_cycles();
+	// }
+
+	    /**
+	     * @dataProvider providerTestParse
+	     */
+	   	public function testParse($querySpec)
+	    {
 		$q;
-		$parser = new Erfurt_Sparql_Parser_Sparql10();
 		try {
-			$q= $parser->initFromString($querySpec["query"]);
-			if ($q['errors']) {
-				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
-				$this->fail($this->_createErrorMsg($querySpec, $e));
+			$q= Erfurt_Sparql_Query2::initFromString($querySpec["query"]);
+			if (!($q instanceof Erfurt_Sparql_Query2)) {
+				throw new Exception($q->getMessage(), 1);
+				
 			}
-			$this->assertTrue($q['retval'] instanceof Erfurt_Sparql_Query2);		
+			$this->assertTrue($q instanceof Erfurt_Sparql_Query2);	
 		} catch (Exception $e) {
 			if ($querySpec['type'] === 'positive') {
 			    $this->fail($this->_createErrorMsg($querySpec, $e));		
 			}
-    	}
-		unset($parser);
+	    	}
 	}
 
+
+	// public function testTest1()
+	// {
+	// 	$q1 = new Erfurt_Sparql_Query2();
+	// 	$q2 = $q1->initFromString("select * {}");
+	// 	// var_dump($q2);
+	// 	if ($q2 instanceof Exception) {
+	// 		echo $q2->getMessage();			
+	// 	}
+	// 	$this->assertTrue($q2 instanceof Erfurt_Sparql_Query2);
+	// }
+	
+
+	// public function testTest()
+	// {
+	// 		$q;
+	// 		$parser = new Erfurt_Sparql_Parser_Sparql10();
+	// 		try {
+	// 			$q= $parser->initFromString("selet *}");
+	// 			var_dump($q);
+	// 			if ($q['errors']) {
+	// 				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
+	// 				$this->fail($this->_createErrorMsg($querySpec, $e));
+	// 			}
+	// 			$this->assertTrue($q['retval'] instanceof Erfurt_Sparql_Query2);		
+	// 		} catch (Exception $e) {
+	// 			// if ($querySpec['type'] === 'positive') {
+	// 			//     $this->fail($this->_createErrorMsg($querySpec, $e));		
+	// 			// }
+	// 	    	}
+	// 	
+	// }
 
     public function providerTestParse()
     {
@@ -48,10 +84,10 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
         
         // 2. erfurt tests
         $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
-        // 
+        // // 
         // 3. rap tests
-        $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
-            
+        // $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
+        //     
         // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = new Erfurt_Syntax_RdfParser();

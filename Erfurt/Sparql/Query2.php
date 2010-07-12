@@ -3,6 +3,12 @@
 //(-> no compliance with zend classfile naming for autoloading)
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
+
+// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+// require_once 'antlr.php';
+// require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
+// require_once 'Erfurt/Sparql10/Parser/Sparql10.php';
+
 require_once 'Query2/structural-Interfaces.php';
 require_once 'Query2/Constraint.php';
 
@@ -85,6 +91,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         } else {
             $this->setQueryType(self::typeSelect);
         }
+		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
     }
     
     public function __clone()
@@ -933,6 +940,38 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     public function setElements($elements)
     {
         //throw
+    }
+
+    public static function initFromString($queryString, $parsePartial = null){
+        // $parser = new Erfurt_Sparql_Parser_Sparql10();
+        // $fromParser = $parser->initFromString($queryString, array());
+        // if($fromParser['retval'] instanceof Erfurt_Sparql_Query2){
+        //     return $fromParser['retval'];
+        // } else {
+        //     throw new Exception("Error in parser: ". print_r($fromParser['errors'], true));
+        //     return null;
+        // }
+		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+
+		$q;
+		$parser = new Erfurt_Sparql_Parser_Sparql10();
+		try {
+			$q= $parser->initFromString($queryString, $parsePartial);
+			if ($q['errors']) {
+				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
+				throw $e;
+				
+			}
+			// var_dump($q);
+			return $q['retval'];
+		} catch (Exception $e) {
+			// if ($querySpec['type'] === 'positive') {
+			//     $this->fail($this->_createErrorMsg($querySpec, $e));		
+			// }
+			return $e;
+	    	}
+
+
     }
 }
 ?>
