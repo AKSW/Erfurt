@@ -728,9 +728,11 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function addProjectionVar(Erfurt_Sparql_Query2_Var $var)
     {
-        if (in_array($var, $this->projectionVars)) {
-            //already added
-            return $this; //for chain/ing
+        foreach ($this->projectionVars as $myVar){
+            if($myVar->equals($var)){
+                //already added
+                return $this;
+            }
         }
         
         /*if (!in_array($var, $this->where->getVars())) {
