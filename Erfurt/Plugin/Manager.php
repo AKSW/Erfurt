@@ -19,6 +19,7 @@ class Erfurt_Plugin_Manager
      * @var string
      */
     const CONFIG_FILENAME = 'plugin.ini';
+    const PRIVATE_CONFIG_FILENAME = 'plugin.private.ini';
     
     /**
      * Postfix for plug-in class names
@@ -97,12 +98,23 @@ class Erfurt_Plugin_Manager
     {
         // parse plugin config
         $pluginConfig = parse_ini_file($pluginPath . self::CONFIG_FILENAME, true);
+        $pluginPrivateConfigPath = $pluginPath . self::PRIVATE_CONFIG_FILENAME;
+        if (is_readable($pluginPrivateConfigPath)) {
+            $pluginConfig = array_merge($config, parse_ini_file($pluginPrivateConfigPath, true));
+        }
         
         if (array_key_exists('private', $pluginConfig)) {
             require_once 'Zend/Config/Ini.php';
             $pluginPrivateConfig = new Zend_Config_Ini($pluginPath . self::CONFIG_FILENAME, 'private', true);
+           
         }
-        
+         if (is_readable($pluginPrivateConfigPath)) {
+            if(isset($pluginPrivateConfig)){
+                $pluginPrivateConfig = $pluginPrivateConfig->merge(new Zend_Config_Ini($pluginPrivateConfigPath, 'private', true));
+            } else {
+                $pluginPrivateConfig = new Zend_Config_Ini($pluginPrivateConfigPath, 'private', true);
+            }
+        }
         // check if plugin is enabled
         if (!array_key_exists('enabled', $pluginConfig) || !(boolean) $pluginConfig['enabled']) {
             return;

@@ -31,6 +31,7 @@ class Erfurt_Wrapper_Manager
      * @var string
      */
     const CONFIG_FILENAME = 'wrapper.ini';
+    const PRIVATE_CONFIG_FILENAME = 'wrapper.private.ini';
     
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
@@ -105,7 +106,12 @@ class Erfurt_Wrapper_Manager
      */ 
     protected function _addWrapper($wrapperName, $wrapperPath)
     {
-        $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true); 
+        $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true);
+        $wrapperPrivateConfigPath = $wrapperPath . self::PRIVATE_CONFIG_FILENAME;
+        if (is_readable($wrapperPrivateConfigPath)) {
+            $wrapperConfig = array_merge($config, parse_ini_file($wrapperPrivateConfigPath, true));
+        }
+
         if (!array_key_exists('enabled', $wrapperConfig) || !(boolean)$wrapperConfig['enabled']) {
             // Wrapper is disabled.
             return;
@@ -120,6 +126,13 @@ class Erfurt_Wrapper_Manager
             );
         } else {
             $privateConfig = false;
+        }
+        if (is_readable($wrapperPrivateConfigPath)) {
+            if(!($privateConfig instanceof Zend_Config_Ini)){
+                $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
+            } else {
+                $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+            }
         }
         
         $wrapperSpec = array(
