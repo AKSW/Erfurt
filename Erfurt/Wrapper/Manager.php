@@ -7,8 +7,6 @@
  * @version $Id: Manager.php 4013 2009-08-13 14:37:18Z pfrischmuth $
  */
 
-require_once 'Erfurt/Wrapper/Registry.php';
-
 /**
  * This class provides functionality in order to scan directories for wrapper
  * extensions.
@@ -31,7 +29,7 @@ class Erfurt_Wrapper_Manager
      * @var string
      */
     const CONFIG_FILENAME = 'wrapper.ini';
-    const PRIVATE_CONFIG_FILENAME = 'wrapper.private.ini';
+    const CONFIG_LOCAL_FILENAME = 'local.ini';
     
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
@@ -107,9 +105,9 @@ class Erfurt_Wrapper_Manager
     protected function _addWrapper($wrapperName, $wrapperPath)
     {
         $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true);
-        $wrapperPrivateConfigPath = $wrapperPath . self::PRIVATE_CONFIG_FILENAME;
+        $wrapperPrivateConfigPath = $wrapperPath . self::CONFIG_LOCAL_FILENAME;
         if (is_readable($wrapperPrivateConfigPath)) {
-            $wrapperConfig = array_merge($config, parse_ini_file($wrapperPrivateConfigPath, true));
+            $wrapperConfig = array_merge($wrapperConfig, parse_ini_file($wrapperPrivateConfigPath, true));
         }
 
         if (!array_key_exists('enabled', $wrapperConfig) || !(boolean)$wrapperConfig['enabled']) {
@@ -118,7 +116,6 @@ class Erfurt_Wrapper_Manager
         }
         
         if (isset($wrapperConfig[$this->_configPrivateSection])) {
-            require_once 'Zend/Config/Ini.php';
             $privateConfig = new Zend_Config_Ini(
                 $wrapperPath . self::CONFIG_FILENAME, 
                 $this->_configPrivateSection, 
@@ -128,10 +125,14 @@ class Erfurt_Wrapper_Manager
             $privateConfig = false;
         }
         if (is_readable($wrapperPrivateConfigPath)) {
-            if(!($privateConfig instanceof Zend_Config_Ini)){
-                $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
-            } else {
-                $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+            try {
+                if(!($privateConfig instanceof Zend_Config_Ini)){
+                    $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
+                } else {
+                    $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+                }
+            } catch (Zend_Config_Exception $e) {
+                // no private config
             }
         }
         
