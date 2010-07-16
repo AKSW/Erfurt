@@ -48,10 +48,15 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 throw new OntoWiki_Exception('serializeQueryResultToString expects a Erfurt_Sparql_Query2 object');
             }
         }
-        $query->removeAllProjectionVars();
-        $query->addProjectionVar($s);
-        $query->addProjectionVar($p);
-        $query->addProjectionVar($o);
+
+        if($query instanceof Erfurt_Sparql_Query2){
+            $query->removeAllProjectionVars();
+            $query->addProjectionVar($s);
+            $query->addProjectionVar($p);
+            $query->addProjectionVar($o);
+        } else if($query instanceof Erfurt_Sparql_SimpleQuery){
+            $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        }
         
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->serializer->ad)) {
