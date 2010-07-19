@@ -84,13 +84,11 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
      * @return boolean true if no problem
      */
     public function remove($id) {
-        $res = $this->_query("SELECT COUNT(*) FROM ef_cache WHERE id = '" . $id . "'");
 
-        $result1 = $res[0]['count'];
         $result2 = $this->_query("DELETE FROM ef_cache WHERE id = '" . $id . "'");
         $result3 = $this->_query("DELETE FROM ef_cache_tag WHERE id = '" . $id . "'");
 
-        return ($result1 && $result2 && $result3);
+        return ($result2 && $result3);
     }
 
 	/**
@@ -252,31 +250,24 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
         }
 
         if ($mode == Zend_Cache::CLEANING_MODE_MATCHING_TAG) {
-            $first = true;
-            $ids = array();
-            foreach ($tags as $tag) {
-                $res = $this->_query("SELECT DISTINCT(id) AS id FROM ef_cache_tag WHERE name = '" . $tag . "'");
-                if (!$res) {
-                    return false;
-                }
-             
-                $ids2 = array();
-				while (($row = @$res->fetch_row())) {
-                    $ids2[] = $row[0];
-                }
-                if ($first) {
-                    $ids = $ids2;
-                    $first = false;
-                } else {
-                    $ids = array_intersect($ids, $ids2);
-                }
+
+            if (sizeOf($tags) < 1) {
+                return false;
             }
-            $result = true;
-            foreach ($ids as $id) {
-                $result = $result && ($this->remove($id));
-            }
+
+            $conditions = array();
+            $sql = "SELECT DISTINCT(id) AS id FROM ef_cache_tag as tag WHERE ";
             
-			return $result;
+            foreach ($tags as $tag) {
+                $conditions[] = "EXISTS (SELECT id FROM ef_cache_tag WHERE name = '" . $tag . "' AND id=tag.id) ";
+            }
+            $sql .= implode(" AND ", $conditions);
+            $result = $this->_query($sql);
+            $res = true;
+            foreach ($result as $entry) {
+                    $res = $res && $this->remove($entry['id']);
+            }
+  		    return $res;
         }
 
         if ($mode === Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG) {

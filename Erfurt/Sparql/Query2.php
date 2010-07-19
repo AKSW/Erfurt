@@ -728,9 +728,11 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function addProjectionVar(Erfurt_Sparql_Query2_Var $var)
     {
-        if (in_array($var, $this->projectionVars)) {
-            //already added
-            return $this; //for chain/ing
+        foreach ($this->projectionVars as $myVar){
+            if($myVar->equals($var)){
+                //already added
+                return $this;
+            }
         }
         
         /*if (!in_array($var, $this->where->getVars())) {
@@ -942,7 +944,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         //throw
     }
 
-    public static function initFromString($queryString){
+    public static function initFromString($queryString, $parsePartial = null){
         // $parser = new Erfurt_Sparql_Parser_Sparql10();
         // $fromParser = $parser->initFromString($queryString, array());
         // if($fromParser['retval'] instanceof Erfurt_Sparql_Query2){
@@ -956,7 +958,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 		$q;
 		$parser = new Erfurt_Sparql_Parser_Sparql10();
 		try {
-			$q= $parser->initFromString($queryString);
+			$q= $parser->initFromString($queryString, $parsePartial);
 			if ($q['errors']) {
 				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
 				throw $e;
