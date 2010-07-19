@@ -37,20 +37,25 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $this->handleGraph($graphUri, $useAc);
         
         $query->setLimit(1000); //needed?
-        if(!strstr((string)$query, '?resourceUri ?p ?o')){
+        $s = new Erfurt_Sparql_Query2_Var('resourceUri');
+        $p = new Erfurt_Sparql_Query2_Var('p');
+        $o = new Erfurt_Sparql_Query2_Var('o');
+        if(strstr((string)$query, '?resourceUri ?p ?o') === false){
             if($query instanceof Erfurt_Sparql_Query2){
-                $s = new Erfurt_Sparql_Query2_Var('resourceUri');
-                $p = new Erfurt_Sparql_Query2_Var('p');
-                $o = new Erfurt_Sparql_Query2_Var('o');
                 $query->addTriple($s,$p,$o);
-                $query->removeAllProjectionVars();
-                $query->addProjectionVar($s);
-                $query->addProjectionVar($p);
-                $query->addProjectionVar($o);
             } else {
                 //should not happen
                 throw new OntoWiki_Exception('serializeQueryResultToString expects a Erfurt_Sparql_Query2 object');
             }
+        }
+
+        if($query instanceof Erfurt_Sparql_Query2){
+            $query->removeAllProjectionVars();
+            $query->addProjectionVar($s);
+            $query->addProjectionVar($p);
+            $query->addProjectionVar($o);
+        } else if($query instanceof Erfurt_Sparql_SimpleQuery){
+            $query->setProloguePart('SELECT ?resourceUri ?p ?o');
         }
         
         $config = Erfurt_App::getInstance()->getConfig();
@@ -63,14 +68,12 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $offset = 0;
         while (true) {
             $query->setOffset($offset);
-
             $result = $this->_store->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
 		        'use_additional_imports' => false,
 		        'use_ac' => $useAc
 		    ));
-
             foreach ($result['bindings'] as $row) {
                 $s     = $row['resourceUri']['value'];
                 $p     = $row['p']['value'];
