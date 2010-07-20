@@ -164,19 +164,21 @@ class Erfurt_Event_Dispatcher
                         $reflectionMethod = new ReflectionMethod(get_class($handlerObject), $handlerMethod);
                         
                         $tempResult = $reflectionMethod->invoke($handlerObject, $event);
-                        if (is_array($tempResult)) {
-                            if ($result === self::INIT_VALUE) {
-                                $result = $tempResult;
-                            } else if (is_array($result)) {
-                                // If multiple plugins return an array, we merge them.
-                                $result = array_merge($result, $tempResult);
+                        if (null !== $tempResult) {
+                            if (is_array($tempResult)) {
+                                if ($result === self::INIT_VALUE) {
+                                    $result = $tempResult;
+                                } else if (is_array($result)) {
+                                    // If multiple plugins return an array, we merge them.
+                                    $result = array_merge($result, $tempResult);
+                                } else {
+                                    // If another plugin returned something else, we convert to an array...
+                                    $result = array_merge(array($result), $tempResult);
+                                }
                             } else {
-                                // If another plugin returned something else, we convert to an array...
-                                $result = array_merge(array($result), $tempResult);
+                                // TODO: Support for chaining multiple plugin results that are no arrays?
+                                $result = $tempResult;
                             }
-                        } else {
-                            // TODO: Support for chaining multiple plugin results that are no arrays?
-                            $result = $tempResult;
                         }
                     }
                 } else {
