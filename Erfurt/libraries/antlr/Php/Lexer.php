@@ -285,12 +285,12 @@ abstract class AntlrLexer extends BaseRecognizer{
 	}
 	
 	
-	public function traceIn($ruleName, $ruleIndex, $inputSymbol=null)  {
+	public function traceIn($ruleName, $ruleIndex, $inputSymbol)  {
 		$inputSymbol = $this->input->LT(1)." line=".$this->getLine().":".$this->getCharPositionInLine();
 		parent::traceIn($ruleName, $ruleIndex, $inputSymbol);
 	}
 
-	public function traceOut($ruleName, $ruleIndex, $inputSymbol=null)  {
+	public function traceOut($ruleName, $ruleIndex, $inputSymbol)  {
 		$inputSymbol = $this->input->LT(1)." line=".$this->getLine().":".$this->getCharPositionInLine();
 		parent::traceOut($ruleName, $ruleIndex, $inputSymbol);
 	}

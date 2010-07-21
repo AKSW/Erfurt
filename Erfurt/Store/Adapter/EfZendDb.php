@@ -1124,7 +1124,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             }
         } else {
             try {
-                $result = $this->_dbConn->fetchAll($sqlQuery);
+                $result = @$this->_dbConn->fetchAll($sqlQuery);
             } catch (Zend_Db_Exception $e) { #return false;
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
