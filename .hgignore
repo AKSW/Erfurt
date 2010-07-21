@@ -11,6 +11,7 @@ config.ini
 nbproject
 ontowiki/src/cache
 ontowiki/src/libraries/Erfurt
+ontowiki/src/libraries/Erfurt-alt
 ontowiki/src/libraries/RDFauthor
 ontowiki/src/libraries/Zend
 erfurt/src/Erfurt/libraries/Zend

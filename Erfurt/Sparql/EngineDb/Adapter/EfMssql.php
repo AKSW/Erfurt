@@ -276,9 +276,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
 
         //SQLSRVCHANGE modify order for limit
 
+ //       var_dump($this->ts->getOrderifiedSqls($arSqls)); echo '<br><br>';
+
         $arSqls = $this->ts->getOrderifiedSqls($arSqls);
         $arSqls = $this->_modifyOrder($arSqls);
-
+//var_dump($arSqls); echo '<br><br>';
         return $rc->convertFromDbResults($this->_queryMultiple($arSqls),
                 $this->query, $this, $this->sg->arVarAssignments);
     }

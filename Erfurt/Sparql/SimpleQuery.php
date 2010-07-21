@@ -59,11 +59,13 @@ class Erfurt_Sparql_SimpleQuery
            // SQLSRVCHANGE - No Limit allowed in SQLSRV
            // Select Distinct mit orderby geht nicht - muss noch ge�ndert werden...
 
-        $this->_config = Erfurt_App::getInstance()->getConfig();
-        if (!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype!='sqlsrv')
-        {
-        //go here only if backend is not sqlsrv
+//        $this->_config = Erfurt_App::getInstance()->getConfig();
+//        if (!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype!='sqlsrv')
+//        {
+//        //go here only if backend is not sqlsrv
 
+
+        
 
         if ($this->_orderClause !== null) {
             $queryString .= 'ORDER BY ' . $this->_orderClause . PHP_EOL;
@@ -75,7 +77,9 @@ class Erfurt_Sparql_SimpleQuery
         if ($this->_offset !== null) {
             $queryString .= 'OFFSET ' . $this->_offset . PHP_EOL;
         }
-        }
+
+        
+//        }
 
         return $queryString;
     }

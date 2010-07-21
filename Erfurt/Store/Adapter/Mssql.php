@@ -1098,7 +1098,11 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 //            $sqlQuery = sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
 //        }
 
-
+//SQLSRVCHANGE _ LIMIT NOT SUPPORTED
+        // add limit/offset
+        if ($limit < PHP_INT_MAX) {
+            echo sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
+        }
 
 
 
