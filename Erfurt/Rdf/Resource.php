@@ -192,7 +192,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 );
                 
                 if ($row['o']['type'] == 'uri') {
-                    $this->_descriptionResource($uri);
+                    $this->_descriptionResource($row['o']['value']);
                 } else if ($row['o']['type'] == 'typed-literal') {
                     $currentValue['type'] = 'literal';
                     $currentValue['datatype'] = $row['o']['datatype'];
