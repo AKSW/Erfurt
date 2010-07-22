@@ -182,6 +182,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         if (($maxDepth > 0) && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
             foreach ($result['results']['bindings'] as $row) {
                 $property = $row['p']['value'];
+                $this->_descriptionResource($property);
                 
                 $currentValue = array(
                     // typed-literal --> literal
@@ -190,7 +191,9 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                     'value' => $row['o']['value']
                 );
                 
-                if ($row['o']['type'] == 'typed-literal') {
+                if ($row['o']['type'] == 'uri') {
+                    $this->_descriptionResource($uri);
+                } else if ($row['o']['type'] == 'typed-literal') {
                     $currentValue['type'] = 'literal';
                     $currentValue['datatype'] = $row['o']['datatype'];
                 } else if (isset($row['o']['xml:lang'])) {
@@ -205,7 +208,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 
                 if ($row['o']['type'] === 'bnode') {
                     $nodeId  = $row['o']['value'];
-                    $bNode    = self::initWithBlankNode($nodeId);
+                    $bNode   = self::initWithBlankNode($nodeId);
                     $nodeKey = sprintf('_:%s', $nodeId);
                     
                     $description[$nodeKey] = $bNode->getDescription($maxDepth-1);
@@ -216,6 +219,10 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return array(
             $this->getIri() => $description
         );
+    }
+    
+    protected function _descriptionResource($uri)
+    {
     }
     
     // ------------------------------------------------------------------------
