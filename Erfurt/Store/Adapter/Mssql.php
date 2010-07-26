@@ -1152,8 +1152,18 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
 
-        private function _createTableSqlsrv($tableName, array $columns)
+    private function _createTableSqlsrv($tableName, array $columns)
     {
+
+    $sqlsrv = 'IF NOT EXISTS
+               (SELECT * FROM SysObjects WHERE [Name] = \''.$tableName.'\')
+                CREATE TABLE'.$tableName.'(';
+
+
+    $sqlsrv .= ') ON [PRIMARY]';
+
+
+
 
       $i = 0;
        $sqlsrv ='CREATE TABLE '.$tableName.' (';

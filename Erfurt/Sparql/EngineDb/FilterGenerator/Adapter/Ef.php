@@ -472,7 +472,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
     protected function createFunction_isblank($tree)
     {
         if (!$this->isObjectOrSubject($tree['parameter'][0])) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'isBlank\'s first parameter needs to be an object or subject'
             );
         }
@@ -535,7 +535,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
     protected function createFunction_lang($tree)
     {
         if (!$this->isObject($tree['parameter'][0])) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'lang\'s first parameter needs to be an object'
             );
         }
@@ -558,13 +558,13 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
         if ($tree['parameter'][0]['type'] != 'function'
          || $tree['parameter'][0]['name'] != 'lang'
         ) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'langMatches\' first parameter needs to be a lang() function'
             );
         }
 
         if (!$this->isPlainString($tree['parameter'][1])) {
-            throw new SparqlEngineDb_SqlGeneratorException(
+            throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'langMatches\' second parameter needs to be a string'
             );
         }
@@ -618,7 +618,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
 
                 default:
                     var_dump($strMod);exit;
-                    throw new SparqlEngineDb_SqlGeneratorException(
+                    throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported regex modifier "'
                         . $strMod
                         . '"'
