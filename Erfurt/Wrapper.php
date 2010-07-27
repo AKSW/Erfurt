@@ -188,7 +188,7 @@ abstract class Erfurt_Wrapper
      * such URIs. 
      * 
      * @param string $uri The URI to be tested.
-     * @param string $graphUri The URI fro the graph to use. Some wrapper implementations
+     * @param string $graphUri The URI for the graph to use. Some wrapper implementations
      * may need it, e.g. to do SPARQL queries against the graph.
      * @return boolean Returns whether the wrapper will handle the given URI.
      * @throws Erfurt_Wrapper_Exception
