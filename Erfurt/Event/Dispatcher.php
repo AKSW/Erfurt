@@ -163,7 +163,8 @@ class Erfurt_Event_Dispatcher
                         // invoke event method
                         $reflectionMethod = new ReflectionMethod(get_class($handlerObject), $handlerMethod);
                         
-                        if ($tempResult = $reflectionMethod->invoke($handlerObject, $event)) {
+                        $tempResult = $reflectionMethod->invoke($handlerObject, $event);
+                        if (null !== $tempResult) {
                             if (is_array($tempResult)) {
                                 if ($result === self::INIT_VALUE) {
                                     $result = $tempResult;
@@ -175,7 +176,7 @@ class Erfurt_Event_Dispatcher
                                     $result = array_merge(array($result), $tempResult);
                                 }
                             } else {
-                                // TODO Support for chaining multiple plugin results that are no arrays?
+                                // TODO: Support for chaining multiple plugin results that are no arrays?
                                 $result = $tempResult;
                             }
                         }
