@@ -13,7 +13,7 @@ nbproject
 ontowiki/src/cache
 ontowiki/src/libraries/Erfurt
 ontowiki/src/libraries/RDFauthor
-ontowiki/src/libraries/Zend
+ontowiki/src/libraries/Zend*
 erfurt/src/Erfurt/libraries/Zend
 ontowiki/src/libraries/ZendFramework-1.*
 
