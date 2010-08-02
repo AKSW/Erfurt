@@ -170,5 +170,75 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
         $is = $this->_object->getUri();
         $this->assertEquals($should, $is);
     }
+    
+    public function testGetDescription()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $model = Erfurt_App::getInstance()->getSysOntModel();
+        $resource = new Erfurt_Rdf_Resource('http://ns.ontowiki.net/SysOnt/Anonymous', $model);
+        
+        $expected = array(
+            'http://ns.ontowiki.net/SysOnt/Anonymous' => array(
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://rdfs.org/sioc/ns#User'
+                    )
+                ), 
+                'http://www.w3.org/2000/01/rdf-schema#label' => array(
+                    array(
+                        'type' => 'literal', 
+                        'value' => 'Anonymous'
+                    )
+                ), 
+                'http://www.w3.org/2000/01/rdf-schema#comment' => array(
+                    array(
+                        'type' => 'literal', 
+                        'value' => 'This special account identifies the anonymous user.'
+                    )
+                ), 
+                'http://ns.ontowiki.net/SysOnt/grantAccess' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/RegisterNewUser'
+                    )
+                ), 
+                'http://ns.ontowiki.net/SysOnt/grantModelEdit' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/AnyModel'
+                    )
+                ),
+                'http://ns.ontowiki.net/SysOnt/grantModelView' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/AnyModel'
+                    ), 
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysBase/'
+                    )
+                ), 
+                'http://ns.ontowiki.net/SysOnt/denyModelView' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/'
+                    )
+                ), 
+                'http://ns.ontowiki.net/SysOnt/denyAccess' => array(
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/Login'
+                    ), 
+                    array(
+                        'type' => 'uri', 
+                        'value' => 'http://ns.ontowiki.net/SysOnt/Rollback'
+                    )
+                )
+            )
+        );
+        
+        $this->assertEquals($expected, $resource->getDescription());
+    }
 }
-?>
