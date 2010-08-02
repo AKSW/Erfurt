@@ -636,6 +636,42 @@ class Erfurt_App
     }
     
     /**
+     * 
+     */
+    public function getHttpClient($uri, $options = array())
+    {
+        $config = $this->getConfig();
+        
+        $defaultOptions = array();
+        if (isset($config->proxy)) {
+            $proxy = $config->proxy;
+            
+            if (isset($proxy->host)) {
+                $defaultOptions['proxy_host'] = $proxy->host;
+                
+                $defaultOptions['adapter'] = 'Zend_Http_Client_Adapter_Proxy';
+                
+                if (isset($proxy->port)) {
+                    $defaultOptions['proxy_port'] = (int)$proxy->port;
+                }
+                
+                if (isset($proxy->username)) {
+                    $defaultOptions['proxy_user'] = $proxy->username;
+                }
+                
+                if (isset($proxy->password)) {
+                    $defaultOptions['proxy_pass'] = $proxy->password;
+                }
+            }
+        }
+        
+        $finalOptions = array_merge($defaultOptions, $options);
+        $client = new Zend_Http_Client($uri, $finalOptions);
+        
+        return $client;
+    }
+    
+    /**
      * Returns a logging instance. If logging is disabled Zend_Log_Writer_Null is returned,
      * so it is save to use this object without further checkings. It is possible to use 
      * different logging files for different contexts. Just use an additional identifier.
