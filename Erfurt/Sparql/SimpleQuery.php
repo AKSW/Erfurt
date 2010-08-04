@@ -42,32 +42,45 @@ class Erfurt_Sparql_SimpleQuery
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
     
-    public function __toString() 
+    public function __toString()
     {
         $queryString = $this->_prologuePart . PHP_EOL;
-        
+
         foreach (array_unique($this->_from) as $from) {
             $queryString .= 'FROM <' . $from . '>' . PHP_EOL;
         }
-        
+
         foreach (array_unique($this->_fromNamed) as $fromNamed) {
             $queryString .= 'FROM NAMED <' . $fromNamed . '>' . PHP_EOL;
         }
-        
+
         $queryString .= $this->_wherePart . ' ';
+
+           // SQLSRVCHANGE - No Limit allowed in SQLSRV
+           // Select Distinct mit orderby geht nicht - muss noch ge�ndert werden...
+
+//        $this->_config = Erfurt_App::getInstance()->getConfig();
+//        if (!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype!='sqlsrv')
+//        {
+//        //go here only if backend is not sqlsrv
+
+
         
+
         if ($this->_orderClause !== null) {
             $queryString .= 'ORDER BY ' . $this->_orderClause . PHP_EOL;
         }
-        
         if ($this->_limit !== null) {
             $queryString .= 'LIMIT ' . $this->_limit . PHP_EOL;
         }
-        
+
         if ($this->_offset !== null) {
             $queryString .= 'OFFSET ' . $this->_offset . PHP_EOL;
         }
+
         
+//        }
+
         return $queryString;
     }
     
