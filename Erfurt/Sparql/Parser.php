@@ -325,8 +325,6 @@ class Erfurt_Sparql_Parser
         $this->_parseQuery();
             
         if (!$this->_query->isComplete()) {
-            debug_print_backtrace();
-            exit;
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Query is incomplete.');
         }

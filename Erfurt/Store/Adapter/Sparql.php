@@ -152,8 +152,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$query);
                 
-        require_once 'Zend/Http/Client.php';
-        $client = new Zend_Http_Client($url, array(
+        $client = Erfurt_App::getInstance()->getHttpClient($url, array(
             'maxredirects'  => 10,
             'timeout'       => 30
         ));
