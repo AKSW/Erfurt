@@ -195,6 +195,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 break;
         }
 
+        
+
         $this->nTableId                 = 0;
         $this->nGraphPatternCount       = 0;
         $this->nUnionCount              = 0;
@@ -202,7 +204,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
         $this->arUnionVarAssignments[0] = array();
 
         foreach ($this->query->getResultPart() as $graphPattern) {
-            
+
+           
+
+
             #if ($graphPattern->isEmpty()) {
             #    continue;
             #}
@@ -224,7 +229,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
             
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
-   
+
+
             if ($arTriplePattern != null) {
                 foreach ($arTriplePattern as $triplePattern) {
                     list (
@@ -244,8 +250,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 }
                 ++$this->nGraphPatternCount;
             }
+
+            
+
              
             foreach ($this->query->getResultPart() as $optionalPattern) {
+
+               
                 if ($optionalPattern->getOptional() === $graphPattern->patternId) {
                     $this->nTriplePatternCount = 0;
                     $arTriplePattern = $optionalPattern->getTriplePatterns();
@@ -302,8 +313,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
         $arSelect    = $this->createEqualSelects($arSelect);
         $arStrSelect = array();
 
-        
-     //   var_dump($strResultForm);  echo '<br><br>';
 
         switch ($strResultForm) {
             case 'construct':
@@ -312,7 +321,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
             case 'select':
             case 'select distinct':
                 if (!isset($strSelectType)) {
-                    $strSelectType = $strResultForm.' Row_Number() over (order by t0.s) as id, '; //sqlsrvchange
+                    $strSelectType = $strResultForm; 
                 }
                 foreach ($arSelect as $nUnionCount => $arSelectPart) {
                     $arSelectPart = $this->removeNull($arSelectPart);
@@ -340,17 +349,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unsupported query type "' . $strResultForm . '"');
                 break;
-        }
-
-
-
-        
+    }
 
         $arSqls = array();
         foreach ($arStrSelect as $nUnionCount => $arSelectPart) {
-
-            
-
             $arSqls[] = array(
                 'select'    => $arSelectPart,
                 'from'      => ' FROM '  . implode(' '    , $this->removeNull($arFrom[$nUnionCount])),
@@ -359,7 +361,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 )
             );
         }
-        
+      
         return $arSqls;
     }//function createSql()
 
@@ -493,14 +495,14 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 ) {
                     $strWhereEquality .=
                         ' AND ' . $strTablePrefix . '.ol=\''
-                        . addslashes($this->query->varLanguages[$object]) . '\'';//SQLSRVCHANGE " to '
+                        . $this->_addslashes($this->query->varLanguages[$object]) . '\'';//SQLSRVCHANGE " to '
                 }
                 if (isset($this->query->varDatatypes[$object])
                  && $this->query->varDatatypes[$object] !== null
                 ) {
                     $strWhereEquality .=
                         ' AND ' . $strTablePrefix . '.ol=\''
-                        . addslashes($this->query->varDatatypes[$object]) . '\'';//SQLSRVCHANGE " to '
+                        . $this->_addslashes($this->query->varDatatypes[$object]) . '\'';//SQLSRVCHANGE " to '
                 }
             }
         }
@@ -557,13 +559,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
                 $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
             }
+
+            
             
             if ($graphPattern->getOptional() !== null) {
                 $strFrom .=  $this->getSqlCondition($subject  , $strTablePrefix, 's')
                            . $this->getSqlCondition($predicate, $strTablePrefix, 'p')
                            . $this->getSqlCondition($object   , $strTablePrefix, 'o')
                            . $strWhereEquality;
-            }
+            }            
         }
 
 
@@ -1139,4 +1143,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_En
     {
         $this->tblStatements = $tblStatements;
     }//public function setStatementsTable($tblStatements)
+
+    private function _addslashes($str)
+    {
+       return str_replace("'", "''", $str);
+    }
+
+
 }

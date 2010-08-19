@@ -637,7 +637,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
     public function getBackendName()
     {
-        return 'ZendDb';
+        return 'MsSql';
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -1062,6 +1062,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $options=array())
     {
+
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
 
         $start = microtime(true);
@@ -1076,7 +1077,13 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             $query = $parser->parse((string)$query);
         }
 
+        
+
+
+
         $result = $engine->queryModel($query, $resultform);
+
+
 
         // Debug executed SPARQL queries in debug mode (7)
         $logger = Erfurt_App::getInstance()->getLog();
@@ -1101,19 +1108,17 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 //SQLSRVCHANGE _ LIMIT NOT SUPPORTED
         // add limit/offset
         if ($limit < PHP_INT_MAX) {
-            echo sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
+            sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
         }
-
-
 
         $queryType = strtolower(substr($sqlQuery, 0, 6));
         if ( $queryType  === 'insert' ||
              $queryType  === 'update' ||
              $queryType  === 'create' ||
              $queryType  === 'if not' ||
-             $queryType  === 'delete') {
+             $queryType  === 'delete' ||
+             substr($queryType, 0, 4) === 'drop') {
             // Handle without ZendDb
-
 
                 $result = $this->_dbConn->query($sqlQuery);
                 //SQLSRVCHANGE - Hack - result kommt immer falsch zurück - Queries werden aber ausgeführt....?

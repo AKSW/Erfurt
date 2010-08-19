@@ -4,7 +4,7 @@ require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
 
 class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_QueryCache_Backend {
 
-    //-------------------------------------------------------------------------------	
+    //-------------------------------------------------------------------------------
     //public functions
     //-------------------------------------------------------------------------------
 
@@ -15,9 +15,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
 	final public function checkCacheVersion() {
         $result = false;
-        try {            
+        try {
             $query = 'SELECT num FROM ef_cache_query_version';
-            $result = $this->store->sqlQuery($query);        
+            $result = $this->store->sqlQuery($query);
         } catch (Erfurt_Store_Adapter_Exception $f) {
             return false;
         }
@@ -33,101 +33,129 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     /**
      *  creating the initially needed cacheStructure. In the database case there will be 6 tables created named as followed:
-     *  ef_cache_query_result, ef_cache_query_triple, ef_cache_query_model, ef_cache_query_rt, ef_cache_query_rm, 
-     *  ef_cache_query_version. Furthermore there are some indexes which are created. 
+     *  ef_cache_query_result, ef_cache_query_triple, ef_cache_query_model, ef_cache_query_rt, ef_cache_query_rm,
+     *  ef_cache_query_version. Furthermore there are some indexes which are created.
      *  NOTE: if this function will be called and database exists, all cached data will be deleted first.
      *  @access     public
      *  @return     boolean         $state          true / false
      */
 	final public function createCacheStructure() {
         $vocabulary = array();
+
+        
         switch (strtolower($this->store->getBackendName())) {
+
+
             case 'zenddb' :
             case 'mysql' :
                 $vocabulary['col_utf8_bin'] = "character set utf8     collate utf8_bin";
                 $vocabulary['col_ascii_bin'] = "character set ascii     collate ascii_bin";
+                $vocabulary['auto_increment'] = "AUTO_INCREMENT";
+                $vocabulary['long_varchar'] = "LONG VARCHAR";
+                $vocabulary['long_varbinary'] = "LONG VARBINARY";
+                $vocabulary['varchar'] = "VARCHAR(255)";
+
+
+            break;
+            case 'mssql':
+            $vocabulary['col_utf8_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
+            $vocabulary['col_ascii_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
+            $vocabulary['auto_increment'] = "IDENTITY(1,1)";
+            $vocabulary['long_varchar'] = "NVARCHAR(max)";
+            $vocabulary['long_varbinary'] = "VARBINARY(max)";
+            $vocabulary['varchar'] = "NVARCHAR(127)";
+
             break;
             case 'virtuoso':
                 $vocabulary['col_utf8_bin'] = "";
                 $vocabulary['col_ascii_bin'] = "";
+                $vocabulary['auto_increment'] = "AUTO_INCREMENT";
+                $vocabulary['long_varchar'] = "LONG VARCHAR";
+                $vocabulary['long_varbinary'] = "LONG VARBINARY";
+                $vocabulary['varchar'] = "VARCHAR(255)";
+
             break;
             default:
                 $vocabulary['col_utf8_bin'] = "";
                 $vocabulary['col_ascii_bin'] = "";
+                $vocabulary['auto_increment'] = "";
+                $vocabulary['long_varchar'] = "";
+                $vocabulary['long_varbinary'] = "";
+                $vocabulary['varchar'] = "";
             break;
         }
 
         if (!$this->store->isSqlSupported()) {
             throw new Exception('To use the Query Cache, store adapter needs to implement the SQL interface.');
         }
-        
+
         $existingTableNames = $this->store->listTables();
 
+        //sqlsrv_change
         if (!in_array('ef_cache_query_result', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => 'VARCHAR(255)    '.$vocabulary['col_ascii_bin'].'   PRIMARY KEY NOT NULL',
-                'query'         => 'LONG VARCHAR    '.$vocabulary['col_utf8_bin'].'    NULL' ,
-                'result'        => 'LONG VARBINARY NULL',
+                'qid'           => $vocabulary['varchar'].'    '.$vocabulary['col_ascii_bin'].'   PRIMARY KEY NOT NULL',
+                'query'         => $vocabulary['long_varchar'].'    '.$vocabulary['col_utf8_bin'].'    NULL' ,
+                'result'        => $vocabulary['long_varchar'].' NULL', //sqlsrvchagne
                 'hit_count'     => 'INT NULL',
                 'inv_count'     => 'INT NULL',
                 'time_stamp'    => 'FLOAT NULL',
                 'duration'      => 'FLOAT NULL'
             );
-            
+
             $this->store->createTable('ef_cache_query_result', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)');
         }
-        
+
         if (!in_array('ef_cache_query_triple', $existingTableNames)) {
             $columnSpec = array(
-                'tid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
-                'subject'       => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
-                'predicate'     => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
-                'object'        => 'VARCHAR(255) '.$vocabulary['col_utf8_bin'].'   NULL',
+                'tid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
+                'subject'       => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
+                'predicate'     => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
+                'object'        => $vocabulary['varchar'].' '.$vocabulary['col_utf8_bin'].'   NULL',
             );
-            
+
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
         }
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
             $columnSpec = array(
-                'mid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
-                'modelIri'      => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].' NULL',
+                'mid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
+                'modelIri'      => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].' NULL',
             );
-            
+
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)');
         }
 
         if (!in_array('ef_cache_query_rt', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
                 'tid'           => 'INT NOT NULL, PRIMARY KEY ( qid, tid )'
             );
-            
+
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-    
         }
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
                 'mid'           => 'INT NOT NULL, PRIMARY KEY (qid, mid)',
             );
-            
+
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
 
         if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL',
-                'objectkey'     => 'VARCHAR(255)  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectkey)',
+                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                'objectkey'     => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectkey)',
             );
-            
+
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
             $this->store->sqlQuery('CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)');
         }
@@ -147,7 +175,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     /**
      *  saving a QueryString and its Result according to its QueryHash
      *  Furthermore triplePatterns from given QueryString and ModelIris (from clause) will also be saved . If array of
-     *  modelIris is empty the QueryId will be assigned to a NULL-Entry . Last But not Least the duration of the originally 
+     *  modelIris is empty the QueryId will be assigned to a NULL-Entry . Last But not Least the duration of the originally
      *  processed query will be saved.
      *  @access     public
      *  @param      string    $queryId        Its a hash of the QueryString
@@ -157,7 +185,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      string    $queryResult    the QueryResult
      *  @param      float     $duration       the duration of the originally executed Query in seconds, microseconds
      *  @return     boolean   $result         returns the state of the saveprocess
-     */    
+     */
     public function save( $queryId, $queryString, $modelIris, $triplePatterns, $queryResult, $duration = 0) {
         #check that this query isn't saved yet
 
@@ -165,19 +193,20 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             #encoding the queryResult
             $queryResult = $this->_encodeResult( $queryResult );
             #saving the result and its according queryId
+
             $query = "INSERT INTO ef_cache_query_result (
-                qid, 
+                qid,
                 query,
                 result,
                 hit_count,
                 inv_count,
-                time_stamp, 
+                time_stamp,
                 duration) VALUES (
                 '".$queryId."',
-                '".(str_replace("'", "\\'", $queryString))."', 
+                '".(str_replace("'", "\\'", $queryString))."',
                 '".$queryResult."',
                 0,
-                0, 
+                0,
                 ".(microtime(true)).",
                 ".$duration.")" ;
             $ret = $this->_query ( $query ) ;
@@ -225,17 +254,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch ($this->store->getBackendName()) {
             case "ZendDb" :
             case "MySql" :
-                $count = $this->_query( "SELECT hit_count 
-                                FROM ef_cache_query_result 
+                $count = $this->_query( "SELECT hit_count
+                                FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
                 $this->_query ( "UPDATE ef_cache_query_result SET hit_count = ".($count[0]['hit_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
             break;
             case "Virtuoso":
             default:
-                $query = "  UPDATE ef_cache_query_result 
-                            SET hit_count = ( 
-                                SELECT hit_count 
-                                FROM ef_cache_query_result 
+                $query = "  UPDATE ef_cache_query_result
+                            SET hit_count = (
+                                SELECT hit_count
+                                FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ) + 1
                             WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
                 $this->_query ( $query );
@@ -254,34 +283,34 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch ($this->store->getBackendName()) {
             case "ZendDb" :
             case "MySql" :
-                $count = $this->_query( "SELECT inv_count 
-                                FROM ef_cache_query_result 
+                $count = $this->_query( "SELECT inv_count
+                                FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
                 $this->_query ( "UPDATE ef_cache_query_result SET inv_count = ".($count[0]['inv_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
             break;
             case "Virtuoso":
             default:
-                $query = "  UPDATE ef_cache_query_result 
-                            SET inv_count = ( 
-                                SELECT inv_count 
-                                FROM ef_cache_query_result 
+                $query = "  UPDATE ef_cache_query_result
+                            SET inv_count = (
+                                SELECT inv_count
+                                FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ) + 1
                             WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
                 $this->_query ( $query );
             break;
         }
-   
+
     }
 
 
     /**
-     *  invalidating a cached Query Result 
+     *  invalidating a cached Query Result
      *  @access     public
      *  @param      array   $statements     an Array of statements in the form $statements[$subject][$predicate] = $object
-     *  @return     int     $count          count of the affected cached queries         
+     *  @return     int     $count          count of the affected cached queries
      */
     public function invalidate ( $modelIri, $statements = array() ) {
-        
+
         if (sizeof($statements) == 0)
             return false;
 
@@ -308,11 +337,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                         $clause[] = "(object = '".addslashes($objectValue)."' OR object IS NULL)" ;
                     }
                     $clauses[] = "(". (implode (" AND ", $clause)) .")";
-                
+
 
 /*                   "(
-                    (subject = '".$subject."' OR subject IS NULL) AND 
-                    (predicate = '".$predicate."' OR predicate IS NULL) AND 
+                    (subject = '".$subject."' OR subject IS NULL) AND
+                    (predicate = '".$predicate."' OR predicate IS NULL) AND
                     (object = '".$objectValue."' OR object IS NULL))"; */
                 }
             }
@@ -324,42 +353,42 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $clauseString = implode (" OR ", $clauses);
         // retrieve List Of qids which have to vbe invalidated
-        $query = "  SELECT DISTINCT (qid) 
-                    FROM 
+        $query = "  SELECT DISTINCT (qid)
+                    FROM
                         (
                             SELECT qid qid1
                             FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                             WHERE ( ".$clauseString." )
-                        ) first 
-                    JOIN 
+                        ) first
+                    JOIN
                         (
                             SELECT qid qid2
                             FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                             WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )
-                        ) second 
-                        ON first.qid1 = second.qid2 
-                    JOIN 
-                        ef_cache_query_result result ON result.qid = qid2 
+                        ) second
+                        ON first.qid1 = second.qid2
+                    JOIN
+                        ef_cache_query_result result ON result.qid = qid2
                     WHERE result.result IS NOT NULL";
         $result = $this->_query ( $query );
         if (!$result)
-            return $qids;        
+            return $qids;
 
         foreach ($result as $entry) {
             $qids[] = $entry['qid'];
         }
-        $query = "  UPDATE ef_cache_query_result SET result = NULL 
-                    WHERE 
+        $query = "  UPDATE ef_cache_query_result SET result = NULL
+                    WHERE
                     (
-                        qid IN 
-                        (   
-                            SELECT DISTINCT (qid) 
+                        qid IN
+                        (
+                            SELECT DISTINCT (qid)
                             FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                             WHERE ( ".$clauseString." )
-                        ) 
+                        )
                         AND qid IN
                         (
-                            SELECT DISTINCT (qid) 
+                            SELECT DISTINCT (qid)
                             FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                             WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )
 
@@ -371,18 +400,18 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
 
     /**
-     *  invalidating all cached Query Results according to a given ModelIri 
+     *  invalidating all cached Query Results according to a given ModelIri
      *  @access     public
      *  @param      string  $modelIri       A ModelIri
-     *  @return     int     $count          count of the affected cached queries         
+     *  @return     int     $count          count of the affected cached queries
      */
     public function invalidateWithModelIri( $modelIri ) {
-        $query = "SELECT DISTINCT (qid) 
+        $query = "SELECT DISTINCT (qid)
                   FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                   WHERE ( ef_cache_query_model.modelIri = '".$modelIri."' OR ef_cache_query_model.modelIri IS NULL )";
 
         $qids = $this->_query ( $query );
-        
+
         foreach ($qids as $qid) {
             $qid = $qid['qid'];
 
@@ -396,19 +425,19 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $this->_query ( "DELETE FROM ef_cache_query_triple WHERE tid = '".$tid."'" );
             }
 
-            //delete entries in query_rt 
+            //delete entries in query_rt
             $this->_query ( "DELETE FROM ef_cache_query_rt WHERE qid = '".$qid."'" );
 
             //delete entries in query_result
             $this->_query ( "DELETE FROM ef_cache_query_result WHERE qid = '".$qid."'" );
 
-            //delete entries in query_rm 
+            //delete entries in query_rm
             $this->_query ( "DELETE FROM ef_cache_query_rm WHERE qid = '".$qid."'" );
 
             //delete entries in query_model
             $this->_query ( "DELETE FROM ef_cache_query_model WHERE modelIri = '".$modelIri."'" );
         }
-        
+
         if (isset($tids)) {
             foreach ($tids as $entry) {
                 $qids[] = $entry['tid'];
@@ -460,8 +489,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $qids = array();
         foreach ($result as $entry) {
             $qids[] = $entry['qid'];
-        }        
-        $this->store->sqlQuery('UPDATE ef_cache_query_result SET result = NULL'); 
+        }
+        $this->store->sqlQuery('UPDATE ef_cache_query_result SET result = NULL');
         return $qids;
     }
 
@@ -486,6 +515,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
 
+
+
         return true;
 
     }
@@ -502,7 +533,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         foreach ($keys as $key) {
             $query = "SELECT * FROM ef_cache_query_objectkey WHERE qid = '".$queryId."' AND objectkey = '".$key."'";
             $ret = $this->_query ($query);
-        
+
             if (!(isset($ret[0]['qid']))) {
                 $query = "INSERT INTO ef_cache_query_objectkey (qid, objectkey) VALUES ('".$queryId."', '".$key."')" ;
                 $this->_query ($query);
@@ -520,6 +551,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     public function exists ( $queryId ) {
         $query = 'SELECT * FROM ef_cache_query_result WHERE qid = \''.$queryId.'\'';
+
+
         $count = $this->_query ($query);
         if ( count($count) == 0 ) {
             return false;
@@ -541,10 +574,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $query = "
             SELECT  s1.tid, s2.subject, s2.predicate, s2.object, s1.tripleHitCount as tripleCount
-            FROM 
+            FROM
             (
               SELECT rt.tid, SUM(r.hit_count +1) as tripleHitCount
-              FROM 
+              FROM
                  ef_cache_query_rt as rt JOIN
                  ef_cache_query_result as r  ON (r.qid=rt.qid)
               GROUP BY (rt.tid)
@@ -552,11 +585,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             (
               SELECT t.tid, t.subject, t.predicate, t.object
-              FROM 
+              FROM
                 ef_cache_query_triple as t
             ) as s2 ON (s1.tid = s2.tid)
             ".$filter."
-            ORDER BY tripleCount DESC 
+            ORDER BY tripleCount DESC
             ".$limiter."
         ";
         $result = $this->_query ($query, (int)$limit);
@@ -580,7 +613,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 	       $resCreate = $this->createNewView($tableName);
 	       $resCopy = $this->copyStatementsToView($tableName, $subject, $predicate, $object);
 
-	       $createdViews[] =array( 
+	       $createdViews[] =array(
 		  'viewName' => $tableName,
 		  'subject' => $subject,
 		  'predicate' => $predicate,
@@ -615,7 +648,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 	   KEY `idx_g_o_ot` (`g`,`o`,`ot`)
 	 ) ENGINE=MyISAM  DEFAULT CHARSET=ascii AUTO_INCREMENT=352 ;";
        $result = $this->_query ($query);
-       
+
        return $result;
     }
 
@@ -652,8 +685,27 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     public function getMaterializedViews() {
 
+                $vocabulary = array();
+        switch (strtolower($this->store->getBackendName())) {
+
+            case 'zenddb' :
+            case 'mysql' :
+                $vocabulary['show_tables_like']="SHOW TABLES LIKE";
+            break;
+            case 'mssql':
+            $vocabulary['show_tables_like']="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE";
+            break;
+            case 'virtuoso':
+                $vocabulary['show_tables_like']="SHOW TABLES LIKE";
+            break;
+            default:
+                $vocabulary['show_tables_like']="";
+
+            break;
+        }
+
         $views = $viewTabels = $tripleIds = $whereClauses = array();
-        $viewTables = $this->_query('SHOW TABLES LIKE \'ef_stmt_view%\'');
+       $viewTables = $this->_query($vocabulary['show_tables_like'].' \'ef_stmt_view%\''); //sqlsrvchange
         if(!$viewTables) {
             return array();
         }
@@ -664,10 +716,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $idStartPos = strrpos($viewName, "_") + 1;
             $tripleId = substr($viewName, $idStartPos );
             $views[$tripleId] = array(
-                'tid' => $tripleId, 
-                'tblName' => $viewName, 
-            ); 
-            $whereClauses[] = "tid = " . $tripleId; 
+                'tid' => $tripleId,
+                'tblName' => $viewName,
+            );
+            $whereClauses[] = "tid = " . $tripleId;
         }
         $whereClause = " WHERE " . implode (" OR ", $whereClauses);
 
@@ -678,9 +730,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $subject    = $entry['subject'];
             $prediacte  = $entry['predicate'];
             $object     = $entry['object'];
-            
+
             if (isset($views[$tripleId])) {
-                $views[$tripleId]['subject']   = $subject ;  
+                $views[$tripleId]['subject']   = $subject ;
                 $views[$tripleId]['predicate'] = $prediacte ;
                 $views[$tripleId]['object']    = $object ;
 
@@ -701,7 +753,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     private
      *  @param      string          $queryId        the Hash of the Query
      *  @param      array           $triplePatterns the Array of TriplePatterns
-     */	
+     */
     private function _saveTriplePatterns ( $queryId, $triplePatterns ) {
 
         $defaultTP = array (
@@ -720,9 +772,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $tripleId = null;
 
-            $query = "SELECT tid FROM ef_cache_query_triple WHERE 
-                        subject ".(( $triplePattern['subject'] == 'NULL' ) ? "IS " : "= " ) . $triplePattern['subject'] . " AND 
-                        predicate ".(( $triplePattern['predicate'] == 'NULL' ) ? "IS " : "= " ) . $triplePattern['predicate'] . " AND 
+            $query = "SELECT tid FROM ef_cache_query_triple WHERE
+                        subject ".(( $triplePattern['subject'] == 'NULL' ) ? "IS " : "= " ) . $triplePattern['subject'] . " AND
+                        predicate ".(( $triplePattern['predicate'] == 'NULL' ) ? "IS " : "= " ) . $triplePattern['predicate'] . " AND
                         object ".(( $triplePattern['object'] == 'NULL' ) ? "IS " : "= " ) . $triplePattern['object'] . " ";
             $result = $this->_query ( $query );
 
@@ -739,14 +791,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             } else {
                 $tripleId = $result[0]['tid'] ;
             }
-            
+
             // build association of triple and result
 
             $res = $this->_query ( "SELECT * FROM ef_cache_query_rt WHERE qid = '".$queryId."' AND tid = '".$tripleId."'" );
             if (sizeof($res) == 0) {
                 $this->_query ( "INSERT INTO ef_cache_query_rt (qid, tid) VALUES ('".$queryId."','".$tripleId."')" );
             }
-        }       
+        }
     }
 
 
@@ -756,14 +808,18 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     private
      *  @param      string          $queryId        the Hash of the Query
      *  @param      array           $modelIris      the Array of modelIris
-     */	
+     */
     private function _saveModelIris ( $queryId, $modelIris )
     {
+
+
         if ( count( $modelIris ) == 0) {
             $modelIris[] = 'NULL' ;
         } else {
             $modelIris = array_unique($modelIris);
         }
+
+
 
         foreach ($modelIris as $modelIri) {
             $modelId = "";
@@ -777,13 +833,19 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             if ( count($result) == 0 ) {
                 $query = "INSERT INTO ef_cache_query_model (modelIri) VALUES (".$modelIri.")";
                 $ret = $this->_query ($query);
-                $modelId = $this->_getLastInsertId();
+
+                $query = "SELECT mid FROM ef_cache_query_model WHERE modelIri " .(($modelIri == 'NULL') ? "IS " : "= " ). $modelIri;
+                $result = $this->_query ( $query );
+
+                $modelId = $result[0]['mid'] ;
+                //$modelId = $this->_getLastInsertId();
+                echo $modelId;
             } else {
                 $modelId = $result[0]['mid'] ;
             }
 
+           $this->_query ("INSERT INTO ef_cache_query_rm (qid, mid) VALUES ('".$queryId."', '".$modelId."')");
 
-            $this->_query ( "INSERT INTO ef_cache_query_rm (qid, mid) VALUES ('".$queryId."', '".$modelId."')" );
         }
     }
 
@@ -792,15 +854,16 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  this private methode encapsulates the functionality to retrieve the last InsertId
      *  @access     private
      *  @return     var           $insertId      InsertId or false if an error occured
-     */	
+     */
     private function _getLastInsertId() {
+
         try {
             return $this->store->lastInsertId() ;
         } catch (Erfurt_Store_Adapter_Exception $e) {
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->log($e->getMessage(), $e->getCode());
             return false;
-        }        
+        }
     }
 
 
@@ -809,17 +872,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     private
      *  @param      string          $queryId        the Hash of the Query
      *  @return     resultSet       $result         the result of the SQL Query
-     */	
-	private function _query($sql, $limit = PHP_INT_MAX, $offset = 0) 
-	{    
+     */
+	private function _query($sql, $limit = PHP_INT_MAX, $offset = 0)
+	{
         $result = false;
         try {
-            $result = $this->store->sqlQuery($sql, $limit, $offset); 
+            $result = $this->store->sqlQuery($sql, $limit, $offset);
         } catch (Erfurt_Store_Adapter_Exception $e){
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->debug($e->getMessage());
-            
-            $result = false;    
+
+            $result = false;
             if (!$this->checkCacheVersion()) {
                 $logger->debug('Creating query cache table structure now.');
                 // In this case the tables are missing, so we try to create them once!
@@ -839,9 +902,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql);
             }
         }
-        
-        return $result;        
-	}	
+
+        return $result;
+	}
 
 
     /**
@@ -849,22 +912,43 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     private
      *  @param      string         $result      Result as String
      *  @return     string         $result      result as base 64 erncoded String
-     */	
+     */
     private function _encodeResult ( $result ) {
-        $result = addslashes( $result );
+        //$result = addslashes( $result );
+
+
+
+        switch (strtolower($this->store->getBackendName())) {
+
+            case 'zenddb' :
+            case 'mysql' :
+                $result = addslashes( $result );
+            break;
+            case 'mssql':
+            $result = str_replace("'", "''", $result);
+            break;
+            case 'virtuoso':
+                $result = addslashes( $result );
+            break;
+            default:
+                $result = $result;
+            break;
+        }
+
         return $result;
-    }	
+        //return $result;
+    }
 
 
     /**
-     *  this private methode encapsulates the functionality decoding the base 64 encoded resultSet 
+     *  this private methode encapsulates the functionality decoding the base 64 encoded resultSet
      *  @access     private
      *  @param      string          $result      base 64 encoded Result
      *  @return     string          $result      decoded result
-     */	
+     */
     private function _decodeResult ( $result ) {
         #$result = ( $result );
         return $result;
-    }	
-	
+    }
+
 }

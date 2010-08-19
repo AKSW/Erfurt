@@ -650,11 +650,11 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
             switch ($strMod) {
                 case '':
                 case '""':
-                    $sql = '(CHARINDEX('.$strVar . ', ' . $strRegex.')=1)';
+                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') ,LOWER('.$strVar . ')) != 0)';
                     break;
 
                 case "'i'":
-                    $sql = '(CHARINDEX(CAST(' . $strVar . ' AS CHAR), ' . $strRegex.')=1)';
+                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') , LOWER(CAST(' .$strVar . ' AS CHAR))) != 0)';
                     break;
 
                 default:
@@ -666,7 +666,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
                     );
             }
         } else {
-            $sql = '(CHARINDEX('.$strVar . ', ' . $strRegex.')=1)';
+            $sql = '(CHARINDEX(LOWER(' . $strRegex. '), LOWER(' .$strVar . ')) != 0)';
         }
 
         if ($this->isObject($tree['parameter'][0])) {

@@ -227,6 +227,9 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
             $this->query = $result;
         }
 
+
+        
+
         $resultform = strtolower($resultform);
         switch ($resultform) {
             case 'xml':
@@ -268,24 +271,17 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
         $this->_setOptions();
 
         $arSqls = $this->sg->createSql();
-        #var_dump($arSqls);exit;
 
         $this->ts->setData($this->sg);
 
-        // var_dump($this->ts->getOrderifiedSqls($arSqls)); echo '<br><br>';
-
-        //SQLSRVCHANGE modify order for limit
-
- //       var_dump($this->ts->getOrderifiedSqls($arSqls)); echo '<br><br>';
-
         $arSqls = $this->ts->getOrderifiedSqls($arSqls);
-        $arSqls = $this->_modifyOrder($arSqls);
-//var_dump($arSqls); echo '<br><br>';
+
         return $rc->convertFromDbResults($this->_queryMultiple($arSqls),
                 $this->query, $this, $this->sg->arVarAssignments);
     }
 
     public function sqlQuery($sql) {
+        
         return $this->dbConn->fetchAll($sql);
     }
 
@@ -303,32 +299,37 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
     protected function _queryDb($arSql, $nOffset, $nLimit) {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
 
-
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 
+       // echo $strSql;
 
         if ($strSql === '()') {
             return array();
         }
 
-
-        //       var_dump($arSql); echo '<br><br>';
-        //       echo $strSql.'<br>'.$nOffset.'<br>'.$nLimit.'<br>';
-
-
         //SQLSRVCHANGE change syntay for limit according mssql
 
-        $selectPart = 'SELECT * FROM( ';
-        $limitPart  = ') as result WHERE result.id between ';
+        $selectPart = 'Select *
+                         From (                        
+                         SELECT Row_Number() over (order by result.v0) as id, *
+                         FROM( ';
+        $limitPart  = ') as result ) as result2 WHERE result2.id between ';
 
         // sqlsrvchange
         if ($nLimit === null && $nOffset == 0) {
+
             $ret = $this->dbConn->query($strSql);
+            
         } else if ($nLimit === null) {
-            $ret = $this->dbConn->query($selectPart.$strSql.$limitPart.$nOffset .' AND 18446744073709551615');
+            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND 18446744073709551615';
+            $ret = $this->dbConn->query($strSql);
         } else {
-            $ret = $this->dbConn->query($selectPart.$strSql.$limitPart.$nOffset .' AND '. $nLimit);
+            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND '. $nLimit;
+            $ret = $this->dbConn->query($strSql);
         }
+
+
+       // echo $strSql;
 
         return $ret->fetchAll();
     }
@@ -395,22 +396,22 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
         //}
     }
 
-    private function _modifyOrder($arSqls) {
-
-        $count = 0;
-
-        foreach ($arSqls as &$arSql) {
-
-            if(!empty($arSql[0]['order'])) {
-                $arSql[0]['select'] = str_replace('ORDER BY T0.S',$arSql[0]['order'],$arSql[0]['select'],&$count);
-
-                if($count != 0) {
-                    $arSql[0]['order'] = NULL;
-                    $count = 0;
-                }
-            }
-        }
-        return $arSqls;
-    }
+//    private function _modifyOrder($arSqls) {
+//
+//        $count = 0;
+//
+//        foreach ($arSqls as &$arSql) {
+//
+//            if(!empty($arSql[0]['order'])) {
+//                $arSql[0]['select'] = str_replace('ORDER BY T0.S',$arSql[0]['order'],$arSql[0]['select'],&$count);
+//
+//                if($count != 0) {
+//                    $arSql[0]['order'] = NULL;
+//                    $count = 0;
+//                }
+//            }
+//        }
+//        return $arSqls;
+//    }
 
 }

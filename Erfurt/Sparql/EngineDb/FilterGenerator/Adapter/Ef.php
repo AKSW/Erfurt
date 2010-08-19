@@ -94,6 +94,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
             return '';
         }
 
+
         $this->bOptional = $bOptional;
         $this->nUnionCount = $nUnionCount;
 
@@ -110,6 +111,9 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef extends Erfurt_Sparql_En
 
     protected function createTreeSql($tree, $parent)
     {
+
+
+
         switch ($tree['type']) {
             case 'equation':
                 $sql = $this->createEquation($tree);

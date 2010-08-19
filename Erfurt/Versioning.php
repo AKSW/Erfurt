@@ -659,13 +659,6 @@ class Erfurt_Versioning {
     private function _initialize() {
 
 
-
-
-
-
-
-
-
         if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
         }
@@ -678,7 +671,7 @@ class Erfurt_Versioning {
 
             //sqlsrvChange add sytax for MSSQL
             $this->_config = Erfurt_App::getInstance()->getConfig();
-            if(!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype=='sqlsrv') {
+            if($this->_config->store->backend == 'mssql') {
                 $columnSpec = array(
                         'id'          => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
                         'model'       => 'VARCHAR(255) NOT NULL',
@@ -703,11 +696,14 @@ class Erfurt_Versioning {
                 );
             }
             $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
+
+            
         }
+        
 
         if (!in_array('ef_versioning_payloads', $existingTableNames)) {
             $this->_config = Erfurt_App::getInstance()->getConfig();
-            if(!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype=='sqlsrv') {
+            if($this->_config->store->backend == 'mssql') {
                 $columnSpec = array(
                         'id'             => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
                         'statement_hash' => 'TEXT'
@@ -744,7 +740,7 @@ class Erfurt_Versioning {
     private function _addslashes($str)
     {
         $this->_config = Erfurt_App::getInstance()->getConfig();
-            if(!empty($this->_config->store->mssql->dbtype) && $this->_config->store->mssql->dbtype=='sqlsrv') {
+            if($this->_config->store->backend == 'mssql') {
             return str_replace("'", "''", $str);
             }
             else{
