@@ -13,7 +13,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     public
      *  @return     boolean         $state          true / false
      */
-	final public function checkCacheVersion() {
+    final public function checkCacheVersion() {
         $result = false;
         try {
             $query = 'SELECT num FROM ef_cache_query_version';
@@ -22,14 +22,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             return false;
         }
 
-		if (!$result) {
-			return false;
-		} else if (is_array($result) && count($result) > 0) {
-		    return true;
-		} else {
-		    return false;
-		}
-	}
+        if (!$result) {
+            return false;
+        } else if (is_array($result) && count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      *  creating the initially needed cacheStructure. In the database case there will be 6 tables created named as followed:
@@ -39,10 +39,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @access     public
      *  @return     boolean         $state          true / false
      */
-	final public function createCacheStructure() {
+    final public function createCacheStructure() {
         $vocabulary = array();
 
-        
+
         switch (strtolower($this->store->getBackendName())) {
 
 
@@ -56,16 +56,16 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $vocabulary['varchar'] = "VARCHAR(255)";
 
 
-            break;
+                break;
             case 'mssql':
-            $vocabulary['col_utf8_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
-            $vocabulary['col_ascii_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
-            $vocabulary['auto_increment'] = "IDENTITY(1,1)";
-            $vocabulary['long_varchar'] = "NVARCHAR(max)";
-            $vocabulary['long_varbinary'] = "VARBINARY(max)";
-            $vocabulary['varchar'] = "NVARCHAR(127)";
+                $vocabulary['col_utf8_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
+                $vocabulary['col_ascii_bin'] = "COLLATE SQL_Latin1_General_CP1_CS_AS";
+                $vocabulary['auto_increment'] = "IDENTITY(1,1)";
+                $vocabulary['long_varchar'] = "NVARCHAR(max)";
+                $vocabulary['long_varbinary'] = "VARBINARY(max)";
+                $vocabulary['varchar'] = "NVARCHAR(127)";
 
-            break;
+                break;
             case 'virtuoso':
                 $vocabulary['col_utf8_bin'] = "";
                 $vocabulary['col_ascii_bin'] = "";
@@ -74,7 +74,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $vocabulary['long_varbinary'] = "LONG VARBINARY";
                 $vocabulary['varchar'] = "VARCHAR(255)";
 
-            break;
+                break;
             default:
                 $vocabulary['col_utf8_bin'] = "";
                 $vocabulary['col_ascii_bin'] = "";
@@ -82,7 +82,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $vocabulary['long_varchar'] = "";
                 $vocabulary['long_varbinary'] = "";
                 $vocabulary['varchar'] = "";
-            break;
+                break;
         }
 
         if (!$this->store->isSqlSupported()) {
@@ -94,13 +94,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         //sqlsrv_change
         if (!in_array('ef_cache_query_result', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => $vocabulary['varchar'].'    '.$vocabulary['col_ascii_bin'].'   PRIMARY KEY NOT NULL',
-                'query'         => $vocabulary['long_varchar'].'    '.$vocabulary['col_utf8_bin'].'    NULL' ,
-                'result'        => $vocabulary['long_varchar'].' NULL', //sqlsrvchagne
-                'hit_count'     => 'INT NULL',
-                'inv_count'     => 'INT NULL',
-                'time_stamp'    => 'FLOAT NULL',
-                'duration'      => 'FLOAT NULL'
+                    'qid'           => $vocabulary['varchar'].'    '.$vocabulary['col_ascii_bin'].'   PRIMARY KEY NOT NULL',
+                    'query'         => $vocabulary['long_varchar'].'    '.$vocabulary['col_utf8_bin'].'    NULL' ,
+                    'result'        => $vocabulary['long_varchar'].' NULL', //sqlsrvchagne
+                    'hit_count'     => 'INT NULL',
+                    'inv_count'     => 'INT NULL',
+                    'time_stamp'    => 'FLOAT NULL',
+                    'duration'      => 'FLOAT NULL'
             );
 
             $this->store->createTable('ef_cache_query_result', $columnSpec);
@@ -110,10 +110,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_triple', $existingTableNames)) {
             $columnSpec = array(
-                'tid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
-                'subject'       => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
-                'predicate'     => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
-                'object'        => $vocabulary['varchar'].' '.$vocabulary['col_utf8_bin'].'   NULL',
+                    'tid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
+                    'subject'       => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
+                    'predicate'     => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].'  NULL',
+                    'object'        => $vocabulary['varchar'].' '.$vocabulary['col_utf8_bin'].'   NULL',
             );
 
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
@@ -122,8 +122,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
             $columnSpec = array(
-                'mid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
-                'modelIri'      => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].' NULL',
+                    'mid'           => 'INT NOT NULL PRIMARY KEY '.$vocabulary['auto_increment'],
+                    'modelIri'      => $vocabulary['varchar'].' '.$vocabulary['col_ascii_bin'].' NULL',
             );
 
             $this->store->createTable('ef_cache_query_model', $columnSpec);
@@ -132,8 +132,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_rt', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
-                'tid'           => 'INT NOT NULL, PRIMARY KEY ( qid, tid )'
+                    'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                    'tid'           => 'INT NOT NULL, PRIMARY KEY ( qid, tid )'
             );
 
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
@@ -142,8 +142,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
-                'mid'           => 'INT NOT NULL, PRIMARY KEY (qid, mid)',
+                    'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                    'mid'           => 'INT NOT NULL, PRIMARY KEY (qid, mid)',
             );
 
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
@@ -152,8 +152,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
             $columnSpec = array(
-                'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
-                'objectkey'     => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectkey)',
+                    'qid'           => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL',
+                    'objectkey'     => $vocabulary['varchar'].'  '.$vocabulary['col_ascii_bin'].' NOT NULL, PRIMARY KEY (qid, objectkey)',
             );
 
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
@@ -162,14 +162,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
             $columnSpec = array(
-                'num'           => 'INT NOT NULL PRIMARY KEY',
+                    'num'           => 'INT NOT NULL PRIMARY KEY',
             );
 
             $this->store->createTable('ef_cache_query_version', $columnSpec);
             $this->store->sqlQuery('INSERT INTO ef_cache_query_version (num) VALUES (1)');
         }
 
-	}
+    }
 
 
     /**
@@ -259,17 +259,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
                 $this->_query ( "UPDATE ef_cache_query_result SET hit_count = ".($count[0]['hit_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
-            break;
+                break;
             case "Virtuoso":
             default:
-                $query = "  UPDATE ef_cache_query_result
+                $query = "UPDATE ef_cache_query_result
                             SET hit_count = (
                                 SELECT hit_count
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ) + 1
                             WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
                 $this->_query ( $query );
-            break;
+                break;
         }
     }
 
@@ -289,17 +289,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
                 $this->_query ( "UPDATE ef_cache_query_result SET inv_count = ".($count[0]['inv_count']+1)." WHERE qid='".$queryId."' AND result IS NOT NULL" );
-            break;
+                break;
             case "Virtuoso":
             default:
-                $query = "  UPDATE ef_cache_query_result
+                $query = "UPDATE ef_cache_query_result
                             SET inv_count = (
                                 SELECT inv_count
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ) + 1
                             WHERE qid='".$queryId."' AND result IS NOT NULL"  ;
                 $this->_query ( $query );
-            break;
+                break;
         }
 
     }
@@ -322,8 +322,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             foreach ($predicates as $predicate => $objects) {
                 foreach ($objects as $object) {
                     $objectValue = $object['value'] ;
-                    if ($object['type'] == 'literal')
-                    {
+                    if ($object['type'] == 'literal') {
                         $objectValue = (isset($object['lang'])) ?  $objectValue . "@" . $object['lang'] : $objectValue ;
                         $objectValue = (isset($object['datatype'])) ?  $objectValue . "^^" . $object['datatype'] : $objectValue ;
                     }
@@ -341,7 +340,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     $clauses[] = "(". (implode (" AND ", $clause)) .")";
 
 
-/*                   "(
+                    /*                   "(
                     (subject = '".$subject."' OR subject IS NULL) AND
                     (predicate = '".$predicate."' OR predicate IS NULL) AND
                     (object = '".$objectValue."' OR object IS NULL))"; */
@@ -379,7 +378,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         foreach ($result as $entry) {
             $qids[] = $entry['qid'];
         }
-        $query = "  UPDATE ef_cache_query_result SET result = NULL
+        $query = "UPDATE ef_cache_query_result SET result = NULL
                     WHERE
                     (
                         qid IN
@@ -471,7 +470,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     public function getObjectKeys ( $qids = array() ) {
         $oKeys = array();
         foreach ($qids as $qid) {
-            $query = "SELECT DISTINCT (objectkey) FROM ef_cache_query_objectkey WHERE qid='".$qid."'"; ;
+            $query = "SELECT DISTINCT (objectkey) FROM ef_cache_query_objectkey WHERE qid='".$qid."'";
+            ;
             $result = $this->_query ( $query );
             foreach ($result as $entry) {
                 $oKeys[$entry['objectkey']] = $entry['objectkey'];
@@ -509,8 +509,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
         // TODO platform indepent index handling
 
-	$this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
-	$this->store->sqlQuery('DROP TABLE ef_cache_query_model');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_model');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
@@ -598,36 +598,36 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     public function createMaterializedViews ($patternList) {
 
-	 $backendName = strtolower($this->store->getBackendName());
-	 if (!($backendName == "mysql" || $backendName == "zenddb" || $backendName == "mssql")) {
-	  return false;
-	 }
-	 $createdViews = array();
-	 foreach ($patternList as $pattern ) {
+        $backendName = strtolower($this->store->getBackendName());
+        if (!($backendName == "mysql" || $backendName == "zenddb" || $backendName == "mssql")) {
+            return false;
+        }
+        $createdViews = array();
+        foreach ($patternList as $pattern ) {
 
-	    $subject = $pattern['subject'];
-	    $predicate = $pattern['predicate'];
-	    $object = $pattern['object'];
-	    if ($subject || $predicate || $object) {
-	       $tableName = "ef_stmt_view_".$pattern['tid'];
-	       $resCreate = $this->createNewView($tableName);
-	       $resCopy = $this->copyStatementsToView($tableName, $subject, $predicate, $object);
+            $subject = $pattern['subject'];
+            $predicate = $pattern['predicate'];
+            $object = $pattern['object'];
+            if ($subject || $predicate || $object) {
+                $tableName = "ef_stmt_view_".$pattern['tid'];
+                $resCreate = $this->createNewView($tableName);
+                $resCopy = $this->copyStatementsToView($tableName, $subject, $predicate, $object);
 
-	       $createdViews[] =array(
-		  'viewName' => $tableName,
-		  'subject' => $subject,
-		  'predicate' => $predicate,
-		  'object' => $object,
-		  'countEntries' => $resCopy);
-	    }
-	 }
-	 return $createdViews;
+                $createdViews[] =array(
+                        'viewName' => $tableName,
+                        'subject' => $subject,
+                        'predicate' => $predicate,
+                        'object' => $object,
+                        'countEntries' => $resCopy);
+            }
+        }
+        return $createdViews;
     }
 
 
     private function createNewView ($tableName) {
 
-       $query = "
+        $query = "
 	 CREATE TABLE IF NOT EXISTS `".$tableName."` (
 	   `id` int(10) unsigned NOT NULL,
 	   `g` int(10) unsigned NOT NULL,
@@ -647,65 +647,65 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 	   KEY `idx_g_p_o_ot` (`g`,`p`,`o`,`ot`),
 	   KEY `idx_g_o_ot` (`g`,`o`,`ot`)
 	 ) ENGINE=MyISAM  DEFAULT CHARSET=ascii AUTO_INCREMENT=352 ;";
-       $result = $this->_query ($query);
+        $result = $this->_query ($query);
 
-       return $result;
+        return $result;
     }
 
     private function copyStatementsToView($viewName, $subject, $predicate, $object) {
 
-       $clauses = array();
-       if ($subject) {
-	  $clauses['s.s'] = "s.s = '".$subject."'";
-       }
+        $clauses = array();
+        if ($subject) {
+            $clauses['s.s'] = "s.s = '".$subject."'";
+        }
 
-       if ($predicate) {
-	  $clauses['s.p'] = "s.p = '".$predicate."'";
-       }
+        if ($predicate) {
+            $clauses['s.p'] = "s.p = '".$predicate."'";
+        }
 
-       if ($object) {
-	  $clauses['s.o'] = "s.o = '".$object."'";
-       }
+        if ($object) {
+            $clauses['s.o'] = "s.o = '".$object."'";
+        }
 
-       if (sizeOf($clauses) > 0) {
-	 $clauseString = "WHERE " . implode(" AND ", $clauses);
-	  $query ="
+        if (sizeOf($clauses) > 0) {
+            $clauseString = "WHERE " . implode(" AND ", $clauses);
+            $query ="
 	    REPLACE INTO ".$viewName." (id, g, s, p, o, s_r, p_r, o_r, st, ot, ol, od, od_r)
 		SELECT s.id, s.g, s.s, s.p, s.o, s.s_r, s.p_r, s.o_r, s.st, s.ot, s.ol, s.od, s.od_r
 		FROM ef_stmt as s ".$clauseString;
-	  $result = $this->_query ($query);
+            $result = $this->_query ($query);
 
-	  $query = "SELECT COUNT(*) as count FROM ".$viewName;
-	  $result = $this->_query ($query);
-	  return $result[0]['count'];
-       }
-       return false;
+            $query = "SELECT COUNT(*) as count FROM ".$viewName;
+            $result = $this->_query ($query);
+            return $result[0]['count'];
+        }
+        return false;
     }
 
 
     public function getMaterializedViews() {
 
-                $vocabulary = array();
+        $vocabulary = array();
         switch (strtolower($this->store->getBackendName())) {
 
             case 'zenddb' :
             case 'mysql' :
                 $vocabulary['show_tables_like']="SHOW TABLES LIKE";
-            break;
+                break;
             case 'mssql':
-            $vocabulary['show_tables_like']="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE";
-            break;
+                $vocabulary['show_tables_like']="SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE";
+                break;
             case 'virtuoso':
                 $vocabulary['show_tables_like']="SHOW TABLES LIKE";
-            break;
+                break;
             default:
                 $vocabulary['show_tables_like']="";
 
-            break;
+                break;
         }
 
         $views = $viewTabels = $tripleIds = $whereClauses = array();
-       $viewTables = $this->_query($vocabulary['show_tables_like'].' \'ef_stmt_view%\''); //sqlsrvchange
+        $viewTables = $this->_query($vocabulary['show_tables_like'].' \'ef_stmt_view%\''); //sqlsrvchange
         if(!$viewTables) {
             return array();
         }
@@ -716,8 +716,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $idStartPos = strrpos($viewName, "_") + 1;
             $tripleId = substr($viewName, $idStartPos );
             $views[$tripleId] = array(
-                'tid' => $tripleId,
-                'tblName' => $viewName,
+                    'tid' => $tripleId,
+                    'tblName' => $viewName,
             );
             $whereClauses[] = "tid = " . $tripleId;
         }
@@ -757,9 +757,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     private function _saveTriplePatterns ( $queryId, $triplePatterns ) {
 
         $defaultTP = array (
-            'subject'   => 'NULL',
-            'predicate'   => 'NULL',
-            'object'   => 'NULL',
+                'subject'   => 'NULL',
+                'predicate'   => 'NULL',
+                'object'   => 'NULL',
         );
 
         foreach ( $triplePatterns as $triplePattern ) {
@@ -809,8 +809,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      string          $queryId        the Hash of the Query
      *  @param      array           $modelIris      the Array of modelIris
      */
-    private function _saveModelIris ( $queryId, $modelIris )
-    {
+    private function _saveModelIris ( $queryId, $modelIris ) {
 
 
         if ( count( $modelIris ) == 0) {
@@ -844,7 +843,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $modelId = $result[0]['mid'] ;
             }
 
-           $this->_query ("INSERT INTO ef_cache_query_rm (qid, mid) VALUES ('".$queryId."', '".$modelId."')");
+            $this->_query ("INSERT INTO ef_cache_query_rm (qid, mid) VALUES ('".$queryId."', '".$modelId."')");
 
         }
     }
@@ -873,49 +872,50 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  @param      string          $queryId        the Hash of the Query
      *  @return     resultSet       $result         the result of the SQL Query
      */
-	private function _query($sql, $limit = PHP_INT_MAX, $offset = 0)
-	{
-        
+    private function _query($sql, $limit = PHP_INT_MAX, $offset = 0) {
 
 
-        //Hack: update returns in special cases erros which seems to be an sqlsrv bug
-        if(strtolower(substr($sql, 0, 6))== 'update'&& strtolower($this->store->getBackendName()) == 'mssql'){
-            $result = $this->store->sqlQuery($sql, $limit, $offset);
-        }
-        else{
-        $result = false;
-        try {
 
-              $result = $this->store->sqlQuery($sql, $limit, $offset);
-
-        } catch (Erfurt_Store_Adapter_Exception $e){
-            $logger = Erfurt_App::getInstance()->getLog('cache');
-            $logger->debug($e->getMessage());
-
+//        //Hack: update returns in special cases erros which seems to be an sqlsrv bug strtolower(substr($sql, 0, 6))== 'update'&&
+//        if(substr_count(strtolower(substr($sql, 0, 10)),'update')!= 0 && strtolower($this->store->getBackendName()) == 'mssql') {
+//
+//            $result = $this->store->sqlQuery($sql, $limit, $offset);
+//            $result = true;
+//        }
+//        else {
             $result = false;
-            if (!$this->checkCacheVersion()) {
-                $logger->debug('Creating query cache table structure now.');
-                // In this case the tables are missing, so we try to create them once!
-                // If this fails, something else is wrong, so we re-throw the error!
-                try {
-                    $this->createCacheStructure();
-                    $result = $this->store->sqlQuery($sql, $limit, $offset);
-                } catch (Erfurt_Store_Adapter_Exception $e2) {
-                    $logger->debug($e2->getMessage());
-                    require_once 'Erfurt/Exception.php';
-                    throw new Erfurt_Exception(
+            try {
+
+                $result = $this->store->sqlQuery($sql, $limit, $offset);
+
+            } catch (Erfurt_Store_Adapter_Exception $e) {
+                $logger = Erfurt_App::getInstance()->getLog('cache');
+                $logger->debug($e->getMessage());
+
+                $result = false;
+                if (!$this->checkCacheVersion()) {
+                    $logger->debug('Creating query cache table structure now.');
+                    // In this case the tables are missing, so we try to create them once!
+                    // If this fails, something else is wrong, so we re-throw the error!
+                    try {
+                        $this->createCacheStructure();
+                        $result = $this->store->sqlQuery($sql, $limit, $offset);
+                    } catch (Erfurt_Store_Adapter_Exception $e2) {
+                        $logger->debug($e2->getMessage());
+                        require_once 'Erfurt/Exception.php';
+                        throw new Erfurt_Exception(
                         'Something went wrong while building query cache structure: ' . $e2->getMessage()
-                    );
+                        );
+                    }
+                } else {
+                    require_once 'Erfurt/Exception.php';
+                    throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql);
                 }
-            } else {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql);
             }
-        }
-        }
+   //     }
 
         return $result;
-	}
+    }
 
 
     /**
@@ -934,16 +934,16 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             case 'zenddb' :
             case 'mysql' :
                 $result = addslashes( $result );
-            break;
+                break;
             case 'mssql':
-            $result = str_replace("'", "''", $result);
-            break;
+                $result = str_replace("'", "''", $result);
+                break;
             case 'virtuoso':
                 $result = addslashes( $result );
-            break;
+                break;
             default:
                 $result = $result;
-            break;
+                break;
         }
 
         return $result;

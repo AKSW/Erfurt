@@ -637,7 +637,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
     public function getBackendName()
     {
-        return 'MsSql';
+        return 'mssql';
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -1110,6 +1110,9 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         if ($limit < PHP_INT_MAX) {
             sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
         }
+
+
+        //Todo conditions not secure if string starts with a space shoud be changed
 
         $queryType = strtolower(substr($sqlQuery, 0, 6));
         if ( $queryType  === 'insert' ||
