@@ -275,7 +275,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
         $this->ts->setData($this->sg);
 
         $arSqls = $this->ts->getOrderifiedSqls($arSqls);
-
+        
         return $rc->convertFromDbResults($this->_queryMultiple($arSqls),
                 $this->query, $this, $this->sg->arVarAssignments);
     }
@@ -299,9 +299,28 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
     protected function _queryDb($arSql, $nOffset, $nLimit) {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
 
+            
+
+
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 
-       // echo $strSql;
+
+
+        $orderString = 'ORDER BY result.v0';
+            if (!empty($arSql[0]['order'])){
+
+                $orderStrings = $this->_getModifiedOrderString($arSql);
+                if($nLimit === null && $nOffset == 0){
+                    $strSql = str_replace($orderStrings['temp'],$orderStrings['original'], $strSql);
+
+                }
+                else{
+                   $orderString = $orderStrings['limit'];
+                   $strSql = str_replace($orderStrings['temp'],' ', $strSql);                     
+                }
+        }
+
+
 
         if ($strSql === '()') {
             return array();
@@ -311,9 +330,9 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
 
         $selectPart = 'Select *
                          From (                        
-                         SELECT Row_Number() over (order by result.v0) as id, *
+                         SELECT Row_Number() over ('.$orderString.') as id, *
                          FROM( ';
-        $limitPart  = ') as result ) as result2 WHERE result2.id between ';
+        $limitPart  = '      ) as result ) as result2 WHERE result2.id between ';
 
         // sqlsrvchange
         if ($nLimit === null && $nOffset == 0) {
@@ -414,4 +433,43 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
 //        return $arSqls;
 //    }
 
+
+
+
+
+    private function _getModifiedOrderString($arSqls) {
+
+            $orderString = $arSqls[0]['order'];
+            $selectString = $arSqls[0]['select'];
+            $newOrderVar = '';
+
+           $start_pos = strpos($orderString,'+*+') + 3;
+
+           $end_pos = strpos($orderString,'-*-');
+
+           $orderVar = substr($orderString,$start_pos,$end_pos-$start_pos);
+
+           foreach (explode(',',$selectString) as $selectPart){
+
+
+
+               if(substr_count($selectPart,$orderVar.' as')!= 0)
+               {
+                   $newOrderVar = 'result.'.strstr($selectPart,'v');
+                   break;
+               }
+
+           }
+
+
+
+           $orderStrings = array();
+           $orderStrings['temp'] = $orderString;
+           $orderStrings['limit'] = str_replace('+*+'.$orderVar.'-*-', $newOrderVar, $orderString);
+           $orderStrings['original'] = str_replace('+*+'.$orderVar.'-*-', $orderVar, $orderString);
+
+
+
+           return $orderStrings;
+    }
 }

@@ -118,7 +118,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer {
 //SQLSRV CHANGE _ ABFRAGEN WELCHES BACKEND
 
         $this->_config = Erfurt_App::getInstance()->getConfig();
-        if($this->_config->store->backend == 'mssql') {
+        if(strtolower($this->_config->store->backend) == 'mssql') {
             require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Mssql.php';
             $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql($query, $this->_engine->getModelIdMapping());
         }
@@ -328,7 +328,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer {
         //SQLSRV CHANGE _ ABFRAGEN WELCHES BACKEND
 
         $this->_config = Erfurt_App::getInstance()->getConfig();
-        if($this->_config->store->backend == 'mssql') {
+        if(strtolower($this->_config->store->backend) == 'mssql') {
             require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Mssql.php';
             $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
         }

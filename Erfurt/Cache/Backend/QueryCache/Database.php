@@ -254,6 +254,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch ($this->store->getBackendName()) {
             case "ZendDb" :
             case "MySql" :
+            case 'mssql':
                 $count = $this->_query( "SELECT hit_count
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
@@ -283,6 +284,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         switch ($this->store->getBackendName()) {
             case "ZendDb" :
             case "MySql" :
+            case 'mssql':
                 $count = $this->_query( "SELECT inv_count
                                 FROM ef_cache_query_result
                                 WHERE qid='".$queryId."' ") ;
@@ -515,8 +517,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
         $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
 
-
-
         return true;
 
     }
@@ -599,7 +599,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     public function createMaterializedViews ($patternList) {
 
 	 $backendName = strtolower($this->store->getBackendName());
-	 if (!($backendName == "mysql" || $backendName == "zenddb" )) {
+	 if (!($backendName == "mysql" || $backendName == "zenddb" || $backendName == "mssql")) {
 	  return false;
 	 }
 	 $createdViews = array();
@@ -875,9 +875,19 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
 	private function _query($sql, $limit = PHP_INT_MAX, $offset = 0)
 	{
+        
+
+
+        //Hack: update returns in special cases erros which seems to be an sqlsrv bug
+        if(strtolower(substr($sql, 0, 6))== 'update'&& strtolower($this->store->getBackendName()) == 'mssql'){
+            $result = $this->store->sqlQuery($sql, $limit, $offset);
+        }
+        else{
         $result = false;
         try {
-            $result = $this->store->sqlQuery($sql, $limit, $offset);
+
+              $result = $this->store->sqlQuery($sql, $limit, $offset);
+
         } catch (Erfurt_Store_Adapter_Exception $e){
             $logger = Erfurt_App::getInstance()->getLog('cache');
             $logger->debug($e->getMessage());
@@ -901,6 +911,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql);
             }
+        }
         }
 
         return $result;
