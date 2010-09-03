@@ -116,11 +116,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // try to connect
         if (function_exists('__virt_internal_dsn')) {
             // via Virtuoso hosting
-            $this->_connection = @call_user_func($odbcConnectFunction, __virt_internal_dsn(), null, null);
-        } else {            
+            $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
+        } else {
             // via php_odbc
-            $this->_connection = @call_user_func($odbcConnectFunction, (string)$dsn, (string)$username, (string)$password);
-            
+            $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
             $this->_user = (string)$username;
         }
         
