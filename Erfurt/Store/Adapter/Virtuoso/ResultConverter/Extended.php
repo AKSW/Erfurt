@@ -138,7 +138,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
      * @return array
      */
     public function convert($xmlSparqlResults)
-    {        
+    {
         // parse the data
         if (xml_parse($this->_parser, (string)$xmlSparqlResults) !== 1) {
             require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';

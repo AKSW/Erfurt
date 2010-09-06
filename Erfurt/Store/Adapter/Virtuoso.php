@@ -696,14 +696,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             case '':
             case null:
+            case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':
             case 'http://www.w3.org/2001/XMLSchema#string':
                 $value = addcslashes($value, $quoteChar);
                 
                 /** 
                  * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR} 
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 * wrong: \t\b\n\r\f\\\"\\\' 
                  */
-                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
+                if (preg_match('/[\\\r\n"]/', $value) > 0) {
                     $longLiteral = true;
                 }
                 break;
@@ -752,7 +754,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                     
                     // add triple
-                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
+                    $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
                 }
             }
         }
