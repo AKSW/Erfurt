@@ -707,6 +707,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                  */
                 if (preg_match('/[\\\r\n"]/', $value) > 0) {
                     $longLiteral = true;
+                    $value = trim($value, "\n\r");
+                    // $value = str_replace("\x0A", '\n', $value);
                 }
                 break;
         }
