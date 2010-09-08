@@ -325,7 +325,7 @@ class Erfurt_Rdf_Model
      */
     public function setEditable($editableFlag)
     {
-        $this->_isEditable = $editableFlag;
+        $this->_isEditable = (boolean) $editableFlag;
         
         return $this;
     }
