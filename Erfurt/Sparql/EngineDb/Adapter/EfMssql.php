@@ -14,9 +14,8 @@
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
  * @version	$Id: $
  */
-class Erfurt_Sparql_EngineDb_Adapter_EfZendDb 
-{   
-	/**
+class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
+    /**
      * Sparql Query object.
      *
      * @var Erfurt_Sparql_Query
@@ -37,46 +36,46 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     protected $dbConn;
 
     /**
-    *   Internal ID for our graph model.
-    *   Stored in the database along the statements.
-    *   Can be of different types:
-    *   - array: array of modelIds
-    *   - null: all models
-    *
-    *   @var array OR null
-    */
+     *   Internal ID for our graph model.
+     *   Stored in the database along the statements.
+     *   Can be of different types:
+     *   - array: array of modelIds
+     *   - null: all models
+     *
+     *   @var array OR null
+     */
     protected $arModelIds;
 
     /**
-    *   Prepared SQL statements are stored in here.
-    *   @var array
-    */
+     *   Prepared SQL statements are stored in here.
+     *   @var array
+     */
     protected $arPrepared    = null;
 
     /**
-    *   If the prepared statement is really prepared, or if we just emulate it.
-    *   @var boolean
-    */
+     *   If the prepared statement is really prepared, or if we just emulate it.
+     *   @var boolean
+     */
     protected $bRealPrepared = false;
 
     /**
-    *   SQL generator instance
-    *   @var SparqlEngineDb_SqlGenerator
-    */
+     *   SQL generator instance
+     *   @var SparqlEngineDb_SqlGenerator
+     */
     protected $sg = null;
 
     /**
-    *   Type sorting instance
-    *   @var SparqlEngineDb_TypeSorter
-    */
+     *   Type sorting instance
+     *   @var SparqlEngineDb_TypeSorter
+     */
     protected $ts = null;
 
     /**
-    *   Prepared statments preparator instance
-    *   @var SparqlEngineDb_Preparator
-    */
+     *   Prepared statments preparator instance
+     *   @var SparqlEngineDb_Preparator
+     */
     protected $pr = null;
-    
+
     protected $arModelIdMapping = null;
 
     // ------------------------------------------------------------------------
@@ -86,33 +85,28 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     /**
      * Constructor
      */
-    public function __construct($dbConn, $arModelIdMapping = array()) 
-    {
-		$this->dbConn = $dbConn;
-		$this->arModelIdMapping = $arModelIdMapping;
+    public function __construct($dbConn, $arModelIdMapping = array()) {
+        $this->dbConn = $dbConn;
+        $this->arModelIdMapping = $arModelIdMapping;
     }
-    
-    public function getModelIdMapping()
-    {
+
+    public function getModelIdMapping() {
         return $this->arModelIdMapping;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
 
-    public function getQuery()
-    {
+    public function getQuery() {
         return $this->query;
     }
 
-    public function getSqlGenerator()
-    {
+    public function getSqlGenerator() {
         return $this->sg;
     }
-    
-    public function getTypeSorter()
-    {
+
+    public function getTypeSorter() {
         return $this->ts;
     }
 
@@ -161,7 +155,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
             $this
         );
     }*/
-    
+
     /**
      *   Execute a prepared statement by filling it with variables
      *
@@ -214,11 +208,10 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      * @param string $resultform Result form. If set to 'xml' the result will be
      * SPARQL Query Results XML Format as described in @link http://www.w3.org/TR/rdf-sparql-XMLres/.
      *
-     * @return array/string  array of triple arrays, or XML. 
+     * @return array/string  array of triple arrays, or XML.
      * Format depends on $resultform parameter.
      */
-    public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') 
-    {   
+    public function queryModel(Erfurt_Sparql_Query $query, $resultform = 'plain') {
         $this->query = $query;
 
         require_once 'Erfurt/Sparql/EngineDb/QuerySimplifier.php';
@@ -228,25 +221,26 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         require_once 'Erfurt/Sparql/EngineDb/QueryOptimizer.php';
         $queryOptimizer = new Erfurt_Sparql_EngineDb_QueryOptimizer($this);
         $result = $queryOptimizer->optimize($this->query);
- 		
-        
+
+
         if ($result instanceof Erfurt_Sparql_Query) {
             $this->query = $result;
         }
 
 
         
+
         $resultform = strtolower($resultform);
         switch ($resultform) {
             case 'xml':
                 require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Xml.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Xml();
                 break;
-                //require_once 'Erfurt/Exception.php';
-                //throw new Erfurt_Exception('XML result format not supported yet.');
-                //require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/EfZendDb/Xml.php';
-                //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
-                //break;
+            //require_once 'Erfurt/Exception.php';
+            //throw new Erfurt_Exception('XML result format not supported yet.');
+            //require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/EfZendDb/Xml.php';
+            //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
+            //break;
             case 'extended':
                 require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Extended.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Extended();
@@ -260,34 +254,34 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
                 require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Plain.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Plain();
         }
-        
+
         if (is_array($result)) {
             $result = $rc->convertFromDbResults($result['data'], $this->query, $this, $result['vars']);
-            
+
             return $result;
         }
-        
-               
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
-        $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($this->query, $this->arModelIdMapping);
-        
+
+        //SQLSRVCHANGE use adapter for mssql
+        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Mssql.php';
+        $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql($this->query, $this->arModelIdMapping);
+
         require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
         $this->ts = new Erfurt_Sparql_EngineDb_TypeSorter($this->query, $this);
 
         $this->_setOptions();
 
         $arSqls = $this->sg->createSql();
-        #var_dump($arSqls);exit;
-        
+
         $this->ts->setData($this->sg);
 
+        $arSqls = $this->ts->getOrderifiedSqls($arSqls);
         
-        return $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
-                    $this->query, $this, $this->sg->arVarAssignments);
+        return $rc->convertFromDbResults($this->_queryMultiple($arSqls),
+                $this->query, $this, $this->sg->arVarAssignments);
     }
-    
-    public function sqlQuery($sql)
-    {
+
+    public function sqlQuery($sql) {
+        
         return $this->dbConn->fetchAll($sql);
     }
 
@@ -302,33 +296,59 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      *
      * @return mixed
      */
-    protected function _queryDb($arSql, $nOffset, $nLimit)
-    {
+    protected function _queryDb($arSql, $nOffset, $nLimit) {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
-        $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
-#var_dump($nLimit, $nOffset);
-      //  echo $strSql;
 
-        
+            
+
+
+        $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
+
+
+
+        $orderString = 'ORDER BY result.v0';
+            if (!empty($arSql[0]['order'])){
+
+                $orderStrings = $this->_getModifiedOrderString($arSql);
+                if($nLimit === null && $nOffset == 0){
+                    $strSql = str_replace($orderStrings['temp'],$orderStrings['original'], $strSql);
+
+                }
+                else{
+                   $orderString = $orderStrings['limit'];
+                   $strSql = str_replace($orderStrings['temp'],' ', $strSql);                     
+                }
+        }
+
+
+
         if ($strSql === '()') {
             return array();
         }
-        
 
-        
+        //SQLSRVCHANGE change syntay for limit according mssql
+
+        $selectPart = 'Select *
+                         From (                        
+                         SELECT Row_Number() over ('.$orderString.') as id, *
+                         FROM( ';
+        $limitPart  = '      ) as result ) as result2 WHERE result2.id between ';
+
+        // sqlsrvchange
         if ($nLimit === null && $nOffset == 0) {
-           // echo $strSql;
-            $ret = @$this->dbConn->query($strSql);
+
+            $ret = $this->dbConn->query($strSql);
+            
         } else if ($nLimit === null) {
-           // echo $strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615';
-            $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615');
+            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND 18446744073709551615';
+            $ret = $this->dbConn->query($strSql);
         } else {
-          //  echo $strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit;
-            $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
+            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND '. $nLimit;
+            $ret = $this->dbConn->query($strSql);
         }
 
 
-      
+       // echo $strSql;
 
         return $ret->fetchAll();
     }
@@ -339,10 +359,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      * @param array $arSqls Array of SQL queries.
      * @return array Array of query results.
      */
-    protected function _queryMultiple($arSqls)
-    {
+    protected function _queryMultiple($arSqls) {
+
+
         $arSM = $this->query->getSolutionModifier();
-        
+
         if ($arSM['limit'] === null && $arSM['offset'] === null) {
             $nOffset = 0;
             $nLimit  = null;
@@ -357,8 +378,8 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $nCount    = 0;
         $arResults = array();
         foreach ($arSqls as $nId => $arSql) {
-            if ($nId < $nSql) { 
-                continue; 
+            if ($nId < $nSql) {
+                continue;
             }
 
             if ($nLimit != null) {
@@ -367,8 +388,10 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
                 $nCurrentLimit = null;
             }
 
+
+
             $dbResult = $this->_queryDb($arSql, $nOffset, $nCurrentLimit);
-            
+
             $nCount     += count($dbResult);
             $arResults[] = $dbResult;
             $nOffset = 0;
@@ -376,20 +399,77 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
                 break;
             }
         }
-        
+
         return $arResults;
     }
 
     /**
      * Set options to subobjects like SqlGenerator
      */
-    protected function _setOptions()
-    {
+    protected function _setOptions() {
         // allow changing the statements' table name
         //if (isset($GLOBALS['RAP']['conf']['database']['tblStatements'])) {
         //    $this->sg->setStatementsTable(
         //        $GLOBALS['RAP']['conf']['database']['tblStatements']
         //    );
         //}
+    }
+
+//    private function _modifyOrder($arSqls) {
+//
+//        $count = 0;
+//
+//        foreach ($arSqls as &$arSql) {
+//
+//            if(!empty($arSql[0]['order'])) {
+//                $arSql[0]['select'] = str_replace('ORDER BY T0.S',$arSql[0]['order'],$arSql[0]['select'],&$count);
+//
+//                if($count != 0) {
+//                    $arSql[0]['order'] = NULL;
+//                    $count = 0;
+//                }
+//            }
+//        }
+//        return $arSqls;
+//    }
+
+
+
+
+
+    private function _getModifiedOrderString($arSqls) {
+
+            $orderString = $arSqls[0]['order'];
+            $selectString = $arSqls[0]['select'];
+            $newOrderVar = '';
+
+           $start_pos = strpos($orderString,'+*+') + 3;
+
+           $end_pos = strpos($orderString,'-*-');
+
+           $orderVar = substr($orderString,$start_pos,$end_pos-$start_pos);
+
+           foreach (explode(',',$selectString) as $selectPart){
+
+
+
+               if(substr_count($selectPart,$orderVar.' as')!= 0)
+               {
+                   $newOrderVar = 'result.'.strstr($selectPart,'v');
+                   break;
+               }
+
+           }
+
+
+
+           $orderStrings = array();
+           $orderStrings['temp'] = $orderString;
+           $orderStrings['limit'] = str_replace('+*+'.$orderVar.'-*-', $newOrderVar, $orderString);
+           $orderStrings['original'] = str_replace('+*+'.$orderVar.'-*-', $orderVar, $orderString);
+
+
+
+           return $orderStrings;
     }
 }

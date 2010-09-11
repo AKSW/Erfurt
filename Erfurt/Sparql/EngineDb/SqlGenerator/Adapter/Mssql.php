@@ -9,7 +9,7 @@ require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
 *
 *   @subpackage sparql
 */
-class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_EngineDb_SqlGenerator
+class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql extends Erfurt_Sparql_EngineDb_SqlGenerator
 {
     public $arTableColumnNames = array(
         's' => array(
@@ -25,13 +25,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         ),
         'datatype' => array(
             'value' => 'od',
-            'empty' => '=""',
-            'not_empty' => '!=""'
+            'empty' => '=\'\'',
+            'not_empty' => '!=\'\''//SQLSRVCHANGE " to '
         ),
         'language' => array(
             'value' => 'ol',
-            'empty' => '=""',
-            'not_empty' => '!=""'
+            'empty' => '=\'\'',
+            'not_empty' => '!=\'\''//SQLSRVCHANGE " to '
         )
     );
     
@@ -184,8 +184,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arWhere    = array();
 
         $strResultForm = $this->query->getResultForm();
-        require_once 'Erfurt/Sparql/EngineDb/FilterGenerator/Adapter/Ef.php';
-        $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef($this);
+        require_once 'Erfurt/Sparql/EngineDb/FilterGenerator/Adapter/Mssql.php';
+        $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql($this);
         switch ($strResultForm) {
             case 'construct':
                 $arResultVars = $this->query->getConstructPatternVariables();
@@ -195,6 +195,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 break;
         }
 
+        
+
         $this->nTableId                 = 0;
         $this->nGraphPatternCount       = 0;
         $this->nUnionCount              = 0;
@@ -202,6 +204,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $this->arUnionVarAssignments[0] = array();
 
         foreach ($this->query->getResultPart() as $graphPattern) {
+
+           
+
 
             #if ($graphPattern->isEmpty()) {
             #    continue;
@@ -225,9 +230,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
 
-            
 
-            
             if ($arTriplePattern != null) {
                 foreach ($arTriplePattern as $triplePattern) {
                     list (
@@ -247,8 +250,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 }
                 ++$this->nGraphPatternCount;
             }
+
+            
+
              
             foreach ($this->query->getResultPart() as $optionalPattern) {
+
+               
                 if ($optionalPattern->getOptional() === $graphPattern->patternId) {
                     $this->nTriplePatternCount = 0;
                     $arTriplePattern = $optionalPattern->getTriplePatterns();
@@ -301,9 +309,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             }
             ++$this->nGraphPatternCount;
         }
-        
+
         $arSelect    = $this->createEqualSelects($arSelect);
         $arStrSelect = array();
+
 
         switch ($strResultForm) {
             case 'construct':
@@ -312,10 +321,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             case 'select':
             case 'select distinct':
                 if (!isset($strSelectType)) {
-                    $strSelectType = $strResultForm;
+                    $strSelectType = $strResultForm; 
                 }
                 foreach ($arSelect as $nUnionCount => $arSelectPart) {
                     $arSelectPart = $this->removeNull($arSelectPart);
+                   
                     if (count($arSelectPart) == 0
                     || (count($arSelectPart) == 1 && $arSelectPart[0] == '')) {
                         //test "test-1-07" suggests we return no rows in this case
@@ -323,6 +333,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     } else {
                         $arStrSelect[$nUnionCount] = strtoupper($strSelectType) . ' ' . implode(','   , $arSelectPart);
                     }
+                    
                 }
                 break;
 
@@ -350,9 +361,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 )
             );
         }
-
-        
-
+      
         return $arSqls;
     }//function createSql()
 
@@ -485,15 +494,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                  && $this->query->varLanguages[$object] !== null
                 ) {
                     $strWhereEquality .=
-                        ' AND ' . $strTablePrefix . '.ol="'
-                        . addslashes($this->query->varLanguages[$object]) . '"';
+                        ' AND ' . $strTablePrefix . '.ol=\''
+                        . $this->_addslashes($this->query->varLanguages[$object]) . '\'';//SQLSRVCHANGE " to '
                 }
                 if (isset($this->query->varDatatypes[$object])
                  && $this->query->varDatatypes[$object] !== null
                 ) {
                     $strWhereEquality .=
-                        ' AND ' . $strTablePrefix . '.ol="'
-                        . addslashes($this->query->varDatatypes[$object]) . '"';
+                        ' AND ' . $strTablePrefix . '.ol=\''
+                        . $this->_addslashes($this->query->varDatatypes[$object]) . '\'';//SQLSRVCHANGE " to '
                 }
             }
         }
@@ -550,13 +559,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
             }
+
+            
             
             if ($graphPattern->getOptional() !== null) {
                 $strFrom .=  $this->getSqlCondition($subject  , $strTablePrefix, 's')
                            . $this->getSqlCondition($predicate, $strTablePrefix, 'p')
                            . $this->getSqlCondition($object   , $strTablePrefix, 'o')
                            . $strWhereEquality;
-            }
+            }            
         }
 
 
@@ -614,8 +625,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         $strTablePrefix . '.od as ' . $this->getSqlVariableNameValue($var),
                         $strTablePrefix . '.od_r as ' . $this->getSqlVariableNameRef($var),
                         '0 as ' . $this->getSqlVariableNameIs($var),
-                        '"" as ' . $this->getSqlVariableNameLanguage($var),
-                        '"" as ' . $this->getSqlVariableNameDatatype($var),
+                        '\'\' as ' . $this->getSqlVariableNameLanguage($var),
+                        '\'\' as ' . $this->getSqlVariableNameDatatype($var),//SQLSRVCHANGE " to '
                     );
                 } else if ($func == 'lang') {
                     if ($chType != 'o') {
@@ -627,8 +638,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     return array(
                         $strTablePrefix . '.ol as ' . $this->getSqlVariableNameValue($var),
                         '2 as ' . $this->getSqlVariableNameIs($var),
-                        '"" as ' . $this->getSqlVariableNameLanguage($var),
-                        '"" as ' . $this->getSqlVariableNameDatatype($var),
+                        '\'\' as ' . $this->getSqlVariableNameLanguage($var),
+                        '\'\' as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else {
                     require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
@@ -772,9 +783,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         $strColDatatype = 'dD';
                         $strColDatatypeRef = 'dDR';
                     }
-                    $ar[] = '"" as '
+                    $ar[] = '\'\' as '//SQLSRVCHANGE " to '
                         . $strColLanguage;
-                    $ar[] = '"" as '
+                    $ar[] = '\'\' as '//SQLSRVCHANGE " to '
                         . $strColDatatype;
                     $ar[] = 'NULL as '
                         . $strColDatatypeRef;
@@ -867,13 +878,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 if ($bject->getDatatype() == '' || $bject->getDatatype() == 'http://www.w3.org/2001/XMLSchema#string') {
                     //string
                     $r .= ' AND ('
-                        . $strColDatatype . '=""'
-                        . ' OR ' . $strColDatatype . '="http://www.w3.org/2001/XMLSchema#string"'
+                        . $strColDatatype . '=\'\''
+                        . ' OR ' . $strColDatatype . '=\'http://www.w3.org/2001/XMLSchema#string\''//SQLSRVCHANGE " to '
                         . ')';
                 } else {
-                    $r .= ' AND ' . $strColDatatype . '="'
+                    $r .= ' AND ' . $strColDatatype . '=\''//SQLSRVCHANGE " to '
                         . $bject->getDatatype()
-                        . '"';
+                        . '\'';//SQLSRVCHANGE " to '
                 }
             }
 
@@ -883,7 +894,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                    . $this->_qstr($bject->getLanguage());
             } else {
                 $strColLanguage = $strTablePrefix . '.ol';
-                $r .= ' AND ' . $strColLanguage . '=""';
+                $r .= ' AND ' . $strColLanguage . '=\'\'';//SQLSRVCHANGE " to '
             }
             return $r;
 
@@ -1132,4 +1143,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
     {
         $this->tblStatements = $tblStatements;
     }//public function setStatementsTable($tblStatements)
+
+    private function _addslashes($str)
+    {
+       return str_replace("'", "''", $str);
+    }
+
+
 }
