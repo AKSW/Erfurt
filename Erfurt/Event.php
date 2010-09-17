@@ -33,6 +33,12 @@ class Erfurt_Event
       * @var array 
       */
      protected $_parameters = array();
+     
+     /**
+      * The event's current value;
+      * @var mixed
+      */
+     protected $_value = null;
     
     /**
      * Constructor
@@ -114,6 +120,15 @@ class Erfurt_Event
     }
     
     /**
+     * Returns the current event value, as handled by previous
+     * handlers or null.
+     */
+    public function getValue()
+    {
+        return $this->_value;
+    }
+    
+    /**
      * Returns whether this event has been handled or not.
      *
      * @return boolean
@@ -146,6 +161,11 @@ class Erfurt_Event
         $this->_handled = (bool) $handled;
         
         return $this;
+    }
+    
+    public function setValue($value)
+    {
+        $this->_value = $value;
     }
     
     /**

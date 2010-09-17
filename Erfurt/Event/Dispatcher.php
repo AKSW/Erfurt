@@ -28,6 +28,12 @@ class Erfurt_Event_Dispatcher
      */
     const INIT_VALUE = '__init_value';
     
+    /**
+     * Handler priority if none is given
+     * @var int
+     */
+    const DEFAULT_PRIORITY = 10;
+    
     /** 
      * @var Zend_Logger 
      */
@@ -76,17 +82,16 @@ class Erfurt_Event_Dispatcher
      * @param string $eventName
      * @param object|array $handler
      */
-    public function register($eventName, $handler)
+    public function register($eventName, $handler, $priority = self::DEFAULT_PRIORITY)
     {
         // create event if not already handled
         if (!array_key_exists($eventName, $this->_registeredEvents)) {
             $this->_registeredEvents[$eventName] = array();
         }
         
-        
         if (is_object($handler)) {
             // simply store handling object
-            $this->_registeredEvents[$eventName][] = $handler;
+            $this->_registerHandler($eventName, $handler, $priority);
             $this->_logger->info('Erfurt_Event_Dispatcher: ' . get_class($handler) . " registered for event '$eventName'");
         } else if (is_array($handler)) {
             // or check mandatory parameters
@@ -101,7 +106,7 @@ class Erfurt_Event_Dispatcher
             }
             
             // and add handler class info
-            $this->_registeredEvents[$eventName][] = $handler;
+            $this->_registerHandler($eventName, $handler, $priority);
             $this->_logger->info('Erfurt_Event_Dispatcher: ' . $handler['class_name'] . " registered for event '$eventName'");
         }
         // var_dump($this->_registeredEvents);
@@ -121,9 +126,10 @@ class Erfurt_Event_Dispatcher
         $result = self::INIT_VALUE;
 
         if (array_key_exists($eventName, $this->_registeredEvents)) {
+            ksort($this->_registeredEvents[$eventName]);            
             foreach ($this->_registeredEvents[$eventName] as &$handler) {
                 if (is_array($handler)) {
-                    // handler is already instanciated
+                    // handler is already instantiated
                     if (isset($handler['instance']) && is_object($handler['instance'])) {
                         $handlerObject = $handler['instance'];
                     } else {
@@ -163,8 +169,12 @@ class Erfurt_Event_Dispatcher
                         // invoke event method
                         $reflectionMethod = new ReflectionMethod(get_class($handlerObject), $handlerMethod);
                         
+                        // get result of current handler
                         $tempResult = $reflectionMethod->invoke($handlerObject, $event);
+                        
                         if (null !== $tempResult) {
+                            $event->setValue($tempResult);
+                            
                             if (is_array($tempResult)) {
                                 if ($result === self::INIT_VALUE) {
                                     $result = $tempResult;
@@ -207,6 +217,15 @@ class Erfurt_Event_Dispatcher
     private function __construct()
     {
         $this->_logger = Erfurt_App::getInstance()->getLog();
+    }
+    
+    private function _registerHandler($eventName, $handler, $priority)
+    {
+        while (isset($this->_registeredEvents[$eventName][$priority])) {
+            $priority++;
+        }
+        
+        $this->_registeredEvents[$eventName][$priority] = $handler;
     }
     
     /**
