@@ -701,9 +701,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 
                 /** 
                  * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR} 
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 * wrong: \t\b\n\r\f\\\"\\\' 
                  */
-                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
+                if (preg_match('/[\\\n\r"]/', $value) > 0) {
                     $longLiteral = true;
                 }
                 break;
@@ -752,7 +753,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                     
                     // add triple
-                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
+                    $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
                 }
             }
         }
