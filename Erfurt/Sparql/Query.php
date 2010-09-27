@@ -254,7 +254,6 @@ class Erfurt_Sparql_Query
      */
     public function addGraphPattern($pattern)
     {
-
         $pattern->setId($this->graphPatternCounter++);
         $this->resultPart[] = $pattern;
     }
@@ -456,7 +455,7 @@ class Erfurt_Sparql_Query
         } else {
             $this->addGraphPattern($pattern);
         }
-
+        
         return $pattern;
     }
 

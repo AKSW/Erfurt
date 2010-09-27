@@ -1344,10 +1344,6 @@ class Erfurt_Store
                 $queryObject->setWhere($ggp);
             }
         }
-
-
-
-
         //querying SparqlEngine or retrieving Result from QueryCache
         //TODO for query cache, please refactor
         $resultFormat = $options[STORE_RESULTFORMAT];
@@ -1355,10 +1351,8 @@ class Erfurt_Store
 
         $sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat );
         if (!is_array($sparqlResult)) {
-
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
@@ -1375,7 +1369,6 @@ class Erfurt_Store
             }
             $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
         }
-
         return $sparqlResult;
     }
     

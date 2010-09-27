@@ -184,8 +184,8 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arWhere    = array();
 
         $strResultForm = $this->query->getResultForm();
-        require_once 'Erfurt/Sparql/EngineDb/FilterGenerator/Adapter/Ef.php';
-        $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Ef($this);
+        require_once 'Erfurt/Sparql/EngineDb/FilterGenerator.php';
+        $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator($this);
         switch ($strResultForm) {
             case 'construct':
                 $arResultVars = $this->query->getConstructPatternVariables();
@@ -202,7 +202,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $this->arUnionVarAssignments[0] = array();
 
         foreach ($this->query->getResultPart() as $graphPattern) {
-
+            
             #if ($graphPattern->isEmpty()) {
             #    continue;
             #}
@@ -224,10 +224,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             
             $this->nTriplePatternCount = 0;
             $arTriplePattern = $graphPattern->getTriplePatterns();
-
-            
-
-            
+   
             if ($arTriplePattern != null) {
                 foreach ($arTriplePattern as $triplePattern) {
                     list (
@@ -338,7 +335,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unsupported query type "' . $strResultForm . '"');
                 break;
-    }
+        }
 
         $arSqls = array();
         foreach ($arStrSelect as $nUnionCount => $arSelectPart) {
@@ -350,9 +347,7 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 )
             );
         }
-
         
-
         return $arSqls;
     }//function createSql()
 

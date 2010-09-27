@@ -209,9 +209,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                             $o['value'] = substr((string)$o['value'], 0, 128) . $objectHash;
                         }
 
-                        $oValue = $this->_addslashes($o['value']);
-
-
+                        $oValue = addslashes($o['value']);
 
                         $sqlString .= "($graphId,'$s','$p','$oValue',";
 
@@ -351,8 +349,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Sql_Interface */
     public function createTable($tableName, array $columns)
     {
-        if ($this->_dbConn instanceof Zend_Db_Adapter_Sqlsrv){
-            return $this->_createTableSqlsrv($tableName, $columns);
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTableMysql($tableName, $columns);
         }
     }
 
@@ -423,7 +421,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
-
         $modelInfoCache = $this->_getModelInfos();
 
         $modelId = $modelInfoCache[$graphUri]['modelId'];
@@ -444,7 +441,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         $firstparam = 0;
 
 
-        $whereString ='';
+
 
         // determine the rows, which should be deleted by the given parameters
         if ($subject !== null) {
@@ -469,7 +466,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
         if (null !== $object) {
             if (isset($object['value'])) {
-                $whereString .= $operator[$firstparam]. ' o = \''.$object['value'].'\'';
+                $whereString .= $operator[$firstparam]. 'o = \''.$object['value'].'\'';
                 $firstparam = 1;
             }
 
@@ -520,6 +517,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
+
         $modelInfoCache = $this->_getModelInfos();
 
         $modelId = $modelInfoCache[$graphUri]['modelId'];
@@ -534,20 +532,20 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         // check whether the subject is a blank node
                         if (substr($subject, 0, 2) === '_:') {
                             $subject = substr($subject, 2);
-                            $whereString .= ' AND st = 1 ';
+                            $whereString .= 'AND st = 1 ';
                         } else {
-                            $whereString .= ' AND st = 0 ';
+                            $whereString .= 'AND st = 0 ';
                         }
 
                         // check the type of the object
                         if ($object['type'] === 'uri') {
-                            $whereString .= ' AND ot = 0 ';
+                            $whereString .= 'AND ot = 0 ';
                         } else if ($object['type'] === 'bnode') {
-                            $whereString .= ' AND ot = 1 ';
+                            $whereString .= 'AND ot = 1 ';
                         } else {
-                            $whereString .= ' AND ot = 2 ';
-                            $whereString .= isset($object['lang']) ? ' AND ol = \'' . $object['lang'] . '\' ' : '';
-                            $whereString .= isset($object['datatype']) ? ' AND od = \'' . $object['datatype'] .
+                            $whereString .= 'AND ot = 2 ';
+                            $whereString .= isset($object['lang']) ? 'AND ol = \'' . $object['lang'] . '\' ' : '';
+                            $whereString .= isset($object['datatype']) ? 'AND od = \'' . $object['datatype'] .
                                             '\' ' : '';
                         }
 
@@ -567,9 +565,9 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         }
 
 
-                        $whereString .= ' AND s = \'' . $subject . '\' ';
-                        $whereString .= ' AND p = \'' . $predicate . '\' ';
-                        $whereString .= ' AND o = \'' . str_replace('\'', '\\\'', $object) . '\' ';
+                        $whereString .= 'AND s = \'' . $subject . '\' ';
+                        $whereString .= 'AND p = \'' . $predicate . '\' ';
+                        $whereString .= 'AND o = \'' . str_replace('\'', '\\\'', $object) . '\' ';
 
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
@@ -637,7 +635,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
     public function getBackendName()
     {
-        return 'mssql';
+        return 'ZendDb';
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -689,7 +687,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     {
         // if model is already in cache return the cached value
         if (isset($this->_modelCache[$modelIri])) {
-            return clone $this->_modelCache[$modelIri];
+            return $this->_modelCache[$modelIri];
         }
 
         $modelInfoCache = $this->_getModelInfos();
@@ -800,7 +798,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     {
 // TODO fix or remove
 
-        if ($this->_dbConn instanceof Zend_Db_Adapter_Sqlsrv) {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $parsedArray = $parser->parse($data, $locator, $modelUri, false);
@@ -852,22 +850,22 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         }
 
                         $lineString = $modelId . ';' . $s . ';' . $p . ';' . $o['value'] . ';';
-                        $lineString .= "NULL;NULL;NULL;";
+                        $lineString .= "\N;\N;\N;";
 
                         $lineString .=  $sType . ';' . $oType . ';';
 
                         if (isset($o['lang'])) {
                             $lineString .= $o['lang'];
                         } else {
-                            $lineString .= "NULL";
+                            $lineString .= "\N";
                         }
 
                         $lineString .= ';';
 
                         if (isset($o['datatype'])) {
-                            $lineString .= $o['datatype'] . ";NULL";
+                            $lineString .= $o['datatype'] . ";\N";
                         } else {
-                            $lineString .= "NULL;NULL";
+                            $lineString .= "\N;\N";
                         }
 
                         $lineString .= PHP_EOL;
@@ -975,16 +973,16 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                 }
 
                 if (isset($stm['o']['lang'])) {
-                    $sql .= '\'' . $stm['o']['lang'] . '\',';
+                    $sql .= '"' . $stm['o']['lang'] . '",';
                 } else {
                     $sql .= "NULL,";
                 }
 
                 if (isset($stm['o']['datatype'])) {
                     if ($dtId !== false) {
-                        $sql .= '\'' . $oDt . '",' . $dtId . ')';
+                        $sql .= '"' . $oDt . '",' . $dtId . ')';
                     } else {
-                        $sql .= '\'' . $stm['o']['datatype'] . '\',' . "NULL)";
+                        $sql .= '"' . $stm['o']['datatype'] . '",' . "\N)";
                     }
                 } else {
                     $sql .= "NULL,NULL)";
@@ -1039,8 +1037,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 		//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... looks like the engine supports it. but there is probably a reason for this not to be supported
 		$start = microtime(true);
 
-        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfMssql.php';
-        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfMssql($this->_dbConn, $this->_getModelInfos());
+        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
+        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();
@@ -1062,13 +1060,12 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $options=array())
     {
-
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
 
         $start = microtime(true);
 
-        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfMssql.php';
-        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfMssql($this->_dbConn, $this->_getModelInfos());
+        require_once 'Erfurt/Sparql/EngineDb/Adapter/EfZendDb.php';
+        $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
         require_once 'Erfurt/Sparql/Parser.php';
         $parser = new Erfurt_Sparql_Parser();
@@ -1077,13 +1074,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             $query = $parser->parse((string)$query);
         }
 
-        
-
-
-
         $result = $engine->queryModel($query, $resultform);
-
-
 
         // Debug executed SPARQL queries in debug mode (7)
         $logger = Erfurt_App::getInstance()->getLog();
@@ -1099,29 +1090,19 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     {
         $start = microtime(true);
 
-//SQLSRVCHANGE _ LIMIT NOT SUPPORTED
-        // add limit/offset
-//        if ($limit < PHP_INT_MAX) {
-//            $sqlQuery = sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
-//        }
-
-//SQLSRVCHANGE _ LIMIT NOT SUPPORTED
         // add limit/offset
         if ($limit < PHP_INT_MAX) {
-            sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
+            $sqlQuery = sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
         }
-
-
-        //Todo conditions not secure if string starts with a space shoud be changed
 
         $queryType = strtolower(substr($sqlQuery, 0, 6));
         if ( $queryType  === 'insert' ||
              $queryType  === 'update' ||
              $queryType  === 'create' ||
              $queryType  === 'if not' ||
-             $queryType  === 'delete' ||
-             substr($queryType, 0, 4) === 'drop') {
+             $queryType  === 'delete') {
             // Handle without ZendDb
+
 
                 $result = $this->_dbConn->query($sqlQuery);
                 //SQLSRVCHANGE - Hack - result kommt immer falsch zurück - Queries werden aber ausgeführt....?
@@ -1160,41 +1141,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
 
-    private function _createTableSqlsrv($tableName, array $columns)
-    {
-
-    $sqlsrv = 'IF NOT EXISTS
-               (SELECT * FROM SysObjects WHERE [Name] = \''.$tableName.'\')
-                CREATE TABLE'.$tableName.'(';
-
-
-    $sqlsrv .= ') ON [PRIMARY]';
-
-
-
-
-      $i = 0;
-       $sqlsrv ='CREATE TABLE '.$tableName.' (';
-       foreach ($columns as $columnName => $columnSpec) {
-	        $sqlsrv .= PHP_EOL
-	                .  ' '. $columnName . ' '
-	                .  $columnSpec . (($i < count($columns)-1) ? ',' : '');
-	        ++$i;
-	       }
-      $sqlsrv .=') ON [PRIMARY]';
-
-      $success = $this->_dbConn->query($sqlsrv);
-
-       	    if (!$success) {
-           // TODO dedicated exception
-	        throw new Exception('Could not create database table with name ' . $tableName . '.');
-	    } else {
-	        return $success;
-	    }
-    }
-
-
-
     /**
      * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.
      */
@@ -1214,7 +1160,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         $sqlsrv ='IF NOT EXISTS
                   ( SELECT * FROM SysObjects WHERE [Name] = \'ef_info\')
                   CREATE TABLE ef_info (
-                  id        INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+                  id        TINYINT NOT NULL IDENTITY(1,1),
                   schema_id VARCHAR(10) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
                   ) ON [PRIMARY]';
 
@@ -1248,7 +1194,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                   ( SELECT * FROM SysObjects WHERE [Name] = \'ef_graph\')
                   BEGIN
                   CREATE TABLE ef_graph (
-                  id        INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+                  id        TINYINT NOT NULL IDENTITY(1,1),
                   uri       VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   uri_r     INT NULL,
                   base      VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
@@ -1268,13 +1214,11 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         //#####################################################################
         // Create table ef_stmt if not existing
 
-        //REMARK: ASCI Collation for s & p??????
-
         $sqlsrv ='IF NOT EXISTS
                   ( SELECT * FROM SysObjects WHERE [Name] = \'ef_stmt\')
                   BEGIN
                   CREATE TABLE ef_stmt (
-                  id        INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+                  id        TINYINT NOT NULL IDENTITY(1,1),
                   g         INT NOT NULL,
                   s         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   p         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
@@ -1282,8 +1226,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                   s_r       INT DEFAULT NULL,
                   p_r       INT DEFAULT NULL,
                   o_r       INT DEFAULT NULL,
-                  st        INT NOT NULL,
-                  ot        INT NOT NULL,
+                  st        TINYINT NOT NULL,
+                  ot        TINYINT NOT NULL,
                   ol        VARCHAR(50)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   od        VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   od_r      INT DEFAULT NULL,
@@ -1308,7 +1252,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                   ( SELECT * FROM SysObjects WHERE [Name] = \'ef_uri\')
                   BEGIN
                   CREATE TABLE ef_uri (
-                  id        INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+                  id        TINYINT NOT NULL IDENTITY(1,1),
                   g         INT NOT NULL,
                   v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
@@ -1333,7 +1277,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                   ( SELECT * FROM SysObjects WHERE [Name] = \'ef_lit\')
                   BEGIN
                   CREATE TABLE ef_lit (
-                  id        INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+                  id        TINYINT NOT NULL IDENTITY(1,1),
                   g         INT NOT NULL,
                   v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
                   vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
@@ -1622,11 +1566,5 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
         }
     }
-
-    private function _addslashes($str)
-    {
-       return str_replace("'", "''", $str);
-    }
-
 }
 ?>

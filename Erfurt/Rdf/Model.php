@@ -519,7 +519,6 @@ class Erfurt_Rdf_Model
     
     public function sparqlQuery($query, $options = array())
     {
-
         $defaultOptions = array(
             'result_format' => 'plain'
         );
@@ -539,12 +538,10 @@ class Erfurt_Rdf_Model
         // restrict to this model
         if($query instanceof Erfurt_Sparql_SimpleQuery){
             $query->setFrom(array($this->_graphUri));
-            
         } else if($query instanceof Erfurt_Sparql_Query2){
-           
             $query->setFroms(array($this->_graphUri));
         }
-
+        
         return $this->getStore()->sparqlQuery($query, $options);
     }
     
