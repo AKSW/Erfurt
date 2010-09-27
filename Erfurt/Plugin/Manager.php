@@ -149,8 +149,10 @@ class Erfurt_Plugin_Manager
                         'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
                     );
                     
+                    $priority = isset($event['priority']) ? (int) $event['priority'] : 10;
+                    
                     // register plugin events with event dispatcher
-                    $this->_eventDispatcher->register($event, $pluginSpec);
+                    $this->_eventDispatcher->register($event, $pluginSpec, $priority);
                 }
             }
         }
@@ -158,16 +160,19 @@ class Erfurt_Plugin_Manager
     }
 
 
-    public function getPluginPaths(){
+    public function getPluginPaths()
+    {
         return $this->_pluginPaths;
     }
 
-    public function getPlugins(){
+    public function getPlugins()
+    {
         return $this->_plugins;
     }
 
-    public function getPlugin($name){
-        if(isset($this->_plugins[$name])){
+    public function getPlugin($name)
+    {
+        if (isset($this->_plugins[$name])) {
             return $this->_plugins[$name];
         }
     }

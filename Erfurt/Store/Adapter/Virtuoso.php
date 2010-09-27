@@ -696,6 +696,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             case '':
             case null:
+            case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':
             case 'http://www.w3.org/2001/XMLSchema#string':
                 $value = addcslashes($value, $quoteChar);
                 
@@ -704,8 +705,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                  * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
                  * wrong: \t\b\n\r\f\\\"\\\' 
                  */
-                if (preg_match('/[\\\n\r"]/', $value) > 0) {
+                if (preg_match('/[\\\r\n"]/', $value) > 0) {
                     $longLiteral = true;
+                    $value = trim($value, "\n\r");
+                    // $value = str_replace("\x0A", '\n', $value);
                 }
                 break;
         }
