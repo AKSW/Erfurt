@@ -329,13 +329,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getAvailableModels()
     {
         if (null === $this->_graphs) {
-            $rid = $this->_execSql('SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
-            $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
-            
             $this->_graphs = array();
-            foreach ($graphs as $graph) {
-                $this->_graphs[$graph] = array('modelIri' => $graph);
-            }            
+            $rid = $this->_execSql('SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
+            if ($rid) {
+                $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
+                $this->_graphs = array();
+                foreach ($graphs as $graph) {
+                    $this->_graphs[$graph] = array('modelIri' => $graph);
+                }
+            }          
         }
         
         return $this->_graphs;
