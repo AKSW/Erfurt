@@ -765,26 +765,31 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @see Erfurt_Store_Adapter_Interface
      * @todo Rename countMatchingStatements
      */
-    public function countWhereMatches($graphUris, $whereSpec, $countSpec)
+    public function countWhereMatches($graphUris, $whereSpec, $countSpec, $distinct = false)
     {
         if (empty($graphUris)) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
-        
+        if($distinct){
+            $distinct = "DISTINCT";
+        } else {
+            $distinct = "";
+        }
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
-            'SELECT COUNT DISTINCT %s FROM <%s> %s', 
+            'SELECT COUNT %s %s FROM <%s> %s',
+            $distinct,
             $countSpec, 
             $fromSpec, 
             $whereSpec);
         
         if ($rid = $this->_execSparql($countQuery)) {
             $count = (int)odbc_result($rid, 1);
-            
+            echo "countWM ".$count;
             return $count;
         }
-        
+
         return 0;
     }
     
@@ -897,11 +902,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
-            
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
-       
+        if(!$resultId){
+            echo htmlentities($sparqlQuery);
+            var_dump($resultId);
+            var_dump($this->_connection);
+        }
+        
         return $resultId;
     }
     

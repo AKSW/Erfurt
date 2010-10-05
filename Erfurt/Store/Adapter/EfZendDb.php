@@ -352,11 +352,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if(!$distinct){
             $query->setProloguePart("COUNT DISTINCT $countSpec"); // old way: distinct has no effect !!!
         } else {
-            $query->setProloguePart("COUNT-DISTINCT $countSpec"); // i made a (unccol) hack to fix this, the "-" ist there because i didnt want to change tokenization
+            $query->setProloguePart("COUNT-DISTINCT $countSpec"); // i made a (uncool) hack to fix this, the "-" is there because i didnt want to change tokenization
         }
         $query->setFrom($graphIris)
               ->setWherePart($whereSpec);
-
+        
         $result = $this->sparqlQuery($query);
 
         if ($result) {
