@@ -273,6 +273,8 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
+        $modelUri = (string) $modelUri;
+        
         $this->_init();
         
         $user       = $this->_getUser();

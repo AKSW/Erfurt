@@ -1681,7 +1681,7 @@ class Erfurt_Store
                         sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
                     )
                 }
-                ORDER BY ?order';
+                ORDER BY ASC(?order)';
 
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);
