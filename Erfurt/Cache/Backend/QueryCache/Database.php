@@ -837,8 +837,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $result = $this->_query ( $query );
 
                 $modelId = $result[0]['mid'] ;
-                //$modelId = $this->_getLastInsertId();
-                echo $modelId;
             } else {
                 $modelId = $result[0]['mid'] ;
             }

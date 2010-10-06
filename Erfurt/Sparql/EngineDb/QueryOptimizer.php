@@ -589,7 +589,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer {
     protected function _queryDb($query, $arSql, $nOffset, $nLimit) {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($query, $arSql);
-#echo $strSql;
+
         if ($strSql === '()') {
             return array();
         }

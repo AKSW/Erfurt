@@ -1657,8 +1657,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             } else {
                 $this->_modelInfoCache = array();
 
-                #$rowSet = $result->fetchAll();
-                #var_dump($result);exit;
                 foreach ($result as $row) {
                     if (!isset($this->_modelInfoCache[$row['uri']])) {
                         $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
@@ -1686,7 +1684,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     }
                 }
 
-                //var_dump($this->_modelInfoCache);exit;
 
                 // build the transitive closure for owl:imports
                 // check for recursive owl:imports; also check for cylces!

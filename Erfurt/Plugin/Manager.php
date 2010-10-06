@@ -154,7 +154,6 @@ class Erfurt_Plugin_Manager
                 }
             }
         }
-        // var_dump($pluginConfig);
     }
 
 

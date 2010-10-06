@@ -964,7 +964,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 				throw $e;
 				
 			}
-			// var_dump($q);
+			
 			return $q['retval'];
 		} catch (Exception $e) {
 			// if ($querySpec['type'] === 'positive') {

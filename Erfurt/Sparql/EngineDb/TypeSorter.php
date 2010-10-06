@@ -418,8 +418,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         #    return '';
         #}
 
-//var_dump($arTypeSet);
-//var_dump($this->arUnionVarAssignments);
+
 
         $sqlOrder = array();
         foreach ($arSM['order by'] as $arVar) {
@@ -468,7 +467,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
-//var_dump($sqlOrder);exit;
+
         return ' ORDER BY ' . implode(', ', $sqlOrder);
     }//function getSqlOrderBy($arTypeSet = array())
 
@@ -598,8 +597,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         #    return '';
         #}
 
-//var_dump($arTypeSet);
-//var_dump($this->arUnionVarAssignments);
+
 
         $sqlOrder = array();
         foreach ($arSM['order by'] as $arVar) {
@@ -638,7 +636,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
-//var_dump($sqlOrder);exit;
+
         return implode(', ', $sqlOrderVaribale);
 
 

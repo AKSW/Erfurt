@@ -277,7 +277,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $this->_setOptions();
 
         $arSqls = $this->sg->createSql();
-        #var_dump($arSqls);exit;
+
         
         $this->ts->setData($this->sg);
 
@@ -306,8 +306,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
-#var_dump($nLimit, $nOffset);
-      //  echo $strSql;
+
 
         
         if ($strSql === '()') {
@@ -317,13 +316,10 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
 
         
         if ($nLimit === null && $nOffset == 0) {
-           // echo $strSql;
             $ret = @$this->dbConn->query($strSql);
         } else if ($nLimit === null) {
-           // echo $strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615';
             $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615');
         } else {
-          //  echo $strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit;
             $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
         }
 

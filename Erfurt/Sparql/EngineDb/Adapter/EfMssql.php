@@ -347,9 +347,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
             $ret = $this->dbConn->query($strSql);
         }
 
-
-       // echo $strSql;
-
         return $ret->fetchAll();
     }
 

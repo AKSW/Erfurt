@@ -18,7 +18,6 @@ class Erfurt_Sparql_Query2_Abstraction_Utils
 	static function getAllProperties(Erfurt_Sparql_Query2_Abstraction_RDFSClass $class){
 
 
-             echo 'test_sparql_query2';
              
 		$query = "PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
 			PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>\
