@@ -785,19 +785,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $countQuery = sprintf(
             'SELECT COUNT %s %s FROM <%s> %s',
             $distinct,
-            $countSpec, 
-            $fromSpec, 
+            $countSpec,
+            $fromSpec,
             $whereSpec);
-        
+
         if ($rid = $this->_execSparql($countQuery)) {
             $count = (int)odbc_result($rid, 1);
-            echo "countWM ".$count;
             return $count;
         }
 
         return 0;
     }
-    
+
     /**
      * Recursively gets owl:imported model IRIs starting with $modelUri as root.
      *
