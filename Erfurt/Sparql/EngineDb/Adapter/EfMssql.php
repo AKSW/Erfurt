@@ -343,9 +343,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
             $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND 18446744073709551615';
             $ret = $this->dbConn->query($strSql);
         } else {
-            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND '. $nLimit;
+            $nLimit = $nLimit + $nOffset;
+
+            $strSql = $selectPart.$strSql.$limitPart.$nOffset .' AND '.$nLimit;
             $ret = $this->dbConn->query($strSql);
-        }
+       }
 
         return $ret->fetchAll();
     }
@@ -436,37 +438,43 @@ class Erfurt_Sparql_EngineDb_Adapter_EfMssql {
 
     private function _getModifiedOrderString($arSqls) {
 
-            $orderString = $arSqls[0]['order'];
-            $selectString = $arSqls[0]['select'];
-            $newOrderVar = '';
+        $orderStrings = array();
 
+
+           $orderString = $arSqls[0]['order'];
+           $selectString = $arSqls[0]['select'];
+           $newOrderVar = '';
+
+           $orderStrings['temp'] = $orderString;
+           $orderStrings['limit'] = $orderString;
+           $orderStrings['original'] = $orderString;
+
+           
            $start_pos = strpos($orderString,'+*+') + 3;
 
-           $end_pos = strpos($orderString,'-*-');
+           $orderString = substr($orderString,$start_pos);
 
-           $orderVar = substr($orderString,$start_pos,$end_pos-$start_pos);
+           $orderVars = explode('+*+',$orderString);
 
-           foreach (explode(',',$selectString) as $selectPart){
+           foreach ($orderVars as &$orderVar) {
 
+            $end_pos = strpos($orderVar, '-*-');
+            
+            $orderVar = substr($orderVar,0,$end_pos);
 
+            foreach (explode(',', $selectString) as $selectPart) {
 
-               if(substr_count($selectPart,$orderVar.' as')!= 0)
-               {
-                   $newOrderVar = 'result.'.strstr($selectPart,'v');
-                   break;
-               }
+                if (substr_count($selectPart, $orderVar . ' as') != 0) {
+                    $newOrderVar = 'result.' . strstr($selectPart, 'v');
+                    break;
+                }
+            }
+            
+           
+           $orderStrings['limit'] = str_replace('+*+'.$orderVar.'-*-', $newOrderVar, $orderStrings['limit']);
+           $orderStrings['original'] = str_replace('+*+'.$orderVar.'-*-', $orderVar, $orderStrings['original']);
 
-           }
-
-
-
-           $orderStrings = array();
-           $orderStrings['temp'] = $orderString;
-           $orderStrings['limit'] = str_replace('+*+'.$orderVar.'-*-', $newOrderVar, $orderString);
-           $orderStrings['original'] = str_replace('+*+'.$orderVar.'-*-', $orderVar, $orderString);
-
-
-
+        }
            return $orderStrings;
     }
 }

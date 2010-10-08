@@ -641,8 +641,18 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
     {
         $strVar   = $this->createTreeSql($tree['parameter'][0], $tree);
         $strRegex = $this->createTreeSql($tree['parameter'][1], $tree);
-            
-           $strRegex = "'". substr($strRegex,2);
+
+        $condition = " != 0 ";
+        if(substr($strRegex,0,2) == "'^"){
+
+        $strRegex= str_replace("'^", "'", $strRegex);
+       $condition = " != 0 ";
+        //$condition = " = 1 ";
+        }
+
+        $strRegex= str_replace("$'", "'", $strRegex);
+
+        $strRegex= str_replace("\\", "", $strRegex);
 
         if (isset($tree['parameter'][2])) {
             //is quoted
@@ -650,11 +660,11 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
             switch ($strMod) {
                 case '':
                 case '""':
-                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') ,LOWER('.$strVar . ')) != 0)';
+                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') ,LOWER('.$strVar . ')) '.$condition.')';
                     break;
 
                 case "'i'":
-                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') , LOWER(CAST(' .$strVar . ' AS CHAR))) != 0)';
+                    $sql = '(CHARINDEX(LOWER(' .$strRegex .') , LOWER(CAST(' .$strVar . ' AS CHAR))) '.$condition.')';
                     break;
 
                 default:
@@ -666,7 +676,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
                     );
             }
         } else {
-            $sql = '(CHARINDEX(LOWER(' . $strRegex. '), LOWER(' .$strVar . ')) != 0)';
+            $sql = '(CHARINDEX(LOWER(' . $strRegex. '), LOWER(' .$strVar . ')) '.$condition.')';
         }
 
         if ($this->isObject($tree['parameter'][0])) {
@@ -675,9 +685,9 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
         }
 
         return self::mkVal($sql, self::$typeXsdBoolean);
-        
 
-        
+
+
         if ($this->isObject($tree['parameter'][0])) {
             $col = $this->getIsCol($tree['parameter'][0]);
             $sql = "($sql AND $col=" . $this->sg->arTypeValues['l'] . ")";
@@ -685,6 +695,71 @@ class Erfurt_Sparql_EngineDb_FilterGenerator_Adapter_Mssql extends Erfurt_Sparql
 
         return self::mkVal($sql, self::$typeXsdBoolean);
     }//protected function createFunction_regex($tree)
+
+
+
+//        protected function createFunction_regex($tree)
+//    {
+//        $strVar   = $this->createTreeSql($tree['parameter'][0], $tree);
+//        $strRegex = $this->createTreeSql($tree['parameter'][1], $tree);
+//
+//        $condition = " != 0 ";
+//        if(substr($strRegex,0,2) == "'^"){
+//
+//        $strRegex= str_replace("'^", "'", $strRegex);
+//
+//        }
+//        else{
+//        $strRegex= str_replace("'", "%", $strRegex);
+//        }
+//
+//
+//
+//        $strRegex= str_replace("$'", "'", $strRegex);
+//
+//
+//
+//        if (isset($tree['parameter'][2])) {
+//            //is quoted
+//            $strMod = $this->createTreeSql($tree['parameter'][2], $tree);
+//            switch ($strMod) {
+//                case '':
+//                case '""':
+//                    $sql = '(PATINDEX(LOWER(' .$strRegex .') ,LOWER('.$strVar . ')) '.$condition.')';
+//                    break;
+//
+//                case "'i'":
+//                    $sql = '(PATINDEX(LOWER(' .$strRegex .') , LOWER(CAST(' .$strVar . ' AS CHAR))) '.$condition.')';
+//                    break;
+//
+//                default:
+//                    var_dump($strMod);exit;
+//                    throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
+//                        'Unsupported regex modifier "'
+//                        . $strMod
+//                        . '"'
+//                    );
+//            }
+//        } else {
+//            $sql = '(PATINDEX(LOWER(' . $strRegex. '), LOWER(' .$strVar . ')) '.$condition.')';
+//        }
+//
+//        if ($this->isObject($tree['parameter'][0])) {
+//            $col = $this->getIsCol($tree['parameter'][0]);
+//            $sql = "($sql AND $col=" . $this->sg->arTypeValues['l'] . ")";
+//        }
+//
+//        return self::mkVal($sql, self::$typeXsdBoolean);
+//
+//
+//
+//        if ($this->isObject($tree['parameter'][0])) {
+//            $col = $this->getIsCol($tree['parameter'][0]);
+//            $sql = "($sql AND $col=" . $this->sg->arTypeValues['l'] . ")";
+//        }
+//
+//        return self::mkVal($sql, self::$typeXsdBoolean);
+//    }//protected function createFunction_regex($tree)
 
 
 
