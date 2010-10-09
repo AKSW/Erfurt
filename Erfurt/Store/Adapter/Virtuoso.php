@@ -909,11 +909,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
-        if(!$resultId){
-            echo htmlentities($sparqlQuery);
-            var_dump($resultId);
-            var_dump($this->_connection);
-        }
         
         return $resultId;
     }
