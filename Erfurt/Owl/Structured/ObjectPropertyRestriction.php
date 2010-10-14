@@ -16,6 +16,12 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structu
     }
 
     protected function getClassExpression(){
+      if($this->classExpression->isComplex()){
+        $innerValue = $this->classExpression->toArray();
+        //var_dump($innerValue);
+        return $innerValue;
+      }
+      else
         return $this->classExpression;
     }
 
@@ -35,16 +41,35 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structu
         $bnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
         $retval = Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, "rdf:type", "owl:Restriction");
         $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, "owl:onProperty", $this->getObjectPropertyExpression());
-        $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, $this->getPredicateString(), $this->getClassExpression());
+        if(!$this->classExpression->isComplex())
+          $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, $this->getPredicateString(), $this->getClassExpression());
+        else {
+
         return $retval;
+      }
     }
 
     public function toTriples() {
-        $retval = Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(), "rdf:type", "owl:Restriction");
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), "owl:onProperty", $this->getObjectPropertyExpression());
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), $this->getPredicateString(), $this->getClassExpression());
-        return $retval;
+     return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
     }
 
-    
+    protected function toArray(){
+      $retval = array();
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+          "rdf:type",
+          "owl:Restriction"
+      );
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          "owl:onProperty",
+          $this->getObjectPropertyExpression()
+      );
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          $this->getPredicateString(),
+          $this->getClassExpression()
+      );
+      return $retval;
+    } 
 }
