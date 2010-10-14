@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 3:57:28 PM
- * To change this template use File | Settings | File Templates.
- */
  
 class Erfurt_Owl_Structured_ClassExpression_ObjectComplementOf extends Erfurt_Owl_Structured_ClassExpression {
 
@@ -19,5 +12,9 @@ class Erfurt_Owl_Structured_ClassExpression_ObjectComplementOf extends Erfurt_Ow
 
     function getPredicateString(){
         return "owl:complementOf";
+    }
+    
+    public function isComplex(){
+      return true;
     }
 }

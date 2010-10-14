@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 2:41:41 PM
- * To change this template use File | Settings | File Templates.
- */
  
 class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_AnnotationValue {
     private $iri;
@@ -24,5 +17,9 @@ class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_Annota
 
     public function getElements(){
         return $this->getValue();
+    }
+    
+    public function isComplex(){
+      return false;
     }
 }

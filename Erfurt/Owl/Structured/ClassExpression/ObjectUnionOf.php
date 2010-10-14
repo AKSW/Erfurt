@@ -9,4 +9,8 @@ class Erfurt_Owl_Structured_ClassExpression_ObjectUnionOf extends Erfurt_Owl_Str
     function getPredicateString(){
         return "owl:unionOf";
     }
+
+    public function isComplex(){
+      return parent::isComplex();
+    }
 }

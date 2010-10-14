@@ -23,12 +23,42 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
     }
 
     public function toTriples() {
-        $retval = Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(), "rdf:type", "owl:Restriction");
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), $this->getPredicateString(), $this->cardinality, "xsd:nonNegativeInteger");
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), "owl:onProperty", $this->getObjectPropertyExpression());
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), "owl:onClass", $this->getClassExpression());
-        return $retval;
+      return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
     }
 
+    public function toArray(){
+      $retval = array();
 
+      $retval []= array(
+        Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+        "rdf:type",
+        "owl:Restriction");
+
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          $this->getPredicateString(),
+          $this->cardinality,
+          "xsd:nonNegativeInteger");
+
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          "owl:onProperty",
+          $this->getObjectPropertyExpression());
+      
+      $ce = $this->getClassExpression(); 
+      if(is_array($ce)){
+        $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          "owl:onClass",
+          $ce[0][0]
+        );
+        $retval = array_merge($retval,$ce);
+      }else
+        $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+          "owl:onClass",
+          $ce
+          );
+      return $retval;
+    }
 }

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 3:56:39 PM
- * To change this template use File | Settings | File Templates.
- */
  
 class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples {
 
@@ -49,7 +42,7 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     public function isComplex(){
-        return count($this->elements)>1;
+        return count($this->elements)>1 || ($this->getElements() && $this->elements[0]->isComplex());
     }
 
     public function getMainNodeBlankId(){
@@ -57,23 +50,50 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     public function getPredicateString() {
-        // TODO: Implement getPredicateString() method.
+      throw new Exception ("not yet implemented");
     }
 
     public function toTriples() {
-      $retval = "";
-      $list = $this->makeList($this->getElements());
-
-      return Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(), $this->getPredicateString(), $list[0]) . $list[1];
+      return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
     }
 
+    protected function toArray(){
+      $retval = array();
+      $list = $this->makeList($this->getElements());
+      $retval []= array(
+          Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+          $this->getPredicateString(),
+          $list[0][0]
+      );
+      $retval = array_merge($retval, $list);
+      return $retval;
+    } 
+
     private function makeList($elements){
-      $retval = "";
-      $firstId = Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId();
+      $retval = array();
+      Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId();
       foreach($elements as $key => $e){
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), "rdf:first", $e);
-        $retval .= Erfurt_Owl_Structured_Util_N3Converter::makeTriple(Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(), "rdf:rest", $key == count($elements)-1 ? "rdf:nil": Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId());
+        if($e->isComplex()){
+          $ee = $e->toArray();
+          $retval []= array(
+            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            "rdf:first",
+            $ee[0][0]
+            );
+          $retval=array_merge($retval,$ee);
+        } else
+          $retval []= array(
+            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            "rdf:first",
+            $e
+          );
+        $retval []= array(
+            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            "rdf:rest",
+            $key == count($elements)-1 ?
+              "rdf:nil": Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId()
+        );
       }
-      return array($firstId, $retval);
+      return $retval;
     }
 }

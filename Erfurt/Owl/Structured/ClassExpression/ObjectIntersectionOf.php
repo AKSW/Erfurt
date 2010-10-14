@@ -9,5 +9,8 @@ class Erfurt_Owl_Structured_ClassExpression_ObjectIntersectionOf extends Erfurt_
     function getPredicateString(){
         return "owl:intersectionOf";
     }
-    
+
+    public function isComplex(){
+      return parent::isComplex();
+    }
 }

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 2:40:18 PM
- * To change this template use File | Settings | File Templates.
- */
  
 class Erfurt_Owl_Structured_Literal extends Erfurt_Owl_Structured_Annotations_AnnotationValue {
 
@@ -20,7 +13,7 @@ class Erfurt_Owl_Structured_Literal extends Erfurt_Owl_Structured_Annotations_An
     }
 
     public function getLexicalValue(){
-        return $this->lexicalValue;
+        return "\"" . $this->lexicalValue;
     }
 
     public function getValue(){
