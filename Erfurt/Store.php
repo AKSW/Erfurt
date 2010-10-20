@@ -1676,11 +1676,12 @@ class Erfurt_Store
             $subSparql = 'SELECT ?parent ?child 
                 FROM <' . $modelIri . '>' . PHP_EOL . $from . '
                 WHERE {
-                    ' . $where . '
+                    ' . $where . ' OPTIONAL {?child <http://ns.ontowiki.net/SysOnt/order> ?order}
                     FILTER (
                         sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
                     )
-                }';
+                }
+                ORDER BY ASC(?order)';
 
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);

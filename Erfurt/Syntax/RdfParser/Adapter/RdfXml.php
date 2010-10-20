@@ -124,8 +124,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     {
         $this->_baseUri = $url;
         
-        require_once 'Zend/Http/Client.php';
-        $client = new Zend_Http_Client($url, array(
+        $client = Erfurt_App::getInstance()->getHttpClient($url, array(
             'maxredirects'  => 10,
             'timeout'       => 30
         ));

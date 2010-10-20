@@ -79,8 +79,12 @@ class Erfurt_Plugin_Manager
      */
     public function isPluginEnabled($pluginName, $registeredOnly = false)
     {
-        if (array_key_exists($pluginName, $this->_plugins)) {
-            return !$registeredOnly || !empty($this->_plugins[$pluginName]);
+        if (array_key_exists($pluginName, $this->_plugins) && $this->_plugins[$pluginName]['enabled']) {
+            if($registeredOnly){
+                return !empty($this->_plugins[$pluginName]['enabled']['events']);
+            } else {
+                return true;
+            }
         }
         
         return false;
@@ -93,9 +97,11 @@ class Erfurt_Plugin_Manager
      * @param string $pluginPath
      */
     private function _addPlugin($pluginName, $pluginPath)
-    {
+    { 
         // parse plugin config
         $pluginConfig = parse_ini_file($pluginPath . self::CONFIG_FILENAME, true);
+        $pluginConfig['pluginPath'] = $pluginPath;
+
         $pluginLocalConfigPath = $pluginPath . self::CONFIG_LOCAL_FILENAME;
         if (is_readable($pluginLocalConfigPath)) {
             $pluginConfig = array_merge($pluginConfig, parse_ini_file($pluginLocalConfigPath, true));
@@ -103,9 +109,9 @@ class Erfurt_Plugin_Manager
         
         if (array_key_exists('private', $pluginConfig)) {
             $pluginPrivateConfig = new Zend_Config_Ini($pluginPath . self::CONFIG_FILENAME, 'private', true);
-           
         }
-         if (is_readable($pluginLocalConfigPath)) {
+
+        if (is_readable($pluginLocalConfigPath)) {
             try {
                 if(isset($pluginPrivateConfig)){
                     $pluginPrivateConfig = $pluginPrivateConfig->merge(new Zend_Config_Ini($pluginLocalConfigPath, 'private', true));
@@ -117,16 +123,21 @@ class Erfurt_Plugin_Manager
             }
         }
         // check if plugin is enabled
-        if (!array_key_exists('enabled', $pluginConfig) || !(boolean) $pluginConfig['enabled']) {
-            return;
+        $enabled = true;
+        if (!array_key_exists('enabled', $pluginConfig)){
+            $pluginConfig['enabled'] = false;
+        }
+        if (!$pluginConfig['enabled']) {
+            $enabled = false;
+            //return;
         }
         
         // keep track of loaded plug-ins
         if (!array_key_exists($pluginName, $this->_plugins)) {
-            $this->_plugins[$pluginName] = array();
+            $this->_plugins[$pluginName] = $pluginConfig;
         }
         
-        if (array_key_exists('events', $pluginConfig) and is_array($pluginConfig['events'])) {
+        if ($enabled && array_key_exists('events', $pluginConfig) && is_array($pluginConfig['events'])) {
             foreach ($pluginConfig['events'] as $event) {
                 if (is_array($event)) {
                     // TODO: allow trigger method that differs from event name
@@ -138,15 +149,32 @@ class Erfurt_Plugin_Manager
                         'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
                     );
                     
-                    // register plugin events with event dispatcher
-                    $this->_eventDispatcher->register($event, $pluginSpec);
+                    $priority = isset($event['priority']) ? (int) $event['priority'] : 10;
                     
-                    // keep track of registered events for the plugin
-                    array_push($this->_plugins[$pluginName], $event);
+                    // register plugin events with event dispatcher
+                    $this->_eventDispatcher->register($event, $pluginSpec, $priority);
                 }
             }
         }
         // var_dump($pluginConfig);
+    }
+
+
+    public function getPluginPaths()
+    {
+        return $this->_pluginPaths;
+    }
+
+    public function getPlugins()
+    {
+        return $this->_plugins;
+    }
+
+    public function getPlugin($name)
+    {
+        if (isset($this->_plugins[$name])) {
+            return $this->_plugins[$name];
+        }
     }
     
     /**

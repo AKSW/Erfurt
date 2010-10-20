@@ -107,4 +107,15 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
+    
+    public function testInitWithString3()
+    {
+        $queryString = '                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?uri ?literal ?domain ?type                FROM <http://localhost/ontowiki/whostat>                WHERE {                    ?uri ?v1 ?literal .
+                    {?v2 ?uri ?v3 .} UNION {?uri a rdf:Property .}                    OPTIONAL {?uri rdfs:domain ?domain .}
+                                        OPTIONAL {<http://localhost/ontowiki/whostat> a ?type . }                    FILTER (                        isURI(?uri)                         && isLITERAL(?literal)                         && REGEX(?literal, "title", "i")                         && REGEX(?literal, "^.{1,50}$"))                }                LIMIT 5';
+        
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
 }

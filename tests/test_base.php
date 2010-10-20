@@ -2,7 +2,7 @@
 define('EF_TEST_CONFIG_SKIP_DB_TESTS', false);
 
 define('_TESTROOT', rtrim(dirname(__FILE__), '\\/') . '/');
-define('_BASE', rtrim(realpath(_TESTROOT . '../src'), '\\/') . '/');
+define('_BASE', rtrim(realpath(_TESTROOT . '../'), '\\/') . '/');
 
 // add Erfurt lib to include path
 $includePath  = get_include_path()          . PATH_SEPARATOR;
