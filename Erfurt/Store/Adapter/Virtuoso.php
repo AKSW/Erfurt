@@ -116,11 +116,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // try to connect
         if (function_exists('__virt_internal_dsn')) {
             // via Virtuoso hosting
-            $this->_connection = @call_user_func($odbcConnectFunction, __virt_internal_dsn(), null, null);
-        } else {            
+            $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
+        } else {
             // via php_odbc
-            $this->_connection = @call_user_func($odbcConnectFunction, (string)$dsn, (string)$username, (string)$password);
-            
+            $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
             $this->_user = (string)$username;
         }
         
@@ -330,13 +329,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function getAvailableModels()
     {
         if (null === $this->_graphs) {
-            $rid = $this->_execSql('SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
-            $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
-            
             $this->_graphs = array();
-            foreach ($graphs as $graph) {
-                $this->_graphs[$graph] = array('modelIri' => $graph);
-            }            
+            $rid = $this->_execSql('SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
+            if ($rid) {
+                $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
+                $this->_graphs = array();
+                foreach ($graphs as $graph) {
+                    $this->_graphs[$graph] = array('modelIri' => $graph);
+                }
+            }          
         }
         
         return $this->_graphs;
@@ -697,15 +698,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             case '':
             case null:
+            case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':
             case 'http://www.w3.org/2001/XMLSchema#string':
                 $value = addcslashes($value, $quoteChar);
                 
                 /** 
                  * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR} 
+                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
+                 * wrong: \t\b\n\r\f\\\"\\\' 
                  */
-                if (preg_match('/[\t\b\n\r\f\\\"\\\']/', $value) > 0) {
+                if (preg_match('/[\\\r\n"]/', $value) > 0) {
                     $longLiteral = true;
+                    $value = trim($value, "\n\r");
+                    // $value = str_replace("\x0A", '\n', $value);
                 }
                 break;
         }
@@ -753,7 +758,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                     
                     // add triple
-                    $triples .= sprintf('%s %s %s . %s', $resource, $property, $value, PHP_EOL);
+                    $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
                 }
             }
         }
@@ -765,29 +770,33 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @see Erfurt_Store_Adapter_Interface
      * @todo Rename countMatchingStatements
      */
-    public function countWhereMatches($graphUris, $whereSpec, $countSpec)
+    public function countWhereMatches($graphUris, $whereSpec, $countSpec, $distinct = false)
     {
         if (empty($graphUris)) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
-        
+        if($distinct){
+            $distinct = "DISTINCT";
+        } else {
+            $distinct = "";
+        }
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
-            'SELECT COUNT DISTINCT %s FROM <%s> %s', 
-            $countSpec, 
-            $fromSpec, 
+            'SELECT COUNT %s %s FROM <%s> %s',
+            $distinct,
+            $countSpec,
+            $fromSpec,
             $whereSpec);
-        
+
         if ($rid = $this->_execSparql($countQuery)) {
             $count = (int)odbc_result($rid, 1);
-            
             return $count;
         }
-        
+
         return 0;
     }
-    
+
     /**
      * Recursively gets owl:imported model IRIs starting with $modelUri as root.
      *
@@ -897,11 +906,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
-            
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
-       
+        
         return $resultId;
     }
     

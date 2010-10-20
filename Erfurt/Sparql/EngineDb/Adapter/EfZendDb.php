@@ -310,11 +310,11 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         }
       
         if ($nLimit === null && $nOffset == 0) {
-            $ret = $this->dbConn->query($strSql);
+            $ret = @$this->dbConn->query($strSql);
         } else if ($nLimit === null) {
-            $ret = $this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615');
+            $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', 18446744073709551615');
         } else {
-            $ret = $this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
+            $ret = @$this->dbConn->query($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
         }
 
         return $ret->fetchAll();

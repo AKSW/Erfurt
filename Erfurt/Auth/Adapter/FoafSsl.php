@@ -338,8 +338,7 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
      */
     public static function getFoafData($foafUri)
     {
-        require_once 'Zend/Http/Client.php';
-        $client = new Zend_Http_Client($foafUri, array(
+        $client = Erfurt_App::getInstance()->getHttpClient($foafUri, array(
             'maxredirects'  => 3,
             'timeout'       => 30
         ));

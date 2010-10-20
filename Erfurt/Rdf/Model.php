@@ -325,7 +325,7 @@ class Erfurt_Rdf_Model
      */
     public function setEditable($editableFlag)
     {
-        $this->_isEditable = $editableFlag;
+        $this->_isEditable = (boolean) $editableFlag;
         
         return $this;
     }
@@ -343,7 +343,7 @@ class Erfurt_Rdf_Model
             // User has no right to edit the model.
             return;
         }
-         
+        
         $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysont->modelUri;
        
         $options = $this->_getOptions();
