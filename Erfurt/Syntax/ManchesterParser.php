@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2010-10-20 15:29:19
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2010-10-21 00:19:36
 
 
 # for convenience in actions
@@ -231,131 +231,131 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
     static $FOLLOW_LESS_in_facet1414;
     static $FOLLOW_GREATER_EQUAL_in_facet1420;
     static $FOLLOW_GREATER_in_facet1426;
-    static $FOLLOW_dataConjunction_in_dataRange1447;
-    static $FOLLOW_OR_LABEL_in_dataRange1461;
-    static $FOLLOW_dataConjunction_in_dataRange1465;
-    static $FOLLOW_dataPrimary_in_dataConjunction1490;
-    static $FOLLOW_AND_LABEL_in_dataConjunction1507;
-    static $FOLLOW_dataPrimary_in_dataConjunction1511;
-    static $FOLLOW_annotations_in_annotationAnnotatedList1534;
-    static $FOLLOW_annotation_in_annotationAnnotatedList1537;
-    static $FOLLOW_COMMA_in_annotationAnnotatedList1540;
-    static $FOLLOW_annotations_in_annotationAnnotatedList1542;
-    static $FOLLOW_annotation_in_annotationAnnotatedList1545;
-    static $FOLLOW_annotationPropertyIRI_in_annotation1564;
-    static $FOLLOW_annotationTarget_in_annotation1568;
-    static $FOLLOW_NODE_ID_in_annotationTarget1585;
-    static $FOLLOW_iri_in_annotationTarget1592;
-    static $FOLLOW_literal_in_annotationTarget1599;
-    static $FOLLOW_ANNOTATIONS_LABEL_in_annotations1616;
-    static $FOLLOW_annotationAnnotatedList_in_annotations1620;
-    static $FOLLOW_description_in_descriptionList1651;
-    static $FOLLOW_COMMA_in_descriptionList1656;
-    static $FOLLOW_description_in_descriptionList1660;
-    static $FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1703;
-    static $FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1706;
-    static $FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1709;
-    static $FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1711;
-    static $FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1714;
-    static $FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1729;
-    static $FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1732;
-    static $FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1735;
-    static $FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1737;
-    static $FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1740;
-    static $FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1774;
-    static $FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1777;
-    static $FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1780;
-    static $FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1782;
-    static $FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1785;
-    static $FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1802;
-    static $FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1804;
-    static $FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1810;
-    static $FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1813;
-    static $FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1822;
-    static $FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1825;
-    static $FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1831;
-    static $FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1834;
-    static $FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1840;
-    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1842;
-    static $FOLLOW_annotations_in_iriAnnotatedList1857;
-    static $FOLLOW_iri_in_iriAnnotatedList1860;
-    static $FOLLOW_COMMA_in_iriAnnotatedList1863;
-    static $FOLLOW_annotations_in_iriAnnotatedList1865;
-    static $FOLLOW_iri_in_iriAnnotatedList1868;
-    static $FOLLOW_iri_in_annotationPropertyIRI1887;
-    static $FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1903;
-    static $FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1906;
-    static $FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1909;
-    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1911;
-    static $FOLLOW_annotations_in_factAnnotatedList1940;
-    static $FOLLOW_fact_in_factAnnotatedList1943;
-    static $FOLLOW_COMMA_in_factAnnotatedList1946;
-    static $FOLLOW_annotations_in_factAnnotatedList1948;
-    static $FOLLOW_fact_in_factAnnotatedList1951;
-    static $FOLLOW_annotations_in_individualAnnotatedList1970;
-    static $FOLLOW_individual_in_individualAnnotatedList1973;
-    static $FOLLOW_COMMA_in_individualAnnotatedList1976;
-    static $FOLLOW_annotations_in_individualAnnotatedList1978;
-    static $FOLLOW_individual_in_individualAnnotatedList1981;
-    static $FOLLOW_NOT_LABEL_in_fact1995;
-    static $FOLLOW_objectPropertyFact_in_fact1999;
-    static $FOLLOW_dataPropertyFact_in_fact2003;
-    static $FOLLOW_objectPropertyIRI_in_objectPropertyFact2014;
-    static $FOLLOW_individual_in_objectPropertyFact2016;
-    static $FOLLOW_dataPropertyIRI_in_dataPropertyFact2030;
-    static $FOLLOW_literal_in_dataPropertyFact2032;
-    static $FOLLOW_DATATYPE_LABEL_in_datatypeFrame2046;
-    static $FOLLOW_dataType_in_datatypeFrame2049;
-    static $FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2055;
-    static $FOLLOW_annotationAnnotatedList_in_datatypeFrame2058;
-    static $FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2066;
-    static $FOLLOW_annotations_in_datatypeFrame2069;
-    static $FOLLOW_dataRange_in_datatypeFrame2071;
-    static $FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2079;
-    static $FOLLOW_annotationAnnotatedList_in_datatypeFrame2082;
-    static $FOLLOW_individual_in_individual2List2107;
-    static $FOLLOW_COMMA_in_individual2List2109;
-    static $FOLLOW_individualList_in_individual2List2111;
-    static $FOLLOW_dataProperty_in_dataProperty2List2123;
-    static $FOLLOW_COMMA_in_dataProperty2List2125;
-    static $FOLLOW_dataPropertyList_in_dataProperty2List2127;
-    static $FOLLOW_dataProperty_in_dataPropertyList2141;
-    static $FOLLOW_COMMA_in_dataPropertyList2144;
-    static $FOLLOW_dataProperty_in_dataPropertyList2146;
-    static $FOLLOW_objectProperty_in_objectProperty2List2162;
-    static $FOLLOW_COMMA_in_objectProperty2List2164;
-    static $FOLLOW_objectPropertyList_in_objectProperty2List2166;
-    static $FOLLOW_objectProperty_in_objectPropertyList2180;
-    static $FOLLOW_COMMA_in_objectPropertyList2183;
-    static $FOLLOW_objectProperty_in_objectPropertyList2185;
-    static $FOLLOW_DATATYPE_LABEL_in_entity2211;
-    static $FOLLOW_OPEN_BRACE_in_entity2213;
-    static $FOLLOW_dataType_in_entity2215;
-    static $FOLLOW_CLOSE_BRACE_in_entity2217;
-    static $FOLLOW_CLASS_LABEL_in_entity2223;
-    static $FOLLOW_OPEN_BRACE_in_entity2225;
-    static $FOLLOW_classIRI_in_entity2227;
-    static $FOLLOW_CLOSE_BRACE_in_entity2229;
-    static $FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2235;
-    static $FOLLOW_OPEN_BRACE_in_entity2237;
-    static $FOLLOW_objectPropertyIRI_in_entity2239;
-    static $FOLLOW_CLOSE_BRACE_in_entity2241;
-    static $FOLLOW_DATA_PROPERTY_LABEL_in_entity2247;
-    static $FOLLOW_OPEN_BRACE_in_entity2249;
-    static $FOLLOW_datatypePropertyIRI_in_entity2251;
-    static $FOLLOW_CLOSE_BRACE_in_entity2253;
-    static $FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2259;
-    static $FOLLOW_OPEN_BRACE_in_entity2261;
-    static $FOLLOW_annotationPropertyIRI_in_entity2263;
-    static $FOLLOW_CLOSE_BRACE_in_entity2265;
-    static $FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2271;
-    static $FOLLOW_OPEN_BRACE_in_entity2273;
-    static $FOLLOW_individualIRI_in_entity2275;
-    static $FOLLOW_CLOSE_BRACE_in_entity2277;
-    static $FOLLOW_iri_in_ontologyIri2294;
-    static $FOLLOW_iri_in_versionIri2305;
-    static $FOLLOW_IMPORT_LABEL_in_imports2315;
-    static $FOLLOW_iri_in_imports2317;
+    static $FOLLOW_dataConjunction_in_dataRange1455;
+    static $FOLLOW_OR_LABEL_in_dataRange1469;
+    static $FOLLOW_dataConjunction_in_dataRange1473;
+    static $FOLLOW_dataPrimary_in_dataConjunction1506;
+    static $FOLLOW_AND_LABEL_in_dataConjunction1523;
+    static $FOLLOW_dataPrimary_in_dataConjunction1527;
+    static $FOLLOW_annotations_in_annotationAnnotatedList1550;
+    static $FOLLOW_annotation_in_annotationAnnotatedList1553;
+    static $FOLLOW_COMMA_in_annotationAnnotatedList1556;
+    static $FOLLOW_annotations_in_annotationAnnotatedList1558;
+    static $FOLLOW_annotation_in_annotationAnnotatedList1561;
+    static $FOLLOW_annotationPropertyIRI_in_annotation1580;
+    static $FOLLOW_annotationTarget_in_annotation1584;
+    static $FOLLOW_NODE_ID_in_annotationTarget1601;
+    static $FOLLOW_iri_in_annotationTarget1608;
+    static $FOLLOW_literal_in_annotationTarget1615;
+    static $FOLLOW_ANNOTATIONS_LABEL_in_annotations1632;
+    static $FOLLOW_annotationAnnotatedList_in_annotations1636;
+    static $FOLLOW_description_in_descriptionList1667;
+    static $FOLLOW_COMMA_in_descriptionList1672;
+    static $FOLLOW_description_in_descriptionList1676;
+    static $FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1719;
+    static $FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1722;
+    static $FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1725;
+    static $FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1727;
+    static $FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1730;
+    static $FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1745;
+    static $FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1748;
+    static $FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1751;
+    static $FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1753;
+    static $FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1756;
+    static $FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1790;
+    static $FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1793;
+    static $FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1796;
+    static $FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1798;
+    static $FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1801;
+    static $FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1818;
+    static $FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1820;
+    static $FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1826;
+    static $FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1829;
+    static $FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1838;
+    static $FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1841;
+    static $FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1847;
+    static $FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1850;
+    static $FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1856;
+    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1858;
+    static $FOLLOW_annotations_in_iriAnnotatedList1873;
+    static $FOLLOW_iri_in_iriAnnotatedList1876;
+    static $FOLLOW_COMMA_in_iriAnnotatedList1879;
+    static $FOLLOW_annotations_in_iriAnnotatedList1881;
+    static $FOLLOW_iri_in_iriAnnotatedList1884;
+    static $FOLLOW_iri_in_annotationPropertyIRI1903;
+    static $FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1919;
+    static $FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1922;
+    static $FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1925;
+    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1927;
+    static $FOLLOW_annotations_in_factAnnotatedList1956;
+    static $FOLLOW_fact_in_factAnnotatedList1959;
+    static $FOLLOW_COMMA_in_factAnnotatedList1962;
+    static $FOLLOW_annotations_in_factAnnotatedList1964;
+    static $FOLLOW_fact_in_factAnnotatedList1967;
+    static $FOLLOW_annotations_in_individualAnnotatedList1986;
+    static $FOLLOW_individual_in_individualAnnotatedList1989;
+    static $FOLLOW_COMMA_in_individualAnnotatedList1992;
+    static $FOLLOW_annotations_in_individualAnnotatedList1994;
+    static $FOLLOW_individual_in_individualAnnotatedList1997;
+    static $FOLLOW_NOT_LABEL_in_fact2011;
+    static $FOLLOW_objectPropertyFact_in_fact2015;
+    static $FOLLOW_dataPropertyFact_in_fact2019;
+    static $FOLLOW_objectPropertyIRI_in_objectPropertyFact2030;
+    static $FOLLOW_individual_in_objectPropertyFact2032;
+    static $FOLLOW_dataPropertyIRI_in_dataPropertyFact2046;
+    static $FOLLOW_literal_in_dataPropertyFact2048;
+    static $FOLLOW_DATATYPE_LABEL_in_datatypeFrame2062;
+    static $FOLLOW_dataType_in_datatypeFrame2065;
+    static $FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2071;
+    static $FOLLOW_annotationAnnotatedList_in_datatypeFrame2074;
+    static $FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2082;
+    static $FOLLOW_annotations_in_datatypeFrame2085;
+    static $FOLLOW_dataRange_in_datatypeFrame2087;
+    static $FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2095;
+    static $FOLLOW_annotationAnnotatedList_in_datatypeFrame2098;
+    static $FOLLOW_individual_in_individual2List2123;
+    static $FOLLOW_COMMA_in_individual2List2125;
+    static $FOLLOW_individualList_in_individual2List2127;
+    static $FOLLOW_dataProperty_in_dataProperty2List2139;
+    static $FOLLOW_COMMA_in_dataProperty2List2141;
+    static $FOLLOW_dataPropertyList_in_dataProperty2List2143;
+    static $FOLLOW_dataProperty_in_dataPropertyList2157;
+    static $FOLLOW_COMMA_in_dataPropertyList2160;
+    static $FOLLOW_dataProperty_in_dataPropertyList2162;
+    static $FOLLOW_objectProperty_in_objectProperty2List2178;
+    static $FOLLOW_COMMA_in_objectProperty2List2180;
+    static $FOLLOW_objectPropertyList_in_objectProperty2List2182;
+    static $FOLLOW_objectProperty_in_objectPropertyList2196;
+    static $FOLLOW_COMMA_in_objectPropertyList2199;
+    static $FOLLOW_objectProperty_in_objectPropertyList2201;
+    static $FOLLOW_DATATYPE_LABEL_in_entity2227;
+    static $FOLLOW_OPEN_BRACE_in_entity2229;
+    static $FOLLOW_dataType_in_entity2231;
+    static $FOLLOW_CLOSE_BRACE_in_entity2233;
+    static $FOLLOW_CLASS_LABEL_in_entity2239;
+    static $FOLLOW_OPEN_BRACE_in_entity2241;
+    static $FOLLOW_classIRI_in_entity2243;
+    static $FOLLOW_CLOSE_BRACE_in_entity2245;
+    static $FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2251;
+    static $FOLLOW_OPEN_BRACE_in_entity2253;
+    static $FOLLOW_objectPropertyIRI_in_entity2255;
+    static $FOLLOW_CLOSE_BRACE_in_entity2257;
+    static $FOLLOW_DATA_PROPERTY_LABEL_in_entity2263;
+    static $FOLLOW_OPEN_BRACE_in_entity2265;
+    static $FOLLOW_datatypePropertyIRI_in_entity2267;
+    static $FOLLOW_CLOSE_BRACE_in_entity2269;
+    static $FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2275;
+    static $FOLLOW_OPEN_BRACE_in_entity2277;
+    static $FOLLOW_annotationPropertyIRI_in_entity2279;
+    static $FOLLOW_CLOSE_BRACE_in_entity2281;
+    static $FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2287;
+    static $FOLLOW_OPEN_BRACE_in_entity2289;
+    static $FOLLOW_individualIRI_in_entity2291;
+    static $FOLLOW_CLOSE_BRACE_in_entity2293;
+    static $FOLLOW_iri_in_ontologyIri2310;
+    static $FOLLOW_iri_in_versionIri2321;
+    static $FOLLOW_IMPORT_LABEL_in_imports2331;
+    static $FOLLOW_iri_in_imports2333;
     static $FOLLOW_objectPropertyExpression_in_synpred18_Erfurt_Syntax_Manchester285;
     static $FOLLOW_SOME_LABEL_in_synpred18_Erfurt_Syntax_Manchester293;
     static $FOLLOW_primary_in_synpred18_Erfurt_Syntax_Manchester297;
@@ -373,29 +373,29 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
     static $FOLLOW_EXACTLY_LABEL_in_synpred18_Erfurt_Syntax_Manchester395;
     static $FOLLOW_nonNegativeInteger_in_synpred18_Erfurt_Syntax_Manchester399;
     static $FOLLOW_primary_in_synpred18_Erfurt_Syntax_Manchester403;
-    static $FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1461;
-    static $FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1465;
-    static $FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1507;
-    static $FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1511;
-    static $FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1534;
-    static $FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1542;
-    static $FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1703;
-    static $FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1711;
-    static $FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1729;
-    static $FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1737;
-    static $FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1774;
-    static $FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1782;
-    static $FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1857;
-    static $FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1865;
-    static $FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1903;
-    static $FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1909;
-    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1911;
-    static $FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1940;
-    static $FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1948;
-    static $FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1970;
-    static $FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1978;
-    static $FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2055;
-    static $FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2058;
+    static $FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1469;
+    static $FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1473;
+    static $FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1523;
+    static $FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1527;
+    static $FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1550;
+    static $FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1558;
+    static $FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1719;
+    static $FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1727;
+    static $FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1745;
+    static $FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1753;
+    static $FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1790;
+    static $FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1798;
+    static $FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1873;
+    static $FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1881;
+    static $FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1919;
+    static $FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1925;
+    static $FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1927;
+    static $FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1956;
+    static $FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1964;
+    static $FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1986;
+    static $FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1994;
+    static $FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2071;
+    static $FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2074;
 
     
     protected $dfa21;
@@ -3349,20 +3349,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
         $d2 = null;
 
 
+        $retval = array();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 36) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:256:3: (d1= dataConjunction ( OR_LABEL d2= dataConjunction )* ) 
-            // src/Erfurt_Syntax_Manchester.g:257:3: d1= dataConjunction ( OR_LABEL d2= dataConjunction )* 
+            // src/Erfurt_Syntax_Manchester.g:261:3: (d1= dataConjunction ( OR_LABEL d2= dataConjunction )* ) 
+            // src/Erfurt_Syntax_Manchester.g:262:3: d1= dataConjunction ( OR_LABEL d2= dataConjunction )* 
             {
-            $this->pushFollow(self::$FOLLOW_dataConjunction_in_dataRange1447);
+            $this->pushFollow(self::$FOLLOW_dataConjunction_in_dataRange1455);
             $d1=$this->dataConjunction();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
             if ( $this->state->backtracking==0 ) {
-              $value = new Erfurt_Owl_Structured_DataRange_DataUnionOf($d1);
+              $retval []= $d1;
             }
-            // src/Erfurt_Syntax_Manchester.g:258:9: ( OR_LABEL d2= dataConjunction )* 
+            // src/Erfurt_Syntax_Manchester.g:263:9: ( OR_LABEL d2= dataConjunction )* 
             //loop29:
             do {
                 $alt29=2;
@@ -3381,16 +3382,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt29) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:258:10: OR_LABEL d2= dataConjunction 
+            	    // src/Erfurt_Syntax_Manchester.g:263:10: OR_LABEL d2= dataConjunction 
             	    {
-            	    $this->match($this->input,$this->getToken('OR_LABEL'),self::$FOLLOW_OR_LABEL_in_dataRange1461); if ($this->state->failed) return $value;
-            	    $this->pushFollow(self::$FOLLOW_dataConjunction_in_dataRange1465);
+            	    $this->match($this->input,$this->getToken('OR_LABEL'),self::$FOLLOW_OR_LABEL_in_dataRange1469); if ($this->state->failed) return $value;
+            	    $this->pushFollow(self::$FOLLOW_dataConjunction_in_dataRange1473);
             	    $d2=$this->dataConjunction();
 
             	    $this->state->_fsp--;
             	    if ($this->state->failed) return $value;
             	    if ( $this->state->backtracking==0 ) {
-            	      $value->addElement($d2);
+            	      $retval []= $d2;
             	    }
 
             	    }
@@ -3404,6 +3405,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
+            if ( $this->state->backtracking==0 ) {
+
+                if(count($retval)>1) $value = new Erfurt_Owl_Structured_DataRange_DataUnionOf($retval);
+                else $value = $retval[0];
+
+            }
         }
         catch (RecognitionException $re) {
             $this->reportError($re);
@@ -3421,7 +3428,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "dataConjunction"
-    // src/Erfurt_Syntax_Manchester.g:261:1: dataConjunction returns [$value] : d1= dataPrimary ( AND_LABEL d2= dataPrimary )* ; 
+    // src/Erfurt_Syntax_Manchester.g:266:1: dataConjunction returns [$value] : d1= dataPrimary ( AND_LABEL d2= dataPrimary )* ; 
     public function dataConjunction(){
         $value = null;
         $dataConjunction_StartIndex = $this->input->index();
@@ -3430,20 +3437,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
         $d2 = null;
 
 
+        $retval = array();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 37) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:262:3: (d1= dataPrimary ( AND_LABEL d2= dataPrimary )* ) 
-            // src/Erfurt_Syntax_Manchester.g:263:3: d1= dataPrimary ( AND_LABEL d2= dataPrimary )* 
+            // src/Erfurt_Syntax_Manchester.g:272:3: (d1= dataPrimary ( AND_LABEL d2= dataPrimary )* ) 
+            // src/Erfurt_Syntax_Manchester.g:273:3: d1= dataPrimary ( AND_LABEL d2= dataPrimary )* 
             {
-            $this->pushFollow(self::$FOLLOW_dataPrimary_in_dataConjunction1490);
+            $this->pushFollow(self::$FOLLOW_dataPrimary_in_dataConjunction1506);
             $d1=$this->dataPrimary();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
             if ( $this->state->backtracking==0 ) {
-              $value = new Erfurt_Owl_Structured_DataRange_DataIntersectionOf($d1);
+              $retval []= $d1;
             }
-            // src/Erfurt_Syntax_Manchester.g:264:13: ( AND_LABEL d2= dataPrimary )* 
+            // src/Erfurt_Syntax_Manchester.g:274:13: ( AND_LABEL d2= dataPrimary )* 
             //loop30:
             do {
                 $alt30=2;
@@ -3462,16 +3470,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt30) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:264:14: AND_LABEL d2= dataPrimary 
+            	    // src/Erfurt_Syntax_Manchester.g:274:14: AND_LABEL d2= dataPrimary 
             	    {
-            	    $this->match($this->input,$this->getToken('AND_LABEL'),self::$FOLLOW_AND_LABEL_in_dataConjunction1507); if ($this->state->failed) return $value;
-            	    $this->pushFollow(self::$FOLLOW_dataPrimary_in_dataConjunction1511);
+            	    $this->match($this->input,$this->getToken('AND_LABEL'),self::$FOLLOW_AND_LABEL_in_dataConjunction1523); if ($this->state->failed) return $value;
+            	    $this->pushFollow(self::$FOLLOW_dataPrimary_in_dataConjunction1527);
             	    $d2=$this->dataPrimary();
 
             	    $this->state->_fsp--;
             	    if ($this->state->failed) return $value;
             	    if ( $this->state->backtracking==0 ) {
-            	      $value->addElement($d2);
+            	      $retval []= $d2;
             	    }
 
             	    }
@@ -3485,6 +3493,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
+            if ( $this->state->backtracking==0 ) {
+
+                if(count($retval)>1) $value = new Erfurt_Owl_Structured_DataRange_DataIntersectionOf($retval);
+                else $value = $retval[0];
+
+            }
         }
         catch (RecognitionException $re) {
             $this->reportError($re);
@@ -3502,16 +3516,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotationAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:270:1: annotationAnnotatedList returns [$value] : ( annotations )? annotation ( COMMA ( annotations )? annotation )* ; 
+    // src/Erfurt_Syntax_Manchester.g:280:1: annotationAnnotatedList returns [$value] : ( annotations )? annotation ( COMMA ( annotations )? annotation )* ; 
     public function annotationAnnotatedList(){
         $value = null;
         $annotationAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 38) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:271:2: ( ( annotations )? annotation ( COMMA ( annotations )? annotation )* ) 
-            // src/Erfurt_Syntax_Manchester.g:271:4: ( annotations )? annotation ( COMMA ( annotations )? annotation )* 
+            // src/Erfurt_Syntax_Manchester.g:281:2: ( ( annotations )? annotation ( COMMA ( annotations )? annotation )* ) 
+            // src/Erfurt_Syntax_Manchester.g:281:4: ( annotations )? annotation ( COMMA ( annotations )? annotation )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:271:4: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:281:4: ( annotations )? 
             $alt31=2;
             $LA31 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA31)
@@ -3547,7 +3561,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_annotationAnnotatedList1534);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_annotationAnnotatedList1550);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -3558,12 +3572,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_annotation_in_annotationAnnotatedList1537);
+            $this->pushFollow(self::$FOLLOW_annotation_in_annotationAnnotatedList1553);
             $this->annotation();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
-            // src/Erfurt_Syntax_Manchester.g:271:28: ( COMMA ( annotations )? annotation )* 
+            // src/Erfurt_Syntax_Manchester.g:281:28: ( COMMA ( annotations )? annotation )* 
             //loop33:
             do {
                 $alt33=2;
@@ -3576,10 +3590,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt33) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:271:29: COMMA ( annotations )? annotation 
+            	    // src/Erfurt_Syntax_Manchester.g:281:29: COMMA ( annotations )? annotation 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_annotationAnnotatedList1540); if ($this->state->failed) return $value;
-            	    // src/Erfurt_Syntax_Manchester.g:271:35: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_annotationAnnotatedList1556); if ($this->state->failed) return $value;
+            	    // src/Erfurt_Syntax_Manchester.g:281:35: ( annotations )? 
             	    $alt32=2;
             	    $LA32 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA32)
@@ -3615,7 +3629,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_annotationAnnotatedList1542);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_annotationAnnotatedList1558);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -3626,7 +3640,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_annotation_in_annotationAnnotatedList1545);
+            	    $this->pushFollow(self::$FOLLOW_annotation_in_annotationAnnotatedList1561);
             	    $this->annotation();
 
             	    $this->state->_fsp--;
@@ -3660,7 +3674,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotation"
-    // src/Erfurt_Syntax_Manchester.g:274:1: annotation returns [$value] : ap= annotationPropertyIRI at= annotationTarget ; 
+    // src/Erfurt_Syntax_Manchester.g:284:1: annotation returns [$value] : ap= annotationPropertyIRI at= annotationTarget ; 
     public function annotation(){
         $value = null;
         $annotation_StartIndex = $this->input->index();
@@ -3671,15 +3685,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 39) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:275:2: (ap= annotationPropertyIRI at= annotationTarget ) 
-            // src/Erfurt_Syntax_Manchester.g:275:4: ap= annotationPropertyIRI at= annotationTarget 
+            // src/Erfurt_Syntax_Manchester.g:285:2: (ap= annotationPropertyIRI at= annotationTarget ) 
+            // src/Erfurt_Syntax_Manchester.g:285:4: ap= annotationPropertyIRI at= annotationTarget 
             {
-            $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotation1564);
+            $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotation1580);
             $ap=$this->annotationPropertyIRI();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
-            $this->pushFollow(self::$FOLLOW_annotationTarget_in_annotation1568);
+            $this->pushFollow(self::$FOLLOW_annotationTarget_in_annotation1584);
             $at=$this->annotationTarget();
 
             $this->state->_fsp--;
@@ -3707,7 +3721,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotationTarget"
-    // src/Erfurt_Syntax_Manchester.g:278:1: annotationTarget returns [$value] : ( NODE_ID | iri | literal ); 
+    // src/Erfurt_Syntax_Manchester.g:288:1: annotationTarget returns [$value] : ( NODE_ID | iri | literal ); 
     public function annotationTarget(){
         $value = null;
         $annotationTarget_StartIndex = $this->input->index();
@@ -3719,7 +3733,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 40) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:279:2: ( NODE_ID | iri | literal ) 
+            // src/Erfurt_Syntax_Manchester.g:289:2: ( NODE_ID | iri | literal ) 
             $alt34=3;
             $LA34 = $this->input->LA(1);
             if($this->getToken('NODE_ID')== $LA34)
@@ -3744,9 +3758,9 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             switch ($alt34) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:279:4: NODE_ID 
+                    // src/Erfurt_Syntax_Manchester.g:289:4: NODE_ID 
                     {
-                    $NODE_ID31=$this->match($this->input,$this->getToken('NODE_ID'),self::$FOLLOW_NODE_ID_in_annotationTarget1585); if ($this->state->failed) return $value;
+                    $NODE_ID31=$this->match($this->input,$this->getToken('NODE_ID'),self::$FOLLOW_NODE_ID_in_annotationTarget1601); if ($this->state->failed) return $value;
                     if ( $this->state->backtracking==0 ) {
                       $value = ($NODE_ID31!=null?$NODE_ID31->getText():null);
                     }
@@ -3754,9 +3768,9 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // src/Erfurt_Syntax_Manchester.g:280:4: iri 
+                    // src/Erfurt_Syntax_Manchester.g:290:4: iri 
                     {
-                    $this->pushFollow(self::$FOLLOW_iri_in_annotationTarget1592);
+                    $this->pushFollow(self::$FOLLOW_iri_in_annotationTarget1608);
                     $iri32=$this->iri();
 
                     $this->state->_fsp--;
@@ -3768,9 +3782,9 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // src/Erfurt_Syntax_Manchester.g:281:4: literal 
+                    // src/Erfurt_Syntax_Manchester.g:291:4: literal 
                     {
-                    $this->pushFollow(self::$FOLLOW_literal_in_annotationTarget1599);
+                    $this->pushFollow(self::$FOLLOW_literal_in_annotationTarget1615);
                     $literal33=$this->literal();
 
                     $this->state->_fsp--;
@@ -3800,7 +3814,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotations"
-    // src/Erfurt_Syntax_Manchester.g:283:1: annotations returns [$value] : ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? ; 
+    // src/Erfurt_Syntax_Manchester.g:293:1: annotations returns [$value] : ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? ; 
     public function annotations(){
         $value = null;
         $annotations_StartIndex = $this->input->index();
@@ -3809,10 +3823,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 41) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:284:2: ( ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? ) 
-            // src/Erfurt_Syntax_Manchester.g:284:4: ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? 
+            // src/Erfurt_Syntax_Manchester.g:294:2: ( ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? ) 
+            // src/Erfurt_Syntax_Manchester.g:294:4: ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? 
             {
-            // src/Erfurt_Syntax_Manchester.g:284:4: ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? 
+            // src/Erfurt_Syntax_Manchester.g:294:4: ( ANNOTATIONS_LABEL a= annotationAnnotatedList )? 
             $alt35=2;
             $LA35_0 = $this->input->LA(1);
 
@@ -3821,10 +3835,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             }
             switch ($alt35) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:284:5: ANNOTATIONS_LABEL a= annotationAnnotatedList 
+                    // src/Erfurt_Syntax_Manchester.g:294:5: ANNOTATIONS_LABEL a= annotationAnnotatedList 
                     {
-                    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_annotations1616); if ($this->state->failed) return $value;
-                    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_annotations1620);
+                    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_annotations1632); if ($this->state->failed) return $value;
+                    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_annotations1636);
                     $a=$this->annotationAnnotatedList();
 
                     $this->state->_fsp--;
@@ -3858,7 +3872,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "descriptionList"
-    // src/Erfurt_Syntax_Manchester.g:295:1: descriptionList returns [$value] : d1= description ( COMMA d2= description )* ; 
+    // src/Erfurt_Syntax_Manchester.g:305:1: descriptionList returns [$value] : d1= description ( COMMA d2= description )* ; 
     public function descriptionList(){
         $value = null;
         $descriptionList_StartIndex = $this->input->index();
@@ -3869,10 +3883,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 42) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:296:3: (d1= description ( COMMA d2= description )* ) 
-            // src/Erfurt_Syntax_Manchester.g:296:5: d1= description ( COMMA d2= description )* 
+            // src/Erfurt_Syntax_Manchester.g:306:3: (d1= description ( COMMA d2= description )* ) 
+            // src/Erfurt_Syntax_Manchester.g:306:5: d1= description ( COMMA d2= description )* 
             {
-            $this->pushFollow(self::$FOLLOW_description_in_descriptionList1651);
+            $this->pushFollow(self::$FOLLOW_description_in_descriptionList1667);
             $d1=$this->description();
 
             $this->state->_fsp--;
@@ -3880,7 +3894,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             if ( $this->state->backtracking==0 ) {
               $value = new Erfurt_Owl_Structured_OwlList($d1);
             }
-            // src/Erfurt_Syntax_Manchester.g:296:78: ( COMMA d2= description )* 
+            // src/Erfurt_Syntax_Manchester.g:306:78: ( COMMA d2= description )* 
             //loop36:
             do {
                 $alt36=2;
@@ -3893,10 +3907,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt36) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:296:79: COMMA d2= description 
+            	    // src/Erfurt_Syntax_Manchester.g:306:79: COMMA d2= description 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_descriptionList1656); if ($this->state->failed) return $value;
-            	    $this->pushFollow(self::$FOLLOW_description_in_descriptionList1660);
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_descriptionList1672); if ($this->state->failed) return $value;
+            	    $this->pushFollow(self::$FOLLOW_description_in_descriptionList1676);
             	    $d2=$this->description();
 
             	    $this->state->_fsp--;
@@ -3933,15 +3947,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "objectPropertyCharacteristicAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:325:1: objectPropertyCharacteristicAnnotatedList : ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* ; 
+    // src/Erfurt_Syntax_Manchester.g:335:1: objectPropertyCharacteristicAnnotatedList : ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* ; 
     public function objectPropertyCharacteristicAnnotatedList(){
         $objectPropertyCharacteristicAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 43) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:326:2: ( ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* ) 
-            // src/Erfurt_Syntax_Manchester.g:326:4: ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* 
+            // src/Erfurt_Syntax_Manchester.g:336:2: ( ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* ) 
+            // src/Erfurt_Syntax_Manchester.g:336:4: ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:326:4: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:336:4: ( annotations )? 
             $alt37=2;
             $LA37_0 = $this->input->LA(1);
 
@@ -3959,7 +3973,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1703);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1719);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -3970,8 +3984,8 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->match($this->input,$this->getToken('OBJECT_PROPERTY_CHARACTERISTIC'),self::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1706); if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:326:48: ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* 
+            $this->match($this->input,$this->getToken('OBJECT_PROPERTY_CHARACTERISTIC'),self::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1722); if ($this->state->failed) return ;
+            // src/Erfurt_Syntax_Manchester.g:336:48: ( COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC )* 
             //loop39:
             do {
                 $alt39=2;
@@ -3984,10 +3998,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt39) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:326:49: COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC 
+            	    // src/Erfurt_Syntax_Manchester.g:336:49: COMMA ( annotations )? OBJECT_PROPERTY_CHARACTERISTIC 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1709); if ($this->state->failed) return ;
-            	    // src/Erfurt_Syntax_Manchester.g:326:55: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1725); if ($this->state->failed) return ;
+            	    // src/Erfurt_Syntax_Manchester.g:336:55: ( annotations )? 
             	    $alt38=2;
             	    $LA38_0 = $this->input->LA(1);
 
@@ -4005,7 +4019,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1711);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1727);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -4016,7 +4030,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->match($this->input,$this->getToken('OBJECT_PROPERTY_CHARACTERISTIC'),self::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1714); if ($this->state->failed) return ;
+            	    $this->match($this->input,$this->getToken('OBJECT_PROPERTY_CHARACTERISTIC'),self::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1730); if ($this->state->failed) return ;
 
             	    }
             	    break;
@@ -4046,15 +4060,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "objectPropertyExpressionAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:329:1: objectPropertyExpressionAnnotatedList : ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* ; 
+    // src/Erfurt_Syntax_Manchester.g:339:1: objectPropertyExpressionAnnotatedList : ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* ; 
     public function objectPropertyExpressionAnnotatedList(){
         $objectPropertyExpressionAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 44) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:330:3: ( ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* ) 
-            // src/Erfurt_Syntax_Manchester.g:330:5: ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* 
+            // src/Erfurt_Syntax_Manchester.g:340:3: ( ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* ) 
+            // src/Erfurt_Syntax_Manchester.g:340:5: ( annotations )? objectPropertyExpression ( COMMA ( annotations )? objectPropertyExpression )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:330:5: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:340:5: ( annotations )? 
             $alt40=2;
             $LA40 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA40)
@@ -4098,7 +4112,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1729);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1745);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -4109,12 +4123,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1732);
+            $this->pushFollow(self::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1748);
             $this->objectPropertyExpression();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:330:43: ( COMMA ( annotations )? objectPropertyExpression )* 
+            // src/Erfurt_Syntax_Manchester.g:340:43: ( COMMA ( annotations )? objectPropertyExpression )* 
             //loop42:
             do {
                 $alt42=2;
@@ -4127,10 +4141,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt42) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:330:44: COMMA ( annotations )? objectPropertyExpression 
+            	    // src/Erfurt_Syntax_Manchester.g:340:44: COMMA ( annotations )? objectPropertyExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1735); if ($this->state->failed) return ;
-            	    // src/Erfurt_Syntax_Manchester.g:330:50: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1751); if ($this->state->failed) return ;
+            	    // src/Erfurt_Syntax_Manchester.g:340:50: ( annotations )? 
             	    $alt41=2;
             	    $LA41 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA41)
@@ -4174,7 +4188,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1737);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1753);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -4185,7 +4199,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1740);
+            	    $this->pushFollow(self::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1756);
             	    $this->objectPropertyExpression();
 
             	    $this->state->_fsp--;
@@ -4219,15 +4233,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "dataPropertyExpressionAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:349:1: dataPropertyExpressionAnnotatedList : ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* ; 
+    // src/Erfurt_Syntax_Manchester.g:359:1: dataPropertyExpressionAnnotatedList : ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* ; 
     public function dataPropertyExpressionAnnotatedList(){
         $dataPropertyExpressionAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 45) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:350:4: ( ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* ) 
-            // src/Erfurt_Syntax_Manchester.g:350:6: ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* 
+            // src/Erfurt_Syntax_Manchester.g:360:4: ( ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* ) 
+            // src/Erfurt_Syntax_Manchester.g:360:6: ( annotations )? dataPropertyExpression ( COMMA ( annotations )? dataPropertyExpression )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:350:6: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:360:6: ( annotations )? 
             $alt43=2;
             $LA43 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA43)
@@ -4263,7 +4277,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1774);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1790);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -4274,12 +4288,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1777);
+            $this->pushFollow(self::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1793);
             $this->dataPropertyExpression();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:350:42: ( COMMA ( annotations )? dataPropertyExpression )* 
+            // src/Erfurt_Syntax_Manchester.g:360:42: ( COMMA ( annotations )? dataPropertyExpression )* 
             //loop45:
             do {
                 $alt45=2;
@@ -4292,10 +4306,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt45) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:350:43: COMMA ( annotations )? dataPropertyExpression 
+            	    // src/Erfurt_Syntax_Manchester.g:360:43: COMMA ( annotations )? dataPropertyExpression 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1780); if ($this->state->failed) return ;
-            	    // src/Erfurt_Syntax_Manchester.g:350:49: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1796); if ($this->state->failed) return ;
+            	    // src/Erfurt_Syntax_Manchester.g:360:49: ( annotations )? 
             	    $alt44=2;
             	    $LA44 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA44)
@@ -4331,7 +4345,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1782);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1798);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -4342,7 +4356,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1785);
+            	    $this->pushFollow(self::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1801);
             	    $this->dataPropertyExpression();
 
             	    $this->state->_fsp--;
@@ -4376,12 +4390,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotationPropertyFrame"
-    // src/Erfurt_Syntax_Manchester.g:353:1: annotationPropertyFrame : ( ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* | DOMAIN_LABEL iriAnnotatedList | RANGE_LABEL iriAnnotatedList | SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList ); 
+    // src/Erfurt_Syntax_Manchester.g:363:1: annotationPropertyFrame : ( ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* | DOMAIN_LABEL iriAnnotatedList | RANGE_LABEL iriAnnotatedList | SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList ); 
     public function annotationPropertyFrame(){
         $annotationPropertyFrame_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 46) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:354:3: ( ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* | DOMAIN_LABEL iriAnnotatedList | RANGE_LABEL iriAnnotatedList | SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList ) 
+            // src/Erfurt_Syntax_Manchester.g:364:3: ( ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* | DOMAIN_LABEL iriAnnotatedList | RANGE_LABEL iriAnnotatedList | SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList ) 
             $alt47=4;
             $LA47 = $this->input->LA(1);
             if($this->getToken('ANNOTATION_PROPERTY_LABEL')== $LA47)
@@ -4410,15 +4424,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             switch ($alt47) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:354:5: ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
+                    // src/Erfurt_Syntax_Manchester.g:364:5: ANNOTATION_PROPERTY_LABEL annotationPropertyIRI ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
                     {
-                    $this->match($this->input,$this->getToken('ANNOTATION_PROPERTY_LABEL'),self::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1802); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1804);
+                    $this->match($this->input,$this->getToken('ANNOTATION_PROPERTY_LABEL'),self::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1818); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1820);
                     $this->annotationPropertyIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    // src/Erfurt_Syntax_Manchester.g:355:3: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
+                    // src/Erfurt_Syntax_Manchester.g:365:3: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
                     //loop46:
                     do {
                         $alt46=2;
@@ -4431,10 +4445,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                         switch ($alt46) {
                     	case 1 :
-                    	    // src/Erfurt_Syntax_Manchester.g:355:5: ANNOTATIONS_LABEL annotationAnnotatedList 
+                    	    // src/Erfurt_Syntax_Manchester.g:365:5: ANNOTATIONS_LABEL annotationAnnotatedList 
                     	    {
-                    	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1810); if ($this->state->failed) return ;
-                    	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1813);
+                    	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1826); if ($this->state->failed) return ;
+                    	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1829);
                     	    $this->annotationAnnotatedList();
 
                     	    $this->state->_fsp--;
@@ -4452,10 +4466,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // src/Erfurt_Syntax_Manchester.g:356:5: DOMAIN_LABEL iriAnnotatedList 
+                    // src/Erfurt_Syntax_Manchester.g:366:5: DOMAIN_LABEL iriAnnotatedList 
                     {
-                    $this->match($this->input,$this->getToken('DOMAIN_LABEL'),self::$FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1822); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1825);
+                    $this->match($this->input,$this->getToken('DOMAIN_LABEL'),self::$FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1838); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1841);
                     $this->iriAnnotatedList();
 
                     $this->state->_fsp--;
@@ -4464,10 +4478,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 3 :
-                    // src/Erfurt_Syntax_Manchester.g:357:5: RANGE_LABEL iriAnnotatedList 
+                    // src/Erfurt_Syntax_Manchester.g:367:5: RANGE_LABEL iriAnnotatedList 
                     {
-                    $this->match($this->input,$this->getToken('RANGE_LABEL'),self::$FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1831); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1834);
+                    $this->match($this->input,$this->getToken('RANGE_LABEL'),self::$FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1847); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1850);
                     $this->iriAnnotatedList();
 
                     $this->state->_fsp--;
@@ -4476,10 +4490,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 4 :
-                    // src/Erfurt_Syntax_Manchester.g:358:5: SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList 
+                    // src/Erfurt_Syntax_Manchester.g:368:5: SUB_PROPERTY_OF_LABEL annotationPropertyIRIAnnotatedList 
                     {
-                    $this->match($this->input,$this->getToken('SUB_PROPERTY_OF_LABEL'),self::$FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1840); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1842);
+                    $this->match($this->input,$this->getToken('SUB_PROPERTY_OF_LABEL'),self::$FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1856); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1858);
                     $this->annotationPropertyIRIAnnotatedList();
 
                     $this->state->_fsp--;
@@ -4506,15 +4520,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "iriAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:361:1: iriAnnotatedList : ( annotations )? iri ( COMMA ( annotations )? iri )* ; 
+    // src/Erfurt_Syntax_Manchester.g:371:1: iriAnnotatedList : ( annotations )? iri ( COMMA ( annotations )? iri )* ; 
     public function iriAnnotatedList(){
         $iriAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 47) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:362:3: ( ( annotations )? iri ( COMMA ( annotations )? iri )* ) 
-            // src/Erfurt_Syntax_Manchester.g:362:5: ( annotations )? iri ( COMMA ( annotations )? iri )* 
+            // src/Erfurt_Syntax_Manchester.g:372:3: ( ( annotations )? iri ( COMMA ( annotations )? iri )* ) 
+            // src/Erfurt_Syntax_Manchester.g:372:5: ( annotations )? iri ( COMMA ( annotations )? iri )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:362:5: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:372:5: ( annotations )? 
             $alt48=2;
             $LA48 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA48)
@@ -4550,7 +4564,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_iriAnnotatedList1857);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_iriAnnotatedList1873);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -4561,12 +4575,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_iri_in_iriAnnotatedList1860);
+            $this->pushFollow(self::$FOLLOW_iri_in_iriAnnotatedList1876);
             $this->iri();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:362:22: ( COMMA ( annotations )? iri )* 
+            // src/Erfurt_Syntax_Manchester.g:372:22: ( COMMA ( annotations )? iri )* 
             //loop50:
             do {
                 $alt50=2;
@@ -4579,10 +4593,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt50) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:362:23: COMMA ( annotations )? iri 
+            	    // src/Erfurt_Syntax_Manchester.g:372:23: COMMA ( annotations )? iri 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_iriAnnotatedList1863); if ($this->state->failed) return ;
-            	    // src/Erfurt_Syntax_Manchester.g:362:29: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_iriAnnotatedList1879); if ($this->state->failed) return ;
+            	    // src/Erfurt_Syntax_Manchester.g:372:29: ( annotations )? 
             	    $alt49=2;
             	    $LA49 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA49)
@@ -4618,7 +4632,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_iriAnnotatedList1865);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_iriAnnotatedList1881);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -4629,7 +4643,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_iri_in_iriAnnotatedList1868);
+            	    $this->pushFollow(self::$FOLLOW_iri_in_iriAnnotatedList1884);
             	    $this->iri();
 
             	    $this->state->_fsp--;
@@ -4663,7 +4677,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotationPropertyIRI"
-    // src/Erfurt_Syntax_Manchester.g:365:1: annotationPropertyIRI returns [$value] : iri ; 
+    // src/Erfurt_Syntax_Manchester.g:375:1: annotationPropertyIRI returns [$value] : iri ; 
     public function annotationPropertyIRI(){
         $value = null;
         $annotationPropertyIRI_StartIndex = $this->input->index();
@@ -4672,10 +4686,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 48) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:366:2: ( iri ) 
-            // src/Erfurt_Syntax_Manchester.g:366:4: iri 
+            // src/Erfurt_Syntax_Manchester.g:376:2: ( iri ) 
+            // src/Erfurt_Syntax_Manchester.g:376:4: iri 
             {
-            $this->pushFollow(self::$FOLLOW_iri_in_annotationPropertyIRI1887);
+            $this->pushFollow(self::$FOLLOW_iri_in_annotationPropertyIRI1903);
             $iri34=$this->iri();
 
             $this->state->_fsp--;
@@ -4703,15 +4717,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "annotationPropertyIRIAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:369:1: annotationPropertyIRIAnnotatedList : ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* ; 
+    // src/Erfurt_Syntax_Manchester.g:379:1: annotationPropertyIRIAnnotatedList : ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* ; 
     public function annotationPropertyIRIAnnotatedList(){
         $annotationPropertyIRIAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 49) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:370:3: ( ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* ) 
-            // src/Erfurt_Syntax_Manchester.g:370:5: ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:380:3: ( ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* ) 
+            // src/Erfurt_Syntax_Manchester.g:380:5: ( annotations )? annotationPropertyIRI ( COMMA annotationPropertyIRIAnnotatedList )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:370:5: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:380:5: ( annotations )? 
             $alt51=2;
             $LA51 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA51)
@@ -4747,7 +4761,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1903);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1919);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -4758,12 +4772,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1906);
+            $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1922);
             $this->annotationPropertyIRI();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:370:40: ( COMMA annotationPropertyIRIAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:380:40: ( COMMA annotationPropertyIRIAnnotatedList )* 
             //loop52:
             do {
                 $alt52=2;
@@ -4782,10 +4796,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt52) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:370:41: COMMA annotationPropertyIRIAnnotatedList 
+            	    // src/Erfurt_Syntax_Manchester.g:380:41: COMMA annotationPropertyIRIAnnotatedList 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1909); if ($this->state->failed) return ;
-            	    $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1911);
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1925); if ($this->state->failed) return ;
+            	    $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1927);
             	    $this->annotationPropertyIRIAnnotatedList();
 
             	    $this->state->_fsp--;
@@ -4819,16 +4833,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "factAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:383:1: factAnnotatedList returns [$value] : ( annotations )? fact ( COMMA ( annotations )? fact )* ; 
+    // src/Erfurt_Syntax_Manchester.g:393:1: factAnnotatedList returns [$value] : ( annotations )? fact ( COMMA ( annotations )? fact )* ; 
     public function factAnnotatedList(){
         $value = null;
         $factAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 50) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:384:2: ( ( annotations )? fact ( COMMA ( annotations )? fact )* ) 
-            // src/Erfurt_Syntax_Manchester.g:384:4: ( annotations )? fact ( COMMA ( annotations )? fact )* 
+            // src/Erfurt_Syntax_Manchester.g:394:2: ( ( annotations )? fact ( COMMA ( annotations )? fact )* ) 
+            // src/Erfurt_Syntax_Manchester.g:394:4: ( annotations )? fact ( COMMA ( annotations )? fact )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:384:4: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:394:4: ( annotations )? 
             $alt53=2;
             $LA53 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA53)
@@ -4872,7 +4886,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_factAnnotatedList1940);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_factAnnotatedList1956);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -4883,12 +4897,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_fact_in_factAnnotatedList1943);
+            $this->pushFollow(self::$FOLLOW_fact_in_factAnnotatedList1959);
             $this->fact();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
-            // src/Erfurt_Syntax_Manchester.g:384:22: ( COMMA ( annotations )? fact )* 
+            // src/Erfurt_Syntax_Manchester.g:394:22: ( COMMA ( annotations )? fact )* 
             //loop55:
             do {
                 $alt55=2;
@@ -4901,10 +4915,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt55) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:384:23: COMMA ( annotations )? fact 
+            	    // src/Erfurt_Syntax_Manchester.g:394:23: COMMA ( annotations )? fact 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_factAnnotatedList1946); if ($this->state->failed) return $value;
-            	    // src/Erfurt_Syntax_Manchester.g:384:29: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_factAnnotatedList1962); if ($this->state->failed) return $value;
+            	    // src/Erfurt_Syntax_Manchester.g:394:29: ( annotations )? 
             	    $alt54=2;
             	    $LA54 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA54)
@@ -4948,7 +4962,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_factAnnotatedList1948);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_factAnnotatedList1964);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -4959,7 +4973,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_fact_in_factAnnotatedList1951);
+            	    $this->pushFollow(self::$FOLLOW_fact_in_factAnnotatedList1967);
             	    $this->fact();
 
             	    $this->state->_fsp--;
@@ -4993,16 +5007,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "individualAnnotatedList"
-    // src/Erfurt_Syntax_Manchester.g:387:1: individualAnnotatedList returns [$value] : ( annotations )? individual ( COMMA ( annotations )? individual )* ; 
+    // src/Erfurt_Syntax_Manchester.g:397:1: individualAnnotatedList returns [$value] : ( annotations )? individual ( COMMA ( annotations )? individual )* ; 
     public function individualAnnotatedList(){
         $value = null;
         $individualAnnotatedList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 51) ) { return $value; }
-            // src/Erfurt_Syntax_Manchester.g:388:3: ( ( annotations )? individual ( COMMA ( annotations )? individual )* ) 
-            // src/Erfurt_Syntax_Manchester.g:388:5: ( annotations )? individual ( COMMA ( annotations )? individual )* 
+            // src/Erfurt_Syntax_Manchester.g:398:3: ( ( annotations )? individual ( COMMA ( annotations )? individual )* ) 
+            // src/Erfurt_Syntax_Manchester.g:398:5: ( annotations )? individual ( COMMA ( annotations )? individual )* 
             {
-            // src/Erfurt_Syntax_Manchester.g:388:5: ( annotations )? 
+            // src/Erfurt_Syntax_Manchester.g:398:5: ( annotations )? 
             $alt56=2;
             $LA56 = $this->input->LA(1);
             if($this->getToken('ANNOTATIONS_LABEL')== $LA56)
@@ -5046,7 +5060,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
                     {
-                    $this->pushFollow(self::$FOLLOW_annotations_in_individualAnnotatedList1970);
+                    $this->pushFollow(self::$FOLLOW_annotations_in_individualAnnotatedList1986);
                     $this->annotations();
 
                     $this->state->_fsp--;
@@ -5057,12 +5071,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            $this->pushFollow(self::$FOLLOW_individual_in_individualAnnotatedList1973);
+            $this->pushFollow(self::$FOLLOW_individual_in_individualAnnotatedList1989);
             $this->individual();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
-            // src/Erfurt_Syntax_Manchester.g:388:29: ( COMMA ( annotations )? individual )* 
+            // src/Erfurt_Syntax_Manchester.g:398:29: ( COMMA ( annotations )? individual )* 
             //loop58:
             do {
                 $alt58=2;
@@ -5075,10 +5089,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt58) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:388:30: COMMA ( annotations )? individual 
+            	    // src/Erfurt_Syntax_Manchester.g:398:30: COMMA ( annotations )? individual 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_individualAnnotatedList1976); if ($this->state->failed) return $value;
-            	    // src/Erfurt_Syntax_Manchester.g:388:36: ( annotations )? 
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_individualAnnotatedList1992); if ($this->state->failed) return $value;
+            	    // src/Erfurt_Syntax_Manchester.g:398:36: ( annotations )? 
             	    $alt57=2;
             	    $LA57 = $this->input->LA(1);
             	    if($this->getToken('ANNOTATIONS_LABEL')== $LA57)
@@ -5122,7 +5136,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             	        case 1 :
             	            // src/Erfurt_Syntax_Manchester.g:0:0: annotations 
             	            {
-            	            $this->pushFollow(self::$FOLLOW_annotations_in_individualAnnotatedList1978);
+            	            $this->pushFollow(self::$FOLLOW_annotations_in_individualAnnotatedList1994);
             	            $this->annotations();
 
             	            $this->state->_fsp--;
@@ -5133,7 +5147,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             	    }
 
-            	    $this->pushFollow(self::$FOLLOW_individual_in_individualAnnotatedList1981);
+            	    $this->pushFollow(self::$FOLLOW_individual_in_individualAnnotatedList1997);
             	    $this->individual();
 
             	    $this->state->_fsp--;
@@ -5167,15 +5181,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "fact"
-    // src/Erfurt_Syntax_Manchester.g:391:1: fact : ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) ; 
+    // src/Erfurt_Syntax_Manchester.g:401:1: fact : ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) ; 
     public function fact(){
         $fact_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 52) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:391:6: ( ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) ) 
-            // src/Erfurt_Syntax_Manchester.g:391:8: ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) 
+            // src/Erfurt_Syntax_Manchester.g:401:6: ( ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) ) 
+            // src/Erfurt_Syntax_Manchester.g:401:8: ( NOT_LABEL )? ( objectPropertyFact | dataPropertyFact ) 
             {
-            // src/Erfurt_Syntax_Manchester.g:391:8: ( NOT_LABEL )? 
+            // src/Erfurt_Syntax_Manchester.g:401:8: ( NOT_LABEL )? 
             $alt59=2;
             $LA59_0 = $this->input->LA(1);
 
@@ -5186,14 +5200,14 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 case 1 :
                     // src/Erfurt_Syntax_Manchester.g:0:0: NOT_LABEL 
                     {
-                    $this->match($this->input,$this->getToken('NOT_LABEL'),self::$FOLLOW_NOT_LABEL_in_fact1995); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('NOT_LABEL'),self::$FOLLOW_NOT_LABEL_in_fact2011); if ($this->state->failed) return ;
 
                     }
                     break;
 
             }
 
-            // src/Erfurt_Syntax_Manchester.g:391:19: ( objectPropertyFact | dataPropertyFact ) 
+            // src/Erfurt_Syntax_Manchester.g:401:19: ( objectPropertyFact | dataPropertyFact ) 
             $alt60=2;
             $LA60 = $this->input->LA(1);
             if($this->getToken('FULL_IRI')== $LA60)
@@ -5257,9 +5271,9 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             switch ($alt60) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:391:20: objectPropertyFact 
+                    // src/Erfurt_Syntax_Manchester.g:401:20: objectPropertyFact 
                     {
-                    $this->pushFollow(self::$FOLLOW_objectPropertyFact_in_fact1999);
+                    $this->pushFollow(self::$FOLLOW_objectPropertyFact_in_fact2015);
                     $this->objectPropertyFact();
 
                     $this->state->_fsp--;
@@ -5268,9 +5282,9 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                     }
                     break;
                 case 2 :
-                    // src/Erfurt_Syntax_Manchester.g:391:41: dataPropertyFact 
+                    // src/Erfurt_Syntax_Manchester.g:401:41: dataPropertyFact 
                     {
-                    $this->pushFollow(self::$FOLLOW_dataPropertyFact_in_fact2003);
+                    $this->pushFollow(self::$FOLLOW_dataPropertyFact_in_fact2019);
                     $this->dataPropertyFact();
 
                     $this->state->_fsp--;
@@ -5301,20 +5315,20 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "objectPropertyFact"
-    // src/Erfurt_Syntax_Manchester.g:393:1: objectPropertyFact : objectPropertyIRI individual ; 
+    // src/Erfurt_Syntax_Manchester.g:403:1: objectPropertyFact : objectPropertyIRI individual ; 
     public function objectPropertyFact(){
         $objectPropertyFact_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 53) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:394:3: ( objectPropertyIRI individual ) 
-            // src/Erfurt_Syntax_Manchester.g:394:5: objectPropertyIRI individual 
+            // src/Erfurt_Syntax_Manchester.g:404:3: ( objectPropertyIRI individual ) 
+            // src/Erfurt_Syntax_Manchester.g:404:5: objectPropertyIRI individual 
             {
-            $this->pushFollow(self::$FOLLOW_objectPropertyIRI_in_objectPropertyFact2014);
+            $this->pushFollow(self::$FOLLOW_objectPropertyIRI_in_objectPropertyFact2030);
             $this->objectPropertyIRI();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_individual_in_objectPropertyFact2016);
+            $this->pushFollow(self::$FOLLOW_individual_in_objectPropertyFact2032);
             $this->individual();
 
             $this->state->_fsp--;
@@ -5339,20 +5353,20 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "dataPropertyFact"
-    // src/Erfurt_Syntax_Manchester.g:397:1: dataPropertyFact : dataPropertyIRI literal ; 
+    // src/Erfurt_Syntax_Manchester.g:407:1: dataPropertyFact : dataPropertyIRI literal ; 
     public function dataPropertyFact(){
         $dataPropertyFact_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 54) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:398:3: ( dataPropertyIRI literal ) 
-            // src/Erfurt_Syntax_Manchester.g:398:5: dataPropertyIRI literal 
+            // src/Erfurt_Syntax_Manchester.g:408:3: ( dataPropertyIRI literal ) 
+            // src/Erfurt_Syntax_Manchester.g:408:5: dataPropertyIRI literal 
             {
-            $this->pushFollow(self::$FOLLOW_dataPropertyIRI_in_dataPropertyFact2030);
+            $this->pushFollow(self::$FOLLOW_dataPropertyIRI_in_dataPropertyFact2046);
             $this->dataPropertyIRI();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_literal_in_dataPropertyFact2032);
+            $this->pushFollow(self::$FOLLOW_literal_in_dataPropertyFact2048);
             $this->literal();
 
             $this->state->_fsp--;
@@ -5377,21 +5391,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "datatypeFrame"
-    // src/Erfurt_Syntax_Manchester.g:401:1: datatypeFrame : DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* ; 
+    // src/Erfurt_Syntax_Manchester.g:411:1: datatypeFrame : DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* ; 
     public function datatypeFrame(){
         $datatypeFrame_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 55) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:402:3: ( DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* ) 
-            // src/Erfurt_Syntax_Manchester.g:402:5: DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:412:3: ( DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* ) 
+            // src/Erfurt_Syntax_Manchester.g:412:5: DATATYPE_LABEL dataType ( ANNOTATIONS_LABEL annotationAnnotatedList )* ( EQUIVALENT_TO_LABEL annotations dataRange )? ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
             {
-            $this->match($this->input,$this->getToken('DATATYPE_LABEL'),self::$FOLLOW_DATATYPE_LABEL_in_datatypeFrame2046); if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_dataType_in_datatypeFrame2049);
+            $this->match($this->input,$this->getToken('DATATYPE_LABEL'),self::$FOLLOW_DATATYPE_LABEL_in_datatypeFrame2062); if ($this->state->failed) return ;
+            $this->pushFollow(self::$FOLLOW_dataType_in_datatypeFrame2065);
             $this->dataType();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:403:4: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:413:4: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
             //loop61:
             do {
                 $alt61=2;
@@ -5410,10 +5424,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt61) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:403:5: ANNOTATIONS_LABEL annotationAnnotatedList 
+            	    // src/Erfurt_Syntax_Manchester.g:413:5: ANNOTATIONS_LABEL annotationAnnotatedList 
             	    {
-            	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2055); if ($this->state->failed) return ;
-            	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2058);
+            	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2071); if ($this->state->failed) return ;
+            	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2074);
             	    $this->annotationAnnotatedList();
 
             	    $this->state->_fsp--;
@@ -5427,7 +5441,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 }
             } while (true);
 
-            // src/Erfurt_Syntax_Manchester.g:404:4: ( EQUIVALENT_TO_LABEL annotations dataRange )? 
+            // src/Erfurt_Syntax_Manchester.g:414:4: ( EQUIVALENT_TO_LABEL annotations dataRange )? 
             $alt62=2;
             $LA62_0 = $this->input->LA(1);
 
@@ -5436,15 +5450,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
             }
             switch ($alt62) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:404:5: EQUIVALENT_TO_LABEL annotations dataRange 
+                    // src/Erfurt_Syntax_Manchester.g:414:5: EQUIVALENT_TO_LABEL annotations dataRange 
                     {
-                    $this->match($this->input,$this->getToken('EQUIVALENT_TO_LABEL'),self::$FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2066); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_annotations_in_datatypeFrame2069);
+                    $this->match($this->input,$this->getToken('EQUIVALENT_TO_LABEL'),self::$FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2082); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_annotations_in_datatypeFrame2085);
                     $this->annotations();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_dataRange_in_datatypeFrame2071);
+                    $this->pushFollow(self::$FOLLOW_dataRange_in_datatypeFrame2087);
                     $this->dataRange();
 
                     $this->state->_fsp--;
@@ -5455,7 +5469,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             }
 
-            // src/Erfurt_Syntax_Manchester.g:405:4: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:415:4: ( ANNOTATIONS_LABEL annotationAnnotatedList )* 
             //loop63:
             do {
                 $alt63=2;
@@ -5468,10 +5482,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt63) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:405:5: ANNOTATIONS_LABEL annotationAnnotatedList 
+            	    // src/Erfurt_Syntax_Manchester.g:415:5: ANNOTATIONS_LABEL annotationAnnotatedList 
             	    {
-            	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2079); if ($this->state->failed) return ;
-            	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2082);
+            	    $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2095); if ($this->state->failed) return ;
+            	    $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2098);
             	    $this->annotationAnnotatedList();
 
             	    $this->state->_fsp--;
@@ -5505,21 +5519,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "individual2List"
-    // src/Erfurt_Syntax_Manchester.g:417:1: individual2List : individual COMMA individualList ; 
+    // src/Erfurt_Syntax_Manchester.g:427:1: individual2List : individual COMMA individualList ; 
     public function individual2List(){
         $individual2List_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 56) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:418:2: ( individual COMMA individualList ) 
-            // src/Erfurt_Syntax_Manchester.g:418:4: individual COMMA individualList 
+            // src/Erfurt_Syntax_Manchester.g:428:2: ( individual COMMA individualList ) 
+            // src/Erfurt_Syntax_Manchester.g:428:4: individual COMMA individualList 
             {
-            $this->pushFollow(self::$FOLLOW_individual_in_individual2List2107);
+            $this->pushFollow(self::$FOLLOW_individual_in_individual2List2123);
             $this->individual();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_individual2List2109); if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_individualList_in_individual2List2111);
+            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_individual2List2125); if ($this->state->failed) return ;
+            $this->pushFollow(self::$FOLLOW_individualList_in_individual2List2127);
             $this->individualList();
 
             $this->state->_fsp--;
@@ -5544,21 +5558,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "dataProperty2List"
-    // src/Erfurt_Syntax_Manchester.g:421:1: dataProperty2List : dataProperty COMMA dataPropertyList ; 
+    // src/Erfurt_Syntax_Manchester.g:431:1: dataProperty2List : dataProperty COMMA dataPropertyList ; 
     public function dataProperty2List(){
         $dataProperty2List_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 57) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:422:3: ( dataProperty COMMA dataPropertyList ) 
-            // src/Erfurt_Syntax_Manchester.g:422:5: dataProperty COMMA dataPropertyList 
+            // src/Erfurt_Syntax_Manchester.g:432:3: ( dataProperty COMMA dataPropertyList ) 
+            // src/Erfurt_Syntax_Manchester.g:432:5: dataProperty COMMA dataPropertyList 
             {
-            $this->pushFollow(self::$FOLLOW_dataProperty_in_dataProperty2List2123);
+            $this->pushFollow(self::$FOLLOW_dataProperty_in_dataProperty2List2139);
             $this->dataProperty();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataProperty2List2125); if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_dataPropertyList_in_dataProperty2List2127);
+            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataProperty2List2141); if ($this->state->failed) return ;
+            $this->pushFollow(self::$FOLLOW_dataPropertyList_in_dataProperty2List2143);
             $this->dataPropertyList();
 
             $this->state->_fsp--;
@@ -5583,20 +5597,20 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "dataPropertyList"
-    // src/Erfurt_Syntax_Manchester.g:425:1: dataPropertyList : dataProperty ( COMMA dataProperty )* ; 
+    // src/Erfurt_Syntax_Manchester.g:435:1: dataPropertyList : dataProperty ( COMMA dataProperty )* ; 
     public function dataPropertyList(){
         $dataPropertyList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 58) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:426:2: ( dataProperty ( COMMA dataProperty )* ) 
-            // src/Erfurt_Syntax_Manchester.g:426:4: dataProperty ( COMMA dataProperty )* 
+            // src/Erfurt_Syntax_Manchester.g:436:2: ( dataProperty ( COMMA dataProperty )* ) 
+            // src/Erfurt_Syntax_Manchester.g:436:4: dataProperty ( COMMA dataProperty )* 
             {
-            $this->pushFollow(self::$FOLLOW_dataProperty_in_dataPropertyList2141);
+            $this->pushFollow(self::$FOLLOW_dataProperty_in_dataPropertyList2157);
             $this->dataProperty();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:426:17: ( COMMA dataProperty )* 
+            // src/Erfurt_Syntax_Manchester.g:436:17: ( COMMA dataProperty )* 
             //loop64:
             do {
                 $alt64=2;
@@ -5609,10 +5623,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt64) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:426:18: COMMA dataProperty 
+            	    // src/Erfurt_Syntax_Manchester.g:436:18: COMMA dataProperty 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataPropertyList2144); if ($this->state->failed) return ;
-            	    $this->pushFollow(self::$FOLLOW_dataProperty_in_dataPropertyList2146);
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_dataPropertyList2160); if ($this->state->failed) return ;
+            	    $this->pushFollow(self::$FOLLOW_dataProperty_in_dataPropertyList2162);
             	    $this->dataProperty();
 
             	    $this->state->_fsp--;
@@ -5646,21 +5660,21 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "objectProperty2List"
-    // src/Erfurt_Syntax_Manchester.g:429:1: objectProperty2List : objectProperty COMMA objectPropertyList ; 
+    // src/Erfurt_Syntax_Manchester.g:439:1: objectProperty2List : objectProperty COMMA objectPropertyList ; 
     public function objectProperty2List(){
         $objectProperty2List_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 59) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:430:3: ( objectProperty COMMA objectPropertyList ) 
-            // src/Erfurt_Syntax_Manchester.g:430:5: objectProperty COMMA objectPropertyList 
+            // src/Erfurt_Syntax_Manchester.g:440:3: ( objectProperty COMMA objectPropertyList ) 
+            // src/Erfurt_Syntax_Manchester.g:440:5: objectProperty COMMA objectPropertyList 
             {
-            $this->pushFollow(self::$FOLLOW_objectProperty_in_objectProperty2List2162);
+            $this->pushFollow(self::$FOLLOW_objectProperty_in_objectProperty2List2178);
             $this->objectProperty();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectProperty2List2164); if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_objectPropertyList_in_objectProperty2List2166);
+            $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectProperty2List2180); if ($this->state->failed) return ;
+            $this->pushFollow(self::$FOLLOW_objectPropertyList_in_objectProperty2List2182);
             $this->objectPropertyList();
 
             $this->state->_fsp--;
@@ -5685,20 +5699,20 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "objectPropertyList"
-    // src/Erfurt_Syntax_Manchester.g:433:1: objectPropertyList : objectProperty ( COMMA objectProperty )* ; 
+    // src/Erfurt_Syntax_Manchester.g:443:1: objectPropertyList : objectProperty ( COMMA objectProperty )* ; 
     public function objectPropertyList(){
         $objectPropertyList_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 60) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:434:3: ( objectProperty ( COMMA objectProperty )* ) 
-            // src/Erfurt_Syntax_Manchester.g:434:5: objectProperty ( COMMA objectProperty )* 
+            // src/Erfurt_Syntax_Manchester.g:444:3: ( objectProperty ( COMMA objectProperty )* ) 
+            // src/Erfurt_Syntax_Manchester.g:444:5: objectProperty ( COMMA objectProperty )* 
             {
-            $this->pushFollow(self::$FOLLOW_objectProperty_in_objectPropertyList2180);
+            $this->pushFollow(self::$FOLLOW_objectProperty_in_objectPropertyList2196);
             $this->objectProperty();
 
             $this->state->_fsp--;
             if ($this->state->failed) return ;
-            // src/Erfurt_Syntax_Manchester.g:434:20: ( COMMA objectProperty )* 
+            // src/Erfurt_Syntax_Manchester.g:444:20: ( COMMA objectProperty )* 
             //loop65:
             do {
                 $alt65=2;
@@ -5711,10 +5725,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt65) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:434:21: COMMA objectProperty 
+            	    // src/Erfurt_Syntax_Manchester.g:444:21: COMMA objectProperty 
             	    {
-            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyList2183); if ($this->state->failed) return ;
-            	    $this->pushFollow(self::$FOLLOW_objectProperty_in_objectPropertyList2185);
+            	    $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_objectPropertyList2199); if ($this->state->failed) return ;
+            	    $this->pushFollow(self::$FOLLOW_objectProperty_in_objectPropertyList2201);
             	    $this->objectProperty();
 
             	    $this->state->_fsp--;
@@ -5748,12 +5762,12 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "entity"
-    // src/Erfurt_Syntax_Manchester.g:447:1: entity : ( DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE | CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE | OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE | DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE | ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE | NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE ); 
+    // src/Erfurt_Syntax_Manchester.g:457:1: entity : ( DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE | CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE | OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE | DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE | ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE | NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE ); 
     public function entity(){
         $entity_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 61) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:448:3: ( DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE | CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE | OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE | DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE | ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE | NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE ) 
+            // src/Erfurt_Syntax_Manchester.g:458:3: ( DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE | CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE | OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE | DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE | ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE | NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE ) 
             $alt66=6;
             $LA66 = $this->input->LA(1);
             if($this->getToken('DATATYPE_LABEL')== $LA66)
@@ -5790,86 +5804,86 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
             switch ($alt66) {
                 case 1 :
-                    // src/Erfurt_Syntax_Manchester.g:448:5: DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:458:5: DATATYPE_LABEL OPEN_BRACE dataType CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('DATATYPE_LABEL'),self::$FOLLOW_DATATYPE_LABEL_in_entity2211); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2213); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_dataType_in_entity2215);
+                    $this->match($this->input,$this->getToken('DATATYPE_LABEL'),self::$FOLLOW_DATATYPE_LABEL_in_entity2227); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2229); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_dataType_in_entity2231);
                     $this->dataType();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2217); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2233); if ($this->state->failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/Erfurt_Syntax_Manchester.g:449:5: CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:459:5: CLASS_LABEL OPEN_BRACE classIRI CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('CLASS_LABEL'),self::$FOLLOW_CLASS_LABEL_in_entity2223); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2225); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_classIRI_in_entity2227);
+                    $this->match($this->input,$this->getToken('CLASS_LABEL'),self::$FOLLOW_CLASS_LABEL_in_entity2239); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2241); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_classIRI_in_entity2243);
                     $this->classIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2229); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2245); if ($this->state->failed) return ;
 
                     }
                     break;
                 case 3 :
-                    // src/Erfurt_Syntax_Manchester.g:450:5: OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:460:5: OBJECT_PROPERTY_LABEL OPEN_BRACE objectPropertyIRI CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('OBJECT_PROPERTY_LABEL'),self::$FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2235); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2237); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_objectPropertyIRI_in_entity2239);
+                    $this->match($this->input,$this->getToken('OBJECT_PROPERTY_LABEL'),self::$FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2251); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2253); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_objectPropertyIRI_in_entity2255);
                     $this->objectPropertyIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2241); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2257); if ($this->state->failed) return ;
 
                     }
                     break;
                 case 4 :
-                    // src/Erfurt_Syntax_Manchester.g:451:5: DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:461:5: DATA_PROPERTY_LABEL OPEN_BRACE datatypePropertyIRI CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('DATA_PROPERTY_LABEL'),self::$FOLLOW_DATA_PROPERTY_LABEL_in_entity2247); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2249); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_datatypePropertyIRI_in_entity2251);
+                    $this->match($this->input,$this->getToken('DATA_PROPERTY_LABEL'),self::$FOLLOW_DATA_PROPERTY_LABEL_in_entity2263); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2265); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_datatypePropertyIRI_in_entity2267);
                     $this->datatypePropertyIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2253); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2269); if ($this->state->failed) return ;
 
                     }
                     break;
                 case 5 :
-                    // src/Erfurt_Syntax_Manchester.g:452:5: ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:462:5: ANNOTATION_PROPERTY_LABEL OPEN_BRACE annotationPropertyIRI CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('ANNOTATION_PROPERTY_LABEL'),self::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2259); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2261); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_entity2263);
+                    $this->match($this->input,$this->getToken('ANNOTATION_PROPERTY_LABEL'),self::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2275); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2277); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_annotationPropertyIRI_in_entity2279);
                     $this->annotationPropertyIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2265); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2281); if ($this->state->failed) return ;
 
                     }
                     break;
                 case 6 :
-                    // src/Erfurt_Syntax_Manchester.g:453:5: NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE 
+                    // src/Erfurt_Syntax_Manchester.g:463:5: NAMED_INDIVIDUAL_LABEL OPEN_BRACE individualIRI CLOSE_BRACE 
                     {
-                    $this->match($this->input,$this->getToken('NAMED_INDIVIDUAL_LABEL'),self::$FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2271); if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2273); if ($this->state->failed) return ;
-                    $this->pushFollow(self::$FOLLOW_individualIRI_in_entity2275);
+                    $this->match($this->input,$this->getToken('NAMED_INDIVIDUAL_LABEL'),self::$FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2287); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('OPEN_BRACE'),self::$FOLLOW_OPEN_BRACE_in_entity2289); if ($this->state->failed) return ;
+                    $this->pushFollow(self::$FOLLOW_individualIRI_in_entity2291);
                     $this->individualIRI();
 
                     $this->state->_fsp--;
                     if ($this->state->failed) return ;
-                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2277); if ($this->state->failed) return ;
+                    $this->match($this->input,$this->getToken('CLOSE_BRACE'),self::$FOLLOW_CLOSE_BRACE_in_entity2293); if ($this->state->failed) return ;
 
                     }
                     break;
@@ -5892,15 +5906,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "ontologyIri"
-    // src/Erfurt_Syntax_Manchester.g:460:1: ontologyIri : iri ; 
+    // src/Erfurt_Syntax_Manchester.g:470:1: ontologyIri : iri ; 
     public function ontologyIri(){
         $ontologyIri_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 62) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:461:2: ( iri ) 
-            // src/Erfurt_Syntax_Manchester.g:461:4: iri 
+            // src/Erfurt_Syntax_Manchester.g:471:2: ( iri ) 
+            // src/Erfurt_Syntax_Manchester.g:471:4: iri 
             {
-            $this->pushFollow(self::$FOLLOW_iri_in_ontologyIri2294);
+            $this->pushFollow(self::$FOLLOW_iri_in_ontologyIri2310);
             $this->iri();
 
             $this->state->_fsp--;
@@ -5925,15 +5939,15 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "versionIri"
-    // src/Erfurt_Syntax_Manchester.g:464:1: versionIri : iri ; 
+    // src/Erfurt_Syntax_Manchester.g:474:1: versionIri : iri ; 
     public function versionIri(){
         $versionIri_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 63) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:465:2: ( iri ) 
-            // src/Erfurt_Syntax_Manchester.g:465:4: iri 
+            // src/Erfurt_Syntax_Manchester.g:475:2: ( iri ) 
+            // src/Erfurt_Syntax_Manchester.g:475:4: iri 
             {
-            $this->pushFollow(self::$FOLLOW_iri_in_versionIri2305);
+            $this->pushFollow(self::$FOLLOW_iri_in_versionIri2321);
             $this->iri();
 
             $this->state->_fsp--;
@@ -5958,16 +5972,16 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
 
     // $ANTLR start "imports"
-    // src/Erfurt_Syntax_Manchester.g:468:1: imports : IMPORT_LABEL iri ; 
+    // src/Erfurt_Syntax_Manchester.g:478:1: imports : IMPORT_LABEL iri ; 
     public function imports(){
         $imports_StartIndex = $this->input->index();
         try {
             if ( $this->state->backtracking>0 && $this->alreadyParsedRule($this->input, 64) ) { return ; }
-            // src/Erfurt_Syntax_Manchester.g:468:9: ( IMPORT_LABEL iri ) 
-            // src/Erfurt_Syntax_Manchester.g:468:11: IMPORT_LABEL iri 
+            // src/Erfurt_Syntax_Manchester.g:478:9: ( IMPORT_LABEL iri ) 
+            // src/Erfurt_Syntax_Manchester.g:478:11: IMPORT_LABEL iri 
             {
-            $this->match($this->input,$this->getToken('IMPORT_LABEL'),self::$FOLLOW_IMPORT_LABEL_in_imports2315); if ($this->state->failed) return ;
-            $this->pushFollow(self::$FOLLOW_iri_in_imports2317);
+            $this->match($this->input,$this->getToken('IMPORT_LABEL'),self::$FOLLOW_IMPORT_LABEL_in_imports2331); if ($this->state->failed) return ;
+            $this->pushFollow(self::$FOLLOW_iri_in_imports2333);
             $this->iri();
 
             $this->state->_fsp--;
@@ -6237,11 +6251,11 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred56_Erfurt_Syntax_Manchester
     public function synpred56_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:258:10: ( OR_LABEL d2= dataConjunction ) 
-        // src/Erfurt_Syntax_Manchester.g:258:10: OR_LABEL d2= dataConjunction 
+        // src/Erfurt_Syntax_Manchester.g:263:10: ( OR_LABEL d2= dataConjunction ) 
+        // src/Erfurt_Syntax_Manchester.g:263:10: OR_LABEL d2= dataConjunction 
         {
-        $this->match($this->input,$this->getToken('OR_LABEL'),self::$FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1461); if ($this->state->failed) return ;
-        $this->pushFollow(self::$FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1465);
+        $this->match($this->input,$this->getToken('OR_LABEL'),self::$FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1469); if ($this->state->failed) return ;
+        $this->pushFollow(self::$FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1473);
         $d2=$this->dataConjunction();
 
         $this->state->_fsp--;
@@ -6253,11 +6267,11 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred57_Erfurt_Syntax_Manchester
     public function synpred57_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:264:14: ( AND_LABEL d2= dataPrimary ) 
-        // src/Erfurt_Syntax_Manchester.g:264:14: AND_LABEL d2= dataPrimary 
+        // src/Erfurt_Syntax_Manchester.g:274:14: ( AND_LABEL d2= dataPrimary ) 
+        // src/Erfurt_Syntax_Manchester.g:274:14: AND_LABEL d2= dataPrimary 
         {
-        $this->match($this->input,$this->getToken('AND_LABEL'),self::$FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1507); if ($this->state->failed) return ;
-        $this->pushFollow(self::$FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1511);
+        $this->match($this->input,$this->getToken('AND_LABEL'),self::$FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1523); if ($this->state->failed) return ;
+        $this->pushFollow(self::$FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1527);
         $d2=$this->dataPrimary();
 
         $this->state->_fsp--;
@@ -6269,10 +6283,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred58_Erfurt_Syntax_Manchester
     public function synpred58_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:271:4: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:271:4: annotations 
+        // src/Erfurt_Syntax_Manchester.g:281:4: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:281:4: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1534);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1550);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6284,10 +6298,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred59_Erfurt_Syntax_Manchester
     public function synpred59_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:271:35: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:271:35: annotations 
+        // src/Erfurt_Syntax_Manchester.g:281:35: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:281:35: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1542);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1558);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6299,10 +6313,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred65_Erfurt_Syntax_Manchester
     public function synpred65_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:326:4: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:326:4: annotations 
+        // src/Erfurt_Syntax_Manchester.g:336:4: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:336:4: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1703);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1719);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6314,10 +6328,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred66_Erfurt_Syntax_Manchester
     public function synpred66_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:326:55: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:326:55: annotations 
+        // src/Erfurt_Syntax_Manchester.g:336:55: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:336:55: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1711);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1727);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6329,10 +6343,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred68_Erfurt_Syntax_Manchester
     public function synpred68_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:330:5: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:330:5: annotations 
+        // src/Erfurt_Syntax_Manchester.g:340:5: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:340:5: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1729);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1745);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6344,10 +6358,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred69_Erfurt_Syntax_Manchester
     public function synpred69_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:330:50: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:330:50: annotations 
+        // src/Erfurt_Syntax_Manchester.g:340:50: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:340:50: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1737);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1753);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6359,10 +6373,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred71_Erfurt_Syntax_Manchester
     public function synpred71_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:350:6: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:350:6: annotations 
+        // src/Erfurt_Syntax_Manchester.g:360:6: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:360:6: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1774);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1790);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6374,10 +6388,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred72_Erfurt_Syntax_Manchester
     public function synpred72_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:350:49: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:350:49: annotations 
+        // src/Erfurt_Syntax_Manchester.g:360:49: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:360:49: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1782);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1798);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6389,10 +6403,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred78_Erfurt_Syntax_Manchester
     public function synpred78_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:362:5: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:362:5: annotations 
+        // src/Erfurt_Syntax_Manchester.g:372:5: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:372:5: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1857);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1873);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6404,10 +6418,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred79_Erfurt_Syntax_Manchester
     public function synpred79_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:362:29: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:362:29: annotations 
+        // src/Erfurt_Syntax_Manchester.g:372:29: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:372:29: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1865);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1881);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6419,10 +6433,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred81_Erfurt_Syntax_Manchester
     public function synpred81_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:370:5: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:370:5: annotations 
+        // src/Erfurt_Syntax_Manchester.g:380:5: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:380:5: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1903);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1919);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6434,11 +6448,11 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred82_Erfurt_Syntax_Manchester
     public function synpred82_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:370:41: ( COMMA annotationPropertyIRIAnnotatedList ) 
-        // src/Erfurt_Syntax_Manchester.g:370:41: COMMA annotationPropertyIRIAnnotatedList 
+        // src/Erfurt_Syntax_Manchester.g:380:41: ( COMMA annotationPropertyIRIAnnotatedList ) 
+        // src/Erfurt_Syntax_Manchester.g:380:41: COMMA annotationPropertyIRIAnnotatedList 
         {
-        $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1909); if ($this->state->failed) return ;
-        $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1911);
+        $this->match($this->input,$this->getToken('COMMA'),self::$FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1925); if ($this->state->failed) return ;
+        $this->pushFollow(self::$FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1927);
         $this->annotationPropertyIRIAnnotatedList();
 
         $this->state->_fsp--;
@@ -6450,10 +6464,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred83_Erfurt_Syntax_Manchester
     public function synpred83_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:384:4: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:384:4: annotations 
+        // src/Erfurt_Syntax_Manchester.g:394:4: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:394:4: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1940);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1956);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6465,10 +6479,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred84_Erfurt_Syntax_Manchester
     public function synpred84_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:384:29: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:384:29: annotations 
+        // src/Erfurt_Syntax_Manchester.g:394:29: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:394:29: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1948);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1964);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6480,10 +6494,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred86_Erfurt_Syntax_Manchester
     public function synpred86_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:388:5: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:388:5: annotations 
+        // src/Erfurt_Syntax_Manchester.g:398:5: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:398:5: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1970);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1986);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6495,10 +6509,10 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred87_Erfurt_Syntax_Manchester
     public function synpred87_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:388:36: ( annotations ) 
-        // src/Erfurt_Syntax_Manchester.g:388:36: annotations 
+        // src/Erfurt_Syntax_Manchester.g:398:36: ( annotations ) 
+        // src/Erfurt_Syntax_Manchester.g:398:36: annotations 
         {
-        $this->pushFollow(self::$FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1978);
+        $this->pushFollow(self::$FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1994);
         $this->annotations();
 
         $this->state->_fsp--;
@@ -6510,11 +6524,11 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
     // $ANTLR start synpred91_Erfurt_Syntax_Manchester
     public function synpred91_Erfurt_Syntax_Manchester_fragment() {   
-        // src/Erfurt_Syntax_Manchester.g:403:5: ( ANNOTATIONS_LABEL annotationAnnotatedList ) 
-        // src/Erfurt_Syntax_Manchester.g:403:5: ANNOTATIONS_LABEL annotationAnnotatedList 
+        // src/Erfurt_Syntax_Manchester.g:413:5: ( ANNOTATIONS_LABEL annotationAnnotatedList ) 
+        // src/Erfurt_Syntax_Manchester.g:413:5: ANNOTATIONS_LABEL annotationAnnotatedList 
         {
-        $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2055); if ($this->state->failed) return ;
-        $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2058);
+        $this->match($this->input,$this->getToken('ANNOTATIONS_LABEL'),self::$FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2071); if ($this->state->failed) return ;
+        $this->pushFollow(self::$FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2074);
         $this->annotationAnnotatedList();
 
         $this->state->_fsp--;
@@ -6998,131 +7012,131 @@ Erfurt_Syntax_ManchesterParser::$FOLLOW_LESS_EQUAL_in_facet1408 = new Set(array(
 Erfurt_Syntax_ManchesterParser::$FOLLOW_LESS_in_facet1414 = new Set(array(1));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_GREATER_EQUAL_in_facet1420 = new Set(array(1));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_GREATER_in_facet1426 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_dataRange1447 = new Set(array(1, 26));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OR_LABEL_in_dataRange1461 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_dataRange1465 = new Set(array(1, 26));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_dataConjunction1490 = new Set(array(1, 27));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_AND_LABEL_in_dataConjunction1507 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_dataConjunction1511 = new Set(array(1, 27));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationAnnotatedList1534 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotation_in_annotationAnnotatedList1537 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_annotationAnnotatedList1540 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationAnnotatedList1542 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotation_in_annotationAnnotatedList1545 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotation1564 = new Set(array(16, 81, 82, 83, 87, 91, 92, 93, 94));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationTarget_in_annotation1568 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_NODE_ID_in_annotationTarget1585 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_annotationTarget1592 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_literal_in_annotationTarget1599 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_annotations1616 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_annotations1620 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionList1651 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_descriptionList1656 = new Set(array(12, 17, 24, 36, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionList1660 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1703 = new Set(array(75));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1706 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1709 = new Set(array(72, 75));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1711 = new Set(array(75));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1714 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1729 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1732 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1735 = new Set(array(12, 72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1737 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1740 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1774 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1777 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1780 = new Set(array(12, 72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1782 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1785 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1802 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1804 = new Set(array(1, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1810 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1813 = new Set(array(1, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1822 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1825 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1831 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1834 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1840 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1842 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_iriAnnotatedList1857 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_iriAnnotatedList1860 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_iriAnnotatedList1863 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_iriAnnotatedList1865 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_iriAnnotatedList1868 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_annotationPropertyIRI1887 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1903 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1906 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1909 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1911 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_factAnnotatedList1940 = new Set(array(12, 17, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_fact_in_factAnnotatedList1943 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_factAnnotatedList1946 = new Set(array(12, 17, 72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_factAnnotatedList1948 = new Set(array(12, 17, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_fact_in_factAnnotatedList1951 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_individualAnnotatedList1970 = new Set(array(81, 82, 83, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individualAnnotatedList1973 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_individualAnnotatedList1976 = new Set(array(72, 81, 82, 83, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_individualAnnotatedList1978 = new Set(array(81, 82, 83, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individualAnnotatedList1981 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_NOT_LABEL_in_fact1995 = new Set(array(12, 17, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyFact_in_fact1999 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyFact_in_fact2003 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyIRI_in_objectPropertyFact2014 = new Set(array(81, 82, 83, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_objectPropertyFact2016 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyIRI_in_dataPropertyFact2030 = new Set(array(16, 87, 92, 93, 94));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_literal_in_dataPropertyFact2032 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_DATATYPE_LABEL_in_datatypeFrame2046 = new Set(array(38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataType_in_datatypeFrame2049 = new Set(array(1, 65, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2055 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2058 = new Set(array(1, 65, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2066 = new Set(array(17, 24, 36, 38, 39, 40, 41, 72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_datatypeFrame2069 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataRange_in_datatypeFrame2071 = new Set(array(1, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2079 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2082 = new Set(array(1, 72));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individual2List2107 = new Set(array(35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_individual2List2109 = new Set(array(81, 82, 83, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individualList_in_individual2List2111 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataProperty2List2123 = new Set(array(35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataProperty2List2125 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyList_in_dataProperty2List2127 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataPropertyList2141 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataPropertyList2144 = new Set(array(12, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataPropertyList2146 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectProperty2List2162 = new Set(array(35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectProperty2List2164 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyList_in_objectProperty2List2166 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectPropertyList2180 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyList2183 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectPropertyList2185 = new Set(array(1, 35));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_DATATYPE_LABEL_in_entity2211 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2213 = new Set(array(38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataType_in_entity2215 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2217 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLASS_LABEL_in_entity2223 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2225 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_classIRI_in_entity2227 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2229 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2235 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2237 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyIRI_in_entity2239 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2241 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_DATA_PROPERTY_LABEL_in_entity2247 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2249 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_datatypePropertyIRI_in_entity2251 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2253 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2259 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2261 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_entity2263 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2265 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2271 = new Set(array(36));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2273 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_individualIRI_in_entity2275 = new Set(array(37));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2277 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_ontologyIri2294 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_versionIri2305 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_IMPORT_LABEL_in_imports2315 = new Set(array(81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_imports2317 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_dataRange1455 = new Set(array(1, 26));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OR_LABEL_in_dataRange1469 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_dataRange1473 = new Set(array(1, 26));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_dataConjunction1506 = new Set(array(1, 27));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_AND_LABEL_in_dataConjunction1523 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_dataConjunction1527 = new Set(array(1, 27));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationAnnotatedList1550 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotation_in_annotationAnnotatedList1553 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_annotationAnnotatedList1556 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationAnnotatedList1558 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotation_in_annotationAnnotatedList1561 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotation1580 = new Set(array(16, 81, 82, 83, 87, 91, 92, 93, 94));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationTarget_in_annotation1584 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_NODE_ID_in_annotationTarget1601 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_annotationTarget1608 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_literal_in_annotationTarget1615 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_annotations1632 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_annotations1636 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionList1667 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_descriptionList1672 = new Set(array(12, 17, 24, 36, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionList1676 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1719 = new Set(array(75));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1722 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyCharacteristicAnnotatedList1725 = new Set(array(72, 75));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyCharacteristicAnnotatedList1727 = new Set(array(75));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_CHARACTERISTIC_in_objectPropertyCharacteristicAnnotatedList1730 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1745 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1748 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyExpressionAnnotatedList1751 = new Set(array(12, 72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_objectPropertyExpressionAnnotatedList1753 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_objectPropertyExpressionAnnotatedList1756 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1790 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1793 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataPropertyExpressionAnnotatedList1796 = new Set(array(12, 72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_dataPropertyExpressionAnnotatedList1798 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyExpression_in_dataPropertyExpressionAnnotatedList1801 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_annotationPropertyFrame1818 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotationPropertyFrame1820 = new Set(array(1, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_annotationPropertyFrame1826 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_annotationPropertyFrame1829 = new Set(array(1, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_DOMAIN_LABEL_in_annotationPropertyFrame1838 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1841 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_RANGE_LABEL_in_annotationPropertyFrame1847 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iriAnnotatedList_in_annotationPropertyFrame1850 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_SUB_PROPERTY_OF_LABEL_in_annotationPropertyFrame1856 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyFrame1858 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_iriAnnotatedList1873 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_iriAnnotatedList1876 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_iriAnnotatedList1879 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_iriAnnotatedList1881 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_iriAnnotatedList1884 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_annotationPropertyIRI1903 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_annotationPropertyIRIAnnotatedList1919 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_annotationPropertyIRIAnnotatedList1922 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_annotationPropertyIRIAnnotatedList1925 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_annotationPropertyIRIAnnotatedList1927 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_factAnnotatedList1956 = new Set(array(12, 17, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_fact_in_factAnnotatedList1959 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_factAnnotatedList1962 = new Set(array(12, 17, 72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_factAnnotatedList1964 = new Set(array(12, 17, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_fact_in_factAnnotatedList1967 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_individualAnnotatedList1986 = new Set(array(81, 82, 83, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individualAnnotatedList1989 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_individualAnnotatedList1992 = new Set(array(72, 81, 82, 83, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_individualAnnotatedList1994 = new Set(array(81, 82, 83, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individualAnnotatedList1997 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_NOT_LABEL_in_fact2011 = new Set(array(12, 17, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyFact_in_fact2015 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyFact_in_fact2019 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyIRI_in_objectPropertyFact2030 = new Set(array(81, 82, 83, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_objectPropertyFact2032 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyIRI_in_dataPropertyFact2046 = new Set(array(16, 87, 92, 93, 94));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_literal_in_dataPropertyFact2048 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_DATATYPE_LABEL_in_datatypeFrame2062 = new Set(array(38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataType_in_datatypeFrame2065 = new Set(array(1, 65, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2071 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2074 = new Set(array(1, 65, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_EQUIVALENT_TO_LABEL_in_datatypeFrame2082 = new Set(array(17, 24, 36, 38, 39, 40, 41, 72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_datatypeFrame2085 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataRange_in_datatypeFrame2087 = new Set(array(1, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_datatypeFrame2095 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_datatypeFrame2098 = new Set(array(1, 72));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individual_in_individual2List2123 = new Set(array(35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_individual2List2125 = new Set(array(81, 82, 83, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individualList_in_individual2List2127 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataProperty2List2139 = new Set(array(35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataProperty2List2141 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPropertyList_in_dataProperty2List2143 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataPropertyList2157 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_dataPropertyList2160 = new Set(array(12, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataProperty_in_dataPropertyList2162 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectProperty2List2178 = new Set(array(35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectProperty2List2180 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyList_in_objectProperty2List2182 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectPropertyList2196 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_objectPropertyList2199 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectProperty_in_objectPropertyList2201 = new Set(array(1, 35));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_DATATYPE_LABEL_in_entity2227 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2229 = new Set(array(38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataType_in_entity2231 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2233 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLASS_LABEL_in_entity2239 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2241 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_classIRI_in_entity2243 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2245 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OBJECT_PROPERTY_LABEL_in_entity2251 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2253 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyIRI_in_entity2255 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2257 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_DATA_PROPERTY_LABEL_in_entity2263 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2265 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_datatypePropertyIRI_in_entity2267 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2269 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATION_PROPERTY_LABEL_in_entity2275 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2277 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRI_in_entity2279 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2281 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_NAMED_INDIVIDUAL_LABEL_in_entity2287 = new Set(array(36));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OPEN_BRACE_in_entity2289 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_individualIRI_in_entity2291 = new Set(array(37));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLOSE_BRACE_in_entity2293 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_ontologyIri2310 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_versionIri2321 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_IMPORT_LABEL_in_imports2331 = new Set(array(81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_iri_in_imports2333 = new Set(array(1));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_synpred18_Erfurt_Syntax_Manchester285 = new Set(array(28, 29, 30, 31, 32, 33, 34));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_SOME_LABEL_in_synpred18_Erfurt_Syntax_Manchester293 = new Set(array(12, 17, 24, 36, 81, 82, 91));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_primary_in_synpred18_Erfurt_Syntax_Manchester297 = new Set(array(1));
@@ -7140,28 +7154,28 @@ Erfurt_Syntax_ManchesterParser::$FOLLOW_primary_in_synpred18_Erfurt_Syntax_Manch
 Erfurt_Syntax_ManchesterParser::$FOLLOW_EXACTLY_LABEL_in_synpred18_Erfurt_Syntax_Manchester395 = new Set(array(16));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_nonNegativeInteger_in_synpred18_Erfurt_Syntax_Manchester399 = new Set(array(1, 12, 17, 24, 36, 81, 82, 91));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_primary_in_synpred18_Erfurt_Syntax_Manchester403 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1461 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1465 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1507 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1511 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1534 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1542 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1703 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1711 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1729 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1737 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1774 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1782 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1857 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1865 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1903 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1909 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1911 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1940 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1948 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1970 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1978 = new Set(array(1));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2055 = new Set(array(72, 81, 82, 91));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2058 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_OR_LABEL_in_synpred56_Erfurt_Syntax_Manchester1469 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataConjunction_in_synpred56_Erfurt_Syntax_Manchester1473 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_AND_LABEL_in_synpred57_Erfurt_Syntax_Manchester1523 = new Set(array(17, 24, 36, 38, 39, 40, 41, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_synpred57_Erfurt_Syntax_Manchester1527 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred58_Erfurt_Syntax_Manchester1550 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred59_Erfurt_Syntax_Manchester1558 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred65_Erfurt_Syntax_Manchester1719 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred66_Erfurt_Syntax_Manchester1727 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred68_Erfurt_Syntax_Manchester1745 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred69_Erfurt_Syntax_Manchester1753 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred71_Erfurt_Syntax_Manchester1790 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred72_Erfurt_Syntax_Manchester1798 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred78_Erfurt_Syntax_Manchester1873 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred79_Erfurt_Syntax_Manchester1881 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred81_Erfurt_Syntax_Manchester1919 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_synpred82_Erfurt_Syntax_Manchester1925 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationPropertyIRIAnnotatedList_in_synpred82_Erfurt_Syntax_Manchester1927 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred83_Erfurt_Syntax_Manchester1956 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred84_Erfurt_Syntax_Manchester1964 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred86_Erfurt_Syntax_Manchester1986 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotations_in_synpred87_Erfurt_Syntax_Manchester1994 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_ANNOTATIONS_LABEL_in_synpred91_Erfurt_Syntax_Manchester2071 = new Set(array(72, 81, 82, 91));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_annotationAnnotatedList_in_synpred91_Erfurt_Syntax_Manchester2074 = new Set(array(1));
 
 ?>

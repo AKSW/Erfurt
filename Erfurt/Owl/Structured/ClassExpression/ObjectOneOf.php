@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 3:57:47 PM
- * To change this template use File | Settings | File Templates.
- */
- 
+
 class Erfurt_Owl_Structured_ClassExpression_ObjectOneOf extends Erfurt_Owl_Structured_ClassExpression {
 
     private $individuals;
@@ -15,7 +8,7 @@ class Erfurt_Owl_Structured_ClassExpression_ObjectOneOf extends Erfurt_Owl_Struc
         $this->individuals = $list;
     }
 
-    function getPredicateString(){
+    function getPredicateString() {
         return "owl:oneOf";
     }
 }

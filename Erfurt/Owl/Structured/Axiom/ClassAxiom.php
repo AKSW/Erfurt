@@ -1,26 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 26, 2010
- * Time: 12:52:48 PM
- * To change this template use File | Settings | File Templates.
- */
- 
-class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples{
 
-    private $classExpressions = array();    
+class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples {
 
-    function __construct($element=null, $nextElement=null) {
-        if($element) $this->addElement($element);
-        if($nextElement) $this->addElement($nextElement);
+    private $classExpressions = array();
+
+    function __construct($element = null, $nextElement = null) {
+        if ($element) $this->addElement($element);
+        if ($nextElement) $this->addElement($nextElement);
     }
 
-    public function addElement($element){
-        $this->classExpressions []= $element;
+    public function addElement($element) {
+        $this->classExpressions [] = $element;
     }
 
-    public function getElements(){
+    public function getElements() {
         return $this->classExpressions;
     }
 
@@ -29,7 +22,7 @@ class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom
     }
 
     public function toN3() {
-//        return Erfurt_Owl_Structured_Util_N3Converter::makeTriple()
+        //        return Erfurt_Owl_Structured_Util_N3Converter::makeTriple()
         // TODO: Implement toN3() method.
     }
 

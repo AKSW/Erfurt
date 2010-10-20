@@ -1,13 +1,13 @@
 <?php
- 
+
 class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_AnnotationValue {
     private $iri;
 
     public function __construct($iri) {
-        $this->iri=$iri;
+        $this->iri = $iri;
     }
 
-    public function getValue(){
+    public function getValue() {
         return $this->iri;
     }
 
@@ -15,11 +15,11 @@ class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_Annota
         return $this->getValue();
     }
 
-    public function getElements(){
+    public function getElements() {
         return $this->getValue();
     }
-    
-    public function isComplex(){
-      return false;
+
+    public function isComplex() {
+        return false;
     }
 }

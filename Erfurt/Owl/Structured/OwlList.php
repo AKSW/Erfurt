@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 5:05:12 PM
- * To change this template use File | Settings | File Templates.
- */
- 
+
 class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
 
     private $list;
@@ -16,19 +9,19 @@ class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
         $nextBNodeId = null;
         $retval = array();
         $elements = $this->getElements();
-        foreach ($elements as $element){
-            $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray(
+        foreach ($elements as $element) {
+            $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray(
                 $bNodeId,
                 "rdf:first",
                 $element->getValue(),
-                $element instanceof Erfurt_Owl_Structured_Literal_StringLiteral ? $element->getLang():null,
-                method_exists($element, "getDatatype")?$element->getDatatype():null
+                $element instanceof Erfurt_Owl_Structured_Literal_StringLiteral ? $element->getLang() : null,
+                method_exists($element, "getDatatype") ? $element->getDatatype() : null
             );
             $nextBNodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
-            $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray(
+            $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray(
                 $bNodeId,
                 "rdf:rest",
-                ($element != end($elements)?$nextBNodeId:"rdf:nil")
+                ($element != end($elements) ? $nextBNodeId : "rdf:nil")
             );
             $bNodeId = $nextBNodeId;
         }
@@ -44,17 +37,17 @@ class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
         $this->addElement($element);
     }
 
-    public function getElements(){
+    public function getElements() {
         return $this->list;
     }
 
-    public function addElement($element){
-        $this->list []= $element;
+    public function addElement($element) {
+        $this->list [] = $element;
     }
 
-    public function addAllElements(Erfurt_Owl_Structured_OwlList $list){
-        foreach ($list->getElements() as $element){
-            $this->list []= $element;
+    public function addAllElements(Erfurt_Owl_Structured_OwlList $list) {
+        foreach ($list->getElements() as $element) {
+            $this->list [] = $element;
         }
     }
 

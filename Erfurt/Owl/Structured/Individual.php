@@ -1,6 +1,6 @@
 <?php
- 
-class Erfurt_Owl_Structured_Individual implements Erfurt_Owl_Structured_IRdfPhp{
+
+class Erfurt_Owl_Structured_Individual implements Erfurt_Owl_Structured_IRdfPhp {
 
     private $value;
 
@@ -8,19 +8,19 @@ class Erfurt_Owl_Structured_Individual implements Erfurt_Owl_Structured_IRdfPhp{
         $this->value = $value;
     }
 
-    public function getValue(){
+    public function getValue() {
         return $this->value;
     }
 
     function __toString() {
-        return "".$this->value;
+        return "" . $this->value;
     }
 
     public function toRdfArray() {
         return $this->value;
     }
 
-    public function isComplex(){
-      return false;
+    public function isComplex() {
+        return false;
     }
 }

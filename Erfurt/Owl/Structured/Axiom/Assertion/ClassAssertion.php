@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 27, 2010
- * Time: 5:25:47 PM
- * To change this template use File | Settings | File Templates.
- */
- 
+
 class Erfurt_Owl_Structured_Axiom_Assertion_ClassAssertion extends Erfurt_Owl_Structured_Axiom_Assertion implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples {
 
     private $classExpression;
@@ -17,7 +10,7 @@ class Erfurt_Owl_Structured_Axiom_Assertion_ClassAssertion extends Erfurt_Owl_St
     }
 
     function __toString() {
-        return  implode(" ", $this->getElements()). $this->getPredicateString(). $this->classExpression ;
+        return implode(" ", $this->getElements()) . $this->getPredicateString() . $this->classExpression;
     }
 
     public function getValue() {
@@ -25,7 +18,7 @@ class Erfurt_Owl_Structured_Axiom_Assertion_ClassAssertion extends Erfurt_Owl_St
     }
 
     public function toRdfArray() {
-        return Erfurt_Owl_Structured_Util_RdfArray::createArray(implode(" ", $this->getElements()), "rdf:type", "".$this->classExpression);
+        return Erfurt_Owl_Structured_Util_RdfArray::createArray(implode(" ", $this->getElements()), "rdf:type", "" . $this->classExpression);
     }
 
     public function getPredicateString() {

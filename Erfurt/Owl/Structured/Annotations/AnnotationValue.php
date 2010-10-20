@@ -1,5 +1,5 @@
 <?php
- 
+
 class Erfurt_Owl_Structured_Annotations_AnnotationValue implements Erfurt_Owl_Structured_IRdfPhp {
 
     public function __toString() {

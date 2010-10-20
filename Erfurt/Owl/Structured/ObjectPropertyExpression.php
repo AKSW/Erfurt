@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 24, 2010
- * Time: 9:11:06 PM
- * To change this template use File | Settings | File Templates.
- */
- 
-class Erfurt_Owl_Structured_ObjectPropertyExpression extends Erfurt_Owl_Structured_ClassExpression{
+
+class Erfurt_Owl_Structured_ObjectPropertyExpression extends Erfurt_Owl_Structured_ClassExpression {
 
     private $objectPropertyExpression;
     private $inverse;
@@ -18,11 +11,11 @@ class Erfurt_Owl_Structured_ObjectPropertyExpression extends Erfurt_Owl_Structur
         $this->inverse = $inverse;
     }
 
-    protected function getObjectPropertyExpression(){
+    protected function getObjectPropertyExpression() {
         return $this->objectPropertyExpression;
     }
 
     public function __toString() {
-        return ($this->inverse?"inverse ":"") . $this->objectPropertyExpression;
+        return ($this->inverse ? "inverse " : "") . $this->objectPropertyExpression;
     }
 }

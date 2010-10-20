@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: roll
- * Date: Aug 25, 2010
- * Time: 12:20:36 AM
- * To change this template use File | Settings | File Templates.
- */
- 
+
 class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRestriction {
 
     private $dataPropertyExpression=array();
@@ -43,4 +36,32 @@ class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structure
     public function getRestrictionLabel() {
         throw new Exception("don't call directly!");
     }
+
+    protected function toArray() {
+//        $retval = array();
+//        $retval [] = array(
+//            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+//            "rdf:type",
+//            "owl:Restriction"
+//        );
+//        $retval [] = array(
+//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+//            "owl:onProperty",
+//            // TODO array mapping to complex type
+//            $this->getDataPropertyExpression()
+//        );
+//        $retval [] = array(
+//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+//            $this->getPredicateString(),
+//            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+//        );
+//        $retval [] = array(
+//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+//            "rdf:type",
+//            "rdfs:Datatype"
+//            );
+var_dump($this);
+        //return $retval;
+    }
+
 }
