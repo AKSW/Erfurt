@@ -7,7 +7,9 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
 
     function __construct($element=null) {
         $this->elements = array();
-        if($element)$this->addElement($element);
+		if (is_array($element)) {
+			$this->elements = array_merge($this->elements, $element);
+		} else if($element) $this->addElement($element);
     }
 
     public function addElement($element){
@@ -32,8 +34,7 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
                 $retval []= $element->toRdfArray();
             }
         }
-        else $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, $this->getPredicateString(), $this->getValue()); 
-	//TODO implement
+        else $retval []= Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, $this->getPredicateString(), $this->getValue());
         return $retval;
     }
 
@@ -50,7 +51,7 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     public function getPredicateString() {
-      throw new Exception ("not yet implemented");
+      throw new Exception ("not yet implemented"); // do i need it at all???
     }
 
     public function toTriples() {
@@ -58,16 +59,32 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     protected function toArray(){
-      $retval = array();
-      $list = $this->makeList($this->getElements());
-      $retval []= array(
+      if($this->isComplex()){
+        $retval = array();
+		$e = $this->getElements();
+		if ($e[0] instanceof Erfurt_Owl_Structured_ClassExpression_ObjectComplementOf) {
+			$retval = array_merge($retval,$e[0]->toArray());
+		} else {
+        	$list = $this->makeList($this->getElements());
+        	$retval []= array(
+            	Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+            	$this->getPredicateString(),
+            	$list[0][0]
+        		);
+        	$retval = array_merge($retval, $list);
+		}
+        return $retval;
+      }else{
+        $retval = array();
+        $e = $this->getElements();
+        $retval []= array(
           Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
-          $this->getPredicateString(),
-          $list[0][0]
-      );
-      $retval = array_merge($retval, $list);
-      return $retval;
-    } 
+          "owl:Class",
+          $e[0]->__toString()
+        );
+        return $retval;
+      }
+    }
 
     private function makeList($elements){
       $retval = array();

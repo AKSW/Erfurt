@@ -73,9 +73,11 @@ _:b12 rdf:rest rdf:nil .
 //        array("dataTypeRestriction","integer [<= 0, >= 150]", "xxx"),
 
         array("conjunction",'ab',
-"_:b15 owl:intersectionOf _:b14 .
-_:b14 rdf:first ab .
-_:b14 rdf:rest rdf:nil .
+"_:b14 owl:Class ab .
+"),
+        // dummy
+        array("description",'ab',
+"_:b15 owl:Class ab .
 "),
         array("conjunction",'a and b',
 "_:b18 owl:intersectionOf _:b16 .
@@ -133,7 +135,18 @@ _:b29 owl:onClass John .
 
   public function providerComplex(){
     return array(
-       array("restriction",'hasParent max 5 (not John)',""),
+        array("conjunction", "not class1",
+"_:b30 owl:complementOf _:b31 .
+_:b31 owl:Class class1 .
+"),
+       array("restriction",'hasParent max 5 (not John)',
+'_:b32 rdf:type owl:Restriction .
+_:b32 owl:maxQualifiedCardinality "5"^^xsd:nonNegativeInteger .
+_:b32 owl:onProperty hasParent .
+_:b32 owl:onClass _:b33 .
+_:b33 owl:complementOf _:b34 .
+_:b34 owl:Class John .
+'),
         );
   }
 

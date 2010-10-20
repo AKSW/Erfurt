@@ -16,12 +16,6 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structu
     }
 
     protected function getClassExpression(){
-      if($this->classExpression->isComplex()){
-        $innerValue = $this->classExpression->toArray();
-        //var_dump($innerValue);
-        return $innerValue;
-      }
-      else
         return $this->classExpression;
     }
 
@@ -47,10 +41,6 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structu
 
         return $retval;
       }
-    }
-
-    public function toTriples() {
-     return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
     }
 
     protected function toArray(){

@@ -22,13 +22,9 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
         return $retval;
     }
 
-    public function toTriples() {
-      return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
-    }
-
     public function toArray(){
       $retval = array();
-
+      $ce = $this->getClassExpression();
       $retval []= array(
         Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
         "rdf:type",
@@ -45,20 +41,29 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
           "owl:onProperty",
           $this->getObjectPropertyExpression());
       
-      $ce = $this->getClassExpression(); 
-      if(is_array($ce)){
+      if($ce->isComplex()){
         $retval []= array(
           Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
           "owl:onClass",
-          $ce[0][0]
+          $this->getFirtsElement()
         );
-        $retval = array_merge($retval,$ce);
-      }else
+        $retval = array_merge($retval,$this->ce_array);
+      }else {
         $retval []= array(
           Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
           "owl:onClass",
-          $ce
+          $ce->__toString()
           );
+	}
       return $retval;
     }
+
+	// hack! needed to init the array and return the first element
+	// otherwise problem with bnodes
+	private function getFirtsElement()
+	{
+		$x = $this->getClassExpression()->getElements();
+		$this->ce_array = $x[0]->toArray();
+		return $this->ce_array[0][0];
+	}
 }
