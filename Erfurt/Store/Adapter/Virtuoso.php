@@ -54,6 +54,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     protected $_connection = null;
     
     /**
+     * Adapter option array
+     * @var array
+     */
+    protected $_adapterOptions = null;
+    
+    /**
      * The available graphs in this store.
      * @var array
      */
@@ -96,7 +102,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @throws Erfurt_Store_Adapter_Exception
      */
     public function __construct($adapterOptions = array())
-    {        
+    {
         // check for odbc extension
         if (!extension_loaded('odbc')) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
@@ -104,31 +110,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             exit;
         }
         
-        extract($adapterOptions);
-        
-        // determine connection function
-        if (isset($use_persistent_connection) && (boolean)$use_persistent_connection === true) {
-            $odbcConnectFunction = 'odbc_pconnect';
-        } else {
-            $odbcConnectFunction = 'odbc_connect';
-        }
-        
-        // try to connect
-        if (function_exists('__virt_internal_dsn')) {
-            // via Virtuoso hosting
-            $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
-        } else {
-            // via php_odbc
-            $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
-            $this->_user = (string)$username;
-        }
-        
-        // success?
-        if (false === $this->_connection) {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
-            exit;
-        }
+        $this->_adapterOptions = $adapterOptions;
     }
     
     /**
@@ -145,7 +127,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
         
         // close connection
-        @odbc_close($this->_connection);
+        @odbc_close($this->connection());
     }
     
     // ------------------------------------------------------------------------
@@ -225,6 +207,46 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $this->_graphs = null;
         
         return true;
+    }
+    
+    /**
+     * Returns the current connection resource.
+     * The resource is created lazily if it doesn't exist.
+     * @retun resource
+     */
+    public function connection()
+    {
+        if (!$this->_connection) {
+            $adapterOptions = $this->_adapterOptions;
+
+            extract($adapterOptions);
+
+            // determine connection function
+            if (isset($use_persistent_connection) && (boolean)$use_persistent_connection === true) {
+                $odbcConnectFunction = 'odbc_pconnect';
+            } else {
+                $odbcConnectFunction = 'odbc_connect';
+            }
+
+            // try to connect
+            if (function_exists('__virt_internal_dsn')) {
+                // via Virtuoso hosting
+                $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
+            } else {
+                // via php_odbc
+                $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
+                $this->_user = (string)$username;
+            }
+
+            // success?
+            if (false === $this->_connection) {
+                require_once 'Erfurt/Store/Adapter/Exception.php';
+                throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
+                exit;
+            }
+        }
+        
+        return $this->_connection;
     }
     
     /**
@@ -637,7 +659,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $tables = $this->_odbcResultToArray(
             odbc_tables(
-                $this->_connection, 
+                $this->connection(), 
                 'db', 
                 $this->_user, 
                 (strlen($prefix) > 0) ? ($prefix . '%') : $prefix, 
@@ -849,8 +871,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function getLastError() 
     {
-        if (null !== $this->_connection) {
-            $message = sprintf('%s (%i)', odbc_errormsg($this->_connection), odbc_error($this->_connection));
+        if (null !== $this->connection()) {
+            $message = sprintf('%s (%i)', odbc_errormsg($this->connection()), odbc_error($this->connection()));
             return $message;
         }
     }
@@ -902,7 +924,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // build Virtuoso/PL query
         $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
 
-        $resultId = @odbc_exec($this->_connection, $virtuosoPl);
+        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
         
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
@@ -922,7 +944,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     protected function _execSql($sqlQuery) 
     {
-        $resultId = @odbc_exec($this->_connection, $sqlQuery);
+        $resultId = @odbc_exec($this->connection(), $sqlQuery);
         
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
