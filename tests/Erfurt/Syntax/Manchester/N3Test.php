@@ -150,8 +150,30 @@ _:b35 owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger .
 _:b35 owl:onProperty hasChild .
 _:b35 owl:onClass Parent .
 '),
-            array('restriction', 'hasAge some integer [< 12 , >= 19]', ''),
-        );
+            array('restriction', 'hasAge some integer [< 12 , >= 19]',
+'_:b41 rdf:type owl:Restriction .
+_:b41 owl:onProperty hasAge .
+_:b41 owl:someValuesFrom _:b40 .
+_:b40 rdf:type rdfs:Datatype .
+_:b40 owl:onDatatype xsd:integer .
+_:b40 owl:withRestrictions _:b36 .
+_:b36 rdf:first _:b37 .
+_:b37 xsd:minExclusive "12"^^xsd:integer .
+_:b36 rdf:rest _:b38 .
+_:b38 rdf:first _:b39 .
+_:b39 xsd:maxInclusive "19"^^xsd:integer .
+_:b38 rdf:rest rdf:nil .
+'),
+            array('restriction', 'hasAge some integer [< 12]',
+'_:b43 rdf:type owl:Restriction .
+_:b43 owl:onProperty hasAge .
+_:b43 owl:someValuesFrom _:b42 .
+_:b42 rdf:type rdfs:Datatype .
+_:b42 owl:onDatatype xsd:integer .
+_:b42 owl:withRestrictions _:b41 .
+_:b41 xsd:minExclusive "12"^^xsd:integer .
+'),
+            );
     }
 
 }

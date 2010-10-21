@@ -14,7 +14,7 @@ class Erfurt_Owl_Structured_DataPropertyRestriction_DataPropertyCardinalityRestr
     }
 
     public function __toString() {
-        return implode(", ", $this->getDataPropertyExpression()) . " " . $this->getRestrictionLabel()
+        return $this->getDataPropertyExpression() . " " . $this->getRestrictionLabel()
                 . ($this->getCardinality() ? " " . $this->getCardinality() : "")
                 . ($this->getDataRange() ? " (" . $this->getDataRange() . ")" : "");
     }

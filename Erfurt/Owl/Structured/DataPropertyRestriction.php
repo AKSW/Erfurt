@@ -2,33 +2,33 @@
 
 class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRestriction {
 
-    private $dataPropertyExpression=array();
+    private $dataPropertyExpression;
     private $dataRange;
 
     public function __toString() {
-            return  implode(", ",$this->dataPropertyExpression) . " " . $this->getRestrictionLabel()
-                    . ($this->dataRange? " " . $this->dataRange : "");
+        return $this->dataPropertyExpression . " " . $this->getRestrictionLabel()
+                . ($this->dataRange ? " " . $this->dataRange : "");
     }
 
     function __construct($dataPropertyExpression, $dataRange = null) {
         parent::__construct();
         $this->setDataPropertyExpression($dataPropertyExpression);
-        if(isset($dataRange)) $this->dataRange = $dataRange;
+        if (isset($dataRange)) $this->dataRange = $dataRange;
     }
 
-    protected function getDataPropertyExpression(){
+    protected function getDataPropertyExpression() {
         return $this->dataPropertyExpression;
     }
 
-    public function setDataPropertyExpression($property){
-        $this->dataPropertyExpression []= $property;
+    public function setDataPropertyExpression($property) {
+        $this->dataPropertyExpression = $property;
     }
 
-    protected function setDataRange($dataRange){
+    protected function setDataRange($dataRange) {
         $this->dataRange = $dataRange;
     }
 
-    protected function getDataRange(){
+    protected function getDataRange() {
         return $this->dataRange;
     }
 
@@ -38,30 +38,24 @@ class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structure
     }
 
     protected function toArray() {
-//        $retval = array();
-//        $retval [] = array(
-//            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
-//            "rdf:type",
-//            "owl:Restriction"
-//        );
-//        $retval [] = array(
-//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-//            "owl:onProperty",
-//            // TODO array mapping to complex type
-//            $this->getDataPropertyExpression()
-//        );
-//        $retval [] = array(
-//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-//            $this->getPredicateString(),
-//            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
-//        );
-//        $retval [] = array(
-//            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-//            "rdf:type",
-//            "rdfs:Datatype"
-//            );
-var_dump($this);
-        //return $retval;
+        $retval = array();
+        $datarangeList = $this->dataRange->toArray();
+        $retval [] = array(
+            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+            "rdf:type",
+            "owl:Restriction"
+        );
+        $retval [] = array(
+            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            "owl:onProperty",
+            $this->getDataPropertyExpression()
+        );
+        $retval [] = array(
+            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            $this->getPredicateString(),
+            $datarangeList[0][0]
+        );
+        $retval = array_merge($retval, $datarangeList);
+        return $retval;
     }
-
 }

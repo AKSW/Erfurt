@@ -2,15 +2,11 @@
 
 class Erfurt_Owl_Structured_DataRange_DataUnionOf extends Erfurt_Owl_Structured_DataRange {
 
-    private $dataRanges = array();
+    private $dataRanges;
 
     public function __construct($dataRange) {
         parent::__construct();
-        $this->addElement($dataRange);
-    }
-
-    public function addElement(Erfurt_Owl_Structured_DataRange_DataIntersectionOf $element) {
-        $this->dataRanges [] = $element;
+        $this->dataRanges = $dataRange;
     }
 
     public function __toString() {

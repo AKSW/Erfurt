@@ -14,7 +14,7 @@ class Erfurt_Owl_Structured_DataPropertyRestriction_DataHasValue extends Erfurt_
     }
 
     public function __toString() {
-        return implode(", ", $this->getDataPropertyExpression()) . " " . $this->getRestrictionLabel()
+        return $this->getDataPropertyExpression() . " " . $this->getRestrictionLabel()
                 . " " . $this->literal;
     }
 

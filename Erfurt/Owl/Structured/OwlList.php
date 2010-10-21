@@ -28,6 +28,10 @@ class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
         return $retval;
     }
 
+    public function toArray(){
+
+    }
+
     public function __toString() {
         return implode(", ", $this->getElements());
     }

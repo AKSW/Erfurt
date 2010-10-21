@@ -7,6 +7,6 @@ class Erfurt_Owl_Structured_DataPropertyRestriction_DataAllValuesFrom extends Er
     }
 
     public function getPredicateString() {
-      return "owl:someValuesFrom";
+      return "owl:allValuesFrom?";
     }
 }

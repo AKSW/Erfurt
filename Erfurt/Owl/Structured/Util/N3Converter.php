@@ -2,14 +2,9 @@
 
 class Erfurt_Owl_Structured_Util_N3Converter {
 
-//    public static function makeTriple($subject, $predicate, $object, $type=null){
-//      if($type) return $subject . " " . $predicate . " \"" . $object . "\"^^$type .\n" ;
-//        return $subject . " " . $predicate . " " . $object . " .\n" ;
-//    }
-
     public static function makeTriplesFromArray($triples) {
         if (!is_array($triples))
-            throw new Exceptiopn("The triple must be converted to array!");
+            throw new Exception("The triple must be converted to array!");
         else {
             $retval = "";
             foreach ($triples as $triple) {
@@ -25,4 +20,33 @@ class Erfurt_Owl_Structured_Util_N3Converter {
     private static function createObj($o, $type = null) {
         return $type ? "\"" . $o . "\"^^$type" : $o;
     }
+
+    public static function makeList($elements) {
+        $retval = array();
+        Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId();
+        foreach ($elements as $key => $e) {
+            if ($e->isComplex()) {
+                $ee = $e->toArray();
+                $retval [] = array(
+                    Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                    "rdf:first",
+                    $ee[0][0]
+                );
+                $retval = array_merge($retval, $ee);
+            } else
+                $retval [] = array(
+                    Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                    "rdf:first",
+                    $e
+                );
+            $retval [] = array(
+                Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                "rdf:rest",
+                $key == count($elements) - 1 ?
+                        "rdf:nil" : Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId()
+            );
+        }
+        return $retval;
+    }
+
 }
