@@ -1,6 +1,8 @@
 <?php
-
-class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRestriction {
+// http://www.w3.org/2007/OWL/refcardA4
+class Erfurt_Owl_Structured_DataPropertyRestriction
+    extends Erfurt_Owl_Structured_ClassExpression
+    implements Erfurt_Owl_Structured_IRestriction {
 
     private $dataPropertyExpression;
     private $dataRange;
@@ -24,22 +26,16 @@ class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structure
         $this->dataPropertyExpression = $property;
     }
 
-    protected function setDataRange($dataRange) {
-        $this->dataRange = $dataRange;
-    }
-
     protected function getDataRange() {
         return $this->dataRange;
     }
-
 
     public function getRestrictionLabel() {
         throw new Exception("don't call directly!");
     }
 
-    protected function toArray() {
+    public function toArray() {
         $retval = array();
-        $datarangeList = $this->dataRange->toArray();
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
             "rdf:type",
@@ -50,12 +46,6 @@ class Erfurt_Owl_Structured_DataPropertyRestriction extends Erfurt_Owl_Structure
             "owl:onProperty",
             $this->getDataPropertyExpression()
         );
-        $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-            $this->getPredicateString(),
-            $datarangeList[0][0]
-        );
-        $retval = array_merge($retval, $datarangeList);
         return $retval;
     }
 }

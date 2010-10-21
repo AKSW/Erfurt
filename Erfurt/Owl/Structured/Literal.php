@@ -19,4 +19,8 @@ class Erfurt_Owl_Structured_Literal extends Erfurt_Owl_Structured_Annotations_An
     public function getValue() {
         return $this->lexicalValue;
     }
+
+    public function isComplex() {
+        return false; 
+    }
 }

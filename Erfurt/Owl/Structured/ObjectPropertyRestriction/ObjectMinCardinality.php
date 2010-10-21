@@ -6,8 +6,8 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectMinCardinality exten
         return "min";
     }
 
-    public function getPredicateString() {
-        return "owl:minQualifiedCardinality";
+    public function getPredicateString($qualified = false) {
+        return $qualified ? "owl:minQualifiedCardinality" : "owl:minCardinality";
     }
 
 }

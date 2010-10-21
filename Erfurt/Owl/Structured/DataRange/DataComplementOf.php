@@ -5,7 +5,6 @@ class Erfurt_Owl_Structured_DataRange_DataComplementOf extends Erfurt_Owl_Struct
     private $dataRange;
 
     public function __construct($dataAtomic) {
-        parent::__construct();
         $this->dataRange = $dataAtomic;
     }
 

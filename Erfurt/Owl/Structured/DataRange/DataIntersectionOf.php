@@ -9,7 +9,6 @@ class Erfurt_Owl_Structured_DataRange_DataIntersectionOf extends Erfurt_Owl_Stru
     }
 
     function __construct($dataPrimary) {
-        parent::__construct();
         $this->dataRanges = $dataPrimary;
     }
 }

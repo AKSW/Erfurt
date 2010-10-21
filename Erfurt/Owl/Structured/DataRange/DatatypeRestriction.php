@@ -1,6 +1,6 @@
 <?php
 
-class Erfurt_Owl_Structured_DataRange_DatatypeRestriction extends Erfurt_Owl_Structured_DataRange implements Erfurt_Owl_Structured_ITriples {
+class Erfurt_Owl_Structured_DataRange_DatatypeRestriction extends Erfurt_Owl_Structured_DataRange {
 
     private $dataType;
     private $restriction = array();
@@ -13,7 +13,6 @@ class Erfurt_Owl_Structured_DataRange_DatatypeRestriction extends Erfurt_Owl_Str
     );
 
     function __construct($dataType) {
-        parent::__construct();
         $this->setDataType($dataType);
     }
 
@@ -38,22 +37,14 @@ class Erfurt_Owl_Structured_DataRange_DatatypeRestriction extends Erfurt_Owl_Str
         return "owl:Restrictions";
     }
 
-    public function toTriples() {
-        return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
-    }
-
     public function toArray() {
         $retval = array();
         $list = $this->restrictionsToArray();
-        $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
-            "rdf:type",
-            "rdfs:Datatype"
-        );
+        $retval [] = parent::toArray();
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
             "owl:onDatatype",
-            "xsd:" . $this->dataType
+            "xsd:" . $this->dataType //datatypeIRI not supported
         );
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),

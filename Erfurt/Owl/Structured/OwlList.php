@@ -29,7 +29,8 @@ class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
     }
 
     public function toArray(){
-
+        //TODO implement
+        throw new Exception("implement it");
     }
 
     public function __toString() {

@@ -24,6 +24,7 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
         return implode(" ", $this->getElements());
     }
 
+    //TODO cleanup
     public function toRdfArray() {
         $this->mainNodeBlankId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
         $retval = Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, "rdf:type", "owl:Class");
@@ -40,7 +41,7 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     public function getValue() {
-        // TODO: Implement getValue() method.
+        throw new Exception ("please implement this method in appropriate subclass");
     }
 
     public function isComplex() {
@@ -52,14 +53,14 @@ class Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRd
     }
 
     public function getPredicateString() {
-        throw new Exception ("not yet implemented"); // do i need it at all???
+        throw new Exception ("please implement this method in appropriate subclass");
     }
 
     public function toTriples() {
         return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray($this->toArray());
     }
 
-    protected function toArray() {
+    public function toArray() {
         if ($this->isComplex()) {
             $retval = array();
             $e = $this->getElements();

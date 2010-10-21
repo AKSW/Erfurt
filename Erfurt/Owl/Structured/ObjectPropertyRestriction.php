@@ -1,6 +1,6 @@
 <?php
 
-class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRestriction, Erfurt_Owl_Structured_ITriples {
+class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structured_ClassExpression implements Erfurt_Owl_Structured_IRestriction{
 
     private $classExpression;
     private $objectPropertyExpression;
@@ -43,7 +43,7 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction extends Erfurt_Owl_Structu
         }
     }
 
-    protected function toArray() {
+    public function toArray() {
         $retval = array();
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),

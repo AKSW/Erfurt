@@ -5,7 +5,6 @@ class Erfurt_Owl_Structured_DataRange_DataUnionOf extends Erfurt_Owl_Structured_
     private $dataRanges;
 
     public function __construct($dataRange) {
-        parent::__construct();
         $this->dataRanges = $dataRange;
     }
 

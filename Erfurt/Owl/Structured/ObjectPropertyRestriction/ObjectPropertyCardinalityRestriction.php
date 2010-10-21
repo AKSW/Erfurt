@@ -1,8 +1,10 @@
 <?php
 
-class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityRestriction extends Erfurt_Owl_Structured_ObjectPropertyRestriction {
+class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityRestriction
+    extends Erfurt_Owl_Structured_ObjectPropertyRestriction {
 
     private $cardinality;
+    private $ce_array;
 
     function __construct($objectPropertyExpression, $nni, $primary = null) {
         parent::__construct($objectPropertyExpression, $primary);
@@ -33,14 +35,18 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
 
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-            $this->getPredicateString(),
-            $this->cardinality,
-            "xsd:nonNegativeInteger");
+            "owl:onProperty",
+            $this->getObjectPropertyExpression()
+        );
 
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-            "owl:onProperty",
-            $this->getObjectPropertyExpression());
+            $this->getPredicateString(isset($ce)),
+            $this->cardinality,
+            "xsd:nonNegativeInteger"
+        );
+
+        if (!$ce) return $retval;
 
         if ($ce->isComplex()) {
             $retval [] = array(

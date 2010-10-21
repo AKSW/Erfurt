@@ -6,7 +6,7 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectMaxCardinality exten
         return "max";
     }
 
-    public function getPredicateString() {
-        return "owl:maxQualifiedCardinality";
+    public function getPredicateString($qualified = false) {
+        return $qualified ? "owl:maxQualifiedCardinality" : "owl:maxCardinality";
     }
 }
