@@ -126,8 +126,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             throw new Erfurt_Store_Adapter_Exception('Cannot close the connection while transactions are open.');
         }
         
-        // close connection
-        @odbc_close($this->connection());
+        $this->_closeConnection();
     }
     
     // ------------------------------------------------------------------------
@@ -804,11 +803,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $distinct = "";
         }
         
-        // TODO: support $
-        if (trim($countSpec[0]) !== '?') {
-            $countSpec = '?' . $countSpec;
-        }
-        
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
             'SELECT COUNT %s %s FROM <%s> %s',
@@ -886,6 +880,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
+    
+    /**
+     * Closes a current connection if it exists
+     */
+    protected function _closeConnection()
+    {
+        if (is_resource($this->_connection)) {
+            // close connection
+            @odbc_close($this->_connection);
+        }
+    }
     
     /**
      * Creates a fulltext index to be used with bif:contains matching.
