@@ -7,6 +7,7 @@ class Erfurt_Owl_Structured_DataPropertyRestriction
     private $dataPropertyExpression;
     private $dataRange;
 
+    //TODO add n-ary data range and multiple data properties
     public function __toString() {
         return $this->dataPropertyExpression . " " . $this->getRestrictionLabel()
                 . ($this->dataRange ? " " . $this->dataRange : "");
