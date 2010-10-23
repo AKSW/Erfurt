@@ -12,7 +12,7 @@ class Erfurt_Owl_Structured_ClassExpression_ObjectIntersectionOf
     }
 
     public function isComplex() {
-        return parent::isComplex();
+        return true;
     }
 
 //    public function toArray() {

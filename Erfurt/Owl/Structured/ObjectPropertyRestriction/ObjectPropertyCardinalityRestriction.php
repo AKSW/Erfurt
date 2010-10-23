@@ -17,30 +17,25 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
     }
 
     public function toRdfArray() {
-        $bnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
-        $retval = Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, "rdf:type", "owl:Restriction");
-        $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, $this->getPredicateString(), new Erfurt_Owl_Structured_Literal_TypedLiteral($this->cardinality, "xsd:nonNegativeInteger"));
-        $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, "owl:onProperty", $this->getObjectPropertyExpression());
-        $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray($bnodeId, "owl:onClass", $this->getClassExpression());
-        return $retval;
     }
 
     public function toArray() {
         $retval = array();
+        $bnodeId = null;
         $ce = $this->getClassExpression();
         $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+            $bnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
             "rdf:type",
             "owl:Restriction");
 
         $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            $bnodeId,
             "owl:onProperty",
             $this->getObjectPropertyExpression()
         );
 
         $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            $bnodeId,
             $this->getPredicateString(isset($ce)),
             $this->cardinality,
             "xsd:nonNegativeInteger"
@@ -48,26 +43,29 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
 
         if (!$ce) return $retval;
 
+
         if ($ce->isComplex()) {
             $retval [] = array(
-                Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                $bnodeId,
                 "owl:onClass",
-                $this->getFirtsElement()
+                $this->getFirstElement()
             );
             $retval = array_merge($retval, $this->ce_array);
         } else {
+            $ee = $ce->toArray();
             $retval [] = array(
-                Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                $bnodeId,
                 "owl:onClass",
-                $ce->__toString()
+                is_array($ee[0]) ? $ee[0][0] : $ee[0]
             );
+            return is_array($ee[0]) ? array_merge($retval, $ee) : $retval;
         }
         return $retval;
     }
 
     // hack! needed to init the array and return the first element
     // otherwise problem with bnodes
-    private function getFirtsElement() {
+    private function getFirstElement() {
         $x = $this->getClassExpression()->getElements();
         $this->ce_array = $x[0]->toArray();
         return $this->ce_array[0][0];

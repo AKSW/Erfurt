@@ -23,30 +23,32 @@ class Erfurt_Owl_Structured_Util_N3Converter {
 
     public static function makeList($elements) {
         $retval = array();
+        $bnodeId = null;
         Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId();
         foreach ($elements as $key => $e) {
             if ($e->isComplex()) {
                 $ee = $e->toArray();
-                $retval [] = array(
-                    Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-                    "rdf:first",
-                    $ee[0][0]
-                );
+                $retval [] = self::addFirst($bnodeId, $ee[0][0]);
                 $retval = array_merge($retval, $ee);
-            } else
-                $retval [] = array(
-                    Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
-                    "rdf:first",
-                    $e
-                );
+            } else {
+                $retval [] = self::addFirst($bnodeId, $e);
+            }
             $retval [] = array(
-                Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                $bnodeId ? $bnodeId : Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
                 "rdf:rest",
                 $key == count($elements) - 1 ?
-                        "rdf:nil" : Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId()
+                        "rdf:nil" : ($bnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId())
             );
+
         }
         return $retval;
     }
 
+    private function addFirst($bnodeId, $value) {
+        return array(
+            $bnodeId ? $bnodeId : Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+            "rdf:first",
+            $value
+        );
+    }
 }

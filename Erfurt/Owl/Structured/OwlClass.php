@@ -6,11 +6,6 @@ class Erfurt_Owl_Structured_OwlClass extends Erfurt_Owl_Structured_ClassExpressi
         return parent::__toString();
     }
 
-    public function toRdfArray() {
-        //        parent::createArray($this->getNewBlankNodeId(),"rdf:type", "uri", "owl:class");
-        //        parent::toRdfArray();
-    }
-
     function __construct(Erfurt_Owl_Structured_Iri $element) {
         parent::__construct($element);
     }
@@ -20,4 +15,12 @@ class Erfurt_Owl_Structured_OwlClass extends Erfurt_Owl_Structured_ClassExpressi
     }
 
 
+    public function isComplex(){
+        return false;
+    }
+
+    public function toArray(){
+        $e= $this->getElements();
+        return array($e[0]->__toString());
+    }
 }

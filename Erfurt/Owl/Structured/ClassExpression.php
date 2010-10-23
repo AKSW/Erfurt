@@ -24,20 +24,8 @@ class Erfurt_Owl_Structured_ClassExpression
         return implode(" ", $this->getElements());
     }
 
-    //TODO cleanup
     public function toRdfArray() {
-        //        $this->mainNodeBlankId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
-        //        $retval = Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, "rdf:type", "owl:Class");
-        //
-        //        if ($this->isComplex()) {
-        //            $newBnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId();
-        //            $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, $this->getPredicateString(), $newBnodeId);
-        //            foreach ($this->getElements() as $element) {
-        //                $retval [] = $element->toRdfArray();
-        //            }
-        //        }
-        //        else $retval [] = Erfurt_Owl_Structured_Util_RdfArray::createArray($this->mainNodeBlankId, $this->getPredicateString(), $this->getValue());
-        //        return $retval;
+        //TODO implement
     }
 
     public function getValue() {
@@ -45,12 +33,8 @@ class Erfurt_Owl_Structured_ClassExpression
     }
 
     public function isComplex() {
-        return count($this->elements) > 1 || ($this->getElements() && $this->elements[0]->isComplex());
+        return count($this->elements) > 1; // || ($this->getElements() && $this->elements[0]->isComplex());
     }
-
-//    public function getMainNodeBlankId() {
-//        return $this->mainNodeBlankId;
-//    }
 
     public function getPredicateString() {
         throw new Exception ("please implement this method in appropriate subclass");
@@ -61,45 +45,31 @@ class Erfurt_Owl_Structured_ClassExpression
     }
 
     public function toArray() {
-        //        if ($this->isComplex()) {
         $retval = array();
-//        var_dump($this);
-//        $e = $this->getElements();
-//            if ($e[0] instanceof Erfurt_Owl_Structured_ClassExpression_ObjectComplementOf) {
-//                $retval = array_merge($retval, $e[0]->toArray());
-//            } else {
-        $list = Erfurt_Owl_Structured_Util_N3Converter::makeList($this->getElements());
+        $bnodeId = null;
+        if ($this->isComplex())
+            $list = Erfurt_Owl_Structured_Util_N3Converter::makeList($this->getElements());
         $retval [] = array(
-            Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId(),
+            $bnodeId ? $bnodeId : $bnodeId = Erfurt_Owl_Structured_Util_RdfArray::getNewBnodeId(),
             "rdf:type",
             "owl:Class"
-//                    $this->getPredicateString(),
-//                    $list[0][0]
         );
-//        $retval = array_merge($retval, $list);
-//            }
         if ($this->isComplex()) {
-//            var_dump($this);
             $retval [] = array(
-                Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
+                $bnodeId,
                 $this->getPredicateString(),
                 $list[0][0]
             );
+            return array_merge($retval, $list);
         } else {
+            $e = $this->getElements();
+            $ee = $e[0]->toArray();
+            $retval [] = array(
+                $bnodeId,
+                $this->getPredicateString(),
+                is_array($ee[0]) ? $ee[0][0] : $ee[0]
+            );
+            return is_array($ee[0]) ? array_merge($retval, $ee) : $retval;
         }
-        return array_merge($retval, $list);
-
-        //        return $retval;
-        //        } else {
-        //            $retval = array();
-        //            $e = $this->getElements();
-        //            $retval [] = array(
-        //                Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
-        //                "owl:Class",
-        //                $e[0]->__toString()
-        //            );
-        //            return $retval;
-        //        }
     }
 }
-
