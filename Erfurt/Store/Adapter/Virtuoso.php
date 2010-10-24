@@ -780,6 +780,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $distinct = "DISTINCT";
         } else {
             $distinct = "";
+            if($countSpec == '*') {
+                $countSpec = '(*)';
+            }
+            // I don't know, if there are more cases in which this query crashes
         }
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
