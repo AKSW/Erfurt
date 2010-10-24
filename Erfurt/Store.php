@@ -1466,6 +1466,12 @@ class Erfurt_Store
      */
     public function countWhereMatches($graphIri, $whereSpec, $countSpec, $distinct = false)
     {
+        // unify parameters
+        if (trim($countSpec[0]) !== '?') {
+            // TODO: support $
+            $countSpec = '?' . $countSpec;
+        }
+        
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
             if ($this->isModelAvailable($graphIri)) {
                 $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
