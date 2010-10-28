@@ -41,11 +41,14 @@ class Erfurt_Sparql_EngineDb_TypeSorter
     protected $_query;
     
     protected $_sg;
+    protected $_backend;
 
     public function __construct(Erfurt_Sparql_Query $query, $engine)
     {
         $this->_engine = $engine;
         $this->_query = $query;
+        $config = Erfurt_App::getInstance()->getConfig();
+        $this->_backend = strtolower($config->store->backend);
     }
 
     /**
@@ -104,13 +107,18 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         }
         
         $arSpecial = $this->getSpecialOrderVariables();
-        if (count($arSpecial) == 0) {
-            $strOrder = $this->getSqlOrderBy();
 
+        
+
+        if (count($arSpecial) == 0) {
+
+            $strOrder = $this->getSqlOrderBy();
+            
             foreach ($arSqls as &$arSql) {
                 if ($strOrder !== '') {
-                    $arSql['order'] = $strOrder;
-                }   
+                    $arSql['order'] = $strOrder;                   
+                }
+              
             }
             
             return array(
@@ -245,6 +253,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         }
 
         
+
         $sql      = 'SELECT DISTINCT ' . implode(',', $arSel) . ' ' . $strFrom . $strWhere;
 
         $arResult = $this->_engine->sqlQuery($sql);
@@ -409,12 +418,20 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         #    return '';
         #}
 
-//var_dump($arTypeSet);
-//var_dump($this->arUnionVarAssignments);
+
 
         $sqlOrder = array();
         foreach ($arSM['order by'] as $arVar) {
             $strSparqlVar = $arVar['val'];
+
+
+            $sqlOrderVar = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1];
+
+            if($this->_backend == 'mssql'){
+                $sqlOrderVar = '+*+'.$sqlOrderVar.'-*-';
+            }
+
+
             if (isset($this->arUnionVarAssignments[$n][$strSparqlVar])) { 
                 $dt = null;
                 if (isset($arTypeSet[$strSparqlVar])) {
@@ -430,15 +447,16 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 }
                 
                 if (!isset($dt) || $dt == '' || $dt == 'String' || $dt == 'http://www.w3.org/2001/XMLSchema#string') {
-                    $sqlOrder[] = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1] . ' ' . strtoupper($arVar['type']);
+
+                    $sqlOrder[] = $sqlOrderVar . ' ' . strtoupper($arVar['type']);
                 } else {
                     try {
                         $sqlOrder[] = self::getCastMethod(
                             $dt,
-                            $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1]
+                            $sqlOrderVar
                         ) . ' ' . strtoupper($arVar['type']);
                     } catch (Exception $e) {
-                        $sqlOrder[] = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1] . ' ' . strtoupper($arVar['type']);
+                        $sqlOrder[] = $sqlOrderVar . ' ' . strtoupper($arVar['type']);
                     }
                     
                 }
@@ -449,7 +467,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
-//var_dump($sqlOrder);exit;
+
         return ' ORDER BY ' . implode(', ', $sqlOrder);
     }//function getSqlOrderBy($arTypeSet = array())
 
@@ -517,7 +535,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                             $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                                . '="")';
+                             . '=\'\')';//Sqlsrvchange
                         } else {
                             $strWhereTypes .= $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                 . '.' . $this->_sg->arTableColumnNames['datatype']['value']
@@ -532,7 +550,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
 
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
-                                 . '="")';
+                               . '=\'\')'; //Sqlsrvchange
                          } else {
                              $strWhereTypes .= ' OR ' . $this->arUnionVarAssignments[$n][$strSparqlVar][0]
                                  . '.' . $this->_sg->arTableColumnNames['datatype']['value']
@@ -565,5 +583,75 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             return "='$str'";
         }
     }//protected function getStringNullComparison($str)
+
+    function getSqlOrderByVariable($arTypeSet = array(), $n = 0)
+    {
+
+         $arSM = $this->_query->getSolutionModifier();
+
+        if ($arSM['order by'] === null) {
+            return '';
+        }
+
+        #if (count($arTypeSet) === 0) {
+        #    return '';
+        #}
+
+
+
+        $sqlOrder = array();
+        foreach ($arSM['order by'] as $arVar) {
+            $strSparqlVar = $arVar['val'];
+
+            if (isset($this->arUnionVarAssignments[$n][$strSparqlVar])) { 
+                $dt = null;
+                if (isset($arTypeSet[$strSparqlVar])) {
+                    foreach ($arTypeSet[$strSparqlVar]['datatype'] as $datatype) {
+                        if ($datatype !== 'http://www.w3.org/2001/XMLSchema#string') {
+                            $dt = $datatype;
+                            break;
+                        }
+                    }
+                }
+                if (null === $dt) {
+                    $dt = 'http://www.w3.org/2001/XMLSchema#string';
+                }
+                
+                if (!isset($dt) || $dt == '' || $dt == 'String' || $dt == 'http://www.w3.org/2001/XMLSchema#string') {
+
+                    $sqlOrderVaribale[] = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1];
+                } else {
+                    try {
+                        $sqlOrderVaribale[] = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1];
+                        
+                    } catch (Exception $e) {
+                        $sqlOrderVaribale[] = $this->arUnionVarAssignments[$n][$strSparqlVar][0] . '.' . $this->arUnionVarAssignments[$n][$strSparqlVar][1];
+                    }
+                    
+                }
+            }
+        }
+
+        if (count($sqlOrderVaribale) === 0) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Something went wrong with ORDER BY.');
+        }
+
+        return implode(', ', $sqlOrderVaribale);
+
+
+
+
+
+
+    }//function getSqlOrderBy($arTypeSet = array())
+
+
+
+
+
+
+
+
 
 }

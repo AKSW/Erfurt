@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * This file is part of the {@link http://ontowiki.net OntoWiki} project.
@@ -17,40 +17,36 @@
  * @subpackage sparql
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Sparql_EngineDb_QueryOptimizer
-{
+class Erfurt_Sparql_EngineDb_QueryOptimizer {
     protected $_engine = null;
-    
-    public function __construct($engine)
-    {
+
+    public function __construct($engine) {
         $this->_engine = $engine;
     }
-    
-    public function optimize(Erfurt_Sparql_Query $query)
-    {
+
+    public function optimize(Erfurt_Sparql_Query $query) {
         $resultForm = $query->getResultForm();
 
         $result = $query;
-        
+
 // TODO Not working on all queries yet.
 #return $result;
 
         if ($resultForm === 'select distinct') {
             $result = $this->_optimizeDistinct($query);
         }
-        
+
         return $result;
     }
-    
-    protected function _optimizeDistinct($query)
-    {
+
+    protected function _optimizeDistinct($query) {
 // TODO Not supported yet.
         $sm = $query->getSolutionModifier();
         if (isset($sm['limit']) || isset($sm['offset'])) {
             return $query;
-        } 
-        
-        
+        }
+
+
         $oldMandatory = array();
         $mandatory = array();
         $optionals = array();
@@ -62,8 +58,8 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                 $tempPattern = clone $graphPattern;
                 $newConstraints = array();
                 $vars = $tempPattern->getVariables();
-                
-                
+
+
                 foreach ($tempPattern->getConstraints() as $c) {
                     $add = true;
                     foreach ($c->getUsedVars() as $v) {
@@ -72,12 +68,12 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                             $optionalOnlyVars[$v] = true;
                         }
                     }
-                    
+
                     if ($add) {
                         $newConstraints[] = $c;
                     }
                 }
-                
+
                 $tempPattern->setConstraints($newConstraints);
                 $usedVars = array_merge($usedVars, $vars);
                 $oldMandatory[$graphPattern->getId()] = $graphPattern;
@@ -85,7 +81,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             } else {
                 $vars = $graphPattern->getVariables();
                 $addToOptionals = true;
-                
+
                 foreach ($vars as $v) {
                     if (isset($optionalOnlyVars[$v])) {
                         $mandatory[$graphPattern->getId()] = $graphPattern;
@@ -93,35 +89,48 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                         break;
                     }
                 }
-                
+
                 if ($addToOptionals) {
                     $optionals[$graphPattern->getId()] = $graphPattern;
                 }
-                
-                
+
+
             }
-  
+
         }
 
 
         if (count($optionals) === 0) {
             // We do not need to modify the query, for there won't be any joins...
             return $query;
-        } 
-        
+        }
+
         $query = clone $query;
-        
-        
+
+
         $resultVars = array();
         foreach ($query->getResultVars() as $varObject) {
             $resultVars[$varObject->getVariable()] = true;
         }
-        
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
+
+
+
+//SQLSRV CHANGE _ ABFRAGEN WELCHES BACKEND
+
+        $this->_config = Erfurt_App::getInstance()->getConfig();
+        if(strtolower($this->_config->store->backend) == 'mssql') {
+            require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Mssql.php';
+            $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Mssql($query, $this->_engine->getModelIdMapping());
+        }
+        else {
+            require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
+            $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
+        }
+
         require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
-        
-        
-        $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
+
+
+
         $ts = new Erfurt_Sparql_EngineDb_TypeSorter($query, $this->_engine);
         $arSqls = $sg->createSql();
         $ts->setData($sg);
@@ -129,16 +138,16 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
 
         $originalVars = $sg->arVarAssignments;
 #var_dump($originalVars);
-        
-        
-        
-           
-        
+
+
+
+
+
         $usedVars = array_unique($usedVars);
         $newResultVars = array();
-        
+
         $tempQuery = clone $query;
-            
+
         // We need to adjust the limit, offset values.
 // TODO limit offset support
         #$sm = $tempQuery->getSolutionModifier();
@@ -148,16 +157,16 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         #if (isset($sm['offset'])) {
         #    $tempQuery->setSolutionModifier('offset', 0);
         #}
-        
+
         foreach ($tempQuery->getResultVars() as $var) {
             if (in_array($var->getVariable(), $usedVars)) {
                 $newResultVars[] = $var;
             }
         }
         $tempQuery->setResultVars($newResultVars);
-        
-        
-        
+
+
+
         $tempQuery->setResultPart($mandatory);
 
         // Execute the modified Sparql query.
@@ -169,7 +178,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $mandatoryResult = $this->_queryMultiple($tempQuery, $orderifiedSqls);
         $mandatoryVars = $sg->arVarAssignments;
 #var_dump($mandatoryResult);exit;
-        
+
         // If the mandatory result is empty... return it.
         $empty = true;
         foreach ($mandatoryResult as $mResult) {
@@ -178,31 +187,31 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                 break;
             }
         }
-        
+
         if ($empty) {
             return array('data' => $mandatoryResult, 'vars' => $originalVars);
         }
-        
+
         $replaceArray = array();
         foreach ($mandatoryResult as $r) {
             foreach ($r as $row) {
                 foreach ($usedVars as $var) {
                     if (!isset($replaceArray[$var])) {
-                        if (isset($mandatoryVars[$var]['sql_value']) && 
-                            null !== $row[$mandatoryVars[$var]['sql_value']]) {
-                             
-                             if ($mandatoryVars[$var][1] !== 'o' || 
+                        if (isset($mandatoryVars[$var]['sql_value']) &&
+                                null !== $row[$mandatoryVars[$var]['sql_value']]) {
+
+                            if ($mandatoryVars[$var][1] !== 'o' ||
                                     $row[$mandatoryVars[$var]['sql_is']] !== 2) {
 
-                                    $replaceArray[$var] = array();
-                                    $replaceArray[$var][$row[$mandatoryVars[$var]['sql_value']]] = true;
-                                }
+                                $replaceArray[$var] = array();
+                                $replaceArray[$var][$row[$mandatoryVars[$var]['sql_value']]] = true;
+                            }
                         }
                     } else {
-                        if ($mandatoryVars[$var][1] !== 'o' || 
-                            $row[$mandatoryVars[$var]['sql_is']] !== 2) {
-                                
-                            $replaceArray[$var][$row[$mandatoryVars[$var]['sql_value']]] = true; 
+                        if ($mandatoryVars[$var][1] !== 'o' ||
+                                $row[$mandatoryVars[$var]['sql_is']] !== 2) {
+
+                            $replaceArray[$var][$row[$mandatoryVars[$var]['sql_value']]] = true;
                         }
                     }
                 }
@@ -210,30 +219,30 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         }
         reset($mandatoryResult);
 
-#var_dump($replaceArray);exit;     
+#var_dump($replaceArray);exit;
         // Remove all old mandatory constraints from the query (already done with the first query).
         // Replace them with a new sameTerm constraint
         #require_once 'Erfurt/Sparql/Constraint.php';
         #$cArray = array();
-        
+
         #$distinctKeys = array();
 // TODO Function nesting fatal error on big result :(
         /*foreach ($replaceArray as $var => $values) {
             $distinctKeys[] = $var;
             $c = new Erfurt_Sparql_Constraint();
-            
+
             $valueSameTermArray = array();
             foreach ($values as $key => $true) {
                 $valueSameTermArray[] = 'sameTerm(' . $var . ', <' . $key . '>)';
             }
-            
+
             $expr = '(' . implode(' || ', $valueSameTermArray) . ')';
             $c->addExpression($expr);
             $c->parse();
-            $cArray[] = $c;          
+            $cArray[] = $c;
         }*/
-#var_dump($cArray);exit;      
-        
+#var_dump($cArray);exit;
+
         /*$ids = array();
         foreach ($optionals as $graphPattern) {
             $newCArray = array();
@@ -246,25 +255,25 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                         break;
                     }
                 }
-                
+
                 if ($add) {
                     $newCArray[] = $c;
                 }
             }
-          
+
             #$graphPattern->setConstraints($newCArray);
             foreach ($oldMandatory as $gp) {
                 if ($graphPattern->getOptional() === $gp->getId() && !empty($newCArray)) {
                     $gp->setTriplePatterns(array());
                     $gp->setConstraints($newCArray);
                 }
-                
-                
+
+
             }
-            
+
             $ids[$graphPattern->getOptional()] = true;
         }
-     
+
         foreach ($oldMandatory as $key => $pattern) {
             if (!isset($ids[$pattern->getId()])) {
                 $unsetIds[$pattern->getId()] = true;
@@ -277,9 +286,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             }
         }
         */
-        
-        
-        
+
+
+
         #require_once 'Erfurt/Sparql/GraphPattern.php';
         #require_once 'Erfurt/Sparql/QueryTriple.php';
         #require_once 'Erfurt/Rdf/Resource.php';
@@ -287,8 +296,8 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         #$pattern->setId(1000);
         #$pattern->setOptional(0);
         #$pattern->addTriplePattern(new Erfurt_Sparql_QueryTriple('?predicate', Erfurt_Rdf_Resource::initWithUri('dummy'), Erfurt_Rdf_Resource::initWithUri('dummy')));
-        
-    #    $optionals[] = $pattern;
+
+        #    $optionals[] = $pattern;
 
         foreach ($oldMandatory as $gp) {
             $gp->setTriplePatterns(array());
@@ -310,14 +319,25 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         foreach ($usedVars as $key => $true) {
             $usedVarsObjects[] = new Erfurt_Sparql_QueryResultVariable($key);
         }
-        
+
         $query->setResultVars($usedVarsObjects);
         $query->setResultPart($newPatterns);
         $query->setResultForm('select');
 #var_dump($query);exit;
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
-        $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
-            
+
+        //SQLSRV CHANGE _ ABFRAGEN WELCHES BACKEND
+
+        $this->_config = Erfurt_App::getInstance()->getConfig();
+        if(strtolower($this->_config->store->backend) == 'mssql') {
+            require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Mssql.php';
+            $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
+        }
+        else {
+            require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
+            $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
+        }
+
+
         require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
         $ts = new Erfurt_Sparql_EngineDb_TypeSorter($query, $this->_engine);
 
@@ -334,8 +354,8 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         foreach ($optionalVars as $var => $varSpec) {
             foreach ($replaceArray as $key => $values) {
                 if ($var === $key) {
-                    $whereAddition[] = $varSpec[0] . '.' . $varSpec[1] . ' IN ("' 
-                                     . implode('","', array_keys($values)) . '")';
+                    $whereAddition[] = $varSpec[0] . '.' . $varSpec[1] . ' IN (\''//SQLSRVCHANGE " to '
+                            . implode('","', array_keys($values)) . '\')';//SQLSRVCHANGE " to '
                 }
             }
         }
@@ -349,19 +369,19 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
 #var_dump($orderifiedSqls);exit;
 
         $optionalResult = $this->_queryMultiple($query, $orderifiedSqls);
-        
+
 #var_dump($optionalResult);exit;
 
 
 #var_dump($originalVars, $optionalVars, $optionalResult);exit;
-        
+
         $newOptResult = array();
         // Remove double entries
         $alreadyIn = array();
         foreach ($optionalResult as $r) {
             foreach ($r as $row) {
                 $md5 = md5(serialize($row));
-                
+
                 if (!isset($alreadyIn[$md5])) {
                     $newOptResult[] = $row;
                     $alreadyIn[$md5] = true;
@@ -370,17 +390,17 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         }
         $optionalResult = array($newOptResult);
 #var_dump($optionalVars);exit;
-        
-        
+
+
         $newResult = array();
-    
+
 #var_dump($mandatoryResult);exit;
         $mResult = current($mandatoryResult);
         while (true) {
             $rowSpec = array();
             $currentValue = null;
             $currentVarName = null;
-            
+
             // Iterate through the first x vars, that are mandatory.
             // Break, if a non-mandatory var is reached.
             foreach ($originalVars as $varName => $varSpec) {
@@ -388,30 +408,30 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                 if (!isset($resultVars[$varName])) {
                     continue;
                 }
-                
+
                 // Current var is in mandatory result... Add it.
                 if (isset($mandatoryVars[$varName])) {
                     $mandatoryRow = current($mResult);
                     $currentValue = $mandatoryRow[$mandatoryVars[$varName]['sql_value']];
-                    
-                    $rowSpec[$varSpec['sql_value']] = $mandatoryRow[$mandatoryVars[$varName]['sql_value']]; 
-                    
+
+                    $rowSpec[$varSpec['sql_value']] = $mandatoryRow[$mandatoryVars[$varName]['sql_value']];
+
                     if (isset($varSpec['sql_is'])) {
                         $rowSpec[$varSpec['sql_is']] = $mandatoryRow[$mandatoryVars[$varName]['sql_is']];
                     }
-                    
+
                     if (isset($varSpec['sql_ref'])) {
                         $rowSpec[$varSpec['sql_ref']] = $mandatoryRow[$mandatoryVars[$varName]['sql_ref']];
                     }
-                    
+
                     if (isset($varSpec['sql_lang'])) {
                         $rowSpec[$varSpec['sql_lang']] = $mandatoryRow[$mandatoryVars[$varName]['sql_lang']];
                     }
-                    
+
                     if (isset($varSpec['sql_type'])) {
                         $rowSpec[$varSpec['sql_type']] = $mandatoryRow[$mandatoryVars[$varName]['sql_type']];
                     }
-                    
+
                     if (isset($varSpec['sql_dt_ref'])) {
                         $rowSpec[$varSpec['sql_dt_ref']] = $mandatoryRow[$mandatoryVars[$varName]['sql_dt_ref']];
                     }
@@ -435,25 +455,25 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                         }
 
                         if (!$startReached && $varName !== $currentVarName) {
-                            if (isset($optionalVars[$varName]) && 
-                                $currentValue !== $optionalRow[$optionalVars[$varName]['sql_value']]) {
+                            if (isset($optionalVars[$varName]) &&
+                                    $currentValue !== $optionalRow[$optionalVars[$varName]['sql_value']]) {
                                 break;
                             }
-                            
+
                             continue;
                         } else {
                             $startReached = true;
-                            
-                            
+
+
                         }
-                        
-                        
+
+
                         // If we reach this, we are save to write the current row
                         $written = true;
                         $writeRow = true;
-                        
+
                         if (!isset($optionalVars[$varName])) {
-                            $rowSpec[$varSpec['sql_value']] = null; 
+                            $rowSpec[$varSpec['sql_value']] = null;
 
                             if (isset($varSpec['sql_is'])) {
                                 $rowSpec[$varSpec['sql_is']] = null;
@@ -474,11 +494,11 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                             if (isset($varSpec['sql_dt_ref'])) {
                                 $rowSpec[$varSpec['sql_dt_ref']] = null;
                             }
-                            
+
                             continue;
                         }
-                        
-                        $rowSpec[$varSpec['sql_value']] = $optionalRow[$optionalVars[$varName]['sql_value']]; 
+
+                        $rowSpec[$varSpec['sql_value']] = $optionalRow[$optionalVars[$varName]['sql_value']];
 
                         if (isset($varSpec['sql_is'])) {
                             $rowSpec[$varSpec['sql_is']] = $optionalRow[$optionalVars[$varName]['sql_is']];
@@ -500,7 +520,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                             $rowSpec[$varSpec['sql_dt_ref']] = $optionalRow[$optionalVars[$varName]['sql_dt_ref']];
                         }
                     }
-                    
+
                     // We have found optional data for the current row
                     if ($writeRow) {
                         $newResult[] = $rowSpec;
@@ -508,7 +528,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                     }
                 }
             }
-            
+
             // If we have written nothing, we need to fill up the row with null values.
             if (!$written) {
                 $startReached = false;
@@ -523,9 +543,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                     } else {
                         $startReached = true;
                     }
-                
-                
-                    $rowSpec[$varSpec['sql_value']] = null; 
+
+
+                    $rowSpec[$varSpec['sql_value']] = null;
 
                     if (isset($varSpec['sql_is'])) {
                         $rowSpec[$varSpec['sql_is']] = null;
@@ -547,10 +567,10 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                         $rowSpec[$varSpec['sql_dt_ref']] = null;
                     }
                 }
-                
+
                 $newResult[] = $rowSpec;
             }
-            
+
             if (next($mResult) === false) {
                 $mResult = next($mandatoryResult);
 
@@ -565,16 +585,15 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $retVal = array($newResult);
         return array('data' => $retVal, 'vars' => $originalVars);
     }
-    
-    protected function _queryDb($query, $arSql, $nOffset, $nLimit)
-    {
+
+    protected function _queryDb($query, $arSql, $nOffset, $nLimit) {
         require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($query, $arSql);
-#echo $strSql;
+
         if ($strSql === '()') {
             return array();
         }
-      
+
         if ($nLimit === null && $nOffset == 0) {
             $ret = $this->_engine->sqlQuery($strSql);
         } else if ($nLimit === null) {
@@ -592,10 +611,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
      * @param array $arSqls Array of SQL queries.
      * @return array Array of query results.
      */
-    protected function _queryMultiple($query, $arSqls)
-    {
+    protected function _queryMultiple($query, $arSqls) {
         $arSM = $query->getSolutionModifier();
-        
+
         if ($arSM['limit'] === null && $arSM['offset'] === null) {
             $nOffset = 0;
             $nLimit  = null;
@@ -610,8 +628,8 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $nCount    = 0;
         $arResults = array();
         foreach ($arSqls as $nId => $arSql) {
-            if ($nId < $nSql) { 
-                continue; 
+            if ($nId < $nSql) {
+                continue;
             }
 
             if ($nLimit != null) {
@@ -621,7 +639,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             }
 
             $dbResult = $this->_queryDb($query, $arSql, $nOffset, $nCurrentLimit);
-#var_dump($dbResult);   
+#var_dump($dbResult);
             $nCount     += count($dbResult);
             $arResults[] = $dbResult;
             $nOffset = 0;
@@ -629,7 +647,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                 break;
             }
         }
-        
+
         return $arResults;
     }
 }

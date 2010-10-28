@@ -620,10 +620,10 @@ class Erfurt_Versioning
         }
 
         $actionsSql .= ' VALUES (\'' . 
-                       addslashes($graphUri) . '\', \'' .
-                       addslashes($userUri) . '\', \'' . 
-                       addslashes($resource) . '\', \'' . time() . '\', ' . 
-                       addslashes($actionType) . ', ' . $actionParent;
+                $this->_addslashes($graphUri) . '\', \'' .
+                $this->_addslashes($userUri) . '\', \'' .
+                $this->_addslashes($resource) . '\', \'' . time() . '\', ' .
+                $this->_addslashes($actionType) . ', ' . $actionParent;
                        
         if (null !== $payloadId) {
            $actionsSql .= ', ' . $payloadId . ')';
@@ -642,7 +642,7 @@ class Erfurt_Versioning
     private function _execAddPayload($payload)
     {
         $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (\'' .
-                        addslashes(serialize($payload)) . '\')';
+                $this->_addslashes(serialize($payload)) . '\')';
                         
         $this->_sqlQuery($payloadsSql);
         $payloadId = $this->_getStore()->lastInsertId();
@@ -698,7 +698,23 @@ class Erfurt_Versioning
         $existingTableNames = $this->_getStore()->listTables();
 
         if (!in_array('ef_versioning_actions', $existingTableNames)) {
+
+            //sqlsrvChange add sytax for MSSQL
+            $this->_config = Erfurt_App::getInstance()->getConfig();
+            if($this->_config->store->backend == 'mssql') {
             $columnSpec = array(
+                        'id'          => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
+                        'model'       => 'VARCHAR(255) NOT NULL',
+                        'useruri'     => 'VARCHAR(255) NOT NULL',
+                        'resource'    => 'VARCHAR(255)',
+                        'tstamp'      => 'INT NOT NULL',
+                        'action_type' => 'INT NOT NULL',
+                        'parent'      => 'INT DEFAULT NULL',
+                        'payload_id'  => 'INT DEFAULT NULL'
+                );
+            }
+            else {
+                $columnSpec = array(
                 'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
                 'model'       => 'VARCHAR(255) NOT NULL',
                 'useruri'     => 'VARCHAR(255) NOT NULL',
@@ -708,16 +724,27 @@ class Erfurt_Versioning
                 'parent'      => 'INT DEFAULT NULL',
                 'payload_id'  => 'INT DEFAULT NULL'
             );
-            
+            }
             $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
+            
+
         }
         
+
         if (!in_array('ef_versioning_payloads', $existingTableNames)) {
+            $this->_config = Erfurt_App::getInstance()->getConfig();
+            if($this->_config->store->backend == 'mssql') {
             $columnSpec = array(
+                        'id'             => 'INT PRIMARY KEY NOT NULL IDENTITY(1,1)',
+                        'statement_hash' => 'TEXT'
+                );
+            }
+            else {
+                $columnSpec = array(
                 'id'             => 'INT PRIMARY KEY AUTO_INCREMENT',
                 'statement_hash' => 'LONGTEXT'
             );
-            
+            }
             $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
         }        
     }
@@ -738,4 +765,22 @@ class Erfurt_Versioning
         
         return $result;
     }
+
+    //sqlsrvChange Add Syntax for mssql
+
+    private function _addslashes($str)
+    {
+        $this->_config = Erfurt_App::getInstance()->getConfig();
+            if($this->_config->store->backend == 'mssql') {
+            return str_replace("'", "''", $str);
 }
+            else{
+            return addslashes($str);
+            }
+    }
+
+}
+
+
+
+

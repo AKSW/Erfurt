@@ -402,9 +402,6 @@ class Erfurt_Rdf_Model
             $logger->debug('removed: ', count($removedStatements));
         }       
         
-        // var_dump('added: ', $addedStatements);
-        // var_dump('removed: ', $removedStatements);
-        // exit;
 
         $this->deleteMultipleStatements($removedStatements);
         $this->addMultipleStatements($addedStatements);
