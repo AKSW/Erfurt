@@ -351,7 +351,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         if (null === $this->_graphs) {
             $this->_graphs = array();
-            $rid = $this->_execSql('SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
+            $rid = $this->_execSql(
+                'SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
             if ($rid) {
                 $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
                 $this->_graphs = array();
