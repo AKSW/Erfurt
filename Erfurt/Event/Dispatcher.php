@@ -137,8 +137,9 @@ class Erfurt_Event_Dispatcher
                         if (!class_exists($handler['class_name'], false)) {
                             $pathSpec = rtrim($handler['include_path'], '/\\') 
                                       . DIRECTORY_SEPARATOR 
-                                      . $handler['file_name'];
-                            require_once $pathSpec;
+                                      . $handler['file_name']
+                                      . '.php';
+                            include_once $pathSpec;
                         }
 
                         // instantiate handler
