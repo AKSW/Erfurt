@@ -40,7 +40,11 @@ class Erfurt_Owl_Structured_DataRange_DatatypeRestriction extends Erfurt_Owl_Str
     public function toArray() {
         $retval = array();
         $list = $this->restrictionsToArray();
-        $retval [] = parent::toArray();
+         $retval []= array(
+                        Erfurt_Owl_Structured_Util_RdfArray::getNewBNodeId(),
+                        "rdf:type",
+                        "rdfs:Datatype"
+                    );
         $retval [] = array(
             Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
             "owl:onDatatype",

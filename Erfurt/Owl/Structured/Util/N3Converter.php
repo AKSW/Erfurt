@@ -48,7 +48,8 @@ class Erfurt_Owl_Structured_Util_N3Converter {
         return array(
             $bnodeId ? $bnodeId : Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
             "rdf:first",
-            $value
+            $value,
+            ($value instanceof Erfurt_Owl_Structured_Literal ? $value->getDatatypeString() : null)
         );
     }
 }

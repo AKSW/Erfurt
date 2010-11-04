@@ -2,6 +2,9 @@
 
 class Erfurt_Owl_Structured_Literal extends Erfurt_Owl_Structured_Annotations_AnnotationValue {
 
+
+  // TODO implement toAray() method and call it from Util::addFirst? to correctly process literals with lang tag
+
     private $lexicalValue;
 
     function __construct($value) {
@@ -22,5 +25,9 @@ class Erfurt_Owl_Structured_Literal extends Erfurt_Owl_Structured_Annotations_An
 
     public function isComplex() {
         return false; 
+    }
+
+    public function getDatatypeString(){
+      return (method_exists($this, "getDatatype"))? "xsd:". $this->getDatatype() : null;
     }
 }

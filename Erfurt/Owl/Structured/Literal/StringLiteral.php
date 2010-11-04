@@ -21,4 +21,7 @@ class Erfurt_Owl_Structured_Literal_StringLiteral extends Erfurt_Owl_Structured_
         return $this->languageTag ? parent::__toString() . "@" . $this->languageTag : parent::__toString();
     }
 
+//    public function getDatatype(){
+//      return "string";
+//    }
 }
