@@ -70,8 +70,32 @@ _:b14 xsd:minExclusive "12"^^xsd:integer .
 '),
 //        array("restriction", 'hasParent exactly 2 integer','_:b14 rdf:type owl:Restriction .
 //            '),
-        array("restriction", "hasParent max 1",''),
-        array("restriction", 'hasParent max 1 integer [< 12]',''),
+        array("restriction", "hasParent max 1",'_:b17 rdf:type owl:Restriction .
+_:b17 owl:onProperty :hasParent .
+_:b17 owl:maxCardinality "1"^^xsd:nonNegativeInteger .
+'),
+        array("restriction", 'hasParent max 1 integer [< 12]','_:b19 rdf:type owl:Restriction .
+_:b19 owl:onProperty :hasParent .
+_:b19 owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger .
+_:b19 owl:onDataRange _:b18 .
+_:b18 rdf:type rdfs:Datatype .
+_:b18 owl:onDatatype xsd:integer .
+_:b18 owl:withRestrictions _:b17 .
+_:b17 xsd:minExclusive "12"^^xsd:integer .
+'),
+        array("restriction", 'hasParent min 1', '_:b20 rdf:type owl:Restriction .
+_:b20 owl:onProperty :hasParent .
+_:b20 owl:minCardinality "1"^^xsd:nonNegativeInteger .
+'),
+        array("restriction", 'hasParent min 1 integer [>22]', '_:b22 rdf:type owl:Restriction .
+_:b22 owl:onProperty :hasParent .
+_:b22 owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger .
+_:b22 owl:onDataRange _:b21 .
+_:b21 rdf:type rdfs:Datatype .
+_:b21 owl:onDatatype xsd:integer .
+_:b21 owl:withRestrictions _:b20 .
+_:b20 xsd:maxExclusive "22"^^xsd:integer .
+'),
           );
     }
 }
