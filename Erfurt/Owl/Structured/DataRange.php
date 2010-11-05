@@ -20,6 +20,10 @@ class Erfurt_Owl_Structured_DataRange implements Erfurt_Owl_Structured_ITriples 
         return Erfurt_Owl_Structured_Util_N3Converter::makeTriplesFromArray(($this->toArray()));
     }
 
+    public function toRdfPhp() {
+        return Erfurt_Owl_Structured_Util_N3Converter::makeRdfPhpFromArray(($this->toArray()));
+    }
+
     public function toArray() {
         $retval = array();
         $list = null;

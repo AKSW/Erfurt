@@ -17,6 +17,19 @@ class Erfurt_Owl_Structured_Util_N3Converter {
         }
     }
 
+    public static function makeRdfPhpFromArray($triples) {
+      $retval;
+        if (!is_array($triples))
+            throw new Exception("The triple must be converted to array!");
+        else {
+            $retval = array();
+            foreach ($triples as $triple) {
+              $retval []= array($triple[0] => array($triple[1] => array(array("type" => "literal", "value"=> $triple[2]))));
+            }
+        }
+        return $retval;
+    }
+
     private static function createObj($o, $type = null) {
         return $type ? "\"" . $o . "\"^^$type" : $o;
     }
