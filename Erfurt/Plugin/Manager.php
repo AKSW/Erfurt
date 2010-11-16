@@ -97,7 +97,7 @@ class Erfurt_Plugin_Manager
      * @param string $pluginPath
      */
     private function _addPlugin($pluginName, $pluginPath)
-    { 
+    {
         // parse plugin config
         $pluginConfig = parse_ini_file($pluginPath . self::CONFIG_FILENAME, true);
         $pluginConfig['pluginPath'] = $pluginPath;
@@ -106,7 +106,7 @@ class Erfurt_Plugin_Manager
         if (is_readable($pluginLocalConfigPath)) {
             $pluginConfig = array_merge($pluginConfig, parse_ini_file($pluginLocalConfigPath, true));
         }
-        
+
         if (array_key_exists('private', $pluginConfig)) {
             $pluginPrivateConfig = new Zend_Config_Ini($pluginPath . self::CONFIG_FILENAME, 'private', true);
         }
@@ -123,43 +123,47 @@ class Erfurt_Plugin_Manager
             }
         }
         // check if plugin is enabled
-        $enabled = true;
         if (!array_key_exists('enabled', $pluginConfig)){
             $pluginConfig['enabled'] = false;
         }
-        if (!$pluginConfig['enabled']) {
-            $enabled = false;
-            //return;
-        }
-        
+
+        $this->addPluginExternally($pluginName,$pluginName,$path,$config);
+        // var_dump($pluginConfig);
+    }
+
+    public function addPluginExternally($pluginName, $fileName, $pluginPath, $pluginConfig){
+         $pluginConfig->pluginPath = $pluginPath;
+         if(!isset($pluginConfig->enabled)){
+             $pluginConfig->enabled = false;
+         }
+         $enabled = $pluginConfig->enabled;
+
         // keep track of loaded plug-ins
         if (!array_key_exists($pluginName, $this->_plugins)) {
             $this->_plugins[$pluginName] = $pluginConfig;
         }
         
-        if ($enabled && array_key_exists('events', $pluginConfig) && is_array($pluginConfig['events'])) {
-            foreach ($pluginConfig['events'] as $event) {
+        if ($enabled && isset($pluginConfig->events) && $pluginConfig->events instanceof Zend_Config) {
+            foreach ($pluginConfig->events->toArray() as $event) {
                 if (is_array($event)) {
                     // TODO: allow trigger method that differs from event name
                 } else if (is_string($event)) {
                     $pluginSpec = array(
-                        'class_name'   => ucfirst($pluginName) . self::PLUGIN_CLASS_POSTFIX, 
-                        'file_name'    => $pluginName,
-                        'include_path' => $pluginPath, 
+                        'class_name'   => ucfirst($pluginName) . self::PLUGIN_CLASS_POSTFIX,
+                        'file_name'    => $fileName,
+                        'include_path' => $pluginPath,
                         'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
                     );
-                    
+
                     $priority = isset($event['priority']) ? (int) $event['priority'] : 10;
-                    
+
                     // register plugin events with event dispatcher
                     $this->_eventDispatcher->register($event, $pluginSpec, $priority);
                 }
             }
         }
-        // var_dump($pluginConfig);
     }
-
-
+    
     public function getPluginPaths()
     {
         return $this->_pluginPaths;
