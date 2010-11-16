@@ -132,19 +132,23 @@ class Erfurt_Plugin_Manager
     }
 
     public function addPluginExternally($pluginName, $fileName, $pluginPath, $pluginConfig){
-         $pluginConfig->pluginPath = $pluginPath;
-         if(!isset($pluginConfig->enabled)){
-             $pluginConfig->enabled = false;
+         if($pluginConfig instanceof Zend_Config){
+             $pluginConfig = $pluginConfig->toArray();
          }
-         $enabled = $pluginConfig->enabled;
+
+         $pluginConfig['pluginPath'] = $pluginPath;
+         if(!isset($pluginConfig['enabled'])){
+             $pluginConfig['enabled'] = false;
+         }
+         $enabled = $pluginConfig['enabled'];
 
         // keep track of loaded plug-ins
         if (!array_key_exists($pluginName, $this->_plugins)) {
             $this->_plugins[$pluginName] = $pluginConfig;
         }
         
-        if ($enabled && isset($pluginConfig->events) && $pluginConfig->events instanceof Zend_Config) {
-            foreach ($pluginConfig->events->toArray() as $event) {
+        if ($enabled && isset($pluginConfig['events']) && is_array($pluginConfig['events'])) {
+            foreach ($pluginConfig['events'] as $event) {
                 if (is_array($event)) {
                     // TODO: allow trigger method that differs from event name
                 } else if (is_string($event)) {
