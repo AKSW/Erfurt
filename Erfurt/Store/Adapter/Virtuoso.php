@@ -804,9 +804,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $distinct = "";
         }
         
+        // more error save
+        if ($countSpec == '?*') {
+            $countSpec = '*';
+        }
+        
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
-            'SELECT COUNT %s %s FROM <%s> %s',
+            'SELECT COUNT %s (%s) FROM <%s> %s',
             $distinct,
             $countSpec,
             $fromSpec,
