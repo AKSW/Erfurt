@@ -139,10 +139,9 @@ class Erfurt_Wrapper_Manager
     }
 
     public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
-        if($privateConfig instanceof Zend_Config){
-            $privateConfig = $privateConfig->toArray();
-        }
-
+//        if($privateConfig instanceof Zend_Config){
+//            $privateConfig = $privateConfig->toArray();
+//        }
 
         $wrapperSpec = array(
             'class_name'   => ucfirst($wrapperName) . 'Wrapper',
@@ -150,8 +149,6 @@ class Erfurt_Wrapper_Manager
             'config'       => $privateConfig,
             'instance'     => null
         );
-
-        echo "added wrapper $wrapperName";
 
         // Finally register the wrapper.
         $this->_registry->register($wrapperName, $wrapperSpec);

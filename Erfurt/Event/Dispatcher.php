@@ -146,10 +146,11 @@ class Erfurt_Event_Dispatcher
                             $handler['class_name'],     // class name
                             $handler['include_path'],   // plug-in root
                             $handler['config']);        // private config
-                        
-                        if (isset($handler['config'])) {
-                            $handlerObject->config = $handler['config'];
-                        }
+
+                        //TODO check usage of this duplicated config property
+                        //if (isset($handler['config'])) {
+                            //$handlerObject->config = $handler['config'];
+                        //}
                     }
                 } else if (is_object($handler)) {
                     $handlerObject = $handler;
