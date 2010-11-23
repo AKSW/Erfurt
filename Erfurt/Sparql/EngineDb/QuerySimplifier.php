@@ -329,12 +329,15 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
                     $pattern->setOptional($newOptionalMapping[$nOptional][0]);
                     
                     if (count($newOptionalMapping[$nOptional]) > 1) {
-                        for ($i = 1; $i < count($newOptionalMapping[$nOptional]); ++$i) {
+                        
+                        $countNOM = count($newOptionalMapping[$nOptional]);
+                        
+                        for ($i = 1; $i < $countNOM; ++$i) {
                             $newPattern = clone $pattern;
                             
                             while (true) {
                                 if (array_key_exists($id, $arPatterns)) {
-                                    $id++;
+                                    ++$id;
                                 } else {
                                     break;
                                 }
@@ -348,9 +351,6 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
                 } else {
                     $pattern->setOptional(null);
                 }
-                
-                
-                
             }
         }
     }

@@ -46,7 +46,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15_static {
 		
 		$numStates = sizeof($transitionS);
 		$arr['transition'] = array();
-		for ($i=0; $i<$numStates; $i++) {
+		for ($i=0; $i<$numStates; ++$i) {
 		    $arr['transition'][$i] = DFA::unpackRLE($transitionS[$i]);
 		}
 		return $arr;

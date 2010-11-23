@@ -30,7 +30,10 @@ class Erfurt_Sparql_Query2_PropertyList {
 
     public function getSparql(){
         $ret = '';
-        for($i = 0; $i < count($this->properties); $i++){
+        
+        $countProperties = count($this->properties);
+        
+        for($i = 0; $i < $countProperties; ++$i){
             $ret .= "\t" . $this->properties[$i]['verb'] . " " . $this->properties[$i]['objList'];
             if(isset($this->properties[$i+1])){
                 $ret .= " ; \n";
@@ -45,7 +48,10 @@ class Erfurt_Sparql_Query2_PropertyList {
 
     public function getVars(){
         $ret = array();
-        for($i = 0; $i < count($this->properties); $i++){
+        
+        $countProperties = count($this->properties);
+        
+        for($i = 0; $i < $countProperties; ++$i){
             if($this->properties[$i]['verb'] instanceof Erfurt_Sparql_Query2_Var){
                 $ret[] = $this->properties[$i]['verb'];
             }
