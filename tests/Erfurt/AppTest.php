@@ -457,8 +457,18 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertFalse($cachePath);
         
         $config->cache->path = 'cache/';
-        $cachePath = $app->getCacheDir();
-        $this->assertEquals(EF_BASE.'cache/', $cachePath);
+        
+        // Check if cache dir is writeable. If not, skip the test because of
+        // getCacheDir returned false.
+        if ( false === is_writable($config->cache->path) )
+        {
+            $this->markTestSkipped( 'Cache dir '. $config->cache->path . ' isnt writeable.' );
+        }
+        else
+        {
+            $cachePath = $app->getCacheDir();
+            $this->assertEquals(EF_BASE.'cache/', $cachePath);
+        }
     }
     
     public function testGetConfig()

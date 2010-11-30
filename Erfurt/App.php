@@ -597,6 +597,7 @@ class Erfurt_App
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
+                // Should throw an exception.
                 return false;
                 //return $this->getTmpDir();
             }

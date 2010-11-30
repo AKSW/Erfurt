@@ -17,3 +17,5 @@ ontowiki/src/libraries/Zend
 erfurt/src/Erfurt/libraries/Zend
 ontowiki/src/libraries/ZendFramework-1.*
 
+cache.sqlite
+tests/Zend
