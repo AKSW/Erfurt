@@ -35,7 +35,10 @@ class Erfurt_Sparql_Query2_OrderClause
      */
     public function getSparql() {
         $sparql = 'ORDER BY';
-        for ($i = 0; $i < count($this->exps); $i++) {
+        
+        $countExps = count($this->exps);
+        
+        for ($i = 0; $i < $countExps; ++$i) {
             $sparql .=' '.$this->exps[$i]['dir'].'('.$this->exps[$i]['exp']->getSparql().')';
             if ($i < (count($this->exps)-1))
                 $sparql .= ' ';

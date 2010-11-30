@@ -1647,11 +1647,17 @@ class Erfurt_Store
                 $mask[] = $key;
             }
         } else {
-            for ($i = 0; $i < count($maskIn); $i++) {
+            
+            $countMaskIn = count($maskIn);
+            
+            for ($i = 0; $i < $countMaskIn; ++$i) {
                 $mask[] = $maskIn[$i]['uri'];
             }
         }
-        for ($i = 0; $i < count($list); $i++) {
+        
+        $countList = count($list);
+        
+        for ($i = 0; $i < $countList; ++$i) {
             if (array_search($list[$i]['uri'], $mask) === false) {
                 unset($list[$i]);
             }

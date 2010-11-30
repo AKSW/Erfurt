@@ -812,7 +812,8 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                         AND s3.object_is = "l" 
                         AND (';
             
-            for ($i=1; $i<count($this->_titleProperties); ++$i) {
+            $countTP = count($this->_titleProperties);
+            for ($i=1; $i<$countTP; ++$i) {
                 $sql .= 's3.predicate = "' . $this->_titleProperties[$i] . '"';
                 
                 if ($i < count($this->_titleProperties)-1) {
