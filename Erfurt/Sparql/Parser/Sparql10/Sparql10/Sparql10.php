@@ -4757,7 +4757,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10 extends AntlrParser {
 
             $this->state->_fsp--;
 
-              $value = new Erfurt_Sparql_Query2_RDFLiteral(($string47!=null?$this->input->toStringBetweenTokens($string47->start,$string47->stop):null));
+              $value = new Erfurt_Sparql_Query2_RDFLiteral(($string47!=null?$this->input->toStringBetweenTokens($string47->start,$string47->stop):null),null,"");
             // Sparql10.g:412:9: ( LANGTAG | ( REFERENCE iriRef ) )? 
             $alt67=3;
             $alt67 = $this->dfa67->predict($this->input);
