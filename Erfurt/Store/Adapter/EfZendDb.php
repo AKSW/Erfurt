@@ -92,7 +92,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
             require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Could not connect to database with name: "' . $dbname . '". Please check your credentials and whether the database exists and the server is running.', -1);
+            // throw new Erfurt_Exception('Could not connect to database with name: "' . $dbname . '". Please check your credentials and whether the database exists and the server is running.', -1);
+            throw new Erfurt_Exception($e->getMessage (), -1);
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
             require_once 'Erfurt/Exception.php';
