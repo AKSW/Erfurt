@@ -9,6 +9,7 @@ $includePath  = get_include_path()          . PATH_SEPARATOR;
 $includePath .= _BASE                       . PATH_SEPARATOR;
 $includePath .= _BASE . 'Erfurt/libraries/' . PATH_SEPARATOR;
 $includePath .= _BASE . 'Erfurt/libraries/antlr/Php' . PATH_SEPARATOR;
+$includePath .= _BASE . '../' . PATH_SEPARATOR;
 set_include_path($includePath);
 
 // We need a session for authentication
