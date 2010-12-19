@@ -1067,11 +1067,13 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     protected function _ord($c)
     {
-        if (strlen($c) === 1) {
+        $strLen = strlen($c);
+        
+        if ( $strLen === 1) {
             return ord($c);
         } else {
             $result = '';
-            for ($i=0; $i<strlen($c); ++$i) {
+            for ($i=0; $i<$strLen; ++$i) {
                 $result .= dechex(ord($c[$i]));
             }
             return hexdec($result);

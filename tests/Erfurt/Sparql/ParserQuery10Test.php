@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '1G');
 ini_set('error_reporting', E_ALL | E_STRICT);
-set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
+set_include_path(get_include_path() . PATH_SEPARATOR . '../../');
 require_once 'Erfurt/TestCase.php';
 require_once 'test_base.php';
 
