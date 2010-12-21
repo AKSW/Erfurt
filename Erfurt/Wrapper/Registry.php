@@ -99,7 +99,7 @@ class Erfurt_Wrapper_Registry
         if (null === $this->_wrapperRegistry[$wrapperName]['instance']) {
             $pathSpec = rtrim($this->_wrapperRegistry[$wrapperName]['include_path'], '/\\') 
                       . DIRECTORY_SEPARATOR 
-                      . strtolower($wrapperName) . '.php';
+                      . ucfirst($wrapperName) . 'Wrapper.php';
             
             require_once $pathSpec;
             $instance = new $this->_wrapperRegistry[$wrapperName]['class_name'];

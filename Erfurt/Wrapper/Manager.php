@@ -135,18 +135,25 @@ class Erfurt_Wrapper_Manager
                 // no private config
             }
         }
-        
+        $this->addWrapperExternally($wrapperName, $wrapperPath, $privateConfig);
+    }
+
+    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
+//        if($privateConfig instanceof Zend_Config){
+//            $privateConfig = $privateConfig->toArray();
+//        }
+
         $wrapperSpec = array(
             'class_name'   => ucfirst($wrapperName) . 'Wrapper',
             'include_path' => $wrapperPath,
             'config'       => $privateConfig,
             'instance'     => null
         );
-        
+
         // Finally register the wrapper.
         $this->_registry->register($wrapperName, $wrapperSpec);
     }
-    
+
     /**
      * This method iterates through a given directory.
      * 
