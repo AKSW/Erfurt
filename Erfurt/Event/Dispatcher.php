@@ -137,20 +137,20 @@ class Erfurt_Event_Dispatcher
                         if (!class_exists($handler['class_name'], false)) {
                             $pathSpec = rtrim($handler['include_path'], '/\\') 
                                       . DIRECTORY_SEPARATOR 
-                                      . $handler['file_name']
-                                      . '.php';
+                                      . $handler['file_name'];
                             include_once $pathSpec;
                         }
-
+                        
                         // instantiate handler
                         $handlerObject = $this->_getHandlerInstance(
                             $handler['class_name'],     // class name
                             $handler['include_path'],   // plug-in root
                             $handler['config']);        // private config
-                        
-                        if (isset($handler['config'])) {
-                            $handlerObject->config = $handler['config'];
-                        }
+
+                        //TODO check usage of this duplicated config property
+                        //if (isset($handler['config'])) {
+                            //$handlerObject->config = $handler['config'];
+                        //}
                     }
                 } else if (is_object($handler)) {
                     $handlerObject = $handler;
