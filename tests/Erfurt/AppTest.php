@@ -703,11 +703,13 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($v instanceof Erfurt_Versioning);
     }
     
+    /*
     public function testGetWrapperManager()
     {
         $wm = Erfurt_App::getInstance()->getWrapperManager();
         $this->assertTrue($wm instanceof Erfurt_Wrapper_Manager); 
     }
+    */
     
     public function testGetWrapperRegistry()
     {

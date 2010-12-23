@@ -25,13 +25,29 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
         $this->assertSame('Erfurt_Store_Adapter_Virtuoso', get_class($this->fixture));
     }
     
+    // TODO: Create an test function for open / close connection
+    
     public function testListTables()
     {
+        // Skip test if no valid connection was established.
+        if ( null === $this->fixture->getConnection () )
+        {
+            $this->markTestSkipped( 'Problems with connection. Maybe no virtuoso installed?' );
+            return;
+        }
+        
         $this->assertEquals(true, in_array('RDF_QUAD', $this->fixture->listTables()));
     }
     
     public function testAddStatementWithUriObject()
     {
+        // Skip test if no valid connection was established.
+        if ( null === $this->fixture->getConnection () )
+        {
+            $this->markTestSkipped( 'Problems with connection. Maybe no virtuoso installed?' );
+            return;
+        }
+        
         $g = 'http://example.com/';
         $s = 'http://example.com/';
         $p = 'http://example.com/property1';
@@ -46,6 +62,13 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testAddStatementsWithLiteralObject()
     {
+        // Skip test if no valid connection was established.
+        if ( null === $this->fixture->getConnection () )
+        {
+            $this->markTestSkipped( 'Problems with connection. Maybe no virtuoso installed?' );
+            return;
+        }
+        
         $g = 'http://example.com/';
         $s = 'http://example.com/';
         $p = 'http://example.com/property1';
@@ -144,6 +167,13 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testBuildLiteralString()
     {
+        // Skip test if no valid connection was established.
+        if ( null === $this->fixture->getConnection () )
+        {
+            $this->markTestSkipped( 'Problems with connection. Maybe no virtuoso installed?' );
+            return;
+        }
+        
         $value    = 'Literal';
         $datatype = 'http://www.w3.org/2001/XMLSchema#string';
         $expected = '"""Literal"""^^<http://www.w3.org/2001/XMLSchema#string>';
@@ -186,6 +216,13 @@ EOT;
     
     public function testBuildTripleString()
     {
+        // Skip test if no valid connection was established.
+        if ( null === $this->fixture->getConnection () )
+        {
+            $this->markTestSkipped( 'Problems with connection. Maybe no virtuoso installed?' );
+            return;
+        }
+        
         $statements = array(
             'http://example.com/1' => array(
                 'http://example.com/2' => array(
