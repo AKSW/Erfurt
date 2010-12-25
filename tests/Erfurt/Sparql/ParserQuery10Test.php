@@ -25,7 +25,7 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	    /**
 	     * @dataProvider providerTestParse
 	     */
-	   	public function testParse($querySpec)
+	   	public function TestParse($querySpec)
 	    {
 		$q;
 		try {
@@ -42,6 +42,15 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	    	}
 	}
 
+	public function testPartial(){
+		$q1 = new Erfurt_Sparql_Query2();
+		$iris=array("qqq:wwwww", ":wwww", "wwww:",":",':a','a:');
+		foreach($iris as $iri) {
+			$q = $q1->initFromString($iri,'prefixedName');
+			$this->assertEquals($q->__toString(), $iri);
+		}
+	}
+		
 
 	// public function testTest1()
 	// {
