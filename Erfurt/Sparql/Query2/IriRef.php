@@ -29,7 +29,7 @@ class Erfurt_Sparql_Query2_IriRef extends Erfurt_Sparql_Query2_ElementHelper imp
             $this->prefix = $prefix;
         }
 
-        if($unexpandablePrefix != null && is_string($unexpandablePrefix)){
+        if($unexpandablePrefix !== null && is_string($unexpandablePrefix)){
             $this->unexpandablePrefix = $unexpandablePrefix;
         }
 
@@ -62,7 +62,7 @@ class Erfurt_Sparql_Query2_IriRef extends Erfurt_Sparql_Query2_ElementHelper imp
      * check if this IriRef uses a prefix
      */
     public function isPrefixed() {
-        return $this->prefix != null || $this->unexpandablePrefix != null;
+        return $this->prefix != null || $this->unexpandablePrefix !== null;
     }
     
     /**
