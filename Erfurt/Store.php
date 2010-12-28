@@ -7,8 +7,8 @@
  */
 
 /**
- * @package Erfurt
- * @subpackage Store
+ * @category Erfurt
+ * @package Store
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author Norman Heino <norman.heino@gmail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
