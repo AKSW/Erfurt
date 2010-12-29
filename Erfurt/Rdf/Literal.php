@@ -1,6 +1,15 @@
 <?php
 require_once 'Erfurt/Rdf/Node.php';
 
+/**
+ * Represents a basic RDF literal.
+ *
+ * @category   Erfurt
+ * @package    Rdf
+ * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @version    $Id$
+ */
 class Erfurt_Rdf_Literal extends Erfurt_Rdf_Node {
 	
 	protected $_label = false;
