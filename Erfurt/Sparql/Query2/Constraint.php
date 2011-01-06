@@ -67,7 +67,9 @@ class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_ContainerHel
     public function getSparql() {
         $sparql = '';
         
-        for ($i=0; $i<count($this->elements); $i++) {
+        $countElements = count($this->elements);
+        
+        for ($i=0; $i<$countElements; ++$i) {
             $sparql .= $this->elements[$i]->getSparql();
             if (isset($this->elements[$i+1])) {
                 $sparql .= ' '.$this->conjunction.' ';
@@ -320,7 +322,10 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_C
      */
     public function getSparql() {
         $sparql = '';
-        for ($i=0; $i<count($this->elements); $i++) {
+        
+        $countElements = count($this->elements);
+        
+        for ($i=0; $i<$countElements; ++$i) {
             if ($i != 0 || $this->elements[$i]['op'] == self::invOperator) {
                 $sparql .= ' '.$this->elements[$i]['op'].' ';
             }
@@ -443,7 +448,9 @@ class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2
     public function getSparql() {
         $sparql = '';
 
-        for ($i=0; $i<count($this->elements); $i++) {
+        $countElements = count($this->elements);
+
+        for ($i=0; $i<$countElements; ++$i) {
             if ($i == 0) {
                 if($this->elements[$i]['op'] == self::invOperator){
                     $sparql .= ' 1'.$this->elements[$i]['op'].' '; // => 1/x
@@ -453,7 +460,7 @@ class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2
             }
             $sparql .= $this->elements[$i]['exp']->getSparql();
         }
-        if (count($this->elements) > 1) {
+        if ($countElements > 1) {
             $sparql = '('.$sparql.')';
         }
         return $sparql;

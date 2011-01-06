@@ -44,13 +44,6 @@ class Erfurt_Wrapper_Manager
     protected $_configPrivateSection = 'private';
     
     /**
-     * This property holds a reference to the registry instance.
-     * 
-     * @var Erfurt_Wrapper_Registry 
-     */
-    protected $_registry = null;
-    
-    /**
      * This property contains directories, that were already scanned.
      * 
      * @var array
@@ -66,7 +59,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        $this->_registry = Erfurt_Wrapper_Registry::getInstance();
+        
     }
     
     // ------------------------------------------------------------------------
@@ -151,7 +144,8 @@ class Erfurt_Wrapper_Manager
         );
 
         // Finally register the wrapper.
-        $this->_registry->register($wrapperName, $wrapperSpec);
+        $registry = Erfurt_Wrapper_Registry::getInstance();
+        $registry->register($wrapperName, $wrapperSpec);
     }
 
     /**

@@ -145,7 +145,9 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
 	
 	while ($result && !librdf_query_results_finished($result)) {
 	    $row = array();
-	    for ($i=0; $i < librdf_query_results_get_bindings_count($result); ++$i) {
+        $countLibRDFResult = librdf_query_results_get_bindings_count($result);
+        
+	    for ($i=0; $i < $countLibRDFResult; ++$i) {
 	    	$val = librdf_query_results_get_binding_value($result, $i);
 		if ($val) {
 		    $nval = librdf_node_to_string($val);

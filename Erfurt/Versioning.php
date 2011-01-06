@@ -572,16 +572,18 @@ class Erfurt_Versioning
 
             $ranges[] = ' ( id >= ' . $started . ' AND id <= ' . $last . ' ) ';
 
+            $sizeOfRanges = sizeof($ranges);
+
             // iterate over id ranges in groups of 100 per query
             // (this optimizes exec. time for large consecutive changes)
-            for ($i = 0; $i < sizeof($ranges); $i = $i + 100) {
+            for ($i = 0; $i < $sizeOfRanges; $i += 100) {
 
                     $sqldeletePayload = 'DELETE FROM ef_versioning_payloads WHERE ';
 
-                    if ( ($i + 100) < sizeof($ranges) ) {
+                    if ( ($i + 100) < $sizeOfRanges ) {
                         $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,100));
                     } else {
-                        $length = ( sizeof($ranges) ) % 100;
+                        $length = ( $sizeOfRanges ) % 100;
                         $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,$length));
                     }
                     $resultPayload = $this->_sqlQuery($sqldeletePayload);

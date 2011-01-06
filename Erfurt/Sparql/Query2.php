@@ -887,7 +887,10 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     public function getVar($name)
     {
         $used = $this->where->getVars();
-        for ($i=0; $i < count($used); $i++) {
+        
+        $countUsed = count($used);
+        
+        for ($i=0; $i < $countUsed; ++$i) {
             if ($name == $used[$i]->getName()) {
                 return $used[$i];
             }
