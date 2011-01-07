@@ -910,7 +910,7 @@ class Erfurt_App
      * on first call of this method (When the class is instanciated).
      * @return Erfurt_Wrapper_Manager
      */
-    /*public function getWrapperManager($addDefaultWrapperPath = true) 
+    public function getWrapperManager($addDefaultWrapperPath = true) 
     {    
         if (null === $this->_wrapperManager) {
             $config = $this->getConfig();
@@ -924,7 +924,7 @@ class Erfurt_App
         }
     
         return $this->_wrapperManager;
-    }*/
+    }
     
     /**
      * Returns the instance of the Erfurt wrapper registry.

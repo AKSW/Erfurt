@@ -3,8 +3,8 @@
 /**
  * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
- * @package erfurt
- * @subpackage    rdf
+ * @category   Erfurt
+ * @package    Rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Natanael Arndt <arndtn@gmail.com>

@@ -5,8 +5,8 @@ require_once 'Erfurt/Rdf/Node.php';
 /**
  * Represents a basic RDF resource.
  *
- * @package erfurt
- * @subpackage    rdf
+ * @category   Erfurt
+ * @package    Rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -268,3 +268,5 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $this->getIri();
     }
 }
+
+?>
