@@ -148,7 +148,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $logger->debug('Add mutliple statements query: ' . PHP_EOL . $insertSparql);
         }
         
-        return $this->_execSparql($insertSparql);
+        $odbcRes = $this->_execSparql($insertSparql);
+        
+        if (odbc_num_fields($odbcRes) > 0 && odbc_field_type($odbcRes, 1) == 'VARCHAR') {
+            $strResult = odbc_result($odbcRes,1);
+            return $strResult;
+        }
     }
     
     /**
