@@ -64,6 +64,16 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     protected $_isBlankNode = false;
     
     /**
+     * An optional locator for the resource.
+     * 
+     * If this property is set, the value of it (a URL) is used, when data
+     * for this resource should be fetched.
+     * 
+     * @var string
+     */
+    protected $_locator = null;
+    
+    /**
      * Constructor
      *
      * @param string $iri
@@ -144,6 +154,31 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function getIri()
     {
         return $this->_namespace . $this->_name;
+    }
+    
+    /**
+     * Returns an optional locator for the resource, or the IRI of it, if no
+     * locator value was set.
+     * 
+     * @return string
+     */
+    public function getLocator()
+    {
+        // If no locator was explicitly set, we return the IRIof the resource.
+        if (null === $this->_locator) {
+            return $this->getIri();
+        }
+        return $this->_locator;
+    }
+    
+    /**
+     * Set a locator URL for this resource.
+     * 
+     * @param string $locator
+     */
+    public function setLocator($locator)
+    {
+       $this->_locator = $locator; 
     }
     
     /**
