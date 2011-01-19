@@ -183,6 +183,12 @@ class Erfurt_Store
         while (list($optionName, $optionValue) = each($storeOptions)) {
             $this->setOption($optionName, $optionValue);
         }
+        
+        if (isset($storeOptions['adapterInstance'])) {
+            $this->_backendAdapter = $storeOptions['adapterInstance'];
+            $this->_backendName = $backend;
+            return;
+        }
 
         // store connection settings for super admin id
         if (array_key_exists('username', $backendOptions)) {
@@ -245,6 +251,12 @@ class Erfurt_Store
             require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
         }
+    }
+    
+    public function setBackendAdapter(Erfurt_Store_Adapter_Interface $adapter)
+    {
+        $this->_backendAdapter = $adapter;
+        $this->_backendName = $adapter->getBackendName();
     }
 
     // ------------------------------------------------------------------------
@@ -1098,7 +1110,7 @@ class Erfurt_Store
             return $retVal;
         }
     }
-
+    
     /**
      * @param string $modelIri The Iri, which identifies the model to look for.
      * @param boolean $useAc Whether to use access control or not.
