@@ -12,15 +12,16 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id: RapZendDb.php 2532 2009-02-06 08:15:41Z pfrischmuth $
  */
-class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface
+class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
     protected $_data = array();
-    
-    
+        
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
-        
+        if (isset($this->_data[$graphUri])) {
+            $this->_data[$graphUri] = $statementsArray;
+        }
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -103,6 +104,11 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface
     {
         return array();
     }
+    
+    public function getImportsClosure($modelIri)
+    {
+        return array();
+    }
 
     /** @see Erfurt_Store_Adapter_Interface */
     public function getModel($modelIri)
@@ -160,4 +166,40 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface
     {
         return array();
     }
+    
+    public function createTable($tableName, array $columns)
+    {
+        
+    }
+    
+    public function lastInsertId()
+    {
+        
+    }
+    
+    public function listTables($prefix = '')
+    {
+        return array(
+            'ef_versioning_actions',
+            'ef_versioning_payloads'
+        );
+    }
+    
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
+    {
+        
+    }
+    
+#pragma mark -
+#pragma mark Helper methods
+
+    public function getStatementsForGraph($graphUri)
+    {
+        if (isset($this->_data[$graphUri])) {
+            return $this->_data[$graphUri];
+        }
+        
+        return array();
+    }
+
 }

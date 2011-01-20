@@ -21,6 +21,9 @@
  */
 class Erfurt_Ac_Test
 {
+    protected $_allowedModelsEdit = array();
+    protected $_allowedModelsView = array();
+    
     /**
      * Delivers the action configuration for a given action
      * 
@@ -84,7 +87,15 @@ class Erfurt_Ac_Test
      */
     public function isModelAllowed($type, $modelUri) 
     {
-        return true;
+        $modelUri = (string)$modelUri;
+        
+        if ($type === 'edit') {
+            return isset($this->_allowedModelsEdit[$modelUri]);
+        } else if ($type === 'view') {
+            return isset($this->_allowedModelsView[$modelUri]);
+        }
+        
+        return false;
     }
     
     /**
@@ -95,7 +106,7 @@ class Erfurt_Ac_Test
      */
     public function isActionAllowed($action) 
     {
-        return false;
+        return true;
     }
     
     /**
@@ -105,7 +116,7 @@ class Erfurt_Ac_Test
      */
     public function isAnyActionAllowed() 
     {   
-        return false;
+        return true;
     }
     
     /**
@@ -117,7 +128,7 @@ class Erfurt_Ac_Test
      */
     public function isAnyModelAllowed($type = 'view') 
     {
-        return false;
+        return true;
     }
         
     /**
@@ -131,6 +142,18 @@ class Erfurt_Ac_Test
      */
     public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
     {
-            
+        if ($type === 'view') {
+            if ($perm === 'grant') {
+                $this->_allowedModelsView[$modelUri] = true;
+            } else {
+                unset($this->_allowedModelsView[$modelUri]);
+            }
+        } else if ($type === 'edit') {
+            if ($perm === 'grant') {
+                $this->_allowedModelsEdit[$modelUri] = true;
+            } else {
+                unset($this->_allowedModelsEdit[$modelUri]);
+            }
+        }
     }
 }
