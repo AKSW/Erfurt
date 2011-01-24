@@ -501,13 +501,13 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 }
             }
             if (count($arTypeArray['type']) === 0) {
-                $strWhereTypes .= '1)';
+                $strWhereTypes .= '1';
             } else {
-                $strWhereTypes .= ')';
+                $strWhereTypes .= '';
             }
             
             if (isset($arTypeArray['datatype']) && count($arTypeArray['datatype']) > 0) {
-                $strWhereTypes .= ' AND (';
+                $strWhereTypes .= ' OR ';
                 foreach ($arTypeArray['datatype'] as $i => $arType) {
                     if ($i === 0) {
                         if ($arType === 'http://www.w3.org/2001/XMLSchema#string') {
