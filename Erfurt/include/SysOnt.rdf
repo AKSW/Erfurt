@@ -91,6 +91,13 @@
     <rdfs:range rdf:resource="&xsd;boolean"/>
   </owl:DatatypeProperty>
 
+  <owl:DatatypeProperty rdf:about="isFacet"
+                        rdfs:label="is facet">
+    <rdfs:comment>This property is a good candidate for beeing a facet in a instance list.</rdfs:comment>
+    <rdfs:domain rdf:resource="&rdf;Property"/>
+    <rdfs:range rdf:resource="&xsd;boolean"/>
+  </owl:DatatypeProperty>
+
   <owl:DatatypeProperty rdf:about="isLarge"
                         rdfs:label="is large">
     <rdf:type rdf:resource="&owl;FunctionalProperty"/>
