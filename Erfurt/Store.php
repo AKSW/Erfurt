@@ -8,7 +8,7 @@
 
 /**
  * @category Erfurt
- * @package Store
+ * @package Erfurt_Store
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author Norman Heino <norman.heino@gmail.com>
  * @copyright Copyright (c) 2011 {@link http://aksw.org aksw}
@@ -544,7 +544,7 @@ class Erfurt_Store
         $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
 
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidateWithStatements( $graphUri, $statementsArray );
+        $queryCache->invalidateWithStatements($graphUri, $statementsArray);
 
         require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onDeleteMultipleStatements');
