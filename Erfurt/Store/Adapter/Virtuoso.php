@@ -49,7 +49,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     
     /** 
      * ODBC connection identifier.
-     * @var int
+     * @var int|null
      */
     protected $_connection = null;
     
@@ -104,6 +104,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function __construct($adapterOptions = array())
     {
         // check for odbc extension
+        // TODO: Should be in an own init function for better testing!
         if (!extension_loaded('odbc')) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Virtuoso adapter requires the ODBC extension to be loaded.');
@@ -347,6 +348,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         require_once 'Erfurt/Store/Adapter/Exception.php';
         throw new Erfurt_Store_Adapter_Exception('RDF export not implemented yet.');
+    }
+    
+    /**
+     * @return int|null Connection id or null.
+     */
+    public function getConnection ()
+    {
+        return $this->_connection;
     }
     
     /**

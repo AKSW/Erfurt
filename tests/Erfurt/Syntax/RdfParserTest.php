@@ -24,7 +24,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithUrlAndRdfXml()
     {        
         $this->_object->initializeWithFormat('rdfxml');
-        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.rdf';
+        $url = 'http://erfurt.ontowiki.googlecode.com/hg/tests/resources/syntax/valid/conferences.rdf';
            
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
         
