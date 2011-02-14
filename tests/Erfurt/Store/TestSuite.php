@@ -10,6 +10,7 @@ class Erfurt_Store_TestSuite extends PHPUnit_Framework_TestSuite
         
         $suite->addTestSuite('Erfurt_Store_Adapter_VirtuosoTest');
         $suite->addTestSuite('Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest');
+        $suite->addTestSuite('Erfurt_Store_Adapter_ArcTest');
         $suite->addTestSuite('Erfurt_StoreTest');
         
         return $suite;

@@ -329,9 +329,9 @@ class Erfurt_Ac_Default
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user->getUri());
         $actionUri  = $this->_uris['acBaseUri'] . $action;
-
+        
         // Action not allowed (init is optimized on all actions which have an instance)
-        if (in_array($actionUri, $userRights['denyAccess'])) {
+        if (in_array($actionUri, $userRights['denyAccess'])) {            
             return false;
         } else if (in_array($actionUri, $userRights['grantAccess'])) {
             // Action explicitly allowed
@@ -690,7 +690,7 @@ class Erfurt_Ac_Default
         $this->_uris['propDenyAccess']     = $this->_config->ac->action->deny;
         $this->_uris['modelClassUri']      = $this->_config->ac->models->class;
         $this->_uris['actionConfigUri']    = $this->_config->ac->action->rawConfig;
-        
+
         $this->_isInit = true;
     }
     
