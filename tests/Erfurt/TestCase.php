@@ -142,6 +142,15 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $this->markTestSkipped();
         }
     }
+
+    public function markTestNeedsARC()
+    {
+        $this->markTestNeedsDatabase();
+
+        if ($this->_testConfig->store->backend !== 'arc') {
+            $this->markTestSkipped();
+        }
+    }
     
     private function _loadTestConfig()
     {

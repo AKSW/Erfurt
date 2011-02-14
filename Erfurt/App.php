@@ -41,7 +41,7 @@ class Erfurt_App
     const EF_MIN_ZEND_VERSION = '1.5.0';
     
     // ------------------------------------------------------------------------
-    // --- Private properties -------------------------------------------------
+    // --- Static member variables --------------------------------------------
     // ------------------------------------------------------------------------
     
     /**
@@ -50,7 +50,23 @@ class Erfurt_App
      * 
      * @var Erfurt_App
      */ 
-    private static $_instance = null;
+    protected static $_instance = null;
+    
+    /**
+     * Contains an instance of the store. 
+     * @var Erfurt_Store 
+     */
+    protected static $_store = null;
+    
+    /** 
+     * Contains an instance of the configuration object.
+     * @var Zend_Config 
+     */
+    protected static $_config = null;
+    
+    // ------------------------------------------------------------------------
+    // --- Private properties -------------------------------------------------
+    // ------------------------------------------------------------------------
     
     /**
      * Contains an instance of the Erfurt access control class. 
@@ -80,12 +96,6 @@ class Erfurt_App
      * @var Zend_Cache_Backend
      */
     private $_cacheBackend = null;
-    
-    /** 
-     * Contains an instance of the configuration object.
-     * @var Zend_Config 
-     */
-    private $_config = null;
     
     /**
      * Holds whether app was started.
@@ -122,12 +132,6 @@ class Erfurt_App
      * @var Erfurt_Cache_Backend_QueryCache_Backend
      */
     private $_queryCacheBackend = null;
-    
-    /**
-     * Contains an instance of the store. 
-     * @var Erfurt_Store 
-     */
-    private $_store = null;
     
     /**
      * Contains an instanciated system ontology model. 
@@ -279,7 +283,7 @@ class Erfurt_App
             $userUri, 
             EF_RDF_TYPE, 
             array(
-                'value' => $this->_config->ac->user->class,
+                'value' => self::getConfig()->ac->user->class,
                 'type'  => 'uri'
             ), 
             false
@@ -295,7 +299,7 @@ class Erfurt_App
             $store->addStatement(
                 $acModelUri,
                 $userUri, 
-                $this->_config->ac->user->mail, 
+                self::getConfig()->ac->user->mail, 
                 array(
                     'value' => $email,
                     'type'  => 'uri'
@@ -322,7 +326,7 @@ class Erfurt_App
             $store->addStatement(
                 $acModelUri,
                 $group, 
-                $this->_config->ac->group->membership, 
+                self::getConfig()->ac->group->membership, 
                 array(
                     'value' => $userUri,
                     'type'  => 'uri'
@@ -355,7 +359,7 @@ class Erfurt_App
             $userUri, 
             EF_RDF_TYPE, 
             array(
-                'value' => $this->_config->ac->user->class, 
+                'value' => self::getConfig()->ac->user->class, 
                 'type'  => 'uri'
             ),
             false
@@ -364,7 +368,7 @@ class Erfurt_App
         $store->addStatement(
             $acModelUri,
             $userUri, 
-            $this->_config->ac->user->name, 
+            self::getConfig()->ac->user->name, 
             array(
                 'value'    => $username, 
                 'type'     => 'literal',
@@ -381,7 +385,7 @@ class Erfurt_App
         $store->addStatement(
             $acModelUri,
             $userUri, 
-            $this->_config->ac->user->mail, 
+            self::getConfig()->ac->user->mail, 
             array(
                 'value' => $email, 
                 'type'  => 'uri'
@@ -392,7 +396,7 @@ class Erfurt_App
         $store->addStatement(
             $acModelUri,
             $userUri, 
-            $this->_config->ac->user->pass, 
+            self::getConfig()->ac->user->pass, 
             array(
                 'value' => sha1($password),
                 'type'  => 'literal'
@@ -404,7 +408,7 @@ class Erfurt_App
             $store->addStatement(
                 $acModelUri,
                 $userGroupUri, 
-                $this->_config->ac->group->membership, 
+                self::getConfig()->ac->group->membership, 
                 array(
                     'value' => $userUri,
                     'type'  => 'uri'
@@ -494,6 +498,11 @@ class Erfurt_App
         }
         
         return $this->_ac;
+    }
+    
+    public function setAc($ac)
+    {
+        $this->_ac = $ac;
     }
     
     /**
@@ -613,14 +622,14 @@ class Erfurt_App
      * @return Zend_Config
      * @throws Erfurt_Exception Throws an exception if no config is loaded.
      */
-    public function getConfig() 
+    public static function getConfig() 
     {    
-        if (null === $this->_config) {
+        if (null === self::$_config) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Configuration was not loaded.');
-        } else {
-            return $this->_config;
         }
+        
+        return self::$_config;
     }
     
     /**
@@ -809,8 +818,8 @@ class Erfurt_App
      */
     public function getStore() 
     {
-        if (null === $this->_store) {
-            $config = $this->getConfig();
+        if (null === self::$_store) {
+            $config = self::getConfig();
             
             // Backend must be set, else throw an exception.
             if (isset($config->store->backend)) {
@@ -841,10 +850,19 @@ class Erfurt_App
             }
         
             require_once 'Erfurt/Store.php';
-            $this->_store = new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema);
+            self::setStore(new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema));
         }
         
-        return $this->_store;
+        return self::$_store;
+    }
+    
+    /**
+     * Sets the store object to use.
+     * Not type checking to allow mocking.
+     */
+    public static function setStore($store)
+    {
+        self::$_store = $store;
     }
     
     /**
@@ -962,13 +980,13 @@ class Erfurt_App
      * 
      * @param Zend_Config|null $config
      */
-    public function loadConfig(Zend_Config $config = null) 
+    public static function loadConfig(Zend_Config $config = null) 
     {   
         // Load the default erfurt config.
         require_once 'Zend/Config/Ini.php';
         if (is_readable((EF_BASE . 'config/default.ini'))) {
             try {
-                $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
+                self::$_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
             } catch (Zend_Config_Exception $e) {
                 require_once 'Erfurt/App/Exception.php';
                 throw new Erfurt_App_Exception('Error while parsing config file default.ini.');
@@ -981,7 +999,7 @@ class Erfurt_App
         // Load user config iff available.
         if (is_readable((EF_BASE . 'config.ini'))) {
             try {
-                $this->_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
+                self::$_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
             } catch (Zend_Config_Exception $e) {
                 require_once 'Erfurt/App/Exception.php';
                 throw new Erfurt_App_Exception('Error while parsing config file config.ini.');
@@ -991,7 +1009,7 @@ class Erfurt_App
         // merge with injected config if given
         if (null !== $config) {
             try {
-                $this->_config->merge($config);
+                self::$_config->merge($config);
             } catch (Zend_Config_Exception $e) {
                 require_once 'Erfurt/App/Exception.php';
                 throw new Erfurt_App_Exception('Error while merging with injected config.');
