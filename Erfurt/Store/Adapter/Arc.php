@@ -152,7 +152,11 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             if (!$this->_store->isSetUp()) {
               $this->_store->setUp();
             }
-            
+
+            #$config = Erfurt_App::getInstance()->getConfig();
+            #var_dump($config->sysont
+            #        );exit;
+            #$this->createModel("http://test.com");
 
             # Daten laden
             #$rdfParser = ARC2::getRDFParser();
@@ -161,7 +165,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             #$this->_store->insert($triples, 'http://example.org/test');                                       // funktioniert
             //$this->_store->insert('/home/flo/Dokumente/work/uni/100k_dataset.turtle', 'http://example.org/test');     // fehler
             //$this->_store->query('LOAD <http://localhost/wenig_triple.ttl>');                                         // funktioniert
-            //$this->_store->query('LOAD <http://localhost/100k_dataset.turtle>');                                      // funktioniert
+            #$this->_store->query('LOAD <http://localhost/100k_dataset.turtle>');                                      // funktioniert
 
             # Query
             
@@ -329,7 +333,7 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     {
         $query = 'INSERT INTO <'.$graphUri.'> { <'.$graphUri.'> a <'.$type.'> . }';
         
-        #var_dump($this->_store->query($query, 'raw', '', true));
+        $this->_store->query($query, 'raw', '', true);
         
         // force reloading graphs next time
         $this->_graphs = null;
@@ -561,6 +565,7 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
                 $this->_graphs[$row['val']] = true;
             }
         }
+        #var_dump($this->_graphs);exit;
         
         return $this->_graphs;
     }
@@ -883,8 +888,9 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
                     #$result = $converter->convert($result);
 
                     #var_dump($rs);
-                    $result = $this->convertToSJP($rs);
-                    #var_dump($result['bindings']);die;
+                    $result = $this->_convertToSJP($rs);
+                    #if(!is_array($result['bindings']))
+                    #    var_dump($rs);die;
                 }
             }
             
@@ -892,9 +898,17 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
             if ($jsonEncode) {
                 $result = json_encode($result);
             }
-            var_dump($query); var_dump($options);var_dump($result);#die;
-            
+            #var_dump($query); var_dump($options);var_dump($result);#die;
+
             return $result;
+        }
+        else
+        {
+            return null;
+            echo "TEST:";
+            var_dump($rs);
+            var_dump($query);
+            exit;
         }
     }
     
@@ -977,10 +991,14 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         $resultArray = array();
         
         $rs = $this->_execSql((string)$sqlQuery);
-        while($row = mysql_fetch_array($rs))
-        {
-            $resultArray[] = $row;
-        }
+        if(!($rs === true) && !($rs === false))
+            while($row = mysql_fetch_array($rs))
+            {
+                $resultArray[] = $row;
+            }
+        else
+            $resultArray[] = $rs;
+            
                 
         return $resultArray;
     }

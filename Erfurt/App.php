@@ -865,10 +865,10 @@ class Erfurt_App
         self::$_store = $store;
     }
     
-    public function setStore(Erfurt_Store $store)
+    /*public function setStore(Erfurt_Store $store)
     {
         $this->_store = $store;
-    }
+    }*/
     
     /**
      * Returns an instance of the system ontology model.

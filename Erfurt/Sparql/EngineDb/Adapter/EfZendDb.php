@@ -261,7 +261,8 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         
         if (is_array($result)) {
             $result = $rc->convertFromDbResults($result['data'], $this->query, $this, $result['vars']);
-            
+            if($resultform == "plain")
+            var_dump($result);exit;
             return $result;
         }
         
@@ -278,9 +279,12 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         #var_dump($arSqls);exit;
         
         $this->ts->setData($this->sg);
-        
-        return $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
+
+        $result = $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
                     $this->query, $this, $this->sg->arVarAssignments);
+        if($resultform == "plain")
+            var_dump($result);exit;
+        return $result;
     }
     
     public function sqlQuery($sql)
