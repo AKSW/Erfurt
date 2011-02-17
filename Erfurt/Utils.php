@@ -37,7 +37,7 @@ class Erfurt_Utils
                 . '[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF.0-9\xB7]*/u';
         
         $matchCount = preg_match($regExp, $string, $matches);
-        if ($matchCount > 0 && $testResult[0] === $string) {
+        if ($matchCount > 0 && $matches[0] === $string) {
             return true;
         }
         
