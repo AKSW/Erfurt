@@ -529,8 +529,12 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     public function lastInsertId()
     {
-        require_once 'Erfurt/Store/Adapter/Exception.php';
-        throw new Erfurt_Store_Adapter_Exception('LastInsertID not implemented yet.');
+        $query = "SELECT LAST_INSERT_ID();";
+        $result = $this->sqlQuery($query);
+        if(isset($result[0]))
+            return $result[0];
+        else
+            return null;
     }
     
     /**
