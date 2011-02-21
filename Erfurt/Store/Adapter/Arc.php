@@ -13,18 +13,18 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
 /** Erfurt_Store_Sql_Interface */
 require_once 'Erfurt/Store/Sql/Interface.php';
 
-include_once 'ARC2/ARC2.php';
+/** ARC library **/
+require_once 'ARC2/ARC2.php';
 
 /**
- * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
+ * ARC Adapter for the Erfurt Semantic Web Framework.
  *
- * Connects to a Virtuoso via ODBC, therefore requires PHP to be compiled with the ODBC extension.
+ * Connects to a MySQL-DB via ARC
  *
  * @category Erfurt
  * @package Store_Adapter
- * @author Norman Heino <norman.heino@gmail.com>
- * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @author Florian Agsten <florianagsten@googlemail.com>
+ * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
@@ -38,22 +38,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      * @var string
      */
     const BLANKNODE_PREFIX = 'nodeID://';
-    
-    /**
-     * Name for the fulltext index.
-     * @var string
-     */
-    const FULLTEXT_INDEX_NAME = 'erfurt_ft_index';
         
     // ------------------------------------------------------------------------
     // --- Protected Properties -----------------------------------------------
     // ------------------------------------------------------------------------
-    
-    /** 
-     * ODBC connection identifier.
-     * @var int
-     */
-    protected $_connection = null;
     
     /**
      * Adapter option array
@@ -84,19 +72,15 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      * @var string
      */
     protected $_user = null;
-    
-    /**
-     * Graph URIs internally used by Virtuoso
-     * @var array 
-     */
-    protected $_virtuosoSpecialGraphs = array(
-        'http://www.openlinksw.com/schemas/virtrdf#', 
-        'http://localhost:8890/DAV'
-    );
 
+    /*
+     * The ARC-rdf-parser
+     */
     protected $_parser = null;
+    /*
+     * The ARC-store
+     */
     protected $_store = null;
-    protected $_sparqlEndpoint = null;
     
     // ------------------------------------------------------------------------
     // --- Magic Methods ------------------------------------------------------
@@ -106,21 +90,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      * Constructor.
      *
      * @throws Erfurt_Store_Adapter_Exception
-     *
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function __construct($adapterOptions = array())
     {
         try{
-            #include_once '../../ARC/ARC2.php';
-            #include_once '/usr/local/ARC/ARC2.php';
-            #include_once $adapterOptions['path_to_arc'].'ARC2.php';
-            
-
-            $this->_parser = ARC2::getRDFParser();
             $config = array(
               /* db */
               'db_host' => $adapterOptions['host'], /* default: localhost */
@@ -147,93 +120,17 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
               'endpoint_write_key' => 'somekey', /* optional */
               'endpoint_max_limit' => 250, /* optional */
             );
+            $this->_adapterOptions = $adapterOptions;
+
+            $this->_parser = ARC2::getRDFParser();
 
             $this->_store = ARC2::getStore($config);
             if (!$this->_store->isSetUp()) {
               $this->_store->setUp();
             }
 
-            #$config = Erfurt_App::getInstance()->getConfig();
-            #var_dump($config->sysont
-            #        );exit;
-            #$this->createModel("http://test.com");
-
-            # Daten laden
-            #$rdfParser = ARC2::getRDFParser();
-            #$rdfParser->parse('/home/flo/Dokumente/work/uni/wenig_triple.ttl');
-            #$triples = $rdfParser->getTriples();
-            #$this->_store->insert($triples, 'http://example.org/test');                                       // funktioniert
-            //$this->_store->insert('/home/flo/Dokumente/work/uni/100k_dataset.turtle', 'http://example.org/test');     // fehler
-            //$this->_store->query('LOAD <http://localhost/wenig_triple.ttl>');                                         // funktioniert
-            #$this->_store->query('LOAD <http://localhost/100k_dataset.turtle>');                                      // funktioniert
-
-            # Query
-            
-            /*$query = 'PREFIX bsbm: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/>
-                        PREFIX dc: <http://purl.org/dc/elements/1.1/>
-
-                        SELECT DISTINCT ?offer ?price
-                        WHERE {
-                                ?offer bsbm:product <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromProducer4/Product150> .
-                                ?offer bsbm:vendor ?vendor .
-                            ?offer dc:publisher ?vendor .
-                                ?vendor bsbm:country <http://downlode.org/rdf/iso-3166/countries#US> .
-                                ?offer bsbm:deliveryDays ?deliveryDays .
-                                FILTER (?deliveryDays <= 3)
-                                ?offer bsbm:price ?price .
-                            ?offer bsbm:validTo ?date .
-                            #FILTER (?date > "2008-06-06T00:00:00" )
-                        }
-                        ORDER BY ?price
-                        LIMIT 10';
-             * 
-             *
-             *
-            $query = 'PREFIX bsbm: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/>
-                        PREFIX dc: <http://purl.org/dc/elements/1.1/>
-
-                        SELECT DISTINCT ?s ?p
-                        FROM <http://localhost/100k_dataset.turtle>
-                        WHERE {
-                                ?s ?p "practiced"
-                        }';
-             *
-             *
-             */
-            /*$query = '
-SELECT ?s ?p ?o
-FROM <http://localhost/OntoWiki/Config/>
-WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
-
-*/
-            /*
-            $query = 'DROP GRAPH <http://localhost/wenig_triple.ttl>';
-
-            # Query Parsen
-            
-            $parser = ARC2::getSPARQLParser();
-            $parser->parse($query);
-            if (!$parser->getErrors()) {
-              $q_infos = $parser->getQueryInfos();
-              print_r($q_infos);
-            }
-            else {
-              echo "invalid query: " . print_r($parser->getErrors());
-            }
-            
-
-            # Query an Store schicken + Ausgabe
-            
-            $result = $this->_store->query($query);
-            echo "<br><br>";var_dump($result);echo "<br><br>";
-            #var_dump($this->_store->getErrors());echo "<br><br>";
-            $rows = $result['result']['rows'];
-            foreach($rows as $row)
-            {
-                var_dump($row);echo "<br><br>";
-            }die;
-            #*/
-            $this->_adapterOptions = $adapterOptions;
+            #$query = "INSERT INTO arc_test2_g2t VALUES (999999,9999999);";
+            #var_dump($this->_execSql($query));exit;
 
         } catch (Erfurt_Store_Adapter_Exception $e){
             require_once 'Erfurt/Store/Adapter/Exception.php';
@@ -243,30 +140,12 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         
     }
     
-    /**
-     * Destructor
-     *
-     * @throws Erfurt_Exception
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
-     */
-    public function __destruct() 
-    {
-        // not required?
-    }
-    
     // ------------------------------------------------------------------------
     // --- Public Methods (Erfurt_Store_Adapter_Interface) --------------------
     // ------------------------------------------------------------------------
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
@@ -285,10 +164,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function addStatement($graphUri, $subject, $predicate, $objectSpec, array $options = array())
     {
@@ -304,7 +179,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
             );
         }
         
-        // TODO: support blank nodes as subject
         $insertSparql = '
             INSERT INTO <' . $graphUri . '> {
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
@@ -324,10 +198,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * @param string $graphUri
      * @param string $baseUri
      * @return boolean
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
@@ -342,59 +212,8 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     }
     
     /**
-     * Returns the current connection resource.
-     * The resource is created lazily if it doesn't exist.
-     * @retun resource
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
-     */
-    public function connection()
-    {
-        // not required?
-
-        if (!$this->_connection) {
-            $adapterOptions = $this->_adapterOptions;
-
-            extract($adapterOptions);
-
-            /*
-            // determine connection function
-            if (isset($use_persistent_connection) && (boolean)$use_persistent_connection === true) {
-                $odbcConnectFunction = 'odbc_pconnect';
-            } else {
-                $odbcConnectFunction = 'odbc_connect';
-            }
-
-            // try to connect
-            if (function_exists('__virt_internal_dsn')) {
-                // via Virtuoso hosting
-                $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
-            } else {
-                // via php_odbc
-                $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
-                $this->_user = (string)$username;
-            }
-
-            // success?
-            if (false === $this->_connection) {
-                require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Store_Adapter_Exception('Unable to connect to ARC Backend.');
-                exit;
-            }*/
-        }
-        
-        return $this->_connection;
-    }
-    
-    /**
      * @see Erfurt_Store_Adapter_Interface
      *
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
@@ -434,30 +253,14 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         
         // perform delete
         $rs = $this->_execSparql($deleteSparql);
-        return $rs['result']['t_count'];
-
-        /*if () {
-            $deleteResult = (string)odbc_result($rid, 1);
-            
-            // extract number of deleted statements
-            $matches = array();
-            preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
-            if (isset($matches[1])) {
-                // return number of deleted statements
-                return (int)$matches[1];
-            }
-        }
-        
-        // no statements deleted
-        return 0;*/
+        if(isset($rs['result']['t_count']))
+            return $rs['result']['t_count'];
+        else
+            return 0;
     }
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
@@ -476,10 +279,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function deleteModel($graphUri)
     {
@@ -528,10 +327,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      * @todo implement
      */
     public function exportRdf($graphUri, $serializationType = 'xml', $filename = null)
@@ -542,10 +337,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function getAvailableModels()
     {       
@@ -565,17 +356,12 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
                 $this->_graphs[$row['val']] = true;
             }
         }
-        #var_dump($this->_graphs);exit;
         
         return $this->_graphs;
     }
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function getBlankNodePrefix()
     {
@@ -584,10 +370,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function getLogoUri()
     {
@@ -595,82 +377,7 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     }
     
     /**
-     * @see Erfurt_Store
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
-     */
-    #public function getSearchPattern($stringSpec, $graphUris, $options)
-    public function virtuoso_getSearchPattern($stringSpec, $graphUris, $options)
-    {
-        // NOT REQUIRED!
-        /*
-        $searchPattern = array();
-        
-        if (false === strpos($stringSpec, '*')) {
-            $stringSpec .= '*';
-        }
-        
-        require_once 'Erfurt/Sparql/Query2/Var.php';
-        $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
-        $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
-        $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
-        
-        require_once 'Erfurt/Sparql/Query2/Triple.php';
-        $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple($subjectVariable, $predicateVariable, $objectVariable);
-        $searchPattern[] = $defaultTriplePattern;
-        
-        $bifPrefix = new Erfurt_Sparql_Query2_Prefix('bif', new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow'));
-        $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
-
-        $filter = new Erfurt_Sparql_Query2_Filter(
-            new Erfurt_Sparql_Query2_ConditionalOrExpression(
-                array(
-#                    *new Erfurt_Sparql_Query2_Function(
-#                        $bifContains,
-#                        array($subjectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-#                    ),
-                    // why doesnt this work???
-                    // ANSWER: bif:contains uses virtuoso specific fulltext index only 
-                    // available for object column uris could only be treated as codepoint representation
-                    // of themselves -> Solution again is IRI (maybe not before PHP 6)
-                    //
-                    new Erfurt_Sparql_Query2_Function(
-                        $bifContains,
-                        array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '\'"'))
-                    )
-                )
-            )
-        );
-
-        if ($options['filter_properties']) {
-            $ss_var = new Erfurt_Sparql_Query2_Var('ss');
-            $oo_var = new Erfurt_Sparql_Query2_Var('oo');
-
-            $propertyFilterTriplePattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
-            $searchPattern[] = $propertyFilterTriplePattern;
-
-            #
-            #$filter->getConstraint()->addElement(
-            #    new Erfurt_Sparql_Query2_Function(
-            #        $bifContains,
-            #        array($oo_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-            #    )
-            #);
-        }
-
-        $searchPattern[] = $filter;
-
-        return $searchPattern;*/
-    }
-    
-    /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function getSupportedExportFormats()
     {
@@ -679,10 +386,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function getSupportedImportFormats()
     {
@@ -694,10 +397,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function importRdf($graphUri, $data, $type, $locator)
     {
@@ -730,94 +429,17 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
 
         // success
         return true;
-        
-        /*
-
-        // check type parameter
-        switch (strtolower($type)) {
-            case 'n3':  // N3
-            case 'nt':  // N-Triple (is N3 Subset)
-            case 'ttl': // Turtle (is N3 Subset)
-                $type = 'n3';
-                break;
-            case 'rdf': // RDF-XML
-            case 'rdfxml':
-            default:    // RDF/XML is default
-                $type = 'rdfxml';
-                break;
-        }
-        require_once 'Erfurt/Syntax/RdfParser.php';
-        switch ($locator) {
-            case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
-                $importSql = $this->_getImportSql('file', $data, $type, $graphUri);
-                break;
-                
-            case Erfurt_Syntax_RdfParser::LOCATOR_URL:
-                // do some type guesswork
-                if ( 
-                    substr($data, -2) == 'n3' ||
-                    substr($data, -2) == 'nt' ||
-                    substr($data, -3) == 'ttl'
-                ) {
-                    $type = 'n3';
-                }
-                $importSql = $this->_getImportSql('url', $data, $type, $graphUri);
-                break;
-                
-            default:
-                require_once 'Erfurt/Store/Adapter/Exception.php';
-                throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
-                break;
-        }
-        
-        try {
-            // import graph
-            $rs = $this->_execSql($importSql);
-            
-            // parse namespace prefixes
-            require_once 'Erfurt/Syntax/RdfParser.php';
-            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
-            $namespacePrefixes = $parser->parseNamespaces($data, $locator);
-            $namespaces = Erfurt_App::getInstance()->getNamespaces();
-            
-            // store namespace prefixes
-            while (list($namespaceUri, $prefix) = each($namespacePrefixes)) {
-                try {
-                    $namespaces->addNamespacePrefix($graphUri, $namespaceUri, $prefix);
-                } catch (Erfurt_Namespaces_Exception $e) {
-                    // ignore
-                }
-            }
-        } catch (Erfurt_Store_Adapter_Exception $e) {
-            throw new Erfurt_Store_Adapter_Exception('Error importing statements: ' . $e->getMessage());
-        } catch (Erfurt_Syntax_RdfParserException $parserException) {
-            throw new Erfurt_Store_Adapter_Exception('Error parsing namespaces: ' . $parserException->getMessage());
-        }
-        
-        // success
-        return true;*/
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function init()
     {
-        // not required?
-        // create fulltext index rule and update index
-        //$this->_createFullTextIndexRules();
     }
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function isModelAvailable($graphUri)
     {
@@ -827,26 +449,22 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function sparqlAsk($query)
     {
         $rs = $this->_execSparql($query);
-        return $rs['result'];
+        if(isset($rs['result']))
+            return $rs['result'];
+        else
+            return array();
     }
     
     /**
      * @see Erfurt_Store_Adapter_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function sparqlQuery($query, $options=array())
-    {        
+    {
+        $result = array();
         $resultFormat = isset($options[STORE_RESULTFORMAT]) ?
                             $options[STORE_RESULTFORMAT] :
                             STORE_RESULTFORMAT_PLAIN;
@@ -854,62 +472,28 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
         
-        // prepare query
-        #$query = $queryPrefix
-        #       . PHP_EOL
-        #       . (string)$query;
-        //echo htmlentities($query);
-        
         $rs = $this->_execSparql($query);
         
-        $result = $rs['result']['rows'];
-        
-        #if ($rid = $this->_execSparql($query)) {
-        if(!empty($result)){
+        $result = $rs['result']['rows'];        
             
-            #$result = $this->_odbcResultToArray($rid);
-            
-            // map single field to complete result
-            #if ($singleField) {
-                // the result is in the first field of the first row                
-                #var_dump("result: ".print_r($result,true));
-                #var_dump("current(result): ".print_r(current($result),true));
-            #    $result = current(current($result));
-                #var_dump("SingleField (current(current(result)): ".$result);
-            #}
-            
-            // convert XML result
-            if (null !== $converter) {
-                foreach ((array) $converter as $currentConverter) {                    
-                    $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;                    
-                    
-                    require_once str_replace('_', '/', $converterClass) . '.php';
-                    $converter = new $converterClass();
-                    #$result = $converter->convert($result);
+        // convert XML result
+        if (null !== $converter) {
+            foreach ((array) $converter as $currentConverter) {
+                $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;
 
-                    #var_dump($rs);
-                    $result = $this->_convertToSJP($rs);
-                    #if(!is_array($result['bindings']))
-                    #    var_dump($rs);die;
-                }
-            }
-            
-            // encode as JSON string
-            if ($jsonEncode) {
-                $result = json_encode($result);
-            }
-            #var_dump($query); var_dump($options);var_dump($result);#die;
+                require_once str_replace('_', '/', $converterClass) . '.php';
+                $converter = new $converterClass();
 
-            return $result;
+                $result = $this->_convertToSJP($rs);
+            }
         }
-        else
-        {
-            return null;
-            echo "TEST:";
-            var_dump($rs);
-            var_dump($query);
-            exit;
+
+        // encode as JSON string
+        if ($jsonEncode) {
+            $result = json_encode($result);
         }
+
+        return $result;
     }
     
     // ------------------------------------------------------------------------
@@ -918,10 +502,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function createTable($tableName, array $columns)
     {
@@ -946,25 +526,16 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
-     * ## ARC ##
-     * Basic: ? (FUNCTION ontowiki.IDENTITY_VALUE does not exist)
-     * Final:
-     * #########
      */
     public function lastInsertId()
     {
-        if ($rid = $this->_execSql('SELECT IDENTITY_VALUE()')) {
-            return (int)odbc_result($rid, 1);
-        }
+        require_once 'Erfurt/Store/Adapter/Exception.php';
+        throw new Erfurt_Store_Adapter_Exception('LastInsertID not implemented yet.');
     }
     
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
      * @todo Easier implementation
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function listTables($prefix = '')
     {
@@ -974,14 +545,9 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        // replacings needed?
         if ($limit < PHP_INT_MAX) {
             $selectRegex   = '/SELECT(\s+DISTINCT)?/i';
             $selectReplace = sprintf('$0 TOP %d, %d', (int)$offset, (int)$limit);
@@ -1014,10 +580,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * @param string|null $datatype
      * @param string|null $lang
      * @return string
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     public function buildLiteralString($value, $datatype = null, $lang = null)
     {
@@ -1070,11 +632,7 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
      *
      * @param $rdfPhpStatements A nested statement array
-     * @return string
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
+     * @return string+
      */
     public function buildTripleString(array $rdfPhpStatements)
     {
@@ -1109,10 +667,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     /**
      * @see Erfurt_Store_Adapter_Interface
      * @todo Rename countMatchingStatements
-     * ## ARC ##
-     * Basic: ? Eingabe unklar
-     * Final:
-     * #########
      */
     public function countWhereMatches($graphUris, $whereSpec, $countSpec, $distinct = false)
     {
@@ -1135,23 +689,16 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
             $whereSpec);
 
         $rs = $this->_execSparql($countQuery);
-        return (int) $rs['result']['rows'][0]['counters'];
-        /*if ($rid = $this->_execSparql($countQuery)) {
-            $count = (int)odbc_result($rid, 1);
-            return $count;
-        }
-
-        return 0;*/
+        if(isset($rs['result']['rows'][0]['counters']))
+            return (int) $rs['result']['rows'][0]['counters'];
+        else
+            return 0;
     }
 
     /**
      * Recursively gets owl:imported model IRIs starting with $modelUri as root.
      *
      * @param string $modelUri
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function getImportsClosure($modelUri)
     {
@@ -1197,10 +744,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * Returns the last ARC error message
      *
      * @return string
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     public function getLastError() 
     {
@@ -1213,52 +756,12 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     // ------------------------------------------------------------------------
     
     /**
-     * Closes a current connection if it exists
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
-     */
-    protected function _closeConnection()
-    {
-        // not required?
-    }
-    
-    /**
-     * Creates a fulltext index to be used with bif:contains matching.
-     *
-     * @throws Erfurt_Store_Adapter_Exception
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
-     */ 
-    protected function _createFullTextIndexRules()
-    {
-        // NOT REQUIRED!
-        
-        /*
-        $pre = microtime(true);
-        $this->_execSql('DB.DBA.RDF_OBJ_FT_RULE_ADD(NULL, NULL, \'' . self::FULLTEXT_INDEX_NAME . '\')');
-        $this->_execSql('DB.DBA.VT_INC_INDEX_DB_DBA_RDF_OBJ()');
-        
-        if (defined('_EFDEBUG')) {            
-            $logger = Erfurt_App::getInstance()->getLog();
-            $logger->info(sprintf('Creating Virtuoso full-text index: %f ms', (microtime(true) - $pre) * 1000));
-        }*/
-    }
-    
-    /**
      * Executes a SPARQL query and returns an ODBC result identifier.
      *
      * @param string $sparqlQuery
      * @param string $graphUri
      * @return ODBC result identifier
      * @throws Erfurt_Store_Adapter_Exception
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     private function _execSparql($sparqlQuery, $graphUri = null) 
     {
@@ -1267,37 +770,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         // result       = eigentliche Ergebnismenge
         // query_time   = Ausführungszeit
         return $this->_store->query($sparqlQuery);
-        
-        /*
-        $graphUri = (string)$graphUri;
-        
-        if (!empty($graphUri)) {
-            // enquote
-            $graphUri = '\'' . $graphUri . '\'';
-        } else {
-            // set Virtuoso NULL
-            $graphUri = 'NULL';
-        }
-        
-        // escape characters that delimit the query within the query        
-        $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
-        echo "<br>";
-        var_dump("sparqlquery: ".$sparqlQuery);
-        
-        // build Virtuoso/PL query
-        $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-        var_dump("virtuosoPl: ".$virtuosoPl);
-
-        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
-        var_dump("resultId: ".$resultId);
-        
-        if (false === $resultId) {
-            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
-            require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception($message);
-        }
-        
-        return $resultId;*/
     }
     
     /**
@@ -1306,26 +778,11 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * @param  string $sqlQuery
      * @return ODBC result identifier
      * @throws Erfurt_Store_Adapter_Exception
-     * ## ARC ##
-     * Basic: +
-     * Final: Test
-     * #########
      */
     protected function _execSql($sqlQuery) 
     {
         // return resultSet
         return $this->_store->queryDB($sqlQuery, $this->_store->getDBCon());
-        /*
-        $resultId = @odbc_exec($this->connection(), $sqlQuery);
-        
-        if (false === $resultId) {
-            $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
-            
-            require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception($message);
-        }
-        
-        return $resultId;*/
     }
     
     /**
@@ -1333,10 +790,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      *
      * @param string $format The result format
      * @return array
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     protected function _getQueryConfig($format = 'plain')
     {
@@ -1379,67 +832,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
         
         return $queryConfigs['plain'];
     }
-    
-    /**
-     * Returns an SQL query to be used for importing statements from a file
-     * or a URL.
-     *
-     * @param string $method 'file' or 'url'
-     * @param mixed $data If $method is 'file', this is the path to a file containing triples;
-     *        if $method is 'url', this is a URL.
-     * @param string $type 'n3', 'nt' or 'rdf' 
-     * @param string $graphUri The graph URI
-     * @param string $baseUri The base URI
-     * @return string
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
-     */
-    protected function _getImportSql($method, $data, $type, $graphUri, $baseUri = null)
-    {
-        // NOT REQUIRED!
-        /*
-        // default base URI to graph URI if not given 
-        // (will be overriden by document directives e. g. xml:base)
-        if ($baseUri === null) {
-            $baseUri = $graphUri;
-        }
-        
-        // check type parameter
-        switch (strtolower($type)) {
-            case 'n3':  // N3
-            case 'nt':  // N-Triple (is N3 subset)
-            case 'ttl': // Turtle   (is N3 subset)
-                // use TTLP function from Virtuoso (is N3 capable)
-                $importFunc = 'TTLP';
-                break;
-            case 'rdf': // RDF-XML
-            case 'rdfxml':
-            default:    // unknown defaults to RDF-XML
-                $importFunc = 'RDF_LOAD_RDFXML';
-                break;
-        }
-        
-        if ($method === 'url') {
-            $importSql = sprintf(
-                "CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')", 
-                $importFunc, 
-                $data, 
-                $baseUri, 
-                $graphUri);
-        } else {
-            // import using internal Virtuoso/PL function
-            $importSql = sprintf(
-                "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", 
-                $importFunc, 
-                $data, 
-                $baseUri, 
-                $graphUri);
-        }
-        
-        return $importSql;*/
-    }
 
     /**
      * Converts an ARC result to an SPARQL/JSON-like PHP-Format (here called SJP)
@@ -1448,10 +840,6 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
      * @param result  the arc result
      *
      * @return array
-     * ## ARC ##
-     * Basic: NEW
-     * Final: NEW
-     * #########
      */
     private function _convertToSJP($arcResult)
     {
@@ -1489,84 +877,9 @@ WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }';
     }
     
     /**
-     * Converts an ODBC result to an array.
-     *
-     * @param boolean $columnsAsKeys If true, column names are used as indices.
-     * @param string $field Non-null values denote the only column name that is returned as the 
-     *        result for a row. If null, all column values are returned in an array.
-     *
-     * @return array
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
-     */
-    private function _odbcResultToArray($odbcResult, $columnsAsKeys = true, $field = null)
-    {
-        // NOT REQUIRED!
-        /*
-        // the result will be stored in here
-        $resultArray = array();
-        
-        // get number of fields (columns)
-        $numFields = odbc_num_fields($odbcResult);
-        
-        // Return empty array on no results (0) or error (-1)
-        if ($numFields < 1) {
-            return $resultArray;
-        }
-        
-        // for all rows
-        while (odbc_fetch_row($odbcResult)) {
-            $resultRowNamed = array();
-
-            // for all columns
-            for ($i = 1; $i <= $numFields; ++$i) {
-                $fieldName = odbc_field_name($odbcResult, $i);
-                $fieldType = odbc_field_type($odbcResult, $i);
-                $value     = '';
-
-                if (substr($fieldType, 0, 4) == 'LONG') {
-                    // LONG VARCHAR or LONG VARBINARY
-                    // get the field value in parts
-                    while ($segment = odbc_result($odbcResult, $i)) {
-                        $value .= (string)$segment;
-                    }
-                } else {
-                    // get the field value normally
-                    $value = odbc_result($odbcResult, $i);
-                }
-
-                if (null !== $field) {
-                    // add only requested field
-                    if ($fieldName == $field) {
-                        $resultRowNamed = $value;
-                    }
-                } else {
-                    // add all fields
-                    if ($columnsAsKeys) {
-                        $resultRowNamed[$fieldName] = $value;
-                    } else {
-                        $resultRowNamed[] = $value;
-                    }
-                }
-            }
-
-            // add row to result array
-            array_push($resultArray, $resultRowNamed);
-        }
-        
-        return $resultArray;*/
-    }
-    
-    /**
      * Returns a data URI with the Virtuoso logo png image.
      *
      * @return string
-     * ## ARC ##
-     * Basic: +
-     * Final: +
-     * #########
      */
     private function _xyz()
     {
