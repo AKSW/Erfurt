@@ -506,17 +506,11 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function createTable($tableName, array $columns)
     {
         $colSpecs = array();
-
-        // Virtuoso-specific replacings
-        $replace = array(
-            'AUTO_INCREMENT' => 'IDENTITY', 
-            'LONGTEXT'       => 'LONG VARCHAR'
-        );
         
         foreach ($columns as $columnName => $columnSpec) {
             $colSpecs[] = PHP_EOL
-                        .  ' "' . $columnName . '" '
-                        .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
+                        .  ' `' . $columnName . '` '
+                        .  $columnSpec;
         }
         
         $createTable = 'CREATE TABLE ' . (string)$tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
@@ -530,7 +524,8 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function lastInsertId()
     {
         $query = "SELECT LAST_INSERT_ID();";
-        $result = $this->sqlQuery($query);
+        $rs = $this->_execSql($query);
+        $result = mysql_fetch_array($rs);        
         if(isset($result[0]))
             return $result[0];
         else
@@ -552,6 +547,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
+
         if ($limit < PHP_INT_MAX) {
             $selectRegex   = '/SELECT(\s+DISTINCT)?/i';
             $selectReplace = sprintf('$0 TOP %d, %d', (int)$offset, (int)$limit);
@@ -560,15 +556,14 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
         
         $resultArray = array();
         
-        $rs = $this->_execSql((string)$sqlQuery);
+        $rs = $this->_execSql($sqlQuery);
         if(!($rs === true) && !($rs === false))
             while($row = mysql_fetch_array($rs))
             {
                 $resultArray[] = $row;
             }
         else
-            $resultArray[] = $rs;
-            
+            $resultArray[] = $rs;            
                 
         return $resultArray;
     }
