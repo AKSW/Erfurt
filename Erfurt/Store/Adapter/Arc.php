@@ -94,6 +94,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function __construct($adapterOptions = array())
     {
         try{
+            if(isset($adapterOptions['store']))
+                $storeName = $adapterOptions['store'];
+            else
+                $storeName = 'ef';
             $config = array(
               /* db */
               'db_host' => $adapterOptions['host'], /* default: localhost */
@@ -101,7 +105,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
               'db_user' => $adapterOptions['username'],
               'db_pwd'  => $adapterOptions['password'],
               /* store */
-              'store_name' => $adapterOptions['store'],
+              'store_name' => $storeName,
               /* network */
               #'proxy_host' => '192.168.1.1',
               #'proxy_port' => 8080,
@@ -121,6 +125,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
               'endpoint_max_limit' => 250, /* optional */
             );
             $this->_adapterOptions = $adapterOptions;
+            $this->_adapterOptions['store'] = $storeName;
 
             $this->_parser = ARC2::getRDFParser();
 
@@ -128,6 +133,22 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             if (!$this->_store->isSetUp()) {
               $this->_store->setUp();
             }
+
+            $query = 'SELECT DISTINCT ?resourceUri
+                      FROM <http://ns.ontowiki.net/SysOnt/>
+                      FROM <http://localhost/OntoWiki/Config/>
+                      WHERE {
+                        ?resourceUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdfs.org/sioc/ns#User>
+                        FILTER (!isBLANK(?resourceUri))
+                        } LIMIT 10 ';
+            /*$rs = $this->_store->query($query);
+            foreach($rs as $row)
+            {
+                var_dump($row);
+            }*/
+            #var_dump($this->sparqlQuery($query));
+
+            #exit;
 
             #$query = "INSERT INTO arc_test2_g2t VALUES (999999,9999999);";
             #var_dump($this->_execSql($query));exit;
@@ -154,10 +175,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             $graphUri, 
             $this->buildTripleString($statementsArray));
         
-        if (defined('_EFDEBUG')) {
+        #if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->debug('Add mutliple statements query: ' . PHP_EOL . $insertSparql);
-        }
+        #}
         
         return $this->_execSparql($insertSparql);
     }
@@ -184,10 +205,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
             }';
         
-        if (defined('_EFDEBUG')) {
+        #if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->debug('Add statement query: ' . PHP_EOL . $insertSparql);
-        }
+        #}
         
         return $this->_execSparql($insertSparql);
     }
@@ -390,8 +411,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function getSupportedImportFormats()
     {
         return array(
-            'rdfxml' => 'RDF/XML',
-            'n3'     => 'N3'
+            'rdfxml' => 'RDF/XML'
         );
     }
     
@@ -659,7 +679,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
                 }
             }
         }
-        
+
         return $triples;
     }
     
