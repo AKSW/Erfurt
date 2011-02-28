@@ -1,0 +1,6 @@
+_:b3 rdf:type owl:Class .
+_:b3 owl:intersectionOf _:b1 .
+_:b1 rdf:first :class1 .
+_:b1 rdf:rest _:b2 .
+_:b2 rdf:first :class2 .
+_:b2 rdf:rest rdf:nil .

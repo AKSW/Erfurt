@@ -25,7 +25,7 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	    /**
 	     * @dataProvider providerTestParse
 	     */
-	   	public function testParse($querySpec)
+	   	public function TestParse($querySpec)
 	    {
 		$q;
 		try {
@@ -43,16 +43,19 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	}
 
 
-	// public function testTest1()
-	// {
-	// 	$q1 = new Erfurt_Sparql_Query2();
-	// 	$q2 = $q1->initFromString("select * {}");
-	// 	// var_dump($q2);
-	// 	if ($q2 instanceof Exception) {
-	// 		echo $q2->getMessage();			
-	// 	}
-	// 	$this->assertTrue($q2 instanceof Erfurt_Sparql_Query2);
-	// }
+	public function testTest1()
+	{
+		$q1 = new Erfurt_Sparql_Query2();
+		$q2 = $q1->initFromString('
+SELECT * {}
+');
+		echo($q2);
+//		var_dump($q2);
+		if ($q2 instanceof Exception) {
+			echo $q2->getMessage();			
+		}
+		$this->assertTrue($q2 instanceof Erfurt_Sparql_Query2);
+	}
 	
 
 	// public function testTest()
