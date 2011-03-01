@@ -1710,7 +1710,7 @@ class Erfurt_Store
             $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);
 
             // get sub items
-            $result = $this->_backendAdapter->sparqlQuery($subSparql, 'plain');
+            $result = $this->_backendAdapter->sparqlQuery($subSparql, array(STORE_RESULTFORMAT => STORE_RESULTFORMAT_PLAIN));
 
             // break on first empty result
             if (empty($result)) {
