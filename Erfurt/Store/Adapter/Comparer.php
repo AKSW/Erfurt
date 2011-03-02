@@ -108,7 +108,9 @@ class Erfurt_Store_Adapter_Comparer
         $this->_candidate = new $candidateClassName($candidateConf->toArray());
         $this->_reference = new $referenceClassName($referenceConf->toArray());
 
-        self::$_ignoredMethods = $adapterOptions['ignoredMethods'];
+        if (isset($adapterOptions['ignoredMethods'])) {
+            self::$_ignoredMethods = $adapterOptions['ignoredMethods'];
+        } 
     }
 
     protected static $_strictMethods = array('isModelAvailable');
