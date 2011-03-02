@@ -125,8 +125,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
 
     public function  __call($name, $arguments) {
-        $ref = call_user_func_array(array($this->_reference, $name), $arguments);
-        $cand = call_user_func_array(array($this->_candidate, $name), $arguments);
+        $refThrowed = false;
+        try {
+            $ref = call_user_func_array(array($this->_reference, $name), $arguments);
+        } catch (Exception $e){
+            $refThrowed = $e;
+        }
+        $candThrowed = false;
+        try {
+            $cand = call_user_func_array(array($this->_candidate, $name), $arguments);
+        } catch (Exception $e){
+            $candThrowed = $e;
+        }
+        if($candThrowed != false && $refThrowed == false){
+            throw new Erfurt_Store_Exception("Candidate throwed an exception but reference didn't".PHP_EOL.$candThrowed->getTraceAsString());
+        }
+        if($candThrowed == false && $refThrowed != false){
+            throw new Erfurt_Store_Exception("Reference throwed an exception but Candidate didn't".PHP_EOL.$candThrowed->getTraceAsString());
+        }
 
         if(in_array($name, self::$_strictMethods)){
             if($ref !== $cand){
