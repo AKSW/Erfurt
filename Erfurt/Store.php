@@ -841,7 +841,6 @@ class Erfurt_Store
                 }
             } else {
                 require_once 'Erfurt/Store/Exception.php';
-                echo "<pre>";xdebug_print_function_stack(); exit;
                 throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }
         }
