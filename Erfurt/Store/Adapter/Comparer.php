@@ -70,12 +70,34 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      *
      * @throws Erfurt_Store_Adapter_Exception
      */
-    public function __construct($adapterOptions = array())
+    public function __construct($adapterOptions)
     {
         $this->_adapterOptions = $adapterOptions;
 
-        $this->_candidate = $adapterOptions['candidate'];
-        $this->_reference = $adapterOptions['reference'];
+        $config = Erfurt_App::getInstance()->getConfig();
+
+        if($config->store->isset($adapterOptions['candidate'])){
+            $candidateConf = $config->store->get($adapterOptions['candidate']);
+        }
+        if($config->store->isset($adapterOptions['reference'])){
+            $referenceConf = $config->store->get($adapterOptions['reference']);
+        }
+
+        if(!isset($candidateConf) || !isset ($referenceConf)){
+            throw new Erfurt_Store_Exception("the requested adapters to be compared have no options set in config.ini");
+        }
+
+        $candidateClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['candidate']);
+        if(!class_exists($candidateClassName)){
+            throw new Erfurt_Store_Exception("the requested adapter class ".$candidateClassName." does not exist");
+        }
+        $referenceClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['reference']);
+        if(!class_exists($referenceClassName)){
+            throw new Erfurt_Store_Exception("the requested adapter class ".$referenceClassName." does not exist");
+        }
+
+        $this->_candidate = new $candidateClassName($candidateConf);
+        $this->_reference = new $referenceClassName($referenceConf);
     }
 
     protected static $_strictMethods = array('isModelAvailable');
