@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
+class Erfurt_Store_Adapter_Comparer
 {
 
     /**
@@ -75,25 +75,33 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $this->_adapterOptions = $adapterOptions;
 
         $config = Erfurt_App::getInstance()->getConfig();
-
-        if($config->store->isset($adapterOptions['candidate'])){
+        $candidateName = $adapterOptions['candidate'];
+        if(isset($config->store->$candidateName)){
             $candidateConf = $config->store->get($adapterOptions['candidate']);
         }
-        if($config->store->isset($adapterOptions['reference'])){
+        $referenceName = $adapterOptions['reference'];
+        if(isset($config->store->$referenceName)){
             $referenceConf = $config->store->get($adapterOptions['reference']);
         }
 
         if(!isset($candidateConf) || !isset ($referenceConf)){
             throw new Erfurt_Store_Exception("the requested adapters to be compared have no options set in config.ini");
         }
-
-        $candidateClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['candidate']);
-        if(!class_exists($candidateClassName)){
-            throw new Erfurt_Store_Exception("the requested adapter class ".$candidateClassName." does not exist");
+        if($candidateName == "zenddb"){
+            $candidateClassName = 'Erfurt_Store_Adapter_EfZendDb';
+        } else {
+            $candidateClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['candidate']);
+            if(!class_exists($candidateClassName)){
+                throw new Erfurt_Store_Exception("the requested adapter class ".$candidateClassName." does not exist");
+            }
         }
-        $referenceClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['reference']);
-        if(!class_exists($referenceClassName)){
-            throw new Erfurt_Store_Exception("the requested adapter class ".$referenceClassName." does not exist");
+        if($referenceName == "zenddb"){
+            $referenceClassName = 'Erfurt_Store_Adapter_EfZendDb';
+        } else {
+            $referenceClassName = 'Erfurt_Store_Adapter_'.ucfirst($adapterOptions['reference']);
+            if(!class_exists($referenceClassName)){
+                throw new Erfurt_Store_Exception("the requested adapter class ".$referenceClassName." does not exist");
+            }
         }
 
         $this->_candidate = new $candidateClassName($candidateConf);
