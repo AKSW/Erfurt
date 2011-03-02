@@ -247,9 +247,12 @@ class Erfurt_Store
         $this->_backendAdapter = new $className($backendOptions);
 
         // check interface conformance
-        if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
-            require_once 'Erfurt/Store/Exception.php';
-            throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
+        // but do not check the comparer adapter since we use __call there
+        if ($backend != 'comparer') {
+            if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
+            }
         }
     }
     

@@ -15,17 +15,18 @@ require_once 'Erfurt/Store/Sql/Interface.php';
 
 class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
     function  __construct($method, $ref, $actual) {
-        function mydumpStr($var){
-            $str = '<pre>'; // This is for correct handling of newlines
-            ob_start();
-            var_dump($var);
-            $a=ob_get_contents();
-            ob_end_clean();
-            $str .= htmlspecialchars($a,ENT_QUOTES); // Escape every HTML special chars (especially > and < )
-            $str .= '</pre>';
-            return $str;
-        }
-        parent::__construct('comparer detected a difference at method "'.$method.'": return should be '.mydumpStr($ref).' but is '.mydumpStr($actual));
+        parent::__construct('comparer detected a difference at method "'.$method.'": return should be '.self::mydumpStr($ref).' but is '.self::mydumpStr($actual));
+    }
+
+    static function mydumpStr($var){
+        $str = '<p>'; // This is for correct handling of newlines
+        ob_start();
+        var_dump($var);
+        $a=ob_get_contents();
+        ob_end_clean();
+        $str .= $a; // Escape every HTML special chars (especially > and < )
+        $str .= '</p>';
+        return $str;
     }
 }
 
@@ -104,14 +105,14 @@ class Erfurt_Store_Adapter_Comparer
             }
         }
 
-        $this->_candidate = new $candidateClassName($candidateConf);
-        $this->_reference = new $referenceClassName($referenceConf);
+        $this->_candidate = new $candidateClassName($candidateConf->toArray());
+        $this->_reference = new $referenceClassName($referenceConf->toArray());
     }
 
     protected static $_strictMethods = array('isModelAvailable');
     protected static $_setMethods = array('sparqlQuery');
 
-    protected function nestedArrayMutualInclusion($arr1, $arr2){
+    static function nestedArrayMutualInclusion($arr1, $arr2){
         foreach($arr1 as $key => $val){
             if(!isset ($arr2[$key])){
                 return false;
@@ -120,7 +121,7 @@ class Erfurt_Store_Adapter_Comparer
                     return false;
                 } else {
                     if(is_array($arr1[$key])){
-                        if(!nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
+                        if(!self::nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
                             return false;
                         }
                     } else {
@@ -139,7 +140,7 @@ class Erfurt_Store_Adapter_Comparer
                     return false;
                 } else {
                     if(is_array($arr1[$key])){
-                        if(!nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
+                        if(!self::nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
                             return false;
                         }
                     } else {
@@ -179,7 +180,7 @@ class Erfurt_Store_Adapter_Comparer
                 throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
             }
         } else  if(in_array($name, self::$_setMethods)){
-            if(!nestedArrayMutualInclusion($ref,$cand)){
+            if(!self::nestedArrayMutualInclusion($ref,$cand)){
                 throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
             }
         }
