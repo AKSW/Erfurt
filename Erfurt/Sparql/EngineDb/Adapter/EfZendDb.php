@@ -282,8 +282,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
 
         $result = $rc->convertFromDbResults($this->_queryMultiple($this->ts->getOrderifiedSqls($arSqls)),
                     $this->query, $this, $this->sg->arVarAssignments);
-        if($resultform == "plain")
-            var_dump($result);exit;
         return $result;
     }
     
