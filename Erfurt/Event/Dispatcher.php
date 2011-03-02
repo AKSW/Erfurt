@@ -126,7 +126,7 @@ class Erfurt_Event_Dispatcher
         $result = self::INIT_VALUE;
 
         if (array_key_exists($eventName, $this->_registeredEvents)) {
-            ksort($this->_registeredEvents[$eventName]);            
+            ksort($this->_registeredEvents[$eventName]);
             foreach ($this->_registeredEvents[$eventName] as &$handler) {
                 if (is_array($handler)) {
                     // handler is already instantiated
@@ -194,7 +194,7 @@ class Erfurt_Event_Dispatcher
                 } else {
                     // TODO: throw exception or log error?
                 }
-            
+
                 $handler['instance'] = $handlerObject;
             }
         }
@@ -207,7 +207,7 @@ class Erfurt_Event_Dispatcher
             $result = $event->getDefault();
             $event->setHandled(false);
         }
-        
+
         return $result;
     }
     
