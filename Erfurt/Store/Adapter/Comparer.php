@@ -30,14 +30,13 @@ class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
 }
 
 /**
- * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
+ * A dummy Adapter for the Erfurt Semantic Web Framework.
  *
- * Connects to a Virtuoso via ODBC, therefore requires PHP to be compiled with the ODBC extension.
+ * compares the result of two adapters and throws errors if they are different
  *
  * @category Erfurt
  * @package Store_Adapter
- * @author Norman Heino <norman.heino@gmail.com>
- * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
@@ -78,8 +77,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $this->_candidate = $adapterOptions['candidate'];
         $this->_reference = $adapterOptions['reference'];
     }
-    
-    
 
     protected static $_strictMethods = array('isModelAvailable');
     protected static $_setMethods = array('sparqlQuery');
@@ -94,6 +91,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 } else {
                     if(is_array($arr1[$key])){
                         if(!nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
+                            return false;
+                        }
+                    } else {
+                        if($arr1[$key] != $arr2[$key]){
                             return false;
                         }
                     }
@@ -111,6 +112,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         if(!nestedArrayMutualInclusion($arr1[$key], $arr2[$key])){
                             return false;
                         }
+                    } else {
+                        if($arr1[$key] != $arr2[$key]){
+                            return false;
+                        }
                     }
                 }
             }
@@ -125,11 +130,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         if(in_array($name, self::$_strictMethods)){
             if($ref !== $cand){
-                throw  new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
+                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
             }
         } else  if(in_array($name, self::$_setMethods)){
             if(!nestedArrayMutualInclusion($ref,$cand)){
-                throw  new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
+                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
             }
         }
 
