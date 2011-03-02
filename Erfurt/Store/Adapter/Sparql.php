@@ -133,7 +133,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     }
     
     public function isModelAvailable($graphUri)
-    {
+    { echo "check ".$graphUri; exit;
         if (isset($this->_configuredGraphs[$graphUri])) {
             return true;
         } else {

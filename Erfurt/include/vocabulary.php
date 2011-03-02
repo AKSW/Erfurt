@@ -27,6 +27,7 @@ define('EF_OWL_DISJOINTWITH', EF_OWL_NS.'disjointWith');
 define('EF_OWL_CLASS', EF_OWL_NS.'Class');
 define('EF_OWL_DEPRECATED_CLASS', EF_OWL_NS.'DeprecatedClass');
 define('EF_OWL_ANNOTATION_PROPERTY', EF_OWL_NS.'AnnotationProperty');
+define('EF_OWL_ONTOLOGY_PROPERTY', EF_OWL_NS.'OntologyProperty');
 define('EF_OWL_DATATYPE_PROPERTY', EF_OWL_NS.'DatatypeProperty');
 define('EF_OWL_OBJECT_PROPERTY', EF_OWL_NS.'ObjectProperty');
 define('EF_OWL_FUNCTIONAL_PROPERTY', EF_OWL_NS.'FunctionalProperty');
