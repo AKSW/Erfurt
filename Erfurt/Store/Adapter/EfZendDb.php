@@ -812,7 +812,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
             // create file
             $tmpDir     = Erfurt_App::getInstance()->getTmpDir();
-            $filename   = $tmpDir . 'import' . md5((string)time()) . '.csv';
+            $filename   = $tmpDir . '/import' . md5((string)time()) . '.csv';
             $fileHandle = fopen($filename, 'w');
 
             $count = 0;
