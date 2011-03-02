@@ -107,10 +107,13 @@ class Erfurt_Store_Adapter_Comparer
 
         $this->_candidate = new $candidateClassName($candidateConf->toArray());
         $this->_reference = new $referenceClassName($referenceConf->toArray());
+
+        self::$_ignoredMethods = $adapterOptions['ignoredMethods'];
     }
 
     protected static $_strictMethods = array('isModelAvailable');
     protected static $_setMethods = array('sparqlQuery');
+    protected static $_ignoredMethods = array();
 
     static function nestedArrayMutualInclusion($arr1, $arr2){
         foreach($arr1 as $key => $val){
@@ -156,18 +159,26 @@ class Erfurt_Store_Adapter_Comparer
 
 
     public function  __call($name, $arguments) {
+        $candThrowed = false;
+        try {
+            $candRet = call_user_func_array(array($this->_candidate, $name), $arguments);
+            if(in_array($name, self::$_ignoredMethods)){
+                return $candRet;
+            }
+        } catch (Exception $e){
+            if(in_array($name, self::$_ignoredMethods)){
+                throw $e;
+            }
+            $candThrowed = $e;
+        }
+
         $refThrowed = false;
         try {
-            $ref = call_user_func_array(array($this->_reference, $name), $arguments);
+            $refRet = call_user_func_array(array($this->_reference, $name), $arguments);
         } catch (Exception $e){
             $refThrowed = $e;
         }
-        $candThrowed = false;
-        try {
-            $cand = call_user_func_array(array($this->_candidate, $name), $arguments);
-        } catch (Exception $e){
-            $candThrowed = $e;
-        }
+        
         if($candThrowed != false && $refThrowed == false){
             throw new Erfurt_Store_Exception("Candidate throwed an exception but reference didn't".PHP_EOL.$candThrowed->getTraceAsString());
         }
@@ -176,15 +187,15 @@ class Erfurt_Store_Adapter_Comparer
         }
 
         if(in_array($name, self::$_strictMethods)){
-            if($ref !== $cand){
-                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
+            if($refRet !== $candRet){
+                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $refRet, $candRet);
             }
         } else  if(in_array($name, self::$_setMethods)){
-            if(!self::nestedArrayMutualInclusion($ref,$cand)){
-                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $ref, $cand);
+            if(!self::nestedArrayMutualInclusion($refRet, $candRet)){
+                throw new Erfurt_Store_Adapter_Comparer_Exception($name, $refRet, $candRet);
             }
         }
 
-        return $cand;
+        return $candRet;
     }
 }
