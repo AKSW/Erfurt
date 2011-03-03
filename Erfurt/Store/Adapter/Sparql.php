@@ -179,7 +179,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         } else {            
             $result = array('head' => array(), 'bindings' => array());
         }
-
+        
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
@@ -197,6 +197,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 
                 return $newResult;
             case 'extended':
+                
                 return $result;
                 break;
             case 'json':

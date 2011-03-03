@@ -1512,6 +1512,15 @@ class Erfurt_Store
 
         return $this->_backendName;
     }
+    /**
+     * Returns the currently used backend.
+     *
+     * @return Erfurt_Store_Adapter_Interface
+     */
+    public function getBackendAdapter()
+    {
+        return $this->_backendAdapter;
+    }
 
     /**
      * Returns a list of graph URIs, where each graph in the list contains at least
