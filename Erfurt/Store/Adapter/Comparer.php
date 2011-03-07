@@ -230,7 +230,7 @@ class Erfurt_Store_Adapter_Comparer
             throw new Erfurt_Store_Exception("Candidate throwed an exception but reference didn't".PHP_EOL.$candThrowed->getTraceAsString());
         }
         if($candThrowed == false && $refThrowed != false){
-            throw new Erfurt_Store_Exception("Reference throwed an exception but Candidate didn't".PHP_EOL.$candThrowed->getTraceAsString());
+            throw new Erfurt_Store_Exception("Reference throwed an exception but Candidate didn't".PHP_EOL.$refThrowed->getTraceAsString());
         }
 
         if(in_array($name, self::$_strictMethods)){
