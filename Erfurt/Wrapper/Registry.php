@@ -75,7 +75,7 @@ class Erfurt_Wrapper_Registry
      */
     public static function reset()
     {   
-        self::$_instance->_wrapperRegistry = array();
+        //self::$_instance->_wrapperRegistry = array();
         self::$_instance = null;
     }
     
