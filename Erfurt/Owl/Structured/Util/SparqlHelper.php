@@ -32,16 +32,19 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $q = ($q) ? $q : $this->q;
         $variable = ($variable) ? $variable : $this->lastVar;
         $structured = new Erfurt_Owl_Structured_ClassExpression();
-
-        if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isBlank")) {
-            if (($offset = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q))>1) {
-                // add offset to filter out the first element
-                // not implemented yet. proceed with the first element
-                // }
-                var_dump("not implemented yet");
-                var_dump((string)$q);
+        $structuredArray = array();
+        $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q);
+        if ($rowsNumber>1) {
+            // add offset to filter out the first element
+            // not implemented yet. proceed with the first element
+            // }
+            for ($i = 0; $i < $rowsNumber; $i++) {
+                $q->setLimit(1);
+                $q->setOffset($i);
+                $structuredArray = array_merge($structuredArray, $this->getStructuredOwl($q, $variable));
             }
-            elseif ($offset == 1) {
+        } else {
+            if ($x = Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isBlank")) {
                 $p = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
                 $o = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
                 $triple = new Erfurt_Sparql_Query2_Triple($variable, $p, $o);
@@ -58,15 +61,16 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                     $structured->addElement($this->getConnectives($q, $variable));
                     break;
                 default:
-                    throw new Exception("not implemented yet");
+                    throw new Exception("$actionType not implemented yet");
                     break;
                 }
+                $structuredArray []= $structured;
+            } else {
+                // it is a class expression axiom, or done?
+                $structuredArray [] = $this->getElement($q, $variable);
             }
-        } else {
-            // it is a class expression axiom, or done?
-            $structured = $this->getElement($q, $variable);
         }
-        return $structured;
+        return $structuredArray;
     }
 
     private function getRestriction(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
@@ -249,7 +253,8 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     private function getElement(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $var)
     {
         if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isBlank")) {
-            return $this->getStructuredOwl($q, $var);
+            $retval = $this->getStructuredOwl($q, $var);
+            return $retval[0];
         }
         elseif (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isLiteral")) {
             $literalValue = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);

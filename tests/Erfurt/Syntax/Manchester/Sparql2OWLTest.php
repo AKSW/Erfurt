@@ -12,19 +12,19 @@ class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
   {
     $val1 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Jahreshoechstlast");
-    $this->assertEquals((string)$val1, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Gasmenge");
+    $this->assertEquals((string)($val1[0]), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Gasmenge");
 
     $val2 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Einspeisenetzbetreiber");
-    $this->assertEquals((string)$val2, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Transportnetzbetreiber or http://www.bi-web.de/ontologies/le4sw/ns/0.3/Verteilnetzbetreiber");
+    $this->assertEquals((string)$val2[0], "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Transportnetzbetreiber or http://www.bi-web.de/ontologies/le4sw/ns/0.3/Verteilnetzbetreiber");
 
-    $val3 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
-      array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Speicher");
+    // $val3 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
+      // array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Speicher");
     // $this->assertEquals((string)$val3, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/EIC exactly 1");
 
     $val4 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://nwalsh.com/rdf/vCard#locality");
-    $this->assertEquals((string)$val4, "http://xmlns.com/foaf/0.1/name exactly 1 (http://www.w3.org/2001/XMLSchema#string)");
+    $this->assertEquals((string)$val4[0], "http://xmlns.com/foaf/0.1/name exactly 1 (http://www.w3.org/2001/XMLSchema#string)");
 
   }
 
@@ -32,7 +32,19 @@ class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
   {
     $val5 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Allokation");
-    $this->assertEquals((string)$val5, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/allokiertFuer exactly 1 http://www.bi-web.de/ontologies/le4sw/ns/0.3/Ausspeisepunkt or http://www.bi-web.de/ontologies/le4sw/ns/0.3/Einspeisepunkt");
+    $this->assertEquals((string)$val5[0], "http://www.bi-web.de/ontologies/le4sw/ns/0.3/allokiertFuer exactly 1 http://www.bi-web.de/ontologies/le4sw/ns/0.3/Ausspeisepunkt or http://www.bi-web.de/ontologies/le4sw/ns/0.3/Einspeisepunkt");
+
+  }
+
+  public function TestMultiple()
+  {
+    $val5 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
+      array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Speicher");
+    // var_dump($val5);
+    foreach ($val5 as $val) {
+      var_dump((string)$val);
+    }
+    // $this->assertEquals((string)$val5, "ddd");
 
   }
 
