@@ -51,10 +51,10 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                     $structured->addElement($this->getConnectives($q, $variable));
                     break;
                 case OWL_RESTRICTION:
-                    $structured->addElement($this->getRestriction($q, $o));
+                    $structured->addElement($this->getRestriction($q, $variable));
                     break;
                 case RDFS_DATATYPE:
-                    $structured->addElement($this->getConnectives($q, $variable, true));
+                    $structured->addElement($this->getConnectives($q, $variable));
                     break;
                 default:
                     throw new Exception("not implemented yet");
@@ -63,18 +63,9 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             }
         } else {
             // it is a class expression axiom, or done?
-            $structured = $this->getIri($q, $variable);
+            $structured = $this->getElement($q, $variable);
         }
         return $structured;
-    }
-
-    private function getIri(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
-    {
-        if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isIri")) {
-            return new Erfurt_Owl_Structured_Iri(Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $variable));
-        } else {
-            throw new Exception("$variable is not an Iri");
-        }
     }
 
     private function getRestriction(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
@@ -84,6 +75,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $onPropertyVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
         $classVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
         $valueVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
+        $datatypeVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
         $onProperty = new Erfurt_Sparql_Query2_IriRef(OWL_ONPROPERTY);
         $rdfType = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
         $onClass = new Erfurt_Sparql_Query2_IriRef(OWL_ONCLASS);
@@ -101,7 +93,10 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
 
         $optionalOnClass = new Erfurt_Sparql_Query2_OptionalGraphPattern();
         $optionalOnClass->addElement(new Erfurt_Sparql_Query2_Triple($variable, $onClass, $classVar));
+        $optionalOnDataRange = new Erfurt_Sparql_Query2_OptionalGraphPattern();
+        $optionalOnDataRange->addElement(new Erfurt_Sparql_Query2_Triple($variable, $onDataRange, $datatypeVar));
         $myQuery->addElement($optionalOnClass);
+        $myQuery->addElement($optionalOnDataRange);
         $filter1 = new Erfurt_Sparql_Query2_Filter(
             new Erfurt_Sparql_Query2_UnaryExpressionNot(
                 new Erfurt_Sparql_Query2_sameTerm(
@@ -130,21 +125,26 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                 )));
         $myQuery->addElement($filter4);
 
+        var_dump((string)$myQuery);
         $restrictionType =     Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($myQuery, $restrictionVar);
-        $restrictionProperty = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($myQuery, $onPropertyVar);
-        $nni =                 Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($myQuery, $valueVar);
-        $onClass =             Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($myQuery, $classVar);
+        $restrictionProperty = $this->getElement($myQuery, $onPropertyVar);
+        $restrictionValue =    $this->getElement($myQuery, $valueVar);
+        $onClassValue =        $this->getElement($myQuery, $classVar);
+        $onDataRangeValue =    $this->getElement($myQuery, $datatypeVar);
 
+        $classNamePrefix = "Erfurt_Owl_Structured_" . ($onDataRangeValue ? "DataPropertyRestriction_Data" : "ObjectPropertyRestriction_Object");
+        $isOPR = $onDataRangeValue ? false : true;
         switch ($restrictionType) {
         case OWL_QUALIFIEDCARDINALITY:
-            $retval = new Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectExactCardinality(
-                new Erfurt_Owl_Structured_Iri($restrictionProperty), $nni, $onClass);
+            $cName = $classNamePrefix . "ExactCardinality"; var_dump($onDataRangeValue);
+            $retval = new $cName($restrictionProperty, $restrictionValue, ($isOPR ? $onClassValue : $onDataRangeValue));
             break;
         case OWL_ALLVALUESFROM:
-            $retval = new Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectAllValuesFrom(new Erfurt_Owl_Structured_Iri($restrictionProperty), $onClass);
+            $cName = $classNamePrefix . "AllValuesFrom";
+            $retval = new $cName($restrictionProperty, $restrictionValue);
             break;
         default:
-            // code...
+            throw new Exception("$restrictionType is not implemented yet...");
             break;
         }
         return $retval;
@@ -233,8 +233,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     private function getElement(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $var)
     {
         if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isBlank")) {
-            echo "Value is bank!!! Needs more work!";
-            // return recursively created structured object
+            return $this->getStructuredOwl($q, $var);
         }
         elseif (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isLiteral")) {
             $literalValue = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);
@@ -253,7 +252,8 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             }
         }
         else {
-            return new Erfurt_Owl_Structured_Iri(Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var));
+            $retval = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);
+            return $retval ? new Erfurt_Owl_Structured_Iri($retval) : false;
         }
     }
 }

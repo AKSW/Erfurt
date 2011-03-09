@@ -8,7 +8,7 @@ require_once 'test_base.php';
 class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
 {
   
-  function testQuery()
+  function TestQuery()
   {
     $val1 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Jahreshoechstlast");
@@ -21,6 +21,19 @@ class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
     $val3 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Speicher");
     // $this->assertEquals((string)$val3, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/EIC exactly 1");
+
+    $val4 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
+      array("http://gasmarkt"), "http://nwalsh.com/rdf/vCard#locality");
+    $this->assertEquals((string)$val4, "http://xmlns.com/foaf/0.1/name exactly 1 (http://www.w3.org/2001/XMLSchema#string)");
+
+  }
+
+  public function testNested()
+  {
+    $val5 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
+      array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Allokation");
+    $this->assertEquals((string)$val5, "http://xmlns.com/foaf/0.1/name exactly 1 (http://www.w3.org/2001/XMLSchema#string)");
+
   }
 
   function TestModel()
