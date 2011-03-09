@@ -39,6 +39,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                 // not implemented yet. proceed with the first element
                 // }
                 var_dump("not implemented yet");
+                var_dump((string)$q);
             }
             elseif ($offset == 1) {
                 $p = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
@@ -125,28 +126,43 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                 )));
         $myQuery->addElement($filter4);
 
-        var_dump((string)$myQuery);
         $restrictionType =     Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($myQuery, $restrictionVar);
         $restrictionProperty = $this->getElement($myQuery, $onPropertyVar);
         $restrictionValue =    $this->getElement($myQuery, $valueVar);
         $onClassValue =        $this->getElement($myQuery, $classVar);
         $onDataRangeValue =    $this->getElement($myQuery, $datatypeVar);
 
-        $classNamePrefix = "Erfurt_Owl_Structured_" . ($onDataRangeValue ? "DataPropertyRestriction_Data" : "ObjectPropertyRestriction_Object");
-        $isOPR = $onDataRangeValue ? false : true;
         switch ($restrictionType) {
+        case OWL_CARDINALITY:
         case OWL_QUALIFIEDCARDINALITY:
-            $cName = $classNamePrefix . "ExactCardinality"; var_dump($onDataRangeValue);
-            $retval = new $cName($restrictionProperty, $restrictionValue, ($isOPR ? $onClassValue : $onDataRangeValue));
+            $structuredClass = "ExactCardinality";
             break;
         case OWL_ALLVALUESFROM:
-            $cName = $classNamePrefix . "AllValuesFrom";
-            $retval = new $cName($restrictionProperty, $restrictionValue);
+            $structuredClass = "AllValuesFrom";
+            break;
+        case OWL_SOMEVALUESFROM:
+            $structuredClass = "SomeValuesFrom";
+            break;
+        case OWL_HASVALUE:
+            $structuredClass = "HasValue";
+            break;
+        case OWL_HASSELF:
+            $structuredClass = "HasSelf";
+            break;
+        case OWL_MAXQUALIFIEDCARDINALITY:
+        case OWL_MAXCARDINALITY:
+            $structuredClass = "MaxCardinality";
+            break;
+        case OWL_MINQUALIFIEDCARDINALITY:
+        case OWL_MINCARDINALITY:
+            $structuredClass = "MinCardinality";
             break;
         default:
             throw new Exception("$restrictionType is not implemented yet...");
             break;
         }
+        $cName = "Erfurt_Owl_Structured_" . ($onDataRangeValue ? "DataPropertyRestriction_Data" : "ObjectPropertyRestriction_Object") . $structuredClass;
+        $retval = new $cName($restrictionProperty, $restrictionValue, ($onClassValue ? $onClassValue : ($onDataRangeValue? $onDataRangeValue : null)));
         return $retval;
     }
 

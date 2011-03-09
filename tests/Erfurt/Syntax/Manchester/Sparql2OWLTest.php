@@ -8,7 +8,7 @@ require_once 'test_base.php';
 class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
 {
   
-  function TestQuery()
+  function testQuery()
   {
     $val1 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Jahreshoechstlast");
@@ -32,7 +32,7 @@ class Erfurt_Syntax_Manchester_Sparql2OWLTest extends Erfurt_TestCase
   {
     $val5 = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(
       array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Allokation");
-    $this->assertEquals((string)$val5, "http://xmlns.com/foaf/0.1/name exactly 1 (http://www.w3.org/2001/XMLSchema#string)");
+    $this->assertEquals((string)$val5, "http://www.bi-web.de/ontologies/le4sw/ns/0.3/allokiertFuer exactly 1 http://www.bi-web.de/ontologies/le4sw/ns/0.3/Ausspeisepunkt or http://www.bi-web.de/ontologies/le4sw/ns/0.3/Einspeisepunkt");
 
   }
 

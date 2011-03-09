@@ -15,12 +15,21 @@
 
 
     define("RDFS_SUBCLASSOF", RDFS_NS . "subClassOf");
+
     define("OWL_RESTRICTION", OWL_NS . 'Restriction');
     define("OWL_CLASS", OWL_NS . 'Class');
     define("OWL_QUALIFIEDCARDINALITY", OWL_NS . "qualifiedCardinality");
+    define("OWL_CARDINALITY", OWL_NS . "cardinality");
     define("OWL_ALLVALUESFROM", OWL_NS . "allValuesFrom");
     define("OWL_UNIONOF", OWL_NS . "unionOf");
     define("OWL_INTERSECTIONOF", OWL_NS . "intersectionOf");
     define("OWL_COMPLEMENTOF", OWL_NS . "complementOf");
     define("OWL_ENUMERATION", OWL_NS . "oneOf");
     define("OWL_DATATYPECOMPLEMENTOF", OWL_NS . "datatypeComplementOf");
+    define("OWL_SOMEVALUESFROM", OWL_NS . "someValuesFrom");
+    define("OWL_HASVALUE", OWL_NS . "hasValue");
+    define("OWL_HASSELF", OWL_NS . "hasSelf");
+    define("OWL_MAXCARDINALITY", OWL_NS . "maxCardinality");
+    define("OWL_MAXQUALIFIEDCARDINALITY", OWL_NS . "maxQualifiedCardinality");
+    define("OWL_MINCARDINALITY", OWL_NS . "minCardinality");
+    define("OWL_MINQUALIFIEDCARDINALITY", OWL_NS . "minQualifiedCardinality");
