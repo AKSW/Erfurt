@@ -37,9 +37,11 @@ class Erfurt_Owl_Structured_OwlList implements Erfurt_Owl_Structured_IRdfPhp {
         return implode(", ", $this->getElements());
     }
 
-    public function __construct($element) {
-        $this->list = array();
+    public function __construct($element = null) {
+      $this->list = array();
+      if ($element) {
         $this->addElement($element);
+      }
     }
 
     public function getElements() {

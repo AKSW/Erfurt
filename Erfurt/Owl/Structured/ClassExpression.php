@@ -7,9 +7,10 @@ class Erfurt_Owl_Structured_ClassExpression
 
     function __construct($element = null) {
         $this->elements = array();
-        if (is_array($element)) {
-            $this->elements = array_merge($this->elements, $element);
-        } else if ($element) $this->addElement($element);
+        if (is_array($element)) $this->elements = array_merge($this->elements, $element);
+        elseif ($element instanceof Erfurt_Owl_Structured_OwlList)
+          $this->elements = array_merge($this->elements, $element->getElements());
+        elseif ($element) $this->addElement($element);
     }
 
     public function addElement($element) {
