@@ -56,14 +56,20 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
         //sort filters to the end - usefull?
         $filters = array();
         $new = array();
-        for ($i=0; $i < count($this->elements); $i++) {
+        
+        $countElements = count($this->elements);
+        
+        for ($i=0; $i < $countElements; ++$i) {
             if ($this->elements[$i] instanceof Erfurt_Sparql_Query2_Filter) {
                 $filters[] = $this->elements[$i];
             } else {
                 $new[] = $this->elements[$i];
             }
         }
-        for ($i=0; $i < count($filters); $i++) {
+        
+        $countFilters = count($filters);
+        
+        for ($i=0; $i < $countFilters; ++$i) {
             $new[] = $filters[$i];
         }
         $this->elements = $new;
@@ -71,7 +77,7 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
         
         //build sparql-string
         $sparql = "{ \n";
-        for ($i=0; $i < count($this->elements); $i++) {
+        for ($i=0; $i < $countElements; ++$i) {
             $sparql .= $this->elements[$i]->getSparql();
 
             //realisation of TriplesBlock
@@ -213,8 +219,11 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
     public function optimize() {
         //delete duplicates
         $to_remove = array();
-        for ($i=0; $i<count($this->elements); $i++) {
-            for ($j=0; $j<count($this->elements); $j++) {
+        
+        $countElements = count($this->elements);
+        
+        for ($i=0; $i<$countElements; ++$i) {
+            for ($j=0; $j<$countElements; ++$j) {
                 if ($i!=$j) {
                     //compare
                     if ($this->elements[$i] === $this->elements[$j]) {

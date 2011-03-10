@@ -74,7 +74,10 @@ class Erfurt_Wrapper_Registry
      * instance will be created.
      */
     public static function reset()
-    {
+    { 
+        if(self::$_instance != null){
+            self::$_instance->_wrapperRegistry = array();
+        }
         self::$_instance = null;
     }
     
@@ -91,6 +94,10 @@ class Erfurt_Wrapper_Registry
      */
     public function getWrapperInstance($wrapperName)
     {
+        if ($wrapperName === 'Erfurt_Wrapper_Test') {
+            return new Erfurt_Wrapper_Test();
+        }
+        
         if (!isset($this->_wrapperRegistry[$wrapperName])) {
             require_once 'Erfurt/Wrapper/Exception.php';
             throw new Erfurt_Wrapper_Exception("A wrapper with name '$wrapperName' has not been registered.");
@@ -99,7 +106,7 @@ class Erfurt_Wrapper_Registry
         if (null === $this->_wrapperRegistry[$wrapperName]['instance']) {
             $pathSpec = rtrim($this->_wrapperRegistry[$wrapperName]['include_path'], '/\\') 
                       . DIRECTORY_SEPARATOR 
-                      . strtolower($wrapperName) . '.php';
+                      . ucfirst($wrapperName) . 'Wrapper.php';
             
             require_once $pathSpec;
             $instance = new $this->_wrapperRegistry[$wrapperName]['class_name'];

@@ -133,7 +133,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     }
     
     public function isModelAvailable($graphUri)
-    {
+    { 
         if (isset($this->_configuredGraphs[$graphUri])) {
             return true;
         } else {
@@ -179,7 +179,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         } else {            
             $result = array('head' => array(), 'bindings' => array());
         }
-    
+
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
@@ -197,12 +197,14 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 
                 return $newResult;
             case 'extended':
+                echo "ok";
                 return $result;
+                break;
             case 'json':
                 return json_encode($result);
                 break;
             default:
-                throw new Exception('Result form not supported yet.');
+                throw new Exception('Result form '.$resultform.' not supported yet.');
         }        
     }
     

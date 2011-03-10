@@ -49,13 +49,11 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
                 $actionType = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $o);
                 switch ($actionType) {
                 case OWL_CLASS:
+                case RDFS_DATATYPE:
                     $structured->addElement($this->getConnectives($q, $variable));
                     break;
                 case OWL_RESTRICTION:
                     $structured->addElement($this->getRestriction($q, $variable));
-                    break;
-                case RDFS_DATATYPE:
-                    $structured->addElement($this->getConnectives($q, $variable));
                     break;
                 default:
                     throw new Exception("$actionType not implemented yet");

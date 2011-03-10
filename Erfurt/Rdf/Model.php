@@ -3,8 +3,8 @@
 /**
  * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
- * @package erfurt
- * @subpackage    rdf
+ * @category   Erfurt
+ * @package    Rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Natanael Arndt <arndtn@gmail.com>
@@ -343,7 +343,7 @@ class Erfurt_Rdf_Model
             // User has no right to edit the model.
             return;
         }
-         
+        
         $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysont->modelUri;
        
         $options = $this->_getOptions();

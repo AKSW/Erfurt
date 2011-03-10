@@ -44,13 +44,6 @@ class Erfurt_Wrapper_Manager
     protected $_configPrivateSection = 'private';
     
     /**
-     * This property holds a reference to the registry instance.
-     * 
-     * @var Erfurt_Wrapper_Registry 
-     */
-    protected $_registry = null;
-    
-    /**
      * This property contains directories, that were already scanned.
      * 
      * @var array
@@ -66,7 +59,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        $this->_registry = Erfurt_Wrapper_Registry::getInstance();
+        
     }
     
     // ------------------------------------------------------------------------
@@ -135,18 +128,26 @@ class Erfurt_Wrapper_Manager
                 // no private config
             }
         }
-        
+        $this->addWrapperExternally($wrapperName, $wrapperPath, $privateConfig);
+    }
+
+    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
+//        if($privateConfig instanceof Zend_Config){
+//            $privateConfig = $privateConfig->toArray();
+//        }
+
         $wrapperSpec = array(
             'class_name'   => ucfirst($wrapperName) . 'Wrapper',
             'include_path' => $wrapperPath,
             'config'       => $privateConfig,
             'instance'     => null
         );
-        
+
         // Finally register the wrapper.
-        $this->_registry->register($wrapperName, $wrapperSpec);
+        $registry = Erfurt_Wrapper_Registry::getInstance();
+        $registry->register($wrapperName, $wrapperSpec);
     }
-    
+
     /**
      * This method iterates through a given directory.
      * 

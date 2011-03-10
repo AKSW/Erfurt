@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '1G');
 ini_set('error_reporting', E_ALL | E_STRICT);
-set_include_path(get_include_path() . PATH_SEPARATOR . '../../ontowiki/src/libraries/');
+set_include_path(get_include_path() . PATH_SEPARATOR . '../../');
 require_once 'Erfurt/TestCase.php';
 require_once 'test_base.php';
 
@@ -25,7 +25,7 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	    /**
 	     * @dataProvider providerTestParse
 	     */
-	   	public function TestParse($querySpec)
+	   	public function testParse($querySpec)
 	    {
 		$q;
 		try {
@@ -42,6 +42,15 @@ class Erfurt_Sparql_ParserQuery10Test extends Erfurt_TestCase
 	    	}
 	}
 
+	public function testPartial(){
+		$q1 = new Erfurt_Sparql_Query2();
+		$iris=array("qqq:wwwww", ":wwww", "wwww:",":",':a','a:');
+		foreach($iris as $iri) {
+			$q = $q1->initFromString($iri,'prefixedName');
+			$this->assertEquals($q->__toString(), $iri);
+		}
+	}
+		
 
 	public function testTest1()
 	{

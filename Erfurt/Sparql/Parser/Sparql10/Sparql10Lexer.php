@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Sparql_Parser_Sparql10_Sparql10.g 2010-05-31 18:25:09
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Sparql_Parser_Sparql10_Sparql10.g 2010-12-25 02:04:22
 
 
 # for convenience in actions
@@ -108,16 +108,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10Lexer extends AntlrLexer {
     static $OPEN_BRACE=93;
     static $GREATER_EQUAL=96;
     static $LANGTAG=55;
-
-    private $_errors = array();
-
-    public function emitErrorMessage($msg) {
-         $this->_errors []= $msg;
-      }
-    public function getErrors(){
-    	return $this->_errors;
-    }
-
 
     // delegates
     /**

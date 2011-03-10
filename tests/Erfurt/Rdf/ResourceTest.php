@@ -241,4 +241,17 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
         
         $this->assertEquals($expected, $resource->getDescription());
     }
+    
+    public function testGetLocatorNoLocator()
+    {
+        $uri = new Erfurt_Rdf_Resource('http://example.org/testResource1');
+        $this->assertEquals('http://example.org/testResource1', $uri->getLocator());
+    }
+    
+    public function testGetLocator()
+    {
+        $uri = new Erfurt_Rdf_Resource('http://example.org/testResource1');
+        $uri->setLocator('http://example.org/testLocator');
+        $this->assertEquals('http://example.org/testLocator', $uri->getLocator());
+    }
 }

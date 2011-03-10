@@ -39,15 +39,6 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $this->assertSame('http://example.org/', $model2->getModelIri());
     }
     
-    public function testGetBaseIriWithEmptyBaseReturnsModelIri()
-    {
-        $model1 = new Erfurt_Rdf_Model('http://example.org/');
-        $model2 = new Erfurt_Rdf_Model('http://example.org/', 'http://example.org/resources/');
-        
-        $this->assertSame('http://example.org/',           $model1->getBaseIri());
-        $this->assertSame('http://example.org/resources/', $model2->getBaseIri());
-    }
-    
     public function testToStringReturnsModelIri()
     {
         $model1 = new Erfurt_Rdf_Model('http://example.org/');
@@ -263,7 +254,16 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $model->updateWithMutualDifference($statements2, $statements1);
         $this->assertEquals($s1only, $this->_storeStub->addMultipleStatements);
         $this->assertEquals($s2only, $this->_storeStub->deleteMultipleStatements);
-    }*/
+    }*/    
+     
+    public function testGetBaseIriWithEmptyBaseReturnsModelIri()
+    {
+        $model1 = new Erfurt_Rdf_Model('http://example.org/');
+        $model2 = new Erfurt_Rdf_Model('http://example.org/', 'http://example.org/resources/');
+        
+        $this->assertSame('http://example.org/',           $model1->getBaseIri());
+        $this->assertSame('http://example.org/resources/', $model2->getBaseIri());
+    }    
     
     public function testUpdateWithMutualDifferenceObjectsDifferInDatatype()
     {
