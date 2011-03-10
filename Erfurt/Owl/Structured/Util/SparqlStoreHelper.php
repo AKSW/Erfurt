@@ -25,7 +25,6 @@ class Erfurt_Owl_Structured_Util_SparqlStoreHelper
             $filter = new Erfurt_Sparql_Query2_Filter(
                 new $builtinClass($variable));
             $myQuery = clone $q;
-            // $myQuery->addElement($filter);
 
             if ($myQuery->hasLimit()) {
                 $retval = self::getVarValue($myQuery, $variable);

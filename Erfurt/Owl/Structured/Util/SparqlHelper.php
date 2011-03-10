@@ -35,9 +35,6 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $structuredArray = array();
         $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q);
         if ($rowsNumber>1) {
-            // add offset to filter out the first element
-            // not implemented yet. proceed with the first element
-            // }
             for ($i = 0; $i < $rowsNumber; $i++) {
                 $q->setLimit(1);
                 $q->setOffset($i);
@@ -93,8 +90,6 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $q->addElements(array($triple1, $triple2, $triple3));
         $myQuery = clone $q;
         $myQuery->setQueryType('SELECT');
-        // $myQuery->addProjectionVar($restrictionVar);
-        // $retval = self::fetch($myQuery);
 
         $optionalOnClass = new Erfurt_Sparql_Query2_OptionalGraphPattern();
         $optionalOnClass->addElement(new Erfurt_Sparql_Query2_Triple($variable, $onClass, $classVar));
