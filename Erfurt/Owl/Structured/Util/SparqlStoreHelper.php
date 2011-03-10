@@ -64,10 +64,20 @@ class Erfurt_Owl_Structured_Util_SparqlStoreHelper
         return self::getReturnValue($myQ);
     }
 
-    // TODO why not sparql internal count?
     public static function count(Erfurt_Sparql_Query2 $q)
     {
         $a = self::fetch($q);
         return count($a);
     }
+
+    public static function getRdfResource($modelIri, $classIri)
+    {
+        $store = self::getConnection();
+        $model = $store->getModel($modelIri);
+        $retval = $model->getResource($classIri)->getQualifiedName();
+        // TODO eventually add the missing namespace to the model
+        // TODO getQualifiedName should check in sysont too
+        return ($retval) ? $retval : $model->getResource($classIri)->getIri();
+    }
+
 }

@@ -6,11 +6,13 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     const VAR_ID = "o";
     private $q;
     private $lastVar;
+    private $_from;
 
     public function __construct(array $from, $uri)
     {
         $this->q = new Erfurt_Sparql_Query2();
         foreach($from as $from1) {
+            $this->_from = $from1;
             $this->q->addFrom(new Erfurt_Sparql_Query2_IriRef($from1));
         }
         $v1 = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
@@ -267,7 +269,8 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         }
         else {
             $retval = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);
-            return $retval ? new Erfurt_Owl_Structured_Iri($retval) : false;
+            $retval1 = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $retval);
+            return $retval ? new Erfurt_Owl_Structured_Iri($retval1) : false;
         }
     }
 }
