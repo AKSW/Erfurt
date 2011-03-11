@@ -43,8 +43,9 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
 
         if (!$ce) return $retval;
 
-
-        if ($ce->isComplex()) {
+        if (false/*$ce->isComplex()*/) {
+          // TODO check if this old hack is still needed. currently 
+          // works without it
             $retval [] = array(
                 $bnodeId,
                 "owl:onClass",

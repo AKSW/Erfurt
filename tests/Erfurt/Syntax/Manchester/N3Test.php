@@ -380,7 +380,7 @@ _:b97 rdf:rest _:b98 .
 _:b98 rdf:first "sss"@de .
 _:b98 rdf:rest rdf:nil .
 '),
-            array("restriction", 'ns0:allokiertFuer exactly 1 ns0:Ausspeisepunkt or ns0:Einspeisepunkt',
+            array("restriction", 'ns0:allokiertFuer exactly 1 (ns0:Ausspeisepunkt)',
             ''
           ),
             );
