@@ -57,7 +57,7 @@ class Erfurt_Owl_Structured_Util_N3Converter {
         return $retval;
     }
 
-    private function addFirst($bnodeId, $value) {
+    private static function addFirst($bnodeId, $value) {
         return array(
             $bnodeId ? $bnodeId : Erfurt_Owl_Structured_Util_RdfArray::getCurrentBNodeId(),
             "rdf:first",

@@ -7,6 +7,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     private $q;
     private $lastVar;
     private $_from;
+    private $_uri;
 
     public function __construct(array $from, $uri)
     {
@@ -23,6 +24,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             $v1);
         $this->q->addElement($firstTriple);
         $this->q->getOrder()->add($v1);
+        $this->_uri = $uri;
     }
 
     /**
@@ -32,8 +34,12 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     public function getStructuredOwl(Erfurt_Sparql_Query2 $q = null, Erfurt_Sparql_Query2_Var $variable=null)
     {
         $q = ($q) ? $q : $this->q;
+        if (!$variable) {
+          $structured = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf(
+            new Erfurt_Owl_Structured_Iri(
+              Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $this->_uri)));
+        } else $structured = new Erfurt_Owl_Structured_ClassExpression();
         $variable = ($variable) ? $variable : $this->lastVar;
-        $structured = new Erfurt_Owl_Structured_ClassExpression();
         $structuredArray = array();
         $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q);
         if ($rowsNumber>1) {

@@ -9,8 +9,9 @@ class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_Annota
 
     // TODO solve ns and full iri problem
     public function getValue() {
-      return //":" . 
-        $this->iri;
+      return strpos($this->iri, ":") ? $this->iri : ":" . $this->iri;
+      // return ":" . 
+        // $this->iri;
     }
 
     public function __toString() {

@@ -1,10 +1,11 @@
 <?php
 
-class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples {
+abstract class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom implements Erfurt_Owl_Structured_IRdfPhp, Erfurt_Owl_Structured_ITriples {
 
-    private $classExpressions = array();
+    private $classExpressions;
 
     function __construct($element = null, $nextElement = null) {
+        $this->classExpressions = array();
         if ($element) $this->addElement($element);
         if ($nextElement) $this->addElement($nextElement);
     }
@@ -17,24 +18,35 @@ class Erfurt_Owl_Structured_Axiom_ClassAxiom extends Erfurt_Owl_Structured_Axiom
         return $this->classExpressions;
     }
 
-    public function getPredicateString() {
+    // public function getPredicateString() {
         // TODO: Implement getPredicateString() method.
-    }
+    // }
 
-    public function toN3() {
+    // public function toN3() {
         //        return Erfurt_Owl_Structured_Util_N3Converter::makeTriple()
         // TODO: Implement toN3() method.
-    }
+    // }
 
-    public function __toString() {
+    // public function __toString() {
         // TODO: Implement __toString() method.
-    }
+    // }
 
-    public function getValue() {
+    // public function getValue() {
         // TODO: Implement getValue() method.
-    }
+    // }
 
     public function toRdfArray() {
         // TODO: Implement toRdfArray() method.
     }
+    
+    // public function toTriples() {
+    // }
+
+    // public function isComplex()
+    // {
+    // }
+
+    // public function toArray()
+    // {
+    // }
 }

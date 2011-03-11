@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2010-11-05 08:17:51
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2011-03-11 19:30:43
 
 
 # for convenience in actions
@@ -64,62 +64,64 @@ class Erfurt_Syntax_ManchesterLexer_DFA1 extends DFA {
 
 class Erfurt_Syntax_ManchesterLexer extends AntlrLexer {
     static $MAX_LENGTH_LABEL=7;
-    static $EXPONENT=54;
-    static $CLOSE_SQUARE_BRACE=50;
+    static $EXPONENT=56;
+    static $CLOSE_SQUARE_BRACE=52;
     static $DECIMAL_LABEL=37;
     static $ONLY_LABEL=28;
     static $DIGITS=15;
     static $MAX_LABEL=32;
-    static $FPLITERAL_HELPER=59;
+    static $FPLITERAL_HELPER=61;
+    static $SUBCLASS_OF_LABEL=42;
     static $EOF=-1;
     static $STRING_LABEL=40;
     static $LANG_PATTERN_LABEL=9;
     static $FLOAT_LABEL=38;
-    static $ABBREVIATED_IRI=56;
+    static $ABBREVIATED_IRI=58;
     static $INVERSE_LABEL=11;
-    static $INTEGER_LABEL=39;
     static $GREATER=22;
     static $EOL=17;
+    static $INTEGER_LABEL=39;
     static $F_LABEL=4;
     static $OR_LABEL=25;
     static $COMMA=34;
     static $LESS=21;
-    static $PN_CHARS_U=45;
-    static $QUOTED_STRING=52;
+    static $PN_CHARS_U=47;
+    static $QUOTED_STRING=54;
     static $PLUS=14;
     static $DOT=13;
-    static $DLITERAL_HELPER=58;
+    static $DLITERAL_HELPER=60;
     static $OPEN_CURLY_BRACE=23;
     static $CLOSE_CURLY_BRACE=24;
     static $PATTERN_LABEL=8;
-    static $SIMPLE_IRI=47;
-    static $PREFIX_NAME=55;
+    static $SIMPLE_IRI=49;
+    static $PREFIX_NAME=57;
     static $AND_LABEL=26;
     static $REFERENCE=41;
-    static $FULL_IRI=46;
+    static $FULL_IRI=48;
     static $CLOSE_BRACE=36;
-    static $ILITERAL_HELPER=57;
+    static $ILITERAL_HELPER=59;
     static $MINUS=12;
     static $LENGTH_LABEL=5;
     static $SOME_LABEL=27;
-    static $Tokens=61;
-    static $NODE_ID=48;
-    static $ITFUCKINDOESNTWORK=60;
-    static $OPEN_SQUARE_BRACE=49;
-    static $ECHAR=51;
+    static $Tokens=63;
+    static $NODE_ID=50;
+    static $ITFUCKINDOESNTWORK=62;
+    static $OPEN_SQUARE_BRACE=51;
+    static $ECHAR=53;
     static $WS=18;
     static $MIN_LABEL=31;
-    static $PN_CHARS_BASE=44;
+    static $PN_CHARS_BASE=46;
+    static $CLASS_LABEL=43;
     static $THAT_LABEL=10;
     static $NOT_LABEL=16;
-    static $PN_PREFIX=43;
+    static $PN_PREFIX=45;
     static $SELF_LABEL=30;
-    static $PN_CHARS=42;
     static $MIN_LENGTH_LABEL=6;
+    static $PN_CHARS=44;
     static $VALUE_LABEL=29;
     static $EXACTLY_LABEL=33;
     static $LESS_EQUAL=19;
-    static $LANGUAGE_TAG=53;
+    static $LANGUAGE_TAG=55;
     static $OPEN_BRACE=35;
     static $GREATER_EQUAL=20;
 
@@ -143,8 +145,8 @@ class Erfurt_Syntax_ManchesterLexer extends AntlrLexer {
         try {
             $_type = Erfurt_Syntax_ManchesterLexer::$ITFUCKINDOESNTWORK;
             $_channel = Erfurt_Syntax_ManchesterLexer::$DEFAULT_TOKEN_CHANNEL;
-            // src/Erfurt_Syntax_Manchester.g:488:20: ( 'ggggggggr!!!' ) 
-            // src/Erfurt_Syntax_Manchester.g:488:22: 'ggggggggr!!!' 
+            // src/Erfurt_Syntax_Manchester.g:492:20: ( 'ggggggggr!!!' ) 
+            // src/Erfurt_Syntax_Manchester.g:492:22: 'ggggggggr!!!' 
             {
             $this->matchString("ggggggggr!!!"); 
 
