@@ -7,15 +7,19 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     private $q;
     private $lastVar;
     private $_from;
-    private $_uri;
 
-    public function __construct(array $from, $uri)
+    public function __construct(array $from)
     {
         $this->q = new Erfurt_Sparql_Query2();
         foreach($from as $from1) {
+            //only 1 from is currently supported
             $this->_from = $from1;
             $this->q->addFrom(new Erfurt_Sparql_Query2_IriRef($from1));
         }
+    }
+
+    public function getSubClass($uri)
+    {
         $v1 = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
         $this->lastVar = $v1;
         $firstTriple = new Erfurt_Sparql_Query2_Triple(
@@ -24,56 +28,69 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             $v1);
         $this->q->addElement($firstTriple);
         $this->q->getOrder()->add($v1);
-        $this->_uri = $uri;
+
+        $structured = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf(
+            new Erfurt_Owl_Structured_Iri(
+                Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $uri)));
+
+        $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($this->q);
+        if ($rowsNumber>1) {
+            for ($i = 0; $i < $rowsNumber; $i++) {
+                $this->q->setLimit(1);
+                $this->q->setOffset($i);
+                $structured->addElement($this->getStructuredOwl($this->q, $v1));
+            }
+        } else $structured->addElement($this->getStructuredOwl($this->q, $v1));
+        return $structured;
     }
 
     /**
      * recursive function
      * current limitations: multiple values in subclass not supported
      */
-    public function getStructuredOwl(Erfurt_Sparql_Query2 $q = null, Erfurt_Sparql_Query2_Var $variable=null)
+    public function getStructuredOwl(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
     {
-        $q = ($q) ? $q : $this->q;
-        if (!$variable) {
-          $structured = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf(
-            new Erfurt_Owl_Structured_Iri(
-              Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $this->_uri)));
-        } else $structured = new Erfurt_Owl_Structured_ClassExpression();
-        $variable = ($variable) ? $variable : $this->lastVar;
-        $structuredArray = array();
-        $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q);
-        if ($rowsNumber>1) {
-            for ($i = 0; $i < $rowsNumber; $i++) {
-                $q->setLimit(1);
-                $q->setOffset($i);
-                $structuredArray = array_merge($structuredArray, $this->getStructuredOwl($q, $variable));
+        // $q = ($q) ? $q : $this->q;
+        // if (!$variable) {
+        // $structured = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf(
+        // new Erfurt_Owl_Structured_Iri(
+        // Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $this->_uri)));
+        // } else
+        $structured = new Erfurt_Owl_Structured_ClassExpression();
+        // $variable = ($variable) ? $variable : $this->lastVar;
+        // $structuredArray = array();
+        // $rowsNumber = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($q);
+        // if ($rowsNumber>1) {
+        // for ($i = 0; $i < $rowsNumber; $i++) {
+        // $q->setLimit(1);
+        // $q->setOffset($i);
+        // $structuredArray = array_merge($structuredArray, $this->getStructuredOwl($q, $variable));
+        // }
+        // } else {
+        if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isBlank")) {
+            $p = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
+            $o = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
+            $triple = new Erfurt_Sparql_Query2_Triple($variable, $p, $o);
+            $q->addElement($triple);
+            $actionType = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $o);
+            switch ($actionType) {
+            case OWL_CLASS:
+            case RDFS_DATATYPE:
+                $structured->addElement($this->getConnectives($q, $variable));
+                break;
+            case OWL_RESTRICTION:
+                $structured->addElement($this->getRestriction($q, $variable));
+                break;
+            default:
+                throw new Exception("$actionType not implemented yet");
+                break;
             }
         } else {
-            if ($x = Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isBlank")) {
-                $p = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
-                $o = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
-                $triple = new Erfurt_Sparql_Query2_Triple($variable, $p, $o);
-                $q->addElement($triple);
-                $actionType = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $o);
-                switch ($actionType) {
-                case OWL_CLASS:
-                case RDFS_DATATYPE:
-                    $structured->addElement($this->getConnectives($q, $variable));
-                    break;
-                case OWL_RESTRICTION:
-                    $structured->addElement($this->getRestriction($q, $variable));
-                    break;
-                default:
-                    throw new Exception("$actionType not implemented yet");
-                    break;
-                }
-                $structuredArray []= $structured;
-            } else {
-                // it is a class expression axiom, or done?
-                $structuredArray [] = $this->getElement($q, $variable);
-            }
+            // it is a class expression axiom, or done?
+            $structured = $this->getElement($q, $variable);
         }
-        return $structuredArray;
+        // }
+        return $structured;
     }
 
     private function getRestriction(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
@@ -255,7 +272,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
     {
         if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isBlank")) {
             $retval = $this->getStructuredOwl($q, $var);
-            return $retval[0];
+            return $retval;
         }
         elseif (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $var, "isLiteral")) {
             $literalValue = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);

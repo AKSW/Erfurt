@@ -6,9 +6,11 @@ class Erfurt_Owl_Structured_ObjectPropertyRestriction_ObjectPropertyCardinalityR
     private $cardinality;
     private $ce_array;
 
-    function __construct($objectPropertyExpression, $nni, $primary = null) {
+    function __construct(Erfurt_Owl_Structured_Iri $objectPropertyExpression, $nni, $primary = null) {
         parent::__construct($objectPropertyExpression, $primary);
-        $this->cardinality = $nni;
+        if ($nni instanceof Erfurt_Owl_Structured_Literal) {
+          $this->cardinality = $nni->getValue();
+        } else $this->cardinality = $nni;
     }
 
     public function __toString() {
