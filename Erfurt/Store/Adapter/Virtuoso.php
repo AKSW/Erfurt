@@ -837,6 +837,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function getImportsClosure($modelUri)
     {
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+
         if (!array_key_exists($modelUri, $this->_importedModels)) {
             $models = array();
             $result = array(
@@ -863,7 +865,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         ?model <' . EF_OWL_NS . 'imports> ?o. 
                         FILTER (' . implode(' || ', $filter) . ')
                     }';
-            } while ($result = $this->sparqlQuery($query));
+
+                $result = $queryCache->load( $query, STORE_RESULTFORMAT_PLAIN );
+                if ($result == $queryCache::ERFURT_CACHE_NO_HIT) {
+                    $startTime = microtime(true);
+                    $result = $this->sparqlQuery($query);
+                    $duration = microtime(true) - $startTime;
+                    $queryCache->save( $query , STORE_RESULTFORMAT_PLAIN, $result, $duration );
+                }
+            } while ($result);
             
             // unset root node
             unset($models[$modelUri]);
@@ -871,7 +881,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // cache result
             $this->_importedModels[$modelUri] = array_keys($models);
         }
-        
         return $this->_importedModels[$modelUri];
     }
     
