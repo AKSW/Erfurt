@@ -33,8 +33,7 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
         if (!is_writable($bdb_dir)) {
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('BDB directory must be writable.');
-        }
-        
+        }        
         #$this->_librdf_world = librdf_php_get_world();
         $this->_librdf_world = librdf_new_world();
         
@@ -44,7 +43,9 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
                 "hash-type='bdb',dir='$bdb_dir', contexts='yes'");
 		
         $this->_librdf_model = librdf_new_model($this->_librdf_world, $this->_librdf_storage, '');
-        var_dump($this->_librdf_model);exit;
+
+
+        var_dump($this->_librdf_storage);exit;
     }
     
     public function __destruct()
