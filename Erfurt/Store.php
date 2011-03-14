@@ -1249,7 +1249,7 @@ class Erfurt_Store
         }
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
-        if ($sparqlResult == $queryCache::ERFURT_CACHE_NO_HIT ){
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT ){
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
@@ -1398,7 +1398,7 @@ class Erfurt_Store
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
         $sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat );
-        if ($sparqlResult == $queryCache::ERFURT_CACHE_NO_HIT) {
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
