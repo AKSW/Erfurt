@@ -35,7 +35,8 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
             throw new Erfurt_Exception('BDB directory must be writable.');
         }
         
-        $this->_librdf_world = librdf_php_get_world();
+        #$this->_librdf_world = librdf_php_get_world();
+        $this->_librdf_world = librdf_new_world();
         
         // try to open existing store or create new if not existing
         $this->_librdf_storage = librdf_new_storage($this->_librdf_world, 
@@ -43,6 +44,7 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
                 "hash-type='bdb',dir='$bdb_dir', contexts='yes'");
 		
         $this->_librdf_model = librdf_new_model($this->_librdf_world, $this->_librdf_storage, '');
+        var_dump($this->_librdf_model);exit;
     }
     
     public function __destruct()
@@ -57,12 +59,12 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
     // ------------------------------------------------------------------------
     
     /** @see Erfurt_Store_Adapter_Abstract */
-    public function addStatement($modelIri, $subject, $predicate, $object, $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
+    public function addStatement($modelIri, $subject, $predicate, $object, array $options = array('subject_type' => Erfurt_Store::TYPE_IRI, 'object_type' => Erfurt_Store::TYPE_IRI))
     {
         throw new Exception('Not implemented yet.');
     }
     
-    public function deleteMatchingStatements($modelIri, $subject, $predicate, $object)
+    public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
         throw new Exception('Not implemented yet.');
     }
@@ -128,13 +130,15 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
         }
     }
     
-    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query)
+    public function sparqlAsk($query)
+    #public function sparqlAsk(Erfurt_Sparql_SimpleQuery $query)
     {
         throw new Exception('Not implemented yet.');
     }
     
     /** @see Erfurt_Store_Adapter_Abstract */
-    public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $options=array()) 
+    public function sparqlQuery($query, $options = array())
+    #public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $options=array())
     {   
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
          
@@ -167,5 +171,31 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
 	
 	
     }
+
+    public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
+    {
+        throw new Exception('Not implemented yet.');
+    }
+
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        throw new Exception('Not implemented yet.');
+    }
+
+    public function deleteMultipleStatements($graphIri, array $statementsArray)
+    {
+        throw new Exception('Not implemented yet.');
+    }
+
+    public function getBlankNodePrefix()
+    {
+        throw new Exception('Not implemented yet.');
+    }
+
+    public function init()
+    {
+        throw new Exception('Not implemented yet.');
+    }
+
 }
 ?>
