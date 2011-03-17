@@ -93,6 +93,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     public function __construct($adapterOptions = array())
     {
+        #$this->count = 0;
         try{
             if(isset($adapterOptions['store']))
                 $storeName = $adapterOptions['store'];
@@ -133,25 +134,104 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             if (!$this->_store->isSetUp()) {
               $this->_store->setUp();
             }
+/*
+            $query2 = "SELECT DISTINCT ?resourceUri ?classUri
+WHERE {
+?resourceUri ?p ?classUri.
 
-            $query = 'SELECT DISTINCT ?resourceUri
-                      FROM <http://ns.ontowiki.net/SysOnt/>
-                      FROM <http://localhost/OntoWiki/Config/>
-                      WHERE {
-                        ?resourceUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdfs.org/sioc/ns#User>
-                        FILTER (!isBLANK(?resourceUri))
-                        } LIMIT 10 ';
-            /*$rs = $this->_store->query($query);
+    FILTER(sameTerm(?resourceUri, <http://ns.ontowiki.net/SysOnt/AnyModel>) || sameTerm(?resourceUri, <http://ns.ontowiki.net/SysOnt/AnyAction>))
+    FILTER langMatches( ?resourceUri, 'FR' )
+    FILTER regex(?name, '^ali', 'i')
+    FILTER sameTerm(?resourceUri, <http://ns.ontowiki.net/SysOnt/AnyModel>) || sameTerm(?resourceUri, <http://ns.ontowiki.net/SysOnt/AnyAction>)
+}
+";
+ *
+
+OPTIONAL {
+?resourceUri <http://ns.ontowiki.net/SysOnt/hidden> ?reg
+}
+OPTIONAL {
+?resourceUri <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?super
+}
+FILTER (isURI(?resourceUri))
+FILTER (!BOUND(?reg))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/1999/02/22-rdf-syntax-ns#'))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/2000/01/rdf-schema#'))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/2002/07/owl#'))
+FILTER (REGEX(STR(?super), '^http://www.w3.org/2002/07/owl#') || !BOUND(?super))
+  *
+            $query = "SELECT DISTINCT ?resourceUri
+FROM <http://localhost/100k_dataset.rdf>
+WHERE {
+{
+?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?resourceUri
+}
+OPTIONAL {
+?resourceUri <http://ns.ontowiki.net/SysOnt/hidden> ?reg
+}
+OPTIONAL {
+?resourceUri <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?super
+}
+FILTER (isURI(?resourceUri))
+FILTER (!BOUND(?reg))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/1999/02/22-rdf-syntax-ns#'))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/2000/01/rdf-schema#'))
+FILTER (!REGEX(STR(?resourceUri), '^http://www.w3.org/2002/07/owl#'))
+FILTER (REGEX(STR(?super), '^http://www.w3.org/2002/07/owl#') || !BOUND(?super))
+
+
+}
+
+";
+ /* $query = "SELECT DISTINCT ?s ?p ?o
+               WHERE{ ?s ?p ?o }
+";
+#*
+            $this->test_execSparql($query);
+/*
+            $newQuery = preg_replace("#\?#","?__",$query);
+            var_dump($query);
+            var_dump($newQuery);
+            exit;
+            $test = explode("WHERE", $query);
+            $test = explode("FROM", $test[0]);
+            # SELECT $test[0]
+            $test = explode("?", $test[0]);
+            var_dump($test);exit;
+
+            var_dump($query2);
+            $filters = explode("FILTER", $query2);
+            $updatedQuery = $filters[0];
+            for($i = 1; $i < sizeof($filters); $i++)
+            {                
+                if(strpos($filters[$i],"sameTerm"))
+                {
+                    $filters[$i] = preg_replace(array("#sameTerm\(#","#,#"),array("(", " = "),$filters[$i]);
+                }
+                $updatedQuery .= "FILTER ".$filters[$i];
+            }
+            var_dump($updatedQuery);exit;
+
+            #FILTER (sameTerm(?p, http://ns.ontowiki.net/SysOnt/grantModelEdit))
+            #http://ns.ontowiki.net/SysOnt/grantModelEdit
+         #   $query = "SELECT ?s ?p ?o
+         #       WHERE{
+         #       ?s ?p ?o}";
+                            #http://www.w3.org/2002/07/owl#Class
+                            #http://www.w3.org/2002/07/owl#Class
+ 
+            $rs = $this->_store->query($query);
+            var_dump($this->_store->getErrors());
             foreach($rs as $row)
             {
                 var_dump($row);
-            }*/
+            }exit;
             #var_dump($this->sparqlQuery($query));
 
             #exit;
 
             #$query = "INSERT INTO arc_test2_g2t VALUES (999999,9999999);";
-            #var_dump($this->_execSql($query));exit;
+            #var_dump($this->_execSql($query));exit;*/
 
         } catch (Erfurt_Store_Adapter_Exception $e){
             require_once 'Erfurt/Store/Adapter/Exception.php';
@@ -175,10 +255,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             $graphUri, 
             $this->buildTripleString($statementsArray));
         
-        #if (defined('_EFDEBUG')) {
+        if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->debug('Add mutliple statements query: ' . PHP_EOL . $insertSparql);
-        #}
+        }
         
         return $this->_execSparql($insertSparql);
     }
@@ -285,6 +365,9 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
+        if(empty($statementsArray))
+            return true;
+
         $deleteSparql = sprintf(
             'DELETE FROM <%s> {%s}', 
             $graphUri, 
@@ -302,7 +385,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      * @see Erfurt_Store_Adapter_Interface
      */
     public function deleteModel($graphUri)
-    {
+    {   
         $store = $this->_adapterOptions['store'];
         // delete triple
         $query =   "DELETE 
@@ -361,8 +444,8 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     public function getAvailableModels()
     {       
-        if (null === $this->_graphs)
-        {
+        #if (null === $this->_graphs)
+        #{
             $store = $this->_adapterOptions['store'];
             $this->_graphs = array();
             $sql = "SELECT DISTINCT val 
@@ -376,7 +459,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
             {
                 $this->_graphs[$row['val']] = true;
             }
-        }
+        #}
         
         return $this->_graphs;
     }
@@ -427,7 +510,32 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
                 case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
                     $parser = ARC2::getRDFParser();
                     $parser->parse($data);
+                    # insert triple
                     $this->_store->insert($parser->getTriples(), $graphUri);
+                    # insert prefix
+                    #$model = new Erfurt_Rdf_Model($graphUri);
+                    #$prefixes = $parser->getParsedNamespacePrefixes();
+                    #foreach($prefixes as $namespace => $prefix)
+                    #{
+                    #    $model->addPrefix($prefix, $namespace);
+                    #}
+
+                    /*
+                     * s
+    the subject value (a URI, Bnode ID, or Variable)
+p
+    the property URI (or a Variable)
+o
+    the subject value (a URI, Bnode ID, Literal, or Variable)
+s_type
+    "uri", "bnode", or "var"
+o_type
+    "uri", "bnode", "literal", or "var"
+o_datatype
+    a datatype URI
+o_lang
+    a language identifier, e.g. ("en-us")
+                     */
                     break;
                 case Erfurt_Syntax_RdfParser::LOCATOR_URL:
                     $this->_store->query('LOAD <'.$data.'>');
@@ -457,14 +565,21 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function init()
     {
     }
-    
+
+    #private $count = 0;
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
     public function isModelAvailable($graphUri)
     {
-        $bool = array_key_exists((string)$graphUri, (array)$this->getAvailableModels());
-        return $bool;
+        /*$models = (array) $this->getAvailableModels();
+        $bool = false;
+        $bool = array_key_exists((string)$graphUri, $models);
+        $logger = Erfurt_App::getInstance()->getLog();
+        $this->count++;
+        $logger->debug('ARC::isModelAvailable('.$graphUri.')['.$this->count.']: '.$bool);#.'/n '.print_r($models,true));
+        return $bool;*/
+        return array_key_exists((string)$graphUri, (array) $this->getAvailableModels());
     }
     
     /**
@@ -482,8 +597,14 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
-    public function sparqlQuery($query, $options=array())
+    public function sparqlQuery($query, $options=array(), $debug=false)
     {
+        $logger = Erfurt_App::getInstance()->getLog();
+        if(strpos($query, "?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?resourceUri ") != false)
+        {
+            $logger->debug($query);
+        }
+
         $result = array();
         $resultFormat = isset($options[STORE_RESULTFORMAT]) ?
                             $options[STORE_RESULTFORMAT] :
@@ -491,7 +612,7 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
         
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
-        
+
         $rs = $this->_execSparql($query);
         
         $result = $rs['result']['rows'];        
@@ -767,7 +888,10 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
     public function getLastError() 
     {
         $errors = $this->_store->getErrors();
-        return $errors[sizeof($errors)-1];
+        if(sizeof($errors) > 0)
+            return $errors[sizeof($errors)-1];
+        else
+            return null;
     }
     
     // ------------------------------------------------------------------------
@@ -784,11 +908,79 @@ class Erfurt_Store_Adapter_Arc implements Erfurt_Store_Adapter_Interface, Erfurt
      */
     private function _execSparql($sparqlQuery, $graphUri = null) 
     {
+        $logger = Erfurt_App::getInstance()->getLog();
+
         // Query-Return:
         // query_type   = Typ der Query (z.B. Select, Insert, Ask etc)
         // result       = eigentliche Ergebnismenge
         // query_time   = Ausführungszeit
-        return $this->_store->query($sparqlQuery);
+        
+        $filters = explode("FILTER", $sparqlQuery);
+        $updatedQuery = $filters[0];
+        for($i = 1; $i < sizeof($filters); $i++)
+        {
+            if(strpos($filters[$i],"sameTerm"))
+            {
+                $filters[$i] = preg_replace(array("#sameTerm\(#","#,#"),array("(", " = "),$filters[$i]);
+            }
+            $updatedQuery .= "FILTER ".$filters[$i];
+        }
+        $rs =  $this->_store->query($updatedQuery);
+
+        if($this->_store->getErrors()){
+            var_dump($this->_store->getErrors());
+            exit;
+        }
+
+        #if((strpos($sparqlQuery,'http://localhost/OntoWiki/Config/') != false) && ())
+        #{
+        #
+        #}
+        /*$rs =  $this->_store->query(preg_replace("#\?#","?__",$updatedQuery));
+        foreach($rs as $r)
+        {
+            echo var_dump($r);
+            if(isset($r['variables']) && !empty($r['variables']))
+            {
+                var_dump($r['variables']);
+                foreach($r['variables'] as $var)
+                {
+                    var_dump($var);
+                }
+            }
+        }
+        exit;*/
+        return $rs;
+    }
+
+    public function test_execSparql($sparqlQuery, $graphUri = null)
+    {
+        $logger = Erfurt_App::getInstance()->getLog();
+
+        // Query-Return:
+        // query_type   = Typ der Query (z.B. Select, Insert, Ask etc)
+        // result       = eigentliche Ergebnismenge
+        // query_time   = Ausführungszeit
+
+        $filters = explode("FILTER", $sparqlQuery);
+        $updatedQuery = $filters[0];
+        for($i = 1; $i < sizeof($filters); $i++)
+        {
+            if(strpos($filters[$i],"sameTerm"))
+            {
+                $filters[$i] = preg_replace(array("#sameTerm\(#","#,#"),array("(", " = "),$filters[$i]);
+            }
+            $updatedQuery .= "FILTER ".$filters[$i];
+        }
+        $rs =  $this->_store->query($updatedQuery);
+
+        var_dump($this->_store->getErrors());
+        foreach($rs as $row)
+        {
+            var_dump($row);
+        }exit;
+        
+        #return $rs;
     }
     
     /**
