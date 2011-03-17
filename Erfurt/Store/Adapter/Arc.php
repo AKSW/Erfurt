@@ -927,11 +927,6 @@ o_lang
         }
         $rs =  $this->_store->query($updatedQuery);
 
-        if($this->_store->getErrors()){
-            var_dump($this->_store->getErrors());
-            exit;
-        }
-
         #if((strpos($sparqlQuery,'http://localhost/OntoWiki/Config/') != false) && ())
         #{
         #

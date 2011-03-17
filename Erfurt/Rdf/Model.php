@@ -266,8 +266,8 @@ class Erfurt_Rdf_Model
             
             if (!empty($titleProperties)) {
                 foreach ($titleProperties as $key => $uri) {
-                    $select .= ' ?' . $key;
-                    $where[] = '{?s <' . $uri . '> ' . '?' . $key . '.}';
+                    $select .= ' ?v' . $key;
+                    $where[] = '{?s <' . $uri . '> ' . '?v' . $key . '.}';
                 }
                 
                 require_once 'Erfurt/Sparql/SimpleQuery.php';
@@ -282,8 +282,8 @@ class Erfurt_Rdf_Model
                 if ($result = $this->getStore()->sparqlQuery($query)) {
                     if (is_array($result) && is_array($result[0])) {
                         foreach ($titleProperties as $key => $uri) {
-                            if (!empty($result[0][$key])) {
-                                $this->_title = $result[0][$key];
+                            if (!empty($result[0]['v'.$key])) {
+                                $this->_title = $result[0]['v'.$key];
                             }
                             
                             continue;
@@ -541,6 +541,8 @@ class Erfurt_Rdf_Model
         } else if($query instanceof Erfurt_Sparql_Query2){
             $query->setFroms(array($this->_graphUri));
         }
+        $logger = Erfurt_App::getInstance()->getLog();
+        $logger->debug($query);
         
         return $this->getStore()->sparqlQuery($query, $options);
     }
