@@ -26,6 +26,10 @@ class Erfurt_Cache_Frontend_QueryCache {
 
     protected static $_materializedViews;
 
+    const ERFURT_CACHE_NO_HIT = "fae0b27c451c728867a567e8c1bb4e53";
+
+
+
 	/**
      *	setter method for the backend implementation object
      *	@access		public
@@ -109,23 +113,23 @@ class Erfurt_Cache_Frontend_QueryCache {
             if ($result) {
                  $result = unserialize ($result);
 
-                if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
+                if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true) {
                     $this->getBackend()->incrementHitCounter($queryId);
+                }
 
                 //saving transactionKeys to transactions table according to a queryId
                 $objectCache = Erfurt_App::getInstance()->getCache();
                 if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null )) {           
                     $this->getBackend()->saveTransactions ( $queryId, $this->getTransactions() ) ;
                 }
-#var_dump($result);
                 return $result;
             }
             else {
-               return false;
+               return self::ERFURT_CACHE_NO_HIT;
             }
         }
         else {
-            return false ;
+            return self::ERFURT_CACHE_NO_HIT ;
         }
     }
 

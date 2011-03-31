@@ -21,12 +21,57 @@ class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
     static function mydumpStr($var){
         $str = '<p>'; // This is for correct handling of newlines
         ob_start();
-        var_dump($var);
+        self::dump($var);
         $a=ob_get_contents();
         ob_end_clean();
         $str .= $a; // Escape every HTML special chars (especially > and < )
         $str .= '</p>';
         return $str;
+    }
+
+    static function dump($value,$level=0)
+    {
+        if ($level==-1)
+        {
+            $trans[' ']='&there4;';
+            $trans["\t"]='&rArr;';
+            $trans["\n"]='&para;;';
+            $trans["\r"]='&lArr;';
+            $trans["\0"]='&oplus;';
+            return strtr(htmlspecialchars($value),$trans);
+        }
+        if ($level==0) echo '<pre>';
+        $type= gettype($value);
+        echo $type;
+        if ($type=='string')
+        {
+            echo '('.strlen($value).')';
+            $value= self::dump($value,-1);
+        }
+        elseif ($type=='boolean') $value= ($value?'true':'false');
+        elseif ($type=='object')
+        {
+            $props= get_class_vars(get_class($value));
+            echo '('.count($props).') <u>'.get_class($value).'</u>';
+            foreach($props as $key=>$val)
+            {
+                echo "\n".str_repeat("  ",$level+1).$key.' => ';
+                self::dump($value->$key,$level+1);
+            }
+            $value= '';
+        }
+        elseif ($type=='array')
+        {
+            echo '('.count($value).')';
+            foreach($value as $key=>$val)
+            {
+                echo "\n".str_repeat("  ",$level+1).self::dump($key,-1).' => ';
+                self::dump($val,$level+1);
+            }
+            $value= '';
+        }
+        echo " <b>$value</b>";
+        if ($level==0) echo '</pre>';
     }
 }
 
@@ -108,7 +153,9 @@ class Erfurt_Store_Adapter_Comparer
         $this->_candidate = new $candidateClassName($candidateConf->toArray());
         $this->_reference = new $referenceClassName($referenceConf->toArray());
 
-        self::$_ignoredMethods = $adapterOptions['ignoredMethods'];
+        if (isset($adapterOptions['ignoredMethods'])) {
+            self::$_ignoredMethods = $adapterOptions['ignoredMethods'];
+        } 
     }
 
     protected static $_strictMethods = array('isModelAvailable');
