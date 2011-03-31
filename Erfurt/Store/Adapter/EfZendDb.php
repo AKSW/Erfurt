@@ -611,6 +611,8 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         // invalidate the cache and fetch model infos again
         // Note: we invalidate the complete model info here
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithModelIri( (string) $graphUri);
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelCache = array();
