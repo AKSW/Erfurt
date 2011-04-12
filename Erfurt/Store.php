@@ -128,6 +128,8 @@ class Erfurt_Store
      */
     protected $_erfurtLogger = null;
 
+    protected $_bnodePrefix = 'nodeID:';
+
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1397,11 +1399,16 @@ class Erfurt_Store
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        $sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat );
+        $queryString = (string)$queryObject;
+        $replacements = 0;
+        $queryString = str_replace($this->_bnodePrefix, $this->_backendAdapter->getBlankNodePrefix(), $queryString, $replacements);
+
+        // $sparqlResult = $queryCache->load($queryString, $queryObject, $resultFormat );
+        $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
+            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {

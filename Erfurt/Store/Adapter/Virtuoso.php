@@ -587,11 +587,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $query = $queryPrefix
                . PHP_EOL
                . (string)$query;
-        //echo htmlentities($query);
+
         if ($rid = $this->_execSparql($query)) {
 
             $result = $this->_odbcResultToArray($rid);
-            
+
             // map single field to complete result
             if ($singleField) {
                 // the result is in the first field of the first row
