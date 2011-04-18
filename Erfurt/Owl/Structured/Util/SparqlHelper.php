@@ -38,6 +38,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             for ($i = 0; $i < $rowsNumber; $i++) {
                 $this->q->setLimit(1);
                 $this->q->setOffset($i);
+                $this->getSubClass(null, $v1);
                 $structured->addElement($this->getStructuredOwl($this->q, $v1));
             }
         } else $structured->addElement($this->getStructuredOwl($this->q, $v1));
