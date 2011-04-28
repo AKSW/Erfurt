@@ -17,7 +17,7 @@ class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_ElementHelper
     protected $mode = 0;
     protected $delimiter = '"';
     
-    public static $knownShortcuts = array('int','boolean','float','decimal','string','time','date');
+    public static $knownShortcuts = array('int','boolean','float','decimal','string','time','date', 'dateTime');
     
     /**
      * @param string $str the literal value
