@@ -138,25 +138,57 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
-        $insertSparql = sprintf(
-            'INSERT INTO GRAPH <%s> {%s}', 
-            $graphUri, 
-            $this->buildTripleString($statementsArray));
-        
-        if (defined('_EFDEBUG')) {
-            $logger = Erfurt_App::getInstance()->getLog();
-            $logger->debug('Add mutliple statements query: ' . PHP_EOL . $insertSparql);
+        $numBlocks = 1;
+        $blockQueries = array();
+        while (true){
+            $statementBlocks = $this->array_split($statementsArray, $numBlocks);
+            $blockQueries = array();
+            foreach($statementBlocks as $statementBlock){
+               $blockQuery = sprintf(
+                'INSERT INTO GRAPH <%s> {%s}', 
+                $graphUri, 
+                $this->buildTripleString($statementBlock));
+
+                if(substr_count($blockQuery, "\n") > 1000){ //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+                    $numBlocks *= 2;
+                    continue 2;
+                } 
+                $blockQueries[] = $blockQuery;
+            }
+            break;  //this only reached if the continue call is not ŕeached
         }
         
-        $odbcRes = $this->_execSparql($insertSparql);
+        $odbcRes = true;
+        foreach ($blockQueries as $query){
+            if (defined('_EFDEBUG')) {
+                $logger = Erfurt_App::getInstance()->getLog();
+                $logger->debug('Add mutliple statements query: ' . PHP_EOL . $query);
+            }
+
+            $odbcRes = $this->_execSparql($query);
+            $result = odbc_result($odbcRes,1);
+
+        }
         
+        //TODO why - please comment
         if (odbc_num_fields($odbcRes) > 0 && odbc_field_type($odbcRes, 1) == 'VARCHAR') {
             $strResult = odbc_result($odbcRes,1);
             return $strResult;
         }
     }
     
-    /**
+    // split the given array into n number of pieces
+    private function array_split($array, $pieces=2)
+    {  
+        if ($pieces < 2)
+            return array($array);
+        $newCount = ceil(count($array)/$pieces);
+        $a = array_slice($array, 0, $newCount);
+        $b = $this->array_split(array_slice($array, $newCount), $pieces-1);
+        return array_merge(array($a),$b);
+    } 
+
+        /**
      * @see Erfurt_Store_Adapter_Interface 
      */
     public function addStatement($graphUri, $subject, $predicate, $objectSpec, array $options = array())

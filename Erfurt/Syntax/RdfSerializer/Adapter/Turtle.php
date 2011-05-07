@@ -64,6 +64,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         } else {
             $this->startRdf();
         }
+        $i = 0;
 
         $offset = 0;
         while (true) {
@@ -82,7 +83,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 $oType = $row['o']['type'];
                 $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
                 $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
-
+                $i++;
                 $this->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
 
@@ -92,7 +93,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
 
     		$offset += 1000;
         }
-
+        echo ">>>>>>>>".$i;
         return $this->endRdf();
     }
 
