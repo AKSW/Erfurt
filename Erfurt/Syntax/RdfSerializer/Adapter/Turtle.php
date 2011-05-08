@@ -28,6 +28,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     protected $_store = null;
     protected $_graphUri = null;
 
+
     public function  __construct() {
         $this->_store = Erfurt_App::getInstance()->getStore();
     }
@@ -36,7 +37,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     {
         $this->handleGraph($graphUri, $useAc);
         
-        $query->setLimit(1000); //needed?
+        $query->setLimit(1000); 
         $s = new Erfurt_Sparql_Query2_Var('resourceUri');
         $p = new Erfurt_Sparql_Query2_Var('p');
         $o = new Erfurt_Sparql_Query2_Var('o');
@@ -45,7 +46,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 $query->addTriple($s,$p,$o);
             } else {
                 //should not happen
-                throw new OntoWiki_Exception('serializeQueryResultToString expects a Erfurt_Sparql_Query2 object');
+                throw new OntoWiki_Exception('serializeQueryResultToString expects a the query to contain the triple ?resourceUri ?p ?o');
             }
         }
 
@@ -64,7 +65,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         } else {
             $this->startRdf();
         }
-        $i = 0;
 
         $offset = 0;
         while (true) {
@@ -83,7 +83,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 $oType = $row['o']['type'];
                 $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
                 $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
-                $i++;
                 $this->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
 
@@ -93,7 +92,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
 
     		$offset += 1000;
         }
-        echo ">>>>>>>>".$i;
         return $this->endRdf();
     }
 
@@ -105,7 +103,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $query->setProloguePart('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
         $query->setWherePart('WHERE { ?resourceUri ?p ?o . }');
-        $query->setOrderClause('?resourceUri ?p ?o');
+        $query->setOrderClause('?resourceUri');
   
         return $this->serializeQueryResultToString($query, $graphUri, $pretty, $useAc);
     }
