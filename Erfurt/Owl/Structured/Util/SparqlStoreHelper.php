@@ -79,8 +79,23 @@ class Erfurt_Owl_Structured_Util_SparqlStoreHelper
         $store = self::getConnection();
         $model = $store->getModel($modelIri);
         $retval = $model->getResource($classIri)->getQualifiedName();
+        /*
+        $matches = array();
+        preg_match('/^(.+[#\/])(.*[^#\/])$/', "http://purl.org/NET/c4dm/timeline.owl#Instant", $matches);
+        if (!$retval) {
+          $k=0;
+          while(true){
+            try{
+              $model->addPrefix("ns".$k++,$matches[1]);
+              $retval = $model->getResource($classIri)->getQualifiedName();
+              //var_dump($retval);
+              //var_dump($model->getNamespaces());
+              break;
+            } catch(Erfurt_Namespaces_Exception $e) {}
+          }
+
+        }*/
         // TODO eventually add the missing namespace to the model
-        // TODO getQualifiedName should check in sysont too
         return ($retval) ? $retval : $model->getResource($classIri)->getIri();
     }
 
