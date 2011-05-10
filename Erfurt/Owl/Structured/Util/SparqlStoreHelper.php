@@ -25,11 +25,15 @@ class Erfurt_Owl_Structured_Util_SparqlStoreHelper
             $filter = new Erfurt_Sparql_Query2_Filter(
                 new $builtinClass($variable));
             $myQuery = clone $q;
-
             if ($myQuery->hasLimit()) {
                 $retval = self::getVarValue($myQuery, $variable);
-                // currently only isBlank is supported
-                return strpos($retval, "nodeID") === 0;
+                if($builtin == "isBlank") {
+                  return strpos($retval, "nodeID") === 0;
+                }
+                elseif ($builtin == "isLiteral") {
+                  return is_numeric($retval) || parse_url($retval) == false;
+                }
+                else return false;
             } else {
                 $myQuery->addElement($filter);
                 $myQuery->setQueryType('ASK');

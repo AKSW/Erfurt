@@ -11,7 +11,8 @@ class Erfurt_Owl_Structured_Util_Owl2Structured
     public static function mapOWL2Structured(array $from, $uri)
     {
       $sparqlHelper = new Erfurt_Owl_Structured_Util_SparqlHelper($from);
-      $retval = $sparqlHelper->getSubClass($uri);
+      // $retval = $sparqlHelper->getSubClass($uri);
+      $retval = $sparqlHelper->getStructuredOwl($uri);
       return $retval;
 
     }

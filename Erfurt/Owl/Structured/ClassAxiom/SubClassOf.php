@@ -16,7 +16,10 @@ class Erfurt_Owl_Structured_ClassAxiom_SubClassOf extends Erfurt_Owl_Structured_
 
     public function getValue() {
         $elements = $this->getElements();
-        $retval = "Class: " . $this->mainClass->__toString() . " SubClassOf: " . implode(", ", $elements);
+        $retval = "Class: " . $this->mainClass->__toString();
+        foreach ($elements as $e) {
+          $retval .= " SubClassOf: " . $e;
+        }
         return $retval;
     }
 

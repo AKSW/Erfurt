@@ -10,11 +10,8 @@ class Erfurt_Syntax_Manchester_SparqlHelperTest extends Erfurt_TestCase {
     }
 
     public function testGreedy(){
-        // $x = Erfurt_Owl_Structured_Util_SparqlHelper::fetch();
-        // $query = "select * {?s ?p ?o}";
-      //var_dump((string)
-      // Erfurt_Owl_Structured_Util_SparqlHelper::generateQuery(array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Kontostand");
-      Erfurt_Owl_Structured_Util_SparqlHelper::generateQuery(array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Bilanzkreisvertrag");
-      // );
+        $expected = "Class: ns0:Bilanzkreisvertrag SubClassOf: (ns0:Vertrag and ns0:hatVertragspartner some ns0:Bilanzkreisnetzbetreiber and ns0:hatVertragspartner some ns0:Lieferant and ns0:hatVertragspartner only (ns0:Bilanzkreisnetzbetreiber or ns0:Lieferant) and ns0:hatVertragspartner max 1 ns0:Bilanzkreisnetzbetreiber and ns0:hatVertragspartner max 1 ns0:Lieferant)";
+        $x = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Bilanzkreisvertrag");
+        $this->assertEquals($expected, (string)$x);
     }
 }
