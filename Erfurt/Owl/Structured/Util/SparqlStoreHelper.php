@@ -88,8 +88,6 @@ class Erfurt_Owl_Structured_Util_SparqlStoreHelper
             try{
               $model->addPrefix("ns".$k++,$matches[1]);
               $retval = $model->getResource($classIri)->getQualifiedName();
-              //var_dump($retval);
-              //var_dump($model->getNamespaces());
               break;
             } catch(Erfurt_Namespaces_Exception $e) {}
           }

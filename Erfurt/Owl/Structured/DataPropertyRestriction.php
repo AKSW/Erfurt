@@ -16,7 +16,7 @@ class Erfurt_Owl_Structured_DataPropertyRestriction
     function __construct($dataPropertyExpression, $dataRange = null) {
         parent::__construct();
         $this->setDataPropertyExpression($dataPropertyExpression);
-        if (isset($dataRange)) $this->dataRange = $dataRange;
+        if (isset($dataRange)) $this->setDataRange($dataRange);
     }
 
     protected function getDataPropertyExpression() {
@@ -48,5 +48,14 @@ class Erfurt_Owl_Structured_DataPropertyRestriction
             $this->getDataPropertyExpression()
         );
         return $retval;
+    }
+
+    private function setDataRange($dataRange)
+    {
+      if ($dataRange instanceof Erfurt_Owl_Structured_Iri) {
+        $this->dataRange = $dataRange;
+      } elseif(is_string($dataRange)) {
+        $this->dataRange = new Erfurt_Owl_Structured_Iri("xsd:".$dataRange);
+      } else $this->dataRange = $dataRange;
     }
 }

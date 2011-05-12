@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 ManchesterTokenizer.g 2011-03-11 22:40:11
+// $ANTLR 3.1.3 Ã¬Ã Ã© 06, 2009 18:28:01 ManchesterTokenizer.g 2011-05-12 11:19:13
 
 
 # for convenience in actions

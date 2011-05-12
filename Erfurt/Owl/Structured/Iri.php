@@ -25,4 +25,9 @@ class Erfurt_Owl_Structured_Iri extends Erfurt_Owl_Structured_Annotations_Annota
     public function isComplex() {
         return false;
     }
+
+    public function toArray(){
+        $e= $this->getElements();
+        return array($e);
+    }
 }

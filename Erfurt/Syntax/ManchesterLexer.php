@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2011-03-11 22:40:11
+// $ANTLR 3.1.3 Ã¬Ã Ã© 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2011-05-12 11:19:12
 
 
 # for convenience in actions
@@ -145,8 +145,8 @@ class Erfurt_Syntax_ManchesterLexer extends AntlrLexer {
         try {
             $_type = Erfurt_Syntax_ManchesterLexer::$ITFUCKINDOESNTWORK;
             $_channel = Erfurt_Syntax_ManchesterLexer::$DEFAULT_TOKEN_CHANNEL;
-            // src/Erfurt_Syntax_Manchester.g:495:20: ( 'ggggggggr!!!' ) 
-            // src/Erfurt_Syntax_Manchester.g:495:22: 'ggggggggr!!!' 
+            // src/Erfurt_Syntax_Manchester.g:499:20: ( 'ggggggggr!!!' ) 
+            // src/Erfurt_Syntax_Manchester.g:499:22: 'ggggggggr!!!' 
             {
             $this->matchString("ggggggggr!!!"); 
 

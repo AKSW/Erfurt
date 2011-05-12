@@ -1,5 +1,5 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2011-03-11 22:40:10
+// $ANTLR 3.1.3 Ã¬Ã Ã© 06, 2009 18:28:01 src/Erfurt_Syntax_Manchester.g 2011-05-12 11:19:11
 
 
 # for convenience in actions
@@ -210,11 +210,11 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
     static $FOLLOW_description_in_descriptionAnnotatedList1577;
     static $FOLLOW_COMMA_in_descriptionAnnotatedList1582;
     static $FOLLOW_description_in_descriptionAnnotatedList1588;
-    static $FOLLOW_CLASS_LABEL_in_classFrame1618;
-    static $FOLLOW_classIRI_in_classFrame1623;
-    static $FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1635;
-    static $FOLLOW_descriptionAnnotatedList_in_classFrame1639;
-    static $FOLLOW_EOF_in_classFrame1654;
+    static $FOLLOW_CLASS_LABEL_in_classFrame1622;
+    static $FOLLOW_classIRI_in_classFrame1627;
+    static $FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1639;
+    static $FOLLOW_descriptionAnnotatedList_in_classFrame1643;
+    static $FOLLOW_EOF_in_classFrame1658;
     static $FOLLOW_objectPropertyExpression_in_synpred15_Erfurt_Syntax_Manchester271;
     static $FOLLOW_SOME_LABEL_in_synpred15_Erfurt_Syntax_Manchester279;
     static $FOLLOW_primary_in_synpred15_Erfurt_Syntax_Manchester283;
@@ -3339,17 +3339,18 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
         $s = null;
 
 
+        $value = null;
         try {
-            // src/Erfurt_Syntax_Manchester.g:319:3: ( CLASS_LABEL c= classIRI ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* EOF ) 
-            // src/Erfurt_Syntax_Manchester.g:319:5: CLASS_LABEL c= classIRI ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* EOF 
+            // src/Erfurt_Syntax_Manchester.g:320:3: ( CLASS_LABEL c= classIRI ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* EOF ) 
+            // src/Erfurt_Syntax_Manchester.g:320:5: CLASS_LABEL c= classIRI ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* EOF 
             {
-            $this->match($this->input,$this->getToken('CLASS_LABEL'),self::$FOLLOW_CLASS_LABEL_in_classFrame1618); if ($this->state->failed) return $value;
-            $this->pushFollow(self::$FOLLOW_classIRI_in_classFrame1623);
+            $this->match($this->input,$this->getToken('CLASS_LABEL'),self::$FOLLOW_CLASS_LABEL_in_classFrame1622); if ($this->state->failed) return $value;
+            $this->pushFollow(self::$FOLLOW_classIRI_in_classFrame1627);
             $c=$this->classIRI();
 
             $this->state->_fsp--;
             if ($this->state->failed) return $value;
-            // src/Erfurt_Syntax_Manchester.g:321:3: ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* 
+            // src/Erfurt_Syntax_Manchester.g:322:3: ( SUBCLASS_OF_LABEL s= descriptionAnnotatedList )* 
             //loop29:
             do {
                 $alt29=2;
@@ -3362,16 +3363,19 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
 
                 switch ($alt29) {
             	case 1 :
-            	    // src/Erfurt_Syntax_Manchester.g:323:1: SUBCLASS_OF_LABEL s= descriptionAnnotatedList 
+            	    // src/Erfurt_Syntax_Manchester.g:324:1: SUBCLASS_OF_LABEL s= descriptionAnnotatedList 
             	    {
-            	    $this->match($this->input,$this->getToken('SUBCLASS_OF_LABEL'),self::$FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1635); if ($this->state->failed) return $value;
-            	    $this->pushFollow(self::$FOLLOW_descriptionAnnotatedList_in_classFrame1639);
+            	    $this->match($this->input,$this->getToken('SUBCLASS_OF_LABEL'),self::$FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1639); if ($this->state->failed) return $value;
+            	    $this->pushFollow(self::$FOLLOW_descriptionAnnotatedList_in_classFrame1643);
             	    $s=$this->descriptionAnnotatedList();
 
             	    $this->state->_fsp--;
             	    if ($this->state->failed) return $value;
             	    if ( $this->state->backtracking==0 ) {
-            	      $value = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf($c, $s);
+
+            	      if(!$value) $value = new Erfurt_Owl_Structured_ClassAxiom_SubClassOf($c, $s);
+            	      else $value->addElement($s);
+
             	    }
 
             	    }
@@ -3382,7 +3386,7 @@ class Erfurt_Syntax_ManchesterParser extends AntlrParser {
                 }
             } while (true);
 
-            $this->match($this->input,$this->getToken('EOF'),self::$FOLLOW_EOF_in_classFrame1654); if ($this->state->failed) return $value;
+            $this->match($this->input,$this->getToken('EOF'),self::$FOLLOW_EOF_in_classFrame1658); if ($this->state->failed) return $value;
 
             }
 
@@ -4115,11 +4119,11 @@ Erfurt_Syntax_ManchesterParser::$FOLLOW_dataPrimary_in_dataConjunction1532 = new
 Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionAnnotatedList1577 = new Set(array(1, 34));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_COMMA_in_descriptionAnnotatedList1582 = new Set(array(11, 16, 23, 35, 48, 49, 58));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_description_in_descriptionAnnotatedList1588 = new Set(array(1, 34));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_CLASS_LABEL_in_classFrame1618 = new Set(array(48, 49, 58));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_classIRI_in_classFrame1623 = new Set(array(42));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1635 = new Set(array(11, 16, 23, 35, 48, 49, 58));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_descriptionAnnotatedList_in_classFrame1639 = new Set(array(42));
-Erfurt_Syntax_ManchesterParser::$FOLLOW_EOF_in_classFrame1654 = new Set(array(1));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_CLASS_LABEL_in_classFrame1622 = new Set(array(48, 49, 58));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_classIRI_in_classFrame1627 = new Set(array(42));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_SUBCLASS_OF_LABEL_in_classFrame1639 = new Set(array(11, 16, 23, 35, 48, 49, 58));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_descriptionAnnotatedList_in_classFrame1643 = new Set(array(42));
+Erfurt_Syntax_ManchesterParser::$FOLLOW_EOF_in_classFrame1658 = new Set(array(1));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_objectPropertyExpression_in_synpred15_Erfurt_Syntax_Manchester271 = new Set(array(27, 28, 29, 30, 31, 32, 33));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_SOME_LABEL_in_synpred15_Erfurt_Syntax_Manchester279 = new Set(array(11, 16, 23, 35, 48, 49, 58));
 Erfurt_Syntax_ManchesterParser::$FOLLOW_primary_in_synpred15_Erfurt_Syntax_Manchester283 = new Set(array(1));

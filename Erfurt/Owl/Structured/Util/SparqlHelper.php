@@ -55,7 +55,6 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $this->q->removeLimit();
         $this->q->removeOffset();
         $blankRows = Erfurt_Owl_Structured_Util_SparqlStoreHelper::count($this->q);
-        // var_dump((string)$this->q);
         $this->q->setLimit(1);
         for ($bn = 0; $bn < $blankRows; $bn++) {
             $this->q->setOffset($bn);
@@ -66,21 +65,20 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
 
     public function getSubClass(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
     {
-        $structured = new Erfurt_Owl_Structured_ClassExpression();
+        $structured = null;
         if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::checkBuiltinFunction($q, $variable, "isBlank")) {
             $p = new Erfurt_Sparql_Query2_IriRef(RDF_TYPE);
             $o = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
             $triple = new Erfurt_Sparql_Query2_Triple($variable, $p, $o);
             $q->addElement($triple);
             $actionType = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $o);
-            // var_dump((string)$q);
             switch ($actionType) {
             case OWL_CLASS:
             case RDFS_DATATYPE:
-                $structured->addElement($this->getConnectives($q, $variable));
+                $structured = $this->getConnectives($q, $variable);
                 break;
             case OWL_RESTRICTION:
-                $structured->addElement($this->getRestriction($q, $variable));
+                $structured = $this->getRestriction($q, $variable);
                 break;
             default:
                 throw new Exception("$actionType not implemented yet");
@@ -252,12 +250,15 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         $nil = new Erfurt_Sparql_Query2_IriRef(RDF_NIL);
         $firstVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
         $restVar = new Erfurt_Sparql_Query2_Var(self::VAR_ID . self::$i++);
+        $optionalTriples = new Erfurt_Sparql_Query2_OptionalGraphPattern();
         $tripleFirst = new Erfurt_Sparql_Query2_Triple($var, $firstIri, $firstVar);
         $tripleRest = new Erfurt_Sparql_Query2_Triple($var, $restIri, $restVar);
-        $q->addElements(array($tripleFirst, $tripleRest));
+        $optionalTriples->addElements(array($tripleFirst, $tripleRest));
+        $q->addElement($optionalTriples);
         $list->addElement($this->getElement($q, $firstVar));
+        $e = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $restVar);
         // recursion...
-        if (Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $restVar) == RDF_NIL) {
+        if ($e == RDF_NIL) {
             return $list;
         } else {
             $list->addAllElements($this->getOwlList($q, $restVar, null));
@@ -294,6 +295,7 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
         else {
             $retval = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getVarValue($q, $var);
             $retval1 = Erfurt_Owl_Structured_Util_SparqlStoreHelper::getRdfResource($this->_from, $retval);
+            $x = new Erfurt_Owl_Structured_OwlClass(new Erfurt_Owl_Structured_Iri($retval1));
             return $retval ? new Erfurt_Owl_Structured_Iri($retval1) : false;
         }
     }

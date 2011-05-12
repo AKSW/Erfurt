@@ -39,12 +39,29 @@ class Erfurt_Owl_Structured_ClassAxiom_SubClassOf extends Erfurt_Owl_Structured_
     public function toArray() {
         $retval = array();
         $e = $this->getElements();
-        $ee = $e[0]->toArray();
-        $retval [] = array(
-                         $this->mainClass->getValue(),
-                         $this->getPredicateString(),
-                         is_array($ee[0]) ? $ee[0][0] : $ee[0]
-                     );
-        return is_array($ee[0]) ? array_merge($retval, $ee) : $retval;
+        $ee = array();
+        foreach ($e as $element) {
+          $ee = array_merge($ee, $element->toArray());
+        }
+        foreach ($ee as $element) {
+          if (is_array($element)) {
+            $triple = array(
+              $this->mainClass->getValue(),
+              $this->getPredicateString(),
+              $element[0]
+            );
+            if (!in_array($triple, $retval)) {
+              $retval []= $triple;
+            }
+            $retval []= $element;
+          } else {
+            $retval []= array(
+              $this->mainClass->getValue(),
+              $this->getPredicateString(),
+              $element
+            );
+          }
+        }
+        return $retval;
     }
 }

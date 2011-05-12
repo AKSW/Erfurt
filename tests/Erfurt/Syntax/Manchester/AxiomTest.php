@@ -14,7 +14,7 @@ class Erfurt_Syntax_Manchester_AxiomTest extends Erfurt_TestCase {
     public function testSimple()
     {
         $x = Erfurt_Owl_Structured_Util_Owl2Structured::mapOWL2Structured(array("http://gasmarkt"), "http://www.bi-web.de/ontologies/le4sw/ns/0.3/Einspeisemenge");
-        $expexted = "Class: ns0:Speicher SubClassOf: ns0:Ausspeisepunkt, ns0:Einspeisepunkt, ns0:istGegenstand only ns0:Speichervertrag, ns0:VolumenkWh exactly :1 (xsd:float), ns0:Volumenm3 exactly :1 (xsd:float)";
+        $expexted = "Class: ns0:Einspeisemenge SubClassOf: ns0:Gasmenge SubClassOf: ns0:eingespeistAm exactly 1 ns31:Instant SubClassOf: ns0:ermitteltAn exactly 1 ns0:Einspeisepunkt";
         $this->assertEquals($expexted, (string)$x);
     }
 }
