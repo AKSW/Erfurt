@@ -60,7 +60,8 @@ class Erfurt_Owl_Structured_Util_SparqlHelper {
             $this->q->setOffset($bn);
             $structured->addElement($this->getSubClass(clone $this->q, $v1));
         }
-        return count($structured->getElements()) ? $structured : null;
+        // return count($structured->getElements()) ? $structured : null;
+        return $structured;
     }
 
     public function getSubClass(Erfurt_Sparql_Query2 $q, Erfurt_Sparql_Query2_Var $variable)
