@@ -24,6 +24,8 @@
  */
 class Erfurt_App
 {
+    static $httpAdapter = null;
+    
     // ------------------------------------------------------------------------
     // --- Class constants ----------------------------------------------------
     // ------------------------------------------------------------------------
@@ -646,6 +648,10 @@ class Erfurt_App
      */
     public function getHttpClient($uri, $options = array())
     {
+        if (null !== self::$httpAdapter) {
+            return new Zend_Http_Client($uri, array('adapter' => self::$httpAdapter));
+        }
+        
         $config = $this->getConfig();
         
         $defaultOptions = array();
