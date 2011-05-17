@@ -212,8 +212,11 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
     /**
      * optimize
      * little demo of optimization: 
-     * - delete duplicate elements
-     * - sort by weight (number of vars used)
+     * - delete duplicate elements (object identity or syntactically equality)
+     * - sort by weight (number of vars used). slightly related to "Bernstein, OptARQ: A SPARQL Optimization Approach based on
+Triple Pattern Selectivity Estimation, 2007"
+     *
+     * TODO: implement a sophisticated semantic equality check
      * @return Erfurt_Sparql_Query2_GroupGraphPattern $this
      */
     public function optimize() {
@@ -252,11 +255,12 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
                                     $this->elements[$j]->getPropList()
                                 );
                         }
-                        continue;
+                        continue; //why continue
                         //TODO cover all cases - cant be generic?!
                     } else if ($this->elements[$i]->equals($this->elements[$j])
                         && $this->elements[$i] != $this->elements[$j]) {
-                        
+                        //they are syntactically equal
+
                         //if the j of this i-j-pair is already 
                         //marked for deletion: skip i
                         if (!in_array($this->elements[$j], $to_remove)) {

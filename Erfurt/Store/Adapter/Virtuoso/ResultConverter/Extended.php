@@ -298,9 +298,9 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
                 if (array_key_exists('rdf:resource', $attributes)) {
                     // URI value
                     $this->_addBinding('uri', $variable, $attributes['rdf:resource']);
-                } else if (array_key_exists('rs:nodeID', $attributes)) {
+                } else if (array_key_exists('rdf:nodeID', $attributes)) {
                     // blanknode value
-                    $this->_addBinding('bnode', $variable, $attributes['rs:nodeID']);
+                    $this->_addBinding('bnode', $variable, $attributes['rdf:nodeID']);
                 } else {
                     // literal value
                     if (array_key_exists('xml:lang', $attributes)) {
