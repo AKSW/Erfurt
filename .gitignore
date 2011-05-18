@@ -1,0 +1,10 @@
+*.log
+local.ini
+config.ini
+.settings
+.project
+.idea
+.buildpath
+.DS_Store
+.htaccess
+nbproject
