@@ -608,8 +608,10 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
     }
     
     /** @see Erfurt_Store_Adapter_Interface */
-    public function sparqlQuery($query, $resultform = 'plain') 
+    public function sparqlQuery($query, $options=array()) 
     {
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        
         require_once 'Erfurt/Sparql/EngineDb/Adapter/RapZendDb.php';
         $engine = new Erfurt_Sparql_EngineDb_Adapter_RapZendDb($this->_dbConn, $this->_modelInfoCache);
                 
@@ -810,7 +812,8 @@ class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, 
                         AND s3.object_is = "l" 
                         AND (';
             
-            for ($i=1; $i<count($this->_titleProperties); ++$i) {
+            $countTP = count($this->_titleProperties);
+            for ($i=1; $i<$countTP; ++$i) {
                 $sql .= 's3.predicate = "' . $this->_titleProperties[$i] . '"';
                 
                 if ($i < count($this->_titleProperties)-1) {

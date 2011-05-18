@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="foaf.xsl"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:ns0="http://xmlns.com/foaf/0.1/"
+  xmlns:ns1="http://www.w3.org/ns/auth/cert#"
+  xmlns:ns2="http://www.w3.org/ns/auth/rsa#">
+
+  <rdf:Description rdf:about="http://foaf.me/ontotest">
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/PersonalProfileDocument"/>
+    <ns0:maker rdf:resource="http://foaf.me/ontotest#me"/>
+    <ns0:primaryTopic rdf:resource="http://foaf.me/ontotest#me"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://foaf.me/ontotest#me">
+
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <ns0:nick>ontotest</ns0:nick>
+    <ns0:firstName>onto</ns0:firstName>
+    <ns0:givenName>test</ns0:givenName>
+    <ns0:homepage rdf:resource="http://foaf.me/ontotest"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://foaf.me/ontotest#cert">
+
+    <rdf:type rdf:resource="http://www.w3.org/ns/auth/rsa#RSAPublicKey"/>
+    <ns1:identity rdf:resource="http://foaf.me/ontotest#me"/>
+    <ns2:modulus rdf:resource="http://foaf.me/ontotest#modulus"/>
+    <ns2:public_exponent rdf:resource="http://foaf.me/ontotest#public_exponent"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://foaf.me/ontotest#modulus">
+    <ns1:hex>B56ECEADD907AA382E5374A644F2BE9B494EAF5AF1A9D4C84FCB2AC85FE7F87DDF75F435B76DADD732AE6E73EA2DBCEC68FC3A21CCC9094BD709655067B41B4F833D367534FFFCBDC90F0B5749CC43F18B8D7BD70FE09DF19043B49105B65FA3AB4E707DE827CF1E4B1F2C78B94CFFB90672A4CB8BFB39669943AF5B7BA3425ACB0564418268AB67A4874B6A3D466AE117C7A89188DC11BFBD4E61DD0288E05F5A75BBBD6C3EE9447F99886443E2D811C0919600ED12233C5727EE7339B5A23D66EB048D5C8595390E3090B8B28DD996B600FD8D53C1DFD6BFE5BC256AABCD849FB02D809038408EDFC0DF953BB7326A4035F629903DBFECCDB77DC0037E2343</ns1:hex>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://foaf.me/ontotest#public_exponent">
+    <ns1:decimal>65537</ns1:decimal>
+  </rdf:Description>
+
+</rdf:RDF>

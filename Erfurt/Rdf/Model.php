@@ -3,8 +3,8 @@
 /**
  * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
- * @package erfurt
- * @subpackage    rdf
+ * @category   Erfurt
+ * @package    Rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Natanael Arndt <arndtn@gmail.com>
@@ -37,6 +37,12 @@ class Erfurt_Rdf_Model
      * @var string
      */
     protected $_graphUri = null;
+    
+    /**
+     * Erfurt namespace management module
+     * @var Erfurt_Namespaces
+     */
+    protected $_namespaces = null;
     
     /**
      * The model's title property value
@@ -74,6 +80,9 @@ class Erfurt_Rdf_Model
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
         }
+        
+        // namespace module
+        $this->_namespaces = Erfurt_App::getInstance()->getNamespaces();
     }
     
     /**
@@ -316,7 +325,7 @@ class Erfurt_Rdf_Model
      */
     public function setEditable($editableFlag)
     {
-        $this->_isEditable = $editableFlag;
+        $this->_isEditable = (boolean) $editableFlag;
         
         return $this;
     }
@@ -334,7 +343,7 @@ class Erfurt_Rdf_Model
             // User has no right to edit the model.
             return;
         }
-         
+        
         $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysont->modelUri;
        
         $options = $this->_getOptions();
@@ -525,8 +534,13 @@ class Erfurt_Rdf_Model
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
         }
-        
-        $query->addFrom($this->_graphUri);
+
+        // restrict to this model
+        if($query instanceof Erfurt_Sparql_SimpleQuery){
+            $query->setFrom(array($this->_graphUri));
+        } else if($query instanceof Erfurt_Sparql_Query2){
+            $query->setFroms(array($this->_graphUri));
+        }
         
         return $this->getStore()->sparqlQuery($query, $options);
     }
@@ -544,8 +558,8 @@ class Erfurt_Rdf_Model
     {    
         require_once 'Erfurt/App.php';
         return Erfurt_App::getInstance()->getStore();
-	}
-
+    }
+    
     /**
      * Returns an array of namespace IRIs (keys) and prefixes defined
      * in this model's source file.
@@ -555,32 +569,10 @@ class Erfurt_Rdf_Model
      */
     public function getNamespaces()
 	{
-		$store = $this->getStore();
-        return array_flip($store->getNamespacePrefixes($this->_graphUri));
+        return array_flip($this->getNamespacePrefixes());
     }
-
-	/**
-	 * Get all namespaces with there prefix
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefixes()
-	{
-		$store = $this->getStore();
-		return $store->getNamespacePrefixes($this->_graphUri);
-	}
-	
-	/**
-	 * Get the prefix for one namespaces, will be created if no prefix exists
-	 *
-	 * @return array with namespace as key and prefix as value
-	 */
-	public function getNamespacePrefix($namespace)
-	{
-		$store = $this->getStore();
-		return $store->getNamespacePrefix($this->_graphUri, $namespace);
-	}
-
-	/**
+    
+    /**
 	 * Add a namespace -> prefix mapping
 	 * @param $prefix a prefix to identify the namespace
 	 * @param $namespace the namespace uri
@@ -588,28 +580,57 @@ class Erfurt_Rdf_Model
 	 */
 	public function addPrefix($prefix, $namespace)
 	{
-		$store = $this->getStore();
-		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
+		return $this->addNamespacePrefix($prefix, $namespace);
 	}
 
-	/**
-	 * Add a namespace -> prefix mapping
-	 * @param $prefix a prefix to identify the namespace
-	 * @param $namespace the namespace uri
-	 */
-	public function addNamespacePrefix($prefix, $namespace)
-	{
-		$store = $this->getStore();
-		$store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
-	}
+    /**
+     * Get all namespaces with there prefix
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefixes()
+    {
+        // $store = $this->getStore();
+        // return $store->getNamespacePrefixes($this->_graphUri);
+        
+        return $this->_namespaces->getNamespacePrefixes($this->getModelUri());
+    }
+    
+    /**
+     * Get the prefix for one namespaces, will be created if no prefix exists
+     *
+     * @return array with namespace as key and prefix as value
+     */
+    public function getNamespacePrefix($namespace)
+    {
+        // $store = $this->getStore();
+        // return $store->getNamespacePrefix($this->_graphUri, $namespace);
+        
+        return $this->_namespaces->getNamespacePrefix($this->getModelUri(), $namespace);
+    }
 
-	/**
-	 * Delete a namespace -> prefix mapping
-	 * @param $prefix the prefix you want to remove
-	 */
-	public function deleteNamespacePrefix($prefix)
-	{
-		$store = $this->getStore();
-		$store->deleteNamespacePrefix($this->_graphUri, $prefix);
-	}
+    /**
+     * Add a namespace -> prefix mapping
+     * @param $prefix a prefix to identify the namespace
+     * @param $namespace the namespace uri
+     */
+    public function addNamespacePrefix($prefix, $namespace)
+    {
+        // $ns = $this
+        // $store = $this->getStore();
+        // $store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
+        
+        return $this->_namespaces->addNamespacePrefix($this->getModelUri(), $namespace, $prefix);
+    }
+
+    /**
+     * Delete a namespace -> prefix mapping
+     * @param $prefix the prefix you want to remove
+     */
+    public function deleteNamespacePrefix($prefix)
+    {
+        // $store = $this->getStore();
+        // $store->deleteNamespacePrefix($this->_graphUri, $prefix);
+        
+        return $this->_namespaces->deleteNamespacePrefix($this->getModelUri(), $prefix);
+    }
 }

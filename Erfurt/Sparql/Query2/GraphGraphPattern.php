@@ -6,7 +6,7 @@ require_once 'GroupGraphPattern.php';
  * 
  * representation of named graphs
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -21,9 +21,9 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
     /**
      * @param Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri
      */
-    public function __construct(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri){
+    public function __construct(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri) {
         $this->varOrIri = $nvarOrIri;
-    	parent::__construct();
+        parent::__construct();
     }
     
     /**
@@ -31,7 +31,7 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
      * @param Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri
      * @return Erfurt_Sparql_Query2_GraphGraphPattern $this
      */
-    public function setVarOrIri(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri){
+    public function setVarOrIri(Erfurt_Sparql_Query2_VarOrIriRef $nvarOrIri) {
         $this->varOrIri = $nvarOrIri;
         return $this; //for chaining
     }
@@ -40,7 +40,7 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
      * getVarOrIri
      * @return Erfurt_Sparql_Query2_VarOrIriRef the name of this graph
      */
-    public function getVarOrIri(){
+    public function getVarOrIri() {
         return $this->varOrIri;
     }
        
@@ -49,7 +49,7 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
      * build a valid sparql representation of this obj - should be like "GRAPH <http://example.com> {[Triple...]}" or "GRAPH ?graphName {[Triple...]}"
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         return 'GRAPH '.$this->varOrIri->getSparql().' '. substr(parent::getSparql(),0,-1); //subtr is cosmetic for stripping off the last linebreak 
     }
     
@@ -63,9 +63,9 @@ class Erfurt_Sparql_Query2_GraphGraphPattern extends Erfurt_Sparql_Query2_GroupG
      * get all vars used in this pattern (recursive)
      * @return array array of Erfurt_Sparql_Query2_Var
      */
-    public function getVars(){
+    public function getVars() {
         $vars = parent::getVars();
-        if($this->varOrIri instanceof Erfurt_Sparql_Query2_Var)
+        if ($this->varOrIri instanceof Erfurt_Sparql_Query2_Var)
             $vars[] = $this->varOrIri;
         return $vars;
     }

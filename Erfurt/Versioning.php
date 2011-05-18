@@ -49,6 +49,8 @@ class Erfurt_Versioning
     protected $_limit = 10;
     
     protected $_store = null;
+    
+    protected $_user = null;
 
     /**
      * Constructor registers with Erfurt_Event_Dispatcher
@@ -140,10 +142,13 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -158,14 +163,17 @@ class Erfurt_Versioning
     public function getConciseHistoryForGraph($graphUri, $page = 1)
     {
         $this->_checkSetup();
-
-        $sql = 'SELECT DISTINCT useruri, resource ' .
-               'FROM ef_versioning_actions WHERE
+				
+		$sql = 'SELECT useruri, resource, MAX(tstamp) FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
-
-        $result = $this->_sqlQuery($sql);
+                GROUP BY useruri, resource
+                ORDER BY 3 DESC';
+				
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
 
         return $result;
     }
@@ -218,10 +226,13 @@ class Erfurt_Versioning
                 model = \'' . $graphUri . '\' AND 
                 resource = \'' . $resourceUri . '\' AND
                 parent IS NULL
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -230,13 +241,17 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT id, useruri, tstamp, action_type ' .
+        $sql = 'SELECT id, resource, useruri, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\' AND ( resource = \'' . implode ('\' OR resource = \'' ,$resources) . '\' )
                 AND parent IS NULL
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ( ( $page - 1) * $this->getLimit() );
-        $result = $this->_sqlQuery($sql);
+                ORDER BY tstamp DESC';
+        
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            ($page - 1) * $this->getLimit()
+        );
         
         return $result;
     } 
@@ -248,10 +263,13 @@ class Erfurt_Versioning
         $sql = 'SELECT id, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($page*$this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $page * $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -266,10 +284,13 @@ class Erfurt_Versioning
         $sql = 'SELECT DISTINCT resource ' .
                'FROM ef_versioning_actions WHERE
                 useruri = \'' . $userUri . '\'
-                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
-                ($this->getLimit()-$this->getLimit());
+                ORDER BY tstamp DESC';
                 
-        $result = $this->_sqlQuery($sql);
+        $result = $this->_sqlQuery(
+            $sql, 
+            $this->getLimit() + 1, 
+            $this->getLimit() - $this->getLimit()
+        );
         
         return $result;
     }
@@ -409,7 +430,7 @@ class Erfurt_Versioning
             foreach ($result as $i) {
 
                 $type = (int) $i['action_type'];
-                $modelUri = $i['model'];
+                $modelUri = isset($i['model']) ? $i['model'] : null;
                 $payloadID = (int) $i['payload_id'];
 
                 $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
@@ -426,7 +447,12 @@ class Erfurt_Versioning
 
                 } else {
                     
-                    $payload = unserialize($payloadResult[0]['statement_hash']);
+                    if (isset($payloadResult[0]['statement_hash'])) {
+                        $payload = unserialize($payloadResult[0]['statement_hash']);
+                    } else {
+                        $payload = null;
+                    }
+                    
 
                     if ($type === self::STATEMENT_ADDED) {
                         $this->_getStore()->deleteMultipleStatements($modelUri, $payload);
@@ -467,6 +493,11 @@ class Erfurt_Versioning
         } else {
             // do nothing
         }
+    }
+    
+    public function setUserUri($uri)
+    {
+        $this->_user = $uri;
     }
 
     /**
@@ -541,16 +572,18 @@ class Erfurt_Versioning
 
             $ranges[] = ' ( id >= ' . $started . ' AND id <= ' . $last . ' ) ';
 
+            $sizeOfRanges = sizeof($ranges);
+
             // iterate over id ranges in groups of 100 per query
             // (this optimizes exec. time for large consecutive changes)
-            for ($i = 0; $i < sizeof($ranges); $i = $i + 100) {
+            for ($i = 0; $i < $sizeOfRanges; $i += 100) {
 
                     $sqldeletePayload = 'DELETE FROM ef_versioning_payloads WHERE ';
 
-                    if ( ($i + 100) < sizeof($ranges) ) {
+                    if ( ($i + 100) < $sizeOfRanges ) {
                         $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,100));
                     } else {
-                        $length = ( sizeof($ranges) ) % 100;
+                        $length = ( $sizeOfRanges ) % 100;
                         $sqldeletePayload .= implode ('OR',array_slice($ranges,$i,$length));
                     }
                     $resultPayload = $this->_sqlQuery($sqldeletePayload);
@@ -569,8 +602,10 @@ class Erfurt_Versioning
     
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
-        $user = $this->_getAuth()->getIdentity();
-        $userUri = $user->getUri();
+        if ($this->_user === null) {
+            $this->_user = $this->_getAuth()->getIdentity()->getUri();
+        } 
+        $userUri = $this->_user;
         
         $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent';
         
@@ -689,15 +724,15 @@ class Erfurt_Versioning
         }        
     }
     
-    protected function _sqlQuery($sql)
+    protected function _sqlQuery($sql, $limit = PHP_INT_MAX, $offset = 0)
     {
         try {
-            $result = $this->_getStore()->sqlQuery($sql);
+            $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
         } catch (Erfurt_Exception $e) {
             $this->_checkSetup();
             
             try {
-                $result = $this->_getStore()->sqlQuery($sql);
+                $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Exception $e2) {
                 throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $e2->getMessage() . $sql);
             }

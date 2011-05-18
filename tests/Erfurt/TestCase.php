@@ -1,5 +1,5 @@
 <?php
-require_once 'test_base.php';
+require_once realpath(dirname(__FILE__) . '/..') . '/test_base.php';
 require_once 'Erfurt/App.php';
 
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase
@@ -9,7 +9,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function __construct($name = null, $data = array(), $dataName = '')
     {
-        error_reporting(E_ALL | E_STRICT);
+        // error_reporting(E_ALL | E_STRICT);
         
         parent::__construct($name, $data, $dataName);
         
@@ -129,11 +129,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsVirtuoso()
     {
+        $this->markTestNeedsTestConfig();
+        $this->_testConfig->store->backend = 'virtuoso';
         $this->markTestNeedsDatabase();
-        
-        if ($this->_testConfig->store->backend !== 'virtuoso') {
-            $this->markTestSkipped();
-        }
     }
     
     public function markTestNeedsZendDb()

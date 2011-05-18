@@ -5,7 +5,7 @@ require_once 'ObjectList.php';
 /**
  * Erfurt Sparql Query2 - Collection
  * 
- * @package   ontowiki
+ * @package   erfurt
  * @subpackage query2 
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -17,20 +17,20 @@ class Erfurt_Sparql_Query2_Collection extends Erfurt_Sparql_Query2_ObjectList  i
     /**
      * @param array array of Erfurt_Sparql_Query2_GraphNode
      */
-    public function __construct ($objects){
+    public function __construct ($objects) {
         parent::__construct($objects);
     }
 
-	/**
+    /**
      * getSparql
      * build a valid sparql representation of this obj - should be like "(obj1, obj2, obj3)"
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         return '('.parent::getSparql().')';
     }
     
-    public function __toString(){    
+    public function __toString() {    
         return $this->getSparql();
     }
 }

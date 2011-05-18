@@ -2,7 +2,7 @@
 /**
  * Erfurt Sparql Query2 - GroupOrUnionGraphPattern.
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -11,8 +11,8 @@
  */
 class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2_GroupGraphPattern
 {    
-    public function __construct(){
-    	parent::__construct();
+    public function __construct() {
+        parent::__construct();
     }
     
     /**
@@ -20,12 +20,20 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      * build a valid sparql representation of this obj - should be like "{[Triples...]} UNION {[Triples...]}"
      * @return string
      */
-     public function getSparql(){
+     public function getSparql() {
         $sparql = '';
         
-        for($i = 0; $i < count($this->elements); $i++){
+        $countElements = count($this->elements);
+
+        for ($i = 0; $i < $countElements; ++$i) {
+            if($this->elements[$i] instanceof Erfurt_Sparql_Query2_OptionalGraphPattern){
+               $sparql .= ' { ';
+            }
             $sparql .= $this->elements[$i]->getSparql();
-            if($i < (count($this->elements)-1)){
+            if($this->elements[$i] instanceof Erfurt_Sparql_Query2_OptionalGraphPattern){
+               $sparql .= ' } ';
+            }
+            if ($i < (count($this->elements)-1)) {
                 $sparql .= ' UNION ';
             }
         }
@@ -38,9 +46,9 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      * @param Erfurt_Sparql_Query2_GroupGraphPattern $element
      * @return Erfurt_Sparql_Query2_GroupOrUnionGraphPattern $this
      */
-    public function addElement($element){
-        if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
-        	throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
+    public function addElement($element) {
+        if (!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
+            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::addElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
         $this->elements[] = $element;
         $element->addParent($this);
         return $this; //for chaining
@@ -52,11 +60,11 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      * @param Erfurt_Sparql_Query2_GroupGraphPattern $element
      * @return Erfurt_Sparql_Query2_GroupOrUnionGraphPattern $this
      */
-    public function setElement($i, $element){
-        if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
-        	throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
+    public function setElement($i, $element) {
+        if (!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern))
+            throw new RuntimeException('Argument 2 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElement must be an instance of Erfurt_Sparql_Query2_GroupGraphPattern, instance of '.typeHelper($element).' given');
         $this->elements[$i] = $element;
-        $element->newUser($this);
+        $element->addParent($this);
         return $this; //for chaining
     }
     
@@ -66,13 +74,13 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      * @param array $elements array of Erfurt_Sparql_Query2_GroupGraphPattern
      * @return Erfurt_Sparql_Query2_GroupGraphPattern $this
      */
-    public function setElements($elements){
-        if(!is_array($elements)){
+    public function setElements($elements) {
+        if (!is_array($elements)) {
             throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupGraphPattern::setElements : must be an array');
         }
         
-        foreach($elements as $element){
-            if(!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern)){
+        foreach ($elements as $element) {
+            if (!($element instanceof Erfurt_Sparql_Query2_GroupGraphPattern)) {
                 throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_GroupOrUnionGraphPattern::setElements : must be an array of instances of Erfurt_Sparql_Query2_GroupGraphPattern');
                 return $this; //for chaining
             } else {

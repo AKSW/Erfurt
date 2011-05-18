@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rs="http://www.w3.org/2005/sparql-results#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <rs:results rdf:nodeID="rset"
+    </rs:result>
+</rdf:RDF>

@@ -24,6 +24,11 @@ class Erfurt_Cache_Frontend_QueryCache {
     */
     protected static $_transactions = array();
 
+    protected static $_materializedViews;
+
+    const ERFURT_CACHE_NO_HIT = "fae0b27c451c728867a567e8c1bb4e53";
+
+
 
 	/**
      *	setter method for the backend implementation object
@@ -55,14 +60,15 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     boolean $result         state of the saving process true/false
     */
     public function save( $queryString, $resultFormat = "plain" , $queryResult, $duration = 0 ) {
-        if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
+
+    if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
         
             //create QueryId
             $queryId = $this->createQueryId( $queryString, $resultFormat );
 
             //serializing the QueryResult
             $queryResult = serialize( $queryResult );
-
+            
             //retrieve TriplePattern and graphUris
             $parsedQuery = $this->parseQuery( $queryString );
             $triplePatterns = $parsedQuery['triples'];
@@ -98,14 +104,18 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     String  $result         Resultset of the Query or false if no result exists
     */
     public function load( $queryString, $resultFormat = "plain" ) {
+        
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
             $queryId = $this->createQueryId( $queryString, $resultFormat );
+
             $result = $this->getBackend()->load($queryId);
+
             if ($result) {
-                $result = unserialize ($result);
-               
-                if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true)
+                 $result = unserialize ($result);
+
+                if ( ((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging ) == true) {
                     $this->getBackend()->incrementHitCounter($queryId);
+                }
 
                 //saving transactionKeys to transactions table according to a queryId
                 $objectCache = Erfurt_App::getInstance()->getCache();
@@ -115,11 +125,11 @@ class Erfurt_Cache_Frontend_QueryCache {
                 return $result;
             }
             else {
-               return false;
+               return self::ERFURT_CACHE_NO_HIT;
             }
         }
         else {
-            return false ;
+            return self::ERFURT_CACHE_NO_HIT ;
         }
     }
 
@@ -181,7 +191,6 @@ class Erfurt_Cache_Frontend_QueryCache {
         return $qids;
     }
 
-
     /**
      *	starting a Caching Transaction to assign cache Objects to queryCacheResults
      *	@access     public
@@ -219,6 +228,42 @@ class Erfurt_Cache_Frontend_QueryCache {
     }
 
 
+    public function getMaterializedViewName ($subject, $predicate, $object) {
+
+        if (self::$_materializedViews == null) {
+            self::$_materializedViews = $this->getBackend()->getMaterializedViews();
+
+        }
+
+        if (!($subject instanceof Erfurt_Rdf_Resource)) {
+            $subject = null;
+        } else {
+            $subject = (string) $subject;
+        }
+
+        if (!($predicate instanceof Erfurt_Rdf_Resource)) {
+            $predicate = null;
+        } else {
+            $predicate = (string) $predicate;
+        }
+
+        if (!($object instanceof Erfurt_Rdf_Resource)) {
+            $object = null;
+        } else {
+            $object = (string) $object;
+        }
+
+        foreach (self::$_materializedViews as $view) {
+            if (    $view['subject'] == $subject &&
+                    $view['predicate'] == $predicate &&
+                    $view['object'] == $object )
+                return $view['tblName'];
+        }
+        return false;
+    }
+
+
+
     /**
      *	starting a Caching Transaction to assign cache Objects to queryCacheResults
      *	@access     public
@@ -247,10 +292,24 @@ class Erfurt_Cache_Frontend_QueryCache {
             break;
 
         }
-
         return $ret;
-
     }
+
+    public function getUsedTriplePattern($limit = null, $minOccurence = null) {
+        $patternList = $this->getBackend()->getUsedTriplePattern($limit, $minOccurence);
+        return $patternList;
+    }
+
+
+    public function createMaterializedViews($limit, $minOccurence) {
+        $pattern = $this->getUsedTriplePattern($limit, $minOccurence);
+        return $this->getBackend()->createMaterializedViews($pattern);
+    }
+
+    public function getMaterializedViews () {
+        return $this->getBackend()->getMaterializedViews();
+    }
+
 
     //----------------------------------------------------
     //private Methods                                   //

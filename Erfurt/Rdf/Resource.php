@@ -5,8 +5,8 @@ require_once 'Erfurt/Rdf/Node.php';
 /**
  * Represents a basic RDF resource.
  *
- * @package erfurt
- * @subpackage    rdf
+ * @category   Erfurt
+ * @package    Rdf
  * @author     Philipp Frischmuth
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -15,6 +15,12 @@ require_once 'Erfurt/Rdf/Node.php';
  */
 class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 {
+    /**
+     * Maximum path length for the CBD.
+     * @var int
+     */
+    const DESCRIPTION_MAX_DEPTH = 3;
+    
     /**
      * The model to which this resource belongs.
      * @var Erfurt_Rdf_Model
@@ -26,6 +32,12 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      * @var string
      */
     protected $_name = null;
+    
+    /**
+     * Holds the CBD or null if no property has been queried.
+     * @var array
+     */
+    protected $_description = null;
     
     /**
      * The namespace this resource's IRI is contained in.
@@ -50,6 +62,16 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      * @var boolean
      */
     protected $_isBlankNode = false;
+    
+    /**
+     * An optional locator for the resource.
+     * 
+     * If this property is set, the value of it (a URL) is used, when data
+     * for this resource should be fetched.
+     * 
+     * @var string
+     */
+    protected $_locator = null;
     
     /**
      * Constructor
@@ -96,6 +118,33 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     {
         return $this->getIri();
     }
+
+    /**
+     * returns the serialized representation (string) of this resource according
+     * to the notation parameter. It always uses the pretty format option
+     * and the access control.
+     *
+     * @param string $notation the specified notation (see Erfurt_Syntax_RdfSerializer
+     *  for possible arguments)
+     *
+     * @return string the representation of this resource in a specified notation
+     */
+    public function serialize($notation = 'xml') {
+
+        require_once('Erfurt/Syntax/RdfSerializer.php');
+        $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($notation);
+        return $serializer->serializeResourceToString($this->getIri(), $this->_model->getModelIri(), true);
+    }
+    
+    public function getDescription($maxDepth = self::DESCRIPTION_MAX_DEPTH)
+    {
+        if (null === $this->_description) {
+            $this->_description = $this->_fetchDescription($maxDepth);
+        }
+        
+        return $this->_description;
+    }
+
     
     /**
      * Returns the resource's IRI
@@ -105,6 +154,31 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     public function getIri()
     {
         return $this->_namespace . $this->_name;
+    }
+    
+    /**
+     * Returns an optional locator for the resource, or the IRI of it, if no
+     * locator value was set.
+     * 
+     * @return string
+     */
+    public function getLocator()
+    {
+        // If no locator was explicitly set, we return the IRIof the resource.
+        if (null === $this->_locator) {
+            return $this->getIri();
+        }
+        return $this->_locator;
+    }
+    
+    /**
+     * Set a locator URL for this resource.
+     * 
+     * @param string $locator
+     */
+    public function setLocator($locator)
+    {
+       $this->_locator = $locator; 
     }
     
     /**
@@ -133,6 +207,59 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $this->_name;
     }
     
+    protected function _fetchDescription($maxDepth)
+    {        
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?p ?o')
+              ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
+        $description = array();
+        
+        if (($maxDepth > 0) && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
+            foreach ($result['results']['bindings'] as $row) {
+                $property = $row['p']['value'];
+                $this->_descriptionResource($property);
+                
+                $currentValue = array(
+                    // typed-literal --> literal
+                    // 'type' => str_replace('typed-', '', $row['o']['type']), 
+                    'type' => $row['o']['type'], 
+                    'value' => $row['o']['value']
+                );
+                
+                if ($row['o']['type'] == 'uri') {
+                    $this->_descriptionResource($row['o']['value']);
+                } else if ($row['o']['type'] == 'typed-literal') {
+                    $currentValue['type'] = 'literal';
+                    $currentValue['datatype'] = $row['o']['datatype'];
+                } else if (isset($row['o']['xml:lang'])) {
+                    $currentValue['lang'] = $row['o']['xml:lang'];
+                }
+                
+                if (!array_key_exists($property, $description)) {
+                    $description[$property] = array();
+                }
+                
+                array_push($description[$property], $currentValue);
+                
+                if ($row['o']['type'] === 'bnode') {
+                    $nodeId  = $row['o']['value'];
+                    $bNode   = self::initWithBlankNode($nodeId);
+                    $nodeKey = sprintf('_:%s', $nodeId);
+                    
+                    $description[$nodeKey] = $bNode->getDescription($maxDepth-1);
+                }
+            }
+        }
+        
+        return array(
+            $this->getIri() => $description
+        );
+    }
+    
+    protected function _descriptionResource($uri)
+    {
+    }
+    
     // ------------------------------------------------------------------------
     
     public static function initWithIri($iri)
@@ -147,7 +274,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $resource;
     }
     
-    public static function initWithNamespaceAndLocalname($namespace, $local)
+    public static function initWithNamespaceAndLocalName($namespace, $local)
     {
         $resource = new self($namespace . $local);
         return $resource;
@@ -176,3 +303,5 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $this->getIri();
     }
 }
+
+?>

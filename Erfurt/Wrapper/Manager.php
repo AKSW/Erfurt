@@ -7,8 +7,6 @@
  * @version $Id: Manager.php 4013 2009-08-13 14:37:18Z pfrischmuth $
  */
 
-require_once 'Erfurt/Wrapper/Registry.php';
-
 /**
  * This class provides functionality in order to scan directories for wrapper
  * extensions.
@@ -31,6 +29,7 @@ class Erfurt_Wrapper_Manager
      * @var string
      */
     const CONFIG_FILENAME = 'wrapper.ini';
+    const CONFIG_LOCAL_FILENAME = 'local.ini';
     
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
@@ -43,13 +42,6 @@ class Erfurt_Wrapper_Manager
      * @var string
      */
     protected $_configPrivateSection = 'private';
-    
-    /**
-     * This property holds a reference to the registry instance.
-     * 
-     * @var Erfurt_Wrapper_Registry 
-     */
-    protected $_registry = null;
     
     /**
      * This property contains directories, that were already scanned.
@@ -67,7 +59,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        $this->_registry = Erfurt_Wrapper_Registry::getInstance();
+        
     }
     
     // ------------------------------------------------------------------------
@@ -105,14 +97,18 @@ class Erfurt_Wrapper_Manager
      */ 
     protected function _addWrapper($wrapperName, $wrapperPath)
     {
-        $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true); 
+        $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true);
+        $wrapperPrivateConfigPath = $wrapperPath . self::CONFIG_LOCAL_FILENAME;
+        if (is_readable($wrapperPrivateConfigPath)) {
+            $wrapperConfig = array_merge($wrapperConfig, parse_ini_file($wrapperPrivateConfigPath, true));
+        }
+
         if (!array_key_exists('enabled', $wrapperConfig) || !(boolean)$wrapperConfig['enabled']) {
             // Wrapper is disabled.
             return;
         }
         
         if (isset($wrapperConfig[$this->_configPrivateSection])) {
-            require_once 'Zend/Config/Ini.php';
             $privateConfig = new Zend_Config_Ini(
                 $wrapperPath . self::CONFIG_FILENAME, 
                 $this->_configPrivateSection, 
@@ -121,18 +117,37 @@ class Erfurt_Wrapper_Manager
         } else {
             $privateConfig = false;
         }
-        
+        if (is_readable($wrapperPrivateConfigPath)) {
+            try {
+                if(!($privateConfig instanceof Zend_Config_Ini)){
+                    $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
+                } else {
+                    $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+                }
+            } catch (Zend_Config_Exception $e) {
+                // no private config
+            }
+        }
+        $this->addWrapperExternally($wrapperName, $wrapperPath, $privateConfig);
+    }
+
+    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
+//        if($privateConfig instanceof Zend_Config){
+//            $privateConfig = $privateConfig->toArray();
+//        }
+
         $wrapperSpec = array(
             'class_name'   => ucfirst($wrapperName) . 'Wrapper',
             'include_path' => $wrapperPath,
             'config'       => $privateConfig,
             'instance'     => null
         );
-        
+
         // Finally register the wrapper.
-        $this->_registry->register($wrapperName, $wrapperSpec);
+        $registry = Erfurt_Wrapper_Registry::getInstance();
+        $registry->register($wrapperName, $wrapperSpec);
     }
-    
+
     /**
      * This method iterates through a given directory.
      * 

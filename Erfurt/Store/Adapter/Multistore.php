@@ -122,12 +122,20 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             if (method_exists($backend, 'countWhereMatches')) {
                 $fullCount += $backend->countWhereMatches(array($graphUri), $whereSpec, $countSpec);
             } else {
-                // If one backend does not support this, we need to return COUNT_NOT_SUPPORTED
-                return Erfurt_Store::COUNT_NOT_SUPPORTED;
+                // If one backend does not support this, we need to throw an exception.
+                throw new Erfurt_Store_Adapter_Exception('Count not supported by backend.');
             }
         }
         
         return $fullCount;
+    }
+    
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        $this->_availableGraphs = null;
+        $this->_configuredGraphs[$graphUri] = self::DEFAULT_BACKEND;
+        
+        return $this->_backends[self::DEFAULT_BACKEND]->createModel($graphUri, $type);
     }
     
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
@@ -206,14 +214,6 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         }
     }
     
-    public function getNewModel($graphUri, $baseUri = '', $type = 'owl')
-    {
-        $this->_availableGraphs = null;
-        $this->_configuredGraphs[$graphUri] = self::DEFAULT_BACKEND;
-        
-        return $this->_backends[self::DEFAULT_BACKEND]->getNewModel($graphUri, $baseUri, $type);
-    }
-    
     public function getSupportedExportFormats()
     {
         return array();
@@ -254,8 +254,14 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
 // TODO
     }
     
-    public function sparqlQuery($query, $resultform = 'plain')
+    public function sparqlQuery($query, $options=array())
     {   
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        
+        if(!($query instanceof Erfurt_Sparql_SimpleQuery)) {
+            $query = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
+        }
+        
         $limit  = $query->getLimit();
         $offset = $query->getOffset();
         
@@ -456,10 +462,10 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         return $defaultBackend->listTables($prefix);
     }
     
-    public function sqlQuery($sqlQuery)
+    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
-        return $defaultBackend->sqlQuery($sqlQuery);
+        return $defaultBackend->sqlQuery($sqlQuery, $limit, $offset);
     }
     
     

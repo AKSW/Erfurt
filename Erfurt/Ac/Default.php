@@ -20,8 +20,8 @@
  * @author Stefan Berger <berger@intersolut.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Ac_Default 
-{    
+class Erfurt_Ac_Default
+{
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -124,9 +124,11 @@ class Erfurt_Ac_Default
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = new Erfurt_Sparql_SimpleQuery();
             $query->setProloguePart('SELECT ?s ?o')
-                  ->setWherePart('WHERE {
-                      ?s <' . $this->_uris['actionConfigUri'] . '> ?o .
-                  }');
+                  ->setWherePart(
+                      'WHERE {
+                          ?s <' . $this->_uris['actionConfigUri'] . '> ?o .
+                      }'
+                  );
             
             $result = $this->_sparql($this->_acModel, $query);
             if ($result) {
@@ -139,7 +141,7 @@ class Erfurt_Ac_Default
                         $o[1] = substr($o[1], 1);
                     }
                     if (substr($o[1], -1) === '"') {
-                        $o[1] = substr($o[1], 0,  -1);
+                        $o[1] = substr($o[1], 0, -1);
                     }
                       
                     // Check whether config for uri is already set.
@@ -271,44 +273,41 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
+        $modelUri = (string) $modelUri;
+        
         $this->_init();
         
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user->getUri());
         $type       = strtolower($type);
-        
+
         // type = view; check whether allowed
         if ($type === 'view') {
             // explicit forbidden
             if (in_array($modelUri, $userRights['denyModelView'])) {
                 return false;
-            }   
-            // view explicit allowed and not denied
-            else if (in_array($modelUri, $userRights['grantModelView'])) {
+            } else if (in_array($modelUri, $userRights['grantModelView'])) {
+                // view explicit allowed and not denied
                 return true;
-            }
-            // view in edit allowed and not denied
-            else if (in_array($modelUri, $userRights['grantModelEdit'])) {
+            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
+                // view in edit allowed and not denied
                 return true;
-            }
-            // any model
-            else if ($this->isAnyModelAllowed('view')) {
+            } else if ($this->isAnyModelAllowed('view')) {
+                // any model
                 return true;
             }
         }
-            
+                  
         // type = edit; check whether allowed
         if ($type === 'edit') {
             // explicit forbidden
             if (in_array($modelUri, $userRights['denyModelEdit'])) {
                 return false;
-            }
-            // edit allowed and not denied
-            else if (in_array($modelUri, $userRights['grantModelEdit'])) {
+            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
+                // edit allowed and not denied
                 return true;
-            }
-            // any model
-            else if ($this->isAnyModelAllowed('edit')) {
+            } else if ($this->isAnyModelAllowed('edit')) {
+                // any model
                 return true;
             }
         }
@@ -334,18 +333,14 @@ class Erfurt_Ac_Default
         // Action not allowed (init is optimized on all actions which have an instance)
         if (in_array($actionUri, $userRights['denyAccess'])) {
             return false;
-        } 
-        // Action explicitly allowed
-        else if (in_array($actionUri, $userRights['grantAccess'])) {
+        } else if (in_array($actionUri, $userRights['grantAccess'])) {
+            // Action explicitly allowed
             return true;
-        }
-        // Every Action allowed
-        else if ($this->isAnyActionAllowed()) {
+        } else if ($this->isAnyActionAllowed()) {
+            // Every Action allowed
             return true;
-        } 
-        // create action instance
-        else {
-        
+        } else {
+            // create action instance
             // array for new statements (an action instance pus label)
             $actionStmt = array(
                 $actionUri => array ( 
@@ -399,13 +394,11 @@ class Erfurt_Ac_Default
             // any model view allowed?
             if ($userRights['userAnyModelViewAllowed'] === true) {
                 return true;
-            }
-            // any model edit allowed? (implies view right)
-            else if ($userRights['userAnyModelEditAllowed'] === true) {
+            } else if ($userRights['userAnyModelEditAllowed'] === true) {
+                // any model edit allowed? (implies view right)
                 return true;
-            }
-            // not allowed!
-            else {
+            } else {
+                // not allowed!
                 return false;
             }
         }
@@ -414,9 +407,8 @@ class Erfurt_Ac_Default
             // any model edit allowed?
             if ($userRights['userAnyModelEditAllowed'] === true) {
                 return true;
-            } 
-            // not allowed!
-            else {
+            } else {
+                // not allowed!
                 return false;
             }           
         }
@@ -458,32 +450,36 @@ class Erfurt_Ac_Default
             if ($perm === 'grant') {
                 $prop = $this->_uris['propGrantModelView'];
                 $right = 'grantModelView';
-            }
-            // else the permission is deny
-            else {
+            } else {
+                // else the permission is deny
                 $prop = $this->_uris['propDenyModelView'];
                 $right = 'denyModelView';
             }
-        } 
-        // else the type is edit
-        else {
+        } else {
+            // else the type is edit
             if ($perm === 'grant') {
                 $prop = $this->_uris['propGrantModelEdit'];
                 $right = 'grantModelEdit';
-            }
-            // else the permission is deny
-            else {
+            } else {
+                // else the permission is deny
                 $prop = $this->_uris['propDenyModelEdit'];
                 $right = 'denyModelEdit';
             }
         }
         
         // Update the array that contains the right for the user.
-        $this->_userRights[$user->getUri()][$right][] = $modelUri;
+        //$this->_userRights[$user->getUri()][$right][] = $modelUri;
+        unset($this->_userRights[$user->getUri()]);
 
 // TODO set the right cache tags, such that cache is invalidated!!!
         $store = Erfurt_App::getInstance()->getStore();
-        $store->addStatement($this->_acModel->getModelUri(), $user->getUri(), $prop, array('type' => 'uri', 'value' => $modelUri), false);
+        $store->addStatement(
+            $this->_acModel->getModelUri(), 
+            $user->getUri(), 
+            $prop, 
+            array('type' => 'uri', 'value' => $modelUri), 
+            false
+        );
     }
     
     // ------------------------------------------------------------------------
@@ -535,10 +531,12 @@ class Erfurt_Ac_Default
             
             $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
             $sparqlQuery->setProloguePart('SELECT ?group ?p ?o')
-                        ->setWherePart('WHERE { 
-                            ?group ?p ?o . 
-                            ?group <' . $this->_config->ac->group->membership . '> <' . $userURI . '> 
-                        }'); 
+                        ->setWherePart(
+                            'WHERE { 
+                                ?group ?p ?o . 
+                                ?group <' . $this->_config->ac->group->membership . '> <' . $userURI . '> 
+                            }'
+                        ); 
             
             if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
@@ -546,18 +544,20 @@ class Erfurt_Ac_Default
             
             $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
             $sparqlQuery->setProloguePart('SELECT ?s ?p ?o')
-                        ->setWherePart('WHERE { 
-                            ?s ?p ?o . 
-                            FILTER (
-                                sameTerm(?s, <' . $userURI . '>) ||
-                                sameTerm(?o, <' . $this->_config->ac->action->class . '>)
-                            )
-                        }');
+                        ->setWherePart(
+                            'WHERE { 
+                                ?s ?p ?o . 
+                                FILTER (
+                                    sameTerm(?s, <' . $userURI . '>) ||
+                                    sameTerm(?o, <' . $this->_config->ac->action->class . '>)
+                                )
+                            }'
+                        );
 
             if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
             }
-            
+          
             // Now check for forbidden anyModel.
             // view
             if (in_array($this->_uris['propAnyModel'], $userRights['denyModelView'])) {
@@ -588,77 +588,68 @@ class Erfurt_Ac_Default
     {
     
         $allActions = array();
-    
+#var_dump($resultList);
         foreach ($resultList as $entry) {
             // any action allowed?
             if (($entry['o'] === $this->_uris['propAnyAction']) 
                     && ($entry['p'] === $this->_uris['propGrantAccess'])) {
                 
                 $userRights['userAnyActionAllowed'] = true;
-            }
-            // any model view allowed?
-            else if (($entry['o'] === $this->_uris['propAnyModel']) 
+            } else if (($entry['o'] === $this->_uris['propAnyModel']) 
                     && ($entry['p'] === $this->_uris['propGrantModelView'])) {
                 
+                // any model view allowed?
                 $userRights['userAnyModelViewAllowed'] = true;
-            } 
-            // any model edit allowed?
-            else if (($entry['o'] === $this->_uris['propAnyModel']) 
+            } else if (($entry['o'] === $this->_uris['propAnyModel']) 
                     && ($entry['p'] === $this->_uris['propGrantModelEdit'])) {
                 
+                // any model edit allowed?
                 $userRights['userAnyModelEditAllowed'] = true;
-            }
-            // grant action?
-            else if ($entry['p'] === $this->_uris['propGrantAccess']) {
+            } else if ($entry['p'] === $this->_uris['propGrantAccess']) {
+                // grant action?
                 if (!in_array($entry['o'], $userRights['grantAccess'])) {
                     $userRights['grantAccess'][] = $entry['o'];
                 }   
-            }
-            // deny action?
-            else if ($entry['p'] === $this->_uris['propDenyAccess']) {
+            } else if ($entry['p'] === $this->_uris['propDenyAccess']) {
+                // deny action?
                 if (!in_array($entry['o'], $userRights['denyAccess'])) {
                     $userRights['denyAccess'][] = $entry['o'];
                 }
-            }
-            // grant model view?
-            else if ($entry['p'] === $this->_uris['propGrantModelView']) {
+            } else if ($entry['p'] === $this->_uris['propGrantModelView']) {
+                // grant model view?
                 if (!in_array($entry['o'], $userRights['grantModelView'])) {
                     $userRights['grantModelView'][] = $entry['o'];
                 }
-            }
-            // deny model view?
-            else if ($entry['p'] === $this->_uris['propDenyModelView']) {
+            } else if ($entry['p'] === $this->_uris['propDenyModelView']) {
+                // deny model view?
                 if (!in_array($entry['o'], $userRights['denyModelView'])) {
                     $userRights['denyModelView'][] = $entry['o'];
                 }
-            }
-            // grant model edit?
-            else if ($entry['p'] === $this->_uris['propGrantModelEdit']) {
+            } else if ($entry['p'] === $this->_uris['propGrantModelEdit']) {
+                // grant model edit?
                 if (!in_array($entry['o'], $userRights['grantModelEdit'])) {
                     $userRights['grantModelEdit'][] = $entry['o'];
                 }
-            }
-            // deny model edit?
-            else if ($entry['p'] === $this->_uris['propDenyModelEdit']) {
+            } else if ($entry['p'] === $this->_uris['propDenyModelEdit']) {
+                // deny model edit?
                 if (!in_array($entry['o'], $userRights['denyModelEdit'])) {
                     $userRights['denyModelEdit'][] = $entry['o'];
                 }
-            }
-            // load all actions into array (handle afterwards)
-            else if(
-                $entry['p'] === EF_RDF_TYPE && 
-                $entry['o'] === $this->_config->ac->action->class && 
-                $entry['s'] !== $this->_config->ac->action->anyAction 
-            ) {
-                    $allActions[] = $entry['s'];
+            } else if ($entry['p'] === EF_RDF_TYPE && $entry['o'] === $this->_config->ac->action->class && 
+                $entry['s'] !== $this->_config->ac->action->anyAction) {
+                
+                // load all actions into array (handle afterwards)
+                $allActions[] = $entry['s'];
             }
         }
         
         // optimize denyAccess for not anyAction allowed users only
         if (!$userRights['userAnyActionAllowed']) {
             // get existing actions which are not defined (and disallowed)
-            $undefinedActions = array_unique(array_diff($allActions,$userRights['grantAccess'],$userRights['denyAccess']));
-            $userRights['denyAccess']   = array_merge($userRights['denyAccess'],$undefinedActions);
+            $undefinedActions = array_unique(
+                array_diff($allActions, $userRights['grantAccess'], $userRights['denyAccess'])
+            );
+            $userRights['denyAccess'] = array_merge($userRights['denyAccess'], $undefinedActions);
         }
     }
     
@@ -713,7 +704,7 @@ class Erfurt_Ac_Default
     private function _sparql($model, $sparqlQuery) 
     {
         $sparqlQuery->addFrom($model->getModelUri());
-        $result = $model->getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
+        $result = $model->getStore()->sparqlQuery($sparqlQuery, array(STORE_USE_AC => false));
         
         return $result;
     }

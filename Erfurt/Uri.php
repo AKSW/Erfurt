@@ -5,37 +5,30 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id:$
  */
 
 /**
  * Simple static class for performing regular expression-based URI checking and normalizing.
  * 
+ * @category Erfurt
+ * @package Uri
  * @copyright Copyright (c) 2009 {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @category Erfurt
- * @package uri
  * @author Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Uri
 {
     /**
+     * Regular expression to split the schema-specific part of HTTP URIs
+     * @var string
+     */
+    protected static $_httpSplit = '/^\/\/(.+@)?(.+?)(\/.*)?$/';
+    
+    /**
      * Regular expression to match the whole URI
      * @var string
      */
     protected static $_regExp = '/^([a-zA-Z][a-zA-Z0-9+.-]+):([^\x00-\x0f\x20\x7f<>{}|\[\]`"^\\\\])+$/';
-    
-    /**
-     * Regular expression to extract the schema part
-     * @var string
-     */
-    protected static $_schema = '^([a-zA-Z][a-zA-Z0-9+-.]+):';
-    
-    /**
-     * Regular expression to extract the server part in a HTTP(S) URI
-     * @var string
-     */
-    protected static $_server = '[^/]+';
     
     /**
      * Checks the general syntax of a given URI. Protocol-specific syntaxes are not checked.
@@ -70,19 +63,19 @@ class Erfurt_Uri
         $schemaSpecific = isset($parts[1]) === true ? $parts[1] : '';
         
         // schema-only normalization
-        $normalized     = $schema
-                        . ':'
-                        . $schemaSpecific;
+        $normalized = $schema
+                    . ':'
+                    . $schemaSpecific;
         
         // check for HTTP(S) URIs
         if (strpos('http', $schema) !== false) {
             // here we can do more ...
             $matches = array();
-            preg_match('/^\/\/(.+@)?(.+?)(\/.*)?$/', $schemaSpecific, $matches);
+            preg_match(self::$_httpSplit, $schemaSpecific, $matches);
                             
-            $authority  = $matches[1];
-            $server     = strtolower($matches[2]);
-            $path       = isset($matches[3]) ? $matches[3] : '';
+            $authority = $matches[1];
+            $server    = strtolower($matches[2]);
+            $path      = isset($matches[3]) ? $matches[3] : '';
             
             // server-part normalization
             $normalized = $schema

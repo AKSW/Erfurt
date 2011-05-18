@@ -270,16 +270,16 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         $pubKey = `openssl x509 -inform DER -in $certFilename -pubkey -noout`;
         $rsaCertStruct = `echo "$pubKey" | openssl asn1parse -inform PEM -i`;
         $rsaCertFields = explode("\n", $rsaCertStruct);
-        $rsaKeyOffset  = explode(':',  $rsaCertFields[4]);
+        $rsaKeyOffset  = explode(':', $rsaCertFields[4]);
         $rsaKeyOffset  = trim($rsaKeyOffset[0]);
         
-		$rsaKey = `echo "$pubKey" | openssl asn1parse -inform PEM -i -strparse $rsaKeyOffset`;
+        $rsaKey = `echo "$pubKey" | openssl asn1parse -inform PEM -i -strparse $rsaKeyOffset`;
 
-		$rsaKeys  = explode("\n", $rsaKey);
-		$modulus  = explode(':', $rsaKeys[1]);
-		$modulus  = $modulus[3]; 
-		$exponent = explode(':', $rsaKeys[2]);
-		$exponent = $exponent[3];
+        $rsaKeys  = explode("\n", $rsaKey);
+        $modulus  = explode(':', $rsaKeys[1]);
+        $modulus  = $modulus[3]; 
+        $exponent = explode(':', $rsaKeys[2]);
+        $exponent = $exponent[3];
         
         unlink($certFilename);
         
@@ -338,8 +338,7 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
      */
     public static function getFoafData($foafUri)
     {
-        require_once 'Zend/Http/Client.php';
-        $client = new Zend_Http_Client($foafUri, array(
+        $client = Erfurt_App::getInstance()->getHttpClient($foafUri, array(
             'maxredirects'  => 3,
             'timeout'       => 30
         ));
@@ -837,16 +836,16 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             $rsaCert  = $keyDetails['key'];
             $rsaCertStruct = `echo "$rsaCert" | openssl asn1parse -inform PEM -i`;
             $rsaCertFields = explode("\n", $rsaCertStruct);
-            $rsaKeyOffset  = explode(':',  $rsaCertFields[4]);
+            $rsaKeyOffset  = explode(':', $rsaCertFields[4]);
             $rsaKeyOffset  = trim($rsaKeyOffset[0]);
             
-    		$rsaKey = `echo "$rsaCert" | openssl asn1parse -inform PEM -i -strparse $rsaKeyOffset`;
+            $rsaKey = `echo "$rsaCert" | openssl asn1parse -inform PEM -i -strparse $rsaKeyOffset`;
 
-    		$rsaKeys  = explode("\n", $rsaKey);
-    		$modulus  = explode(':', $rsaKeys[1]);
-    		$modulus  = $modulus[3]; 
-    		$exponent = explode(':', $rsaKeys[2]);
-    		$exponent = $exponent[3];
+            $rsaKeys  = explode("\n", $rsaKey);
+            $modulus  = explode(':', $rsaKeys[1]);
+            $modulus  = $modulus[3]; 
+            $exponent = explode(':', $rsaKeys[2]);
+            $exponent = $exponent[3];
 
             return array(
                 'exponent' => strtolower($exponent),
@@ -906,7 +905,7 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         }
         
         $pubKeyId = null;
-        foreach($foafData as $s=>$pArray) {
+        foreach ($foafData as $s=>$pArray) {
             foreach ($pArray as $p=>$oArray) {
                 if ($p === EF_RDF_TYPE) {
                     foreach ($oArray as $o) {
@@ -956,8 +955,8 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         if (isset($_SERVER['SSL_CLIENT_CERT']) && !empty($_SERVER['SSL_CLIENT_CERT'])) {
             $x509Cert = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT']);
            
-    		if (isset($x509Cert['extensions']['subjectAltName'])) {
-    			$uriList = explode(',', $x509Cert['extensions']['subjectAltName']);
+            if (isset($x509Cert['extensions']['subjectAltName'])) {
+                $uriList = explode(',', $x509Cert['extensions']['subjectAltName']);
                 $retVal  = array();
                 
                 foreach ($uriList as $uri) {
@@ -967,9 +966,9 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
                 }
 
                 return $retVal;
-    		} else {
-    		    return false;
-    		}
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

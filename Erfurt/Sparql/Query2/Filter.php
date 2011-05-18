@@ -5,7 +5,7 @@
  * 
  * holds a constraint. no action here
  * 
- * @package    ontowiki
+ * @package    erfurt
  * @subpackage query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
@@ -13,14 +13,20 @@
  * @version    $Id$
  */
  
-class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
+class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
 {
     protected $element;
     
     /**
      * @param Erfurt_Sparql_Query2_Constraint $element
      */
-    public function __construct(Erfurt_Sparql_Query2_Constraint $element){
+    public function __construct($element) {
+        if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
+            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+        }
+        if(is_bool($element)){
+            $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);
+        }
         $this->element = $element;
         parent::__construct();
     }
@@ -29,7 +35,7 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
      * getConstraint
      * @return Erfurt_Sparql_Query2_Constraint
      */
-    public function getConstraint(){
+    public function getConstraint() {
        return $this->element;
     }
     
@@ -38,7 +44,13 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
      * @param Erfurt_Sparql_Query2_Constraint $element
      * @return Erfurt_Sparql_Query2_Filter $this
      */
-    public function setConstraint(Erfurt_Sparql_Query2_Constraint $element){
+    public function setConstraint($element) {
+       if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
+            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+       }
+       if(is_bool($element)){
+            $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);
+        }
        $this->element = $element;
        return $this;
     }
@@ -48,14 +60,18 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
      * build a valid sparql representation of this obj - should be like "FILTER([constraint])"
      * @return string
      */
-    public function getSparql(){
+    public function getSparql() {
         $constraint_str = trim($this->element->getSparql());
         
         //grammar says: brackets are not needed , sparql engines say: error...
-        if(substr($constraint_str, 0, 1) != '('){
+        if (substr($constraint_str, 0, 1) != '(') {
             $constraint_str = '('.$constraint_str.')';
         }
         return 'FILTER '.$constraint_str;
+    }
+    
+    public function __toString(){
+        return $this->getSparql();
     }
     
     //TODO not implemented yet
@@ -64,7 +80,7 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ObjectHelper
      * get all vars used in this filter (recursive)
      * @return array array of Erfurt_Sparql_Query2_Var
      */
-    public function getVars(){
+    public function getVars() {
         return array();
     }
 }

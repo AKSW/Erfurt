@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
+  <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY sioc "http://rdfs.org/sioc/ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&SysOnt;"
+         xmlns:sysont="&SysOnt;"
+         xmlns="&SysOnt;"
+         xmlns:foaf="&foaf;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+         xmlns:sioc="&sioc;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about=""
+                rdfs:label="OntoWiki System Ontology">
+    <rdfs:comment>This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
+    <owl:versionInfo>$Id: SysOnt.rdf 3811 2009-07-27 13:27:22Z sebastian.dietzold $</owl:versionInfo>
+    <owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/erfurt/src/Erfurt/include/SysOnt.rdf" />
+  </owl:Ontology>
+
+<!-- Classes -->
+  <owl:Class rdf:about="Action"
+             rdfs:label="Action">
+    <rdfs:comment>Actions represent specific GUI or API actions which can be activated or used by an Agent.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="Model"
+             rdfs:label="Model">
+    <rdfs:comment>A model is a knowledge base in OntoWiki.</rdfs:comment>
+  </owl:Class>
+
+    <owl:Class rdf:about="&sioc;User"
+               rdfs:comment="Users are able to log into OntoWiki."
+               rdfs:label="User"/>
+    <owl:Class rdf:about="&sioc;Usergroup"
+               rdfs:comment="A Group of User Accounts ..."
+               rdfs:label="Usergroup"/>
+    <owl:Class rdf:nodeID="b1">
+        <owl:unionOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="&sioc;User"/>
+            <rdf:Description rdf:about="&sioc;Usergroup"/>
+        </owl:unionOf>
+    </owl:Class>
+  
+
+  <!--owl:Class rdf:about="StatementSelector" rdfs:label="Statement Selector">
+    <rdfs:comment>Statements Based Access Control: Statement Selector select statements according to a specific SPARQL WHERE clause.</rdfs:comment>
+  </owl:Class-->
+
+<!-- Datatypes -->
+  <rdfs:Datatype rdf:about="&xsd;string" rdfs:label="String"/>
+  <rdfs:Datatype rdf:about="&xsd;anyURI" rdfs:label="Any URI"/>
+  <rdfs:Datatype rdf:about="&xsd;boolean" rdfs:label="Boolean"/>
+
+<!-- Annotation Properties -->
+  <owl:AnnotationProperty rdf:about="&rdfs;comment" rdfs:label="comment">
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:AnnotationProperty>
+  <owl:AnnotationProperty rdf:about="&rdfs;label"  rdfs:label="label">
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:AnnotationProperty>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="userPassword"
+                        rdfs:comment="The password of an OntoWiki Account."
+                        rdfs:label="password">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:domain rdf:resource="&sioc;User"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="&foaf;accountName"
+                        rdfs:label="uid">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:comment>This is the user identifier of an OntoWiki account which is used for login</rdfs:comment>
+    <rdfs:domain rdf:resource="&sioc;User"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="hidden"
+                        rdfs:label="hidden">
+    <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+    <rdfs:comment>All resources (especially Models, Classes and Properties) can be hidden.</rdfs:comment>
+    <rdfs:domain rdf:resource="&owl;Thing"/>
+    <rdfs:range rdf:resource="&xsd;boolean"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="rawConfig"
+                        rdfs:label="config">
+    <rdfs:comment>This property holds action configuration values beyond the rdf schema.</rdfs:comment>
+    <rdfs:domain rdf:resource="Action"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+  <!--owl:DatatypeProperty rdf:about="sparqlWhereClause"
+                        rdfs:label="Statement(s)">
+    <rdfs:comment>Statements Based Access Control: This property represents a set of statements with a specific SPARQL WHERE clause.</rdfs:comment>
+    <rdfs:domain rdf:resource="StatementSelector"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty-->
+
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="possibleDatatype"
+                      rdfs:label="possible datatype">
+    <rdfs:comment>Since it is not allowed to state more than one possible datatypes of a datatype property in OWL, you can use this relation. (not implemented yet)</rdfs:comment>
+    <rdfs:domain rdf:resource="&owl;DatatypeProperty"/>
+    <rdfs:range rdf:resource="&rdfs;Datatype"/>
+  </owl:ObjectProperty>
+
+  <!--owl:ObjectProperty rdf:about="model"
+                      rdfs:label="Model">
+    <rdfs:comment>Statements Based Access Control: Restricts a Statement Selector to specific model(s). Selectors without restriction match to any model.</rdfs:comment>
+    <rdfs:domain rdf:resource="StatementSelector"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantStatementsEdit"
+                      rdfs:label="editable statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+    <rdfs:subPropertyOf rdf:resource="grantStatementsView"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantStatementsView"
+                      rdfs:label="readable statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyStatementsEdit"
+                      rdfs:label="not editable Statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are NOT allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyStatementsView"
+                      rdfs:label="not readable Statements">
+    <rdfs:comment>Statements Based Access Control: Which Statements are NOT allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="StatementSelector"/>
+    <rdfs:subPropertyOf rdf:resource="denyStatementsEdit"/>
+  </owl:ObjectProperty-->
+
+
+  <owl:ObjectProperty rdf:about="grantModelEdit"
+                      rdfs:label="editable model">
+    <rdfs:comment>Model Based Access Control: Which Models are allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Model"/>
+    <rdfs:subPropertyOf rdf:resource="grantModelView"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantModelView"
+                      rdfs:label="readable model">
+    <rdfs:comment>Model Based Access Control: Which Models are allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyModelEdit"
+                      rdfs:label="not editable model">
+    <rdfs:comment>Model Based Access Control: Which Models are NOT allowed to edit (and read)</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Model"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyModelView"
+                      rdfs:label="not readable model">
+    <rdfs:comment>Model Based Access Control: Which Models are NOT allowed to read</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Model"/>
+    <rdfs:subPropertyOf rdf:resource="denyModelEdit"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="grantAccess"
+                      rdfs:label="grant access">
+    <rdfs:comment>Access Control: Which Actions are allowed to accessed?</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Action"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="denyAccess"
+                      rdfs:label="deny access">
+    <rdfs:comment>Action Based Access Control: Which Actions are NOT to be accessed?</rdfs:comment>
+    <rdfs:domain rdf:nodeID="b1"/>
+    <rdfs:range rdf:resource="Action"/>
+  </owl:ObjectProperty>
+
+
+  <!--owl:ObjectProperty rdf:about="subGroup"
+                      rdfs:label="has subgroup">
+    <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+    <rdfs:comment>A group can have subgroups to manage user accounts (not implemented yet).</rdfs:comment>
+    <rdfs:domain rdf:resource="&sioc;Usergroup"/>
+    <rdfs:range rdf:resource="&sioc;Usergroup"/>
+  </owl:ObjectProperty-->
+
+
+  <owl:ObjectProperty rdf:about="&sioc;email"
+                                 rdfs:label="mbox">
+    <rdfs:comment>A personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox.</rdfs:comment>
+    <rdfs:domain rdf:resource="&sioc;User"/>
+    <rdfs:range rdf:resource="&owl;Thing"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="&sioc;has_member"
+                      rdfs:label="member">
+    <rdfs:comment>The sioc:member property relates a sioc:Usergroup to a sioc:User that is a member of that group.</rdfs:comment>
+    <rdfs:domain rdf:resource="&sioc;Usergroup"/>
+    <rdfs:range rdf:resource="&sioc;User"/>
+  </owl:ObjectProperty>
+  
+  <owl:ObjectProperty rdf:about="hiddenImports"
+                          rdfs:label="hidden imports">
+      <rdfs:comment>Acts like owl:imports but is not part of the model itself.</rdfs:comment>
+      <rdfs:domain rdf:resource="Model" />
+      <rdfs:range rdf:resource="Model" />
+    </owl:ObjectProperty>
+
+<!-- Instances -->
+  <sioc:User rdf:about="Anonymous"
+              rdfs:label="Anonymous">
+    <rdfs:comment>This special account identifies the anonymous user.</rdfs:comment>
+  </sioc:User>
+
+  <sioc:User rdf:about="SuperAdmin"
+              rdfs:label="SuperAdmin">
+    <rdfs:comment>This special account is the SuperAdministrator. He has hard coded access to all models and actions and uses the user nick and pass from the database configuration. All access control statements of this user are ignored by the system.</rdfs:comment>
+  </sioc:User>
+
+  <Model rdf:about="AnyModel"
+                rdfs:label="AnyModel">
+    <rdfs:comment>This special model identifies any model.</rdfs:comment>
+  </Model>
+
+  <Action rdf:about="AnyAction"
+                rdfs:label="AnyAction">
+    <rdfs:comment>This special action identifies any action.</rdfs:comment>
+  </Action>
+
+	<!--StatementSelector rdf:about="AnyStatement" rdfs:label="Any Statement">
+		<model rdf:resource="AnyModel" />
+    <rdfs:comment>This special selector selects any statement in any model.</rdfs:comment>
+  </StatementSelector-->
+
+  <Action rdf:about="RegisterNewUser"
+                rdfs:label="Register new User">
+    <rdfs:comment>Register new users with application/register</rdfs:comment>
+  </Action>
+
+  <Action rdf:about="ModelManagement" rdfs:label="Model Management">
+    <rdfs:comment>Create and remove models from the store</rdfs:comment>
+  </Action>
+
+  <Action rdf:about="Login"
+                rdfs:label="Login">
+    <rdfs:comment>Login to the OntoWiki application</rdfs:comment>
+  </Action>
+
+  <Action rdf:about="Rollback"
+                rdfs:label="Rollback">
+    <rdfs:comment>Rollback changes on statements to a past version (needs Versioning)</rdfs:comment>
+  </Action>
+
+</rdf:RDF>
+

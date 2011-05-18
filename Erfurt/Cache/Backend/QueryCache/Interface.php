@@ -137,6 +137,13 @@ interface Erfurt_Cache_Backend_QueryCache_Interface {
      */
     public function getObjectKeys () ;
 
+    /**
+     *  getmaterializedViews
+     *  @access     public
+     *  @return     array           $array of tableNames
+     */
+    public function getMaterializedViews () ;
+
 }
 
 ?>

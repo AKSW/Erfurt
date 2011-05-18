@@ -134,8 +134,10 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
     }
     
     /** @see Erfurt_Store_Adapter_Abstract */
-    public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $resultform = 'plain') 
-    {    
+    public function sparqlQuery(Erfurt_Sparql_Simple_Query $query, $options=array()) 
+    {   
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+         
         $q = librdf_new_query($this->_librdf_world, 'sparql', null, $query, null);
 	
 	$result = librdf_model_query_execute($this->_librdf_model, $q);
@@ -143,7 +145,9 @@ class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
 	
 	while ($result && !librdf_query_results_finished($result)) {
 	    $row = array();
-	    for ($i=0; $i < librdf_query_results_get_bindings_count($result); ++$i) {
+        $countLibRDFResult = librdf_query_results_get_bindings_count($result);
+        
+	    for ($i=0; $i < $countLibRDFResult; ++$i) {
 	    	$val = librdf_query_results_get_binding_value($result, $i);
 		if ($val) {
 		    $nval = librdf_node_to_string($val);

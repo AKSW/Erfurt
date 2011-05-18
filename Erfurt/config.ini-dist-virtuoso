@@ -5,6 +5,7 @@
 ;;----------------------------------------------------------------------------;;
 
 store.backend = virtuoso ; zenddb, virtuoso
+;store.virtuoso.use_persistent_connection = true
 
 ;store.zenddb.dbname   = ontowiki
 ;store.zenddb.username = ow

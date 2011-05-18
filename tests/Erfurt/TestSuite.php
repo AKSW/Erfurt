@@ -17,6 +17,7 @@ class Erfurt_TestSuite extends PHPUnit_Framework_TestSuite
         
         $suite->addTestSuite('Erfurt_AppTest');
         $suite->addTestSuite('Erfurt_Auth_TestSuite');
+        $suite->addTestSuite('Erfurt_NamespacesTest');
         $suite->addTestSuite('Erfurt_Rdf_TestSuite');
         $suite->addTestSuite('Erfurt_Owl_TestSuite');
         $suite->addTestSuite('Erfurt_Sparql_TestSuite');

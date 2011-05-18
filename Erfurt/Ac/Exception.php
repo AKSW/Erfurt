@@ -18,7 +18,7 @@ require_once 'Erfurt/Exception.php';
  * @subpackage ac
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Ac_Exception extends Erfurt_Exception 
+class Erfurt_Ac_Exception extends Erfurt_Exception
 {
     
 }

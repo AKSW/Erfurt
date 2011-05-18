@@ -136,6 +136,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -151,6 +152,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
     public function testSparqlQueryWithCountAndFromIssue174()
     {
         $this->markTestNeedsDatabase();
+        $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -165,7 +167,39 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $result = $store->sparqlQuery($simpleQuery);
         
-        $this->assertEquals(181, $result);
+        $this->assertEquals(191, $result);
+    }
+    
+    public function testCountWhereMatchesWithNonExistingModel()
+    {
+        $this->markTestNeedsDatabase();
+        
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        try {
+            $result = $store->countWhereMatches(
+                'http://localhost/SomeModelThatDoesNotExist123456789', 
+                '{ ?s ?p ?o }',
+                '*'
+            );
+            
+            // Should fail...
+            $this->fail();
+        } catch (Erfurt_Store_Exception $e) {
+            // Nothing to do here...
+        }
+    }
+    
+    public function testSparqlQueryWithSpecialCharUriIssue579()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $store = Erfurt_App::getInstance()->getStore();
+        
+        $sparql = "SELECT ?p ?o WHERE { <http://umg.kurtisrandom.com/resource/genre-Children's> ?p ?o . }";
+        $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($sparql);
+        $result = $store->sparqlQuery($simpleQuery);
+        $this->assertTrue(is_array($result));
     }
 }
 

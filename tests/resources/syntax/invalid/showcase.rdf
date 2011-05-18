@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE rdf:RDF [
+  <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY doap "http://usefulinc.com/ns/doap#">
+  <!ENTITY showcase "http://showcase.ontowiki.net/">
+]>
+
+<rdf:RDF xml:base="&showcase;" 
+    xmlns:rdf="&rdf;"
+    xmlns:rdfs="&rdfs;"
+    xmlns:owl="&owl;"
+    xmlns:foaf="&foaf;"
+    xmlns:doap="&doap;"
+    xmlns:showcase="&showcase;">
+
+    <owl:Ontology rdf:about="&showcase;">
+        <rdfs:label xml:lang="en">OntoWiki and Erfurt Showcase</rdfs:label>
+        <dc:description xml:lang="en">A RDF graph in order to demonstrate the entire OntoWiki and Erfurt feature set.</dc:description>
+        <rdfs:comment>You should configure this model to use the OntoWiki System Base ...</rdfs:comment>
+				<owl:versionInfo>$Id: $</owl:versionInfo>
+				<owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/models/Showcase/showcase.rdf" />
+        
+    </owl:Ontology>
+
+<!-- Persons -->
+    <foaf:Person rdf:about="http://sebastian.dietzold.de/terms/me">
+        <foaf:name>Sebastian Dietzold</foaf:name>
+        <foaf:firstName>Sebastian</foaf:firstName>
+        <foaf:surname>Dietzold</foaf:surname>
+        <foaf:nick>Seebi</foaf:nick>
+        <foaf:gender>male</foaf:gender>
+        <foaf:title>Dipl.-Inf.</foaf:title>
+        <foaf:mbox rdf:resource="mailto:dietzold@informatik.uni-leipzig.de" />
+        <foaf:mbox_sha1sum>4220157adb98c500bbc2a96e9af3f9ae571b773d</foaf:mbox_sha1sum>
+        <foaf:depiction rdf:resource="http://aksw.org/images/jpegPhoto.php?name=sn&amp;value=Dietzold" />
+        <foaf:weblog rdf:resource="http://sebastian.dietzold.de" />
+        <foaf:based_near rdf:resource="http://linkedgeodata.org/triplify/node/243213648#id" />
+        <foaf:workplaceHomepage rdf:resource="http://bis.informatik.uni-leipzig.de/" />
+    	<foaf:workInfoHomepage rdf:resource="http://bis.informatik.uni-leipzig.de/SebastianDietzold" />
+    	<foaf:publications rdf:resource="http://bis.informatik.uni-leipzig.de/SebastianDietzold" />
+        <rdfs:seeAlso rdf:resource="http://sebastian.dietzold.de/rdf/foaf.rdf" />
+        <foaf:knows rdf:resource="http://philipp.frischmuth24.de/id/me" />
+        <foaf:knows rdf:resource="http://feedface.de/me" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="http://philipp.frischmuth24.de/id/me">
+        <foaf:name>Philipp Frischmuth</foaf:name>
+        <foaf:firstName>Philipp</foaf:firstName>
+        <foaf:surname>Frischmuth</foaf:surname>
+        <foaf:gender>male</foaf:gender>
+        <foaf:mbox rdf:resource="mailto:frischmuth@informatik.uni-leipzig.de" />
+        <foaf:mbox_sha1sum>c96f26b513d234df37a0116f170b50d4c61bed85</foaf:mbox_sha1sum>
+        <foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Frischmuth" />
+        <foaf:homepage rdf:resource="http://philipp.frischmuth24.de" />
+        <foaf:based_near rdf:resource="http://dbpedia.org/resource/Leipzig" />
+        <rdfs:seeAlso rdf:resource="http://philipp.frischmuth24.de/foaf.rdf" />
+        <foaf:knows rdf:resource="http://sebastian.dietzold.de/terms/me" />
+        <foaf:knows rdf:resource="http://feedface.de/me" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="http://feedface.de/me">
+        <foaf:name>Norman Heino</foaf:name>
+        <foaf:firstName>Norman</foaf:firstName>
+        <foaf:surname>Heino</foaf:surname>
+        <foaf:gender>male</foaf:gender>
+        <foaf:mbox rdf:resource="mailto:heino@informatik.uni-leipzig.de" />
+        <foaf:mbox_sha1sum>ea8289538eb8b4b342aa3ffe4a44371f5d98a36e</foaf:mbox_sha1sum>
+        <foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Heino" />
+        <foaf:based_near rdf:resource="http://dbpedia.org/resource/Leipzig" />
+        <foaf:knows rdf:resource="http://sebastian.dietzold.de/terms/me" />
+        <foaf:knows rdf:resource="http://philipp.frischmuth24.de/id/me" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="SoerenAuer">
+        <foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Auer" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="JensLehmann">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Lehmann" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="ThomasRiechert">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Riechert" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="ThorstenBerger">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Berger" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="AxelCNgongaNgomo">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Ngomo" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="MichaelMartin">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Martin" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="SebastianHellmann">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Hellmann" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="ChristophRiess">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Riess" />
+    </foaf:Person>
+    
+    <foaf:Person rdf:about="NathanaelArndt">
+<foaf:depiction rdf:resource="http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=Arndt" />
+    </foaf:Person>
+
+<!-- Organizations -->
+    <foaf:Organization rdf:about="AKSW">
+        <foaf:name>Agile Knowledge Engineering and Semantic Web (AKSW)</foaf:name>
+        <foaf:mbox rdf:resource="mailto:aksw@informatik.uni-leipzig.de" />
+        <foaf:depiction rdf:resource="http://aksw.org/Team/files?get=img_0988_cutted_resized.png" />
+        <foaf:member rdf:resource="SoerenAuer" />
+        <foaf:member rdf:resource="http://sebastian.dietzold.de/terms/me" />
+        <foaf:member rdf:resource="http://feedface.de/me" />
+        <foaf:member rdf:resource="http://philipp.frischmuth24.de/id/me" />
+        <foaf:member rdf:resource="MichaelMartin" />
+        <foaf:member rdf:resource="SebastianHellmann" />
+        <foaf:member rdf:resource="JensLehmann" />
+        <foaf:member rdf:resource="ThomasRiechert" />
+        <foaf:member rdf:resource="ChristophRiess" />
+        <foaf:member rdf:resource="NathanaelArndt" />
+        <foaf:member rdf:resource="AxelCNgongaNgomo" />
+        <foaf:member rdf:resource="ThorstenBerger" />
+    </foaf:Organization>
+    
+<!-- Projects -->
+    <doap:Project rdf:about="OntoWiki">
+        <doap:name>OntoWiki</doap:name>
+        <doap:homepage rdf:resource="http://ontowiki.net" />
+        <foaf:depiction rdf:resource="http://code.google.com/p/ontowiki/logo?logo_id=1238408069" />
+        <doap:shortdesc xml:lang="en">OntoWiki is a tool providing support for agile, distributed knowledge engineering scenarios.</doap:shortdesc>
+        <doap:description xml:lang="en">OntoWiki facilitates the visual presentation of a knowledge base as an information map, with different views on instance data. It enables intuitive authoring of semantic content, with an inline editing mode for editing RDF content, similar to WYSIWIG for text documents.</doap:description>
+    </doap:Project>
+    
+    <doap:Project rdf:about="Erfurt">
+        <doap:name>Erfurt API</doap:name>
+        <doap:homepage rdf:resource="http://aksw.org/Projects/Erfurt" />
+        <doap:shortdesc xml:lang="en">Erfurt is a PHP / Zend based Semantic Web API for Social Semantic Software.</doap:shortdesc>
+    </doap:Project>
+    
+    <doap:Project rdf:about="DBpedia">
+        <doap:name>DBpedia</doap:name>
+        <doap:homepage rdf:resource="http://dbpedia.org" />
+        <foaf:depiction rdf:resource="http://wiki.dbpedia.org/images/dbpedia_logo.png" />
+        <doap:description xml:lang="en">Do you know all mayors from towns elevated higher than 1000m, all sitcoms set in New York, or all philosophers that were influenced by Friedrich Nietzsche? Wikipedia contains information required for answering such questions, but has the problem that its constricted search capabilities only allow very limited access to this valuable knowledge-base. The Semantic Web still lacks a critical mass of RDF data online and up-to-date terms and ontologies are missing for many application domains. The dbpedia.org project approaches both problems by extracting structured information from Wikipedia and by making this information available on the Web. dbpedia.org allows you to ask sophisticated queries against Wikipedia (like the ones mentioned above) and to link other datasets on the Web to dbpedia data.</doap:description>
+    </doap:Project>
+    
+    <doap:Project rdf:about="XOperator">
+        <doap:name>xOperator</doap:name>
+        <doap:homepage rdf:resource="http://aksw.org/Projects/xOperator" />
+        <foaf:depiction rdf:resource="http://aksw.org/Projects/xOperator/files?get=xoplogo.png" />
+        <doap:shortdesc xml:lang="en">xOperator combines advantages of social network websites with instant messaging.</doap:shortdesc>
+        <doap:description xml:lang="en">A semantic agent for xmpp / jabber network which finds and shares content about resources (using RDF/SPARQL) for you and your jabber friends.</doap:description>
+    </doap:Project>
+    
+</rdf:RDF>
+    

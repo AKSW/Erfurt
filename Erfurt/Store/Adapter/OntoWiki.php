@@ -79,8 +79,9 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
 // TODO ?    
     }
     
-    public function sparqlQuery($query, $resultform = 'plain')
+    public function sparqlQuery($query, $options=array())
     {   
+        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         // Support for FOAF+SSL only when user is authenticated via WebID.
         $identity = Erfurt_App::getInstance()->getAuth()->getIdentity();
         if (!$identity->isWebId()) {
@@ -121,8 +122,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
     
     private function _handleRequest($url, $accept = null)
     {
-        require_once 'Zend/Http/Client.php';
-        $client = new Zend_Http_Client($url, array(
+        $client = Erfurt_App::getInstance()->getHttpClient($url, array(
             'maxredirects'  => 10,
             'timeout'       => 30
         ));
@@ -157,7 +157,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
                 $url = 'https://' . substr($url, 7);
             }
             
-            $client = new Zend_Http_Client($url, array(
+            $client = Erfurt_App::getInstance()->getHttpClient($url, array(
                 'maxredirects'  => 10,
                 'timeout'       => 30,
                 'sslcert'       => $certFilename

@@ -33,10 +33,10 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
                 $object = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($format);
                 
                 if (!($object instanceof Erfurt_Syntax_RdfSerializer)) {
-                    $this->fail('Object initialization failed where it should not fail.');
+                    throw new Exception ( 'Object initialization with '. $format .' failed where it should not fail.' );
                 }
             } catch (Exception $e) {
-                $this->fail('Object initialization failed where it should not fail.');
+                $this->fail($e->getMessage ());
             }
         }
         
@@ -52,7 +52,7 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
         }
     }
     
-    public function testinitializeWithFormat()
+    public function testInitializeWithFormat()
     {
         $positiveFormats = array('rdfxml', 'xml', 'rdf', 'turtle', 'ttl', 'nt', 'ntriple',
             'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle');
@@ -65,10 +65,10 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
                 $object->initializeWithFormat($format);
                 
                 if (!($object instanceof Erfurt_Syntax_RdfSerializer)) {
-                    $this->fail('Object initialization failed where it should not fail.');
+                    throw new Exception ('Object initialization with format '. $format .' failed where it should not fail.');
                 }
             } catch (Exception $e) {
-                $this->fail('Object initialization with format failed where it should not fail.');
+                $this->fail($e->getMessage ());
             }
         }
         
@@ -85,81 +85,99 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
         }
     }
     
-    /*public function testSerializeGraphToStringWithRdfXml()
+    public function testSerializeGraphToStringWithRdfXml()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+    
         $this->_object->initializeWithFormat('rdfxml');
-        $result1 = $this->_object->serializeGraphToString('http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeGraphToString($g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
-        $result2 = $adapter->serializeGraphToString('http://3ba.se/conferences/');
+        $result2 = $adapter->serializeGraphToString($g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
     
-    /*public function testSerializeResourceToStringWithRdfXml()
+    public function testSerializeResourceToStringWithRdfXml()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+        
         $this->_object->initializeWithFormat('rdfxml');
-        $result1 = $this->_object->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeResourceToString($g, $g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
-        $result2 = $adapter->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result2 = $adapter->serializeResourceToString($g, $g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
     
-    /*public function testSerializeGraphToStringWithRdfJson()
+    public function testSerializeGraphToStringWithRdfJson()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+        
         $this->_object->initializeWithFormat('rdfjson');
-        $result1 = $this->_object->serializeGraphToString('http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeGraphToString($g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
-        $result2 = $adapter->serializeGraphToString('http://3ba.se/conferences/');
+        $result2 = $adapter->serializeGraphToString($g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
     
-    /*public function testSerializeResourceToStringWithRdfJson()
+    public function testSerializeResourceToStringWithRdfJson()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+        
         $this->_object->initializeWithFormat('rdfjson');
-        $result1 = $this->_object->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeResourceToString($g, $g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
-        $result2 = $adapter->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result2 = $adapter->serializeResourceToString($g, $g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
     
-    /*public function testSerializeGraphToStringWithN3()
+    public function testSerializeGraphToStringWithN3()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+        
         $this->_object->initializeWithFormat('ttl');
-        $result1 = $this->_object->serializeGraphToString('http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeGraphToString($g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
-        $result2 = $adapter->serializeGraphToString('http://3ba.se/conferences/');
+        $result2 = $adapter->serializeGraphToString($g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
     
-    /*public function testSerializeResourceToStringWithN3()
+    public function testSerializeResourceToStringWithN3()
     {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+        $g = 'http://localhost/OntoWiki/Config/';
+        
         $this->_object->initializeWithFormat('ttl');
-        $result1 = $this->_object->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result1 = $this->_object->serializeResourceToString($g, $g);
         
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
-        $result2 = $adapter->serializeResourceToString('http://3ba.se/conferences/PhilippFrischmuth', 
-                        'http://3ba.se/conferences/');
+        $result2 = $adapter->serializeResourceToString($g, $g);
         
         $this->assertEquals($result1, $result2);
-    }*/
+    }
 }

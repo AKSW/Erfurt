@@ -4,10 +4,16 @@ class Erfurt_Rdf_ModelStub
     public $store = null; 
     public $graphUri = null;
     public $statements = array();
+    public $options = array();
     
     public function __construct($graphUri)
     {
         $this->graphUri = $graphUri;
+    }
+    
+    public function __toString()
+    {
+        return $this->getModelUri();
     }
     
     public function addStatement($subject, $predicate, array $object)
@@ -36,5 +42,17 @@ class Erfurt_Rdf_ModelStub
         }
         
         return $this->store;
+    }
+    
+    public function getOption($optionSpec)
+    {
+        if (array_key_exists($optionSpec, $this->options)) {
+            return $this->options[$optionSpec];
+        }
+    }
+    
+    public function setOption($optionSpec, $optionValue)
+    {
+        $this->options[$optionSpec] = $optionValue;
     }
 }

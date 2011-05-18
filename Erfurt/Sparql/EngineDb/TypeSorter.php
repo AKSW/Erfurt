@@ -34,6 +34,7 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         //yes, this does not work with multiple time zones.
         'http://www.w3.org/2001/XMLSchema#dateTime' => 'CHAR',
         'http://www.w3.org/2001/XMLSchema#date'     => 'CHAR',
+        'http://www.w3.org/2001/XMLSchema#anyURI'   => 'CHAR',
     );
 
     protected $_engine;
@@ -500,13 +501,13 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 }
             }
             if (count($arTypeArray['type']) === 0) {
-                $strWhereTypes .= '1)';
+                $strWhereTypes .= '1';
             } else {
-                $strWhereTypes .= ')';
+                $strWhereTypes .= '';
             }
             
             if (isset($arTypeArray['datatype']) && count($arTypeArray['datatype']) > 0) {
-                $strWhereTypes .= ' AND (';
+                $strWhereTypes .= ' OR ';
                 foreach ($arTypeArray['datatype'] as $i => $arType) {
                     if ($i === 0) {
                         if ($arType === 'http://www.w3.org/2001/XMLSchema#string') {

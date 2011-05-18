@@ -153,12 +153,17 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         foreach ($query->getFromPart() as $from) {
             if (isset($arModelIdMapping[$from])) {
                 $this->arModelIds[] = $arModelIdMapping[$from]['modelId'];
+            } else {
+                $this->arModelIds[] = -1;
             }
         }    
-                
+        
         foreach ($query->getFromNamedPart() as $from) {
             if (isset($arModelIdMapping[$from])) {
                 $this->arModelIds[] = $arModelIdMapping[$from]['modelId'];
+            } else {
+                $this->arModelIds[] = -1;
+                
             }
         }
     }
@@ -280,14 +285,15 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $arConstraints = $graphPattern->getConstraints();
 
             if ($arConstraints != null) {
-
-                foreach ($arConstraints as $constraint) {
-                    $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
-                     .= $filterGen->createFilterSql(
-                        $constraint->getTree(),
-                        $graphPattern->getOptional() !== null,
-                        $this->nUnionCount
-                    );
+                if(isset($arWhere[$this->nUnionCount])){
+                    foreach ($arConstraints as $constraint) {
+                        $arWhere[$this->nUnionCount][count($arWhere[$this->nUnionCount]) - 1]
+                         .= $filterGen->createFilterSql(
+                            $constraint->getTree(),
+                            $graphPattern->getOptional() !== null,
+                            $this->nUnionCount
+                        );
+                    }
                 }
             }
             ++$this->nGraphPatternCount;
@@ -321,7 +327,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             case 'count':
                 $arStrSelect = array('SELECT COUNT(*) as count');
                 break;
-
+            case 'count-distinct':
+                $arStrSelect = array('SELECT COUNT(DISTINCT(t0.s)) as count');
+                break;
             default:
                 require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
@@ -332,15 +340,13 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arSqls = array();
         foreach ($arStrSelect as $nUnionCount => $arSelectPart) {
             $arSqls[] = array(
-                'select'    => $arStrSelect[$nUnionCount],
+                'select'    => $arSelectPart,
                 'from'      => ' FROM '  . implode(' '    , $this->removeNull($arFrom[$nUnionCount])),
                 'where'     => ' WHERE ' . $this->fixWhere(
                             implode(' '  , $this->removeNull($arWhere[$nUnionCount]))
                 )
             );
         }
-        
-
         
         return $arSqls;
     }//function createSql()
@@ -513,28 +519,31 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         /**
         *   FROM part
         */
+        //receive tableName from QueryCache ; if QueryCache dont have some special views
+        //the original tableName will be chosen
+        $tableName = $this->tblStatements;
+        if ($viewName =  Erfurt_App::getInstance()->getQueryCache()->getMaterializedViewName($subject, $predicate, $object)) {
+            $tableName = $viewName;
+        }
+
         if ($this->nUnionTriplePatternCount == 0) {
             //first FROM
-            $strFrom    = $this->tblStatements . ' as ' . $strTablePrefix;
+            $strFrom    = $tableName . ' as ' . $strTablePrefix;
         } else {
             //normal join
             if (count($this->arModelIds) == 1) {
-                $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
             } else if (count($this->arModelIds) > 1) {
                 $arIDs     = array();
                 foreach ($this->arModelIds as $nId) {
                     $arIDs[] = $strTablePrefix . '.g=' . intval($nId);
                 }
-                $strFrom  = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom  = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                           . ' ON (' . implode(' OR ', $arIDs) . ')';
             } else {
-                $strFrom    = 'LEFT JOIN ' . $this->tblStatements . ' as ' . $strTablePrefix
+                $strFrom    = 'LEFT JOIN ' . $tableName . ' as ' . $strTablePrefix
                             . ' ON t0.g=' . $strTablePrefix . '.g';
-            }
-
-            foreach ($arRefVars as $strRefVar => $strSqlVar) {
-                $strFrom .= ' AND ' . $this->arUsedVarAssignments[$strRefVar] . '=' . $strSqlVar;
             }
             
             if ($graphPattern->getOptional() !== null) {
@@ -686,10 +695,14 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
 
             foreach ($arSelect[0] as $arTripleVars) {
                 $ar = array();
+                $arHasItems = false;
+                
                 foreach ($arTripleVars as $arVarParts) {
                     $ar[] = implode(',', $arVarParts);
+                    $arHasItems = true;
                 }
-                if (count($ar) > 0) {
+                // if (count($ar) > 0) {
+                if ( true === $arHasItems ) {
                     $arNewSelect[0][] = implode(',', $ar);
                 }
             }
@@ -780,9 +793,9 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             $str = stripslashes($str);
         } 
             
-        $str = str_replace('"', "'", $str);
+        $str = str_replace("'", "\\'", $str);
         
-        return '"' . $str . '"';
+        return "'" . $str . "'";
     }
 
     /**

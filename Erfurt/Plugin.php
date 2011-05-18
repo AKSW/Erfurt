@@ -11,7 +11,7 @@ class Erfurt_Plugin
 {
     /**
      * Plug-in private config
-     * @var Zend_Config_Ini
+     * @var Zend_Config
      */
     protected $_privateConfig = null;
     
@@ -28,7 +28,7 @@ class Erfurt_Plugin
     {
         $this->_pluginRoot = $root;
         
-        if ($config instanceof Zend_Config_Ini) {
+        if ($config instanceof Zend_Config) {
             $this->_privateConfig = $config;
         }
         
