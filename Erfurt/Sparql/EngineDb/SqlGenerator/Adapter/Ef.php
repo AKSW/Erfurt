@@ -695,10 +695,14 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
 
             foreach ($arSelect[0] as $arTripleVars) {
                 $ar = array();
+                $arHasItems = false;
+                
                 foreach ($arTripleVars as $arVarParts) {
                     $ar[] = implode(',', $arVarParts);
+                    $arHasItems = true;
                 }
-                if (count($ar) > 0) {
+                // if (count($ar) > 0) {
+                if ( true === $arHasItems ) {
                     $arNewSelect[0][] = implode(',', $ar);
                 }
             }

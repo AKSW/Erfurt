@@ -33,10 +33,10 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
                 $object = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($format);
                 
                 if (!($object instanceof Erfurt_Syntax_RdfSerializer)) {
-                    $this->fail('Object initialization failed where it should not fail.');
+                    throw new Exception ( 'Object initialization with '. $format .' failed where it should not fail.' );
                 }
             } catch (Exception $e) {
-                $this->fail('Object initialization failed where it should not fail.');
+                $this->fail($e->getMessage ());
             }
         }
         
@@ -52,7 +52,7 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
         }
     }
     
-    public function testinitializeWithFormat()
+    public function testInitializeWithFormat()
     {
         $positiveFormats = array('rdfxml', 'xml', 'rdf', 'turtle', 'ttl', 'nt', 'ntriple',
             'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle');
@@ -65,10 +65,10 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
                 $object->initializeWithFormat($format);
                 
                 if (!($object instanceof Erfurt_Syntax_RdfSerializer)) {
-                    $this->fail('Object initialization failed where it should not fail.');
+                    throw new Exception ('Object initialization with format '. $format .' failed where it should not fail.');
                 }
             } catch (Exception $e) {
-                $this->fail('Object initialization with format failed where it should not fail.');
+                $this->fail($e->getMessage ());
             }
         }
         

@@ -34,7 +34,7 @@ abstract class BaseRecognizer{
 		$this->state->syntaxErrors = 0;
 		// wack everything related to backtracking and memoization
 		$this->state->backtracking = 0;
-		for ($i = 0; $this->state->ruleMemo!=null && $i < $this->state->ruleMemo->length; $i++) { // wipe cache
+		for ($i = 0; $this->state->ruleMemo!=null && $i < $this->state->ruleMemo->length; ++$i) { // wipe cache
 			$this->state->ruleMemo[$i] = null;
 		}
 	}
@@ -729,7 +729,8 @@ abstract class BaseRecognizer{
 	public function toStrings($tokens) {
 		if ( $tokens==null ) return null;
 		$strings = array();
-		for ($i=0; $i<$tokens->size(); $i++) {
+        $tokensSize = $tokens->size();
+		for ($i=0; $i<$tokensSize; ++$i) {
 			$strings[] = $tokens[$i]->getText();
 		}
 		return $strings;
@@ -802,7 +803,10 @@ abstract class BaseRecognizer{
 	 */
 	public function getRuleMemoizationCacheSize() {
 		$n = 0;
-		for ($i = 0; $this->state->ruleMemo!=null && $i < sizeof($this->state->ruleMemo); $i++) {
+        
+        $sizeOfRuleMemo = sizeof($this->state->ruleMemo);
+        
+		for ($i = 0; $this->state->ruleMemo!=null && $i < $sizeOfRuleMemo; ++$i) {
 			$ruleMap = $this->state->ruleMemo[$i];
 			if ( $ruleMap!=null ) {
 				$n += sizeof($ruleMap); // how many input indexes are recorded?

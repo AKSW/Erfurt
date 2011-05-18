@@ -22,8 +22,10 @@ class Erfurt_Sparql_Query2_GroupOrUnionGraphPattern extends Erfurt_Sparql_Query2
      */
      public function getSparql() {
         $sparql = '';
+        
+        $countElements = count($this->elements);
 
-        for ($i = 0; $i < count($this->elements); $i++) {
+        for ($i = 0; $i < $countElements; ++$i) {
             if($this->elements[$i] instanceof Erfurt_Sparql_Query2_OptionalGraphPattern){
                $sparql .= ' { ';
             }

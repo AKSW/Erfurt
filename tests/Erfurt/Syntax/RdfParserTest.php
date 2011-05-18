@@ -38,7 +38,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithUrlAndN3()
     {   
         $this->_object->initializeWithFormat('ttl');
-        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.ttl';
+        $url = 'http://erfurt.ontowiki.googlecode.com/hg/tests/resources/syntax/valid/conferences.ttl';
         
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
@@ -53,7 +53,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithUrlAndRdfJson()
     {
         $this->_object->initializeWithFormat('rdfjson');
-        $url = 'http://ontowiki.googlecode.com/hg/erfurt/tests/resources/syntax/valid/conferences.json';
+        $url = 'http://erfurt.ontowiki.googlecode.com/hg/tests/resources/syntax/valid/conferences.json';
         
         
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);

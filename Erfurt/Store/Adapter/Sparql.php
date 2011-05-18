@@ -133,7 +133,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     }
     
     public function isModelAvailable($graphUri)
-    {
+    { 
         if (isset($this->_configuredGraphs[$graphUri])) {
             return true;
         } else {
@@ -147,7 +147,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     }
     
     public function sparqlQuery($query, $options=array())
-    {
+    { 
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$query);
@@ -179,7 +179,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         } else {            
             $result = array('head' => array(), 'bindings' => array());
         }
-    
+
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
@@ -197,12 +197,14 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 
                 return $newResult;
             case 'extended':
+                
                 return $result;
+                break;
             case 'json':
                 return json_encode($result);
                 break;
             default:
-                throw new Exception('Result form not supported yet.');
+                throw new Exception('Result form '.$resultform.' not supported yet.');
         }        
     }
     
@@ -253,11 +255,12 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                     $var = $node->attributes->getNamedItem('name')->value;
                     
                     $valueNodes = $node->childNodes;
+                    $addRow = false;
                     foreach ($valueNodes as $vn) {
-                        if (!$vn instanceof DOMNode
-                               || '' === trim($vn->nodeValue)) {
+                        if (!($vn instanceof DOMNode) || trim($vn->nodeValue) === '') {
                             continue;
                         }
+                        $addRow = true;
                         
                         $valueType = $vn->nodeName;
                         if ($valueType === 'uri' || $valueType === 'bnode') {
@@ -280,17 +283,19 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                         
                         break;
                     }
-                    
-                    $row[$var] = array(
-                        'type'  => $type,
-                        'value' => $val
-                    );
-                    
-                    if (isset($lang)) {
-                        $row[$var]['xml:lang'] = $lang;
-                    }
-                    if (isset($dt)) {
-                        $row[$var]['datatype'] = $dt;
+
+                    if($addRow){
+                        $row[$var] = array(
+                            'type'  => $type,
+                            'value' => $val
+                        );
+
+                        if (isset($lang)) {
+                            $row[$var]['xml:lang'] = $lang;
+                        }
+                        if (isset($dt)) {
+                            $row[$var]['datatype'] = $dt;
+                        }
                     }
                 }
             }

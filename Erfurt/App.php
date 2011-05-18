@@ -24,6 +24,8 @@
  */
 class Erfurt_App
 {
+    static $httpAdapter = null;
+    
     // ------------------------------------------------------------------------
     // --- Class constants ----------------------------------------------------
     // ------------------------------------------------------------------------
@@ -496,6 +498,11 @@ class Erfurt_App
         return $this->_ac;
     }
     
+    public function setAc($ac)
+    {
+        $this->_ac = $ac;
+    }
+    
     /**
      * Returns an instance of the access control model.
      * 
@@ -597,6 +604,7 @@ class Erfurt_App
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
+                // Should throw an exception.
                 return false;
                 //return $this->getTmpDir();
             }
@@ -640,6 +648,10 @@ class Erfurt_App
      */
     public function getHttpClient($uri, $options = array())
     {
+        if (null !== self::$httpAdapter) {
+            return new Zend_Http_Client($uri, array('adapter' => self::$httpAdapter));
+        }
+        
         $config = $this->getConfig();
         
         $defaultOptions = array();
@@ -844,6 +856,11 @@ class Erfurt_App
         }
         
         return $this->_store;
+    }
+    
+    public function setStore(Erfurt_Store $store)
+    {
+        $this->_store = $store;
     }
     
     /**

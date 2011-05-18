@@ -161,4 +161,5 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         
         return json_encode($triples);
     }
+    
 }
