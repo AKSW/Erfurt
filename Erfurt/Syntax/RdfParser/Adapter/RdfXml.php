@@ -10,7 +10,7 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml/PropertyElement.php';
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id$
+ * @version   $Id: RdfXml.php 4283 2009-10-12 11:26:57Z c.riess.dev $
  */
 class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_Adapter_Interface
 {

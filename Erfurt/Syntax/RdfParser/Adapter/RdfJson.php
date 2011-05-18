@@ -8,7 +8,7 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id$
+ * @version   $Id: RdfJson.php 2929 2009-04-22 14:56:30Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser_Adapter_Interface
 {    

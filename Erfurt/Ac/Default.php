@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Default.php 4316 2009-10-16 19:56:50Z c.riess.dev $
  */
 
 /**

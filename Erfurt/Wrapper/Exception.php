@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Exception.php 4013 2009-08-13 14:37:18Z pfrischmuth $
  */
 
 require_once 'Erfurt/Exception.php';

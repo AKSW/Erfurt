@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Dispatcher.php 4015 2009-08-13 14:52:51Z pfrischmuth $
  */
 
 require_once 'Erfurt/Event.php';

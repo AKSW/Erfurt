@@ -7,7 +7,7 @@
  * @author    Norman Heino <norman.heino@gmail.com>
  * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id$
+ * @version   $Id: Store.php 4312 2009-10-14 21:37:14Z c.riess.dev $
  */
 class Erfurt_Store
 {   

@@ -11,7 +11,7 @@ require_once 'Erfurt/Rdf/Node.php';
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: Resource.php 3632 2009-07-08 13:54:09Z norman.heino $
  */
 class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 {

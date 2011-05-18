@@ -7,7 +7,7 @@
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
  * @copyright Copyright (c) 2007
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version $Id$
+ * @version $Id: RdfWriter.php 4016 2009-08-13 15:21:13Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter 
 {

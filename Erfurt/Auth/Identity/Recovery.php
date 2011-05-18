@@ -5,7 +5,7 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Recovery.php 4283 2009-10-12 11:26:57Z c.riess.dev $
  */
 
 require_once 'Zend/Mail.php';

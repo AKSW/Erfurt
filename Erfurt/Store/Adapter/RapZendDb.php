@@ -11,7 +11,7 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: RapZendDb.php 3498 2009-06-30 00:01:06Z sebastian.dietzold $
  */
 class Erfurt_Store_Adapter_RapZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {

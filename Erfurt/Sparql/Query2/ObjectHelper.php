@@ -8,7 +8,7 @@
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: ObjectHelper.php 4246 2009-10-06 09:57:37Z jonas.brekle@gmail.com $
  * @abstract
  */
 abstract class Erfurt_Sparql_Query2_ObjectHelper{

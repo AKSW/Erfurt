@@ -158,13 +158,13 @@ class Erfurt_Versioning
     public function getConciseHistoryForGraph($graphUri, $page = 1)
     {
         $this->_checkSetup();
-				
-		$sql = 'SELECT useruri, resource, MAX(tstamp) FROM ef_versioning_actions WHERE
+
+        $sql = 'SELECT DISTINCT useruri, resource ' .
+               'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
-                GROUP BY useruri, resource
-                ORDER BY 3 DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
+                ORDER BY tstamp DESC LIMIT ' . ($this->getLimit() + 1) . ' OFFSET ' .
                 ($page*$this->getLimit()-$this->getLimit());
-				
+
         $result = $this->_sqlQuery($sql);
 
         return $result;

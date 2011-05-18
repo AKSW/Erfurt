@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: FoafSsl.php 4030 2009-08-14 04:31:05Z pfrischmuth $
  */
 
 require_once 'Zend/Auth/Adapter/Interface.php';

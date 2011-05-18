@@ -9,7 +9,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: Redland.php 2899 2009-04-20 13:32:26Z sebastian.dietzold $
  */
 class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
 {

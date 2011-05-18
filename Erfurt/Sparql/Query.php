@@ -10,7 +10,7 @@
  * @author Tobias Gauss <tobias.gauss@web.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id$
+ * @version	$Id: Query.php 3021 2009-05-04 13:45:43Z pfrischmuth $
  */
 class Erfurt_Sparql_Query 
 {    

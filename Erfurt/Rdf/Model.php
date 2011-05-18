@@ -10,7 +10,7 @@
  * @author     Natanael Arndt <arndtn@gmail.com>
  * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: Model.php 4110 2009-09-01 15:07:18Z jonas.brekle@gmail.com $
  */
 class Erfurt_Rdf_Model
 {

@@ -11,7 +11,7 @@
  * @author Christian Weiske <cweiske@cweiske.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id$
+ * @version	$Id: Parser.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
 class Erfurt_Sparql_Parser 
 {

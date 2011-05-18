@@ -14,7 +14,7 @@ require_once 'Zend/Auth/Result.php';
  * @author  Norman Heino <norman.heino@gmail.com>
  * @author  Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license
- * @version $Id$
+ * @version $Id: Rdf.php 4191 2009-09-25 10:32:03Z c.riess.dev $
  */
 class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface {
     

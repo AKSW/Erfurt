@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Auth.php 4023 2009-08-13 19:04:31Z pfrischmuth $
  */
 
 require_once 'Zend/Auth.php';

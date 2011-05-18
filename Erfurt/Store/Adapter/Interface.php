@@ -7,7 +7,7 @@
  * @author     Norman Heino <norman.heino@gmail.com>
  * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
+ * @version    $Id: Interface.php 4057 2009-08-14 06:28:31Z pfrischmuth $
  */
 interface Erfurt_Store_Adapter_Interface
 {

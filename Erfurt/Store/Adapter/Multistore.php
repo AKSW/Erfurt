@@ -4,7 +4,7 @@
  *
  * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id$
+ * @version $Id: Multistore.php 4059 2009-08-14 06:40:23Z pfrischmuth $
  */
 
 require_once 'Erfurt/Store/Adapter/Interface.php';

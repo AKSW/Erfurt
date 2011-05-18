@@ -9,7 +9,7 @@ require_once 'Erfurt/Sparql/Query.php';
  * @subpackage sparql
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id$
+ * @version	$Id: QueryResultVariable.php 2899 2009-04-20 13:32:26Z sebastian.dietzold $
  */
 class Erfurt_Sparql_QueryResultVariable
 {

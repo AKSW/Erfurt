@@ -12,7 +12,7 @@ require_once 'Erfurt/Exception.php';
  * @author Tobias Gauss <tobias.gauss@web.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id$
+ * @version	$Id: ParserException.php 4129 2009-09-06 09:38:43Z jonas.brekle@gmail.com $
  */
 class Erfurt_Sparql_ParserException extends Erfurt_Exception 
 { 
