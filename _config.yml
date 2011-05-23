@@ -1,0 +1,10 @@
+markdown: rdiscount
+pygments: true
+
+name: Erfurt Semantic Web Framwork
+feedurl: /atom.xml
+
+#googleapikey:    ABQIAAAAitobPUIhyrbIytinfOycLhRyFBN_AqxOq4tgVFHJFem-WL375BSiKcIycY70aCjXPsPAhC7l-eYlDg
+googleapikey:    ABQIAAAAceda6Yw6e6J-g107iwZV7hRv1TyhWELInpDTcWyd-dUz7oIw-xQce91OtXQpURA5VOeeHB-KujXgZw
+googleanalytics: UA-241023-24
+
