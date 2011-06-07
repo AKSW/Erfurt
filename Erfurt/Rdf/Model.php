@@ -386,8 +386,8 @@ class Erfurt_Rdf_Model
      * Added statements are those that are found in $changed but not in $original, 
      * removed statements are found in $original but not in $changed.
      *
-     * @param stdClass statementsObject1
-     * @param stdClass statementsObject2
+     * @param array $original
+     * @param array $changed
      */
     public function updateWithMutualDifference(array $original, array $changed)
     {
