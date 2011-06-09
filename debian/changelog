@@ -1,0 +1,5 @@
+erfurt (1.0-1) lod2; urgency=low
+
+  * initial debian package
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Thu, 09 Jun 2011 12:35:20 +0200
