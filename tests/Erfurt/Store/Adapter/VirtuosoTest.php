@@ -12,8 +12,8 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
         // $config = $this->getTestConfig()->store->virtuoso->toArray();
         
         $config = array(
-            'dsn' => 'VOS', 
-            'username' => 'dba', 
+            'dsn' => 'VOS',
+            'username' => 'dba',
             'password' => 'dba'
         );
         

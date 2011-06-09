@@ -128,6 +128,8 @@ class Erfurt_Store
      */
     protected $_erfurtLogger = null;
 
+    protected $_bnodePrefix = 'nodeID:';
+
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -163,6 +165,8 @@ class Erfurt_Store
      * @var int
      */
     private static $_queryCount = 0;
+
+    private $_importsClosure = array();
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -247,9 +251,12 @@ class Erfurt_Store
         $this->_backendAdapter = new $className($backendOptions);
 
         // check interface conformance
-        if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
-            require_once 'Erfurt/Store/Exception.php';
-            throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
+        // but do not check the comparer adapter since we use __call there
+        if ($backend != 'comparer') {
+            if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
+                require_once 'Erfurt/Store/Exception.php';
+                throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
+            }
         }
     }
     
@@ -767,12 +774,42 @@ class Erfurt_Store
         return $this->_dbPass;
     }
 
+    public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
+    {
+        if (array_key_exists($modelIri, $this->_importsClosure)) {
+            return $this->_importsClosure[$modelIri];
+        }
+
+        if ($this->_backendName == "Virtuoso") {
+            $objectCache = Erfurt_App::getInstance()->getCache();
+            $importsClosure = null;
+            $importsClosureKey = "ImportsClosure_".(md5($modelIri));
+            $importsClosure = $objectCache->load($importsClosureKey);
+            if (is_array($importsClosure)) {
+                //nothing ToDo
+            } else {
+                $queryCache = Erfurt_App::getInstance()->getQueryCache();
+                $queryCache->startTransaction($importsClosureKey);
+                $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
+                $queryCache->endTransaction($importsClosureKey);
+                $objectCache->save($importsClosure, $importsClosureKey);
+            }
+        } else {
+            $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
+        }
+
+        $this->_importsClosure[$modelIri] = $importsClosure;
+        return $importsClosure;
+    }
+
+
+
     /**
      * Recursively gets owl:imported model IRIs starting with $modelIri as root.
      *
      * @param string $modelIri
      */
-    public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
+    private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if($currentLevel == array($modelIri)) {
@@ -1213,7 +1250,8 @@ class Erfurt_Store
             }
         }
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        if (!($sparqlResult = $queryCache->load( (string) $queryObject, 'plain'))){
+        $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT ){
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
@@ -1361,11 +1399,16 @@ class Erfurt_Store
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        $sparqlResult = $queryCache->load( (string) $queryObject, $resultFormat );
-        if (!is_array($sparqlResult)) {
+        $queryString = (string)$queryObject;
+        $replacements = 0;
+        $queryString = str_replace($this->_bnodePrefix, $this->_backendAdapter->getBlankNodePrefix(), $queryString, $replacements);
+
+        // $sparqlResult = $queryCache->load($queryString, $queryObject, $resultFormat );
+        $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryObject, $options);
+            $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
@@ -1508,6 +1551,15 @@ class Erfurt_Store
         }
 
         return $this->_backendName;
+    }
+    /**
+     * Returns the currently used backend.
+     *
+     * @return Erfurt_Store_Adapter_Interface
+     */
+    public function getBackendAdapter()
+    {
+        return $this->_backendAdapter;
     }
 
     /**
@@ -1710,7 +1762,7 @@ class Erfurt_Store
             $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);
 
             // get sub items
-            $result = $this->_backendAdapter->sparqlQuery($subSparql, 'plain');
+            $result = $this->_backendAdapter->sparqlQuery($subSparql, array(STORE_RESULTFORMAT => STORE_RESULTFORMAT_PLAIN));
 
             // break on first empty result
             if (empty($result)) {

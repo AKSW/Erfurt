@@ -74,7 +74,7 @@ class Erfurt_Wrapper_Registry
      * instance will be created.
      */
     public static function reset()
-    {   
+    { 
         if(self::$_instance != null){
             self::$_instance->_wrapperRegistry = array();
         }

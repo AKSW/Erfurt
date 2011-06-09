@@ -610,10 +610,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $this->_dbConn->delete('ef_lit', "g = $graphId");
 
         // invalidate the cache and fetch model infos again
-        require_once 'Erfurt/App.php';
+        // Note: we invalidate the complete model info here
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $queryCache->invalidateWithModelIri( (string) $graphUri);
         $cache = Erfurt_App::getInstance()->getCache();
-        $tags =  array('model_info', $modelInfoCache[$graphUri]['modelId']);
-        #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
+        $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelCache = array();
         $this->_modelInfoCache = null;
     }
@@ -812,7 +813,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
             // create file
             $tmpDir     = Erfurt_App::getInstance()->getTmpDir();
-            $filename   = $tmpDir . 'import' . md5((string)time()) . '.csv';
+            $filename   = $tmpDir . '/import' . md5((string)time()) . '.csv';
             $fileHandle = fopen($filename, 'w');
 
             $count = 0;
