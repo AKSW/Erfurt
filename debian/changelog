@@ -1,4 +1,4 @@
-erfurt (1.0-1) lod2; urgency=low
+liberfurt-php (1.0-1) lod2; urgency=low
 
   * initial debian package
 
