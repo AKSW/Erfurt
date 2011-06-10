@@ -1403,8 +1403,7 @@ class Erfurt_Store
         $replacements = 0;
         $queryString = str_replace($this->_bnodePrefix, $this->_backendAdapter->getBlankNodePrefix(), $queryString, $replacements);
 
-        // $sparqlResult = $queryCache->load($queryString, $queryObject, $resultFormat );
-        $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
+        $sparqlResult = $queryCache->load($queryString, $resultFormat );
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
