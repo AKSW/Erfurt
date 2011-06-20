@@ -337,7 +337,7 @@ class Erfurt_Rdf_Model
      * @param string $optionUri The URI that identifies the option.
      * @param array|null An array (RDF/PHP object part) of values or null.
      */
-    public function setOption($optionUri, $value = null)
+    public function setOption($optionUri, $value = null, $replace = true)
     {
         if (!$this->_isEditable) {
             // User has no right to edit the model.
@@ -349,7 +349,7 @@ class Erfurt_Rdf_Model
         $options = $this->_getOptions();
         $store = $this->getStore();
 
-        if (isset($options[$optionUri])) {
+        if ($replace && isset($options[$optionUri])) {
             // In this case we need to remove the old values from sysont        
             $options = array(
                 'use_ac'       => false, // We disable AC, for we need to write the system ontology.
