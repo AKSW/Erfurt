@@ -1,3 +1,9 @@
+liberfurt-php (1.0-2) lod2; urgency=low
+
+  * move to /usr/share/php/
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Mon, 20 Jun 2011 10:38:24 +0200
+
 liberfurt-php (1.0-1) lod2; urgency=low
 
   * initial debian package
