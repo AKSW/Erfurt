@@ -1,0 +1,22 @@
+Source: liberfurt-php
+Section: web
+Priority: extra
+Maintainer: Sebastian Tramp <tramp@informatik.uni-leipzig.de>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Homepage: http://erfurt-framework.org
+Vcs-Git: git://github.com/AKSW/Erfurt.git
+Vcs-Browser: https://github.com/AKSW/Erfurt
+
+Package: liberfurt-php
+Architecture: all
+Depends: libzend-framework-php, ${misc:Depends}
+Description: PHP5 / Zend based Semantic Web API for Social Semantic Software
+ Features
+  * RDF Parser / Serializer
+  * Storage Abstraction / RDF Store
+  * Versioning
+  * SPARQL Query / Update
+  * Caching
+  * Plugins / Trigger
+
