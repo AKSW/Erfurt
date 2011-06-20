@@ -243,7 +243,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 
                 if ($row['o']['type'] === 'bnode') {
                     $nodeId  = $row['o']['value'];
-                    $bNode   = self::initWithBlankNode($nodeId);
+                    $bNode   = self::initWithBlankNode($nodeId, $this->_model);
                     $nodeKey = sprintf('_:%s', $nodeId);
                     
                     $description[$nodeKey] = $bNode->getDescription($maxDepth-1);
@@ -280,9 +280,9 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         return $resource;
     }
     
-    public static function initWithBlankNode($id)
+    public static function initWithBlankNode($id, $model = null)
     {
-        $resource = new self($id);
+        $resource = new self($id, $model);
         $resource->_isBlankNode = true;
         return $resource;
     }
