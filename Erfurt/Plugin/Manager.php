@@ -79,13 +79,17 @@ class Erfurt_Plugin_Manager
      */
     public function isPluginEnabled($pluginName, $registeredOnly = false)
     {
-        if (array_key_exists($pluginName, $this->_plugins) && $this->_plugins[$pluginName]['enabled']) {
-            if($registeredOnly){
-                return !empty($this->_plugins[$pluginName]['enabled']['events']);
-            } else {
-                return true;
+        if (array_key_exists($pluginName, $this->_plugins)) {
+            $pluginConfigZend = $this->_plugins[$pluginName];
+            $pluginConfigArray = $pluginConfigZend->toArray();
+            if ($pluginConfigArray['enabled']) {
+                if ($registeredOnly){
+                    return !empty($this->_plugins[$pluginName]['enabled']['events']);
+                } else {
+                    return true;
+                }
             }
-        }
+        } 
         
         return false;
     }
