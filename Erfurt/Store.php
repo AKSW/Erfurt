@@ -1473,6 +1473,7 @@ class Erfurt_Store
 
             $stmtArray = array();
             if ($result = $this->sparqlQuery($queryObject, $queryoptions)) {
+                $result = $result['results'];
                 foreach ($result['bindings'] as $row) {
                     if (!isset($stmtArray[$row['s']['value']])) {
                         $stmtArray[$row['s']['value']] = array();

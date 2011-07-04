@@ -640,7 +640,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     $result = $converter->convert($result);
                 }
             }
-            
+
             // encode as JSON string
             if ($jsonEncode) {
                 $result = json_encode($result);
@@ -1029,22 +1029,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $queryConfigs = array(
             'json' => array(
-                'singleField' => true, 
-                'converter'   => 'Extended',
-                'jsonEncode'  => true, 
-                'queryPrefix' => 'define output:format "RDF/XML"'
+                'singleField' => true,
+                'converter'   => null,
+                'jsonEncode'  => false,
+                'queryPrefix' => 'define output:format "JSON"'
             ), 
+            // We now parse extended format via JSON
             'extended' => array(
-                'singleField' => true, 
-                'converter'   => 'Extended',
-                'jsonEncode'  => false, 
-                'queryPrefix' => 'define output:format "RDF/XML"'
-            ), 
+                'singleField' => 'true',
+                'converter'   => 'Json',
+                'jsonEncode'  => false,
+                'queryPrefix' => 'define output:format "JSON"'
+            ),
             'xml' => array(
                 'singleField' => true, 
-                'converter'   => array('Extended', 'SparqlResultsXml'),
+                'converter'   => array('Json', 'SparqlResultsXml'),
                 'jsonEncode'  => false, 
-                'queryPrefix' => 'define output:format "RDF/XML"'
+                'queryPrefix' => 'define output:format "JSON"'
             ), 
             'n3' => array(
                 'singleField' => true, 
