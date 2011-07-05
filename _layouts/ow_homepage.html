@@ -1,0 +1,132 @@
+---
+layout: ow_layout
+---
+    <header id="teaser" class="tabcontainer">
+    
+        {{ content }}
+        
+    </header> <!-- /#teaser -->
+
+    <hr class="hideme"/>
+
+    <div id="page">
+        <!-- section id="partners">
+            <h2 class="hideme">Our Partners</h2>
+            <ul class="partnerlogos">
+                <li><a href="#"><img src="./_tmp/dummy-logo01.png" alt="Universität Leipzig" height="50"/></a></li>
+                <li><a href="#"><img src="./_tmp/dummy-logo02.png" alt="InfAI Leipzig" height="50"/></a></li>
+                <li><a href="#"><img src="./_tmp/dummy-logo03.png" alt="AKSW" height="50"/></a></li>
+                <li><a href="#"><img src="./_tmp/dummy-logo04.png" alt="Virtuoso" height="50"/></a></li>
+                <li><a href="#"><img src="./_tmp/dummy-logo05.png" alt="ISA Informationssysteme GmbH" height="50"/></a></li>
+            </ul>
+        </section -->
+        
+        <hr class="hideme" />
+        
+        <div class="subcolumns">
+            <div class="c66l">
+                <div class="subcl">
+                    <section class="newsfeed">
+                        <!-- latest news/post with teaser
+                        <h2><span class="hideme">Latest News:</span> <a href="#">AKSW Conference participation this spring: ESWC, ICWE, WIMS <span class="hideme">(</span><time class="datetime">Feb 27, 2011</time><span class="hideme">)</span></a></h2>
+                        <p>
+                            Members of AKSW are actively participating in some key (Semantic) Web conferences this spring. AKSW was already involved in the organization of 8th Extended Semantic Web Conference 2011 with Jens being one of the PC Chairs of the Linked Data track and a number of other AKSW researchers serving as members of the PC of various tracks, workshops and side events. Now also three AKSW submissions were accepted for the main conference programm (having a 23% acceptance rate) at ESWC:
+                            <a href="#">read full article <span class="hideme">&quot;AKSW Conference participation this spring: ESWC, ICWE, WIMS&quot;</span></a>
+                        </p>
+                        -->
+                        <h2>Other recent <a href="/archive.html">Erfurt posts</a></h2>
+                        <ul>
+                            {% for post in site.posts limit:3 %}
+                            <li><a href="{{ post.url }}">{{ post.title }}</a> <span class="hideme">(</span><time class="datetime">{{ post.date | date_to_string }}</time><span class="hideme">)</span></li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                </div>
+            </div>
+            <div class="c33r">
+                <div class="subcr">
+                    <section class="newsfeed">
+                        <h2><a href="#">Erfurt on Twitter</a></h2>
+                        <!-- ul>
+                            <li>
+                                Excepteur sint @<a href="#">occaecat</a> cupidatat non proident, sunt in culpa qui officia #<a href="#">deserunt</a> mollit anim id est laborum.
+                                <a href="#" title="tweeted by Haschek">#</a><span class="hideme">(</span><time class="datetime">Jan 17, 2011</time><span class="hideme">)</span>
+                            </li>
+                            <li>
+                                Lorem ipsum dolor sit amet, consectetur @<a href="#">adipisicing</a> elit, sed do eiusmod tempor incididunt ut labore et #<a href="#">dolore</a> #<a href="#">magna</a> #<a href="#">aliqua</a>.
+                                <a href="#" title="tweeted by Haschek">#</a><span class="hideme">(</span><time class="datetime">Jan 17, 2011</time><span class="hideme">)</span>
+                            </li>
+                            <li>
+                                Ut enim ad minim veniam, quis nostrud #<a href="#">exercitation</a> ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                <a href="#" title="tweeted by Haschek">#</a><span class="hideme">(</span><time class="datetime">Jan 17, 2011</time><span class="hideme">)</span>
+                            </li>
+                            <li>
+                                Lorem ipsum dolor sit amet, @<a href="#">consectetur</a> adipisicing elit, sed do eiusmod tempor #<a href="#">incididunt</a> ut labore et dolore magna aliqua.
+                                <a href="#" title="tweeted by Haschek">#</a><span class="hideme">(</span><time class="datetime">Jan 17, 2011</time><span class="hideme">)</span>
+                            </li>
+                        </ul -->
+                    </section>
+                </div>
+            </div>
+        </div>
+        
+        <!-- section class="teaser teaser-inpage">
+            <hr class="hideme" />
+            <p class="bigger" style="text-align:center;"><br/><br/><br/>Teaser Inpage<br/><br/><br/><br/></p>
+            <hr class="hideme" />
+        </section -->
+        
+        <hr />
+        
+        <div class="subcolumns">
+            <div class="c33l">
+                <div class="subcl">
+                    <section class="newsfeed">
+                        <h2>Community</h2>
+                        <!-- ul>
+                            <li><a href="#">OntoWiki on none standard port</a> <span class="hideme">(</span><time class="datetime">Feb 4, 2011</time><span class="hideme">)</span></li>
+                            <li><a href="#">Unable to connect to Virtuoso Universal Server via ODBC.</a> <span class="hideme">(</span><time class="datetime">Jan 20, 2011</time><span class="hideme">)</span></li>
+                            <li><a href="#">Semantic Publications at ESWC</a> <span class="hideme">(</span><time class="datetime">Jan 11, 2011</time><span class="hideme">)</span></li>
+                            <li><a href="#">Mercurial CA-Certificates</a> <span class="hideme">(</span><time class="datetime">Jan 7, 2011</time><span class="hideme">)</span></li>
+                            <li><a href="#">Getting started</a> <span class="hideme">(</span><time class="datetime">Nov 18, 2010</time><span class="hideme">)</span></li>
+                            <li><a href="#">Please Don't Use Superglobals (aka. Making OntoWiki Controllers Unit Testable)</a> <span class="hideme">(</span><time class="datetime">Nov 3, 2010</time><span class="hideme">)</span></li>
+                            <li><a href="#">Mercurial 1.7</a> <span class="hideme">(</span><time class="datetime">Nov 3, 2010</time><span class="hideme">)</span></li>
+                            <li><a href="#">Erfurt library failing when cloning ontowiki</a> <span class="hideme">(</span><time class="datetime">Oct 7, 2010</time><span class="hideme">)</span></li>
+                        </ul -->
+                    </section>
+                </div>
+            </div>
+            <div class="c33l">
+                <div class="subc">
+                    <section class="newsfeed">
+                        <h2>Project Activities</h2>
+                        <!-- ul>
+                            <li><a href="#">Revision ed925575ff (cleanup) pushed by rol...@gmail.com</a> <span class="hideme">(</span><time class="datetime">12 min ago</time><span class="hideme">)</span></li>
+                            <li><a href="#">4 new revisions pushed by rol...@gmail.com</a> <span class="hideme">(</span><time class="datetime">17 hours ago</time><span class="hideme">)</span></li>
+                            <li><a href="#">RecommendedPHPSettings (Settings in the php.ini we recommend for using OntoWiki) Wiki page edited by norman.h...@googlemail.com</a> <span class="hideme">(</span><time class="datetime">18 hours ago</time><span class="hideme">)</span></li>
+                            <li><a href="#">issue 974 (sparql and update endpoints doesn't work with http auth) reported by yamali...@gmail.com</a> <span class="hideme">(</span><time class="datetime">22 hours ago</time><span class="hideme">)</span></li>
+                            <li><a href="#">WebServices (An overview of available Ontowiki web services.) Wiki page edited by norman.h...@googlemail.com</a> <span class="hideme">(</span><time class="datetime">41 hours ago</time><span class="hideme">)</span></li>
+                        </ul -->
+                    </section>
+                </div>
+            </div>
+            <div class="c33r">
+                <div class="subcr">
+                    <section class="gallery">
+                        <!-- h2>Screenshots &amp; Videos</h2>
+                        <ul>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-01.jpg" alt="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-02.jpg" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-03.jpg" alt="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-04.jpg" alt="Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-05.jpg" alt="@@" height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-06.jpg" alt="@@" height="75" width="100"/></a></li>
+                            <li class="image"><a href="./_tmp/dummy-screenshot-01.png"><img src="./_tmp/dummy-thumbnail-07.jpg" alt="@@" height="75" width="100"/></a></li>
+                        </ul -->
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div> <!-- /#page -->
+    
+

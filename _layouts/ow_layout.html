@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:sioc="http://rdfs.org/sioc/ns#"
+    xmlns:sioct="http://rdfs.org/sioc/types#"
+    xmlns:dcterms="http://rdfs.org/sioc/types#"
+    xmlns:rel="http://purl.org/vocab/relationship/"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    > 
+<head>
+    <title>{{ page.title }} &mdash; {{ site.name }}</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta http-equiv="content-style-type" content="text/css" />
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" type="text/css" href="/css/all.css" media="all" /> <!-- layout css -->
+    <link rel="stylesheet" href="/css/syntax.css" type="text/css" /> <!-- syntax css -->
+    <!-- link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" / -->
+    <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/css/patches/ie7.css" /><![endif]-->
+
+    <!-- javascript -->
+    <script type="text/javascript">document.documentElement.className += 'js';</script>
+    <script src="/js/headjs/head.min.js" type="text/javascript"></script>
+    <script src="/js/headjs.settings.js" type="text/javascript"></script>
+    <!-- script src="" type="text/javascript"></script -->
+
+    <!-- (c)2011 Michael Haschke, Webentwicklung | http://48augen.de/ -->
+
+    <meta name="author" content="{{ site.name }}" />
+    <!-- meta name="keywords" content="@@" / -->
+    <!-- meta name="description" content="@@" / -->
+    <!-- meta name="date" content="@@" / -->
+
+    <meta name="robots" content="index,follow" />
+    
+    <!-- meta http-equiv="cache-control" content="max-age=7" / -->
+    <!-- meta name="revisit-after" content="30 days" / -->
+
+    <!-- meta name="google-site-verification" content="" / -->
+
+    <link href="{{site.feedurl}}" rel="alternate" title="{{ site.name }}"" type="application/atom+xml" />
+    <!-- link rel="alternate" type="text/xml" title="" href="" / -->
+</head>
+<body id="cat_{{ page.layout_cat }}">
+<div id="bgtop" class="bgsite"></div>
+<div id="bgbottom" class="bgsite"></div>
+
+
+<div class="page_margins">
+
+    <header id="header">
+        <h1><a href="/">Erfurt <abbr title="Semantic Web Framework">SWF</abbr><span id="logo"></span></a></h1>
+        <!-- start - Nav & Searchform
+        <nav id="nav-main">
+            <ol>
+                <li><strong>Home</strong></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Manual</a></li>
+                <li><a href="./usecases-deepcontent.html">Success Stories</a></li>
+                <li><a href="./development-overview.html">Development</a></li>
+                <li id="searchform">
+                    <form method="get" action="#">
+                        <label class="hideme" for="searchstring">Search this site</label>
+                        <input type="text" name="q" id="searchstring" value="" />
+                        <button type="submit"><span class="hideme">Search</span> &raquo;</button>
+                    </form>
+                </li>
+            </ol>
+        </nav>
+        -->
+    </header> <!-- /#header -->
+
+    <hr class="hideme"/>
+        
+        {{ content }}
+
+    <hr class="hideme"/>
+
+    <footer id="footer" class="inverse-link-behaviour">
+        <h2 class="hideme">Global site informations</h2>
+        <div class="subcolumns">
+            <div class="c33l">
+                <nav class="subc">
+                    <h3>Sitemap</h3>
+                    <!-- ul>
+                        <li><a href="#">Home: Get Started & News</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Manual</a></li>
+                        <li><a href="#">Success Stories &amp; Use Cases</a></li>
+                        <li><a href="#">Extensions & Development</a></li>
+                        <li><a href="#">Contact &amp; Impress</a></li>
+                    </ul -->
+                </nav>
+            </div>
+            <div class="c33r">
+                <aside class="subcr">
+                    <h3>Other Web Resources</h3>
+                    <!-- ul>
+                        <li><a href="#">Website: http://ontowiki.net/</a></li>
+                        <li><a href="#">Repository: http://code.google.com/p/ontowiki/</a></li>
+                        <li><a href="#">Flickr: http://flickr.com/groups/ontowiki</a></li>
+                        <li><a href="#">Videos: http://vimeo.com/ontowiki</a></li>
+                        <li><a href="#">Ohloh: http://ohloh.com/project/ontowiki</a></li>
+                    </ul -->
+                </aside>
+            </div>
+        </div>
+    </footer> <!-- /#footer -->
+
+</div> <!-- /.page_margins -->
+
+<div>
+    <a href="http://github.com/AKSW/Erfurt"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://d3nwyuy0nl342s.cloudfront.net/img/abad93f42020b733148435e2cd92ce15c542d320/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" /></a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+---
+layout: ow_layout
+---
+    <div id="page">
+        {% if page.topictitle %}
+        <header class="hideme">
+            <h1>{{ page.topictitle }}</h1>
+        </header>
+        {% endif %}
+        
+        <div id="col1">
+            <div id="col1_content" class="clearfix">
+            
+                <article about="" typeof="sioc:BlogPost">
+                    {% if page.topictitle %}
+                        <h2 property="dcterms:title">{{ page.title }}</h2>
+                    {% else %}
+                        <h1 property="dcterms:title">{{ page.title }}</h1>
+                    {% endif %}
+                    
+                    <p class="meta smaller">{{page.when}} - {{page.who}}</p>
+                    
+                    <div property="content:encoded">
+                        {{ content }}
+                    </div>
+                    
+                    {% for post in site.related_posts limit:10 %}
+                        {% if forloop.first %}
+                        <section class="newsfeed">
+                            <h2>Related posts</h2>
+                            <ul>
+                            {% endif %}
+                                <li><a href="{{ post.url }}">{{ post.title }}</a> <span class="hideme">(</span><time class="datetime">{{ post.date | date_to_string }}</time><span class="hideme">)</span></li>
+                            {% if forloop.last %}
+                            </ul>
+                        </section>
+                        {% endif %}
+                    {% endfor %}
+
+                </article>
+                
+            </div> <!-- /#col1_content -->
+        </div>
+        <div id="col2">
+            <div id="col2_content" class="clearfix">
+                <nav>
+                    <h2 class="hideme">Subnavigation: Develop &amp; Extend</h2>
+                    <ul id="nav-sub">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#" class="active">Lorem ipsum consectetur</a>
+                            <ul>
+                                <li><a href="#">dolor sit amet</a></li>
+                                <li><a href="#">consectetur</a></li>
+                                <li><strong>adipisicing elit</strong></li>
+                                <li><a href="#">eiusmod tempor</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Incididunt labore et dolore</a>
+                            <ul>
+                                <li><a href="#">labore et dolore</a></li>
+                                <li><a href="#">magna aliqua</a></li>
+                                <li><a href="#">enim ad minim</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Veniam commodo consequat</a>
+                            <ul>
+                                <li><a href="#">quis nostrud</a></li>
+                                <li><a href="#">exercitation</a></li>
+                                <li><a href="#">ullamco laboris</a></li>
+                                <li><a href="#">nisi ut aliquip</a></li>
+                                <li><a href="#">commodo consequat</a></li>
+                                <li><a href="#">irure dolor</a></li>
+                                <li><a href="#">reprehenderit</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Incididunt labore et dolore</a></li>
+                        <li><a href="#">Voluptate dolore eu fugiat</a>
+                            <ul>
+                                <li><a href="#">velit esse cillum</a></li>
+                                <li><a href="#">dolore eu fugiat</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Nulla pariatur sint occaecat</a>
+                            <ul>
+                                <li><a href="#">Excepteur</a></li>
+                                <li><a href="#">sint occaecat</a></li>
+                                <li><a href="#">cupidatat</a></li>
+                                <li><a href="#">proident sunt</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Lorem ipsum consectetur</a></li>
+                        <li><a href="#">Incididunt labore et dolore</a></li>
+                        <li><a href="#">Culpa qui officia</a>
+                            <ul>
+                                <li><a href="#">deserunt</a></li>
+                                <li><a href="#">mollit anim</a></li>
+                                <li><a href="#">laborum</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="ie_clearing">&nbsp;</div>
+        </div>
+        
+    </div> <!-- /#page -->
+
