@@ -317,11 +317,8 @@ class Erfurt_Store
      * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
-     * @param string $object (IRI, blank node or literal)
-     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
-     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
-     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
-     * the object of the statement is a literal.
+     * @param array $object conaining keys "value", "type", "datatype", "lang"
+     * @param bool $useAcl 
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
@@ -1470,12 +1467,13 @@ class Erfurt_Store
 
             $queryoptions = array(
                 'use_ac'                 => false,
-                'result_format'          => 'extended',
+                'result_format'          => STORE_RESULTFORMAT_EXTENDED,
                 'use_additional_imports' => false
             );
 
             $stmtArray = array();
             if ($result = $this->sparqlQuery($queryObject, $queryoptions)) {
+                $result = $result['results'];
                 foreach ($result['bindings'] as $row) {
                     if (!isset($stmtArray[$row['s']['value']])) {
                         $stmtArray[$row['s']['value']] = array();

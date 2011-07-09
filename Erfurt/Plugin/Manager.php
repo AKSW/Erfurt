@@ -85,7 +85,7 @@ class Erfurt_Plugin_Manager
             } else {
                 return true;
             }
-        }
+        } 
         
         return false;
     }
