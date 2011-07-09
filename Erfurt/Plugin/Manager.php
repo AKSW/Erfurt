@@ -81,7 +81,8 @@ class Erfurt_Plugin_Manager
     {
         if (array_key_exists($pluginName, $this->_plugins) && $this->_plugins[$pluginName]->enabled) {
             if($registeredOnly){
-                return !empty($this->_plugins[$pluginName]->events->toArray());
+                $events = $this->_plugins[$pluginName]->events->toArray();
+                return !empty($events);
             } else {
                 return true;
             }
