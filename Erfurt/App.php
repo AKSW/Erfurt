@@ -513,7 +513,7 @@ class Erfurt_App
         if (null === $this->_acModel) {
             $config = $this->getConfig();
             $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
-        }    
+        }
         
         return $this->_acModel;
     }

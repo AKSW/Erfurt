@@ -114,6 +114,14 @@ class Erfurt_Versioning
     }
     
     /**
+     * abort current action
+     * TODO: is it ok to have this method also public?
+     */
+    public function abortAction(){
+        $this->_abortAction();
+    } 
+    
+    /**
      * Probably shortcut?
      */
     public function getLastModifiedForResource($resourceUri, $graphUri)
