@@ -1405,6 +1405,7 @@ class Erfurt_Store
                     throw new Erfurt_Store_Exception('invalid query result.');
                 }
             }
+            
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
