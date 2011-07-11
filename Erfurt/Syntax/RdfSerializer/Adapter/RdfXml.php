@@ -290,7 +290,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         }
 
         if (count($result['bindings']) < 1000) {
-        break;
+            break;
         }
 
         $offset += 1000;
@@ -315,7 +315,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, array(
+            $result = $this->_store->sparqlQuery($query, 
+                    array(
                         'result_format'   => 'extended',
                         'use_owl_imports' => false,
                         'use_additional_imports' => false,
@@ -340,9 +341,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
             if (count($result['bindings']) < 1000) {
                 break;
-                }
+            }
 
-                $offset += 1000;
+            $offset += 1000;
         }
         $this->_forceWrite();
 
@@ -373,7 +374,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, array(
+            $result = $this->_store->sparqlQuery($query, 
+                    array(
                         'result_format'   => 'extended',
                         'use_owl_imports' => false,
                         'use_additional_imports' => false,
@@ -398,9 +400,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
             if (count($result['bindings']) < 1000) {
                 break;
-                }
+            }
 
-                $offset += 1000;
+            $offset += 1000;
         }
         $this->_forceWrite();
 
