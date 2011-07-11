@@ -79,15 +79,12 @@ class Erfurt_Plugin_Manager
      */
     public function isPluginEnabled($pluginName, $registeredOnly = false)
     {
-        if (array_key_exists($pluginName, $this->_plugins)) {
-            $pluginConfigZend = $this->_plugins[$pluginName];
-            $pluginConfigArray = $pluginConfigZend->toArray();
-            if ($pluginConfigArray['enabled']) {
-                if ($registeredOnly){
-                    return !empty($this->_plugins[$pluginName]['enabled']['events']);
-                } else {
-                    return true;
-                }
+        if (array_key_exists($pluginName, $this->_plugins) && $this->_plugins[$pluginName]->enabled) {
+            if($registeredOnly){
+                $events = $this->_plugins[$pluginName]->events->toArray();
+                return !empty($events);
+            } else {
+                return true;
             }
         } 
         
@@ -127,8 +124,8 @@ class Erfurt_Plugin_Manager
             }
         }
         // check if plugin is enabled
-        if (!array_key_exists('enabled', $pluginConfig)){
-            $pluginConfig['enabled'] = false;
+        if (!isset($pluginConfig->enabled)){
+            $pluginConfig->enabled = false;
         }
 
         $this->addPluginExternally($pluginName,$pluginName,$path,$config);
