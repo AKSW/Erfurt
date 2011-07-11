@@ -344,7 +344,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                         $limit = 0;
                     }
                 } else {
-                    $limit = $limit - count($tempResult['bindings']);
+                    $limit = $limit - count($tempResult['result']['bindings']);
                     if ($limit < 0) {
                         $limit = 0;
                     }
@@ -356,9 +356,9 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             } else {
                 if (empty($result)) {
                     $result['head'] = $tempResult['head'];
-                    $result['bindings'] = $tempResult['bindings'];
+                    $result['result']['bindings'] = $tempResult['bindings'];
                 } else {
-                    $result['bindings'] = array_merge($result['bindings'], $tempResult['bindings']);
+                    $result['result']['bindings'] = array_merge($result['bindings'], $tempResult['bindings']);
                 }
                 
                 

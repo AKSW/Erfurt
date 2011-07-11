@@ -75,7 +75,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
 		        'use_additional_imports' => false,
 		        'use_ac' => $useAc
 		    ));
-            foreach ($result['bindings'] as $row) {
+            foreach ($result['results']['bindings'] as $row) {
                 $s     = $row['resourceUri']['value'];
                 $p     = $row['p']['value'];
                 $o     = $row['o']['value'];
@@ -86,7 +86,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 $this->handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
 
-            if (count($result['bindings']) < 1000) {
+            if (count($result['results']['bindings']) < 1000) {
     	        break;
     		}
 

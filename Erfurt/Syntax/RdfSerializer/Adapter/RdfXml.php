@@ -208,11 +208,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 'use_additional_imports' => false
             ));
 
-        if ($offset === 0 && count($result['bindings']) > 0) {
+        if ($offset === 0 && count($result['bindings']['bindings']) > 0) {
             $this->_rdfWriter->addComment($description);
         }
 
-        foreach ($result['bindings'] as $row) {
+        foreach ($result['bindings']['bindings'] as $row) {
             $s = $row['s']['value'];
             $p = $row['p']['value'];
             $o = $row['o']['value'];
@@ -224,7 +224,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
             $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
         }
 
-        if (count($result['bindings']) < 1000) {
+        if (count($result['results']['bindings']) < 1000) {
             break;
         }
 
@@ -272,11 +272,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 'use_additional_imports' => false
             ));
 
-        if ($offset === 0 && count($result['bindings']) > 0) {
+        if ($offset === 0 && count($result['results']['bindings']) > 0) {
             $this->_rdfWriter->addComment($description);
         }
 
-        foreach ($result['bindings'] as $row) {
+        foreach ($result['results']['bindings'] as $row) {
             $s = $row['s']['value'];
             $p = $row['p']['value'];
             $o = $row['o']['value'];
@@ -322,7 +322,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                         'use_ac' => $useAc
                     ));
 
-            foreach ($result['bindings'] as $row) {
+            foreach ($result['results']['bindings'] as $row) {
                 $s     = $row['s']['value'];
                 $p     = $row['p']['value'];
                 $o     = $row['o']['value'];
@@ -338,7 +338,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
 
-            if (count($result['bindings']) < 1000) {
+            if (count($result['results']['bindings']) < 1000) {
                 break;
             }
 
@@ -381,7 +381,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                         'use_ac' => $useAc
                     ));
 
-            foreach ($result['bindings'] as $row) {
+            foreach ($result['results']['bindings'] as $row) {
                 $s     = $row['s']['value'];
                 $p     = $row['p']['value'];
                 $o     = $row['o']['value'];
@@ -397,7 +397,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
             }
 
-            if (count($result['bindings']) < 1000) {
+            if (count($result['results']['bindings']) < 1000) {
                 break;
             }
 
