@@ -278,7 +278,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
         foreach ($result['results']['bindings'] as $row) {
             $s = $row['s']['value'];
-            echo $s."<br/>";
             $p = $row['p']['value'];
             $o = $row['o']['value'];
             $sType = $row['s']['type'];
