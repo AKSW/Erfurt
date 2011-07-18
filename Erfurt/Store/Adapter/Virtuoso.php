@@ -744,49 +744,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function buildLiteralString($value, $datatype = null, $lang = null)
     {
-        $longLiteral = false;
-        $quoteChar   = (strpos($value, '"') !== false) ? "'" : '"';
-        $value       = (string)$value;
-        
-        // datatype-specific treatment
-        switch ($datatype) {
-            case 'http://www.w3.org/2001/XMLSchema#boolean':
-                $search  = array('0', '1');
-                $replace = array('false', 'true');
-                $value   = str_replace($search, $replace, $value);
-                break;
-            case '':
-            case null:
-            case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':
-            case 'http://www.w3.org/2001/XMLSchema#string':
-                $value = addcslashes($value, $quoteChar);
-                
-                /** 
-                 * Check for characters not allowed in a short literal
-                 * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
-                 * wrong: \t\b\n\r\f\\\"\\\' 
-                 */
-                if (preg_match('/[\\\r\n"]/', $value) > 0) {
-                    $longLiteral = true;
-                    $value = trim($value, "\n\r");
-                    // $value = str_replace("\x0A", '\n', $value);
-                }
-                break;
-        }
-        
-        // add short, long literal quotes respectively
-        $value = $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '')
-               . $value 
-               . $quoteChar . ($longLiteral ? ($quoteChar . $quoteChar) : '');
-        
-        // add datatype URI/lang tag
-        if (!empty($datatype)) {
-            $value .= '^^<' . (string)$datatype . '>';
-        } else if (!empty($lang)) {
-            $value .= '@' . (string)$lang;
-        }
-        
-        return $value;
+        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
     }
     
     /**
