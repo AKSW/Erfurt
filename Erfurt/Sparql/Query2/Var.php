@@ -116,7 +116,12 @@ class Erfurt_Sparql_Query2_Var extends Erfurt_Sparql_Query2_ElementHelper implem
         
         if ($ret == '') $ret = $name;
         
-        return strtolower($ret);
+        $lower = strtolower($ret);
+        
+        $notAllowed = array('-');
+        $clean = str_replace($notAllowed, '', $lower);
+        
+        return $clean;
     }
     
     
