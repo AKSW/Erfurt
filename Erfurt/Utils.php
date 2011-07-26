@@ -64,10 +64,24 @@ class Erfurt_Utils
                 $replace = array('false', 'true');
                 $value   = str_replace($search, $replace, $value);
                 break;
+            case 'http://www.w3.org/2001/XMLSchema#decimal':
+            case 'http://www.w3.org/2001/XMLSchema#integer':
+            case 'http://www.w3.org/2001/XMLSchema#int':
+            case 'http://www.w3.org/2001/XMLSchema#float':
+            case 'http://www.w3.org/2001/XMLSchema#double':
+            case 'http://www.w3.org/2001/XMLSchema#duration':
+            case 'http://www.w3.org/2001/XMLSchema#dateTime':
+            case 'http://www.w3.org/2001/XMLSchema#date':
+            case 'http://www.w3.org/2001/XMLSchema#gMonthDay':
+            case 'http://www.w3.org/2001/XMLSchema#anyURI':
+            case 'http://www.w3.org/2001/XMLSchema#time':
+                /* no normalization needed for these types */
+                break;
             case '':    /* fallthrough */
             case null:  /* fallthrough */
             case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':   /* fallthrough */
             case 'http://www.w3.org/2001/XMLSchema#string':
+            default:
                 $value = addcslashes($value, $quoteChar);
                 
                 /** 

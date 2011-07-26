@@ -1396,9 +1396,12 @@ class Erfurt_Store
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
-            if($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['bindings'])){
-                if(isset($sparqlResult['results']['bindings'])){
-                    $sparqlResult['bindings'] = $sparqlResult['results']['bindings'];
+            //check for the correct format 
+            if($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])){
+                if(isset($sparqlResult['bindings'])){
+                    //fix it if possible
+                    $sparqlResult['results'] = array();
+                    $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
                     //var_dump($sparqlResult);
                     require_once 'Erfurt/Store/Exception.php';

@@ -491,7 +491,7 @@ class Erfurt_Versioning
 
         // action already running?
         if (null !== $this->_currentAction) {
-            throw new Exception('Action already started');
+            throw new Exception('Action already started (type='.$this->_currentAction['type'].', modeluri='.$this->_currentAction['modeluri'].', resourceuri='.$this->_currentAction['resourceuri'].')');
         } elseif ($this->isVersioningEnabled() ) {
             $actionType = $actionSpec['type'];
             $graphUri = $actionSpec['modeluri'];
