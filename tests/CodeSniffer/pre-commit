@@ -1,0 +1,69 @@
+#!/bin/bash
+
+width=80;
+
+while getopts ":s:p:f:" optname
+    do
+        case "$optname" in
+        "s")
+            severity=$OPTARG
+        ;;
+        "p")
+            cspath=$OPTARG
+        ;;
+        "f")
+            filetypes=$OPTARG
+        ;;
+        "?")
+            echo "Unknown option $OPTARG"
+        ;;
+        ":")
+            echo "No argument value for option $OPTARG"
+        ;;
+        *)
+            # Should not occur
+            echo "Unknown error while processing options"
+        ;;
+    esac
+    done
+
+    if [ -n $severity ]; then
+        severity=`sed -En 's/^severity = (.)$/\1/p' Makefile`
+    fi
+    if [ -n $cspath ]; then
+        cspath=`sed -En 's/^cspath = (.*)$/\1/p' Makefile`
+    fi
+    if [ -n $filetypes ]; then
+        filetypes=`sed -En 's/^filetypes = (.*)$/\1/p' Makefile`
+    fi
+
+if [ `git rev-parse --verify HEAD` ]; then
+    against='HEAD'
+else
+    against='4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+fi
+
+commitFiles=`git diff-index --cached --name-only --diff-filter=AM $against`
+args="-n -p -s --report-width=$width --severity=$severity --standard=$cspath"
+
+phpFiles="";
+phpFilesCount=0;
+for f in $commitFiles; do
+    if [[ ! -e $f ]]; then
+        continue;
+    fi
+    if [[ $f == *.$filetypes ]]; then
+        phpFilesCount=$((phpFilesCount+1))
+        phpFiles="$phpFiles $f"
+    fi
+done;
+
+if [[ $phpFilesCount = 0 ]]; then
+    exit 0;
+fi
+
+if [[ $phpFilesCount > 2 ]]; then
+    args="$args --report=summary"
+fi
+
+phpcs $args $phpFiles
