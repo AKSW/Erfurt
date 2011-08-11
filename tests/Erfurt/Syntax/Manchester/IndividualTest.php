@@ -16,7 +16,7 @@ class Erfurt_Syntax_Manchester_IndividualTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerParser
      */
-    public function testParser($method, $inputQuery) {
+    public function TestParser($method, $inputQuery) {
         $q = $this->initParser($inputQuery)->$method();
         $this->assertEquals($inputQuery, $q->__toString());
     }
@@ -84,12 +84,11 @@ class Erfurt_Syntax_Manchester_IndividualTest extends PHPUnit_Framework_TestCase
     }
 
     public function testClassFrame() {
-        //     $inputQuery = 'Class: Woman
-        //          SubClassOf: Person';
-        //     $q = $this->initParser($inputQuery)->classFrame();
-        //     $this->assertEquals($inputQuery, $q->__toString());
+             $inputQuery = 'Class: Woman SubClassOf: Person';
+             $q = $this->initParser($inputQuery)->classFrame();
+             $this->assertEquals($inputQuery, $q->__toString());
 
-        $this->markTestIncomplete('This test has not been implemented yet.');
+//        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
 }
