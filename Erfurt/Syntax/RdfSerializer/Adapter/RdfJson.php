@@ -39,7 +39,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
 		    ));
             
             $counter = 0;
-            foreach ($result['bindings'] as $stm) {
+            foreach ($result['results']['bindings'] as $stm) {
                 $s = $stm['s']['value'];
                 $p = $stm['p']['value'];
                 $o = $stm['o'];
@@ -113,7 +113,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
 		    ));
 
             $counter = 0;
-            foreach ($result['bindings'] as $stm) {
+            foreach ($result['results']['bindings'] as $stm) {
                 $s = $stm['s']['value'];
                 $p = $stm['p']['value'];
                 $o = $stm['o'];

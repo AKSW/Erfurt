@@ -172,19 +172,19 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if ($response->getStatus() === 200) {
             // OK
             if ($response->getBody() === '') {
-                $result = array('head' => array(), 'bindings' => array());
+                $result = array('head' => array(), 'results' => array('bindings' => array()));
             } else {
                 $result = $this->_parseSparqlXmlResults($response->getBody());
             }
         } else {            
-            $result = array('head' => array(), 'bindings' => array());
+            $result = array('head' => array(), 'results' => array('bindings' => array()));
         }
 
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
                 
-                foreach ($result['bindings'] as $row) {
+                foreach ($result['results']['bindings'] as $row) {
                     $newRow = array();
                     
                     foreach ($row as $var=>$value) {
@@ -213,7 +213,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if (trim($sparqlXmlResults) === '') {
             return array(
                 'head'     => array(),
-                'bindings' => array()
+                'results' => array('bindings' => array())
             );
         }
         
@@ -224,7 +224,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if ($xmlDoc === false) {
             return array(
                 'head'     => array(),
-                'bindings' => array()
+                'results' => array('bindings' => array())
             );
         }
         
@@ -240,7 +240,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             $result['head']['vars'][] = $varElem->attributes->getNamedItem('name')->value;
         }
 
-        $result['bindings'] = array();
+        $result['results'] = array('bindings' => array());
         $resultElems = $xmlDoc->getElementsByTagName('result');
         foreach ($resultElems as $resultElem) {
             $row = array();
@@ -300,7 +300,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 }
             }
             
-            $result['bindings'][] = $row;
+            $result['results']['bindings'][] = $row;
         }
 
         return $result;

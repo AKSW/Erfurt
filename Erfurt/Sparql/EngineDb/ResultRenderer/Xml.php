@@ -42,7 +42,7 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Xml extends Erfurt_Sparql_EngineDb_R
         } else {
             $xmlString .= '<results>' . PHP_EOL;
             
-            foreach ($result['bindings'] as $row) {
+            foreach ($result['results']['bindings'] as $row) {
                 $xmlString .= '<result>' . PHP_EOL;
                 foreach ($row as $key=>$value) {
                     $xmlString .= '<binding name="' . $key . '">' . PHP_EOL;

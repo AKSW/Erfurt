@@ -6,16 +6,16 @@
     <variable name="<?php echo $var ?>" />
   <?php endforeach; // $var ?>
   </head>
-  
+
   <results>
-  <?php foreach ($this->results as $bindings): ?>
+  <?php $bindings = $this->results->bindings; ?>
     <?php foreach ($bindings as $binding): ?>
       <result>
       <?php foreach ($binding as $key => $varSpec): ?>
         <binding name="<?php echo $key ?>">            
         <?php if ($varSpec['type'] == 'uri'): ?>
           <uri><?php echo $varSpec['value'] ?></uri>
-        <?php elseif ($varSpec['type'] == 'literal'):   ?>
+        <?php elseif ($varSpec['type'] == 'literal' || $varSpec['type'] == 'typed-literal'):   ?>
           <literal
           <?php if (isset($varSpec['datatype'])): ?>
             datatype="<?php echo $varSpec['datatype'] ?>"
@@ -27,7 +27,6 @@
       <?php endforeach; // $varSpec ?>
       </result>
     <?php endforeach; // $binding ?>
-  <?php endforeach; // $bindings ?>
   </results>
   
 </sparql>

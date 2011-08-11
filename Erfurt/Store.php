@@ -317,11 +317,8 @@ class Erfurt_Store
      * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
-     * @param string $object (IRI, blank node or literal)
-     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
-     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
-     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype', but only in case
-     * the object of the statement is a literal.
+     * @param array $object conaining keys "value", "type", "datatype", "lang"
+     * @param bool $useAcl 
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
@@ -1214,66 +1211,11 @@ class Erfurt_Store
             }
         }
     }
-
+    
     /**
-     * Executes a SPARQL ASK query and returns a boolean result value.
-     *
-     * @param string $modelIri
-     * @param string $askSparql
-     * @param boolean $useAc Whether to check for access control.
+     * check and manipulate the declared FROMs according to the access control
      */
-    public function sparqlAsk(Erfurt_Sparql_SimpleQuery $queryObject, $useAc = true)
-    {
-        // add owl:imports
-        foreach ($queryObject->getFrom() as $fromGraphUri) {
-            foreach ($this->getImportsClosure($fromGraphUri, true, $useAc) as $importedGraphUri) {
-                $queryObject->addFrom($importedGraphUri);
-            }
-        }
-
-        if ($useAc) {
-            $modelsFiltered = $this->_filterModels($queryObject->getFrom());
-
-            // query contained a non-allowed non-existent model
-            if (empty($modelsFiltered)) {
-                return;
-                // require_once 'Erfurt/Store/Exception.php';
-                // throw new Erfurt_Store_Exception('Query could not be executed.');
-            }
-
-            $queryObject->setFrom($modelsFiltered);
-
-            // from named only if it was set
-            $fromNamed = $queryObject->getFromNamed();
-            if (count($fromNamed)) {
-                $queryObject->setFromNamed($this->_filterModels($fromNamed));
-            }
-        }
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
-        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT ){
-            // TODO: check if adapter supports requested result format
-            $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
-            self::$_queryCount++;
-            $duration = microtime(true) - $startTime;
-            $queryCache->save( (string) $queryObject, 'plain' , $sparqlResult, $duration);
-        }
-
-        return $sparqlResult;
-    }
-
-    /**
-     * @param Erfurt_Sparql_SimpleQuery $queryObject
-     * @param string $resultFormat Currently supported are: 'plain' and 'xml'
-     * @param boolean $useAc Whether to check for access control or not.
-     *
-     * @throws Erfurt_Exception Throws an exception if query is no string.
-     *
-     * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
-     */
-    public function sparqlQuery($queryObject, $options = array())
-    {
+    protected function _prepareQuery($queryObject, &$options = array()){
         // if ($queryObject instanceof Erfurt_Sparql_Query2)
         //     Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
 
@@ -1294,6 +1236,10 @@ class Erfurt_Store
         if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)) {
             throw new Exception("Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string", 1);
         }
+        
+        if($options[STORE_USE_AC] == false){
+            return $queryObject;
+        } 
 
         /*
          * clone the Query2 Object to not modify the original one
@@ -1394,8 +1340,50 @@ class Erfurt_Store
                 $queryObject->setWhere($ggp);
             }
         }
+        return $queryObject;
+    }
+
+    /**
+     * Executes a SPARQL ASK query and returns a boolean result value.
+     *
+     * @param string $modelIri
+     * @param string $askSparql
+     * @param boolean $useAc Whether to check for access control.
+     */
+    public function sparqlAsk($queryObject, $useAc = true)
+    {
+        $options = array( STORE_USE_AC => $useAc);
+        $queryObject = $this->_prepareQuery($queryObject, $options);
+        
+        //query from query cache
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+        $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT ){
+            // TODO: check if adapter supports requested result format
+            $startTime = microtime(true);
+            $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
+            self::$_queryCount++;
+            $duration = microtime(true) - $startTime;
+            $queryCache->save( (string) $queryObject, 'plain' , $sparqlResult, $duration);
+        }
+
+        return $sparqlResult;
+    }
+
+    /**
+     * @param Erfurt_Sparql_SimpleQuery $queryObject
+     * @param string $resultFormat Currently supported are: 'plain' and 'xml'
+     * @param boolean $useAc Whether to check for access control or not.
+     *
+     * @throws Erfurt_Exception Throws an exception if query is no string.
+     *
+     * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
+     */
+    public function sparqlQuery($queryObject, $options = array())
+    {
+        $queryObject = $this->_prepareQuery($queryObject, $options);
+        
         //querying SparqlEngine or retrieving Result from QueryCache
-        //TODO for query cache, please refactor
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
@@ -1403,12 +1391,24 @@ class Erfurt_Store
         $replacements = 0;
         $queryString = str_replace($this->_bnodePrefix, $this->_backendAdapter->getBlankNodePrefix(), $queryString, $replacements);
 
-        // $sparqlResult = $queryCache->load($queryString, $queryObject, $resultFormat );
-        $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
+        $sparqlResult = $queryCache->load($queryString, $resultFormat );
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
+            //check for the correct format 
+            if($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])){
+                if(isset($sparqlResult['bindings'])){
+                    //fix it if possible
+                    $sparqlResult['results'] = array();
+                    $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
+                } else {
+                    //var_dump($sparqlResult);
+                    require_once 'Erfurt/Store/Exception.php';
+                    throw new Erfurt_Store_Exception('invalid query result.');
+                }
+            }
+            
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
@@ -1471,12 +1471,13 @@ class Erfurt_Store
 
             $queryoptions = array(
                 'use_ac'                 => false,
-                'result_format'          => 'extended',
+                'result_format'          => STORE_RESULTFORMAT_EXTENDED,
                 'use_additional_imports' => false
             );
 
             $stmtArray = array();
             if ($result = $this->sparqlQuery($queryObject, $queryoptions)) {
+                $result = $result['results'];
                 foreach ($result['bindings'] as $row) {
                     if (!isset($stmtArray[$row['s']['value']])) {
                         $stmtArray[$row['s']['value']] = array();
