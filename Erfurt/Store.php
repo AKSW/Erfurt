@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
  * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
@@ -8,11 +8,9 @@
 
 /**
  * @category Erfurt
- * @package Erfurt_Store
- * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @author Norman Heino <norman.heino@gmail.com>
- * @copyright Copyright (c) 2011 {@link http://aksw.org aksw}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @package  Erfurt_Store
+ * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author   Norman Heino <norman.heino@gmail.com>
  */
 
 // ------------------------------------------------------------------------
@@ -187,7 +185,7 @@ class Erfurt_Store
         while (list($optionName, $optionValue) = each($storeOptions)) {
             $this->setOption($optionName, $optionValue);
         }
-        
+
         if (isset($storeOptions['adapterInstance'])) {
             $this->_backendAdapter = $storeOptions['adapterInstance'];
             $this->_backendName = $backend;
@@ -259,7 +257,7 @@ class Erfurt_Store
             }
         }
     }
-    
+
     public function setBackendAdapter(Erfurt_Store_Adapter_Interface $adapter)
     {
         $this->_backendAdapter = $adapter;
@@ -318,7 +316,7 @@ class Erfurt_Store
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param array $object conaining keys "value", "type", "datatype", "lang"
-     * @param bool $useAcl 
+     * @param bool $useAcl
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
@@ -1144,7 +1142,7 @@ class Erfurt_Store
             return $retVal;
         }
     }
-    
+
     /**
      * @param string $modelIri The Iri, which identifies the model to look for.
      * @param boolean $useAc Whether to use access control or not.
@@ -1211,7 +1209,7 @@ class Erfurt_Store
             }
         }
     }
-    
+
     /**
      * check and manipulate the declared FROMs according to the access control
      */
@@ -1236,10 +1234,10 @@ class Erfurt_Store
         if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)) {
             throw new Exception("Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string", 1);
         }
-        
+
         if($options[STORE_USE_AC] == false){
             return $queryObject;
-        } 
+        }
 
         /*
          * clone the Query2 Object to not modify the original one
@@ -1354,7 +1352,7 @@ class Erfurt_Store
     {
         $options = array( STORE_USE_AC => $useAc);
         $queryObject = $this->_prepareQuery($queryObject, $options);
-        
+
         //query from query cache
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
@@ -1382,7 +1380,7 @@ class Erfurt_Store
     public function sparqlQuery($queryObject, $options = array())
     {
         $queryObject = $this->_prepareQuery($queryObject, $options);
-        
+
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -1396,7 +1394,7 @@ class Erfurt_Store
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
-            //check for the correct format 
+            //check for the correct format
             if($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])){
                 if(isset($sparqlResult['bindings'])){
                     //fix it if possible
@@ -1408,7 +1406,7 @@ class Erfurt_Store
                     throw new Erfurt_Store_Exception('invalid query result.');
                 }
             }
-            
+
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
@@ -1519,8 +1517,11 @@ class Erfurt_Store
      *
      * @param string $graphUri
      * @param string $whereSpec
+     * @param string $countSpec
+     * @param boolean $distinct
+     * @param boolean $followImports - use importsClosure or not
      */
-    public function countWhereMatches($graphIri, $whereSpec, $countSpec, $distinct = false)
+    public function countWhereMatches($graphIri, $whereSpec, $countSpec, $distinct = false, $followImports = true)
     {
         // unify parameters
         if (trim($countSpec[0]) !== '?') {
@@ -1530,7 +1531,12 @@ class Erfurt_Store
 
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
             if ($this->isModelAvailable($graphIri)) {
-                $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
+                // use the imports closure per default (use 5th parameter to disable this)
+                if ($followImports === true) {
+                    $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
+                } else {
+                    $graphIris = array($graphIri);
+                }
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
             } else {
                 throw new Erfurt_Store_Exception('Model <' . $graphIri . '> is not available.');

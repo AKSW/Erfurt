@@ -1,23 +1,33 @@
 <?php
 /**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
- * @author  {@link http://sebastian.tramp.name Sebastian Tramp}
- * @license http://sam.zoy.org/wtfpl/  Do What The Fuck You Want To Public License (WTFPL)
+ * @author {@link http://sebastian.tramp.name Sebastian Tramp}
  */
 class Erfurt_Rdf_MemoryModel
 {
     private $statements = array();
 
-    function __construct( array $init = array()){
+    /*
+     * model can be constructed with a given array
+     */
+    function __construct( array $init = array())
+    {
         $this->addStatements($init);
     }
-
 
     /*
      * checks if there is at least one statement for resource $iri
      */
-    public function hasS($s = null) {
+    public function hasS($s = null)
+    {
         if ($s == null) {
             throw new Exception('need an IRI string as first parameter');
         }
@@ -32,7 +42,8 @@ class Erfurt_Rdf_MemoryModel
      * checks if there is at least one statement for resource $iri with
      * predicate $p
      */
-    public function hasSP($s = null, $p = null ) {
+    public function hasSP($s = null, $p = null )
+    {
         if (!$this->hasS($s)) {
             return false;
         } else {
@@ -50,7 +61,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * search for a value where S and P is fix
      */
-    public function hasSPvalue($s = null, $p = null, $value = null){
+    public function hasSPvalue($s = null, $p = null, $value = null)
+    {
         if ($value == null) {
             throw new Exception('need a value string as third parameter');
         } else {
@@ -67,7 +79,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * count statements where S and P is fix
      */
-    public function countSP($s = null, $p = null){
+    public function countSP($s = null, $p = null)
+    {
         if (!$this->hasSP($s, $p)) {
             return 0;
         } else {
@@ -78,7 +91,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * returns an array of values where S and P is fix
      */
-    public function getValues($s = null, $p = null){
+    public function getValues($s = null, $p = null)
+    {
         if (!$this->hasSP($s, $p)) {
             return array();
         } else {
@@ -89,7 +103,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * returns the first object value where S and P is fix
      */
-    public function getValue($s = null, $p = null){
+    public function getValue($s = null, $p = null)
+    {
         if (!$this->hasSP($s, $p)) {
             return false;
         } else {
@@ -100,7 +115,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * return the statement array, limited to a subject uri
      */
-    public function getStatements($iri = null){
+    public function getStatements($iri = null)
+    {
         if ($iri == null) {
             return $this->statements;
         } else {
@@ -116,7 +132,8 @@ class Erfurt_Rdf_MemoryModel
      * This adds a statement array to the model by merging the arrays
      * This function is the base for all other add functions
      */
-    public function addStatements(array $statements){
+    public function addStatements(array $statements)
+    {
         $model = $this->statements;
         foreach ($statements as $subjectIri => $subjectArray) {
             if (!isset($model[$subjectIri])) {
@@ -148,7 +165,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * adds a triple based on the result of an extended SPARQL query
      */
-    public function addStatementFromExtendedFormatArray(array $s, array $p, array $o) {
+    public function addStatementFromExtendedFormatArray(array $s, array $p, array $o)
+    {
         $typeO = $o['type'];
         $object = array();
         $object['value'] = $o['value'];
@@ -180,5 +198,80 @@ class Erfurt_Rdf_MemoryModel
         $statement[$s] = $pArray;
 
         $this->addStatements($statement);
+    }
+
+    /*
+     * add a single statement where the object is a literal
+     *
+     * @param string $subject   - the statement subject URI string
+     * @param string $predicate - the statement predicate URI string
+     * @param string $literal   - the literal value string
+     * @param string $lang      - the optional xml:lang identifier string
+     * @param string $datatype  - the optional datatype URI string
+     */
+    public function addAttribute($subject = null, $predicate = null, $literal = "", $lang = null, $datatype = null)
+    {
+        if ($subject == null) {
+            throw new Exception('need a subject URI as first parameter');
+        } else if ($predicate == null) {
+            throw new Exception('need a predicate URI as second parameter');
+        }
+        $newStatements = array();
+
+        // create the object array
+        $o = array();
+        $o['type'] = 'literal';
+        $o['value'] = $literal;
+        if (is_string($lang)) {
+            $o['lang'] = $lang;
+        } else if (is_string($datatype)) {
+            $o['datatype'] = $datatype;
+        }
+
+        // fill object array into predicate array
+        $p =  array();
+        $p[$predicate] = array();
+        $p[$predicate][] = $o;
+
+        // fill the predicate array into the statements array
+        $statements[$subject] = $p;
+        // add the statements array to the model
+        $this->addStatements($statements);
+    }
+
+    /*
+     * add a single statement where the object is a resource
+     *
+     * @param string $subject  - the statement subject URI string
+     * @param string $relation - the statement predicate URI string
+     * @param string $object   - the statement object URI string
+     */
+    public function addRelation($subject = null, $relation = null, $object = null)
+    {
+        if ($subject == null) {
+            throw new Exception('need a subject URI as first parameter');
+        } else if ($relation == null) {
+            throw new Exception('need a predicate URI as second parameter');
+        } else if ($object == null) {
+            throw new Exception('need an object URI as second parameter');
+        }
+
+        $newStatements = array();
+
+        // create the object array
+        $o = array();
+        $o['type'] = 'uri';
+        $o['value'] = $object;
+
+        // fill object array into predicate array
+        $p =  array();
+        $p[$relation] = array();
+        $p[$relation][] = $o;
+
+        // fill the predicate array into the statements array
+        $statements[$subject] = $p;
+
+        // add the statements array to the model
+        $this->addStatements($statements);
     }
 }
