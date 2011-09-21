@@ -1,3 +1,10 @@
+liberfurt-php (1.0-3) lod2; urgency=low
+
+  * switch to revision ae75d4c
+  * switch to native package
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Wed, 31 Aug 2011 21:13:24 +0200
+
 liberfurt-php (1.0-2) lod2; urgency=low
 
   * move to /usr/share/php/
