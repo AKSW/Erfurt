@@ -224,9 +224,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $o['value'] = substr((string)$o['value'], 0, 128) . $objectHash;
                     }
-
+                        
                     $oValue = addslashes($o['value']);
-
+                    //$oValue = mysql_real_escape_string($o['value']);
+                    
                     $sqlString .= "($graphId,'$s','$p','$oValue',";
 
                     #$data = array(
@@ -478,7 +479,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         if (null !== $object) {
             if (isset($object['value'])) {
-                $whereString .= ' AND o = "' . $object['value'] . '"';
+                //$whereString .= ' AND o = "' . $object['value'] . '"';
+                $escapedObject = str_replace('\'', '\\\'', $object['value']);
+                $escapedObject = str_replace('\\', '\\\\', $escapedObject);
+                
+                $whereString .= ' AND o = \'' . $escapedObject . '\' ';
             }
 
             if (isset($object['type'])) {
@@ -508,7 +513,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 }
             }
         }
-
+        
         // remove the specified statements from the database
         $ret = $this->_dbConn->delete('ef_stmt', $whereString);
 
@@ -572,8 +577,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $whereString .= 'AND s = \'' . $subject . '\' ';
                         $whereString .= 'AND p = \'' . $predicate . '\' ';
-                        $whereString .= 'AND o = \'' . str_replace('\'', '\\\'', $object) . '\' ';
-
+                        $escapedObject = str_replace('\'', '\\\'', $object);
+                        $escapedObject = str_replace('\\', '\\\\', $escapedObject);
+                        $whereString .= 'AND o = \'' . $escapedObject . '\' ';
+                        
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
                 }
