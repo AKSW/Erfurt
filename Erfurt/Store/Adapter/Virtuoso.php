@@ -938,6 +938,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // set Virtuoso NULL
             $graphUri = 'NULL';
         }
+
+        // Translate Erfurt blank node identifiers to Virtuoso blank node IDs
+        // TODO: this should be done in Erfurt_Store
+        $sparqlQuery = str_replace('node://', self::BLANKNODE_PREFIX, $sparqlQuery);
         
         // escape characters that delimit the query within the query
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
