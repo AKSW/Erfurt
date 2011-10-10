@@ -1,18 +1,42 @@
 #!/bin/bash
+# PHP CodeSniffer pre-commit hook for git
+#
+# @author Lars Eidam <larseidam@googlemail.com>
+#
+# Git pre-commit hook to check chanced Code with the PHP CodeSniffer.
+# Features:
+#  - differnt severity, coding standard, whitelist filetypes and report types
+#    are possible
+#  - not be set parameter are taken from the Makefile
+#  - only added or chanced files in the staging area be tested
+#  - if partially files in the staging area only the parts of the file in the
+#    staging area be checked, not the whole file (ATTENTION:it makes it a little
+#    bit difficult to find the right line were a error or warning is caused)
+#
+#
 
-width=80;
+# folder for the tempary stage files
+TMP_STAGING=".tmp_staging"
 
-while getopts ":s:p:f:" optname
+# set window-width
+WIDTH=80;
+
+# parse parameter for severity, cspath (path to the coding standard), filetypes
+# and reporttyp
+while getopts ":s:p:f:r:" optname
     do
         case "$optname" in
         "s")
-            severity=$OPTARG
+            SEVERITY=$OPTARG
         ;;
         "p")
-            cspath=$OPTARG
+            CSPATH=$OPTARG
         ;;
         "f")
-            filetypes=$OPTARG
+            FILETYPES=$OPTARG
+        ;;
+        "r")
+            REPORT=$OPTARG
         ;;
         "?")
             echo "Unknown option $OPTARG"
@@ -27,43 +51,103 @@ while getopts ":s:p:f:" optname
     esac
     done
 
-    if [ -n $severity ]; then
-        severity=`sed -En 's/^severity = (.)$/\1/p' Makefile`
+# if no parameter are set then read the parameter from the Makefile
+    if [ -e $SEVERITY ]; then
+        SEVERITY=`sed -En 's/^SEVERITY = (.)$/\1/p' Makefile`
     fi
-    if [ -n $cspath ]; then
-        cspath=`sed -En 's/^cspath = (.*)$/\1/p' Makefile`
+    if [ -e $CSPATH ]; then
+        CSPATH=`sed -En 's/^CSPATH = (.*)$/\1/p' Makefile`
     fi
-    if [ -n $filetypes ]; then
-        filetypes=`sed -En 's/^filetypes = (.*)$/\1/p' Makefile`
+    if [ -e $FILETYPES ]; then
+        FILETYPES=`sed -En 's/^FILETYPES = (.*)$/\1/p' Makefile`
+    fi
+    if [ -e $REPORT ]; then
+        REPORT="full"
     fi
 
+# parameter for the CodeSniffer
+ARGS="-n -p -s --report=$REPORT --report-width=$WIDTH --severity=$SEVERITY --standard=$CSPATH"
+
+# check if CodeSniffer are found
+phpcs --version
+RETVAL=$?
+if [ "$RETVAL" -ne "0" ]; then
+echo "PHP CodeSniffer bin not found or executable"
+    exit 1
+fi
+
+# get the reference commit
 if [ `git rev-parse --verify HEAD` ]; then
     against='HEAD'
 else
+    # Initial commit: diff against an empty tree object
     against='4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 fi
 
-commitFiles=`git diff-index --cached --name-only --diff-filter=AM $against`
-args="-n -p -s --report-width=$width --severity=$severity --standard=$cspath"
+# retrieve all files in staging area that are added, modified or renamed
+# but no deletions etc
+COMMITFILES=$(git diff-index --name-only --cached --diff-filter=ACMR $against -- )
 
-phpFiles="";
-phpFilesCount=0;
-for f in $commitFiles; do
-    if [[ ! -e $f ]]; then
-        continue;
-    fi
-    if [[ $f == *.$filetypes ]]; then
-        phpFilesCount=$((phpFilesCount+1))
-        phpFiles="$phpFiles $f"
-    fi
-done;
-
-if [[ $phpFilesCount = 0 ]]; then
-    exit 0;
+if [ "$COMMITFILES" == "" ]; then
+    exit 0
 fi
 
-if [[ $phpFilesCount > 2 ]]; then
-    args="$args --report=summary"
+# clean and create temporary copy of staging area
+if [ -e $TMP_STAGING ]; then
+    rm -rf $TMP_STAGING
+fi
+mkdir $TMP_STAGING
+
+
+# match files against whitelist
+PHPCS_FILE_PATTERN=`echo $FILETYPES | tr , '|'`
+PHPCS_FILE_PATTERN="\.("$PHPCS_FILE_PATTERN")$"
+FILES_TO_CHECK=""
+FILES_COUNT=0;
+for FILE in $COMMITFILES
+do
+    echo "$FILE" | egrep -q "$PHPCS_FILE_PATTERN"
+    RETVAL=$?
+    if [ "$RETVAL" -eq "0" ]; then
+        FILES_TO_CHECK="$FILES_TO_CHECK $FILE"
+        FILES_COUNT=$((FILES_COUNT+1))
+    fi
+done
+if [ "$FILES_TO_CHECK" == "" ]; then
+    rm -rf $TMP_STAGING
+    exit 0
+fi
+# if more than 5 files to check then show only a summary
+if [[ $FILES_COUNT > 5 ]]; then
+    ARGS="$ARGS --report=summary"
 fi
 
-phpcs $args $phpFiles
+# Copy contents of staged version of files to temporary staging area
+# because we only want the staged version that will be commited and not
+# the version in the working directory
+STAGED_FILES=""
+for FILE in $FILES_TO_CHECK
+do
+ID=$(git diff-index --cached HEAD $FILE | cut -d " " -f4)
+
+  # create staged version of file in temporary staging area with the same
+  # path as the original file so that the phpcs ignore filters can be applied
+  mkdir -p "$TMP_STAGING/$(dirname $FILE)"
+  git cat-file blob $ID > "$TMP_STAGING/$FILE"
+  STAGED_FILES="$STAGED_FILES $TMP_STAGING/$FILE"
+done
+
+OUTPUT=$(phpcs $ARGS $STAGED_FILES)
+RETVAL=$?
+
+# delete temporary copy of staging area
+rm -rf $TMP_STAGING
+
+OUTPUT=${OUTPUT//.tmp_staging\//}
+
+# check for output
+if [ $RETVAL -ne 0 ]; then
+    echo "$OUTPUT"
+fi
+
+exit $RETVAL
