@@ -225,10 +225,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         $o['value'] = substr((string)$o['value'], 0, 128) . $objectHash;
                     }
                         
-                    $oValue = addslashes($o['value']);
-                    //$oValue = mysql_real_escape_string($o['value']);
+                    $oValue = $this->_dbConn->quote($o['value']);
                     
-                    $sqlString .= "($graphId,'$s','$p','$oValue',";
+                    $sqlString .= "($graphId, '$s', '$p', $oValue,";
 
                     #$data = array(
                     #    'g'     => $graphId,
@@ -479,11 +478,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         if (null !== $object) {
             if (isset($object['value'])) {
-                //$whereString .= ' AND o = "' . $object['value'] . '"';
-                $escapedObject = str_replace('\'', '\\\'', $object['value']);
-                $escapedObject = str_replace('\\', '\\\\', $escapedObject);
+                $escapedObject = $this->_dbConn->quote($object);
                 
-                $whereString .= ' AND o = \'' . $escapedObject . '\' ';
+                $whereString .= ' AND o = ' . $escapedObject . ' ';
             }
 
             if (isset($object['type'])) {
@@ -553,6 +550,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         } else if ($object['type'] === 'bnode') {
                             $whereString .= 'AND ot = 1 ';
                         } else {
+                            //literal
                             $whereString .= 'AND ot = 2 ';
                             $whereString .= isset($object['lang']) ? 'AND ol = \'' . $object['lang'] . '\' ' : '';
                             $whereString .= isset($object['datatype']) ? 'AND od = \'' . $object['datatype'] .
@@ -574,12 +572,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $object = $object['value'];
                         }
 
-
                         $whereString .= 'AND s = \'' . $subject . '\' ';
                         $whereString .= 'AND p = \'' . $predicate . '\' ';
-                        $escapedObject = str_replace('\'', '\\\'', $object);
-                        $escapedObject = str_replace('\\', '\\\\', $escapedObject);
-                        $whereString .= 'AND o = \'' . $escapedObject . '\' ';
+                        
+                        //escaping
+                        $escapedObject = $this->_dbConn->quote($object); //also wraps the quotes around
+                        
+                        $whereString .= 'AND o = ' . $escapedObject . ' ';
                         
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
