@@ -10,6 +10,7 @@
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
+ * @author {Jonas Brekle <jonas.brekle@gmail.com>}
  */
 class Erfurt_Rdf_MemoryModel
 {
