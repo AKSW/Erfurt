@@ -119,7 +119,7 @@ class Erfurt_Rdf_MemoryModel
     public function getValue($s = null, $p = null)
     {
         if (!$this->hasSP($s, $p)) {
-            return false;
+            return null;
         } else {
             return $this->statements[$s][$p][0]['value'];
         }

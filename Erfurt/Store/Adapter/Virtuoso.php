@@ -934,16 +934,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (!empty($graphUri)) {
             // enquote
             $graphUri = '\'' . $graphUri . '\'';
+            $graphSpec = 'define input:default-graph-uri <' . $graphUri . '> ';
         } else {
             // set Virtuoso NULL
             $graphUri = 'NULL';
+            $graphSpec = '';
         }
         
         // escape characters that delimit the query within the query
-        $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
+        // $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
         
         // build Virtuoso/PL query
-        $virtuosoPl = 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
+        $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+
+        // $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         
         $resultId = @odbc_exec($this->connection(), $virtuosoPl);
         
