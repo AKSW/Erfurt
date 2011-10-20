@@ -10,6 +10,7 @@
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
+ * @author {Jonas Brekle <jonas.brekle@gmail.com>}
  */
 class Erfurt_Rdf_MemoryModel
 {
@@ -106,7 +107,7 @@ class Erfurt_Rdf_MemoryModel
     public function getValue($s = null, $p = null)
     {
         if (!$this->hasSP($s, $p)) {
-            return false;
+            return null;
         } else {
             return $this->statements[$s][$p][0]['value'];
         }
@@ -127,7 +128,7 @@ class Erfurt_Rdf_MemoryModel
             }
         }
     }
-
+    
     /*
      * This adds a statement array to the model by merging the arrays
      * This function is the base for all other add functions
@@ -162,6 +163,15 @@ class Erfurt_Rdf_MemoryModel
         $this->statements = $model;
     }
 
+    /*
+     * adds multiple triples coming from the result of an extended SPARQL query
+     */
+    public function addStatementsFromSPOQuery(array $res)
+    {
+        foreach($res['bindings'] as $binding){
+            $this->addStatementFromExtendedFormatArray($binding['s'], $binding['p'], $binding['o']);
+        }
+    }
     /*
      * adds a triple based on the result of an extended SPARQL query
      */
