@@ -6,12 +6,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-/** Erfurt_Store_Adapter_Interface */
-require_once 'Erfurt/Store/Adapter/Interface.php';
-
-/** Erfurt_Store_Sql_Interface */
-require_once 'Erfurt/Store/Sql/Interface.php';
-
 /**
  * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
  *
@@ -102,7 +96,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // check for odbc extension
         if (!extension_loaded('odbc')) {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Virtuoso adapter requires the ODBC extension to be loaded.');
             exit;
         }
@@ -119,7 +112,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // check for ongoing transactions
         if ($this->_transactions) {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Cannot close the connection while transactions are open.');
         }
 
@@ -231,7 +223,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $createQuery = "CREATE SILENT GRAPH <$graphUri>";
         $this->_execSparql($createQuery);
 
-        require_once 'Erfurt/Store.php';
         if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
             // add statement <graph> a owl:Ontology
             $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_ONTOLOGY);
@@ -252,12 +243,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function connection()
     {
         if (!$this->_connection) {
-            $adapterOptions = $this->_adapterOptions;
-
-            extract($adapterOptions);
+            $options = $this->_adapterOptions;
 
             // determine connection function
-            if (isset($use_persistent_connection) && (boolean)$use_persistent_connection === true) {
+            if ((isset($options['use_persistent_connection'])) &&
+                ((boolean) $options['use_persistent_connection'] === true)) {
                 $odbcConnectFunction = 'odbc_pconnect';
             } else {
                 $odbcConnectFunction = 'odbc_connect';
@@ -268,14 +258,40 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 // via Virtuoso hosting
                 $this->_connection = $odbcConnectFunction(__virt_internal_dsn(), null, null);
             } else {
+                // check for dsn parameter
+                if (!isset($options['dsn'])) {
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Your config.ini lacks a store.virtuoso.dsn parameter.'
+                    );
+                } else {
+                    $dsn = (string) $options['dsn'];
+                }
+
+                // check for username parameter
+                if (!isset($options['username'])) {
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Your config.ini lacks a store.virtuoso.username parameter.'
+                    );
+                } else {
+                    $username = (string) $options['username'];
+                }
+
+                // check for password parameter
+                if (!isset($options['password'])) {
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Your config.ini lacks a store.virtuoso.password parameter.'
+                    );
+                } else {
+                    $password = (string) $options['password'];
+                }
+
                 // via php_odbc
-                $this->_connection = $odbcConnectFunction((string)$dsn, (string)$username, (string)$password);
-                $this->_user = (string)$username;
+                $this->_connection = $odbcConnectFunction($dsn, $username, $password);
+                $this->_user = $username;
             }
 
             // success?
             if (false === $this->_connection) {
-                require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
                 exit;
             }
@@ -290,7 +306,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         if (empty($graphUri)) {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
 
@@ -377,7 +392,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function exportRdf($graphUri, $serializationType = 'xml', $filename = null)
     {
-        require_once 'Erfurt/Store/Adapter/Exception.php';
         throw new Erfurt_Store_Adapter_Exception('RDF export not implemented yet.');
     }
 
@@ -430,12 +444,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $stringSpec .= '*';
         }
 
-        require_once 'Erfurt/Sparql/Query2/Var.php';
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
         $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
         $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
 
-        require_once 'Erfurt/Sparql/Query2/Triple.php';
         $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple(
             $subjectVariable,
             $predicateVariable,
@@ -518,7 +530,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
         }
 
-        require_once 'Erfurt/Syntax/RdfParser.php';
         switch ($locator) {
             case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
                 $importSql = $this->_getImportSql('file', $data, $type, $graphUri);
@@ -537,7 +548,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
 
             default:
-                require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
                 break;
         }
@@ -547,7 +557,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $rid = $this->_execSql($importSql);
 
             // parse namespace prefixes
-            require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $namespacePrefixes = $parser->parseNamespaces($data, $locator);
             $namespaces = Erfurt_App::getInstance()->getNamespaces();
@@ -788,7 +797,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function countWhereMatches($graphUris, $whereSpec, $countSpec, $distinct = false)
     {
         if (empty($graphUris)) {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
         if ($distinct) {
@@ -952,7 +960,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 
@@ -972,8 +979,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
-
-            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 
