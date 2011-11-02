@@ -1,9 +1,8 @@
 <?php
-
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -19,83 +18,81 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  * Connects to a Virtuoso via ODBC, therefore requires PHP to be compiled with the ODBC extension.
  *
  * @category Erfurt
- * @package Store_Adapter
- * @author Norman Heino <norman.heino@gmail.com>
- * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @package  Store_Adapter
+ * @author   Norman Heino <norman.heino@gmail.com>
+ * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
     // ------------------------------------------------------------------------
     // --- Class Constants ----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Prefix for blanknode identifiers.
      * @var string
      */
     const BLANKNODE_PREFIX = 'nodeID://';
-    
+
     /**
      * Name for the fulltext index.
      * @var string
      */
     const FULLTEXT_INDEX_NAME = 'erfurt_ft_index';
-        
+
     // ------------------------------------------------------------------------
     // --- Protected Properties -----------------------------------------------
     // ------------------------------------------------------------------------
-    
-    /** 
+
+    /**
      * ODBC connection identifier.
      * @var int
      */
     protected $_connection = null;
-    
+
     /**
      * Adapter option array
      * @var array
      */
     protected $_adapterOptions = null;
-    
+
     /**
      * The available graphs in this store.
      * @var array
      */
     protected $_graphs = null;
-    
+
     /**
      * Model imports cache.
      * @var array
      */
     protected $_importedModels = array();
-    
-    /** 
+
+    /**
      * Whether there are ongoing transactions.
      * @var boolean
      */
     protected $_transactions = false;
-    
+
     /**
      * The user performing db requests
      * @var string
      */
     protected $_user = null;
-    
+
     /**
      * Graph URIs internally used by Virtuoso
-     * @var array 
+     * @var array
      */
     protected $_virtuosoSpecialGraphs = array(
-        'http://www.openlinksw.com/schemas/virtrdf#', 
+        'http://www.openlinksw.com/schemas/virtrdf#',
         'http://localhost:8890/DAV'
     );
-    
+
     // ------------------------------------------------------------------------
     // --- Magic Methods ------------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Constructor.
      *
@@ -109,116 +106,118 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             throw new Erfurt_Store_Adapter_Exception('Virtuoso adapter requires the ODBC extension to be loaded.');
             exit;
         }
-        
+
         $this->_adapterOptions = $adapterOptions;
     }
-    
+
     /**
      * Destructor
      *
      * @throws Erfurt_Exception
      */
-    public function __destruct() 
+    public function __destruct()
     {
         // check for ongoing transactions
         if ($this->_transactions) {
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Cannot close the connection while transactions are open.');
         }
-        
+
         $this->_closeConnection();
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public Methods (Erfurt_Store_Adapter_Interface) --------------------
     // ------------------------------------------------------------------------
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
         $numBlocks = 1;
         $blockQueries = array();
-        while (true){
+        while (true) {
             $statementBlocks = $this->array_split($statementsArray, $numBlocks);
             $blockQueries = array();
-            foreach($statementBlocks as $statementBlock){
-               $blockQuery = sprintf(
-                'INSERT INTO GRAPH <%s> {%s}', 
-                $graphUri, 
-                $this->buildTripleString($statementBlock));
+            foreach ($statementBlocks as $statementBlock) {
+                $blockQuery = sprintf(
+                    'INSERT INTO GRAPH <%s> {%s}',
+                    $graphUri,
+                    $this->buildTripleString($statementBlock)
+                );
 
-                if(substr_count($blockQuery, "\n") > 1000){ //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+               //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+               if (substr_count($blockQuery, "\n") > 1000) {
                     $numBlocks *= 2;
                     continue 2;
-                } 
-                $blockQueries[] = $blockQuery;
+               }
+               $blockQueries[] = $blockQuery;
             }
             break;  //this only reached if the continue call is not ŕeached
         }
-        
+
         $odbcRes = true;
-        foreach ($blockQueries as $query){
+        foreach ($blockQueries as $query) {
             if (defined('_EFDEBUG')) {
                 $logger = Erfurt_App::getInstance()->getLog();
                 $logger->debug('Add mutliple statements query: ' . PHP_EOL . $query);
             }
 
             $odbcRes = $this->_execSparql($query);
-            $result = odbc_result($odbcRes,1);
+            $result = odbc_result($odbcRes, 1);
 
         }
-        
+
         //TODO why - please comment
         if (odbc_num_fields($odbcRes) > 0 && odbc_field_type($odbcRes, 1) == 'VARCHAR') {
-            $strResult = odbc_result($odbcRes,1);
+            $strResult = odbc_result($odbcRes, 1);
             return $strResult;
         }
     }
-    
+
     // split the given array into n number of pieces
     private function array_split($array, $pieces=2)
-    {  
+    {
         if ($pieces < 2)
             return array($array);
         $newCount = ceil(count($array)/$pieces);
         $a = array_slice($array, 0, $newCount);
         $b = $this->array_split(array_slice($array, $newCount), $pieces-1);
-        return array_merge(array($a),$b);
-    } 
+        return array_merge(array($a), $b);
+    }
 
         /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function addStatement($graphUri, $subject, $predicate, $objectSpec, array $options = array())
     {
         extract($objectSpec);
-        
+
         if ($type == 'uri') {
             $object = '<' . $value . '>';
         } else {
             $object = $this->buildLiteralString(
-                $value, 
-                isset($datatype) ? $datatype : null, 
+                $value,
+                isset($datatype) ? $datatype : null,
                 isset($lang) ? $lang : null
             );
         }
-        
+
         // TODO: support blank nodes as subject
         $insertSparql = '
             INSERT INTO GRAPH <' . $graphUri . '> {
                 <' . $subject . '> <' . $predicate . '> ' . $object . '
             }';
-        
+
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->debug('Add statement query: ' . PHP_EOL . $insertSparql);
         }
-        
+
         return $this->_execSparql($insertSparql);
     }
-    
+
     /**
      * Explicitly creates a new named graph.
      *
@@ -231,20 +230,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // create empty graph
         $createQuery = "CREATE SILENT GRAPH <$graphUri>";
         $this->_execSparql($createQuery);
-        
+
         require_once 'Erfurt/Store.php';
         if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
             // add statement <graph> a owl:Ontology
             $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_ONTOLOGY);
             $this->_execSparql($owlInsert);
         }
-        
+
         // force reloading graphs next time
         $this->_graphs = null;
-        
+
         return true;
     }
-    
+
     /**
      * Returns the current connection resource.
      * The resource is created lazily if it doesn't exist.
@@ -281,12 +280,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 exit;
             }
         }
-        
+
         return $this->_connection;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
@@ -294,40 +293,40 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
-        
+
         $graphSpec     = '<' . (string)$graphUri . '>';
         $subjectSpec   = $subject   ? '<' . (string)$subject . '>'   : '?s';
         $predicateSpec = $predicate ? '<' . (string)$predicate . '>' : '?p';
-        
+
         if (null !== $object) {
             if ($object['type'] == 'uri') {
                 $objectSpec = '<' . $object['value'] . '>';
             } else {
                 $objectSpec = $this->buildLiteralString(
-                    $object['value'], 
-                    array_key_exists('datatype', $object) ? $object['datatype'] : null, 
+                    $object['value'],
+                    array_key_exists('datatype', $object) ? $object['datatype'] : null,
                     array_key_exists('lang', $object) ? $object['lang'] : null
                 );
             }
         } else {
             $objectSpec = '?o';
         }
-        
+
         $deleteSparql = sprintf(
-            'DELETE FROM GRAPH %s {%s %s %s.} WHERE {%s %s %s}', 
-            $graphSpec, 
-            $subjectSpec, 
-            $predicateSpec, 
-            $objectSpec, 
-            $subjectSpec, 
-            $predicateSpec, 
+            'DELETE FROM GRAPH %s {%s %s %s.} WHERE {%s %s %s}',
+            $graphSpec,
+            $subjectSpec,
+            $predicateSpec,
+            $objectSpec,
+            $subjectSpec,
+            $predicateSpec,
             $objectSpec
-        );     
-        
+        );
+
         // perform delete
         if ($rid = $this->_execSparql($deleteSparql)) {
             $deleteResult = (string)odbc_result($rid, 1);
-            
+
             // extract number of deleted statements
             $matches = array();
             preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
@@ -336,41 +335,42 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 return (int)$matches[1];
             }
         }
-        
+
         // no statements deleted
         return 0;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
         $deleteSparql = sprintf(
-            'DELETE FROM GRAPH <%s> {%s}', 
-            $graphUri, 
-            $this->buildTripleString($statementsArray));
-        
+            'DELETE FROM GRAPH <%s> {%s}',
+            $graphUri,
+            $this->buildTripleString($statementsArray)
+        );
+
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->debug('Delete multiple statements query:' . PHP_EOL . $deleteSparql);
         }
-        
+
         return $this->_execSparql($deleteSparql);
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function deleteModel($graphUri)
     {
         // delete explicit graph
         $result = $this->_execSparql('DROP SILENT GRAPH <' . $graphUri . '>');
         $this->_graphs = null;
-        
+
         return $result;
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Interface
      * @todo implement
@@ -380,36 +380,37 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         require_once 'Erfurt/Store/Adapter/Exception.php';
         throw new Erfurt_Store_Adapter_Exception('RDF export not implemented yet.');
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function getAvailableModels()
     {
         if (null === $this->_graphs) {
             $this->_graphs = array();
             $rid = $this->_execSql(
-                'SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
+                'SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH'
+            );
             if ($rid) {
                 $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
                 $this->_graphs = array();
                 foreach ($graphs as $graph) {
                     $this->_graphs[$graph] = array('modelIri' => $graph);
                 }
-            }          
+            }
         }
-        
+
         return $this->_graphs;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function getBlankNodePrefix()
     {
         return self::BLANKNODE_PREFIX;
     }
-    
+
     /**
      * @see Erfurt_Store
      */
@@ -417,28 +418,35 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         return $this->_xyz();
     }
-    
+
     /**
      * @see Erfurt_Store
      */
     public function getSearchPattern($stringSpec, $graphUris, $options)
     {
         $searchPattern = array();
-        
+
         if (false === strpos($stringSpec, '*')) {
             $stringSpec .= '*';
         }
-        
+
         require_once 'Erfurt/Sparql/Query2/Var.php';
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
         $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
         $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
-        
+
         require_once 'Erfurt/Sparql/Query2/Triple.php';
-        $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple($subjectVariable, $predicateVariable, $objectVariable);
+        $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple(
+            $subjectVariable,
+            $predicateVariable,
+            $objectVariable
+        );
         $searchPattern[] = $defaultTriplePattern;
-        
-        $bifPrefix = new Erfurt_Sparql_Query2_Prefix('bif', new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow'));
+
+        $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
+            'bif',
+            new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow')
+        );
         $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
 
         $filter = new Erfurt_Sparql_Query2_Filter(
@@ -449,7 +457,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         array($subjectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
                     ),
                     // why doesnt this work???
-                    // ANSWER: bif:contains uses virtuoso specific fulltext index only 
+                    // ANSWER: bif:contains uses virtuoso specific fulltext index only
                     // available for object column uris could only be treated as codepoint representation
                     // of themselves -> Solution again is IRI (maybe not before PHP 6)
                     */
@@ -462,36 +470,26 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
 
         if ($options['filter_properties']) {
-            $ss_var = new Erfurt_Sparql_Query2_Var('ss');
-            $oo_var = new Erfurt_Sparql_Query2_Var('oo');
-
-            $propertyFilterTriplePattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
-            $searchPattern[] = $propertyFilterTriplePattern;
-
-            /*
-            $filter->getConstraint()->addElement(
-                new Erfurt_Sparql_Query2_Function(
-                    $bifContains,
-                    array($oo_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-                )
-            );*/
+            throw new Erfurt_Store_Adapter_Exception(
+                'Option filter_properties not implemented in Virtuoso adapter yet.'
+            );
         }
 
         $searchPattern[] = $filter;
 
         return $searchPattern;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function getSupportedExportFormats()
     {
         return array();
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function getSupportedImportFormats()
     {
@@ -500,9 +498,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             'n3'     => 'N3'
         );
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function importRdf($graphUri, $data, $type, $locator)
     {
@@ -519,16 +517,16 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $type = 'rdfxml';
                 break;
         }
-        
+
         require_once 'Erfurt/Syntax/RdfParser.php';
         switch ($locator) {
             case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
                 $importSql = $this->_getImportSql('file', $data, $type, $graphUri);
                 break;
-                
+
             case Erfurt_Syntax_RdfParser::LOCATOR_URL:
                 // do some type guesswork
-                if ( 
+                if (
                     substr($data, -2) == 'n3' ||
                     substr($data, -2) == 'nt' ||
                     substr($data, -3) == 'ttl'
@@ -537,23 +535,23 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 }
                 $importSql = $this->_getImportSql('url', $data, $type, $graphUri);
                 break;
-                
+
             default:
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
                 break;
         }
-        
+
         try {
             // import graph
             $rid = $this->_execSql($importSql);
-            
+
             // parse namespace prefixes
             require_once 'Erfurt/Syntax/RdfParser.php';
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $namespacePrefixes = $parser->parseNamespaces($data, $locator);
             $namespaces = Erfurt_App::getInstance()->getNamespaces();
-            
+
             // store namespace prefixes
             while (list($namespaceUri, $prefix) = each($namespacePrefixes)) {
                 try {
@@ -567,54 +565,54 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         } catch (Erfurt_Syntax_RdfParserException $parserException) {
             throw new Erfurt_Store_Adapter_Exception('Error parsing namespaces: ' . $parserException->getMessage());
         }
-        
+
         // success
         return true;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function init()
     {
         // create fulltext index rule and update index
         $this->_createFullTextIndexRules();
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function isModelAvailable($graphUri)
     {
         return array_key_exists((string)$graphUri, (array)$this->getAvailableModels());
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function sparqlAsk($query)
     {
         $resultId = $this->_execSparql($query);
-        
+
         if (odbc_result($resultId, 1) == '1') {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Interface 
+     * @see Erfurt_Store_Adapter_Interface
      */
     public function sparqlQuery($query, $options=array())
     {
         $resultFormat = isset($options[STORE_RESULTFORMAT]) ?
                             $options[STORE_RESULTFORMAT] :
                             STORE_RESULTFORMAT_PLAIN;
-        
+
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
-        
+
         // prepare query
         $query = $queryPrefix
                . PHP_EOL
@@ -629,12 +627,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 // the result is in the first field of the first row
                 $result = current(current($result));
             }
-            
+
             // convert XML result
             if (null !== $converter) {
                 foreach ((array) $converter as $currentConverter) {
                     $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;
-                    
+
                     require_once str_replace('_', '/', $converterClass) . '.php';
                     $converter = new $converterClass();
                     $result = $converter->convert($result);
@@ -645,17 +643,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             if ($jsonEncode) {
                 $result = json_encode($result);
             }
-            
+
             return $result;
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public Methods (Erfurt_Store_Adapter_Sql_Interface) ----------------
     // ------------------------------------------------------------------------
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Sql_Interface 
+     * @see Erfurt_Store_Adapter_Sql_Interface
      */
     public function createTable($tableName, array $columns)
     {
@@ -663,21 +661,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         // Virtuoso-specific replacings
         $replace = array(
-            'AUTO_INCREMENT' => 'IDENTITY', 
+            'AUTO_INCREMENT' => 'IDENTITY',
             'LONGTEXT'       => 'LONG VARCHAR'
         );
-        
+
         foreach ($columns as $columnName => $columnSpec) {
             $colSpecs[] = PHP_EOL
                         .  ' "' . $columnName . '" '
                         .  str_ireplace(array_keys($replace), array_values($replace), $columnSpec);
         }
-        
+
         $createTable = 'CREATE TABLE ' . (string)$tableName . ' (' . implode(',', $colSpecs) . PHP_EOL . ')';
-    
+
         return $this->sqlQuery($createTable);
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
      */
@@ -687,7 +685,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             return (int)odbc_result($rid, 1);
         }
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Sql_Interface
      * @todo Easier implementation
@@ -696,21 +694,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $tables = $this->_odbcResultToArray(
             odbc_tables(
-                $this->connection(), 
-                'db', 
-                $this->_user, 
-                (strlen($prefix) > 0) ? ($prefix . '%') : $prefix, 
+                $this->connection(),
+                'db',
+                $this->_user,
+                (strlen($prefix) > 0) ? ($prefix . '%') : $prefix,
                 'TABLE, VIEW'
-            ), 
-            true, 
+            ),
+            true,
             'TABLE_NAME'
         );
-        
+
         return $tables;
     }
-    
+
     /**
-     * @see Erfurt_Store_Adapter_Sql_Interface 
+     * @see Erfurt_Store_Adapter_Sql_Interface
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
@@ -720,20 +718,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $selectReplace = sprintf('$0 TOP %d, %d', (int)$offset, (int)$limit);
             $sqlQuery      = preg_replace($selectRegex, $selectReplace, (string)$sqlQuery);
         }
-        
+
         $resultArray = array();
 
         if ($result = $this->_execSql((string)$sqlQuery)) {
             $resultArray = $this->_odbcResultToArray($result);
         }
-                
+
         return $resultArray;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public Methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Builds a SPARQL-compatible literal string with long literals if necessary.
      *
@@ -746,7 +744,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         return Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
     }
-    
+
     /**
      * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
      *
@@ -756,33 +754,33 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function buildTripleString(array $rdfPhpStatements)
     {
         $triples = '';
-        
+
         foreach ($rdfPhpStatements as $currentSubject => $predicates) {
             foreach ($predicates as $currentPredicate => $objects) {
                 foreach ($objects as $currentObject) {
                     // TODO: blank nodes
                     $resource = '<' . trim($currentSubject) . '>';
                     $property = '<' . trim($currentPredicate) . '>';
-                    
+
                     if ($currentObject['type'] == 'uri') {
                         $value = '<' . $currentObject['value'] . '>';
                     } else {
                         $value = $this->buildLiteralString(
-                            $currentObject['value'], 
-                            array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null, 
+                            $currentObject['value'],
+                            array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null,
                             array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
                         );
                     }
-                    
+
                     // add triple
                     $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
                 }
             }
         }
-        
+
         return $triples;
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Interface
      * @todo Rename countMatchingStatements
@@ -793,24 +791,25 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
-        if($distinct){
+        if ($distinct) {
             $distinct = "DISTINCT";
         } else {
             $distinct = "";
         }
-        
+
         // more error save
         if ($countSpec == '?*') {
             $countSpec = '*';
         }
-        
+
         $fromSpec = implode('> FROM <', (array)$graphUris);
         $countQuery = sprintf(
             'SELECT COUNT %s (%s) FROM <%s> %s',
             $distinct,
             $countSpec,
             $fromSpec,
-            $whereSpec);
+            $whereSpec
+        );
 
         if ($rid = $this->_execSparql($countQuery)) {
             $count = (int)odbc_result($rid, 1);
@@ -849,48 +848,48 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                 }
                 $query = '
-                    SELECT ?o' . 
+                    SELECT ?o' .
                     $from . '
                     WHERE {
-                        ?model <' . EF_OWL_NS . 'imports> ?o. 
+                        ?model <' . EF_OWL_NS . 'imports> ?o.
                         FILTER (' . implode(' || ', $filter) . ')
                     }';
 
-                $result = $queryCache->load( $query, STORE_RESULTFORMAT_PLAIN );
+                $result = $queryCache->load($query, STORE_RESULTFORMAT_PLAIN);
                 if ($result == $queryCache::ERFURT_CACHE_NO_HIT) {
                     $startTime = microtime(true);
                     $result = $this->sparqlQuery($query);
                     $duration = microtime(true) - $startTime;
-                    $queryCache->save( $query , STORE_RESULTFORMAT_PLAIN, $result, $duration );
+                    $queryCache->save($query, STORE_RESULTFORMAT_PLAIN, $result, $duration);
                 }
             } while ($result);
-            
+
             // unset root node
             unset($models[$modelUri]);
-            
+
             // cache result
             $this->_importedModels[$modelUri] = array_keys($models);
         }
         return $this->_importedModels[$modelUri];
     }
-    
+
     /**
      * Returns the last ODBC error message and number.
      *
      * @return string
      */
-    public function getLastError() 
+    public function getLastError()
     {
         if (null !== $this->connection()) {
             $message = sprintf('%s (%i)', odbc_errormsg($this->connection()), odbc_error($this->connection()));
             return $message;
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Closes a current connection if it exists
      */
@@ -901,24 +900,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             @odbc_close($this->_connection);
         }
     }
-    
+
     /**
      * Creates a fulltext index to be used with bif:contains matching.
      *
      * @throws Erfurt_Store_Adapter_Exception
-     */ 
+     */
     protected function _createFullTextIndexRules()
     {
         $pre = microtime(true);
         $this->_execSql('DB.DBA.RDF_OBJ_FT_RULE_ADD(NULL, NULL, \'' . self::FULLTEXT_INDEX_NAME . '\')');
         $this->_execSql('DB.DBA.VT_INC_INDEX_DB_DBA_RDF_OBJ()');
-        
-        if (defined('_EFDEBUG')) {            
+
+        if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
             $logger->info(sprintf('Creating Virtuoso full-text index: %f ms', (microtime(true) - $pre) * 1000));
         }
     }
-    
+
     /**
      * Executes a SPARQL query and returns an ODBC result identifier.
      *
@@ -927,10 +926,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @return ODBC result identifier
      * @throws Erfurt_Store_Adapter_Exception
      */
-    private function _execSparql($sparqlQuery, $graphUri = null) 
+    private function _execSparql($sparqlQuery, $graphUri = null)
     {
         $graphUri = (string)$graphUri;
-        
+
         if (!empty($graphUri)) {
             // enquote
             $graphUri = '\'' . $graphUri . '\'';
@@ -940,26 +939,26 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $graphUri = 'NULL';
             $graphSpec = '';
         }
-        
+
         // escape characters that delimit the query within the query
         // $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
-        
+
         // build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
         // $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-        
+
         $resultId = @odbc_exec($this->connection(), $virtuosoPl);
-        
+
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
-        
+
         return $resultId;
     }
-    
+
     /**
      * Executes a SQL statement and returns an ODBC result identifier.
      *
@@ -967,20 +966,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @return ODBC result identifier
      * @throws Erfurt_Store_Adapter_Exception
      */
-    protected function _execSql($sqlQuery) 
+    protected function _execSql($sqlQuery)
     {
         $resultId = @odbc_exec($this->connection(), $sqlQuery);
-        
+
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
-            
+
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception($message);
         }
-        
+
         return $resultId;
     }
-    
+
     /**
      *  Returns the query configuration for a given query type.
      *
@@ -995,7 +994,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 'converter'   => null,
                 'jsonEncode'  => false,
                 'queryPrefix' => 'define output:format "JSON"'
-            ), 
+            ),
             // We now parse extended format via JSON
             'extended' => array(
                 'singleField' => 'true',
@@ -1004,32 +1003,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 'queryPrefix' => 'define output:format "JSON"'
             ),
             'xml' => array(
-                'singleField' => true, 
+                'singleField' => true,
                 'converter'   => array('Json', 'SparqlResultsXml'),
-                'jsonEncode'  => false, 
+                'jsonEncode'  => false,
                 'queryPrefix' => 'define output:format "JSON"'
-            ), 
+            ),
             'n3' => array(
-                'singleField' => true, 
+                'singleField' => true,
                 'converter'   => null,
-                'jsonEncode'  => false, 
+                'jsonEncode'  => false,
                 'queryPrefix' => 'define output:format "TTL"'
-            ), 
+            ),
             'plain' => array(
-                'singleField' => false, 
+                'singleField' => false,
                 'converter'   => null,
-                'jsonEncode'  => false, 
+                'jsonEncode'  => false,
                 'queryPrefix' => ''
             )
         );
-        
+
         if (array_key_exists($format, $queryConfigs)) {
             return $queryConfigs[$format];
         }
-        
+
         return $queryConfigs['plain'];
     }
-    
+
     /**
      * Returns an SQL query to be used for importing statements from a file
      * or a URL.
@@ -1037,19 +1036,19 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $method 'file' or 'url'
      * @param mixed $data If $method is 'file', this is the path to a file containing triples;
      *        if $method is 'url', this is a URL.
-     * @param string $type 'n3', 'nt' or 'rdf' 
+     * @param string $type 'n3', 'nt' or 'rdf'
      * @param string $graphUri The graph URI
      * @param string $baseUri The base URI
      * @return string
      */
     protected function _getImportSql($method, $data, $type, $graphUri, $baseUri = null)
     {
-        // default base URI to graph URI if not given 
+        // default base URI to graph URI if not given
         // (will be overriden by document directives e. g. xml:base)
         if ($baseUri === null) {
             $baseUri = $graphUri;
         }
-        
+
         // check type parameter
         switch (strtolower($type)) {
             case 'n3':  // N3
@@ -1064,32 +1063,34 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $importFunc = 'RDF_LOAD_RDFXML';
                 break;
         }
-        
+
         if ($method === 'url') {
             $importSql = sprintf(
-                "CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')", 
-                $importFunc, 
-                $data, 
-                $baseUri, 
-                $graphUri);
+                "CALL DB.DBA.%s(XML_URI_GET_AND_CACHE('%s'), '%s', '%s')",
+                $importFunc,
+                $data,
+                $baseUri,
+                $graphUri
+            );
         } else {
             // import using internal Virtuoso/PL function
             $importSql = sprintf(
-                "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')", 
-                $importFunc, 
-                $data, 
-                $baseUri, 
-                $graphUri);
+                "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')",
+                $importFunc,
+                $data,
+                $baseUri,
+                $graphUri
+            );
         }
-        
+
         return $importSql;
     }
-    
+
     /**
      * Converts an ODBC result to an array.
      *
      * @param boolean $columnsAsKeys If true, column names are used as indices.
-     * @param string $field Non-null values denote the only column name that is returned as the 
+     * @param string $field Non-null values denote the only column name that is returned as the
      *        result for a row. If null, all column values are returned in an array.
      *
      * @return array
@@ -1098,15 +1099,15 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // the result will be stored in here
         $resultArray = array();
-        
+
         // get number of fields (columns)
         $numFields = odbc_num_fields($odbcResult);
-        
+
         // Return empty array on no results (0) or error (-1)
         if ($numFields < 1) {
             return $resultArray;
         }
-        
+
         // for all rows
         while (odbc_fetch_row($odbcResult)) {
             $resultRowNamed = array();
@@ -1146,10 +1147,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // add row to result array
             array_push($resultArray, $resultRowNamed);
         }
-        
+
         return $resultArray;
     }
-    
+
     /**
      * Returns a data URI with the Virtuoso logo png image.
      *
@@ -1202,7 +1203,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
               . 'TEN7lzhc24qx14wqVMYjWSlUbP1mLbM6nOLVd5toM3jPPCqFHF1+2qTb8hkT4vF4RPfAMB9fGoB4Ddp'
               . 'YK2erT9F/w0LmslQ2b1479zftfWDSiRt2ukV7r93/3eZy8kW3E5ukYmmyAuvlVi6d+2zWVTGH8Zh0Aj'
               . '0ejxgddWM232LQ7v0vY9hqxzJ4i1tD3muG3ILl/hP1HObwrcN/AF5zmzGLB8I2AAAAAElFTkSuQmCC';
-        
+
         return $logo;
     }
 }
