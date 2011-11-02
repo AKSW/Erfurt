@@ -1624,105 +1624,95 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     private function _fetchModelInfos()
     {
-        require_once 'Erfurt/App.php';
-        $cache = Erfurt_App::getInstance()->getCache();
+        //It is not possible to use a cache because SQL instead of SPARQL is used. Using a cache causing updating problems.
+        $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
+                    (SELECT count(*)
+                    FROM ef_stmt s2
+                    WHERE s2.g = g.id
+                    AND s2.s = g.uri
+                    AND s2.st = 0
+                    AND s2.p = \'' . EF_RDF_TYPE . '\'
+                    AND s2.o = \'' . EF_OWL_ONTOLOGY . '\'
+                    AND s2.ot = 0) as is_owl_ontology
+                FROM ef_graph g
+                LEFT JOIN ef_stmt s ON (g.id = s.g
+                    AND g.uri = s.s
+                    AND s.p = \'' . EF_OWL_IMPORTS. '\'
+                    AND s.ot = 0)
+                LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
 
-        $id = $cache->makeId($this, '_fetchModelInfos', array());
-        $cachedVal = $cache->load($id);
-        if ($cachedVal) {
-            $this->_modelInfoCache = $cachedVal;
+        try {
+            $result = $this->sqlQuery($sql);
+        } catch (Exception $e) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+        }
+
+
+        if ($result === false) {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
         } else {
-            $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
-                        (SELECT count(*)
-                        FROM ef_stmt s2
-                        WHERE s2.g = g.id
-                        AND s2.s = g.uri
-                        AND s2.st = 0
-                        AND s2.p = \'' . EF_RDF_TYPE . '\'
-                        AND s2.o = \'' . EF_OWL_ONTOLOGY . '\'
-                        AND s2.ot = 0) as is_owl_ontology
-                    FROM ef_graph g
-                    LEFT JOIN ef_stmt s ON (g.id = s.g
-                        AND g.uri = s.s
-                        AND s.p = \'' . EF_OWL_IMPORTS. '\'
-                        AND s.ot = 0)
-                    LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
+            $this->_modelInfoCache = array();
 
-            try {
-                $result = $this->sqlQuery($sql);
-            } catch (Exception $e) {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Error while fetching model and namespace informations.');
-            }
+            #$rowSet = $result->fetchAll();
+            #var_dump($result);exit;
+            foreach ($result as $row) {
+                if (!isset($this->_modelInfoCache[$row['uri']])) {
+                    $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
+                    $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
+                    $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
+                    $this->_modelInfoCache[$row['uri']]['imports']      = array();
 
-
-            if ($result === false) {
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception('Error while fetching model and namespace informations.');
-            } else {
-                $this->_modelInfoCache = array();
-
-                #$rowSet = $result->fetchAll();
-                #var_dump($result);exit;
-                foreach ($result as $row) {
-                    if (!isset($this->_modelInfoCache[$row['uri']])) {
-                        $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
-                        $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
-                        $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
-                        $this->_modelInfoCache[$row['uri']]['imports']      = array();
-
-                        // set the type of the model
-                        if ($row['is_owl_ontology'] > 0) {
-                            $this->_modelInfoCache[$row['uri']]['type'] = 'owl';
-                        } else {
-                            $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
-                        }
-
-                        if ($row['o'] !== null &&
-                         !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
-                            $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
-                        }
+                    // set the type of the model
+                    if ($row['is_owl_ontology'] > 0) {
+                        $this->_modelInfoCache[$row['uri']]['type'] = 'owl';
                     } else {
-                        if ($row['o'] !== null &&
-                                !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+                        $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
+                    }
 
-                            $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
-                        }
+                    if ($row['o'] !== null &&
+                     !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
+                    }
+                } else {
+                    if ($row['o'] !== null &&
+                            !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+
+                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
                     }
                 }
+            }
 
-                //var_dump($this->_modelInfoCache);exit;
+            //var_dump($this->_modelInfoCache);exit;
 
-                // build the transitive closure for owl:imports
-                // check for recursive owl:imports; also check for cylces!
-                do {
-                    // indicated whether anything was changed in the array or not and whether loop needs to run again
-                    $hasChanged = false;
+            // build the transitive closure for owl:imports
+            // check for recursive owl:imports; also check for cylces!
+            do {
+                // indicated whether anything was changed in the array or not and whether loop needs to run again
+                $hasChanged = false;
 
-                    // test every model exists in the model table
-                    foreach ($this->_modelInfoCache as $modelIri) {
-                        // only owl models can import other models
-                        if ($modelIri['type'] !== 'owl') {
-                            continue;
-                        }
-                        foreach ($modelIri['imports'] as $importsIri) {
-                            if (isset($this->_modelInfoCache[$importsIri])) {
-                                foreach ($this->_modelInfoCache[$importsIri]['imports'] as $importsImportIri) {
-                                    if (!isset($modelIri['imports'][$importsImportIri]) &&
-                                            !($importsImportIri === $modelIri['modelIri'])) {
+                // test every model exists in the model table
+                foreach ($this->_modelInfoCache as $modelIri) {
+                    // only owl models can import other models
+                    if ($modelIri['type'] !== 'owl') {
+                        continue;
+                    }
+                    foreach ($modelIri['imports'] as $importsIri) {
+                        if (isset($this->_modelInfoCache[$importsIri])) {
+                            foreach ($this->_modelInfoCache[$importsIri]['imports'] as $importsImportIri) {
+                                if (!isset($modelIri['imports'][$importsImportIri]) &&
+                                        !($importsImportIri === $modelIri['modelIri'])) {
 
-                                        $this->_modelInfoCache[$modelIri['modelIri']]
-                                                    ['imports'][$importsImportIri] = $importsImportIri;
-                                        $hasChanged = true;
-                                    }
+                                    $this->_modelInfoCache[$modelIri['modelIri']]
+                                                ['imports'][$importsImportIri] = $importsImportIri;
+                                    $hasChanged = true;
                                 }
                             }
                         }
                     }
-                } while ($hasChanged === true);
-            }
-
-            $cache->save($this->_modelInfoCache, $id, array('model_info'));
+                }
+            } while ($hasChanged === true);
         }
     }
 
