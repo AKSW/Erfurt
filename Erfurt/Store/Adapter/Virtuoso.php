@@ -137,39 +137,41 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $numBlocks = 1;
         $blockQueries = array();
-        while (true){
+        while (true) {
             $statementBlocks = $this->array_split($statementsArray, $numBlocks);
             $blockQueries = array();
-            foreach($statementBlocks as $statementBlock){
-               $blockQuery = sprintf(
-                'INSERT INTO GRAPH <%s> {%s}',
-                $graphUri,
-                $this->buildTripleString($statementBlock));
+            foreach ($statementBlocks as $statementBlock) {
+                $blockQuery = sprintf(
+                    'INSERT INTO GRAPH <%s> {%s}',
+                    $graphUri,
+                    $this->buildTripleString($statementBlock)
+                );
 
-                if(substr_count($blockQuery, "\n") > 1000){ //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+               //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+               if (substr_count($blockQuery, "\n") > 1000) {
                     $numBlocks *= 2;
                     continue 2;
-                }
-                $blockQueries[] = $blockQuery;
+               }
+               $blockQueries[] = $blockQuery;
             }
             break;  //this only reached if the continue call is not ŕeached
         }
 
         $odbcRes = true;
-        foreach ($blockQueries as $query){
+        foreach ($blockQueries as $query) {
             if (defined('_EFDEBUG')) {
                 $logger = Erfurt_App::getInstance()->getLog();
                 $logger->debug('Add mutliple statements query: ' . PHP_EOL . $query);
             }
 
             $odbcRes = $this->_execSparql($query);
-            $result = odbc_result($odbcRes,1);
+            $result = odbc_result($odbcRes, 1);
 
         }
 
         //TODO why - please comment
         if (odbc_num_fields($odbcRes) > 0 && odbc_field_type($odbcRes, 1) == 'VARCHAR') {
-            $strResult = odbc_result($odbcRes,1);
+            $strResult = odbc_result($odbcRes, 1);
             return $strResult;
         }
     }
@@ -182,7 +184,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $newCount = ceil(count($array)/$pieces);
         $a = array_slice($array, 0, $newCount);
         $b = $this->array_split(array_slice($array, $newCount), $pieces-1);
-        return array_merge(array($a),$b);
+        return array_merge(array($a), $b);
     }
 
         /**
@@ -346,7 +348,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $deleteSparql = sprintf(
             'DELETE FROM GRAPH <%s> {%s}',
             $graphUri,
-            $this->buildTripleString($statementsArray));
+            $this->buildTripleString($statementsArray)
+        );
 
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
@@ -386,7 +389,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (null === $this->_graphs) {
             $this->_graphs = array();
             $rid = $this->_execSql(
-                'SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH');
+                'SELECT ID_TO_IRI(REC_GRAPH_IID) AS GRAPH FROM DB.DBA.RDF_EXPLICITLY_CREATED_GRAPH'
+            );
             if ($rid) {
                 $graphs = $this->_odbcResultToArray($rid, false, 'GRAPH');
                 $this->_graphs = array();
@@ -432,10 +436,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
 
         require_once 'Erfurt/Sparql/Query2/Triple.php';
-        $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple($subjectVariable, $predicateVariable, $objectVariable);
+        $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple(
+            $subjectVariable,
+            $predicateVariable,
+            $objectVariable
+        );
         $searchPattern[] = $defaultTriplePattern;
 
-        $bifPrefix = new Erfurt_Sparql_Query2_Prefix('bif', new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow'));
+        $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
+            'bif',
+            new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow')
+        );
         $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
 
         $filter = new Erfurt_Sparql_Query2_Filter(
@@ -459,19 +470,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
 
         if ($options['filter_properties']) {
-            $ss_var = new Erfurt_Sparql_Query2_Var('ss');
-            $oo_var = new Erfurt_Sparql_Query2_Var('oo');
-
-            $propertyFilterTriplePattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
-            $searchPattern[] = $propertyFilterTriplePattern;
-
-            /*
-            $filter->getConstraint()->addElement(
-                new Erfurt_Sparql_Query2_Function(
-                    $bifContains,
-                    array($oo_var, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
-                )
-            );*/
+            throw new Erfurt_Store_Adapter_Exception(
+                'Option filter_properties not implemented in Virtuoso adapter yet.'
+            );
         }
 
         $searchPattern[] = $filter;
@@ -790,7 +791,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
         }
-        if($distinct){
+        if ($distinct) {
             $distinct = "DISTINCT";
         } else {
             $distinct = "";
@@ -807,7 +808,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $distinct,
             $countSpec,
             $fromSpec,
-            $whereSpec);
+            $whereSpec
+        );
 
         if ($rid = $this->_execSparql($countQuery)) {
             $count = (int)odbc_result($rid, 1);
@@ -853,12 +855,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         FILTER (' . implode(' || ', $filter) . ')
                     }';
 
-                $result = $queryCache->load( $query, STORE_RESULTFORMAT_PLAIN );
+                $result = $queryCache->load($query, STORE_RESULTFORMAT_PLAIN);
                 if ($result == $queryCache::ERFURT_CACHE_NO_HIT) {
                     $startTime = microtime(true);
                     $result = $this->sparqlQuery($query);
                     $duration = microtime(true) - $startTime;
-                    $queryCache->save( $query , STORE_RESULTFORMAT_PLAIN, $result, $duration );
+                    $queryCache->save($query, STORE_RESULTFORMAT_PLAIN, $result, $duration);
                 }
             } while ($result);
 
@@ -1068,7 +1070,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $importFunc,
                 $data,
                 $baseUri,
-                $graphUri);
+                $graphUri
+            );
         } else {
             // import using internal Virtuoso/PL function
             $importSql = sprintf(
@@ -1076,7 +1079,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $importFunc,
                 $data,
                 $baseUri,
-                $graphUri);
+                $graphUri
+            );
         }
 
         return $importSql;
