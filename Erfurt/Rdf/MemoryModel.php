@@ -27,7 +27,7 @@ class Erfurt_Rdf_MemoryModel
     /*
      * checks if there is at least one statement for resource $iri
      */
-    public function hasS($s = null)
+    public function hasS($s)
     {
         if ($s === null) {
             throw new Exception('need an IRI string as first parameter');
@@ -43,7 +43,7 @@ class Erfurt_Rdf_MemoryModel
      * checks if there is at least one statement for resource $iri with
      * predicate $p
      */
-    public function hasSP($s = null, $p = null )
+    public function hasSP($s, $p)
     {
         if (!$this->hasS($s)) {
             return false;
@@ -62,7 +62,7 @@ class Erfurt_Rdf_MemoryModel
     /*
      * search for a value where S and P is fix
      */
-    public function hasSPvalue($s = null, $p = null, $value = null)
+    public function hasSPvalue($s, $p, $value)
     {
         if ($value == null) {
             throw new Exception('need a value string as third parameter');
@@ -80,7 +80,7 @@ class Erfurt_Rdf_MemoryModel
     /*
      * count statements where S and P is fix
      */
-    public function countSP($s = null, $p = null)
+    public function countSP($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
             return 0;
@@ -104,7 +104,7 @@ class Erfurt_Rdf_MemoryModel
     /*
      * returns an array of values where S and P is fix
      */
-    public function getValues($s = null, $p = null)
+    public function getValues($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
             return array();
@@ -116,7 +116,7 @@ class Erfurt_Rdf_MemoryModel
     /*
      * returns the first object value where S and P is fix
      */
-    public function getValue($s = null, $p = null)
+    public function getValue($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
             return null;
@@ -231,7 +231,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $lang      - the optional xml:lang identifier string
      * @param string $datatype  - the optional datatype URI string
      */
-    public function addAttribute($subject = null, $predicate = null, $literal = "", $lang = null, $datatype = null)
+    public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
         if ($subject == null) {
             throw new Exception('need a subject URI as first parameter');
@@ -268,7 +268,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $relation - the statement predicate URI string
      * @param string $object   - the statement object URI string
      */
-    public function addRelation($subject = null, $relation = null, $object = null)
+    public function addRelation($subject, $relation, $object = null)
     {
         if ($subject == null) {
             throw new Exception('need a subject URI as first parameter');
