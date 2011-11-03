@@ -206,9 +206,13 @@ class Erfurt_Rdf_MemoryModel
                     $object['lang'] = $o['xml:lang'];
                 }
                 break;
+            //TODO i added bnode, why was it skipped? 
+            //btw: the way it was skipped just caused the 'type' field to be missing...
+            case 'bnode':
+                $object['type'] = 'bnode';
+                break;
             default:
-                /* blank nodes are ignore */
-                /* be quiet here */
+                return; // correct way to skip unwanted types
                 break;
         }
 
