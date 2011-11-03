@@ -438,11 +438,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function getSearchPattern($stringSpec, $graphUris, $options)
     {
-        $searchPattern = array();
-
-        if (false === strpos($stringSpec, '*')) {
-            $stringSpec .= '*';
+        if ($options['filter_properties']) {
+            throw new Erfurt_Store_Adapter_Exception(
+                'getSearchPattern option filter_properties not implemented in Virtuoso adapter yet.'
+            );
         }
+
+        $searchPattern = array();
 
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
         $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
@@ -455,15 +457,34 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
         $searchPattern[] = $defaultTriplePattern;
 
-        $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
-            'bif',
-            new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow')
-        );
-        $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
+        // look for a bif:contains string limit in config
+        $bifLimit = null;
+        if ($this->_adapterOptions['search_max_length_for_bifcontains']) {
+            $bifLimit = (int) $this->_adapterOptions['search_max_length_for_bifcontains'];
+        }
 
-        $filter = new Erfurt_Sparql_Query2_Filter(
-            new Erfurt_Sparql_Query2_ConditionalOrExpression(
-                array(
+        if ((isset($bifLimit)) && (strlen($stringSpec)) < $bifLimit) {
+            // string is < bifLimit character => use FILTER (str(?o) = "..."))
+            $strExpression     = new Erfurt_Sparql_Query2_Str($objectVariable);
+            $literalExpression = new Erfurt_Sparql_Query2_RDFLiteral($stringSpec);
+            $filter            = new Erfurt_Sparql_Query2_Filter(
+                new Erfurt_Sparql_Query2_Equals($strExpression, $literalExpression)
+            );
+        } else {
+            // string >= bifLimit characters
+            if (false === strpos($stringSpec, '*')) {
+                $stringSpec .= '*';
+            }
+
+            $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
+                'bif',
+                new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow')
+            );
+            $bifContains = new Erfurt_Sparql_Query2_IriRef('contains', $bifPrefix);
+
+            $filter = new Erfurt_Sparql_Query2_Filter(
+                new Erfurt_Sparql_Query2_ConditionalOrExpression(
+                    array(
                     /*new Erfurt_Sparql_Query2_Function(
                         $bifContains,
                         array($subjectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
@@ -472,18 +493,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     // ANSWER: bif:contains uses virtuoso specific fulltext index only
                     // available for object column uris could only be treated as codepoint representation
                     // of themselves -> Solution again is IRI (maybe not before PHP 6)
-                    */
-                    new Erfurt_Sparql_Query2_Function(
-                        $bifContains,
-                        array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '\'"'))
+                     */
+                        new Erfurt_Sparql_Query2_Function(
+                            $bifContains,
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '\'"'))
+                        )
                     )
                 )
-            )
-        );
-
-        if ($options['filter_properties']) {
-            throw new Erfurt_Store_Adapter_Exception(
-                'Option filter_properties not implemented in Virtuoso adapter yet.'
             );
         }
 
