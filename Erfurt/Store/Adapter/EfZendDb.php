@@ -478,7 +478,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         if (null !== $object) {
             if (isset($object['value'])) {
-                $escapedObject = $this->_dbConn->quote($object);
+                $escapedObject = $this->_dbConn->quote($object['value']);
                 
                 $whereString .= ' AND o = ' . $escapedObject . ' ';
             }
