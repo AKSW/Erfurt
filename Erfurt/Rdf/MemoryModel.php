@@ -14,7 +14,7 @@
  */
 class Erfurt_Rdf_MemoryModel
 {
-    private $statements = array();
+    protected $statements = array();
 
     /*
      * model can be constructed with a given array
@@ -29,7 +29,7 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasS($s = null)
     {
-        if ($s == null) {
+        if ($s === null) {
             throw new Exception('need an IRI string as first parameter');
         }
         if (isset($this->statements[$s])) {
@@ -283,5 +283,17 @@ class Erfurt_Rdf_MemoryModel
 
         // add the statements array to the model
         $this->addStatements($statements);
+    }
+    
+    public function removeS($subject)
+    {
+        if (isset($this->statements[$subject])) {
+            unset($this->statements[$subject]);
+        }
+    }
+    
+    public function getSubjects()
+    {
+        return array_keys($this->statements);
     }
 }
