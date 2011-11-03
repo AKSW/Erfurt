@@ -92,6 +92,18 @@ class Erfurt_Rdf_MemoryModel
     /*
      * returns an array of values where S and P is fix
      */
+    public function getPO($s)
+    {
+        if (!$this->hasS($s)) {
+            return array();
+        } else {
+            return $this->statements[$s];
+        }
+    }
+
+    /*
+     * returns an array of values where S and P is fix
+     */
     public function getValues($s = null, $p = null)
     {
         if (!$this->hasSP($s, $p)) {
@@ -107,7 +119,7 @@ class Erfurt_Rdf_MemoryModel
     public function getValue($s = null, $p = null)
     {
         if (!$this->hasSP($s, $p)) {
-            return false;
+            return null;
         } else {
             return $this->statements[$s][$p][0]['value'];
         }
