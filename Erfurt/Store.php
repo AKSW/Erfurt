@@ -731,35 +731,19 @@ class Erfurt_Store
         return $this->_dbPass;
     }
 
+    /**
+     * Returns importsClosure for a given model
+     * @return array
+     */
     public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         if (array_key_exists($modelIri, $this->_importsClosure)) {
             return $this->_importsClosure[$modelIri];
         }
-
-        if ($this->_backendName == "Virtuoso") {
-            $objectCache = Erfurt_App::getInstance()->getCache();
-            $importsClosure = null;
-            $importsClosureKey = "ImportsClosure_".(md5($modelIri));
-            $importsClosure = $objectCache->load($importsClosureKey);
-            if (is_array($importsClosure)) {
-                //nothing ToDo
-            } else {
-                $queryCache = Erfurt_App::getInstance()->getQueryCache();
-                $queryCache->startTransaction($importsClosureKey);
-                $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-                $queryCache->endTransaction($importsClosureKey);
-                $objectCache->save($importsClosure, $importsClosureKey);
-            }
-        } else {
-            $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-        }
-
+        $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
         $this->_importsClosure[$modelIri] = $importsClosure;
         return $importsClosure;
     }
-
-
 
     /**
      * Recursively gets owl:imported model IRIs starting with $modelIri as root.
