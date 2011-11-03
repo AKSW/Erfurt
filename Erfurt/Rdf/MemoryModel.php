@@ -304,6 +304,23 @@ class Erfurt_Rdf_MemoryModel
         }
     }
     
+    /**
+     *removes a predicate p (and its values) of a subject s
+     * @param type $subject
+     * @param type $predicate 
+     */
+    public function removePredicateOf($subject, $predicate)
+    {
+        if (isset($this->statements[$subject]) && isset($this->statements[$subject][$predicate])) {
+            unset($this->statements[$subject][$predicate]);
+            
+            //check if this was the last
+            if(count($this->statements[$subject]) == 0){
+                unset($this->statements[$subject]);
+            }
+        }
+    }
+    
     public function getSubjects()
     {
         return array_keys($this->statements);
