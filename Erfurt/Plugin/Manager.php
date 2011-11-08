@@ -128,7 +128,7 @@ class Erfurt_Plugin_Manager
             $pluginConfig->enabled = false;
         }
 
-        $this->addPluginExternally($pluginName,$pluginName,$path,$config);
+        $this->addPluginExternally($pluginName, $pluginName, $pluginPath, $pluginConfig);
         // var_dump($pluginConfig);
     }
 
