@@ -2,6 +2,9 @@
 <ruleset name="Ontowiki">
  <description>A Ontowiki coding standard.</description>
  
+  <exclude-pattern>*/Parser/Sparql10/*</exclude-pattern>
+  <exclude-pattern>*/Parser/Sparql11/*</exclude-pattern>
+ 
  <rule ref="Zend"/>
 
 
