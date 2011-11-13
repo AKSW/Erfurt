@@ -73,17 +73,32 @@ class Erfurt_Rdf_MemoryModel
      * @param string $s - the subject URN of searched statement
      * @param string $p - the predicate URN of searched statement
      * @param string $value - the value of the object of the the searched statement
+     * @param string $matchType - strict for strict match, preg for preg_match
      * @return boolean
      */
-    public function hasSPvalue($s, $p, $value)
+    public function hasSPvalue($s, $p, $value, $matchType = 'strict')
     {
         if ($value == null) {
             throw new Exception('need a value string as third parameter');
         } else {
             $values = $this->getValues($s, $p);
             foreach ($values as $key => $object) {
-                if ($object['value'] == $value) {
-                    return true;
+                switch ($matchType) {
+                    case 'strict':
+                        if ($object['value'] == $value) {
+                            return true;
+                        }
+                        break;
+                    case 'preg':
+                        // the pattern is given by function param value
+                        // the object value is tested against the pattern
+                        if (preg_match($value, $object['value']) == 1) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        throw new Exception('unknown matchType, use strict or preg');
+                        break;
                 }
             }
             return false;
