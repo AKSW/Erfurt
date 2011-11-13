@@ -10,7 +10,7 @@
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
- * @author {Jonas Brekle <jonas.brekle@gmail.com>}
+ * @author Jonas Brekle <jonas.brekle@gmail.com>
  */
 class Erfurt_Rdf_MemoryModel
 {
@@ -25,12 +25,12 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * checks if there is at least one statement for resource $iri
+     * checks if there is at least one statement for resource $s
      */
     public function hasS($s)
     {
         if ($s === null) {
-            throw new Exception('need an IRI string as first parameter');
+            throw new Exception('need an URN string as first parameter');
         }
         if (isset($this->statements[$s])) {
             return true;
@@ -40,7 +40,7 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * checks if there is at least one statement for resource $iri with
+     * checks if there is at least one statement for resource $s with
      * predicate $p
      */
     public function hasSP($s, $p)
@@ -49,7 +49,7 @@ class Erfurt_Rdf_MemoryModel
             return false;
         } else {
             if ($p == null) {
-                throw new Exception('need an IRI string as second parameter');
+                throw new Exception('need an URN string as second parameter');
             }
             if (isset($this->statements[$s][$p])) {
                 return true;
@@ -60,7 +60,7 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * search for a value where S and P is fix
+     * search for a value where S, P and the value of O is fix
      */
     public function hasSPvalue($s, $p, $value)
     {
@@ -126,21 +126,21 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * return the statement array, limited to a subject uri
+     * return the statement array, limited to a subject URN
      */
-    public function getStatements($iri = null)
+    public function getStatements($urn = null)
     {
-        if ($iri == null) {
+        if ($urn == null) {
             return $this->statements;
         } else {
-            if ($this->hasS($iri)) {
-                return array( $iri => $this->statements[$iri] );
+            if ($this->hasS($urn)) {
+                return array( $urn => $this->statements[$urn] );
             } else {
                 return array();
             }
         }
     }
-    
+
     /*
      * This adds a statement array to the model by merging the arrays
      * This function is the base for all other add functions
@@ -148,22 +148,22 @@ class Erfurt_Rdf_MemoryModel
     public function addStatements(array $statements)
     {
         $model = $this->statements;
-        foreach ($statements as $subjectIri => $subjectArray) {
-            if (!isset($model[$subjectIri])) {
+        foreach ($statements as $subjectUrn => $subjectArray) {
+            if (!isset($model[$subjectUrn])) {
                 // new subject
-                $model[$subjectIri] = $subjectArray;
+                $model[$subjectUrn] = $subjectArray;
             } else {
                 // existing subject
-                foreach ($subjectArray as $predicateIri => $predicateArray) {
-                    if (!isset($model[$subjectIri][$predicateIri])) {
+                foreach ($subjectArray as $predicateUrn => $predicateArray) {
+                    if (!isset($model[$subjectUrn][$predicateUrn])) {
                         // new predicate on subject
-                        $model[$subjectIri][$predicateIri] = $predicateArray;
+                        $model[$subjectUrn][$predicateUrn] = $predicateArray;
                     } else {
                         // existing predicate on subject
                         foreach ($predicateArray as $objectArray) {
-                            if (!in_array($objectArray, $model[$subjectIri][$predicateIri])) {
+                            if (!in_array($objectArray, $model[$subjectUrn][$predicateUrn])) {
                                 // new object for subject/predicate pattern
-                                $model[$subjectIri][$predicateIri][] = $objectArray;
+                                $model[$subjectUrn][$predicateUrn][] = $objectArray;
                             } else {
                                 // same triple
                             }
@@ -206,8 +206,6 @@ class Erfurt_Rdf_MemoryModel
                     $object['lang'] = $o['xml:lang'];
                 }
                 break;
-            //TODO i added bnode, why was it skipped? 
-            //btw: the way it was skipped just caused the 'type' field to be missing...
             case 'bnode':
                 $object['type'] = 'bnode';
                 break;
@@ -217,8 +215,8 @@ class Erfurt_Rdf_MemoryModel
         }
 
         $statement = array();
-        $s = $s['value']; // is always an IRI (or bnode)
-        $p = $p['value']; // is always an IRI
+        $s = $s['value']; // is always an URN (or bnode)
+        $p = $p['value']; // is always an URN
 
         $pArray[$p] = array(0 => $object);
         $statement[$s] = $pArray;
@@ -229,18 +227,18 @@ class Erfurt_Rdf_MemoryModel
     /*
      * add a single statement where the object is a literal
      *
-     * @param string $subject   - the statement subject URI string
-     * @param string $predicate - the statement predicate URI string
+     * @param string $subject   - the statement subject URN string
+     * @param string $predicate - the statement predicate URN string
      * @param string $literal   - the literal value string
      * @param string $lang      - the optional xml:lang identifier string
-     * @param string $datatype  - the optional datatype URI string
+     * @param string $datatype  - the optional datatype URN string
      */
     public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject URI as first parameter');
+            throw new Exception('need a subject URN as first parameter');
         } else if ($predicate == null) {
-            throw new Exception('need a predicate URI as second parameter');
+            throw new Exception('need a predicate URN as second parameter');
         }
         $newStatements = array();
 
@@ -268,18 +266,18 @@ class Erfurt_Rdf_MemoryModel
     /*
      * add a single statement where the object is a resource
      *
-     * @param string $subject  - the statement subject URI string
-     * @param string $relation - the statement predicate URI string
-     * @param string $object   - the statement object URI string
+     * @param string $subject  - the statement subject URN string
+     * @param string $relation - the statement predicate URN string
+     * @param string $object   - the statement object URN string
      */
     public function addRelation($subject, $relation, $object = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject URI as first parameter');
+            throw new Exception('need a subject URN as first parameter');
         } else if ($relation == null) {
-            throw new Exception('need a predicate URI as second parameter');
+            throw new Exception('need a predicate URN as second parameter');
         } else if ($object == null) {
-            throw new Exception('need an object URI as second parameter');
+            throw new Exception('need an object URN as second parameter');
         }
 
         $newStatements = array();
@@ -300,31 +298,38 @@ class Erfurt_Rdf_MemoryModel
         // add the statements array to the model
         $this->addStatements($statements);
     }
-    
+
+    /**
+     * removes all statements of a given subject
+     * @param type $subject
+     */
     public function removeS($subject)
     {
-        if (isset($this->statements[$subject])) {
+        if ($this->hasS($subject)) {
             unset($this->statements[$subject]);
         }
     }
-    
+
     /**
-     *removes a predicate p (and its values) of a subject s
+     * removes a predicate p (and its values) of a subject s
      * @param type $subject
-     * @param type $predicate 
+     * @param type $predicate
      */
-    public function removePredicateOf($subject, $predicate)
+    public function removeSP($subject, $predicate)
     {
-        if (isset($this->statements[$subject]) && isset($this->statements[$subject][$predicate])) {
+        if ($this->hasSP($subject, $predicate)) {
             unset($this->statements[$subject][$predicate]);
-            
+
             //check if this was the last
             if(count($this->statements[$subject]) == 0){
                 unset($this->statements[$subject]);
             }
         }
     }
-    
+
+    /*
+     * returns an array of all subjects
+     */
     public function getSubjects()
     {
         return array_keys($this->statements);
