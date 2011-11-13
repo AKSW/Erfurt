@@ -26,6 +26,9 @@ class Erfurt_Rdf_MemoryModel
 
     /*
      * checks if there is at least one statement for resource $s
+     *
+     * @param string $s - the subject URN of searched statement
+     * @return boolean
      */
     public function hasS($s)
     {
@@ -42,6 +45,10 @@ class Erfurt_Rdf_MemoryModel
     /*
      * checks if there is at least one statement for resource $s with
      * predicate $p
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return boolean
      */
     public function hasSP($s, $p)
     {
@@ -60,7 +67,13 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * search for a value where S, P and the value of O is fix
+     * search for statements where S, P and the value of O is fix and return
+     * true if at least one statement is found and false if no statement found
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @param string $value - the value of the object of the the searched statement
+     * @return boolean
      */
     public function hasSPvalue($s, $p, $value)
     {
@@ -78,7 +91,12 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * count statements where S and P is fix
+     * counts statements where S and P is fix
+     * return 0 if no statement was found or an positive integer
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return int
      */
     public function countSP($s, $p)
     {
@@ -90,7 +108,10 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * returns an array of values where S and P is fix
+     * returns all predicate/object tupel of a given subject URN
+     *
+     * @param string $s - the subject URN
+     * @return array
      */
     public function getPO($s)
     {
@@ -102,7 +123,11 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * returns an array of values where S and P is fix
+     * returns an array of values from statements where S and P was given
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return array
      */
     public function getValues($s, $p)
     {
@@ -114,7 +139,11 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * returns the first object value where S and P is fix
+     * returns the first object value of a statement where S and P was given
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return string|null
      */
     public function getValue($s, $p)
     {
@@ -126,15 +155,18 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * return the statement array, limited to a subject URN
+     * return the statement array, optional limited to a subject URN
+     *
+     * @param string $s - the subject URN of searched statements
+     * @return array
      */
-    public function getStatements($urn = null)
+    public function getStatements($s)
     {
-        if ($urn == null) {
+        if ($s == null) {
             return $this->statements;
         } else {
-            if ($this->hasS($urn)) {
-                return array( $urn => $this->statements[$urn] );
+            if ($this->hasS($s)) {
+                return array( $s => $this->statements[$s] );
             } else {
                 return array();
             }
@@ -144,6 +176,8 @@ class Erfurt_Rdf_MemoryModel
     /*
      * This adds a statement array to the model by merging the arrays
      * This function is the base for all other add functions
+     *
+     * @param array $statements - a php statement array
      */
     public function addStatements(array $statements)
     {
@@ -301,28 +335,30 @@ class Erfurt_Rdf_MemoryModel
 
     /**
      * removes all statements of a given subject
-     * @param type $subject
+     *
+     * @param string $s
      */
-    public function removeS($subject)
+    public function removeS($s)
     {
-        if ($this->hasS($subject)) {
-            unset($this->statements[$subject]);
+        if ($this->hasS($s)) {
+            unset($this->statements[$s]);
         }
     }
 
     /**
      * removes a predicate p (and its values) of a subject s
-     * @param type $subject
-     * @param type $predicate
+     *
+     * @param string $s
+     * @param string $p
      */
-    public function removeSP($subject, $predicate)
+    public function removeSP($s, $p)
     {
-        if ($this->hasSP($subject, $predicate)) {
-            unset($this->statements[$subject][$predicate]);
+        if ($this->hasSP($s, $p)) {
+            unset($this->statements[$s][$p]);
 
             //check if this was the last
-            if(count($this->statements[$subject]) == 0){
-                unset($this->statements[$subject]);
+            if(count($this->statements[$s]) == 0){
+                unset($this->statements[$s]);
             }
         }
     }
