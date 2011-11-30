@@ -1360,10 +1360,10 @@ class Erfurt_Store
                     $slow = "";
                 }
 
-                $logger->debug(
-                    "SPARQL *****************" . round((1000 * $duration), 2) .
-                    " msec " . $slow . "\n" . $queryObject
-                );
+                // $logger->debug(
+                    // "SPARQL *****************" . round((1000 * $duration), 2) .
+                    // " msec " . $slow . "\n" . $queryObject
+                // );
             }
             $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
         }
