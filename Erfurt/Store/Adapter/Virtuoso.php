@@ -980,6 +980,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // Translate Erfurt blank node identifiers to Virtuoso blank node IDs
         // TODO: this should be done in Erfurt_Store
         $sparqlQuery = str_replace('node://', self::BLANKNODE_PREFIX, $sparqlQuery);
+        $sparqlQuery = str_replace('http://139.18.2.164/OntoWiki/view/r/', '', $sparqlQuery);
         
         // escape characters that delimit the query within the query
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
