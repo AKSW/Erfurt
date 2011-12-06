@@ -405,10 +405,6 @@ class Erfurt_Rdf_Model
             $logger->debug('removed: ', count($removedStatements));
         }
 
-        // var_dump('added: ', $addedStatements);
-        // var_dump('removed: ', $removedStatements);
-        // exit;
-
         $this->deleteMultipleStatements($removedStatements);
         $this->addMultipleStatements($addedStatements);
 
@@ -442,10 +438,10 @@ class Erfurt_Rdf_Model
      * The difference will contain any statement in the first object that
      * is not contained in the second object.
      *
-     * @param stdClass statementsObject1
-     * @param stdClass statementsObject2
+     * @param array statementsObject1
+     * @param array statementsObject2
      *
-     * @return stdClass a RDF/JSON object
+     * @return array a RDF/PHP array the complement of the intersection
      */
     private function _getStatementsDiff(array $statementsObject1, array $statementsObject2)
     {
@@ -473,7 +469,6 @@ class Erfurt_Rdf_Model
                     $found = false;
                     foreach ($statementsObject2[$subject][$predicate] as $object2) {
                         if ($object['type'] == $object2['type'] && $object['value'] == $object2['value']) {
-
                             if (isset($object['datatype'])) {
                                 if (isset($object2['datatype']) && $object['datatype'] === $object2['datatype']) {
                                     $found = true;
