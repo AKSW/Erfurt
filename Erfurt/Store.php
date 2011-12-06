@@ -1763,10 +1763,7 @@ class Erfurt_Store
      */
     protected function _getQueryLogger()
     {
-        if (null === $this->_queryLogger) {
-            $this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
-        }
-        return $this->_queryLogger;
+        return $this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
     }
 
     /**
@@ -1776,9 +1773,6 @@ class Erfurt_Store
      */
     protected function _getErfurtLogger()
     {
-        if (null === $this->_erfurtLogger) {
-            $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
-        }
-        return $this->_erfurtLogger;
+        return $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
     }
 }
