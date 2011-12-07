@@ -84,6 +84,12 @@ class Erfurt_Event_Dispatcher
      */
     public function register($eventName, $handler, $priority = self::DEFAULT_PRIORITY)
     {
+        //with semantic extensions, the event names are URIs
+        $eventNS = 'http://ns.ontowiki.net/SysOnt/Events/';
+        if(substr($eventName, 0, strlen($eventNS)) == $eventNS){
+            $eventName = substr($eventName, strlen($eventNS));
+        }
+        
         // create event if not already handled
         if (!array_key_exists($eventName, $this->_registeredEvents)) {
             $this->_registeredEvents[$eventName] = array();

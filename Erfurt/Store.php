@@ -16,14 +16,14 @@
 // ------------------------------------------------------------------------
 // --- Macros ---------------------------------------------------
 // ------------------------------------------------------------------------
-define('STORE_RESULTFORMAT','result_format');
-define('STORE_RESULTFORMAT_PLAIN','plain');
-define('STORE_RESULTFORMAT_XML','xml');
-define('STORE_RESULTFORMAT_EXTENDED','extended');
-define('STORE_USE_AC','use_ac');
-define('STORE_USE_OWL_IMPORTS','use_owl_imports');
-define('STORE_USE_ADDITIONAL_IMPORTS','use_additional_imports');
-define('STORE_TIMEOUT','timeout');
+define('STORE_RESULTFORMAT', 'result_format');
+define('STORE_RESULTFORMAT_PLAIN', 'plain');
+define('STORE_RESULTFORMAT_XML', 'xml');
+define('STORE_RESULTFORMAT_EXTENDED', 'extended');
+define('STORE_USE_AC', 'use_ac');
+define('STORE_USE_OWL_IMPORTS', 'use_owl_imports');
+define('STORE_USE_ADDITIONAL_IMPORTS', 'use_additional_imports');
+define('STORE_TIMEOUT', 'timeout');
 
 class Erfurt_Store
 {
@@ -229,7 +229,6 @@ class Erfurt_Store
         if (is_readable((EF_BASE . $fileName))) {
             require_once $fileName;
         } else {
-            require_once 'Erfurt/Store/Exception.php';
             $msg = "Backend '$this->_backendName' "
                  . ($schema ? "with schema '$schemaName'" : "")
                  . " not supported. No suitable backend adapter found.";
@@ -238,7 +237,6 @@ class Erfurt_Store
 
         // check class existence
         if (!class_exists($className)) {
-            require_once 'Erfurt/Store/Exception.php';
             $msg = "Backend '$this->_backendName' "
                  . ($schema ? "with schema '$schemaName'" : "")
                  . " not supported. No suitable backend adapter class found.";
@@ -252,7 +250,6 @@ class Erfurt_Store
         // but do not check the comparer adapter since we use __call there
         if ($backend != 'comparer') {
             if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
             }
         }
@@ -285,13 +282,11 @@ class Erfurt_Store
 
         // check whether model is available
         if (!$this->isModelAvailable($graphUri, $useAc)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('Model is not available.');
         }
 
         // check whether model is editable
         if (!$this->_checkAc($graphUri, 'edit', $useAc)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
@@ -299,9 +294,8 @@ class Erfurt_Store
 
         //invalidate deprecated Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidateWithStatements($graphUri, $statementsArray );
+        $queryCache->invalidateWithStatements($graphUri, $statementsArray);
 
-        require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onAddMultipleStatements');
         $event->graphUri   = $graphUri;
         $event->statements = $statementsArray;
@@ -324,13 +318,11 @@ class Erfurt_Store
     {
         // check whether model is available
         if ($useAcl && !$this->isModelAvailable($graphUri)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('Model is not available.');
         }
 
         // check whether model is editable
         if ($useAcl && !$this->_checkAc($graphUri, 'edit')) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
@@ -338,9 +330,8 @@ class Erfurt_Store
 
         //invalidate deprecateded Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidate( $graphUri, $subject , $predicate, $object );
+        $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
-        require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onAddStatement');
         $event->graphUri   = $graphUri;
         $event->statement = array(
@@ -377,16 +368,17 @@ class Erfurt_Store
             Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
 
             $this->getNewModel($sysOntModel, '', 'owl', false);
-            require_once 'Erfurt/Syntax/RdfParser.php';
             try {
                 if (is_readable($modelPath)) {
                     // load SysOnt Model from file
-                    $this->importRdf($sysOntModel, $modelPath, 'rdfxml',
-                            Erfurt_Syntax_RdfParser::LOCATOR_FILE, false);
+                    $this->importRdf(
+                        $sysOntModel, $modelPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false
+                    );
                 } else {
                     // load SysOnt Model from Web
-                    $this->importRdf($sysOntModel, $modelLocation, 'rdfxml',
-                            Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
+                    $this->importRdf(
+                        $sysOntModel, $modelLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false
+                    );
                 }
             } catch (Erfurt_Exception $e) {
                 // clear query cache completly
@@ -394,12 +386,10 @@ class Erfurt_Store
                 $queryCache->cleanUpCache(array('mode' => 'uninstall'));
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntModel);
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed -> " . $e->getMessage());
             }
 
             if (!$this->isModelAvailable($sysOntModel, false)) {
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
             }
 
@@ -414,29 +404,28 @@ class Erfurt_Store
             Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
 
             $this->getNewModel($sysOntSchema, '', 'owl', false);
-            require_once 'Erfurt/Syntax/RdfParser.php';
             try {
                 if (is_readable($schemaPath)) {
                     // load SysOnt from file
-                    $this->importRdf($sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE,
-                            false);
+                    $this->importRdf(
+                        $sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false
+                    );
                 } else {
                     // load SysOnt from Web
-                    $this->importRdf($sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL,
-                            false);
+                    $this->importRdf(
+                        $sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false
+                    );
                 }
             } catch (Erfurt_Exception $e) {
                 // clear query cache completly
                 $queryCache = Erfurt_App::getInstance()->getQueryCache();
-                $queryCache->cleanUpCache( array('mode' => 'uninstall') );
+                $queryCache->cleanUpCache(array('mode' => 'uninstall'));
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntSchema);
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed -> " . $e->getMessage());
             }
 
             if (!$this->isModelAvailable($sysOntSchema, false)) {
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
 
@@ -446,7 +435,6 @@ class Erfurt_Store
         }
 
         if ($returnValue === false) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('One or more system models imported.', 20);
         }
 
@@ -491,13 +479,13 @@ class Erfurt_Store
 
         if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
-                $ret =  $this->_backendAdapter->deleteMatchingStatements(
-                $graphUri, $subject, $predicate, $object, $options);
+                $ret = $this->_backendAdapter->deleteMatchingStatements(
+                    $graphUri, $subject, $predicate, $object, $options
+                );
 
                 $queryCache = Erfurt_App::getInstance()->getQueryCache();
-                $queryCache->invalidate( $graphUri, $subject , $predicate, $object );
+                $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
-                require_once 'Erfurt/Event.php';
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
@@ -512,7 +500,6 @@ class Erfurt_Store
             } catch (Erfurt_Store_Adapter_Exception $e) {
                 // TODO: Create a exception for too many matching values
                 // In this case we log without storing the payload. No rollback supported for such actions.
-                require_once 'Erfurt/Event.php';
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
@@ -533,13 +520,11 @@ class Erfurt_Store
     {
         // check whether model is available
         if (!$this->isModelAvailable($graphUri)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('Model is not available.');
         }
 
         // check whether model is editable
         if (!$this->_checkAc($graphUri, 'edit')) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
@@ -548,7 +533,6 @@ class Erfurt_Store
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithStatements($graphUri, $statementsArray);
 
-        require_once 'Erfurt/Event.php';
         $event = new Erfurt_Event('onDeleteMultipleStatements');
         $event->graphUri   = $graphUri;
         $event->statements = $statementsArray;
@@ -565,13 +549,11 @@ class Erfurt_Store
     {
         // check whether model is available
         if (!$this->isModelAvailable($modelIri, $useAc)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Model <$modelIri> is not available and therefore not removable.");
         }
 
         // check whether model editing is allowed
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("No permissions to delete model <$modelIri>.");
         }
 
@@ -626,14 +608,12 @@ class Erfurt_Store
 
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Model <$modelIri> cannot be exported. Model is not available.");
         }
 
         if (in_array($serializationType, $this->_backendAdapter->getSupportedExportFormats())) {
             return $this->_backendAdapter->exportRdf($modelIri, $serializationType, $filename);
         } else {
-            require_once 'Erfurt/Syntax/RdfSerializer.php';
             $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($serializationType);
 
             return $serializer->serializeGraphToString($modelIri);
@@ -653,61 +633,43 @@ class Erfurt_Store
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
 
-        $options = array_merge(array(
-            'case_sensitive'    => false,
-            'filter_classes'    => false,
-            'filter_properties' => false,
-            'with_imports'      => true
-        ), $options);
+        $options = array_merge(
+            array(
+                'case_sensitive'    => false,
+                'filter_classes'    => false,
+                'filter_properties' => false,
+                'with_imports'      => true
+            ), $options
+        );
 
         // execute backend-specific search if available
-        if (method_exists($this->_backendAdapter, 'getSearchPattern'))
-        {
+        if (method_exists($this->_backendAdapter, 'getSearchPattern')) {
             return $this->_backendAdapter->getSearchPattern($stringSpec, $graphUris, $options);
-        }
-        // else execute Sparql Regex Fallback
-        else {
+        } else {
+            // else execute Sparql Regex Fallback
             $ret = array();
 
-            $s_var = new Erfurt_Sparql_Query2_Var('resourceUri');
-            $p_var = new Erfurt_Sparql_Query2_Var('p');
-            $o_var = new Erfurt_Sparql_Query2_Var('o');
-
-            $default_tpattern = new Erfurt_Sparql_Query2_Triple($s_var, $p_var, $o_var);
-            $ret[] = $default_tpattern;
-
-
+            $sVar  = new Erfurt_Sparql_Query2_Var('resourceUri');
+            $pVar  = new Erfurt_Sparql_Query2_Var('p');
+            $oVar  = new Erfurt_Sparql_Query2_Var('o');
+            $ret[] = new Erfurt_Sparql_Query2_Triple($sVar, $pVar, $oVar);
 
             $filter = new Erfurt_Sparql_Query2_Filter(
                 new Erfurt_Sparql_Query2_ConditionalOrExpression(
                     array(
-                        /*new Erfurt_Sparql_Query2_Regex(
-                            $s_var,
-                            new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
-                            $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
-                        ),*/
                         new Erfurt_Sparql_Query2_Regex(
-                            $o_var,
+                            $oVar,
                             new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
                             $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
                         )
                     )
                 )
             );
-            if ($options['filter_properties']) {
-                $ss_var = new Erfurt_Sparql_Query2_var('ss');
-                $oo_var = new Erfurt_Sparql_Query2_var('oo');
 
-                $filterprop_tpattern = new Erfurt_Sparql_Query2_Triple($ss_var, $s_var, $oo_var);
-                $ret[] = $filterprop_tpattern;
-                /*
-                $filter->getConstraint()->addElement(
-                    new Erfurt_Sparql_Query2_Regex(
-                            $oo_var,
-                            new Erfurt_Sparql_Query2_RDFLiteral($stringSpec),
-                            $options['case_sensitive'] ? null : new Erfurt_Sparql_Query2_RDFLiteral('i')
-                        )
-                );*/
+            if ($options['filter_properties']) {
+                $ssVar = new Erfurt_Sparql_Query2_var('ss');
+                $ooVar = new Erfurt_Sparql_Query2_var('oo');
+                $ret[]  = new Erfurt_Sparql_Query2_Triple($ssVar, $sVar, $ooVar);
             }
             $ret[] = $filter;
 
@@ -769,35 +731,19 @@ class Erfurt_Store
         return $this->_dbPass;
     }
 
+    /**
+     * Returns importsClosure for a given model
+     * @return array
+     */
     public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         if (array_key_exists($modelIri, $this->_importsClosure)) {
             return $this->_importsClosure[$modelIri];
         }
-
-        if ($this->_backendName == "Virtuoso") {
-            $objectCache = Erfurt_App::getInstance()->getCache();
-            $importsClosure = null;
-            $importsClosureKey = "ImportsClosure_".(md5($modelIri));
-            $importsClosure = $objectCache->load($importsClosureKey);
-            if (is_array($importsClosure)) {
-                //nothing ToDo
-            } else {
-                $queryCache = Erfurt_App::getInstance()->getQueryCache();
-                $queryCache->startTransaction($importsClosureKey);
-                $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-                $queryCache->endTransaction($importsClosureKey);
-                $objectCache->save($importsClosure, $importsClosureKey);
-            }
-        } else {
-            $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-        }
-
+        $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
         $this->_importsClosure[$modelIri] = $importsClosure;
         return $importsClosure;
     }
-
-
 
     /**
      * Recursively gets owl:imported model IRIs starting with $modelIri as root.
@@ -807,7 +753,7 @@ class Erfurt_Store
     private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
-        if($currentLevel == array($modelIri)) {
+        if ($currentLevel == array($modelIri)) {
             return $currentLevel;
         }
         if ($withHiddenImports === true) {
@@ -858,18 +804,15 @@ class Erfurt_Store
                     if ($e->getCode() === 20) {
                         // Everything is fine, system models now imported
                     } else {
-                        require_once 'Erfurt/Store/Exception.php';
                         throw new Erfurt_Store_Exception('Check setup failed: ' . $e->getMessage());
                     }
                 }
 
                 // still not available?
                 if (!$this->isModelAvailable($modelIri, $useAc)) {
-                    require_once 'Erfurt/Store/Exception.php';
                     throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
                 }
             } else {
-                require_once 'Erfurt/Store/Exception.php';
                 throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }
         }
@@ -888,11 +831,9 @@ class Erfurt_Store
             // TODO: cache this
             if ($this->sparqlAsk($owlQuery, $useAc)) {
                 // instantiate OWL model
-                require_once 'Erfurt/Owl/Model.php';
                 $modelInstance = new Erfurt_Owl_Model($modelIri);
             } else {
                 // instantiate RDF-S model
-                require_once 'Erfurt/Rdfs/Model.php';
                 $modelInstance = new Erfurt_Rdfs_Model($modelIri);
             }
         }
@@ -935,7 +876,6 @@ class Erfurt_Store
         if ($this->isModelAvailable($modelIri, false)) {
             // if debug mode is enabled create a more detailed exception description. If debug mode is disabled the
             // user should not know why this fails.
-            require_once 'Erfurt/Store/Exception.php';
             $message = defined('_EFDEBUG')
                      ? 'Failed creating the model. Reason: A model with the same URI already exists.'
                      : 'Failed creating the model.';
@@ -944,14 +884,12 @@ class Erfurt_Store
 
         // check action access
         if ($useAc && !Erfurt_App::getInstance()->isActionAllowed('ModelManagement')) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Failed creating the model. Action not allowed!");
         }
 
         try {
             $this->_backendAdapter->createModel($modelIri, $type);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            require_once 'Erfurt/Store/Exception.php';
             $message = defined('_EFDEBUG')
                      ? "Failed creating the model. \nReason: {$e->getMessage()}."
                      : 'Failed creating the model.';
@@ -1046,11 +984,8 @@ class Erfurt_Store
         $queryCache->invalidateWithModelIri($modelIri);
 
         if (!$this->_checkAc($modelIri, 'edit', $useAc)) {
-            require_once 'Erfurt/Store/Exception.php';
             throw new Erfurt_Store_Exception("Import failed. Model <$modelIri> not found or not writable.");
         }
-
-        require_once 'Erfurt/Syntax/RdfParser.php';
 
         if ($type === 'auto') {
             // detect file type
@@ -1063,11 +998,14 @@ class Erfurt_Store
                 $headers['Location'] = true;
 
                 // set default content-type header
-                stream_context_get_default(array(
-                    'http' => array(
-                        'header' => 'Accept: application/rdf+xml, application/json, text/rdf+n3, text/plain',
-                        'max_redirects' => 1 // no redirects as we need the 303 URI
-                )));
+                stream_context_get_default(
+                    array(
+                        'http' => array(
+                            'header' => 'Accept: application/rdf+xml, application/json, text/rdf+n3, text/plain',
+                            'max_redirects' => 1 // no redirects as we need the 303 URI
+                        )
+                    )
+                );
 
                 do { // follow redirects
                     $flag       = false;
@@ -1085,10 +1023,7 @@ class Erfurt_Store
                 } while ($isRedirect);
 
                 // restore default empty headers
-                stream_context_get_default(array(
-                    'http' => array(
-                        'header' => ""
-                )));
+                stream_context_get_default(array('http' => array('header' => '')));
 
                 if (is_array($headers) && array_key_exists('Content-Type', $headers)) {
                     $ct = $headers['Content-Type'];
@@ -1213,10 +1148,8 @@ class Erfurt_Store
     /**
      * check and manipulate the declared FROMs according to the access control
      */
-    protected function _prepareQuery($queryObject, &$options = array()){
-        // if ($queryObject instanceof Erfurt_Sparql_Query2)
-        //     Erfurt_App::getInstance()->getLog()->info('Store: evaluating a Query2-object (sparql:'."\n".$queryObject.') ');
-
+    protected function _prepareQuery($queryObject, &$options = array())
+    {
         $defaultOptions = array(
             STORE_RESULTFORMAT           => STORE_RESULTFORMAT_PLAIN,
             STORE_USE_AC                 => true,
@@ -1228,14 +1161,16 @@ class Erfurt_Store
 
         //typechecking
         if (is_string($queryObject)) {
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
             $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryObject);
         }
         if (!($queryObject instanceof Erfurt_Sparql_Query2 || $queryObject instanceof Erfurt_Sparql_SimpleQuery)) {
-            throw new Exception("Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string", 1);
+            throw new Erfurt_Store_Exception(
+                'Argument 1 passed to Erfurt_Store::sparqlQuery must be instance of '.
+                'Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string', 1
+            );
         }
 
-        if($options[STORE_USE_AC] == false){
+        if ($options[STORE_USE_AC] == false) {
             return $queryObject;
         }
 
@@ -1298,7 +1233,11 @@ class Erfurt_Store
         // 4. get import closure for every remaining from
         if ($options[STORE_USE_OWL_IMPORTS] === true) {
             foreach ($froms as $from) {
-                $importsClosure = $this->getImportsClosure($from['uri'], $options[STORE_USE_ADDITIONAL_IMPORTS], $options[STORE_USE_AC]);
+                $importsClosure = $this->getImportsClosure(
+                    $from['uri'],
+                    $options[STORE_USE_ADDITIONAL_IMPORTS],
+                    $options[STORE_USE_AC]
+                );
                 foreach ($importsClosure as $importedGraphUri) {
                     $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
                     if (in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false) {
@@ -1315,9 +1254,9 @@ class Erfurt_Store
                 $queryObject->addFrom($from['uri'], $from['named']);
             }
         } else {
-             $queryObject->setFrom(array());
-             $queryObject->setFromNamed(array());
-             foreach ($froms as $from) {
+            $queryObject->setFrom(array());
+            $queryObject->setFromNamed(array());
+            foreach ($froms as $from) {
                 if (!$from['named']) {
                     $queryObject->addFrom($from['uri']);
                 } else {
@@ -1326,10 +1265,10 @@ class Erfurt_Store
             }
         }
 
-       // if there were froms and all got deleted due to access controll - give back empty result set
-       // this is achieved by replacing the where-part with an unsatisfiable one
-       // i think this is efficient because otherwise we would have to deal with result formating und variables
-       if ($noBindings) {
+        // if there were froms and all got deleted due to access controll - give back empty result set
+        // this is achieved by replacing the where-part with an unsatisfiable one
+        // i think this is efficient because otherwise we would have to deal with result formating und variables
+        if ($noBindings) {
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
                 $queryObject->setWherePart('{FILTER(false)}');
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1350,19 +1289,19 @@ class Erfurt_Store
      */
     public function sparqlAsk($queryObject, $useAc = true)
     {
-        $options = array( STORE_USE_AC => $useAc);
+        $options     = array( STORE_USE_AC => $useAc);
         $queryObject = $this->_prepareQuery($queryObject, $options);
 
         //query from query cache
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $sparqlResult = $queryCache->load( (string) $queryObject, 'plain');
-        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT ){
+        $queryCache   = Erfurt_App::getInstance()->getQueryCache();
+        $sparqlResult = $queryCache->load((string) $queryObject, 'plain');
+        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
-            $queryCache->save( (string) $queryObject, 'plain' , $sparqlResult, $duration);
+            $queryCache->save((string) $queryObject, 'plain', $sparqlResult, $duration);
         }
 
         return $sparqlResult;
@@ -1392,7 +1331,7 @@ class Erfurt_Store
                                    $queryString,
                                    $replacements);
 
-        $sparqlResult = $queryCache->load($queryString, $resultFormat );
+        $sparqlResult = $queryCache->load($queryString, $resultFormat);
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
@@ -1401,14 +1340,12 @@ class Erfurt_Store
                                         $this->_bnodePrefix, 
                                         $sparqlResult);
             //check for the correct format
-            if($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])){
-                if(isset($sparqlResult['bindings'])){
+            if ($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])) {
+                if (isset($sparqlResult['bindings'])) {
                     //fix it if possible
                     $sparqlResult['results'] = array();
                     $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
-                    //var_dump($sparqlResult);
-                    require_once 'Erfurt/Store/Exception.php';
                     throw new Erfurt_Store_Exception('invalid query result.');
                 }
             }
@@ -1424,9 +1361,12 @@ class Erfurt_Store
                     $slow = "";
                 }
 
-                $logger->debug("SPARQL *****************" . round((1000 * $duration),2) . " msec " . $slow . "\n" . $queryObject);
+                $logger->debug(
+                    "SPARQL *****************" . round((1000 * $duration), 2) .
+                    " msec " . $slow . "\n" . $queryObject
+                );
             }
-            $queryCache->save( (string) $queryObject , $resultFormat, $sparqlResult, $duration );
+            $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
         }
         return $sparqlResult;
     }
@@ -1446,13 +1386,12 @@ class Erfurt_Store
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();
-                $logger->debug("SQL ***************** ".round((1000 * $duration),2)." msec \n". $sqlQuery);
+                $logger->debug("SQL ***************** ".round((1000 * $duration), 2)." msec \n". $sqlQuery);
             }
             return $result;
         }
 
         // TODO: will throw an exception
-        // require_once 'Erfurt/Store/Exception.php';
         // throw new Erfurt_Store_Exception('Current backend doesn not support SQL queries.');
     }
 
@@ -1467,7 +1406,6 @@ class Erfurt_Store
             $sysOntModelUri = $this->getOption('modelUri');
 
             // Fetch the graph configurations
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
             $queryObject = new Erfurt_Sparql_SimpleQuery();
             $queryObject->setProloguePart('SELECT ?s ?p ?o');
             $queryObject->setFrom(array($sysOntModelUri));
@@ -1602,7 +1540,6 @@ class Erfurt_Store
             }
         }
 
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setProloguePart('SELECT DISTINCT ?graph')
               ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
@@ -1644,10 +1581,17 @@ class Erfurt_Store
      * @param boolean $inverse Denotes whether the property is inverse, i.e. ?child ?property ?parent
      * @param int $maxDepth The maximum number of iteration steps
      */
-    public function getTransitiveClosure($modelIri, $property, $startResources, $inverse = true, $maxDepth = self::MAX_ITERATIONS)
+    public function getTransitiveClosure($modelIri, $property, $startResources,
+        $inverse = true, $maxDepth = self::MAX_ITERATIONS)
     {
         if (method_exists($this->_backendAdapter, 'getTransitiveClosure')) {
-            $closure = $this->_backendAdapter->getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
+            $closure = $this->_backendAdapter->getTransitiveClosure(
+                $modelIri,
+                $property,
+                (array) $startResources,
+                $inverse,
+                $maxDepth
+            );
         } else {
             $closure = $this->_getTransitiveClosure($modelIri, $property, (array) $startResources, $inverse, $maxDepth);
         }
@@ -1679,7 +1623,6 @@ class Erfurt_Store
             return true;
         } else {
             if ($this->_ac === null) {
-                require_once 'Erfurt/App.php';
                 $this->_ac = Erfurt_App::getInstance()->getAc();
             }
 
@@ -1717,7 +1660,8 @@ class Erfurt_Store
      * @param array $maskIn the mask to apply on the list of the same format as the list
      * @return array the list witout uri missing in $maskIn
      */
-    private function _maskModelList (array $list, array $maskIn = null) {
+    private function _maskModelList (array $list, array $maskIn = null)
+    {
         $mask = array();
         if ($maskIn === null) {
             foreach ($this->getAvailableModels(true) as $key => $true) {
@@ -1771,11 +1715,13 @@ class Erfurt_Store
                 }
                 ORDER BY ASC(?order)';
 
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
             $subSparql = Erfurt_Sparql_SimpleQuery::initWithString($subSparql);
 
             // get sub items
-            $result = $this->_backendAdapter->sparqlQuery($subSparql, array(STORE_RESULTFORMAT => STORE_RESULTFORMAT_PLAIN));
+            $result = $this->_backendAdapter->sparqlQuery(
+                $subSparql,
+                array(STORE_RESULTFORMAT => STORE_RESULTFORMAT_PLAIN)
+            );
 
             // break on first empty result
             if (empty($result)) {
@@ -1816,11 +1762,9 @@ class Erfurt_Store
      *
      * @return object Zend Logger, which writes to logs/queries.log
      */
-    protected function _getQueryLogger(){
-        if(null === $this->_queryLogger){
-            $this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
-        }
-        return $this->_queryLogger;
+    protected function _getQueryLogger()
+    {
+        return $this->_queryLogger =  Erfurt_App::getInstance()->getLog('queries');
     }
 
     /**
@@ -1828,10 +1772,8 @@ class Erfurt_Store
      *
      * @return object Zend Logger, which writes to logs/erfurt.log
      */
-    protected function _getErfurtLogger(){
-        if(null === $this->_erfurtLogger){
-            $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
-        }
-        return $this->_erfurtLogger;
+    protected function _getErfurtLogger()
+    {
+        return $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
     }
 }
