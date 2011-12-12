@@ -272,27 +272,27 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
                 'use_additional_imports' => false
             ));
 
-        if ($offset === 0 && count($result['results']['bindings']) > 0) {
-            $this->_rdfWriter->addComment($description);
-        }
+            if ($offset === 0 && count($result['results']['bindings']) > 0) {
+                $this->_rdfWriter->addComment($description);
+            }
 
-        foreach ($result['results']['bindings'] as $row) {
-            $s = $row['s']['value'];
-            $p = $row['p']['value'];
-            $o = $row['o']['value'];
-            $sType = $row['s']['type'];
-            $oType = $row['o']['type'];
-            $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
-            $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
+            foreach ($result['results']['bindings'] as $row) {
+                $s = $row['s']['value'];
+                $p = $row['p']['value'];
+                $o = $row['o']['value'];
+                $sType = $row['s']['type'];
+                $oType = $row['o']['type'];
+                $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
+                $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
 
-            $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
-        }
+                $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
+            }
 
-        if (count($result['bindings']) < 1000) {
-            break;
-        }
+            if ( count($result['results']['bindings']) < 1000) {
+                break;
+            }
 
-        $offset += 1000;
+            $offset += 1000;
         }
 
         $this->_forceWrite();
