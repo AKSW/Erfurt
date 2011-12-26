@@ -245,6 +245,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (!$this->_connection) {
             $options = $this->_adapterOptions;
 
+            // ini_set('odbc.default_cursortype', SQL_CURSOR_FORWARD_ONLY);
+
             // determine connection function
             if ((isset($options['use_persistent_connection'])) &&
                 ((boolean) $options['use_persistent_connection'] === true)) {
