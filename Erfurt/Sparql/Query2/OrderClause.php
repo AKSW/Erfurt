@@ -43,6 +43,7 @@ class Erfurt_Sparql_Query2_OrderClause
             }
         }
     }
+    
     /**
      *
      */
@@ -65,9 +66,8 @@ class Erfurt_Sparql_Query2_OrderClause
         $sparql = 'ORDER BY';
         
         $countExps = count($this->exps);
-        
         for ($i = 0; $i < $countExps; ++$i) {
-            $sparql .=' '.$this->exps[$i]['dir'].'('.$this->exps[$i]['exp']->getSparql().')';
+            $sparql .= ' '.$this->exps[$i]['dir'].'('.$this->exps[$i]['exp']->getSparql().')';
             if ($i < (count($this->exps)-1))
                 $sparql .= ' ';
         }
@@ -78,6 +78,7 @@ class Erfurt_Sparql_Query2_OrderClause
     public function __toString(){
         return $this->getSparql();
     }
+    
     /**
      * toggleDirection
      * @param int $i index of element which direction should be toggled
@@ -125,6 +126,4 @@ class Erfurt_Sparql_Query2_OrderClause
         return $this->exps;
     }
 }
-
-
 ?>
