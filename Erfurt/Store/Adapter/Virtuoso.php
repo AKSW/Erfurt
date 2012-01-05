@@ -969,12 +969,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
 
         // build Virtuoso/PL query
-        $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
 
-        // $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-
-        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
-
+        $resultId = odbc_exec($this->connection(), $virtuosoPl);
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
