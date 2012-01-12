@@ -460,7 +460,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         // look for a bif:contains string limit in config
         $bifLimit = null;
-        if ($this->_adapterOptions['search_max_length_for_bifcontains']) {
+        if (isset($this->_adapterOptions['search_max_length_for_bifcontains'])) {
             $bifLimit = (int) $this->_adapterOptions['search_max_length_for_bifcontains'];
         }
 
