@@ -445,7 +445,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 'getSearchPattern option filter_properties not implemented in Virtuoso adapter yet.'
             );
         }
-
         $searchPattern = array();
 
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
@@ -474,9 +473,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             );
         } else {
             // string >= bifLimit characters
-            if (false === strpos($stringSpec, '*')) {
-                $stringSpec .= '*';
-            }
+            // if (false === strpos($stringSpec, '*')) {
+            //                 $stringSpec .= '*';
+            //             }
 
             $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
                 'bif',
@@ -498,7 +497,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '\'"'))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"'))
                         )
                     )
                 )
@@ -970,12 +969,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
 
         // build Virtuoso/PL query
-        $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
 
-        // $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-
-        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
-
+        $resultId = odbc_exec($this->connection(), $virtuosoPl);
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
