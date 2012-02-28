@@ -418,6 +418,11 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     }
                 }
             }
+        } else {
+            if (strlen($subject) > 160) {
+                $subject = substr((string)$subject, 0, 128) . md5((string)$subject);
+               
+            }
         }
          
         if (Erfurt_Sparql_Variable::isVariable($predicate)) {
@@ -447,6 +452,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         $this->arUsedVarAssignments[$predicate] = $strTablePrefix . '.p';
                     }
                 }
+            }
+        } else {
+            if (strlen($predicate) > 160) {
+                $predicate = substr((string)$predicate, 0, 128) . md5((string)$predicate);
             }
         }
        
@@ -490,6 +499,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         ' AND ' . $strTablePrefix . '.ol="'
                         . addslashes($this->query->varDatatypes[$object]) . '"';
                 }
+            }
+        } else {
+            if (strlen($object) > 160) {
+                $object = substr((string)$object, 0, 128) . md5((string)$object);
             }
         }
    
