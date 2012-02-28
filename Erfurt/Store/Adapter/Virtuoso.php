@@ -497,7 +497,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"'))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"\''))
                         )
                     )
                 )
@@ -505,7 +505,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $searchPattern[] = $filter;
-
+#var_dump((string)$searchPattern[1]);exit;
         return $searchPattern;
     }
 
@@ -969,13 +969,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
 
         // build Virtuoso/PL query
-        // $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
         $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
 
         $resultId = @odbc_exec($this->connection(), $virtuosoPl);
-
-        $resultId = odbc_exec($this->connection(), $virtuosoPl);
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
