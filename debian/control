@@ -3,7 +3,7 @@ Section: web
 Priority: extra
 Maintainer: Sebastian Tramp <tramp@informatik.uni-leipzig.de>
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Homepage: http://erfurt-framework.org
 Vcs-Git: git://github.com/AKSW/Erfurt.git
 Vcs-Browser: https://github.com/AKSW/Erfurt

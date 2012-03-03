@@ -1,3 +1,9 @@
+liberfurt-php (1.0-4) lod2; urgency=low
+
+  * switch to revision fd1351d
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Fri, 24 Feb 2012 01:43:34 +0100
+
 liberfurt-php (1.0-3) lod2; urgency=low
 
   * switch to revision ae75d4c
