@@ -111,16 +111,38 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
     }
 
     public static function compareWeight($c1, $c2){
+        switch(true){
+            case $c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject:
+                $c1weight = 1;
+                break;
+            case $c1 instanceof Erfurt_Sparql_Query2_GroupGraphPattern:
+                $c1weight = 2;
+                break;
+            case $c1 instanceof Erfurt_Sparql_Query2_Filter:
+                $c1weight = 3;
+                break;
+        }
+        switch(true){
+            case $c2 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject:
+                $c2weight = 1;
+                break;
+            case $c2 instanceof Erfurt_Sparql_Query2_GroupGraphPattern:
+                $c2weight = 2;
+                break;
+            case $c2 instanceof Erfurt_Sparql_Query2_Filter:
+                $c2weight = 3;
+                break;
+        }
         if (!($c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && $c2 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject)) {
-                return 0;
+            return $c1weight - $c2weight;
         }
 
+        //both are normal triples
         $res = $c1->getWeight() - $c2->getWeight();
         switch ($res){
             case $res == 0:
                 // go deeper 
-                
-                
+
                 break;
             case $res < 0:
                 $ret = -1;

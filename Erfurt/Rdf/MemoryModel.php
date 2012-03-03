@@ -10,10 +10,11 @@
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
+ * @author Jonas Brekle <jonas.brekle@gmail.com>
  */
 class Erfurt_Rdf_MemoryModel
 {
-    private $statements = array();
+    protected $statements = array();
 
     /*
      * model can be constructed with a given array
@@ -24,12 +25,15 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * checks if there is at least one statement for resource $iri
+     * checks if there is at least one statement for resource $s
+     *
+     * @param string $s - the subject URN of searched statement
+     * @return boolean
      */
-    public function hasS($s = null)
+    public function hasS($s)
     {
-        if ($s == null) {
-            throw new Exception('need an IRI string as first parameter');
+        if ($s === null) {
+            throw new Exception('need an URN string as first parameter');
         }
         if (isset($this->statements[$s])) {
             return true;
@@ -39,16 +43,20 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * checks if there is at least one statement for resource $iri with
+     * checks if there is at least one statement for resource $s with
      * predicate $p
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return boolean
      */
-    public function hasSP($s = null, $p = null )
+    public function hasSP($s, $p)
     {
         if (!$this->hasS($s)) {
             return false;
         } else {
             if ($p == null) {
-                throw new Exception('need an IRI string as second parameter');
+                throw new Exception('need an URN string as second parameter');
             }
             if (isset($this->statements[$s][$p])) {
                 return true;
@@ -59,17 +67,38 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * search for a value where S and P is fix
+     * search for statements where S, P and the value of O is fix and return
+     * true if at least one statement is found and false if no statement found
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @param string $value - the value of the object of the the searched statement
+     * @param string $matchType - strict for strict match, preg for preg_match
+     * @return boolean
      */
-    public function hasSPvalue($s = null, $p = null, $value = null)
+    public function hasSPvalue($s, $p, $value, $matchType = 'strict')
     {
         if ($value == null) {
             throw new Exception('need a value string as third parameter');
         } else {
             $values = $this->getValues($s, $p);
             foreach ($values as $key => $object) {
-                if ($object['value'] == $value) {
-                    return true;
+                switch ($matchType) {
+                    case 'strict':
+                        if ($object['value'] == $value) {
+                            return true;
+                        }
+                        break;
+                    case 'preg':
+                        // the pattern is given by function param value
+                        // the object value is tested against the pattern
+                        if (preg_match($value, $object['value']) == 1) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        throw new Exception('unknown matchType, use strict or preg');
+                        break;
                 }
             }
             return false;
@@ -77,9 +106,14 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * count statements where S and P is fix
+     * counts statements where S and P is fix
+     * return 0 if no statement was found or an positive integer
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return int
      */
-    public function countSP($s = null, $p = null)
+    public function countSP($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
             return 0;
@@ -89,9 +123,28 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * returns an array of values where S and P is fix
+     * returns all predicate/object tupel of a given subject URN
+     *
+     * @param string $s - the subject URN
+     * @return array
      */
-    public function getValues($s = null, $p = null)
+    public function getPO($s)
+    {
+        if (!$this->hasS($s)) {
+            return array();
+        } else {
+            return $this->statements[$s];
+        }
+    }
+
+    /*
+     * returns an array of values from statements where S and P was given
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return array
+     */
+    public function getValues($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
             return array();
@@ -101,27 +154,34 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
-     * returns the first object value where S and P is fix
+     * returns the first object value of a statement where S and P was given
+     *
+     * @param string $s - the subject URN of searched statement
+     * @param string $p - the predicate URN of searched statement
+     * @return string|null
      */
-    public function getValue($s = null, $p = null)
+    public function getValue($s, $p)
     {
         if (!$this->hasSP($s, $p)) {
-            return false;
+            return null;
         } else {
             return $this->statements[$s][$p][0]['value'];
         }
     }
 
     /*
-     * return the statement array, limited to a subject uri
+     * return the statement array, optional limited to a subject URN
+     *
+     * @param string $s - the subject URN of searched statements
+     * @return array
      */
-    public function getStatements($iri = null)
+    public function getStatements($s)
     {
-        if ($iri == null) {
+        if ($s == null) {
             return $this->statements;
         } else {
-            if ($this->hasS($iri)) {
-                return array( $iri => $this->statements[$iri] );
+            if ($this->hasS($s)) {
+                return array( $s => $this->statements[$s] );
             } else {
                 return array();
             }
@@ -131,26 +191,28 @@ class Erfurt_Rdf_MemoryModel
     /*
      * This adds a statement array to the model by merging the arrays
      * This function is the base for all other add functions
+     *
+     * @param array $statements - a php statement array
      */
     public function addStatements(array $statements)
     {
         $model = $this->statements;
-        foreach ($statements as $subjectIri => $subjectArray) {
-            if (!isset($model[$subjectIri])) {
+        foreach ($statements as $subjectUrn => $subjectArray) {
+            if (!isset($model[$subjectUrn])) {
                 // new subject
-                $model[$subjectIri] = $subjectArray;
+                $model[$subjectUrn] = $subjectArray;
             } else {
                 // existing subject
-                foreach ($subjectArray as $predicateIri => $predicateArray) {
-                    if (!isset($model[$subjectIri][$predicateIri])) {
+                foreach ($subjectArray as $predicateUrn => $predicateArray) {
+                    if (!isset($model[$subjectUrn][$predicateUrn])) {
                         // new predicate on subject
-                        $model[$subjectIri][$predicateIri] = $predicateArray;
+                        $model[$subjectUrn][$predicateUrn] = $predicateArray;
                     } else {
                         // existing predicate on subject
                         foreach ($predicateArray as $objectArray) {
-                            if (!in_array($objectArray, $model[$subjectIri][$predicateIri])) {
+                            if (!in_array($objectArray, $model[$subjectUrn][$predicateUrn])) {
                                 // new object for subject/predicate pattern
-                                $model[$subjectIri][$predicateIri][] = $objectArray;
+                                $model[$subjectUrn][$predicateUrn][] = $objectArray;
                             } else {
                                 // same triple
                             }
@@ -162,6 +224,15 @@ class Erfurt_Rdf_MemoryModel
         $this->statements = $model;
     }
 
+    /*
+     * adds multiple triples coming from the result of an extended SPARQL query
+     */
+    public function addStatementsFromSPOQuery(array $res)
+    {
+        foreach($res['bindings'] as $binding){
+            $this->addStatementFromExtendedFormatArray($binding['s'], $binding['p'], $binding['o']);
+        }
+    }
     /*
      * adds a triple based on the result of an extended SPARQL query
      */
@@ -184,15 +255,17 @@ class Erfurt_Rdf_MemoryModel
                     $object['lang'] = $o['xml:lang'];
                 }
                 break;
+            case 'bnode':
+                $object['type'] = 'bnode';
+                break;
             default:
-                /* blank nodes are ignore */
-                /* be quiet here */
+                return; // correct way to skip unwanted types
                 break;
         }
 
         $statement = array();
-        $s = $s['value']; // is always an IRI (or bnode)
-        $p = $p['value']; // is always an IRI
+        $s = $s['value']; // is always an URN (or bnode)
+        $p = $p['value']; // is always an URN
 
         $pArray[$p] = array(0 => $object);
         $statement[$s] = $pArray;
@@ -203,18 +276,18 @@ class Erfurt_Rdf_MemoryModel
     /*
      * add a single statement where the object is a literal
      *
-     * @param string $subject   - the statement subject URI string
-     * @param string $predicate - the statement predicate URI string
+     * @param string $subject   - the statement subject URN string
+     * @param string $predicate - the statement predicate URN string
      * @param string $literal   - the literal value string
      * @param string $lang      - the optional xml:lang identifier string
-     * @param string $datatype  - the optional datatype URI string
+     * @param string $datatype  - the optional datatype URN string
      */
-    public function addAttribute($subject = null, $predicate = null, $literal = "", $lang = null, $datatype = null)
+    public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject URI as first parameter');
+            throw new Exception('need a subject URN as first parameter');
         } else if ($predicate == null) {
-            throw new Exception('need a predicate URI as second parameter');
+            throw new Exception('need a predicate URN as second parameter');
         }
         $newStatements = array();
 
@@ -242,18 +315,18 @@ class Erfurt_Rdf_MemoryModel
     /*
      * add a single statement where the object is a resource
      *
-     * @param string $subject  - the statement subject URI string
-     * @param string $relation - the statement predicate URI string
-     * @param string $object   - the statement object URI string
+     * @param string $subject  - the statement subject URN string
+     * @param string $relation - the statement predicate URN string
+     * @param string $object   - the statement object URN string
      */
-    public function addRelation($subject = null, $relation = null, $object = null)
+    public function addRelation($subject, $relation, $object = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject URI as first parameter');
+            throw new Exception('need a subject URN as first parameter');
         } else if ($relation == null) {
-            throw new Exception('need a predicate URI as second parameter');
+            throw new Exception('need a predicate URN as second parameter');
         } else if ($object == null) {
-            throw new Exception('need an object URI as second parameter');
+            throw new Exception('need an object URN as second parameter');
         }
 
         $newStatements = array();
@@ -273,5 +346,43 @@ class Erfurt_Rdf_MemoryModel
 
         // add the statements array to the model
         $this->addStatements($statements);
+    }
+
+    /**
+     * removes all statements of a given subject
+     *
+     * @param string $s
+     */
+    public function removeS($s)
+    {
+        if ($this->hasS($s)) {
+            unset($this->statements[$s]);
+        }
+    }
+
+    /**
+     * removes a predicate p (and its values) of a subject s
+     *
+     * @param string $s
+     * @param string $p
+     */
+    public function removeSP($s, $p)
+    {
+        if ($this->hasSP($s, $p)) {
+            unset($this->statements[$s][$p]);
+
+            //check if this was the last
+            if(count($this->statements[$s]) == 0){
+                unset($this->statements[$s]);
+            }
+        }
+    }
+
+    /*
+     * returns an array of all subjects
+     */
+    public function getSubjects()
+    {
+        return array_keys($this->statements);
     }
 }

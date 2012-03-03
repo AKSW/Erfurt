@@ -13,8 +13,8 @@ require_once 'GroupGraphPattern.php';
  */
 class Erfurt_Sparql_Query2_OptionalGraphPattern extends Erfurt_Sparql_Query2_GroupGraphPattern 
 {
-    public function __construct() {
-        parent::__construct();
+    public function __construct($elements = array()) {
+        parent::__construct($elements);
     }
     
     /**
