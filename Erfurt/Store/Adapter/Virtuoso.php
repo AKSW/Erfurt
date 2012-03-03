@@ -881,7 +881,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }';
 
                 $result = $queryCache->load($query, STORE_RESULTFORMAT_PLAIN);
-                if ($result == $queryCache::ERFURT_CACHE_NO_HIT) {
+                if ($result == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
                     $startTime = microtime(true);
                     $result = $this->sparqlQuery($query);
                     $duration = microtime(true) - $startTime;
