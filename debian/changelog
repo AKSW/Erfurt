@@ -1,3 +1,12 @@
+liberfurt-php (1.1) lod2; urgency=low
+
+  * virtuoso backend: fix for double query execution in _execSparql
+  * virtuoso backend: fix bif:contains search
+  * zenddb backend: fix sql generation for long uris
+  * revision is 782181f
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Sat, 03 Mar 2012 20:19:37 +0100
+
 liberfurt-php (1.0-4) lod2; urgency=low
 
   * switch to revision fd1351d
