@@ -264,10 +264,12 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
             $sql .= implode(" AND ", $conditions);
             $result = $this->_query($sql);
             $res = true;
-            foreach ($result as $entry) {
-                    $res = $res && $this->remove($entry['id']);
+            if(is_array($result)){
+                foreach ($result as $entry) {
+                        $res = $res && $this->remove($entry['id']);
+                }
             }
-  		    return $res;
+            return $res;
         }
 
         if ($mode === Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG) {
