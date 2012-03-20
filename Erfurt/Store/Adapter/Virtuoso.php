@@ -617,6 +617,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return array_key_exists((string)$graphUri, (array)$this->getAvailableModels());
     }
 
+    public function isInSyntaxSupported()
+    {
+        return true;
+    }
+    
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
