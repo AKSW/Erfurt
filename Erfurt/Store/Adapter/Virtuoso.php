@@ -156,15 +156,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $logger->debug('Add mutliple statements query: ' . PHP_EOL . $query);
             }
 
-            $odbcRes = $this->_execSparql($query);
-            $result = odbc_result($odbcRes, 1);
-
-        }
-
-        //TODO why - please comment
-        if (odbc_num_fields($odbcRes) > 0 && odbc_field_type($odbcRes, 1) == 'VARCHAR') {
-            $strResult = odbc_result($odbcRes, 1);
-            return $strResult;
+            $odbcRes = $this->_execSparqlUpdate($query);
         }
     }
 
@@ -207,7 +199,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $logger->debug('Add statement query: ' . PHP_EOL . $insertSparql);
         }
 
-        return $this->_execSparql($insertSparql);
+        return $this->_execSparqlUpdate($insertSparql);
     }
 
     /**
@@ -221,12 +213,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // create empty graph
         $createQuery = "CREATE SILENT GRAPH <$graphUri>";
-        $this->_execSparql($createQuery);
+        $this->_execSparqlUpdate($createQuery);
 
         if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
             // add statement <graph> a owl:Ontology
             $owlInsert = sprintf('INSERT INTO GRAPH <%s> {<%s> a <%s>.}', $graphUri, $graphUri, EF_OWL_ONTOLOGY);
-            $this->_execSparql($owlInsert);
+            $this->_execSparqlUpdate($owlInsert);
         }
 
         // force reloading graphs next time
@@ -291,7 +283,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $this->_connection = $odbcConnectFunction($dsn, $username, $password);
                 $this->_user = $username;
             }
-
             // success?
             if (false === $this->_connection) {
                 throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
@@ -341,16 +332,29 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
 
         // perform delete
-        if ($rid = $this->_execSparql($deleteSparql)) {
-            $deleteResult = (string)odbc_result($rid, 1);
+        $deleteSparql = 'DELETE FROM GRAPH <http://localhost/OntoWiki/Config/> {<http://exmaple.org/nothExisting> ?p ?o.} WHERE {<http://exmaple.org/nothExisting> ?p ?o}';
+        if ($rid = $this->_execSparqlUpdate($deleteSparql)) {
+            if (odbc_num_fields($rid) > 0) {
+                // Virtuoso <= 6.1.4 returned 1 row with metadata for update queries!
+                $deleteResult = (string)odbc_result($rid, 1);
 
-            // extract number of deleted statements
-            $matches = array();
-            preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
-            if (isset($matches[1])) {
-                // return number of deleted statements
-                return (int)$matches[1];
-            }
+                // extract number of deleted statements
+                $matches = array();
+                preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
+                if (isset($matches[1])) {
+                    // return number of deleted statements
+                    return (int)$matches[1];
+                }
+            } else {
+                // As of Virtuoso 6.1.5 they do it the documented ODBC way, which means 
+                // odbc_num_rows contains the number of affected rows for updated queries.
+                // If no rows were affected Virtuoso returns -1.
+                $affectedRows = odbc_num_rows($rid);
+                if ($affectedRows === -1) {
+                    return 0;
+                }
+                return $affectedRows;
+            }    
         }
 
         // no statements deleted
@@ -373,7 +377,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $logger->debug('Delete multiple statements query:' . PHP_EOL . $deleteSparql);
         }
 
-        return $this->_execSparql($deleteSparql);
+        return $this->_execSparqlUpdate($deleteSparql);
     }
 
     /**
@@ -382,7 +386,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function deleteModel($graphUri)
     {
         // delete explicit graph
-        $result = $this->_execSparql('DROP SILENT GRAPH <' . $graphUri . '>');
+        $result = $this->_execSparqlUpdate('DROP SILENT GRAPH <' . $graphUri . '>');
         $this->_graphs = null;
 
         return $result;
@@ -613,13 +617,17 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return array_key_exists((string)$graphUri, (array)$this->getAvailableModels());
     }
 
+    public function isInSyntaxSupported()
+    {
+        return true;
+    }
+    
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
     public function sparqlAsk($query)
     {
         $resultId = $this->_execSparql($query);
-
         if (odbc_result($resultId, 1) == '1') {
             return true;
         }
@@ -669,6 +677,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             if ($jsonEncode) {
                 $result = json_encode($result);
             }
+
+            odbc_free_result($rid);
 
             return $result;
         }
@@ -968,12 +978,37 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // escape characters that delimit the query within the query
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
 
-        // build Virtuoso/PL query
+        //build Virtuoso/PL query
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
-        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
+        $resultId = odbc_exec($this->connection(), $virtuosoPl);
+#var_dump($resultId);exit;
+        if (false === $resultId) {
+            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
+            throw new Erfurt_Store_Adapter_Exception($message);
+        }
 
-        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
+        return $resultId;
+    }
+    
+    private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
+    {
+        $graphUri = (string)$graphUri;
+
+        if (!empty($graphUri)) {
+            // enquote
+            $graphUri = '\'' . $graphUri . '\'';
+            $graphSpec = 'define input:default-graph-uri <' . $graphUri . '> ';
+        } else {
+            // set Virtuoso NULL
+            $graphUri = 'NULL';
+            $graphSpec = '';
+        }
+        
+        //build Virtuoso/PL query
+        $virtuosoPl = 'SPARQL ' . $sparqlQuery;
+        $resultId = odbc_exec($this->connection(), $virtuosoPl);
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
@@ -1120,9 +1155,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // the result will be stored in here
         $resultArray = array();
-
+        
         // get number of fields (columns)
         $numFields = odbc_num_fields($odbcResult);
+        //var_dump($numFields);
 
         // Return empty array on no results (0) or error (-1)
         if ($numFields < 1) {
@@ -1132,13 +1168,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // for all rows
         while (odbc_fetch_row($odbcResult)) {
             $resultRowNamed = array();
-
+                        
             // for all columns
             for ($i = 1; $i <= $numFields; ++$i) {
                 $fieldName = odbc_field_name($odbcResult, $i);
                 $fieldType = odbc_field_type($odbcResult, $i);
                 $value     = '';
-
+            
                 if (substr($fieldType, 0, 4) == 'LONG') {
                     // LONG VARCHAR or LONG VARBINARY
                     // get the field value in parts
@@ -1149,7 +1185,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     // get the field value normally
                     $value = odbc_result($odbcResult, $i);
                 }
-
+            
                 if (null !== $field) {
                     // add only requested field
                     if ($fieldName == $field) {
@@ -1164,11 +1200,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                 }
             }
-
+            
             // add row to result array
             array_push($resultArray, $resultRowNamed);
         }
-
+        
         return $resultArray;
     }
 

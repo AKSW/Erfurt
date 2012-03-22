@@ -175,7 +175,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $s - the subject URN of searched statements
      * @return array
      */
-    public function getStatements($s)
+    public function getStatements($s = null)
     {
         if ($s == null) {
             return $this->statements;
