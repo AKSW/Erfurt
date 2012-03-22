@@ -461,7 +461,7 @@ class Erfurt_Store
     /**
      * Deletes all statements that match the triple pattern specified.
      *
-     * @param string $modelIri
+     * @param string $graphUri
      * @param mixed triple pattern $subject (string or null)
      * @param mixed triple pattern $predicate (string or null)
      * @param mixed triple pattern $object (string or null)
@@ -1182,22 +1182,18 @@ class Erfurt_Store
             $queryObject = clone $queryObject;
         }
 
-        //get all models
-        $all = array();
-        $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
-        foreach ($allpre as $key => $true) {
-            $all[] = array('uri' => $key, 'named' => false);
-        }
-
         //get available models (readable)
         $available = array();
         if ($options[STORE_USE_AC] === true) {
-            $availablepre = $this->getAvailableModels(true);
+            $availablepre = $this->getAvailableModels(true); //all readable (with ac)
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         } else {
-            $available = $all;
+            $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
+            foreach ($allpre as $key => $true) {
+                $available[] = array('uri' => $key, 'named' => false);
+            }
         }
 
         // examine froms (for access control and imports) in 5 steps
@@ -1319,7 +1315,7 @@ class Erfurt_Store
     public function sparqlQuery($queryObject, $options = array())
     {
         $queryObject = $this->_prepareQuery($queryObject, $options);
-
+        
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
