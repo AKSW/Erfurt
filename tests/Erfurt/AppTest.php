@@ -572,6 +572,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->query->enable = true;
+        unset($config->cache->query->type);
         
         try {
             $app->getQueryCache();
