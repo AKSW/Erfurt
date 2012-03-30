@@ -425,6 +425,12 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetCacheWithSqliteCacheBackendSuccess()
     {   
+        if (!extension_loaded('sqlite')) {
+            $this->markTestSkipped(
+                'The SQLite extension is not available.'
+            );
+        }
+        
         Erfurt_App::reset();
         
         $configOptions = array(
