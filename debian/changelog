@@ -1,0 +1,33 @@
+liberfurt-php (1.1) lod2; urgency=low
+
+  * virtuoso backend: fix for double query execution in _execSparql
+  * virtuoso backend: fix bif:contains search
+  * zenddb backend: fix sql generation for long uris
+  * revision is 782181f
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Sat, 03 Mar 2012 20:19:37 +0100
+
+liberfurt-php (1.0-4) lod2; urgency=low
+
+  * switch to revision fd1351d
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Fri, 24 Feb 2012 01:43:34 +0100
+
+liberfurt-php (1.0-3) lod2; urgency=low
+
+  * switch to revision ae75d4c
+  * switch to native package
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Wed, 31 Aug 2011 21:13:24 +0200
+
+liberfurt-php (1.0-2) lod2; urgency=low
+
+  * move to /usr/share/php/
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Mon, 20 Jun 2011 10:38:24 +0200
+
+liberfurt-php (1.0-1) lod2; urgency=low
+
+  * initial debian package
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Thu, 09 Jun 2011 12:35:20 +0200

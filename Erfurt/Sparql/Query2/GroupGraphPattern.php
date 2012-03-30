@@ -11,8 +11,8 @@
  */
 class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_ContainerHelper
 {
-    public function __construct() {
-        parent::__construct();
+    public function __construct($elements = array()) {
+        parent::__construct($elements);
     }
         
     /**

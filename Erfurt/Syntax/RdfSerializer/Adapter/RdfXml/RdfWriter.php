@@ -493,7 +493,7 @@ private $subjects;
 	    
 	    $listArray = array();
 	    if ($result) {
-	        foreach ($result['bindings'] as $row) {
+	        foreach ($result['results']['bindings'] as $row) {
     	        $listArray[$row['s']['value']] = array(
     	            'first' => $row['first']['value'],
     	            'rest'  => $row['rest']['value']

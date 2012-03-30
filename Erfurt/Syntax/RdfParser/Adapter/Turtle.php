@@ -396,7 +396,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     protected function _throwException($msg)
     {
         require_once 'Erfurt/Syntax/RdfParserException.php';
-        throw new Erfurt_Syntax_RdfParserException($msg);
+        throw new Erfurt_Syntax_RdfParserException($msg.' when parsing '.$this->_baseUri);
     }
     
     protected function _parseNumber()
@@ -1081,14 +1081,45 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     }
     
     /**
+     * new string decode, taken from arc
+     * @param type $v
+     * @return type 
+     */
+    function unescapeNtripleUTF($v) {
+        if (strpos($v, '\\') === false) return $v;
+        $mappings = array('t' => "\t", 'n' => "\n", 'r' => "\r", '\"' => '"', '\'' => "'");
+        foreach ($mappings as $in => $out) {
+          $v = preg_replace('/\x5c([' . $in . '])/', $out, $v);
+        }
+        if (strpos(strtolower($v), '\u') === false) return $v;
+        while (preg_match('/\\\(U)([0-9A-F]{8})/', $v, $m) || preg_match('/\\\(u)([0-9A-F]{4})/', $v, $m)) {
+          $no = hexdec($m[2]);
+                    if ($no < 128) $char = chr($no);
+          else if ($no < 2048) $char = chr(($no >> 6) + 192) . chr(($no & 63) + 128);
+          else if ($no < 65536) $char = chr(($no >> 12) + 224) . chr((($no >> 6) & 63) + 128) . chr(($no & 63) + 128);
+                    else if ($no < 2097152) $char = chr(($no >> 18) + 240) . chr((($no >> 12) & 63) + 128) . chr((($no >> 6) & 63) + 128) . chr(($no & 63) + 128);
+          else $char= '';
+          $v = str_replace('\\' . $m[1] . $m[2], $char, $v);
+        }
+        return $v;
+      }
+    /**
      * Decodes escape sequences on a string
      * (Including Unicode escape via \u and \U)
      * @param String $value the string to decode escape sequences from
      * @pram boolean $isUrl whether the input escapes should be encoded url compatible
      * @return String with decoded escape sequences
      */
+      
     protected function _decodeString($value, $isUrl = false)
     {
+        $val = $this->unescapeNtripleUTF($value);
+        if ($isUrl){
+            return urldecode($val); 
+        } else {
+            return $val;
+        }
+        /*
         $backSlashIdx = strpos((string)$value, "\\");
         
         if ($backSlashIdx === false) {
@@ -1147,7 +1178,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         
         $result .= substr((string)$value, $startIdx);
         return $result;
-    }
+        */
+         
+    }   
     
     protected function _uchr($dec)
     {

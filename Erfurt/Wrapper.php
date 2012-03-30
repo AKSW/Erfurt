@@ -169,12 +169,11 @@ abstract class Erfurt_Wrapper
     /**
      * This method forms the second step in the data fetching process.
      * If a given URI is handled by a wrapper, this method tests whether there
-     * is data available for the URI. In many situations this will imply,
-     * that the data is actually fetched. It is a appropriate solution to cache
-     * requested data in order to do a request only once.
+     * is data available for the URI. In many situations this implies,
+     * that the data is actually fetched within this method and cached.
      * 
      * @param string $uri The URI to test for available data.
-     * @param string $graphUri The URI fro the graph to use. Some wrapper implementations
+     * @param string $graphUri The URI for the graph to use. Some wrapper implementations
      * may need it, e.g. to do SPARQL queries against the graph.
      * @return boolean Returns whether there is data available for the given URI or not.
      * @throws Erfurt_Wrapper_Exception
