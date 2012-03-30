@@ -15,7 +15,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
         
-        $url = 'http://ns.softwiki.de/req/';
+        $url = 'http://ns.softwiki.de/req/?format=rdfxml';
         
         $store = Erfurt_App::getInstance()->getStore();
         
