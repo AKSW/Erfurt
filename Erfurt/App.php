@@ -195,6 +195,7 @@ class Erfurt_App
     
     public static function reset()
     {
+        self::$_config = null;
         self::$_instance = null;
     }
     
