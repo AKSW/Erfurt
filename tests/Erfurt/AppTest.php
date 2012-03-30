@@ -629,11 +629,16 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app = Erfurt_App::getInstance();
         
         try {
-            $store = Erfurt_App::getInstance()->getStore();
+            $app->setStore (null);
+ 	        
+            $config = $app->getConfig();
+ 	        unset($config->store->backend);
+ 	        $app->replaceConfig($config);
+            $store = $app->getStore();
             
             $this->fail();
         } catch (Erfurt_Exception $e) {
-            
+            // getStore have to be failed
         }
     }
     
