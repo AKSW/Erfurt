@@ -461,7 +461,7 @@ class Erfurt_Store
     /**
      * Deletes all statements that match the triple pattern specified.
      *
-     * @param string $modelIri
+     * @param string $graphUri
      * @param mixed triple pattern $subject (string or null)
      * @param mixed triple pattern $predicate (string or null)
      * @param mixed triple pattern $object (string or null)
@@ -804,7 +804,7 @@ class Erfurt_Store
                     if ($e->getCode() === 20) {
                         // Everything is fine, system models now imported
                     } else {
-                        throw new Erfurt_Store_Exception('Check setup failed: ' . $e->getMessage());
+                        throw $e;
                     }
                 }
 
@@ -890,10 +890,11 @@ class Erfurt_Store
         try {
             $this->_backendAdapter->createModel($modelIri, $type);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            $message = defined('_EFDEBUG')
-                     ? "Failed creating the model. \nReason: {$e->getMessage()}."
-                     : 'Failed creating the model.';
-            throw new Erfurt_Store_Exception($message);
+            if (defined('_EFDEBUG')) {
+                throw $e;
+            } else {
+                throw new Erfurt_Store_Exception('Failed creating the model.');
+            }
         }
 
         // everything ok, create new model
@@ -1097,6 +1098,15 @@ class Erfurt_Store
     {
         return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
+    
+    public function isInSyntaxSupported()
+    {
+        if (method_exists($this->_backendAdapter, 'isInSyntaxSupported')) {
+            return $this->_backendAdapter->isInSyntaxSupported();
+        }
+        
+        return false;
+    }
 
     /**
      * Returns the ID for the last insert statement.
@@ -1182,22 +1192,18 @@ class Erfurt_Store
             $queryObject = clone $queryObject;
         }
 
-        //get all models
-        $all = array();
-        $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
-        foreach ($allpre as $key => $true) {
-            $all[] = array('uri' => $key, 'named' => false);
-        }
-
         //get available models (readable)
         $available = array();
         if ($options[STORE_USE_AC] === true) {
-            $availablepre = $this->getAvailableModels(true);
+            $availablepre = $this->getAvailableModels(true); //all readable (with ac)
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         } else {
-            $available = $all;
+            $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
+            foreach ($allpre as $key => $true) {
+                $available[] = array('uri' => $key, 'named' => false);
+            }
         }
 
         // examine froms (for access control and imports) in 5 steps
@@ -1319,7 +1325,7 @@ class Erfurt_Store
     public function sparqlQuery($queryObject, $options = array())
     {
         $queryObject = $this->_prepareQuery($queryObject, $options);
-
+        
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -1345,6 +1351,8 @@ class Erfurt_Store
                     $sparqlResult['results'] = array();
                     $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
+                    //var_dump($queryString);exit;
+                    //exit;
                     throw new Erfurt_Store_Exception('invalid query result.');
                 }
             }
@@ -1353,17 +1361,44 @@ class Erfurt_Store
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $logger = $this->_getQueryLogger();
-
+                $isSlow = true;
+                
                 if ($duration > 1) {
                     $slow = " WARNING SLOW ";
+                    $isSlow = true;
                 } else {
                     $slow = "";
                 }
 
-                $logger->debug(
-                    "SPARQL *****************" . round((1000 * $duration), 2) .
-                    " msec " . $slow . "\n" . $queryObject
-                );
+                if ($isSlow) {
+                    $additionalInfo = '';
+                    if (function_exists('xdebug_get_function_stack')) {
+                        $stack = xdebug_get_function_stack();
+                        foreach ($stack as $i=>$info) {
+                            $class = '';
+                            if (isset($info['class'])) {
+                                $class = $info['class'];
+                            }
+                            
+                            $function = 'UNKNOWN_FUNCTION';
+                            if (isset($info['function'])) {
+                                $function = $info['function'];
+                            }
+                            
+                            $additionalInfo .= $class . '@' . $function 
+                                            . ':' . $info['line'] . PHP_EOL;
+                        }
+                    }
+                        
+                    $q = (string)$queryObject;
+                    $q = str_replace (PHP_EOL, ' ', $q);
+                        
+                    $logger->debug(
+                        "SPARQL *****************" . round((1000 * $duration), 2) .
+                        " msec " . $slow . "\n" . $q . PHP_EOL . $additionalInfo
+                    );
+                }
+                
             }
             $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
         }

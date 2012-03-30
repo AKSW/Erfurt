@@ -44,7 +44,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
     
-// TODO support for large files 
+        // TODO support for large files 
         $data = '';
         // Let's parse.
         while (!feof($fileHandle)) {
