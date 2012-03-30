@@ -108,10 +108,14 @@ class Erfurt_Wrapper_Registry
                       . DIRECTORY_SEPARATOR 
                       . ucfirst($wrapperName) . 'Wrapper.php';
             
-            require_once $pathSpec;
-            $instance = new $this->_wrapperRegistry[$wrapperName]['class_name'];
-            $instance->init($this->_wrapperRegistry[$wrapperName]['config']);
-            $this->_wrapperRegistry[$wrapperName]['instance'] = $instance;
+            if ( true == file_exists ( $pathSpec ) ) {
+ 	             require_once $pathSpec;
+ 	             $instance = new $this->_wrapperRegistry[$wrapperName]['class_name'];
+ 	             $instance->init($this->_wrapperRegistry[$wrapperName]['config']);
+ 	             $this->_wrapperRegistry[$wrapperName]['instance'] = $instance;
+ 	         } else {
+ 	             throw new Erfurt_Wrapper_Exception("File $pathSpec does not exists!");
+ 	         }
         }
         
         return $this->_wrapperRegistry[$wrapperName]['instance'];
