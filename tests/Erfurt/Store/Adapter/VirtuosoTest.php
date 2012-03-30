@@ -17,11 +17,23 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
             'password' => 'dba'
         );
         
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($config);
     }
     
     public function testInstantiation()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         $this->assertSame('Erfurt_Store_Adapter_Virtuoso', get_class($this->fixture));
     }
     
@@ -29,6 +41,12 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testListTables()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         // Skip test if no valid connection was established.
         if ( null === $this->fixture->getConnection () )
         {
@@ -41,6 +59,12 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testAddStatementWithUriObject()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         // Skip test if no valid connection was established.
         if ( null === $this->fixture->getConnection () )
         {
@@ -62,6 +86,12 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testAddStatementsWithLiteralObject()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         // Skip test if no valid connection was established.
         if ( null === $this->fixture->getConnection () )
         {
@@ -167,6 +197,12 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function testBuildLiteralString()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         // Skip test if no valid connection was established.
         if ( null === $this->fixture->getConnection () )
         {
@@ -216,6 +252,12 @@ EOT;
     
     public function testBuildTripleString()
     {
+        if (!extension_loaded('odbc')) {
+            $this->markTestSkipped(
+                'The ODBC extension is not available.'
+            );
+        } 
+        
         // Skip test if no valid connection was established.
         if ( null === $this->fixture->getConnection () )
         {
