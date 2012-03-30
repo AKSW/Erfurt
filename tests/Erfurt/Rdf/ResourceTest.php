@@ -213,16 +213,20 @@ class Erfurt_Rdf_ResourceTest extends Erfurt_TestCase
                 'http://ns.ontowiki.net/SysOnt/grantModelView' => array(
                     array(
                         'type' => 'uri', 
-                        'value' => 'http://ns.ontowiki.net/SysOnt/AnyModel'
+                        'value' => 'http://ns.ontowiki.net/SysBase/'
                     ), 
                     array(
                         'type' => 'uri', 
-                        'value' => 'http://ns.ontowiki.net/SysBase/'
+                        'value' => 'http://ns.ontowiki.net/SysOnt/AnyModel'
                     )
                 ), 
                 'http://ns.ontowiki.net/SysOnt/denyModelView' => array(
                     array(
                         'type' => 'uri', 
+                        'value' => 'http://localhost/OntoWiki/Config/'
+                    ),
+                    array(
+                        'type' => 'uri',
                         'value' => 'http://ns.ontowiki.net/SysOnt/'
                     )
                 ), 

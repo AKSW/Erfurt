@@ -98,8 +98,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsZendDb();
         
         $store = Erfurt_App::getInstance()->getStore();
-        $sql = 'DROP TABLE IF EXISTS ' . implode(',', $store->listTables()) . ';';
-        $store->sqlQuery($sql);
+        $store->checkSetup ();
         
         // We do not clean up the db on tear down, for it is empty now.
         $this->_dbWasUsed = false;

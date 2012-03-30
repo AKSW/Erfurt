@@ -15,7 +15,7 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
         
-        $url = 'http://ns.softwiki.de/req/';
+        $url = 'http://ns.softwiki.de/req/?format=rdfxml';
         
         $store = Erfurt_App::getInstance()->getStore();
         
@@ -159,15 +159,13 @@ class Erfurt_StoreTest extends Erfurt_TestCase
         
         $query = 'COUNT 
                   FROM <http://localhost/OntoWiki/Config/> 
-                  WHERE { 
-            ?s ?p ?o . 
-        }';
+                  WHERE { ?s ?p ?o . }';
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         
         $result = $store->sparqlQuery($simpleQuery);
         
-        $this->assertEquals(191, $result);
+        $this->assertEquals(196, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()

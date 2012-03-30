@@ -195,6 +195,7 @@ class Erfurt_App
     
     public static function reset()
     {
+        self::$_config = null;
         self::$_instance = null;
     }
     
@@ -1022,6 +1023,18 @@ class Erfurt_App
             }   
         }
     }
+    
+    /**
+ 	 * Replace $_config attribute with own $config
+ 	 * @param Zend_Config|null $config
+     * @return void
+ 	 */
+ 	public function replaceConfig(Zend_Config $config = null)
+ 	{
+        if (null !== $config) {
+            self::$_config = $config;
+        }
+    }  
     
     /**
      * The third and last step of the OpenID authentication process.
