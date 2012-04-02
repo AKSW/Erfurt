@@ -21,6 +21,7 @@ define('STORE_RESULTFORMAT_PLAIN', 'plain');
 define('STORE_RESULTFORMAT_XML', 'xml');
 define('STORE_RESULTFORMAT_EXTENDED', 'extended');
 define('STORE_USE_AC', 'use_ac');
+define('STORE_USE_CACHE', 'use_cache');
 define('STORE_USE_OWL_IMPORTS', 'use_owl_imports');
 define('STORE_USE_ADDITIONAL_IMPORTS', 'use_additional_imports');
 define('STORE_TIMEOUT', 'timeout');
@@ -1338,8 +1339,11 @@ class Erfurt_Store
             $queryString,
             $replacements
         );
-
-        $sparqlResult = $queryCache->load($queryString, $resultFormat);
+        if (!isset($options[STORE_USE_CACHE]) || $options[STORE_USE_CACHE]) {
+            $sparqlResult = $queryCache->load($queryString, $resultFormat);
+        } else {
+            $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
+        }
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
@@ -1391,7 +1395,7 @@ class Erfurt_Store
                     }
                         
                     $q = (string)$queryObject;
-                    $q = str_replace (PHP_EOL, ' ', $q);
+                    $q = str_replace(PHP_EOL, ' ', $q);
                         
                     $logger->debug(
                         "SPARQL *****************" . round((1000 * $duration), 2) .
