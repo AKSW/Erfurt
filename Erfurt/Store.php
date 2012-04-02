@@ -516,7 +516,7 @@ class Erfurt_Store
      *
      * @throws Erfurt_Exception
      */
-    public function deleteMultipleStatements($graphUri, array $statementsArray)
+    public function deleteMultipleStatements($graphUri, array $statementsArray, $useAc = true)
     {
         // check whether model is available
         if (!$this->isModelAvailable($graphUri)) {
@@ -524,7 +524,7 @@ class Erfurt_Store
         }
 
         // check whether model is editable
-        if (!$this->_checkAc($graphUri, 'edit')) {
+        if ($useAc && !$this->_checkAc($graphUri, 'edit')) {
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
