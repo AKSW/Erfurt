@@ -289,7 +289,8 @@ class Erfurt_Rdf_MemoryModel
         } else if ($predicate == null) {
             throw new Exception('need a predicate URN as second parameter');
         }
-        $newStatements = array();
+        
+        $statements = array();
 
         // create the object array
         $o = array();
@@ -329,7 +330,7 @@ class Erfurt_Rdf_MemoryModel
             throw new Exception('need an object URN as second parameter');
         }
 
-        $newStatements = array();
+        $statements = array();
 
         // create the object array
         $o = array();
