@@ -25,6 +25,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
     
+    /**
+     * an array of model URIs, that should be listed as available 
+     * a list of remote models, that are assumed to exist
+     * @var array 
+     */
     protected $_configuredGraphs = array();
     
     protected $_serviceUrl = null;
@@ -40,6 +45,8 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         foreach($adapterOptions['graphs'] as $graphUri) {
             $this->_configuredGraphs[$graphUri] = true;
         }
+        
+        //TODO add option to retrieve available graphs from the endpoint (slower but complete)
         
         if (isset($adapterOptions['username'])) {
             $this->_username = $adapterOptions['username'];

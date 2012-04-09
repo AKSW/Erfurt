@@ -1155,7 +1155,9 @@ class Erfurt_Store
             }
         }
     }
-
+    
+    function toStr($a){$s=''; foreach($a as $aa){$s.=' '.$aa['uri'];} return $s;}
+    
     /**
      * check and manipulate the declared FROMs according to the access control
      */
@@ -1192,20 +1194,26 @@ class Erfurt_Store
         if ($queryObject instanceof Erfurt_Sparql_Query2) { //always clone?
             $queryObject = clone $queryObject;
         }
-
+        $logger = $this->_getQueryLogger();
+        
         //get available models (readable)
         $available = array();
         if ($options[STORE_USE_AC] === true) {
+            $logger->debug('AC: use ac ');
+
             $availablepre = $this->getAvailableModels(true); //all readable (with ac)
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         } else {
+            $logger->debug('AC: dont use ac ');
+
             $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
             foreach ($allpre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         }
+        $logger->debug('AC: available models '.$this->toStr( $available));
 
         // examine froms (for access control and imports) in 5 steps
         // 1. extract froms for easier handling
@@ -1223,16 +1231,21 @@ class Erfurt_Store
                 $froms[] = array('uri' => $graphClause, 'named' => true);
             }
         }
+        $logger->debug('AC: requested FROMs'.$this->toStr( $froms));
 
         // 2. no froms in query -> froms = availableModels
         if (empty($froms)) {
+            $logger->debug('AC: no requested FROM -> take all available: '.$this->toStr($available));
             $froms = $available;
         }
-
+        
         // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
         if ($options[STORE_USE_AC] === true) {
             $froms = $this->_maskModelList($froms, $available);
+            $logger->debug('AC: after filtering (read-rights and existence): '.$this->toStr( $froms));
+
             if (empty($froms)) {
+                $logger->debug('AC:  all disallowed - empty result');
                 $noBindings = true;
             }
         }
@@ -1245,14 +1258,18 @@ class Erfurt_Store
                     $options[STORE_USE_ADDITIONAL_IMPORTS],
                     $options[STORE_USE_AC]
                 );
+                $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
+
                 foreach ($importsClosure as $importedGraphUri) {
                     $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
+                    //avoid duplicates
                     if (in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false) {
                         $froms[] = $addCandidate;
                     }
                 }
             }
         }
+        $logger->debug('AC:  after imports: '.$this->toStr( $froms));
 
         // 5. put froms back
         if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1276,6 +1293,7 @@ class Erfurt_Store
         // this is achieved by replacing the where-part with an unsatisfiable one
         // i think this is efficient because otherwise we would have to deal with result formating und variables
         if ($noBindings) {
+            $logger->debug('AC: force no bindings');
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
                 $queryObject->setWherePart('{FILTER(false)}');
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1283,7 +1301,7 @@ class Erfurt_Store
                 $ggp->addFilter(false); //unsatisfiable
                 $queryObject->setWhere($ggp);
             }
-        }
+        } 
         return $queryObject;
     }
 
@@ -1316,8 +1334,7 @@ class Erfurt_Store
 
     /**
      * @param Erfurt_Sparql_SimpleQuery $queryObject
-     * @param string $resultFormat Currently supported are: 'plain' and 'xml'
-     * @param boolean $useAc Whether to check for access control or not.
+     * @param array $options keys: STORE_USE_CACHE, STORE_RESULTFORMAT, STORE_USE_AC
      *
      * @throws Erfurt_Exception Throws an exception if query is no string.
      *
@@ -1325,6 +1342,9 @@ class Erfurt_Store
      */
     public function sparqlQuery($queryObject, $options = array())
     {
+        $logger = $this->_getQueryLogger();
+
+        $logger->debug('query in: '.(string)$queryObject);
         $queryObject = $this->_prepareQuery($queryObject, $options);
         
         //querying SparqlEngine or retrieving Result from QueryCache
@@ -1339,12 +1359,14 @@ class Erfurt_Store
             $queryString,
             $replacements
         );
+        $logger->debug('query after rewriting: '.$queryString);
         if (!isset($options[STORE_USE_CACHE]) || $options[STORE_USE_CACHE]) {
             $sparqlResult = $queryCache->load($queryString, $resultFormat);
         } else {
             $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
         }
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+            $logger->debug('uncached');
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
@@ -1355,8 +1377,6 @@ class Erfurt_Store
                     $sparqlResult['results'] = array();
                     $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
-                    //var_dump($queryString);exit;
-                    //exit;
                     throw new Erfurt_Store_Exception('invalid query result.');
                 }
             }
@@ -1364,14 +1384,13 @@ class Erfurt_Store
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
-                $logger = $this->_getQueryLogger();
                 $isSlow = true;
                 
                 if ($duration > 1) {
-                    $slow = " WARNING SLOW ";
+                    $slow = ' WARNING SLOW ';
                     $isSlow = true;
                 } else {
-                    $slow = "";
+                    $slow = '';
                 }
 
                 if ($isSlow) {
@@ -1398,11 +1417,13 @@ class Erfurt_Store
                     $q = str_replace(PHP_EOL, ' ', $q);
                         
                     $logger->debug(
-                        "SPARQL *****************" . round((1000 * $duration), 2) .
-                        " msec " . $slow . "\n" . $q . PHP_EOL . $additionalInfo
+                        'SPARQL *****************' . round((1000 * $duration), 2) .
+                        ' msec ' . $slow . PHP_EOL . $q . PHP_EOL . $additionalInfo
                     );
                 }
                 
+            } else {
+                $logger->debug('cached');
             }
             $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
         }
@@ -1696,7 +1717,7 @@ class Erfurt_Store
      * We need this function because array_intersect doesn't work on 2D-Arrays.
      * @param array $list a 2D-Array where the uris are available with $list[<index>]['uri']
      * @param array $maskIn the mask to apply on the list of the same format as the list
-     * @return array the list witout uri missing in $maskIn
+     * @return array the list without uri missing in $maskIn
      */
     private function _maskModelList (array $list, array $maskIn = null)
     {
@@ -1706,17 +1727,18 @@ class Erfurt_Store
                 $mask[] = $key;
             }
         } else {
-
             $countMaskIn = count($maskIn);
             for ($i = 0; $i < $countMaskIn; ++$i) {
                 $mask[] = $maskIn[$i]['uri'];
             }
         }
 
+        $logger = $this->_getQueryLogger();
         $countList = count($list);
         for ($i = 0; $i < $countList; ++$i) {
             if (array_search($list[$i]['uri'], $mask) === false) {
-                // TODO: check if this maybe skips indices ...
+                $logger->debug('AC: remove from: '.$list[$i]['uri']);
+
                 unset($list[$i]);
             }
         }
