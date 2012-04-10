@@ -126,9 +126,9 @@ class Erfurt_Rdf_Model
      *
      * @param stdClass $statements
      */
-    public function addMultipleStatements(array $statements)
+    public function addMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->addMultipleStatements($this->_graphUri, $statements);
+        $this->getStore()->addMultipleStatements($this->_graphUri, $statements, $useAc);
 
         return $this;
     }
@@ -170,9 +170,9 @@ class Erfurt_Rdf_Model
      * @param string $predicate
      * @param string $object
      */
-    public function deleteMultipleStatements(array $statements)
+    public function deleteMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->deleteMultipleStatements($this->_graphUri, $statements);
+        $this->getStore()->deleteMultipleStatements($this->_graphUri, $statements, $useAc);
     }
 
     /**
@@ -392,7 +392,7 @@ class Erfurt_Rdf_Model
      * @param array $original
      * @param array $changed
      */
-    public function updateWithMutualDifference(array $original, array $changed)
+    public function updateWithMutualDifference(array $original, array $changed, $useAc = true)
     {
         $addedStatements   = $this->_getStatementsDiff($changed, $original);
         $removedStatements = $this->_getStatementsDiff($original, $changed);
@@ -405,8 +405,8 @@ class Erfurt_Rdf_Model
             $logger->debug('removed: ', count($removedStatements));
         }
 
-        $this->deleteMultipleStatements($removedStatements);
-        $this->addMultipleStatements($addedStatements);
+        $this->deleteMultipleStatements($removedStatements, $useAc);
+        $this->addMultipleStatements($addedStatements, $useAc);
 
         return $this;
     }

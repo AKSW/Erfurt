@@ -175,7 +175,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $s - the subject URN of searched statements
      * @return array
      */
-    public function getStatements($s)
+    public function getStatements($s = null)
     {
         if ($s == null) {
             return $this->statements;
@@ -289,7 +289,8 @@ class Erfurt_Rdf_MemoryModel
         } else if ($predicate == null) {
             throw new Exception('need a predicate URN as second parameter');
         }
-        $newStatements = array();
+        
+        $statements = array();
 
         // create the object array
         $o = array();
@@ -329,7 +330,7 @@ class Erfurt_Rdf_MemoryModel
             throw new Exception('need an object URN as second parameter');
         }
 
-        $newStatements = array();
+        $statements = array();
 
         // create the object array
         $o = array();
