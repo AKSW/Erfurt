@@ -35,7 +35,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     
     public function __construct($adapterOptions = array())
     {
-        $this->_serviceUrl = $adapterOptions['serviceurl'];
+        $this->_serviceUrl = $adapterOptions['serviceUrl'];
                 
         foreach($adapterOptions['graphs'] as $graphUri) {
             $this->_configuredGraphs[$graphUri] = true;
@@ -144,17 +144,36 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function sparqlAsk($query)
     {
 // TODO
+        throw new Exception('TODO');
     }
     
     public function sparqlQuery($query, $options=array())
-    { 
+    {
+        //var_dump($query);exit;
+        
+        // Make sure, we only query for configured graphs...
+        $q = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
+        $from = $q->getFrom();
+        $newFrom = array();
+        foreach ($from as $f) {
+            if (isset($this->_configuredGraphs[$f])) {
+                $newFrom[] = $f;
+            }
+        }
+        //var_dump($this->_configuredGraphs, $from);exit;
+        if (count($newFrom) === 0) {
+            return array();
+        }
+        $q->setFrom($newFrom);
+        
+        
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         
-        $url = $this->_serviceUrl . '?query=' . urlencode((string)$query);
+        $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
                 
         $client = Erfurt_App::getInstance()->getHttpClient($url, array(
             'maxredirects'  => 10,
-            'timeout'       => 30
+            'timeout'       => 2000
         ));
     
         if (null !== $this->_username) {

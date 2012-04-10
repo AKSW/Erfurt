@@ -241,9 +241,11 @@ class Erfurt_App
           
         // Starting Versioning
         try {
-            $versioning = $this->getVersioning(); 
-            if ((boolean)$config->versioning === false) {
-                $versioning->enableVersioning(false);
+            $versioning = $this->getVersioning();
+            if ($versioning instanceof Erfurt_Versioning) {
+                if ((boolean)$config->versioning === false) {
+                    $versioning->enableVersioning(false);
+                }
             }
         } catch (Erfurt_Exception $e) {
             require_once 'Erfurt/Exception.php';
@@ -428,8 +430,20 @@ class Erfurt_App
     public function authenticate($username = 'Anonymous', $password = '')
     {
         // Set up the authentication adapter.
-        require_once 'Erfurt/Auth/Adapter/Rdf.php';
-        $adapter = new Erfurt_Auth_Adapter_Rdf($username, $password);
+        $config = $this->getConfig();
+        $type = strtolower($config->ac->type);
+        
+        $adapter = null;
+        if ($type === 'rdf') {
+            require_once 'Erfurt/Auth/Adapter/Rdf.php';
+            $adapter = new Erfurt_Auth_Adapter_Rdf($username, $password);
+        } else if ($type === 'none') {
+            require_once 'Erfurt/Auth/Adapter/None.php';
+            $adapter = new Erfurt_Auth_Adapter_None($username, $password);
+        } else {
+            require_once 'Erfurt/Exception.php';
+            throw new Erfurt_Exception("Auth type '$type' not supported");
+        }
         
         // Attempt authentication, saving the result.
         $result = $this->getAuth()->authenticate($adapter);
@@ -491,8 +505,18 @@ class Erfurt_App
     public function getAc() 
     {    
         if (null === $this->_ac) {
-            require_once 'Erfurt/Ac/Default.php';
-            $this->_ac = new Erfurt_Ac_Default();
+            $config = $this->getConfig();
+            $type = strtolower($config->ac->type);
+            if ($type === 'rdf') {
+                require_once 'Erfurt/Ac/Default.php';
+                $this->_ac = new Erfurt_Ac_Default();
+            } else if ($type === 'none') {
+                require_once 'Erfurt/Ac/None.php';
+                $this->_ac = new Erfurt_Ac_None();
+            } else {
+                require_once 'Erfurt/Exception.php';
+                throw new Erfurt_Exception("AC type '$type' not supported.");
+            }
         }
         
         return $this->_ac;
@@ -912,6 +936,12 @@ class Erfurt_App
     public function getVersioning() 
     {
         if (null === $this->_versioning) {
+            $config = $this->getConfig();
+            $versioningEnabled = (boolean)$config->versioning;
+            if (!$versioningEnabled) {
+                return false;
+            }
+            
             require_once 'Erfurt/Versioning.php';
             $this->_versioning = new Erfurt_Versioning();
         }

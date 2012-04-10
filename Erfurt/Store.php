@@ -1355,9 +1355,15 @@ class Erfurt_Store
                     $sparqlResult['results'] = array();
                     $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
-                    //var_dump($queryString);exit;
-                    //exit;
-                    throw new Erfurt_Store_Exception('invalid query result.');
+                    if (count($sparqlResult) === 0) {
+                        // empty result
+                        $sparqlResult['results'] = array();
+                        $sparqlResult['results']['bindings'] = array();
+                    } else {
+                        //var_dump($queryString);exit;
+                        //exit;
+                        throw new Erfurt_Store_Exception('invalid query result.');
+                    }
                 }
             }
 
