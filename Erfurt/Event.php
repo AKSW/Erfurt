@@ -1,16 +1,19 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
 require_once 'Erfurt/Event/Dispatcher.php';
 
 /**
  * Erfurt event class
  *
- * @package erfurt
- * @subpackage    event
+ * @package    erfurt
+ * @subpackage event
  * @author     Norman Heino <norman.heino@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 class Erfurt_Event
 {
@@ -18,28 +21,28 @@ class Erfurt_Event
      * @var Erfurt_Event_Dispatcher
      */
     protected $_eventDispatcher = null;
-    
+
     /**
      * @var bool
      */
     protected $_handled = false;
-    
+
     /**
      * @var string
      */
-     protected $_name = null;
+    protected $_name = null;
 
-     /** 
-      * @var array 
+     /**
+      * @var array
       */
-     protected $_parameters = array();
-     
+    protected $_parameters = array();
+
      /**
       * The event's current value;
       * @var mixed
       */
-     protected $_value = null;
-    
+    protected $_value = null;
+
     /**
      * Constructor
      */
@@ -48,7 +51,7 @@ class Erfurt_Event
         $this->_name = (string) $eventName;
         $this->_eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
     }
-    
+
     /**
      * Returns a property value
      *
@@ -60,7 +63,7 @@ class Erfurt_Event
             return $this->_parameters[$propertyName];
         }
     }
-    
+
     /**
      * Sets a property
      *
@@ -68,12 +71,12 @@ class Erfurt_Event
      * @param mixed $propertyValue
      */
     public function __set($propertyName, $propertyValue)
-    {        
+    {
         $this->_parameters[$propertyName] = $propertyValue;
-        
+
         return $this;
     }
-    
+
     /**
      * Returns whether a property with name $propertyName is set.
      *
@@ -85,7 +88,7 @@ class Erfurt_Event
     {
         return array_key_exists($propertyName, $this->_parameters);
     }
-    
+
     /**
      * Returns a default value for the event if one has been set or null.
      * A default value is used if the event is not handled by any handler.
@@ -98,7 +101,7 @@ class Erfurt_Event
             return $this->_default;
         }
     }
-    
+
     /**
      * Returns the event name.
      *
@@ -108,7 +111,7 @@ class Erfurt_Event
     {
         return $this->_name;
     }
-    
+
     /**
      * Returns this event's parameters all at once.
      *
@@ -118,7 +121,7 @@ class Erfurt_Event
     {
         return $this->_parameters;
     }
-    
+
     /**
      * Returns the current event value, as handled by previous
      * handlers or null.
@@ -127,7 +130,7 @@ class Erfurt_Event
     {
         return $this->_value;
     }
-    
+
     /**
      * Returns whether this event has been handled or not.
      *
@@ -137,7 +140,7 @@ class Erfurt_Event
     {
         return $this->_handled;
     }
-    
+
     /**
      * Sets the event's default value.
      * A default value is used if the event is not handled by any handler.
@@ -147,10 +150,10 @@ class Erfurt_Event
     public function setDefault($default)
     {
         $this->_default = $default;
-        
+
         return $this;
     }
-    
+
     /**
      * Sets this event's handled state.
      *
@@ -159,15 +162,15 @@ class Erfurt_Event
     public function setHandled($handled)
     {
         $this->_handled = (bool) $handled;
-        
+
         return $this;
     }
-    
+
     public function setValue($value)
     {
         $this->_value = $value;
     }
-    
+
     /**
      * Triggers this event.
      *
