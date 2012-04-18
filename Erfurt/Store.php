@@ -21,6 +21,7 @@ define('STORE_RESULTFORMAT_PLAIN', 'plain');
 define('STORE_RESULTFORMAT_XML', 'xml');
 define('STORE_RESULTFORMAT_EXTENDED', 'extended');
 define('STORE_USE_AC', 'use_ac');
+define('STORE_USE_CACHE', 'use_cache');
 define('STORE_USE_OWL_IMPORTS', 'use_owl_imports');
 define('STORE_USE_ADDITIONAL_IMPORTS', 'use_additional_imports');
 define('STORE_TIMEOUT', 'timeout');
@@ -461,7 +462,7 @@ class Erfurt_Store
     /**
      * Deletes all statements that match the triple pattern specified.
      *
-     * @param string $modelIri
+     * @param string $graphUri
      * @param mixed triple pattern $subject (string or null)
      * @param mixed triple pattern $predicate (string or null)
      * @param mixed triple pattern $object (string or null)
@@ -516,7 +517,7 @@ class Erfurt_Store
      *
      * @throws Erfurt_Exception
      */
-    public function deleteMultipleStatements($graphUri, array $statementsArray)
+    public function deleteMultipleStatements($graphUri, array $statementsArray, $useAc = true)
     {
         // check whether model is available
         if (!$this->isModelAvailable($graphUri)) {
@@ -524,7 +525,7 @@ class Erfurt_Store
         }
 
         // check whether model is editable
-        if (!$this->_checkAc($graphUri, 'edit')) {
+        if ($useAc && !$this->_checkAc($graphUri, 'edit')) {
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
@@ -804,7 +805,7 @@ class Erfurt_Store
                     if ($e->getCode() === 20) {
                         // Everything is fine, system models now imported
                     } else {
-                        throw new Erfurt_Store_Exception('Check setup failed: ' . $e->getMessage());
+                        throw $e;
                     }
                 }
 
@@ -890,10 +891,11 @@ class Erfurt_Store
         try {
             $this->_backendAdapter->createModel($modelIri, $type);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            $message = defined('_EFDEBUG')
-                     ? "Failed creating the model. \nReason: {$e->getMessage()}."
-                     : 'Failed creating the model.';
-            throw new Erfurt_Store_Exception($message);
+            if (defined('_EFDEBUG')) {
+                throw $e;
+            } else {
+                throw new Erfurt_Store_Exception('Failed creating the model.');
+            }
         }
 
         // everything ok, create new model
@@ -1097,6 +1099,15 @@ class Erfurt_Store
     {
         return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
+    
+    public function isInSyntaxSupported()
+    {
+        if (method_exists($this->_backendAdapter, 'isInSyntaxSupported')) {
+            return $this->_backendAdapter->isInSyntaxSupported();
+        }
+        
+        return false;
+    }
 
     /**
      * Returns the ID for the last insert statement.
@@ -1144,7 +1155,9 @@ class Erfurt_Store
             }
         }
     }
-
+    
+    function toStr($a){$s=''; foreach($a as $aa){$s.=' '.$aa['uri'];} return $s;}
+    
     /**
      * check and manipulate the declared FROMs according to the access control
      */
@@ -1181,24 +1194,26 @@ class Erfurt_Store
         if ($queryObject instanceof Erfurt_Sparql_Query2) { //always clone?
             $queryObject = clone $queryObject;
         }
-
-        //get all models
-        $all = array();
-        $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
-        foreach ($allpre as $key => $true) {
-            $all[] = array('uri' => $key, 'named' => false);
-        }
-
+        $logger = $this->_getQueryLogger();
+        
         //get available models (readable)
         $available = array();
         if ($options[STORE_USE_AC] === true) {
-            $availablepre = $this->getAvailableModels(true);
+            $logger->debug('AC: use ac ');
+
+            $availablepre = $this->getAvailableModels(true); //all readable (with ac)
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         } else {
-            $available = $all;
+            $logger->debug('AC: dont use ac ');
+
+            $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
+            foreach ($allpre as $key => $true) {
+                $available[] = array('uri' => $key, 'named' => false);
+            }
         }
+        $logger->debug('AC: available models '.$this->toStr( $available));
 
         // examine froms (for access control and imports) in 5 steps
         // 1. extract froms for easier handling
@@ -1216,16 +1231,21 @@ class Erfurt_Store
                 $froms[] = array('uri' => $graphClause, 'named' => true);
             }
         }
+        $logger->debug('AC: requested FROMs'.$this->toStr( $froms));
 
         // 2. no froms in query -> froms = availableModels
         if (empty($froms)) {
+            $logger->debug('AC: no requested FROM -> take all available: '.$this->toStr($available));
             $froms = $available;
         }
-
+        
         // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
         if ($options[STORE_USE_AC] === true) {
             $froms = $this->_maskModelList($froms, $available);
+            $logger->debug('AC: after filtering (read-rights and existence): '.$this->toStr( $froms));
+
             if (empty($froms)) {
+                $logger->debug('AC:  all disallowed - empty result');
                 $noBindings = true;
             }
         }
@@ -1238,14 +1258,18 @@ class Erfurt_Store
                     $options[STORE_USE_ADDITIONAL_IMPORTS],
                     $options[STORE_USE_AC]
                 );
+                $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
+
                 foreach ($importsClosure as $importedGraphUri) {
                     $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
+                    //avoid duplicates
                     if (in_array($addCandidate, $available) && array_search($addCandidate, $froms) === false) {
                         $froms[] = $addCandidate;
                     }
                 }
             }
         }
+        $logger->debug('AC:  after imports: '.$this->toStr( $froms));
 
         // 5. put froms back
         if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1269,6 +1293,7 @@ class Erfurt_Store
         // this is achieved by replacing the where-part with an unsatisfiable one
         // i think this is efficient because otherwise we would have to deal with result formating und variables
         if ($noBindings) {
+            $logger->debug('AC: force no bindings');
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
                 $queryObject->setWherePart('{FILTER(false)}');
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1276,7 +1301,7 @@ class Erfurt_Store
                 $ggp->addFilter(false); //unsatisfiable
                 $queryObject->setWhere($ggp);
             }
-        }
+        } 
         return $queryObject;
     }
 
@@ -1309,8 +1334,7 @@ class Erfurt_Store
 
     /**
      * @param Erfurt_Sparql_SimpleQuery $queryObject
-     * @param string $resultFormat Currently supported are: 'plain' and 'xml'
-     * @param boolean $useAc Whether to check for access control or not.
+     * @param array $options keys: STORE_USE_CACHE, STORE_RESULTFORMAT, STORE_USE_AC
      *
      * @throws Erfurt_Exception Throws an exception if query is no string.
      *
@@ -1318,8 +1342,11 @@ class Erfurt_Store
      */
     public function sparqlQuery($queryObject, $options = array())
     {
-        $queryObject = $this->_prepareQuery($queryObject, $options);
+        $logger = $this->_getQueryLogger();
 
+        $logger->debug('query in: '.(string)$queryObject);
+        $queryObject = $this->_prepareQuery($queryObject, $options);
+        
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -1331,8 +1358,14 @@ class Erfurt_Store
                                    $queryString,
                                    $replacements);
 
-        $sparqlResult = $queryCache->load($queryString, $resultFormat);
+        $logger->debug('query after rewriting: '.$queryString);
+        if (!isset($options[STORE_USE_CACHE]) || $options[STORE_USE_CACHE]) {
+            $sparqlResult = $queryCache->load($queryString, $resultFormat);
+        } else {
+            $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
+        }
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+            $logger->debug('uncached');
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
@@ -1346,25 +1379,61 @@ class Erfurt_Store
                     $sparqlResult['results'] = array();
                     $sparqlResult['results']['bindings'] = $sparqlResult['bindings'];
                 } else {
-                    throw new Erfurt_Store_Exception('invalid query result.');
+                    if (count($sparqlResult) === 0) {
+                        // empty result
+                        $sparqlResult['results'] = array();
+                        $sparqlResult['results']['bindings'] = array();
+                    } else {
+                        //var_dump($queryString);exit;
+                        //exit;
+                        throw new Erfurt_Store_Exception('invalid query result.');
+                    }
                 }
             }
 
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
-                $logger = $this->_getQueryLogger();
-
+                $isSlow = true;
+                
                 if ($duration > 1) {
-                    $slow = " WARNING SLOW ";
+                    $slow = ' WARNING SLOW ';
+                    $isSlow = true;
                 } else {
-                    $slow = "";
+                    $slow = '';
                 }
 
-                $logger->debug(
-                    "SPARQL *****************" . round((1000 * $duration), 2) .
-                    " msec " . $slow . "\n" . $queryObject
-                );
+                if ($isSlow) {
+                    $additionalInfo = '';
+                    if (function_exists('xdebug_get_function_stack')) {
+                        $stack = xdebug_get_function_stack();
+                        foreach ($stack as $i=>$info) {
+                            $class = '';
+                            if (isset($info['class'])) {
+                                $class = $info['class'];
+                            }
+                            
+                            $function = 'UNKNOWN_FUNCTION';
+                            if (isset($info['function'])) {
+                                $function = $info['function'];
+                            }
+                            
+                            $additionalInfo .= $class . '@' . $function 
+                                            . ':' . $info['line'] . PHP_EOL;
+                        }
+                    }
+                        
+                    $q = (string)$queryObject;
+                    $q = str_replace(PHP_EOL, ' ', $q);
+                        
+                    $logger->debug(
+                        'SPARQL *****************' . round((1000 * $duration), 2) .
+                        ' msec ' . $slow . PHP_EOL . $q . PHP_EOL . $additionalInfo
+                    );
+                }
+                
+            } else {
+                $logger->debug('cached');
             }
             $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
         }
@@ -1658,7 +1727,7 @@ class Erfurt_Store
      * We need this function because array_intersect doesn't work on 2D-Arrays.
      * @param array $list a 2D-Array where the uris are available with $list[<index>]['uri']
      * @param array $maskIn the mask to apply on the list of the same format as the list
-     * @return array the list witout uri missing in $maskIn
+     * @return array the list without uri missing in $maskIn
      */
     private function _maskModelList (array $list, array $maskIn = null)
     {
@@ -1668,17 +1737,18 @@ class Erfurt_Store
                 $mask[] = $key;
             }
         } else {
-
             $countMaskIn = count($maskIn);
             for ($i = 0; $i < $countMaskIn; ++$i) {
                 $mask[] = $maskIn[$i]['uri'];
             }
         }
 
+        $logger = $this->_getQueryLogger();
         $countList = count($list);
         for ($i = 0; $i < $countList; ++$i) {
             if (array_search($list[$i]['uri'], $mask) === false) {
-                // TODO: check if this maybe skips indices ...
+                $logger->debug('AC: remove from: '.$list[$i]['uri']);
+
                 unset($list[$i]);
             }
         }

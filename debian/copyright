@@ -23,18 +23,18 @@ Upstream Author(s):
 
 Copyright:
 
-    <Copyright (C) 2011 Christoph Rieß>
-    <Copyright (C) 2011 Daniel Gerber>
-    <Copyright (C) 2011 Jonas Brekle>
-    <Copyright (C) 2011 Konrad Abicht>
-    <Copyright (C) 2011 Michael Haschke>
-    <Copyright (C) 2011 Michael Martin>
-    <Copyright (C) 2011 Natanael Arndt>
-    <Copyright (C) 2011 Norman Heino>
-    <Copyright (C) 2011 Philipp Frischmuth>
-    <Copyright (C) 2011 Rolland Brunec>
-    <Copyright (C) 2011 Sebastian Tramp>
-    <Copyright (C) 2011 Tim Ermilov>
+    <Copyright (C) 2012 Christoph Rieß>
+    <Copyright (C) 2012 Daniel Gerber>
+    <Copyright (C) 2012 Jonas Brekle>
+    <Copyright (C) 2012 Konrad Abicht>
+    <Copyright (C) 2012 Michael Haschke>
+    <Copyright (C) 2012 Michael Martin>
+    <Copyright (C) 2012 Natanael Arndt>
+    <Copyright (C) 2012 Norman Heino>
+    <Copyright (C) 2012 Philipp Frischmuth>
+    <Copyright (C) 2012 Rolland Brunec>
+    <Copyright (C) 2012 Sebastian Tramp>
+    <Copyright (C) 2012 Tim Ermilov>
 
 License:
 
@@ -55,7 +55,7 @@ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
 
 The Debian packaging is:
 
-    Copyright (C) 2011 Sebastian Tramp <tramp@informatik.uni-leipzig.de>
+    Copyright (C) 2012 Sebastian Tramp <tramp@informatik.uni-leipzig.de>
 
 you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
