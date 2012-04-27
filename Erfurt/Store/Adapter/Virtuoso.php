@@ -280,7 +280,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 }
 
                 // via php_odbc
-                $this->_connection = $odbcConnectFunction($dsn, $username, $password);
+                $this->_connection = @$odbcConnectFunction($dsn, $username, $password);
                 $this->_user = $username;
             }
             // success?
@@ -346,7 +346,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     return (int)$matches[1];
                 }
             } else {
-                // As of Virtuoso 6.1.5 they do it the documented ODBC way, which means 
+                // As of Virtuoso 6.1.5 they do it the documented ODBC way, which means
                 // odbc_num_rows contains the number of affected rows for updated queries.
                 // If no rows were affected Virtuoso returns -1.
                 $affectedRows = odbc_num_rows($rid);
@@ -354,7 +354,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     return 0;
                 }
                 return $affectedRows;
-            }    
+            }
         }
 
         // no statements deleted
@@ -621,7 +621,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         return true;
     }
-    
+
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
@@ -991,7 +991,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         return $resultId;
     }
-    
+
     private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
     {
         $graphUri = (string)$graphUri;
@@ -1005,7 +1005,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $graphUri = 'NULL';
             $graphSpec = '';
         }
-        
+
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
         $resultId = odbc_exec($this->connection(), $virtuosoPl);
@@ -1155,7 +1155,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         // the result will be stored in here
         $resultArray = array();
-        
+
         // get number of fields (columns)
         $numFields = odbc_num_fields($odbcResult);
         //var_dump($numFields);
@@ -1168,13 +1168,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // for all rows
         while (odbc_fetch_row($odbcResult)) {
             $resultRowNamed = array();
-                        
+
             // for all columns
             for ($i = 1; $i <= $numFields; ++$i) {
                 $fieldName = odbc_field_name($odbcResult, $i);
                 $fieldType = odbc_field_type($odbcResult, $i);
                 $value     = '';
-            
+
                 if (substr($fieldType, 0, 4) == 'LONG') {
                     // LONG VARCHAR or LONG VARBINARY
                     // get the field value in parts
@@ -1185,7 +1185,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     // get the field value normally
                     $value = odbc_result($odbcResult, $i);
                 }
-            
+
                 if (null !== $field) {
                     // add only requested field
                     if ($fieldName == $field) {
@@ -1200,11 +1200,11 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
                 }
             }
-            
+
             // add row to result array
             array_push($resultArray, $resultRowNamed);
         }
-        
+
         return $resultArray;
     }
 
