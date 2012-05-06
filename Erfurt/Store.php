@@ -1351,12 +1351,11 @@ class Erfurt_Store
         $resultFormat = $options[STORE_RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        $queryString = (string)$queryObject;
         $replacements = 0;
         $queryString = str_replace(
             $this->_bnodePrefix,
             $this->_backendAdapter->getBlankNodePrefix(),
-            $queryString,
+            (string)$queryObject,
             $replacements
         );
         $logger->debug('query after rewriting: '.$queryString);

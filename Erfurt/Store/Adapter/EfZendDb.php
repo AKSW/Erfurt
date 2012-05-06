@@ -39,6 +39,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
 
+    private $_adapterOptions = array();
     /**
      * Constructor
      *
@@ -50,28 +51,31 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     public function __construct($adapterOptions = array())
     {
-        $adapter    = $adapterOptions['dbtype'];
-        $host       = isset($adapterOptions['host']) ? $adapterOptions['host'] : 'localhost';
-        $username   = $adapterOptions['username'];
-        $password   = $adapterOptions['password'];
-        $dbname     = $adapterOptions['dbname'];
+        $adapterOptions = array_merge(array('host' =>  'localhost', 'profiler'  => false), $adapterOptions);
+        
+        $this->_adapterOptions = $adapterOptions;
+        
+        $this->_connect();
 
-        $adapterOptions = array(
-            'host'      => $host,
-            'username'  => $username,
-            'password'  => $password,
-            'dbname'    => $dbname,
-            'profiler'  => false
-        );
+        // we want indexed results
+        //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
 
-        switch (strtolower($adapter)) {
+        // load title properties for model titles
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->properties->title)) {
+            $this->_titleProperties = $config->properties->title->toArray();
+        }
+    }
+    
+    protected function _connect(){
+        switch (strtolower($this->_adapterOptions['dbtype'])) {
             case 'mysql':
                 if (extension_loaded('mysqli')) {
                     require_once 'Zend/Db/Adapter/Mysqli.php';
-                    $this->_dbConn = new Zend_Db_Adapter_Mysqli($adapterOptions);
+                    $this->_dbConn = new Zend_Db_Adapter_Mysqli($this->_adapterOptions);
                 } else if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
                     require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
-                    $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($adapterOptions);
+                    $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($this->_adapterOptions);
                 } else {
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
@@ -80,7 +84,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             case 'sqlsrv':
                 if (extension_loaded('sqlsrv')) {
                     require_once 'Zend/Db/Adapter/Sqlsrv.php';
-                    $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($adapterOptions);
+                    $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($this->_adapterOptions);
                 } else {
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
@@ -98,7 +102,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             // maybe wrong login credentials or db-server not running?!
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception(
-                'Could not connect to database with name: "' . $dbname . 
+                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] . 
                 '". Please check your credentials and whether the database exists and the server is running.', -1
             );
 
@@ -110,12 +114,20 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         // we want indexed results
         //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
+    }
+    
+    /**
+     * save all but except the db connection
+     * @return array keys to save
+     */
+    function __sleep(){
+        $vars = get_object_vars($this);
+        unset($vars['_dbConn']);
+        return array_keys($vars);
+    }
 
-        // load title properties for model titles
-        $config = Erfurt_App::getInstance()->getConfig();
-        if (isset($config->properties->title)) {
-            $this->_titleProperties = $config->properties->title->toArray();
-        }
+    function __wakeUp(){
+        $this->_connect();
     }
 
     public function __destruct()
