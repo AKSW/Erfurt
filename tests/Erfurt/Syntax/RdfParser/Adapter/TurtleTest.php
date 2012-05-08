@@ -42,11 +42,86 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $data = fread($fileHandle, filesize($fileName));
         fclose($fileHandle);
         
+        $parserResult = null;
         try {
-            $result = $this->_object->parseFromDataString($data);
-            $this->assertTrue(is_array($result));
+            $parserResult = $this->_object->parseFromDataString($data);
         } catch (Erfurt_Syntax_RdfParserException $e) {
             $this->fail($e->getMessage());
+        }
+        
+        $this->assertTrue(is_array($parserResult));
+        
+        // Check for .result file
+        $resultFileName = str_replace('.ttl', '.result', $fileName);
+        if (is_readable($resultFileName)) {
+            $resultFileHandle = fopen($resultFileName, 'r');
+            $resultData = fread($resultFileHandle, filesize($resultFileName));
+            fclose($resultFileHandle);
+            
+            // Prepare parser result
+            $parserResultTriplesArray = array();
+            foreach ($parserResult as $s=>$pArray) {
+                foreach ($pArray as $p=>$oArray) {
+                    foreach ($oArray as $oSpec) {
+                        $tripleString = '';
+                        if (substr($s, 0, 2) === '_:') {
+                            $tripleString .= $s;
+                        } else {
+                            $tripleString .= '<' . $s . '>';
+                        }
+                        $tripleString .= ' <' . $p . '> ';
+                        
+                        if ($oSpec['type'] === 'uri') {
+                            $tripleString .= '<' . $oSpec['value']. '>';
+                        } else if ($oSpec['type'] === 'bnode') {
+                            $tripleString .= $oSpec['value'];
+                        } else {
+                            $tripleString .= '"""' . str_replace('"', '\"', $oSpec['value']) . '"""';
+                            if (isset($oSpec['lang'])) {
+                                $tripleString .= '@' . $oSpec['lang'];
+                            } else if (isset($oSpec['datatype'])) {
+                                $tripleString .= '^^<' . $oSpec['datatype'] . '>';
+                            }
+                        }
+                        
+                        $parserResultTriplesArray[] = $tripleString . ' . ';
+                    }
+                }
+            }
+            
+            $resultArray = explode(PHP_EOL, trim($resultData));
+            
+            // Triple counts need to be equal
+            $this->assertEquals(count($resultArray), count($parserResultTriplesArray));
+            
+            // Check for .base file for base URI
+            $baseFileName = str_replace('.ttl', '.base', $fileName);
+            $baseUri = 'file:' . $fileName;
+            if (is_readable($baseFileName)) {
+                $baseUri = trim(file_get_contents($baseFileName));
+            }
+            
+            // Parse parser result (ntriples) with rapper iff avaiable and compare
+            $parserResultTriplesString = implode(PHP_EOL, $parserResultTriplesArray);
+            $tmpFileName = tempnam('/tmp', 'erfurt-test');
+            $tmp = fopen($tmpFileName, 'w');
+            fwrite($tmp, $parserResultTriplesString);
+            fclose($tmp); 
+            
+            $cmd = "rapper -qi turtle -o turtle $tmpFileName | rapper -qi turtle -o ntriples -I $baseUri -";
+            $output = array();
+            $execResult = exec($cmd, $output);
+            unlink($tmpFileName);
+            
+            $resultArray = array_unique($resultArray);
+            sort($resultArray);
+            $exptecedTriplesString = implode(PHP_EOL, $resultArray);
+            
+            $output = array_unique($output);
+            sort($output);
+            $actualTriplesString = implode(PHP_EOL, $output);
+            
+            $this->assertEquals($exptecedTriplesString, $actualTriplesString);
         }
     }
     
@@ -165,6 +240,42 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $this->assertEquals(
             'nl',
             $result['http://example.org/1']['http://example.org/prop'][0]['lang']
+        );
+    }
+    
+    public function testParseWithTelUriIssue16()
+    {
+        $turtle = '<http://aksw.org/AlexDummy> <http://xmlns.com/foaf/0.1/phone> <tel:+49-341-97-32341> .';
+        
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'tel:+49-341-97-32341',
+            $result['http://aksw.org/AlexDummy']['http://xmlns.com/foaf/0.1/phone'][0]['value']
+        );
+    }
+    
+    public function testParseWithUrlEncodedUriIssue16()
+    {
+        $turtle = '<http://aksw.org/> <http://rdfs.org/ns/void#dataDump> <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml> .';
+        
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml',
+            $result['http://aksw.org/']['http://rdfs.org/ns/void#dataDump'][0]['value']
+        );
+    }
+    
+    public function testParseWithNoTrailingSlashIssue17()
+    {
+        $turtle = '@base <http://aksw.org> . <http://aksw.org/Projects/DL-Learner> <http://usefulinc.com/ns/doap#homepage> </tmp/dl-learner.org> .';
+        
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'http://aksw.org/tmp/dl-learner.org',
+            $result['http://aksw.org/Projects/DL-Learner']['http://usefulinc.com/ns/doap#homepage'][0]['value']
         );
     }
 }
