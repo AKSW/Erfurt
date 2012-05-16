@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -332,7 +332,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         );
 
         // perform delete
-        $deleteSparql = 'DELETE FROM GRAPH <http://localhost/OntoWiki/Config/> {<http://exmaple.org/nothExisting> ?p ?o.} WHERE {<http://exmaple.org/nothExisting> ?p ?o}';
+        $deleteSparql = 'DELETE FROM GRAPH <http://localhost/OntoWiki/Config/> '
+            . '{<http://exmaple.org/nothExisting> ?p ?o.} '
+            . 'WHERE {<http://exmaple.org/nothExisting> ?p ?o}';
         if ($rid = $this->_execSparqlUpdate($deleteSparql)) {
             if (odbc_num_fields($rid) > 0) {
                 // Virtuoso <= 6.1.4 returned 1 row with metadata for update queries!
