@@ -59,7 +59,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        
+        $this->addWrapperPath(EF_BASE  . '/Wrapper/');
     }
     
     // ------------------------------------------------------------------------
@@ -119,10 +119,12 @@ class Erfurt_Wrapper_Manager
         }
         if (is_readable($wrapperPrivateConfigPath)) {
             try {
-                if(!($privateConfig instanceof Zend_Config_Ini)){
+                if (!($privateConfig instanceof Zend_Config_Ini)) {
                     $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
                 } else {
-                    $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+                    $privateConfig = $privateConfig->merge(
+                        new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true)
+                    );
                 }
             } catch (Zend_Config_Exception $e) {
                 // no private config
@@ -131,7 +133,8 @@ class Erfurt_Wrapper_Manager
         $this->addWrapperExternally($wrapperName, $wrapperPath, $privateConfig);
     }
 
-    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
+    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig)
+    {
 //        if($privateConfig instanceof Zend_Config){
 //            $privateConfig = $privateConfig->toArray();
 //        }
