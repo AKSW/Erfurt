@@ -59,7 +59,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        $this->addWrapperPath(EF_BASE  . '/Wrapper/');
+        $this->_addDefaultWrappers();
     }
     
     // ------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class Erfurt_Wrapper_Manager
     public function addWrapperPath($pathSpec)
     {
         $path = rtrim($pathSpec, '/\\') . DIRECTORY_SEPARATOR;
-        
+
         if (is_readable($path) && !isset($this->_wrapperPaths[$path])) {
             $this->_wrapperPaths[$path] = true;
             $this->_scanWrapperPath($path);
@@ -166,10 +166,56 @@ class Erfurt_Wrapper_Manager
                 $innerPath = $pathSpec . $fileName . DIRECTORY_SEPARATOR;
                 
                 // Iff a config file exists add the wrapper
-                if (is_readable(($innerPath . self::CONFIG_FILENAME))) {
+                if (is_readable($innerPath . self::CONFIG_FILENAME)) {
                     $this->_addWrapper($fileName, $innerPath);
                 }
             }
         }
-    }   
+    }
+
+    /**
+     * Ths method iterates through the Wrapper directory in Erfurt to import all default Wrappers
+     */
+    protected function _addDefaultWrappers()
+    {
+        $defaultPath = EF_BASE . 'Wrapper' . DIRECTORY_SEPARATOR;
+
+        $iterator = new DirectoryIterator($defaultPath);
+
+        foreach ($iterator as $file) {
+            $fileName  = $file->getFileName();
+            if (!$file->isDot() && !$file->isDir() && $this->_isWrapperFile($fileName)) {
+
+                $wrapperName = $this->_getWrapperName($fileName);
+                $wrapperSpec = array(
+                        'class_name'   => 'Erfurt_Wrapper_' . $wrapperName . 'Wrapper',
+                        'include_path' => $defaultPath,
+                        'config'       => false,
+                        'instance'     => null
+                );
+
+                // Finally register the wrapper.
+                $registry = Erfurt_Wrapper_Registry::getInstance();
+                $registry->register($wrapperName, $wrapperSpec);
+            }
+        }
+    }
+
+    private function _isWrapperFile($fileName)
+    {
+        $length = strlen('Wrapper.php');
+        if ($length == 0) {
+            return true;
+        }
+
+        $start  = $length * -1; //negative
+        return (substr($fileName, $start) === 'Wrapper.php');
+    }
+
+    private function _getWrapperName($fileName)
+    {
+        $pos = strpos($fileName, 'Wrapper.php');
+
+        return substr($fileName, 0, $pos);
+    }
 }
