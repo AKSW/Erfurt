@@ -1,10 +1,15 @@
 <?php
-// vim: sw=4:sts=4:expandtab
 /**
- * @package   erfurt
- * @subpackage    exception
- * @copyright  AKSW team 2007
- * @author Stefan Berger <berger@intersolut.de>
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
+ * @package     Erfurt
+ * @copyright   Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @author      Stefan Berger <berger@intersolut.de>
  */
 class Erfurt_Exception extends Exception {
 

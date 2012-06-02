@@ -1,4 +1,10 @@
-<?php 
+<?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
 /*
  * database tables:
@@ -23,13 +29,11 @@
 /**
  * Erfurt versioning component
  *
- * @package erfurt
- * @subpackage    versioning
+ * @package    Erfurt
  * @author     Philipp Frischmuth <prischmuth@googlemail.com>
  * @author     Norman Heino <norman.heino@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 class Erfurt_Versioning
 {

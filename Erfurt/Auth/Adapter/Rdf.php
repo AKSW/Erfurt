@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
 require_once 'Zend/Auth/Adapter/Interface.php';
 require_once 'Zend/Auth/Result.php';
@@ -8,13 +14,11 @@ require_once 'Zend/Auth/Result.php';
  *
  * Authenticates a subject via an RDF store using a provided model.
  *
- * @package erfurt
- * @subpackage auth
+ * @package Erfurt_Auth_Adapter
  * @author  Stefan Berger <berger@intersolut.de>
  * @author  Norman Heino <norman.heino@gmail.com>
  * @author  Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @license
- * @version $Id: Rdf.php 4191 2009-09-25 10:32:03Z c.riess.dev $
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
 {

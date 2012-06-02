@@ -1,10 +1,9 @@
-<?php 
+<?php
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Auth.php 4023 2009-08-13 19:04:31Z pfrischmuth $
  */
 
 require_once 'Zend/Auth.php';
@@ -12,10 +11,9 @@ require_once 'Zend/Auth.php';
 /**
  * Extends the Zend_Auth class in order to provide some additional functionality.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package erfurt
- * @subpackage auth
+ * @package Erfurt
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Auth extends Zend_Auth

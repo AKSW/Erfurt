@@ -2,18 +2,16 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Default.php 4316 2009-10-16 19:56:50Z c.riess.dev $
  */
 
 /**
  * A class providing support for disabled access control.
  *
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package erfurt
- * @subpackage ac
+ * @package Erfurt_Ac
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Ac_None
