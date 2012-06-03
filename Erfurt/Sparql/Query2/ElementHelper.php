@@ -1,16 +1,20 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * OntoWiki Sparql Query ElementHelper
  * 
  * a abstract helper class for objects that are elements of groups. i.e.: Triples but also GroupGraphPatterns
  * 
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: ElementHelper.php 4246 2009-10-06 09:57:37Z jonas.brekle@gmail.com $
- * @abstract
  */
 abstract class Erfurt_Sparql_Query2_ElementHelper {
     protected $id;

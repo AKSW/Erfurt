@@ -1,15 +1,19 @@
 <?php
 /**
- * Erfurt SParql Query2 - Nil
- * 
- * @package    erfurt
- * @subpackage query2
- * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
- * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Nil.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+/**
+ * Erfurt SParql Query2 - Nil
+ * 
+ * @package    Erfurt_Sparql_Query2
+ * @author     Jonas Brekle <jonas.brekle@gmail.com>
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 class Erfurt_Sparql_Query2_Nil implements Erfurt_Sparql_Query2_GraphTerm
 {
     /**

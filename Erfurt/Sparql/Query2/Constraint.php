@@ -1,32 +1,34 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * Erfurt Sparql Query2 - Constraint (can be set as filter expression)
  * 
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Constraint.php 4203 2009-09-28 13:56:20Z jonas.brekle@gmail.com $
  */
 interface Erfurt_Sparql_Query2_Constraint{}
 
 /**
  * the root interface for all constraining expressions
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_Expression extends Erfurt_Sparql_Query2_Constraint {}
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_IF_ConditionalOrExpression extends Erfurt_Sparql_Query2_Expression {}
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_ContainerHelper implements Erfurt_Sparql_Query2_IF_ConditionalOrExpression
 {
@@ -103,8 +105,7 @@ class Erfurt_Sparql_Query2_AndOrHelper extends Erfurt_Sparql_Query2_ContainerHel
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_ConditionalOrExpression extends Erfurt_Sparql_Query2_AndOrHelper
 {    
@@ -116,16 +117,14 @@ class Erfurt_Sparql_Query2_ConditionalOrExpression extends Erfurt_Sparql_Query2_
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_IF_ConditionalAndExpression extends Erfurt_Sparql_Query2_IF_ConditionalOrExpression{
     
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_ConditionalAndExpression extends Erfurt_Sparql_Query2_AndOrHelper implements Erfurt_Sparql_Query2_IF_ConditionalAndExpression
 {    
@@ -141,8 +140,7 @@ class Erfurt_Sparql_Query2_ConditionalAndExpression extends Erfurt_Sparql_Query2
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_InExpression implements Erfurt_Sparql_Query2_Expression
 {
@@ -167,6 +165,7 @@ class Erfurt_Sparql_Query2_InExpression implements Erfurt_Sparql_Query2_Expressi
 
 /**
  * helper class for second-order relations
+ * @package    Erfurt_Sparql_Query2
  */
 abstract class Erfurt_Sparql_Query2_RelHelper extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_Expression
 {
@@ -215,15 +214,13 @@ abstract class Erfurt_Sparql_Query2_RelHelper extends Erfurt_Sparql_Query2_Eleme
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_RelationalExpression extends Erfurt_Sparql_Query2_IF_ConditionalAndExpression{ }
 
 /**
  * equals relation
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Equals extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
@@ -238,6 +235,10 @@ class Erfurt_Sparql_Query2_Equals extends Erfurt_Sparql_Query2_RelHelper impleme
         parent::__construct($e1, $e2);
     }
 }
+
+/**
+ * @package    Erfurt_Sparql_Query2
+ */
 class Erfurt_Sparql_Query2_NotEquals extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
     protected $conjuction = '!=';
@@ -252,10 +253,8 @@ class Erfurt_Sparql_Query2_NotEquals extends Erfurt_Sparql_Query2_RelHelper impl
     }
 }
 
-
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Larger extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
@@ -272,8 +271,7 @@ class Erfurt_Sparql_Query2_Larger extends Erfurt_Sparql_Query2_RelHelper impleme
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Smaller extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
@@ -290,8 +288,7 @@ class Erfurt_Sparql_Query2_Smaller extends Erfurt_Sparql_Query2_RelHelper implem
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_LargerEqual extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
@@ -307,10 +304,8 @@ class Erfurt_Sparql_Query2_LargerEqual extends Erfurt_Sparql_Query2_RelHelper im
     }
 }
 
-
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_SmallerEqual extends Erfurt_Sparql_Query2_RelHelper implements Erfurt_Sparql_Query2_RelationalExpression
 {
@@ -326,8 +321,14 @@ class Erfurt_Sparql_Query2_SmallerEqual extends Erfurt_Sparql_Query2_RelHelper i
     }
 }
 
+/**
+ * @package    Erfurt_Sparql_Query2
+ */
 interface Erfurt_Sparql_Query2_IF_AdditiveExpression extends Erfurt_Sparql_Query2_RelationalExpression {}
 
+/**
+ * @package    Erfurt_Sparql_Query2
+ */
 abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_ContainerHelper{
 
     const operator = null;
@@ -386,8 +387,7 @@ abstract class Erfurt_Sparql_Query2_AddMultHelper extends Erfurt_Sparql_Query2_C
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMultHelper implements Erfurt_Sparql_Query2_IF_AdditiveExpression
 {    
@@ -429,14 +429,12 @@ class Erfurt_Sparql_Query2_AdditiveExpression extends Erfurt_Sparql_Query2_AddMu
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_IF_MultiplicativeExpression extends Erfurt_Sparql_Query2_IF_AdditiveExpression{}
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2_AddMultHelper implements Erfurt_Sparql_Query2_IF_MultiplicativeExpression
 {    
@@ -493,14 +491,12 @@ class Erfurt_Sparql_Query2_MultiplicativeExpression extends Erfurt_Sparql_Query2
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_IF_UnaryExpression extends Erfurt_Sparql_Query2_IF_MultiplicativeExpression {}
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 abstract class Erfurt_Sparql_Query2_UnaryExpressionHelper extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_IF_UnaryExpression
 {
@@ -526,8 +522,7 @@ abstract class Erfurt_Sparql_Query2_UnaryExpressionHelper extends Erfurt_Sparql_
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_UnaryExpressionNot extends Erfurt_Sparql_Query2_UnaryExpressionHelper
 {
@@ -539,8 +534,7 @@ class Erfurt_Sparql_Query2_UnaryExpressionNot extends Erfurt_Sparql_Query2_Unary
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_UnaryExpressionPlus extends Erfurt_Sparql_Query2_UnaryExpressionHelper
 {
@@ -556,8 +550,7 @@ class Erfurt_Sparql_Query2_UnaryExpressionPlus extends Erfurt_Sparql_Query2_Unar
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_UnaryExpressionMinus extends Erfurt_Sparql_Query2_UnaryExpressionHelper
 {
@@ -573,21 +566,18 @@ class Erfurt_Sparql_Query2_UnaryExpressionMinus extends Erfurt_Sparql_Query2_Una
 }
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_PrimaryExpression extends Erfurt_Sparql_Query2_IF_UnaryExpression {}
 
 /**
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 interface Erfurt_Sparql_Query2_IriRefOrFunction extends Erfurt_Sparql_Query2_PrimaryExpression {}
 
 /**
  * represents a user-defined function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Function extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_IriRefOrFunction{
     protected $iri;
@@ -640,8 +630,7 @@ class Erfurt_Sparql_Query2_Function extends Erfurt_Sparql_Query2_ElementHelper i
 
 /**
  * wrapps an expression in brackets
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_BrackettedExpression extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_PrimaryExpression
 {
@@ -674,12 +663,15 @@ class Erfurt_Sparql_Query2_BrackettedExpression extends Erfurt_Sparql_Query2_Ele
         return '('.$this->expression->getSparql().')';
     }
 }
+
+/**
+ * @package    Erfurt_Sparql_Query2
+ */
 interface Erfurt_Sparql_Query2_BuiltInCall extends Erfurt_Sparql_Query2_PrimaryExpression {}
 
 /**
  * represents a built-in str function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Str extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -705,8 +697,7 @@ class Erfurt_Sparql_Query2_Str extends Erfurt_Sparql_Query2_ElementHelper implem
 
 /**
  * represents a built-in Lang function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Lang extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -732,8 +723,7 @@ class Erfurt_Sparql_Query2_Lang extends Erfurt_Sparql_Query2_ElementHelper imple
 
 /**
  * represents a built-in datatype function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Datatype extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -759,8 +749,7 @@ class Erfurt_Sparql_Query2_Datatype extends Erfurt_Sparql_Query2_ElementHelper i
 
 /**
  * represents a built-in isIri function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_isIri extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -786,8 +775,7 @@ class Erfurt_Sparql_Query2_isIri extends Erfurt_Sparql_Query2_ElementHelper impl
 
 /**
  * represents a built-in isUri function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_isUri extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -813,8 +801,7 @@ class Erfurt_Sparql_Query2_isUri extends Erfurt_Sparql_Query2_ElementHelper impl
 
 /**
  * represents a built-in isLiteral function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_isLiteral extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -840,8 +827,7 @@ class Erfurt_Sparql_Query2_isLiteral extends Erfurt_Sparql_Query2_ElementHelper 
 
 /**
  * represents a build-in isBlank function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_isBlank extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -867,8 +853,7 @@ class Erfurt_Sparql_Query2_isBlank extends Erfurt_Sparql_Query2_ElementHelper im
 
 /**
  * represents a built-in bound function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_bound extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -894,8 +879,7 @@ class Erfurt_Sparql_Query2_bound extends Erfurt_Sparql_Query2_ElementHelper impl
 
 /**
  * represents a built-in LangMatches function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_LangMatches extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -924,8 +908,7 @@ class Erfurt_Sparql_Query2_LangMatches extends Erfurt_Sparql_Query2_ElementHelpe
 
 /**
  * represents a built-in sameTerm function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_sameTerm extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {
@@ -954,8 +937,7 @@ class Erfurt_Sparql_Query2_sameTerm extends Erfurt_Sparql_Query2_ElementHelper i
 
 /**
  * represents a built-in "regex" function call
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql_Query2
  */
 class Erfurt_Sparql_Query2_Regex extends Erfurt_Sparql_Query2_ElementHelper implements Erfurt_Sparql_Query2_BuiltInCall
 {

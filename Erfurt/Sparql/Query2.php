@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 //some classes and interfaces are not in separate files
 //(-> no compliance with zend classfile naming for autoloading)
 //reason:  they are stubs and they are many
@@ -24,12 +31,10 @@ function typeHelper($obj)
  * 
  * represents a sparql query
  * 
- * @package    erfurt
- * @subpackage query2
+ * @package    Erfurt_Sparql
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 {

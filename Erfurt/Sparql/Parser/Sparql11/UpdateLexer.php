@@ -1,13 +1,22 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 /Users/roll/Documents/workspace/SparqlGrammar/src/Erfurt_Sparql_Parser_Sparql11_Update.g 2010-03-22 22:31:16
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 /Users/roll/Documents/workspace/SparqlGrammar/src/Erfurt_Sparql_Parser_Sparql11_Update.g 2010-03-22 22:31:16
 
 # for convenience in actions
 if (!defined('HIDDEN')) define('HIDDEN', BaseRecognizer::$HIDDEN);
 
- 
-      
-
+/**
+ * @category Erfurt
+ * @package Erfurt_Sparql_Parser_Sparql11
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 class Erfurt_Sparql_Parser_Sparql11_UpdateLexer extends AntlrLexer {
     static $PREFIX=22;
     static $EXPONENT=77;

@@ -2,10 +2,9 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-
 
 require_once 'Erfurt/Store/Adapter/Interface.php';
 require_once 'Erfurt/Store/Sql/Interface.php';
@@ -14,8 +13,7 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  * Erfurt RDF Store - Adapter for the {@link http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/ RAP} schema (modified) with
  * Zend_Db database abstraction layer.
  *
- * @package    erfurt
- * @subpackage store
+ * @package    Erfurt_Store_Adapter
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface

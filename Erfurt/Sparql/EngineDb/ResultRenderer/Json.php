@@ -1,14 +1,20 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Extended.php';
 
 /**
  * Result renderer that creates a JSON object string containing the result of a SPARQL query as defined in
  * @link http://www.w3.org/TR/rdf-sparql-json-res/.
  *
- * @subpackage sparql
+ * @package Erfurt_Sparql_EngineDb_ResultRenderer
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version	$Id: $
  */
 class Erfurt_Sparql_EngineDb_ResultRenderer_Json extends Erfurt_Sparql_EngineDb_ResultRenderer_Extended 
 {

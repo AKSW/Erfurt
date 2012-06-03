@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
 /**
  * Converts Virtuoso-specific SPARQL results XML format into an 
@@ -8,12 +14,11 @@
  * applying json_decode to a JSON-encoded SPARQL result set
  * ({@link http://www.w3.org/TR/rdf-sparql-json-res/}).
  *
- * @subpackage   store
  * @author    Christian Würker <christian.wuerker@ceus-media.de
  * @author    Norman Heino <norman.heino@gmail.com>
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id$
+ * @package   Erfurt_Store_Adapter_Virtuoso
  */
 class Erfurt_Store_Adapter_Virtuoso_XmlConverter
 {

@@ -1,15 +1,20 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * Erfurt Sparql Query - A
- * 
+ *
  * an object that does nothing else then behaving like a "Verb" (see sparql grammar) and printing an "a"
- * 
- * @package    erfurt
- * @subpackage query2
+ *
+ * @package    Erfurt_Sparql_Query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: A.php 4181 2009-09-22 15:46:24Z jonas.brekle@gmail.com $
  */
 class Erfurt_Sparql_Query2_A implements Erfurt_Sparql_Query2_Verb {
     /**

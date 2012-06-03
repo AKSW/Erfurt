@@ -1,14 +1,19 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
 
 /**
  * 
- * @package erfurt
- * @subpackage   syntax
+ * @package   Erfurt_Syntax_RdfParser_Adapter
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id: RdfJson.php 2929 2009-04-22 14:56:30Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser_Adapter_Interface
 {    

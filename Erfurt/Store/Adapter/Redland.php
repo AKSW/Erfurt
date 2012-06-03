@@ -1,15 +1,20 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Store/Adapter/Interface.php';
 
 /**
  * Erfurt RDF Store - Adapter for Redland.
  * 
- * @package erfurt
- * @subpackage    store
+ * @package    Erfurt_Store_Adapter
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright  Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @copyright  Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: Redland.php 2899 2009-04-20 13:32:26Z sebastian.dietzold $
  */
 class Erfurt_Store_Adapter_Redland implements Erfurt_Store_Adapter_Interface
 {
