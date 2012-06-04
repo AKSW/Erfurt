@@ -43,6 +43,33 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /*
+     * checks if there is at least one statement with the object $o
+     *
+     * @param array $o - an array with the keys 'type' and 'value'
+     * @param string $o['type'] - the type of the object ('uri', 'literal' or 'bnode')
+     * @param string $o['value'] - the value of the object depending on the type
+     */
+    public function hasO(array $o)
+    {
+        if ($o === null) {
+            throw new Exception('need an IRI string as first parameter');
+        }
+
+        foreach ($this->_statements as $subject => $predicates) {
+            foreach ($predicates as $predicate => $objects) {
+                foreach ($objects as $object) {
+                    if ($object['type'] == $o[type] && $object['value'] == $o['value']) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // sorry for the worst case costs
+        return $false;
+    }
+
+    /*
      * checks if there is at least one statement for resource $s with
      * predicate $p
      *
@@ -186,6 +213,41 @@ class Erfurt_Rdf_MemoryModel
                 return array();
             }
         }
+    }
+
+    /*
+     * checks if there is at least one statement with the object $o
+     *
+     * @param array $o - an array with the keys 'type' and 'value'
+     * @param string $o['type'] - the type of the object ('uri', 'literal' or 'bnode')
+     * @param string $o['value'] - the value of the object depending on the type
+     */
+    public function getSP(array $o)
+    {
+        if ($o === null) {
+            throw new Exception('need an IRI string as first parameter');
+        }
+
+        $results = array();
+
+        foreach ($this->_statements as $subject => $predicates) {
+            foreach ($predicates as $predicate => $objects) {
+                foreach ($objects as $object) {
+                    if ($object['type'] == $o['type'] && $object['value'] == $o['value']) {
+                        if (!isset($results[$subject])) {
+                            $results[$subject] = array();
+                        }
+                        if (!isset($results[$subject][$predicate])) {
+                            $results[$subject][$predicate] = array();
+                        }
+                        $results[$subject][$predicate][] = $o;
+                    }
+                }
+            }
+        }
+
+        // sorry for the worst case costs
+        return $results;
     }
 
     /*
