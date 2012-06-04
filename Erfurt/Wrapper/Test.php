@@ -1,9 +1,7 @@
 <?php
 /**
- * This file is part of the {@link http://ontowiki.net OntoWiki} project.
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @category  OntoWiki
- * @package   OntoWiki_extensions_wrapper
  * @copyright Copyright (c) 2010, {@link http://aksw.org AKSW}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
@@ -13,9 +11,8 @@ require_once 'Erfurt/Wrapper.php';
 /**
  * This wrapper extension provides functionality for gathering linked data.
  *
- * @category  OntoWiki
- * @package   OntoWiki_extensions_wrapper
- * @copyright Copyright (c) 2009 {@link http://aksw.org aksw}
+ * @package   Erfurt_Wrapper
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  */

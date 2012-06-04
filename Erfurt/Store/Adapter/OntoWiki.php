@@ -2,9 +2,8 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: OntoWiki.php 4060 2009-08-14 06:48:05Z pfrischmuth $
  */
 
 require_once 'Erfurt/Store/Adapter/Sparql.php';
@@ -12,10 +11,9 @@ require_once 'Erfurt/Store/Adapter/Sparql.php';
 /**
  * This class acts as a backend for OntoWiki endpoints.
  *
- * @copyright  Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package    erfurt
- * @subpackage store
+ * @package    Erfurt_Store_Adapter
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql

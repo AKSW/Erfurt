@@ -12,7 +12,7 @@
  * Connects to a Virtuoso via ODBC, therefore requires PHP to be compiled with the ODBC extension.
  *
  * @category Erfurt
- * @package  Store_Adapter
+ * @package  Erfurt_Store_Adapter
  * @author   Norman Heino <norman.heino@gmail.com>
  * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
  */

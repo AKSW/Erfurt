@@ -14,8 +14,8 @@
  * application may use. It's also the place where an Erfurt application gets started
  * and initialized.
  *
- * @package erfurt
- * @subpackage app
+ * @category Erfurt
+ * @package Erfurt
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_App

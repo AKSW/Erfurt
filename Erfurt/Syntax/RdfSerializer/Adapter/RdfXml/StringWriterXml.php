@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 /*
  * StringWriterXMLImpl.php
  * Encoding: UTF-8
@@ -25,12 +32,10 @@
 /**
  * This implementation of a string writer, writes the content as pretty formatted XML in a string.
  *
- * @package erfurt
- * @subpackage   syntax
+ * @package Erfurt_Syntax_RdfSerializer_Adapter_RdfXml
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2007
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version $Id$
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml 
 {

@@ -1,10 +1,22 @@
 <?php
-// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 /Users/roll/Documents/workspace/SparqlGrammar/src/Erfurt_Sparql_Parser_Sparql11_Query.g 2010-03-22 22:31:42
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
+// $ANTLR 3.1.3 “ˆŽ 06, 2009 18:28:01 /Users/roll/Documents/workspace/SparqlGrammar/src/Erfurt_Sparql_Parser_Sparql11_Query.g 2010-03-22 22:31:42
 
 # for convenience in actions
 if (!defined('HIDDEN')) define('HIDDEN', BaseRecognizer::$HIDDEN);
 
+/**
+ * @category Erfurt
+ * @package Erfurt_Sparql_Parser_Sparql11
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 class Erfurt_Sparql_Parser_Sparql11_QueryParser extends AntlrParser {
     public static $tokenNames = array(
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "DATA", "MODIFY", "DELETE", "INSERT", "INTO", "LOAD", "CLEAR", "CREATE", "SILENT", "DROP", "EXISTS", "UNSAID", "HAVING", "COUNT", "COALESCE", "DEFINE", "IF", "BASE", "PREFIX", "NOT", "SELECT", "DISTINCT", "REDUCED", "CONSTRUCT", "DESCRIBE", "ASK", "FROM", "NAMED", "WHERE", "ORDER", "GROUP", "BY", "ASC", "DESC", "LIMIT", "OFFSET", "OPTIONAL", "GRAPH", "UNION", "FILTER", "A", "AS", "STR", "LANG", "LANGMATCHES", "DATATYPE", "BOUND", "SAMETERM", "ISIRI", "ISURI", "ISBLANK", "ISLITERAL", "REGEX", "TRUE", "FALSE", "LESS", "GREATER", "OPEN_CURLY_BRACE", "CLOSE_CURLY_BRACE", "IRI_REF", "PN_PREFIX", "PNAME_NS", "PN_LOCAL", "PNAME_LN", "VARNAME", "VAR1", "VAR2", "MINUS", "LANGTAG", "INTEGER", "DOT", "DECIMAL", "DIGIT", "EXPONENT", "DOUBLE", "PLUS", "INTEGER_POSITIVE", "DECIMAL_POSITIVE", "DOUBLE_POSITIVE", "INTEGER_NEGATIVE", "DECIMAL_NEGATIVE", "DOUBLE_NEGATIVE", "ECHAR", "STRING_LITERAL1", "STRING_LITERAL2", "STRING_LITERAL_LONG1", "STRING_LITERAL_LONG2", "EOL", "WS", "PN_CHARS_BASE", "PN_CHARS_U", "PN_CHARS", "BLANK_NODE_LABEL", "REFERENCE", "AND", "OR", "COMMENT", "SEMICOLON", "ASTERISK", "COMMA", "NOT_SIGN", "DIVIDE", "EQUAL", "OPEN_BRACE", "CLOSE_BRACE", "LESS_EQUAL", "GREATER_EQUAL", "NOT_EQUAL", "OPEN_SQUARE_BRACE", "CLOSE_SQUARE_BRACE", "HAT_LABEL", "QUESTION_MARK_LABEL"

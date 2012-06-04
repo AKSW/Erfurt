@@ -1,15 +1,20 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * This class models a SPARQL query that can be used within an application in order to make
  * it easier e.g. to set different parts of a query independently.
  *
- * @package erfurt
- * @subpackage    sparql
+ * @package    Erfurt_Sparql
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id: SimpleQuery.php 4019 2009-08-13 15:28:50Z pfrischmuth $
  */
 class Erfurt_Sparql_SimpleQuery 
 {    

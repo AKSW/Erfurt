@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -12,8 +12,8 @@ require_once 'Erfurt/Rdf/Node.php';
  * Represents a basic RDF resource.
  *
  * @category   Erfurt
- * @package    Rdf
- * @author     Philipp Frischmuth
+ * @package    Erfurt_Rdf
+ * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author     Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node

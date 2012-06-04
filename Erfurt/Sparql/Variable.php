@@ -1,15 +1,19 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * Object representation of a SPARQL variable.
  *
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
  * It was modified and extended in order to fit into Erfurt.
  *
- * @package erfurt
- * @subpackage sparql
+ * @package Erfurt_Sparql
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id: Variable.php 2899 2009-04-20 13:32:26Z sebastian.dietzold $
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
  */
 class Erfurt_Sparql_Variable

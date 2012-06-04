@@ -1,13 +1,18 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
 /**
  * Erfurt plugin manager.
  *
- * @package Erfurt
- * @subpackage plugin
+ * @package Erfurt_Plugin
  * @author Michael Haschke
  * @author Norman Heino <norman.heino@gmail.com>
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Plugin_Manager

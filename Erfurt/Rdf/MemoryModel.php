@@ -9,6 +9,8 @@
 /**
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
+ * @category Erfurt
+ * @package Erfurt_Rdf
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
  * @author Jonas Brekle <jonas.brekle@gmail.com>
  */

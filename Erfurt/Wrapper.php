@@ -2,9 +2,8 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Wrapper.php 4013 2009-08-13 14:37:18Z pfrischmuth $
  */
 
 /**
@@ -16,8 +15,7 @@
  * 
  * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package    erfurt
- * @subpackage wrapper
+ * @package    Erfurt
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 abstract class Erfurt_Wrapper

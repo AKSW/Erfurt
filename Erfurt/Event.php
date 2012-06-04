@@ -11,8 +11,7 @@ require_once 'Erfurt/Event/Dispatcher.php';
 /**
  * Erfurt event class
  *
- * @package    erfurt
- * @subpackage event
+ * @package    Erfurt
  * @author     Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Event

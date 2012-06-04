@@ -2,9 +2,8 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Dispatcher.php 4015 2009-08-13 14:52:51Z pfrischmuth $
  */
 
 require_once 'Erfurt/Event.php';
@@ -12,11 +11,9 @@ require_once 'Erfurt/Event.php';
 /**
  * Erfurt event dispatcher.
  *
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package    erfurt
- * @subpackage event
- * @version    $$
+ * @package    Erfurt_Event
  * @author     Michael Haschke
  * @author     Norman Heino <norman.heino@gmail.com>
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>

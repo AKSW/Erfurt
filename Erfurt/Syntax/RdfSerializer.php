@@ -1,11 +1,16 @@
 <?php
 /**
- * @package erfurt
- * @subpackage   syntax
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
+ * @package   Erfurt_Syntax
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id: RdfSerializer.php 4016 2009-08-13 15:21:13Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfSerializer
 {   
