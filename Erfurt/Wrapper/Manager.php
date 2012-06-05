@@ -2,19 +2,17 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Manager.php 4013 2009-08-13 14:37:18Z pfrischmuth $
  */
 
 /**
  * This class provides functionality in order to scan directories for wrapper
  * extensions.
  * 
- * @copyright  Copyright (c) 2009 {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012 {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package    erfurt
- * @subpackage wrapper
+ * @package    Erfurt_Wrapper
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
 class Erfurt_Wrapper_Manager
@@ -59,7 +57,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        
+        $this->_addDefaultWrappers();
     }
     
     // ------------------------------------------------------------------------
@@ -74,7 +72,7 @@ class Erfurt_Wrapper_Manager
     public function addWrapperPath($pathSpec)
     {
         $path = rtrim($pathSpec, '/\\') . DIRECTORY_SEPARATOR;
-        
+
         if (is_readable($path) && !isset($this->_wrapperPaths[$path])) {
             $this->_wrapperPaths[$path] = true;
             $this->_scanWrapperPath($path);
@@ -119,10 +117,12 @@ class Erfurt_Wrapper_Manager
         }
         if (is_readable($wrapperPrivateConfigPath)) {
             try {
-                if(!($privateConfig instanceof Zend_Config_Ini)){
+                if (!($privateConfig instanceof Zend_Config_Ini)) {
                     $privateConfig = new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true);
                 } else {
-                    $privateConfig = $privateConfig->merge(new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true));
+                    $privateConfig = $privateConfig->merge(
+                        new Zend_Config_Ini($wrapperPrivateConfigPath, 'private', true)
+                    );
                 }
             } catch (Zend_Config_Exception $e) {
                 // no private config
@@ -131,7 +131,8 @@ class Erfurt_Wrapper_Manager
         $this->addWrapperExternally($wrapperName, $wrapperPath, $privateConfig);
     }
 
-    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig){
+    public function addWrapperExternally($wrapperName, $wrapperPath, $privateConfig)
+    {
 //        if($privateConfig instanceof Zend_Config){
 //            $privateConfig = $privateConfig->toArray();
 //        }
@@ -163,10 +164,56 @@ class Erfurt_Wrapper_Manager
                 $innerPath = $pathSpec . $fileName . DIRECTORY_SEPARATOR;
                 
                 // Iff a config file exists add the wrapper
-                if (is_readable(($innerPath . self::CONFIG_FILENAME))) {
+                if (is_readable($innerPath . self::CONFIG_FILENAME)) {
                     $this->_addWrapper($fileName, $innerPath);
                 }
             }
         }
-    }   
+    }
+
+    /**
+     * Ths method iterates through the Wrapper directory in Erfurt to import all default Wrappers
+     */
+    protected function _addDefaultWrappers()
+    {
+        $defaultPath = EF_BASE . 'Wrapper' . DIRECTORY_SEPARATOR;
+
+        $iterator = new DirectoryIterator($defaultPath);
+
+        foreach ($iterator as $file) {
+            $fileName  = $file->getFileName();
+            if (!$file->isDot() && !$file->isDir() && $this->_isWrapperFile($fileName)) {
+
+                $wrapperName = $this->_getWrapperName($fileName);
+                $wrapperSpec = array(
+                        'class_name'   => 'Erfurt_Wrapper_' . $wrapperName . 'Wrapper',
+                        'include_path' => $defaultPath,
+                        'config'       => false,
+                        'instance'     => null
+                );
+
+                // Finally register the wrapper.
+                $registry = Erfurt_Wrapper_Registry::getInstance();
+                $registry->register($wrapperName, $wrapperSpec);
+            }
+        }
+    }
+
+    private function _isWrapperFile($fileName)
+    {
+        $length = strlen('Wrapper.php');
+        if ($length == 0) {
+            return true;
+        }
+
+        $start  = $length * -1; //negative
+        return (substr($fileName, $start) === 'Wrapper.php');
+    }
+
+    private function _getWrapperName($fileName)
+    {
+        $pos = strpos($fileName, 'Wrapper.php');
+
+        return substr($fileName, 0, $pos);
+    }
 }

@@ -10,6 +10,7 @@
  * Erfurt plug-in base class.
  * Sets up the environment for an erfurt plug-in.
  *
+ * @package Erfurt
  * @author Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Plugin

@@ -1,5 +1,12 @@
 <?php
-/* 
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,6 +14,7 @@
 /**
  * Description of PropertyList
  *
+ * @package    Erfurt_Sparql_Query2
  * @author jonas
  */
 class Erfurt_Sparql_Query2_PropertyList {

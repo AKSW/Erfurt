@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Zend/Auth/Adapter/Interface.php';
 
 /**
@@ -7,12 +14,10 @@ require_once 'Zend/Auth/Adapter/Interface.php';
  * class also checks, whether a given user exists in the store and is allowed
  * to login.
  * 
- * @package  erfurt
- * @subpackage   auth
+ * @package   Erfurt_Auth_Adapter
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2009 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id: OpenId.php 3378 2009-06-24 14:09:30Z pfrischmuth $
  */
 class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
 {

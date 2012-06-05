@@ -1,13 +1,18 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * An implemenation of a RDF string writer.
  *
- * @package erfurt
- * @subpackage   syntax
+ * @package Erfurt_Syntax_RdfSerializer_Adapter_RdfXml
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2007
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version $Id: RdfWriter.php 4016 2009-08-13 15:21:13Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter 
 {

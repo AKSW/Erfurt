@@ -1,17 +1,22 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * Represents a constraint. A value constraint is a boolean- valued expression
  * of variables and RDF Terms.
  *
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
  * It was modified and extended in order to fit into Erfurt.
  *
- * @package erfurt
- * @subpackage sparql
+ * @package Erfurt_Sparql
  * @author Tobias Gauss <tobias.gauss@web.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
- * @version	$Id: Constraint.php 3021 2009-05-04 13:45:43Z pfrischmuth $
  */
 class Erfurt_Sparql_Constraint 
 {

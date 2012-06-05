@@ -2,9 +2,8 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version $Id: Sparql.php 4059 2009-08-14 06:40:23Z pfrischmuth $
  */
 
 require_once 'Erfurt/Store/Adapter/Interface.php';
@@ -13,11 +12,10 @@ require_once 'Erfurt/Store.php';
 /**
  * This class acts as a backend for SPARQL endpoints.
  *
- * @copyright  Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package    erfurt
- * @subpackage store
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @package    Erfurt_Store_Adapter
  */
 class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 {    

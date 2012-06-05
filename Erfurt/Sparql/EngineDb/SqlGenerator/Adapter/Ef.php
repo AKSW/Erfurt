@@ -1,14 +1,20 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Sparql/EngineDb/SqlGenerator.php';
 
 /**
-*   Creates sql statements from a Query object
-*
-*   @author Christian Weiske <cweiske@cweiske.de>
-*   @license http://www.gnu.org/licenses/lgpl.html LGPL
-*
-*   @subpackage sparql
-*/
+ * Creates sql statements from a Query object
+ *
+ * @author Christian Weiske <cweiske@cweiske.de>
+ * @license http://www.gnu.org/licenses/lgpl.html LGPL
+ * @package Erfurt_Sparql_EngineDb_SqlGenerator_Adapter
+ */
 class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_EngineDb_SqlGenerator
 {
     public $arTableColumnNames = array(

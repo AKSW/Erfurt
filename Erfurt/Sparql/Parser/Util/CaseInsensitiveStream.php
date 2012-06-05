@@ -1,9 +1,18 @@
 <?php
 /**
-* Extends the ANTLRStringStream to use case insensitive grammar for tokens.
-* in the grammar the strings are compared in lowercase
-*/
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
 
+/**
+ * Extends the ANTLRStringStream to use case insensitive grammar for tokens.
+ * in the grammar the strings are compared in lowercase
+ *
+ * @category Erfurt
+ * @package Erfurt_Sparql_Parser_Util
+ */
 class Erfurt_Sparql_Parser_Util_CaseInsensitiveStream extends ANTLRStringStream
 {	
 	public function LA($i)

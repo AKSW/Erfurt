@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once dirname(__FILE__)."/../Query2.php";
 require_once "Abstraction/ClassNode.php";
 require_once "Abstraction/RDFSClass.php";
@@ -11,13 +18,11 @@ require_once "Abstraction/Utils.php";
  * 
  * an Abstraction for Sparql-Queries
  * 
- * @see            {@link http://code.google.com/p/Erfurt_Sparql/wiki/QueryObject Idea}
- * @package    erfurt
- * @subpackage query2
+ * @see        {@link http://code.google.com/p/Erfurt_Sparql/wiki/QueryObject Idea}
+ * @package    Erfurt_Sparql_Query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright  Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version    $Id$
  */
 class Erfurt_Sparql_Query2_Abstraction
 {

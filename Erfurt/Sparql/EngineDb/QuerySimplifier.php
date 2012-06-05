@@ -1,27 +1,35 @@
 <?php
 /**
-*   Simplifies ("flattens") Query objects that have graph
-*   patterns which are subpatterns of other patterns.
-*
-*   Example:
-*      ?g ?h ?i .
-*      {
-*        {?person <some://typ/e> 'asd'}
-*        UNION
-*        {?person3 <some://typ/es2> 'three'}
-*      }
-*    is represented internally as three graph patterns, the latter
-*    two referencing the first to be their pattern (they are subpatternOf).
-*    Now this can be flattened to this which is the same:
-*      {?g ?h ?i . ?person <some://typ/e> 'asd'}
-*      UNION
-*      {?g ?h ?i .?person3 <some://typ/es2> 'three'}
-*
-*   This class does this.
-*
-*   @author Christian Weiske <cweiske@cweiske.de>
-*   @license http://www.gnu.org/licenses/lgpl.html LGPL
-*/
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
+ * Simplifies ("flattens") Query objects that have graph
+ * patterns which are subpatterns of other patterns.
+ *
+ *   Example:
+ *      ?g ?h ?i .
+ *      {
+ *        {?person <some://typ/e> 'asd'}
+ *        UNION
+ *        {?person3 <some://typ/es2> 'three'}
+ *      }
+ *    is represented internally as three graph patterns, the latter
+ *    two referencing the first to be their pattern (they are subpatternOf).
+ *    Now this can be flattened to this which is the same:
+ *      {?g ?h ?i . ?person <some://typ/e> 'asd'}
+ *      UNION
+ *      {?g ?h ?i .?person3 <some://typ/es2> 'three'}
+ *
+ * This class does this.
+ *
+ * @author Christian Weiske <cweiske@cweiske.de>
+ * @license http://www.gnu.org/licenses/lgpl.html LGPL
+ * @package Erfurt_Sparql_EngineDb
+ */
 class Erfurt_Sparql_EngineDb_QuerySimplifier 
 {
     /**

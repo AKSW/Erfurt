@@ -1,6 +1,17 @@
 <?php
 /**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/**
  * Erfurt_Sparql_Query2_ContainerHelper
+ *
+ * @package    Erfurt_Sparql_Query2
+ * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2_ElementHelper
 {

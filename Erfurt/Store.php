@@ -2,13 +2,13 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
  * @category Erfurt
- * @package  Erfurt_Store
+ * @package  Erfurt
  * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author   Norman Heino <norman.heino@gmail.com>
  */

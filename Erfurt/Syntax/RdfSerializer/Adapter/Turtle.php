@@ -1,14 +1,19 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 require_once 'Erfurt/Syntax/Utils/Turtle.php';
 
 /**
- * @package erfurt
- * @subpackage   syntax
+ * @package   Erfurt_Syntax_RdfSerializer_Adapter
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @copyright Copyright (c) 2008 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @version   $Id: Turtle.php 4016 2009-08-13 15:21:13Z pfrischmuth $
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {   

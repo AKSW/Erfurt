@@ -1,6 +1,18 @@
 <?php
+/**
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
+/**
+ * @copyright  Copyright (c) 2012 {@link http://aksw.org aksw}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @package    Erfurt_Syntax_RdfSerializer_Adapter
+ */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSerializer_Adapter_Interface
 {
     protected $_currentSubject = null;

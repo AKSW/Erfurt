@@ -1,9 +1,8 @@
 <?php
-
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2009, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -13,6 +12,9 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
 /** Erfurt_Store_Sql_Interface */
 require_once 'Erfurt/Store/Sql/Interface.php';
 
+/**
+ * @package Erfurt_Store_Adapter
+ */
 class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
     function  __construct($method, $ref, $actual) {
         parent::__construct('comparer detected a difference at method "'.$method.'": return should be '.self::mydumpStr($ref).' but is '.self::mydumpStr($actual));
@@ -81,9 +83,9 @@ class Erfurt_Store_Adapter_Comparer_Exception extends Erfurt_Store_Exception{
  * compares the result of two adapters and throws errors if they are different
  *
  * @category Erfurt
- * @package Store_Adapter
+ * @package Erfurt_Store_Adapter
  * @author Jonas Brekle <jonas.brekle@gmail.com>
- * @copyright Copyright (c) 2008, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Store_Adapter_Comparer

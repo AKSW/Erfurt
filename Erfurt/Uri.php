@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2011, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -10,7 +10,7 @@
  * Simple static class for performing regular expression-based URI checking and normalizing.
  *
  * @category Erfurt
- * @package Uri
+ * @package Erfurt
  * @author Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Uri
