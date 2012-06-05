@@ -414,10 +414,10 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 if (null !== $this->_url) {
                     $temp = $this->_url;
                 } else {
-                    $temp = $uri;
+                    $temp = $docUrl;
                 }
 
-                if (strrpos($uri, '#') !== false) {
+                if (strrpos($temp, '#') !== false) {
                     $baseUri = substr($temp, 0, strrpos($temp, '#'));
                 } else {
                     $baseUri = $temp;
