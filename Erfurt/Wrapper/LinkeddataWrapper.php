@@ -16,6 +16,7 @@ require_once 'Erfurt/Wrapper.php';
  * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author    Natanael Arndt <arndtn@gmail.com>
  */
 class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
 {
@@ -353,6 +354,11 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                     break;
                 case 'text/html':
                     return $this->_handleResponseBodyHtml($response, $baseUri);
+                case '':
+                    $type = $this->_checkExtension($baseUri);
+                    if ($type != false) {
+                        break;
+                    }
                 default:
                     require_once 'Erfurt/Wrapper/Exception.php';
                     throw new Erfurt_Wrapper_Exception('Server returned not supported content type: ' . $contentType);
@@ -453,6 +459,28 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
             'data' => $fullResult,
             'ns'   => $fullNs
         );
+    }
+
+    private function _checkExtension($uri)
+    {
+        $hashPos = strrpos($uri, '#');
+        if ($hashPos == false) {
+            $hashPos = strlen($uri);
+        }
+        $url = substr($uri, 0, $hashPos);
+        $extension = strrchr($url, '.');
+        switch ($extension) {
+            case '.rdf':
+                return 'rdfxml';
+            case '.ttl':
+            case '.nt':
+            case '.n3':
+                return 'rdfn3';
+            case '.json':
+                return 'rdfjson';
+            default:
+                return false;
+        }
     }
     
     private function _matchUri($pattern, $uri)
