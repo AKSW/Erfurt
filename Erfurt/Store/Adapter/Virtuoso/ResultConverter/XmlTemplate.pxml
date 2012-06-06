@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?= '<?xml version="1.0"?>' ?>
 <sparql xmlns="http://www.w3.org/2005/sparql-results#">
   
   <head>
@@ -16,8 +16,7 @@
         <?php if ($varSpec['type'] == 'uri'): ?>
           <uri><?php echo $varSpec['value'] ?></uri>
         <?php elseif ($varSpec['type'] == 'literal' || $varSpec['type'] == 'typed-literal'):   ?>
-          <literal
-          <?php if (isset($varSpec['datatype'])): ?>
+          <literal <?php if (isset($varSpec['datatype'])): ?>
             datatype="<?php echo $varSpec['datatype'] ?>"
           <?php elseif (isset($varSpec['xml:lang'])): ?>
             xml:lang="<?php echo $varSpec['xml:lang'] ?>"
