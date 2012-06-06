@@ -13,6 +13,11 @@ class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
         $this->_manager = new Erfurt_Wrapper_Manager();
     } 
     
+    protected function tearDown()
+    {
+        Erfurt_Wrapper_Registry::reset();
+    }
+    
     public function testAddWrapperPathWithNotExistingPath()
     {
         // Should not fail...
