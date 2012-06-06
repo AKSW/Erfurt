@@ -181,13 +181,13 @@ class Erfurt_Rdf_MemoryModel
             foreach ($this->_statements[$s] as $predicate => $objects) {
                 foreach ($objects as $object) {
                     if ($object['type'] == $o['type'] && $object['value'] == $o['value']) {
-                        if (!isset($results[$subject])) {
-                            $results[$subject] = array();
+                        if (!isset($results[$s])) {
+                            $results[$s] = array();
                         }
-                        if (!isset($results[$subject][$predicate])) {
-                            $results[$subject][$predicate] = array();
+                        if (!isset($results[$s][$predicate])) {
+                            $results[$s][$predicate] = array();
                         }
-                        $results[$subject][$predicate][] = $o;
+                        $results[$s][$predicate][] = $o;
                     }
                 }
             }
