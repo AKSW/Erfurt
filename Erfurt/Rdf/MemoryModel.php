@@ -13,6 +13,7 @@
  * @package Erfurt_Rdf
  * @author {@link http://sebastian.tramp.name Sebastian Tramp}
  * @author Jonas Brekle <jonas.brekle@gmail.com>
+ * @author Natanael Arndt <arndtn@gmail.com>
  */
 class Erfurt_Rdf_MemoryModel
 {
@@ -164,6 +165,35 @@ class Erfurt_Rdf_MemoryModel
         } else {
             return $this->_statements[$s];
         }
+    }
+
+    /*
+     * returns all subject/predicate/object tupel of a given subject IRI
+     *
+     * @param string $s - the subject IRI
+     * @param array $o - the object array
+     * @return array
+     */
+    public function getP($s, array $o)
+    {
+        $result = array();
+        if ($this->hasS($s)) {
+            foreach ($this->_statements[$s] as $predicate => $objects) {
+                foreach ($objects as $object) {
+                    if ($object['type'] == $o['type'] && $object['value'] == $o['value']) {
+                        if (!isset($results[$subject])) {
+                            $results[$subject] = array();
+                        }
+                        if (!isset($results[$subject][$predicate])) {
+                            $results[$subject][$predicate] = array();
+                        }
+                        $results[$subject][$predicate][] = $o;
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     /*
