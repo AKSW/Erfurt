@@ -194,7 +194,11 @@ class Erfurt_Wrapper_Manager
 
                 // Finally register the wrapper.
                 $registry = Erfurt_Wrapper_Registry::getInstance();
-                $registry->register($wrapperName, $wrapperSpec);
+
+                $activeWrappers = $registry->listActiveWrapper();
+                if (!isset($activeWrappers[$wrapperName])) {
+                    $registry->register($wrapperName, $wrapperSpec);
+                }
             }
         }
     }
