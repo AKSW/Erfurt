@@ -176,7 +176,7 @@ class Erfurt_Rdf_MemoryModel
      */
     public function getP($s, array $o)
     {
-        $result = array();
+        $results = array();
         if ($this->hasS($s)) {
             foreach ($this->_statements[$s] as $predicate => $objects) {
                 foreach ($objects as $object) {
@@ -193,7 +193,7 @@ class Erfurt_Rdf_MemoryModel
             }
         }
 
-        return $result;
+        return $results;
     }
 
     /*
