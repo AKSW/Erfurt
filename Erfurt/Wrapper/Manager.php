@@ -57,7 +57,7 @@ class Erfurt_Wrapper_Manager
      */
     public function __construct()
     {
-        $this->_addDefaultWrappers();
+        // Nothing to do here.
     }
     
     // ------------------------------------------------------------------------
@@ -169,55 +169,5 @@ class Erfurt_Wrapper_Manager
                 }
             }
         }
-    }
-
-    /**
-     * Ths method iterates through the Wrapper directory in Erfurt to import all default Wrappers
-     */
-    protected function _addDefaultWrappers()
-    {
-        $defaultPath = EF_BASE . 'Wrapper' . DIRECTORY_SEPARATOR;
-
-        $iterator = new DirectoryIterator($defaultPath);
-
-        foreach ($iterator as $file) {
-            $fileName  = $file->getFileName();
-            if (!$file->isDot() && !$file->isDir() && $this->_isWrapperFile($fileName)) {
-
-                $wrapperName = $this->_getWrapperName($fileName);
-                $wrapperSpec = array(
-                        'class_name'   => 'Erfurt_Wrapper_' . $wrapperName . 'Wrapper',
-                        'include_path' => $defaultPath,
-                        'config'       => false,
-                        'instance'     => null
-                );
-
-                // Finally register the wrapper.
-                $registry = Erfurt_Wrapper_Registry::getInstance();
-
-                $activeWrappers = $registry->listActiveWrapper();
-                if (!isset($activeWrappers[$wrapperName])) {
-                    $registry->register($wrapperName, $wrapperSpec);
-                }
-            }
-        }
-    }
-
-    private function _isWrapperFile($fileName)
-    {
-        $length = strlen('Wrapper.php');
-        if ($length == 0) {
-            return true;
-        }
-
-        $start  = $length * -1; //negative
-        return (substr($fileName, $start) === 'Wrapper.php');
-    }
-
-    private function _getWrapperName($fileName)
-    {
-        $pos = strpos($fileName, 'Wrapper.php');
-
-        return substr($fileName, 0, $pos);
     }
 }
