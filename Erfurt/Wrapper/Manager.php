@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
  * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
@@ -20,7 +20,7 @@ class Erfurt_Wrapper_Manager
     // ------------------------------------------------------------------------
     // --- Public constants ---------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Name of the wrapper config file.
      * 
@@ -28,11 +28,11 @@ class Erfurt_Wrapper_Manager
      */
     const CONFIG_FILENAME = 'wrapper.ini';
     const CONFIG_LOCAL_FILENAME = 'local.ini';
-    
+
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * This property defines the section of the configuration file, which is
      * used for wrapper-internal options.
@@ -40,18 +40,18 @@ class Erfurt_Wrapper_Manager
      * @var string
      */
     protected $_configPrivateSection = 'private';
-    
+
     /**
      * This property contains directories, that were already scanned.
      * 
      * @var array
      */
     protected $_wrapperPaths = array();
-    
+
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * The constructor of this class, which initializes new objects.
      */
@@ -59,11 +59,11 @@ class Erfurt_Wrapper_Manager
     {
         // Nothing to do here.
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Scans a given path and adds the wrapper plugins found in that path.
      * 
@@ -78,11 +78,11 @@ class Erfurt_Wrapper_Manager
             $this->_scanWrapperPath($path);
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Protected methods --------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Checks a given wrapper name and path pair, whether the specified plugin
      * is active (a key "enabled" needs to be set to "true").
@@ -92,7 +92,7 @@ class Erfurt_Wrapper_Manager
      * 
      * @param string $wrapperName
      * @param string $wrapperPath
-     */ 
+     */
     protected function _addWrapper($wrapperName, $wrapperPath)
     {
         $wrapperConfig = parse_ini_file(($wrapperPath . self::CONFIG_FILENAME), true);
@@ -105,11 +105,11 @@ class Erfurt_Wrapper_Manager
             // Wrapper is disabled.
             return;
         }
-        
+
         if (isset($wrapperConfig[$this->_configPrivateSection])) {
             $privateConfig = new Zend_Config_Ini(
-                $wrapperPath . self::CONFIG_FILENAME, 
-                $this->_configPrivateSection, 
+                $wrapperPath . self::CONFIG_FILENAME,
+                $this->_configPrivateSection,
                 true
             );
         } else {
@@ -157,12 +157,12 @@ class Erfurt_Wrapper_Manager
     protected function _scanWrapperPath($pathSpec)
     {
         $iterator = new DirectoryIterator($pathSpec);
-        
+
         foreach ($iterator as $file) {
             if (!$file->isDot() && $file->isDir()) {
                 $fileName  = $file->getFileName();
                 $innerPath = $pathSpec . $fileName . DIRECTORY_SEPARATOR;
-                
+
                 // Iff a config file exists add the wrapper
                 if (is_readable($innerPath . self::CONFIG_FILENAME)) {
                     $this->_addWrapper($fileName, $innerPath);
