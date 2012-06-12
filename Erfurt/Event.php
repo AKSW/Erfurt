@@ -16,6 +16,9 @@ require_once 'Erfurt/Event/Dispatcher.php';
  */
 class Erfurt_Event
 {
+    const ON_ADD_MULTIPLE_STATEMENTS = 'onAddMultipleStatements';
+    const ON_ADD_STATEMENT           = 'onAddStatement';
+
     /**
      * @var Erfurt_Event_Dispatcher
      */
