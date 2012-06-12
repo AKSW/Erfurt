@@ -506,14 +506,14 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $store = Erfurt_App::getInstance()->getStore();
         $store->getNewModel('http://example.org/', 'http://example.org/', 'owl', false);
         $ac = Erfurt_App::getInstance()->getAc();
-        $ac->setUserModelRight('http://example.org/', 'edit', 'deny');
+        $ac->addUserModelRule('http://example.org/', Erfurt_Ac::ACCESS_TYPE_VIEW, Erfurt_Ac::ACCESS_PERM_GRANT);
         
         $this->authenticateAnonymous();
         $model = $store->getModel('http://example.org/');
         $this->assertTrue($model instanceof Erfurt_Rdf_Model);
         $this->assertFalse($model->isEditable());
         
-        $ac->setUserModelRight('http://example.org/', 'view', 'deny');
+        $ac->addUserModelRule('http://example.org/', Erfurt_Ac::ACCESS_TYPE_VIEW, Erfurt_Ac::ACCESS_PERM_DENY);
         try {
             $model = $store->getModel('http://example.org/');
             

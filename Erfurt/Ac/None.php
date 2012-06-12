@@ -69,7 +69,7 @@ class Erfurt_Ac_None
      * @throws Erfurt_Exception Throws an exception if wrong type was submitted or
      * wrong perm type was submitted.
      */
-    public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
+    public function addUserModelRule($modelUri, $type = Erfurt_Ac::ACCESS_TYPE_VIEW, $perm = Erfurt_Ac::ACCESS_PERM_GRANT)
     {    
         // Nothing to do here...
     }

@@ -226,7 +226,7 @@ class Erfurt_Auth_Identity
                     
             require_once 'Zend/Validate/EmailAddress.php';
             $emailValidator = new Zend_Validate_EmailAddress();
-            $actionConfig = $app->getActionConfig('RegisterNewUser');
+            $actionConfig = $app->getAc()->getActionConfig(Erfurt_Ac::ACTION_REGISTER);
             
             if (in_array($newEmailWithMailto, $registeredEmailAddresses)) {
                 require_once 'Erfurt/Auth/Identity/Exception.php';

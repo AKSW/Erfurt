@@ -19,20 +19,39 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  */
 class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
-    protected $_data = array();
-        
+    private $_data = array();
+    
+    private $_queryResults = array();
+    private $_queryResultIndex = 0;
+     
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
         if (isset($this->_data[$graphUri])) {
             $this->_data[$graphUri] = $statementsArray;
+            
+            return true;
         }
+        
+        return false;
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
     public function addStatement($graphUri, $subject, $predicate, $object, array $options = array())
     {
+        if (isset($this->_data[$graphUri])) {
+            $statementsArray = array(
+                $subject => array(
+                    $predicate => array($object)
+                )
+            );
+
+            $this->_data[$graphUri] = $statementsArray;
+            
+            return true;
+        }
         
+        return false;
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -169,7 +188,11 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $options=array())
     {
-        return array();
+        if ($this->_queryResultIndex >= count($this->_queryResults)) {
+            return array(); // empty result by default
+        }
+
+        return $this->_queryResults[$this->_queryResultIndex++];
     }
     
     public function createTable($tableName, array $columns)
@@ -197,6 +220,11 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     
 #pragma mark -
 #pragma mark Helper methods
+
+    public function addQueryResult(array $queryResult)
+    {
+        $this->_queryResults[] = $queryResult;
+    }
 
     public function getStatementsForGraph($graphUri)
     {

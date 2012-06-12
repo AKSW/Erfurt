@@ -448,7 +448,7 @@ class Erfurt_App
         if (!$result->isValid()) {
             $this->getAuth()->clearIdentity();
         }
-
+        
         return $result;
     }
 
@@ -505,7 +505,15 @@ class Erfurt_App
             $type = strtolower($config->ac->type);
             if ($type === 'rdf') {
                 require_once 'Erfurt/Ac/Default.php';
-                $this->_ac = new Erfurt_Ac_Default();
+                
+                $acConfig = array();
+                if (isset($config->ac->allowDbUser)) {
+                    $acConfig['allowDbUser'] = (bool)$config->ac->allowDbUser;
+                }
+                
+                $this->_ac = new Erfurt_Ac_Default($acConfig);
+                $this->_ac->setUser($this->getAuth()->getIdentity());
+                $this->_ac->setStore($this->getStore());
             } else if ($type === 'none') {
                 require_once 'Erfurt/Ac/None.php';
                 $this->_ac = new Erfurt_Ac_None();
@@ -536,17 +544,6 @@ class Erfurt_App
         }
 
         return $this->_acModel;
-    }
-
-    /**
-     * Convenience shortcut for Ac_Default::getActionConfig().
-     *
-     * @param string $actionSpec The action to get the configuration for.
-     * @return array Returns the configuration for the given action.
-     */
-    public function getActionConfig($actionSpec)
-    {
-        return $this->getAc()->getActionConfig($actionSpec);
     }
 
     /**
@@ -882,6 +879,10 @@ class Erfurt_App
 
             require_once 'Erfurt/Store.php';
             $this->_store = new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema);
+            
+            $this->_store->setLog($this->getLog());
+            $this->_store->setQueryCache($this->getQueryCache());
+            $this->_store->setEventDispatcher($this->getEventDispatcher());
         }
 
         return $this->_store;

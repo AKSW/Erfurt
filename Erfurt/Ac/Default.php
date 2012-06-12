@@ -2,397 +2,295 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2010-2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
+
+require_once 'Erfurt/Ac.php';
 
 /**
  * A class providing support for access control.
  * 
- * This class provides support for model, action (and statement) based access control.
+ * This class provides support for model and action based access control.
  * The access control informations are stored in a triple store.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2010-2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package Erfurt_Ac
  * @author Stefan Berger <berger@intersolut.de>
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Ac_Default
+class Erfurt_Ac_Default extends Erfurt_Ac
 {
-    // ------------------------------------------------------------------------
-    // --- Private properties -------------------------------------------------
-    // ------------------------------------------------------------------------
-    
     /**
-     * Instance of the ac model.
-     * @var Erfurt_Rdf_Model
-     */
-    private $_acModel = null;
-    
-    /**
-     * Contains the action configuration from the configurations (both ini and ac model).
+     * Contains the combinded action configurations extracted from the defaultActionConfig as well
+     * as the ac model.
+     *
      * @var array
      */
     private $_actionConfig = null;
     
     /**
-     * Contains a reference to a auth object.
-     * @var Zend_Auth
-     */
-    private $_auth = null;
-    
-    /**
-     * Contains the configuration.
-     * @var Zend_Config
-     */
-    private $_config = null;
-    
-    private $_isInit = false;
-    
-    /**
-     * Contains the configured ac concept uris.
+     * Contains configuration values like URIs, etc.
+     * 
+     * There exists a default value for each supported key, which can be overwritten in the
+     * constructor.
+     *
      * @var array
      */
-    private $_uris = array(
+    private $_config = array(
+        'acGraphUri'         => 'http://localhost/OntoWiki/Config/',
         'acBaseUri'          => 'http://ns.ontowiki.net/SysOnt/',
-        'acModelUri'         => 'http://localhost/OntoWiki/Config/',
-        'anonymousUserUri'   => 'http://ns.ontowiki.net/SysOnt/Anonymous',
-        'superUserUri'       => 'http://ns.ontowiki.net/SysOnt/SuperAdmin',
-        'propAnyModel'       => 'http://ns.ontowiki.net/SysOnt/AnyModel',
-        'propGrantModelView' => 'http://ns.ontowiki.net/SysOnt/grantModelView',
-        'propDenyModelView'  => 'http://ns.ontowiki.net/SysOnt/denyModelView',
-        'propGrantModelEdit' => 'http://ns.ontowiki.net/SysOnt/grantModelEdit',
-        'propDenyModelEdit'  => 'http://ns.ontowiki.net/SysOnt/denyModelEdit',
         'actionClassUri'     => 'http://ns.ontowiki.net/SysOnt/Action',
-        'propAnyAction'      => 'http://ns.ontowiki.net/SysOnt/AnyAction',
-        'propGrantAccess'    => 'http://ns.ontowiki.net/SysOnt/grantAccess',
-        'propDenyAccess'     => 'http://ns.ontowiki.net/SysOnt/denyAccess',
-        'modelClassUri'      => 'http://ns.ontowiki.net/SysOnt/Model',
-        'actionConfigUri'    => 'http://ns.ontowiki.net/SysOnt/rawConfig'
+        'groupMemberProp'    => 'http://rdfs.org/sioc/ns#has_member',
+        'rawConfigPropUri'   => 'http://ns.ontowiki.net/SysOnt/rawConfig',
+        'groupClassUri'      => 'http://rdfs.org/sioc/ns#Usergroup',
+        'userClassUri'       => 'http://rdfs.org/sioc/ns#User',
+        'anyGraphUri'        => 'http://ns.ontowiki.net/SysOnt/AnyModel',
+        'grantAccessProp'    => 'http://ns.ontowiki.net/SysOnt/grantAccess',
+        'anyActionUri'       => 'http://ns.ontowiki.net/SysOnt/AnyAction',
+        'denyAccessProp'     => 'http://ns.ontowiki.net/SysOnt/denyAccess',
+        'grantAccessProp'    => 'http://ns.ontowiki.net/SysOnt/grantAccess',
+        'grantModelViewProp' => 'http://ns.ontowiki.net/SysOnt/grantModelView',
+        'denyModelViewProp'  => 'http://ns.ontowiki.net/SysOnt/denyModelView',
+        'grantModelEditProp' => 'http://ns.ontowiki.net/SysOnt/grantModelEdit',
+        'denyModelEditProp'  => 'http://ns.ontowiki.net/SysOnt/denyModelEdit',
+        'autoAddActions'     => true,
+        'allowDbUser'        => false,
     );
-        
+    
+    /**
+     * Contains default action configurations, which will be overwritten by values from the ac model.
+     *
+     * The default action configuration can also be overwritten by using setDefaultActionConfig.
+     *
+     * @var array
+     */
+    private $_defaultActionConfig = array(
+        self::ACTION_LOGIN => array(
+            'type' => 'RDF'
+        ),
+        self::ACTION_REGISTER => array(
+            'defaultGroup'   => 'http://localhost/OntoWiki/Config/DefaultUserGroup',
+            'mailValidation' => true,
+            'uidRegexp'      => '/^[[:alnum:]]+$/',
+            'passRegexp'     => ''
+        )
+    );
+    
+    /**
+     * Contains default user rights, which will be overwritten by values from the ac model.
+     *
+     * The default user rights can also be overwritten by using setDefaultUserRights. By default
+     * there are no default user rights configured.
+     *
+     * @var array
+     */
+    private $_defaultUserRights = array();
+    
+    /**
+     * The store to use for querying the ac model.
+     *
+     * Use setStore to configure the store to use. When no store is set, querying the ac model will
+     * be skipped. 
+     *
+     * @var Erfurt_Store
+     */
+    private $_store = null;
+
     /**
      * Contains the user rights for all fetched users.
+     *
      * @var array
      */
     private $_userRights = array();
-
+    
     /**
      * Contains a template for the default permissions of a user.
+     *
      * @var array
      */
     private $_userRightsTemplate = array(
-        'userAnyModelViewAllowed' => false,
-        'userAnyModelEditAllowed' => false,
-        'userAnyActionAllowed'    => false,
-        'grantAccess'             => array(),
-        'denyAccess'              => array(),
-        'grantModelView'          => array(),
-        'denyModelView'           => array(),
-        'grantModelEdit'          => array(),
-        'denyModelEdit'           => array()
+        Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED => false,
+        Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED => false,
+        Erfurt_Ac::AC_ANY_ACTION_ALLOWED     => false,
+        Erfurt_Ac::AC_GRANT_ACCESS           => array(),
+        Erfurt_Ac::AC_DENY_ACCESS            => array(),
+        Erfurt_Ac::AC_GRANT_MODEL_VIEW       => array(),
+        Erfurt_Ac::AC_DENY_MODEL_VIEW        => array(),
+        Erfurt_Ac::AC_GRANT_MODEL_EDIT       => array(),
+        Erfurt_Ac::AC_DENY_MODEL_EDIT        => array()
     );
-    
-    // ------------------------------------------------------------------------
-    // --- Public methods -----------------------------------------------------
-    // ------------------------------------------------------------------------
-    
+
     /**
-     * Delivers the action configuration for a given action
-     * 
-     * @param string $actionSpec The URI of the action.
-     * @return array Returns an array with the action spec.
+     * Creates a new instance with an optional configuration.
+     *
+     * @param array $config An optional configuration array that is merged with the default configuration.
+     * @return void
      */
-    public function getActionConfig($actionSpec)
-    {   
-        $this->_init();
+    public function __construct(array $config = array())
+    {
+        $this->_config = array_merge($this->_config, $config);
+    }
+
+    /**
+     * @see Erfurt_Ac::addUserModelRule
+     * @inheritdoc
+     */
+    public function addUserModelRule($modelUri, $type = Erfurt_Ac::ACCESS_TYPE_VIEW, $perm = Erfurt_Ac::ACCESS_PERM_GRANT) 
+    {
+        $userUri = $this->getUser()->getUri();
+        $type    = strtolower($type);
+        $perm    = strtolower($perm);
         
-        if (null === $this->_actionConfig) {
-            // Fetch the action config.
-            $actionConfig = array();
-            
-            // First we set the default values from (ini) config. These values will then be overwritten by
-            // values from the (ac model) config.
-            foreach ($this->_config->ac->action->config->toArray() as $actions) {
-                $actionConfig[$actions['uri']] = $actions['spec'];
+        // is type supported?
+        if (!in_array($type, array(Erfurt_Ac::ACCESS_TYPE_VIEW, Erfurt_Ac::ACCESS_TYPE_EDIT))) {
+            require_once 'Erfurt/Ac/Exception.php';
+            throw new Erfurt_Ac_Exception('Wrong access type submitted');
+        }
+
+        // is permission supported?
+        if (!in_array($perm, array(Erfurt_Ac::ACCESS_PERM_GRANT, Erfurt_Ac::ACCESS_PERM_DENY))) {
+            require_once 'Erfurt/Ac/Exception.php';
+            throw new Erfurt_Ac_Exception('Wrong permission type submitted');
+        }
+
+        // set the property for the right to add...
+        if ($type === Erfurt_Ac::ACCESS_TYPE_VIEW) {
+            if ($perm === Erfurt_Ac::ACCESS_PERM_GRANT) {
+                $prop = $this->_config['grantModelViewProp'];
+            } else {
+                // else the permission is deny
+                $prop = $this->_config['denyModelViewProp'];
             }
-            
-            // Now fetch the config from ac model and overwrite the values.
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
-            $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setProloguePart('SELECT ?s ?o')
-                  ->setWherePart(
-                      'WHERE {
-                          ?s <' . $this->_uris['actionConfigUri'] . '> ?o .
-                      }'
-                  );
-            
-            $result = $this->_sparql($this->_acModel, $query);
-            if ($result) {
-                foreach ($result as $row) {
-                    $s = $row['s'];
-                    $o = explode('=', $row['o']);
-                    
-                    // remove quotas
-                    if (substr($o[1], 0, 1) === '"') {
-                        $o[1] = substr($o[1], 1);
-                    }
-                    if (substr($o[1], -1) === '"') {
-                        $o[1] = substr($o[1], 0, -1);
-                    }
-                      
-                    // Check whether config for uri is already set.
-                    if (!isset($actionConfig[$s])) {
-                        $actionConfig[$s] = array();
-                    } 
-                    
-                    $actionConfig[$s][$o[0]] = $o[1];
-                }
+        } else {
+            // else the type is edit
+            if ($perm === Erfurt_Ac::ACCESS_PERM_GRANT) {
+                $prop = $this->_config['grantModelEditProp'];
+            } else {
+                // else the permission is deny
+                $prop = $this->_config['denyModelEditProp'];
             }
-            
-            $this->_actionConfig = $actionConfig;
+        }
+
+        // Update the array that contains the right for the user.
+        unset($this->_userRights[$userUri]);
+
+        // Add the right
+        $result = false;
+        if (null !== $this->_store) {
+            $result = $this->_store->addStatement(
+                $this->_config['acGraphUri'], 
+                $userUri, 
+                $prop, 
+                array('type' => 'uri', 'value' => $modelUri), 
+                false
+            );
         }
         
-        // Return the action config for the given spec if available.
-        $actionUri = $this->_uris['acBaseUri'] . $actionSpec;
+        return $result;
+    }
+
+    /**
+     * @see Erfurt_Ac
+     */
+    public function getActionConfig($action, $isUri = true)
+    {   
+        $this->_fetchActionConfig();
+        
+        $actionUri = $action;
+        if (!$isUri) {
+            $actionUri = $this->_config['acBaseUri'] . $action;
+        }
         
         if (isset($this->_actionConfig[$actionUri])) {
             return $this->_actionConfig[$actionUri];
         } else {
-            return array();
+            return false;
         }
     }
-    
-    /**
-     * Delievers a  list of allowed actions for the current user.
-     *  
-     * @return array Returns a list of allowed actions.
-     */
-    public function getAllowedActions() 
-    {   
-        $this->_init();
-         
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        
-        // filter denied actions
-        $ret = array();
-        foreach ($userRights['grantAccess'] as $allowed) {
-            if (in_array($allowed, $userRights['denyAccess'])) {
-                continue;
-            }
-            $ret[] = $allowed;
-        }
-        
-        return $ret;
-    }
-    
-    /**
-     * Delievers a list of allowed models.
-     *  
-     * @param string $type Name of the access type.
-     * @return array Returns a list of allowed models.
-     */
-    public function getAllowedModels($type = 'view') 
-    {   
-        $this->_init();
-        
-        $type = strtolower($type);
-        // not supported type?
-        if (!in_array($type, array('view', 'edit'))) {
-            return array();
-        }
-         
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        
-        $ret = array();
-        $grantModelKey  = ($type === 'view') ? 'grantModelView' : 'grantModelEdit';
-        $denyModelKey   = ($type === 'view') ? 'denyModelView'  : 'denyModelEdit';
-        
-        // filter denied models
-        foreach ($userRights[$grantModelKey] as $allowed) {
-            if (in_array($allowed, $userRights[$denyModelKey])) {
-                continue;
-            } 
-            $ret[] = $allowed;
-        }
-        
-        return $ret;
-    }
-    
-    /**
-     * Delievers a list of denied actions for the current user.
-     *
-     * @return array Returns a list of denied actions.
-     */
-    public function getDeniedActions() 
-    {   
-        $this->_init();
-         
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        
-        return $userRights['denyAccess']; 
-    }
-    
-    /**
-     * Delievers a list of denied models.
-     *
-     * @param string $type Name of the access type.
-     * @return array Returns a list of denied models.
-     */
-    public function getDeniedModels($type = 'view') 
-    {   
-        $this->_init();
-        
-        $type = strtolower($type);
-        // not supported type?
-        if (!in_array($type, array('view', 'edit'))) {
-            return array();
-        }
-        
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-            
-        $denyModelKey = ($type === 'view') ? 'denyModelView' : 'denyModelEdit';
-        
-        return $userRights[$denyModelKey];
-    }
-    
-    /**
-     * Checks whether the given action is allowed for the current user on the
-     * given model uri.
-     *
-     * @param string $type Name of the access-type (view, edit).
-     * @param string $modelUri The uri of the graph to check.
-     * @return boolean Returns whether allowed or denied.
-     */
-    public function isModelAllowed($type, $modelUri) 
-    {
-        $modelUri = (string) $modelUri;
-        
-        $this->_init();
-        
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        $type       = strtolower($type);
 
-        // type = view; check whether allowed
-        if ($type === 'view') {
-            // explicit forbidden
-            if (in_array($modelUri, $userRights['denyModelView'])) {
+    /**
+     * @see Erfurt_Ac
+     */
+    public function isActionAllowed($action, $isUri = true)
+    {
+        $userRights = $this->_getUserModelRights();
+    
+        $actionUri = $action;
+        if (!$isUri) {
+            $actionUri = $this->_config['acBaseUri'] . $action;
+        }
+
+        if (isset($this->_actionConfig[$actionUri])) {
+            // Action exists
+            if (in_array($actionUri, $userRights[Erfurt_Ac::AC_DENY_ACCESS])) {
+                // Action explicitly forbidden
                 return false;
-            } else if (in_array($modelUri, $userRights['grantModelView'])) {
-                // view explicit allowed and not denied
+            } else if (in_array($actionUri, $userRights[Erfurt_Ac::AC_GRANT_ACCESS])) {
+                // Action explicitly allowed
                 return true;
-            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
-                // view in edit allowed and not denied
-                return true;
-            } else if ($this->isAnyModelAllowed('view')) {
-                // any model
+            } else if ($this->isAnyActionAllowed()) {
+                // Every Action allowed
                 return true;
             }
-        }
-                  
-        // type = edit; check whether allowed
-        if ($type === 'edit') {
-            // explicit forbidden
-            if (in_array($modelUri, $userRights['denyModelEdit'])) {
-                return false;
-            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
-                // edit allowed and not denied
-                return true;
-            } else if ($this->isAnyModelAllowed('edit')) {
-                // any model
-                return true;
+        } else {
+            if (((bool)$this->_config['autoAddActions'] === true) && (null !== $this->_store)) {
+                // We create action instance, such that it can be configured in AC model.
+                // Array for new statements (an action instance plus label)
+                $statementArray = array(
+                    $actionUri => array ( 
+                        EF_RDF_TYPE => array(array(
+                            'type'  => 'uri',
+                            'value' => $this->_config['actionClassUri']
+                        ))
+                    )
+                );
+                
+                // Label
+                if (!$isUri) {
+                    $statementArray[$actionUri][EF_RDFS_LABEL] = array(array(
+                        'type'  => 'literal',
+                        'value' => $action
+                    ));
+                }
+            
+                $this->_store->addMultipleStatements(
+                    $this->_config['acGraphUri'], 
+                    $statementArray, 
+                    false
+                );
             }
         }
         
-        // deny everything else => false
+        // Also the action may was added at this point, we return false here, since
+        // access to this action needs to be configured first. 
         return false;
     }
-    
-    /**
-     * Checks whether the given action is allowed for the current user.
-     *
-     * @param string $action The name of the action.
-     * @return boolean Returns whether action is allowed or not.
-     */
-    public function isActionAllowed($action) 
-    {
-        $this->_init();
 
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        $actionUri  = $this->_uris['acBaseUri'] . $action;
-
-        // Action not allowed (init is optimized on all actions which have an instance)
-        if (in_array($actionUri, $userRights['denyAccess'])) {
-            return false;
-        } else if (in_array($actionUri, $userRights['grantAccess'])) {
-            // Action explicitly allowed
-            return true;
-        } else if ($this->isAnyActionAllowed()) {
-            // Every Action allowed
-            return true;
-        } else {
-            // create action instance
-            // array for new statements (an action instance pus label)
-            $actionStmt = array(
-                $actionUri => array ( 
-                    EF_RDF_TYPE => array ( 
-                        array ( 'type' => 'uri' , 'value' => $this->_uris['actionClassUri'] )
-                    ) ,
-                    EF_RDFS_LABEL => array (
-                        array ( 'type' => 'literal' , 'value' => $action )
-                    )
-                )
-            );
-            
-            $store = Erfurt_App::getInstance()->getStore();
-            $store->addMultipleStatements($this->_uris['acModelUri'], $actionStmt, false);
-            
-            return false;
-        }
-    }
-    
     /**
-     * Checks whether any action is allowed for the current user.
-     *
-     * @return boolean Returns whether an action is allowed or not.
+     * @see Erfurt_Ac
      */
     public function isAnyActionAllowed() 
-    {   
-        $this->_init(); 
-        
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        
-        return $userRights['userAnyActionAllowed'];
-    }
-    
-    /**
-     * Checks whether the current user has the given permission 
-     * for any models. 
-     *
-     * @param string $type (optional) Contains view or edit.
-     * @return boolean Returns whether allowed or denied.
-     */
-    public function isAnyModelAllowed($type = 'view') 
     {
-        $this->_init();
-        
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
+        $userRights = $this->_getUserModelRights();
+    
+        return $userRights[Erfurt_Ac::AC_ANY_ACTION_ALLOWED];
+    }
+
+    /**
+     * @see Erfurt_Ac
+     */
+    public function isAnyModelAllowed($type = Erfurt_Ac::ACCESS_TYPE_VIEW)
+    {
+        $userRights = $this->_getUserModelRights();
         $type       = strtolower($type);
         
-        if ($type === 'view') {
+        if ($type === Erfurt_Ac::ACCESS_TYPE_VIEW) {
             // any model view allowed?
-            if ($userRights['userAnyModelViewAllowed'] === true) {
+            if ($userRights[Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED] === true) {
                 return true;
-            } else if ($userRights['userAnyModelEditAllowed'] === true) {
+            } else if ($userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] === true) {
                 // any model edit allowed? (implies view right)
                 return true;
             } else {
@@ -401,9 +299,9 @@ class Erfurt_Ac_Default
             }
         }
         
-        if ($type === 'edit') {
+        if ($type === Erfurt_Ac::ACCESS_TYPE_EDIT) {
             // any model edit allowed?
-            if ($userRights['userAnyModelEditAllowed'] === true) {
+            if ($userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] === true) {
                 return true;
             } else {
                 // not allowed!
@@ -414,296 +312,334 @@ class Erfurt_Ac_Default
         // deny everything else => false
         return false;
     }
-        
+
     /**
-     * Adds a right to a model for the current user.
-     * 
-     * @param string $modelUri The URI of the model. 
-     * @param string $type Type of access: view or edit.
-     * @param string $perm Type of permission: grant or deny.
-     * @throws Erfurt_Exception Throws an exception if wrong type was submitted or
-     * wrong perm type was submitted.
+     * @see Erfurt_Ac
      */
-    public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
-    {    
-        $this->_init();
-       
-        $user       = $this->_getUser();
+    public function isModelAllowed($type, $modelUri)
+    {
+        $modelUri   = (string)$modelUri;
+        $userRights = $this->_getUserModelRights();
         $type       = strtolower($type);
-        
-        // is type supported?
-        if (!in_array($type, array('view', 'edit'))) {
-            require_once 'Erfurt/Ac/Exception.php';
-            throw new Erfurt_Ac_Exception('Wrong access type submitted');
-        }
-            
-        // is permission supported?
-        if (!in_array($perm, array('grant', 'deny'))) {
-            require_once 'Erfurt/Ac/Exception.php';
-            throw new Erfurt_Ac_Exception('Wrong permission type submitted');
-        }
-            
-        // set the property for the right to add...
-        if ($type === 'view') {
-            if ($perm === 'grant') {
-                $prop = $this->_uris['propGrantModelView'];
-                $right = 'grantModelView';
-            } else {
-                // else the permission is deny
-                $prop = $this->_uris['propDenyModelView'];
-                $right = 'denyModelView';
-            }
-        } else {
-            // else the type is edit
-            if ($perm === 'grant') {
-                $prop = $this->_uris['propGrantModelEdit'];
-                $right = 'grantModelEdit';
-            } else {
-                // else the permission is deny
-                $prop = $this->_uris['propDenyModelEdit'];
-                $right = 'denyModelEdit';
-            }
-        }
-        
-        // Update the array that contains the right for the user.
-        //$this->_userRights[$user->getUri()][$right][] = $modelUri;
-        unset($this->_userRights[$user->getUri()]);
 
-// TODO set the right cache tags, such that cache is invalidated!!!
-        $store = Erfurt_App::getInstance()->getStore();
-        $store->addStatement(
-            $this->_acModel->getModelUri(), 
-            $user->getUri(), 
-            $prop, 
-            array('type' => 'uri', 'value' => $modelUri), 
-            false
-        );
-    }
-    
-    // ------------------------------------------------------------------------
-    // --- Private methods ----------------------------------------------------
-    // ------------------------------------------------------------------------
-    
-    /**
-     * Fetches the current user from the auth object.
-     * 
-     * @return array Returns a user spec array on success.
-     * @throws Erfurt_Ac_Exception Throws an exception if no valid user is given.
-     */ 
-    private function _getUser()
-    {
-        if ($this->_auth->hasIdentity()) {
-            // Identity exists; get it
-            return $this->_auth->getIdentity();
-        } else {
-            require_once 'Erfurt/Ac/Exception.php';
-            throw new Erfurt_Ac_Exception('No valid user was given.');
+        // type = view; check whether allowed
+        if ($type === Erfurt_Ac::ACCESS_TYPE_VIEW) {
+            // explicit forbidden
+            if (in_array($modelUri, $userRights[Erfurt_Ac::AC_DENY_MODEL_VIEW])) {
+                return false;
+            } else if (in_array($modelUri, $userRights[Erfurt_Ac::AC_GRANT_MODEL_VIEW])) {
+                // view explicit allowed and not denied
+                return true;
+            } else if (in_array($modelUri, $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT]) 
+                       && !in_array($modelUri, $userRights[Erfurt_Ac::AC_DENY_MODEL_EDIT])) {
+                
+                // view access type contained in edit and edit allowed and not denied
+                return true;
+            } else if ($this->isAnyModelAllowed(Erfurt_Ac::ACCESS_TYPE_VIEW)) {
+                // any model view allowed
+                return true;
+            }
+        } else if ($type === Erfurt_Ac::ACCESS_TYPE_EDIT) { // type = edit; check whether allowed
+            // explicit forbidden
+            if (in_array($modelUri, $userRights[Erfurt_Ac::AC_DENY_MODEL_EDIT])) {
+                return false;
+            } else if (in_array($modelUri, $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT])) {
+                // edit allowed and not denied
+                return true;
+            } else if ($this->isAnyModelAllowed(Erfurt_Ac::ACCESS_TYPE_EDIT)) {
+                // any model edit allowed
+                return true;
+            }
         }
+        
+        // deny everything else => false
+        return false;
     }
-    
+
     /**
-     * Gets the user rights for the current user.
-     * In case the user uri was not fetched, it is fetched.
+     * Sets the default action configuration.
+     *
+     * By calling this method the default action configuration, which is used for merging with
+     * the results from querying the ac model is overwritten.
      * 
-     * @param string $userURI The URI of the user.
-     * @return array Returns an array that contains the user rights.
+     * @param array $defaultActionConfig An array containing the new default action config
+     * @return void
      */
-    private function _getUserModelRights($userURI) 
+    public function setDefaultActionConfig(array $defaultActionConfig)
     {
-        if (!isset($this->_userRights[$userURI])) {
-            // In this case we need to fetch the rights for the user.
-            $userRights = $this->_userRightsTemplate;
-         
-            // Super admin, i.e. a user that has database rights (only for debugging purposes and only if
-            // enabled in config).
-            if (($userURI === $this->_uris['superUserUri']) && ((boolean)$this->_config->ac->allowDbUser === true)) {
-                $userRights['userAnyActionAllowed']     = true;
-                $userRights['userAnyModelEditAllowed']  = true;
-                $userRights['userAnyModelViewAllowed']  = true;
+        // Initial config for actions provided as a static config.
+        // This will be overwritten by the results of SPARQL queries iff a store is set.
+        $this->_defaultActionConfig = $defaultActionConfig;
+    }
 
-                $this->_userRights[$userURI] = $userRights;
+    /**
+     * Sets the default user rights.
+     *
+     * By calling this method the default user rights, which are used for merging with
+     * the results from querying the ac model are overwritten.
+     * 
+     * @param array $defaultUserRights An array containing the new default user rights
+     * @return void
+     */
+    public function setDefaultUserRights(array $defaultUserRights)
+    {
+        // Initial default rights for users provided as a static config.
+        // This will be overwritten by the results of SPARQL queries iff a store is set.
+        $this->_defaultUserRights = $defaultUserRights;
+    }
+
+    /**
+     * Sets the store instance that is used for querying the ac model.
+     * 
+     * @param Erfurt_Store
+     * @return void
+     */
+    public function setStore(Erfurt_Store $store)
+    {
+        // Check for AC model!
+        $acModel = $store->getModel($this->_config['acGraphUri'], false);
+        if (!$acModel) {
+            require_once 'Erfurt/Ac/Exception.php';
+            throw new Erfurt_Ac_Exception('AC model not available with URI: ' . $this->_config['acGraphUri']);
+        }
+    
+        $this->_store = $store;
+    }
+
+    /**
+     * Internal method that fetches the action configuration.
+     *
+     * This is done by merging the default action configuration with the result of querying the
+     * ac model (if the store is set).
+     *
+     * @return void
+     */
+    protected function _fetchActionConfig()
+    {
+        if (null === $this->_actionConfig) {
+            // Default values
+            $this->_actionConfig = $this->_defaultActionConfig;
+            
+            if (null !== $this->_store) {
+                // Overwrite with values from store
+                $acGraphUri = $this->_config['acGraphUri'];
+                $rdfType = EF_RDF_TYPE;
+                $actionClass = $this->_config['actionClassUri'];
+                $rawConfigProp = $this->_config['rawConfigPropUri'];
+                
+                $sparql = <<<EOF
+SELECT ?s ?o
+FROM <$acGraphUri>
+WHERE {
+    ?s <$rawConfigProp> ?o .
+    ?s <$rdfType> <$actionClass> .
+}
+EOF;
+
+                $result = $this->_sparql($sparql);
+                if ($result) {
+                    foreach ($result as $row) {
+                        $s      = $row['s'];
+                        $oArray = explode('=', $row['o']);
+                    
+                        // remove quotas
+                        if (substr($oArray[1], 0, 1) === '"') {
+                            $oArray[1] = substr($oArray[1], 1);
+                        }
+                        if (substr($oArray[1], -1) === '"') {
+                            $oArray[1] = substr($oArray[1], 0, -1);
+                        }
+                      
+                        // Check whether config for uri is already set.
+                        if (!isset($this->_actionConfig[$s])) {
+                            $this->_actionConfig[$s] = array();
+                        } 
+                    
+                        $this->_actionConfig[$s][$oArray[0]] = $oArray[1];
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Internal method that filters the SPARQL results and saves the results in $userRights var.
+     * 
+     * @param array $resultList A list of sparql results
+     * @param array $userRights A reference to an array containing user rights
+     * @return void
+     */
+    protected function _filterAccess($resultList, &$userRights) 
+    {
+        // 1. Check for anyAction/anyModel allowed + specific allowed actions/models
+        foreach ($resultList as $entry) {
+            $p = $entry['p'];
+            $o = $entry['o'];
+        
+            if ($p === $this->_config['grantAccessProp']) {
+                if ($o === $this->_config['anyActionUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_ACTION_ALLOWED] = true;
+                } else if (!in_array($o, $userRights[Erfurt_Ac::AC_GRANT_ACCESS])) {
+                    $userRights[Erfurt_Ac::AC_GRANT_ACCESS][] = $o;
+                }
+            } else if ($p === $this->_config['grantModelViewProp']) {
+                if ($o === $this->_config['anyGraphUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED] = true;
+                } else if (!in_array($o, $userRights[Erfurt_Ac::AC_GRANT_MODEL_VIEW])) {
+                    $userRights[Erfurt_Ac::AC_GRANT_MODEL_VIEW][] = $o;
+                }
+            } else if ($p === $this->_config['grantModelEditProp']) {
+                if ($o === $this->_config['anyGraphUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] = true;
+                } else if (!in_array($o, $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT])) {
+                    $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT][] = $o;
+                }
+            }
+        }
+        
+        // 2. Check for anyAction/anyModel denied + specific denied actions/models (overwrites allow!)
+        foreach ($resultList as $entry) {
+            $p = $entry['p'];
+            $o = $entry['o'];
+            
+            if ($p === $this->_config['denyAccessProp']) {
+                if ($o === $this->_config['anyActionUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_ACTION_ALLOWED] = false;
+                } else if (!in_array($o, $userRights[Erfurt_Ac::AC_DENY_ACCESS])) {
+                    $userRights[Erfurt_Ac::AC_DENY_ACCESS][] = $o;
+                }
+            } else if ($p === $this->_config['denyModelViewProp']) {
+                if ($o === $this->_config['anyGraphUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED] = false;
+                } 
+                
+                if (!in_array($o, $userRights[Erfurt_Ac::AC_DENY_MODEL_VIEW])) {
+                    $userRights[Erfurt_Ac::AC_DENY_MODEL_VIEW][] = $o;
+                }
+            } else if ($p === $this->_config['denyModelEditProp']) {
+                if ($o === $this->_config['anyGraphUri']) {
+                    $userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] = false;
+                }
+                
+                if (!in_array($o, $userRights[Erfurt_Ac::AC_DENY_MODEL_EDIT])) {
+                    $userRights[Erfurt_Ac::AC_DENY_MODEL_EDIT][] = $o;
+                }
+            }
+        }
+    }
+
+    /**
+     * Internal method that gets the user rights for the current user.
+     *
+     * In case the user uri was not fetched already, it is fetched.
+     * 
+     * @return array Returns an array that contains the user rights
+     */
+    protected function _getUserModelRights() 
+    {
+        $userUri = $this->getUser()->getUri();
+        
+        // Also fetch action config if required.
+        $this->_fetchActionConfig();
+    
+        if (!isset($this->_userRights[$userUri])) {
+            // In this case we need to fetch the rights for the user.
+            // Initialize with a fresh template.
+            $userRights = $this->_userRightsTemplate;
+            
+            // Super admin, i.e. a user that has database rights 
+            // (only for debugging purposes and only if enabled in config).
+            if (((bool)$this->_config['allowDbUser'] === true) && 
+                ($userUri === Erfurt_Auth::SUPERADMIN_USER)) {
+                
+                $userRights[Erfurt_Ac::AC_ANY_ACTION_ALLOWED]     = true;
+                $userRights[Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED] = true;
+                $userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] = true;
+
+                $this->_userRights[$userUri] = $userRights;
                 return $userRights;
             }
             
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
-            
-            $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
-            $sparqlQuery->setProloguePart('SELECT ?group ?p ?o')
-                        ->setWherePart(
-                            'WHERE { 
-                                ?group ?p ?o . 
-                                ?group <' . $this->_config->ac->group->membership . '> <' . $userURI . '> 
-                            }'
-                        ); 
-            
-            if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
-                $this->_filterAccess($result, $userRights);
+            // Set values from default user rights config iff available.
+            if (isset($this->_defaultUserRights[$userUri])) {
+                // Overwrite template values with default values for user.
+                $userRights = array_merge($userRights, $this->_defaultUserRights[$userUri]);
             }
             
-            $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
-            $sparqlQuery->setProloguePart('SELECT ?s ?p ?o')
-                        ->setWherePart(
-                            'WHERE { 
-                                ?s ?p ?o . 
-                                FILTER (
-                                    sameTerm(?s, <' . $userURI . '>) ||
-                                    sameTerm(?o, <' . $this->_config->ac->action->class . '>)
-                                )
-                            }'
-                        );
+            if (null !== $this->_store) {
+                $acGraphUri = $this->_config['acGraphUri'];
+                $memberProp = $this->_config['groupMemberProp'];
+                $rdfTypeProp = EF_RDF_TYPE;
+                $groupClass = $this->_config['groupClassUri'];
+                
+                // Group query
+                $sparql = <<<EOF
+SELECT ?group ?p ?o
+FROM <$acGraphUri>
+WHERE {
+    ?group ?p ?o .
+    ?group <$rdfTypeProp> <$groupClass> .
+    ?group <$memberProp> <$userUri> .
+}
+EOF;
 
-            if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
-                $this->_filterAccess($result, $userRights);
+                $result = $this->_sparql($sparql);
+                if ($result) {
+                    $this->_filterAccess($result, $userRights);
+                }
+                
+                // User query
+                $userClass = $this->_config['userClassUri'];
+                
+                $sparql = <<<EOF
+SELECT ?p ?o
+FROM <$acGraphUri>
+WHERE {
+    <userUri> ?p ?o .
+    <userUri> <$rdfTypeProp> <$userClass> .
+}
+EOF;
+
+                $result = $this->_sparql($sparql);
+                if ($result) {
+                    $this->_filterAccess($result, $userRights);
+                }
             }
-          
+                      
             // Now check for forbidden anyModel.
-            // view
-            if (in_array($this->_uris['propAnyModel'], $userRights['denyModelView'])) {
-                $userRights['userAnyModelViewAllowed'] = false;
-                $userRights['userAnyModelEditAllowed'] = false;
-                $userRights['grantModelView']          = array();
-                $userRights['grantModelEdit']          = array();
-            }
-            // edit
-            if (in_array($this->_uris['propAnyModel'], $userRights['denyModelEdit'])) {
-                $userRights['userAnyModelEditAllowed'] = false;
-                $userRights['grantModelEdit']          = array();
+            $anyGraphUri = $this->_config['anyGraphUri'];
+            if (in_array($anyGraphUri, $userRights[Erfurt_Ac::AC_DENY_MODEL_VIEW])) {
+                // view
+                $userRights[Erfurt_Ac::AC_ANY_MODEL_VIEW_ALLOWED] = false;
+                $userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] = false;
+                $userRights[Erfurt_Ac::AC_GRANT_MODEL_VIEW]       = array();
+                $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT]       = array();
+            } else if (in_array($anyGraphUri, $userRights[Erfurt_Ac::AC_DENY_MODEL_EDIT])) {
+                // edit
+                $userRights[Erfurt_Ac::AC_ANY_MODEL_EDIT_ALLOWED] = false;
+                $userRights[Erfurt_Ac::AC_GRANT_MODEL_EDIT]       = array();
             }
             
-            $this->_userRights[$userURI] = $userRights;
+            $this->_userRights[$userUri] = $userRights;
         }
+        
+        return $this->_userRights[$userUri];
+    }
 
-        return $this->_userRights[$userURI];
-    }
-    
     /**
-     * Filters the sparql results and saves the results in $userRights var.  
+     * Internal method that executes a sparql query against the store. 
      * 
-     * @param array $resultList A list of sparql results.
-     * @param array $userRights A reference to an array containing user rights.
+     * @param string SPARQL query
+     * @return array Returns an array containig the results
      */
-    private function _filterAccess($resultList, &$userRights) 
+    protected function _sparql($sparqlQuery) 
     {
-    
-        $allActions = array();
-#var_dump($resultList);
-        foreach ($resultList as $entry) {
-            // any action allowed?
-            if (($entry['o'] === $this->_uris['propAnyAction']) 
-                    && ($entry['p'] === $this->_uris['propGrantAccess'])) {
-                
-                $userRights['userAnyActionAllowed'] = true;
-            } else if (($entry['o'] === $this->_uris['propAnyModel']) 
-                    && ($entry['p'] === $this->_uris['propGrantModelView'])) {
-                
-                // any model view allowed?
-                $userRights['userAnyModelViewAllowed'] = true;
-            } else if (($entry['o'] === $this->_uris['propAnyModel']) 
-                    && ($entry['p'] === $this->_uris['propGrantModelEdit'])) {
-                
-                // any model edit allowed?
-                $userRights['userAnyModelEditAllowed'] = true;
-            } else if ($entry['p'] === $this->_uris['propGrantAccess']) {
-                // grant action?
-                if (!in_array($entry['o'], $userRights['grantAccess'])) {
-                    $userRights['grantAccess'][] = $entry['o'];
-                }   
-            } else if ($entry['p'] === $this->_uris['propDenyAccess']) {
-                // deny action?
-                if (!in_array($entry['o'], $userRights['denyAccess'])) {
-                    $userRights['denyAccess'][] = $entry['o'];
-                }
-            } else if ($entry['p'] === $this->_uris['propGrantModelView']) {
-                // grant model view?
-                if (!in_array($entry['o'], $userRights['grantModelView'])) {
-                    $userRights['grantModelView'][] = $entry['o'];
-                }
-            } else if ($entry['p'] === $this->_uris['propDenyModelView']) {
-                // deny model view?
-                if (!in_array($entry['o'], $userRights['denyModelView'])) {
-                    $userRights['denyModelView'][] = $entry['o'];
-                }
-            } else if ($entry['p'] === $this->_uris['propGrantModelEdit']) {
-                // grant model edit?
-                if (!in_array($entry['o'], $userRights['grantModelEdit'])) {
-                    $userRights['grantModelEdit'][] = $entry['o'];
-                }
-            } else if ($entry['p'] === $this->_uris['propDenyModelEdit']) {
-                // deny model edit?
-                if (!in_array($entry['o'], $userRights['denyModelEdit'])) {
-                    $userRights['denyModelEdit'][] = $entry['o'];
-                }
-            } else if ($entry['p'] === EF_RDF_TYPE && $entry['o'] === $this->_config->ac->action->class && 
-                $entry['s'] !== $this->_config->ac->action->anyAction) {
-                
-                // load all actions into array (handle afterwards)
-                $allActions[] = $entry['s'];
-            }
+        if (null !== $this->_store) {
+            return $this->_store->sparqlQuery($sparqlQuery, array(STORE_USE_AC => false));
         }
         
-        // optimize denyAccess for not anyAction allowed users only
-        if (!$userRights['userAnyActionAllowed']) {
-            // get existing actions which are not defined (and disallowed)
-            $undefinedActions = array_unique(
-                array_diff($allActions, $userRights['grantAccess'], $userRights['denyAccess'])
-            );
-            $userRights['denyAccess'] = array_merge($userRights['denyAccess'], $undefinedActions);
-        }
-    }
-    
-    /**
-     * initialisation of models, uris and rights
-     * 
-     */
-    private function _init()
-    {
-        if ($this->_isInit === true) {
-            return;
-        }
-        
-        // Reset the user rights array.
-        $this->_userRights = array();
-        
-        $app = Erfurt_App::getInstance();
-        
-        $this->_config = $app->getConfig();
-        $this->_auth   = $app->getAuth();
-        
-        // access control informations
-        $this->_acModel = $app->getAcModel();
-        
-        // get custom uri configuration
-        $this->_uris['acBaseUri']   = $this->_config->ac->baseUri;
-        $this->_uris['acModelUri'] = $this->_acModel->getModelUri();
-        $this->_uris['anonymousUserUri']   = $this->_config->ac->user->anonymousUser;
-        $this->_uris['superUserUri']       = $this->_config->ac->user->superAdmin;
-        $this->_uris['propAnyModel']       = $this->_config->ac->models->anyModel;
-        $this->_uris['propGrantModelView'] = $this->_config->ac->models->grantView;
-        $this->_uris['propDenyModelView']  = $this->_config->ac->models->denyView;
-        $this->_uris['propGrantModelEdit'] = $this->_config->ac->models->grantEdit;
-        $this->_uris['propDenyModelEdit']  = $this->_config->ac->models->denyEdit;
-        $this->_uris['actionClassUri']     = $this->_config->ac->action->class;
-        $this->_uris['propAnyAction']      = $this->_config->ac->action->anyAction;
-        $this->_uris['propGrantAccess']    = $this->_config->ac->action->grant;
-        $this->_uris['propDenyAccess']     = $this->_config->ac->action->deny;
-        $this->_uris['modelClassUri']      = $this->_config->ac->models->class;
-        $this->_uris['actionConfigUri']    = $this->_config->ac->action->rawConfig;
-        
-        $this->_isInit = true;
-    }
-    
-    /**
-     * Executes a sparql query against the store. 
-     * 
-     * @param Erfurt_Rdf_Model Active model instance to query sparql.
-     * @param Erfurt_Sparql_SimpleQuery The SPARQL query.
-     * @return array Returns an array containig the result.
-     */
-    private function _sparql($model, $sparqlQuery) 
-    {
-        $sparqlQuery->addFrom($model->getModelUri());
-        $result = $model->getStore()->sparqlQuery($sparqlQuery, array(STORE_USE_AC => false));
-        
-        return $result;
+        // @codeCoverageIgnoreStart
+        return array();
+        // @codeCoverageIgnoreEnd
     }
 }

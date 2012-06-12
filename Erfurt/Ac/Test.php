@@ -5,6 +5,8 @@
  * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
+ 
+require_once 'Erfurt/Ac.php';
 
 /**
  * A class providing support for access control.
@@ -17,10 +19,11 @@
  * @package Erfurt_Ac
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Ac_Test
+class Erfurt_Ac_Test extends Erfurt_Ac
 {
     protected $_allowedModelsEdit = array();
     protected $_allowedModelsView = array();
+    protected $_allowedActions = array();
     
     /**
      * Delivers the action configuration for a given action
@@ -28,49 +31,7 @@ class Erfurt_Ac_Test
      * @param string $actionSpec The URI of the action.
      * @return array Returns an array with the action spec.
      */
-    public function getActionConfig($actionSpec)
-    {   
-        return array();
-    }
-    
-    /**
-     * Delievers a  list of allowed actions for the current user.
-     *  
-     * @return array Returns a list of allowed actions.
-     */
-    public function getAllowedActions() 
-    {   
-        return array();
-    }
-    
-    /**
-     * Delievers a list of allowed models.
-     *  
-     * @param string $type Name of the access type.
-     * @return array Returns a list of allowed models.
-     */
-    public function getAllowedModels($type = 'view') 
-    {   
-        return array();
-    }
-    
-    /**
-     * Delievers a list of denied actions for the current user.
-     *
-     * @return array Returns a list of denied actions.
-     */
-    public function getDeniedActions() 
-    {   
-        return array();
-    }
-    
-    /**
-     * Delievers a list of denied models.
-     *
-     * @param string $type Name of the access type.
-     * @return array Returns a list of denied models.
-     */
-    public function getDeniedModels($type = 'view') 
+    public function getActionConfig($action, $isUri = true)
     {   
         return array();
     }
@@ -102,9 +63,9 @@ class Erfurt_Ac_Test
      * @param string $action The name of the action.
      * @return boolean Returns whether action is allowed or not.
      */
-    public function isActionAllowed($action) 
+    public function isActionAllowed($action, $isUri = true)
     {
-        return true;
+        return in_array($action, $this->_allowedActions);
     }
     
     /**
@@ -124,7 +85,7 @@ class Erfurt_Ac_Test
      * @param string $type (optional) Contains view or edit.
      * @return boolean Returns whether allowed or denied.
      */
-    public function isAnyModelAllowed($type = 'view') 
+    public function isAnyModelAllowed($type = Erfurt_Ac::ACCESS_TYPE_VIEW)
     {
         return true;
     }
@@ -138,7 +99,7 @@ class Erfurt_Ac_Test
      * @throws Erfurt_Exception Throws an exception if wrong type was submitted or
      * wrong perm type was submitted.
      */
-    public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant') 
+    public function addUserModelRule($modelUri, $type = Erfurt_Ac::ACCESS_TYPE_VIEW, $perm = Erfurt_Ac::ACCESS_PERM_GRANT) 
     {
         if ($type === 'view') {
             if ($perm === 'grant') {
@@ -153,5 +114,12 @@ class Erfurt_Ac_Test
                 unset($this->_allowedModelsEdit[$modelUri]);
             }
         }
+    }
+    
+    /* Helper Methods */
+    
+    public function setAllowedActions(array $allowedActions = array())
+    {
+        $this->_allowedActions = $allowedActions;
     }
 }

@@ -166,6 +166,10 @@ class Erfurt_Store
     private static $_queryCount = 0;
 
     private $_importsClosure = array();
+    
+    private $_log = null;
+    private $_queryCache = null;
+    private $_eventDispatcher = null;
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -276,73 +280,118 @@ class Erfurt_Store
      */
     public function addMultipleStatements($graphUri, array $statementsArray, $useAc = true)
     {
-        if (defined('_EFDEBUG')) {
-            $logger = Erfurt_App::getInstance()->getLog();
-            $logger->info('Store: adding multiple statements: ' . print_r($statementsArray, true));
-        }
-
+        $this->_logDebug('Store: adding multiple statements: ' . print_r($statementsArray, true));
+        
         // check whether model is available
-        if (!$this->isModelAvailable($graphUri, $useAc)) {            
-            throw new Erfurt_Store_Exception('Model '.$graphUri.' is not available.');
+        if (!$this->isModelAvailable($graphUri, $useAc)) {
+            throw new Erfurt_Store_Exception('Model ' . $graphUri . ' is not available.');
         }
 
         // check whether model is editable
-        if (!$this->_checkAc($graphUri, 'edit', $useAc)) {
+        if (!$this->_checkAc($graphUri, Erfurt_Ac::ACCESS_TYPE_EDIT, $useAc)) {
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
-        $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
+        $addResult = $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
 
-        //invalidate deprecated Cache Objects
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidateWithStatements($graphUri, $statementsArray);
-
-        $event = new Erfurt_Event('onAddMultipleStatements');
-        $event->graphUri   = $graphUri;
-        $event->statements = $statementsArray;
-        $event->trigger();
-
+        // invalidate deprecated Cache Objects
+        if (null !== $this->_queryCache) {
+            $this->_queryCache->invalidateWithStatements($graphUri, $statementsArray);
+        }
+        
+        if (null !== $this->_eventDispatcher) {
+            $event = new Erfurt_Event(Erfurt_Event::ON_ADD_MULTIPLE_STATEMENTS);
+            $event->graphUri   = $graphUri;
+            $event->statements = $statementsArray;
+            $event->addResult  = $addResult;
+            
+            $this->_eventDispatcher->trigger($event);
+        }
+        
+        // Reset graph configuration cache
         $this->_graphConfigurations = null;
+        
+        return $addResult;
     }
-
+    
     /**
      * Adds a statement to the graph specified by $modelIri.
      * @param string $graphUri
      * @param string $subject (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
      * @param array $object conaining keys "value", "type", "datatype", "lang"
-     * @param bool $useAcl
+     * @param bool $useAc
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-    public function addStatement($graphUri, $subject, $predicate, $object, $useAcl = true)
+    public function addStatement($graphUri, $subject, $predicate, $object, $useAc = true)
     {
         // check whether model is available
-        if ($useAcl && !$this->isModelAvailable($graphUri)) {
-            throw new Erfurt_Store_Exception('Model is not available.');
+        if (!$this->isModelAvailable($graphUri, $useAc)) {
+            throw new Erfurt_Store_Exception('Model ' . $graphUri . ' is not available.');
         }
 
         // check whether model is editable
-        if ($useAcl && !$this->_checkAc($graphUri, 'edit')) {
+        if (!$this->_checkAc($graphUri, Erfurt_Ac::ACCESS_TYPE_EDIT, $useAc)) {
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
-        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
+        $addResult = $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
 
-        //invalidate deprecateded Cache Objects
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-        $queryCache->invalidate($graphUri, $subject, $predicate, $object);
+        // invalidate deprecated Cache Objects
+        if (null !== $this->_queryCache) {
+            $this->_queryCache->invalidate($graphUri, $subject, $predicate, $object);
+        }
 
-        $event = new Erfurt_Event('onAddStatement');
-        $event->graphUri   = $graphUri;
-        $event->statement = array(
-            'subject'   => $subject,
-            'predicate' => $predicate,
-            'object'    => $object
-        );
-        $event->trigger();
+        if (null !== $this->_eventDispatcher) {
+            $event = new Erfurt_Event(Erfurt_Event::ON_ADD_STATEMENT);
+            $event->graphUri   = $graphUri;
+            $event->statement = array(
+                'subject'   => $subject,
+                'predicate' => $predicate,
+                'object'    => $object
+            );
+            $event->addResult  = $addResult;
+            
+            $this->_eventDispatcher->trigger($event);
+        }
 
+        // Reset graph configuration cache
         $this->_graphConfigurations = null;
+        
+        return $addResult;
+    }
+    
+    public function setLog(Zend_Log $log)
+    {
+        $this->_log = $log;
+    }
+    
+    public function setQueryCache(Erfurt_Cache_Frontend_QueryCache $queryCache)
+    {
+        $this->_queryCache = $queryCache;
+    }
+    
+    public function setEventDispatcher(Erfurt_Event_Dispatcher $eventDispatcher)
+    {
+        $this->_eventDispatcher = $eventDispatcher;
+    }
+    
+    private function _logInfo($msg)
+    {
+        $this->_log($msg, Zend_Log::INFO);
+    }
+    
+    private function _logDebug($msg)
+    {
+        $this->_log($msg, Zend_Log::DEBUG);
+    }
+    
+    private function _log($msg, $logLevel = Zend_Log::DEBUG)
+    {
+        if (null !== $this->_log) {
+            $this->_log->info($msg);
+        }
     }
 
     /**
@@ -1715,9 +1764,7 @@ class Erfurt_Store
     {
         // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
         if ($useAc === false) {
-            $logger = $this->_getErfurtLogger();
-            $logger->warn("Store.php->_checkAc: Doing something without Access Controll!!!");
-            $logger->debug("Store.php->_checkAc: ModelIri: " . $modelIri . " accessType: " . $accessType);
+            $this->_logDebug('Erfurt_Store::_checkAc: ModelIri: ' . $modelIri . ' accessType: ' . $accessType);
             return true;
         } else {
             if ($this->_ac === null) {

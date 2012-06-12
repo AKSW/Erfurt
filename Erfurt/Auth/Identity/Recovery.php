@@ -215,7 +215,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $config       = Erfurt_App::getInstance()->getConfig();
         $store        = Erfurt_App::getInstance()->getStore();
-        $actionConfig = Erfurt_App::getInstance()->getActionConfig('RegisterNewUser');
+        $actionConfig = Erfurt_App::getInstance()->getAc()->getActionConfig(Erfurt_Ac::ACTION_REGISTER);
 
         $userUri = $this->validateHash($hash);
 

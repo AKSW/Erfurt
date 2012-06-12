@@ -374,21 +374,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
          $this->assertEquals($acModelUri, $acModel->getModelUri());
     }
     
-    public function testGetActionConfig()
-    {
-        $acMock = $this->getMock('Erfurt_Ac_Default', array('getActionConfig'));
-        $appMock = $this->getMock('Erfurt_App', array('getAc'), array(), '', false);
-        
-        $appMock->expects($this->once())
-                ->method('getAc')
-                ->will($this->returnValue($acMock));
-        
-        $acMock->expects($this->once())
-               ->method('getActionConfig');
-        
-        $appMock->getActionConfig(array());
-    }
-    
     public function testGetAuth()
     {
         $auth = Erfurt_App::getInstance()->getAuth();
