@@ -18,6 +18,9 @@ require_once 'Zend/Auth.php';
  */
 class Erfurt_Auth extends Zend_Auth
 {
+    const ANONYMOUS_USER  = 'http://ns.ontowiki.net/SysOnt/Anonymous';
+    const SUPERADMIN_USER = 'http://ns.ontowiki.net/SysOnt/SuperAdmin';
+
     public static function getInstance()
     {
         // We need to copy this, for PHP uses superclass with self :(
