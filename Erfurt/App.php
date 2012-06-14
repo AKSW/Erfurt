@@ -724,7 +724,33 @@ class Erfurt_App
                     $logWriter = new Zend_Log_Writer_Null();
                 } else {
                     require_once 'Zend/Log/Writer/Stream.php';
-                    $logWriter = new Zend_Log_Writer_Stream($logDir . $logIdentifier . '.log');
+                    
+                    $logName = $logDir . $logIdentifier;
+            
+                    // Check whether log can be created with $logName... otherwise append a number.
+                    // This needs to be done, since logs may be created by other processes (e.g. with 
+                    // testing) and thus can't be opened anymore.
+                    for ($i = 0; $i<10; ++$i) {
+                        try {
+                            $fullLogName = $logName;
+                            if ($i > 0) {
+                                $fullLogName .= '_' . $i;
+                            }
+                            $fullLogName .= '.log';
+                    
+                            $logWriter = new Zend_Log_Writer_Stream($fullLogName);
+                            if (null !== $logWriter) {
+                                break;
+                            }
+                        } catch (Zend_Log_Exception $e) {
+                            // Nothing to do... just continue
+                        }
+                    }
+            
+                    if (null === $logWriter) {
+                        require_once 'Zend/Log/Writer/Null.php';
+                        $logWriter = new Zend_Log_Writer_Null();
+                    }
                 }
             } else {
                 require_once 'Zend/Log/Writer/Null.php';
