@@ -101,6 +101,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $this->_adapterOptions = $adapterOptions;
+        
+        // Access the connection in order to check whether it works.
+        $this->connection();
     }
 
     /**
