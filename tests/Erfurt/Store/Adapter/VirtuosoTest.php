@@ -4,6 +4,9 @@ require_once 'Erfurt/Store/Adapter/Virtuoso.php';
 
 class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
 {
+    /**
+     * @var Erfurt_Store_Adapter_Virtuoso
+     */
     public $fixture = null;
     
     public function setUp()
@@ -239,6 +242,17 @@ We will integrate and syndicate linked data with large-scale, existing applicati
 EOT;
 
         $this->assertEquals($expected2, $this->fixture->buildTripleString($statements2));
+    }
+
+    public function testSparqlQuery()
+    {
+        $arResult = $this->fixture->sparqlQuery(
+            'SELECT * WHERE { ?s ?p ?o } LIMIT 1'
+        );
+        $this->assertCount(
+            1, $arResult,
+            'There should be exact one result row in the array'
+        );
     }
 }
 
