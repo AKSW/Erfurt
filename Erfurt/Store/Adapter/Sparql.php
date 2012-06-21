@@ -6,6 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+require_once 'Erfurt/Store.php';
 require_once 'Erfurt/Store/Adapter/Interface.php';
 require_once 'Erfurt/Store.php';
 
@@ -172,7 +173,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         $q->setFrom($newFrom);
         
         
-        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
                 

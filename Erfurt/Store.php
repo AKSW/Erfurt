@@ -13,19 +13,6 @@
  * @author   Norman Heino <norman.heino@gmail.com>
  */
 
-// ------------------------------------------------------------------------
-// --- Macros ---------------------------------------------------
-// ------------------------------------------------------------------------
-define('STORE_RESULTFORMAT', 'result_format');
-define('STORE_RESULTFORMAT_PLAIN', 'plain');
-define('STORE_RESULTFORMAT_XML', 'xml');
-define('STORE_RESULTFORMAT_EXTENDED', 'extended');
-define('STORE_USE_AC', 'use_ac');
-define('STORE_USE_CACHE', 'use_cache');
-define('STORE_USE_OWL_IMPORTS', 'use_owl_imports');
-define('STORE_USE_ADDITIONAL_IMPORTS', 'use_additional_imports');
-define('STORE_TIMEOUT', 'timeout');
-
 class Erfurt_Store
 {
     // ------------------------------------------------------------------------
@@ -75,6 +62,16 @@ class Erfurt_Store
      * @var int
      */
     const MODEL_TYPE_OWL = 502;
+    
+    const RESULTFORMAT           = 'result_format';
+    const RESULTFORMAT_PLAIN     = 'plain';
+    const RESULTFORMAT_XML       = 'xml';
+    const RESULTFORMAT_EXTENDED  = 'extended';
+    const USE_AC                 = 'use_ac';
+    const USE_CACHE              = 'use_cache';
+    const USE_OWL_IMPORTS        = 'use_owl_imports';
+    const USE_ADDITIONAL_IMPORTS = 'use_additional_imports';
+    const TIMEOUT                = 'timeout';
 
     // ------------------------------------------------------------------------
     // --- Protected Properties -----------------------------------------------
@@ -1164,10 +1161,10 @@ class Erfurt_Store
     protected function _prepareQuery($queryObject, &$options = array())
     {
         $defaultOptions = array(
-            STORE_RESULTFORMAT           => STORE_RESULTFORMAT_PLAIN,
-            STORE_USE_AC                 => true,
-            STORE_USE_OWL_IMPORTS        => true,
-            STORE_USE_ADDITIONAL_IMPORTS => true
+            Erfurt_Store::RESULTFORMAT           => Erfurt_Store::RESULTFORMAT_PLAIN,
+            Erfurt_Store::USE_AC                 => true,
+            Erfurt_Store::USE_OWL_IMPORTS        => true,
+            Erfurt_Store::USE_ADDITIONAL_IMPORTS => true
         );
         $options = array_merge($defaultOptions, $options);
         $noBindings = false;
@@ -1183,7 +1180,7 @@ class Erfurt_Store
             );
         }
 
-        if ($options[STORE_USE_AC] == false) {
+        if ($options[Erfurt_Store::USE_AC] == false) {
             return $queryObject;
         }
 
@@ -1198,7 +1195,7 @@ class Erfurt_Store
         
         //get available models (readable)
         $available = array();
-        if ($options[STORE_USE_AC] === true) {
+        if ($options[Erfurt_Store::USE_AC] === true) {
             $logger->debug('AC: use ac ');
 
             $availablepre = $this->getAvailableModels(true); //all readable (with ac)
@@ -1240,7 +1237,7 @@ class Erfurt_Store
         }
         
         // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
-        if ($options[STORE_USE_AC] === true) {
+        if ($options[Erfurt_Store::USE_AC] === true) {
             $froms = $this->_maskModelList($froms, $available);
             $logger->debug('AC: after filtering (read-rights and existence): '.$this->toStr( $froms));
 
@@ -1251,12 +1248,12 @@ class Erfurt_Store
         }
 
         // 4. get import closure for every remaining from
-        if ($options[STORE_USE_OWL_IMPORTS] === true) {
+        if ($options[Erfurt_Store::USE_OWL_IMPORTS] === true) {
             foreach ($froms as $from) {
                 $importsClosure = $this->getImportsClosure(
                     $from['uri'],
-                    $options[STORE_USE_ADDITIONAL_IMPORTS],
-                    $options[STORE_USE_AC]
+                    $options[Erfurt_Store::USE_ADDITIONAL_IMPORTS],
+                    $options[Erfurt_Store::USE_AC]
                 );
                 $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
 
@@ -1314,7 +1311,7 @@ class Erfurt_Store
      */
     public function sparqlAsk($queryObject, $useAc = true)
     {
-        $options     = array( STORE_USE_AC => $useAc);
+        $options     = array( Erfurt_Store::USE_AC => $useAc);
         $queryObject = $this->_prepareQuery($queryObject, $options);
 
         //query from query cache
@@ -1334,7 +1331,7 @@ class Erfurt_Store
 
     /**
      * @param Erfurt_Sparql_SimpleQuery $queryObject
-     * @param array $options keys: STORE_USE_CACHE, STORE_RESULTFORMAT, STORE_USE_AC
+     * @param array $options keys: Erfurt_Store::USE_CACHE, Erfurt_Store::RESULTFORMAT, Erfurt_Store::USE_AC
      *
      * @throws Erfurt_Exception Throws an exception if query is no string.
      *
@@ -1348,7 +1345,7 @@ class Erfurt_Store
         $queryObject = $this->_prepareQuery($queryObject, $options);
         
         //querying SparqlEngine or retrieving Result from QueryCache
-        $resultFormat = $options[STORE_RESULTFORMAT];
+        $resultFormat = $options[Erfurt_Store::RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
         $replacements = 0;
@@ -1359,7 +1356,7 @@ class Erfurt_Store
             $replacements
         );
         $logger->debug('query after rewriting: '.$queryString);
-        if (!isset($options[STORE_USE_CACHE]) || $options[STORE_USE_CACHE]) {
+        if (!isset($options[Erfurt_Store::USE_CACHE]) || $options[Erfurt_Store::USE_CACHE]) {
             $sparqlResult = $queryCache->load($queryString, $resultFormat);
         } else {
             $sparqlResult = Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT;
@@ -1370,7 +1367,7 @@ class Erfurt_Store
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlQuery($queryString, $options);
             //check for the correct format
-            if ($resultFormat == STORE_RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])) {
+            if ($resultFormat == Erfurt_Store::RESULTFORMAT_EXTENDED && !isset($sparqlResult['results']['bindings'])) {
                 if (isset($sparqlResult['bindings'])) {
                     //fix it if possible
                     $sparqlResult['results'] = array();
@@ -1479,7 +1476,7 @@ class Erfurt_Store
 
             $queryoptions = array(
                 'use_ac'                 => false,
-                'result_format'          => STORE_RESULTFORMAT_EXTENDED,
+                'result_format'          => Erfurt_Store::RESULTFORMAT_EXTENDED,
                 'use_additional_imports' => false
             );
 
@@ -1819,7 +1816,7 @@ class Erfurt_Store
             // get sub items
             $result = $this->_backendAdapter->sparqlQuery(
                 $subSparql,
-                array(STORE_RESULTFORMAT => STORE_RESULTFORMAT_PLAIN)
+                array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_PLAIN)
             );
 
             // break on first empty result

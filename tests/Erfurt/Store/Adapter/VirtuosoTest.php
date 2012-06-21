@@ -8,15 +8,8 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     
     public function setUp()
     {   
-        // $this->markTestNeedsVirtuoso();
-        // $config = $this->getTestConfig()->store->virtuoso->toArray();
-        
-        $config = array(
-            'dsn' => 'VOS',
-            'username' => 'dba',
-            'password' => 'dba'
-        );
-        
+        $this->markTestNeedsVirtuoso();
+        $config = $this->getTestConfig()->store->virtuoso->toArray();
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($config);
     }
     
@@ -146,7 +139,7 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
     {
         $value    = 'Literal';
         $datatype = 'http://www.w3.org/2001/XMLSchema#string';
-        $expected = '"""Literal"""^^<http://www.w3.org/2001/XMLSchema#string>';
+        $expected = '"Literal"^^<http://www.w3.org/2001/XMLSchema#string>';
         $this->assertEquals($expected, $this->fixture->buildLiteralString($value, $datatype, null));
         
         $value    = "Literal \n with newline";
@@ -156,7 +149,7 @@ class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
         
         $value    = 'Literal';
         $lang     = 'de';
-        $expected = '"""Literal"""@de';
+        $expected = '"Literal"@de';
         $this->assertEquals($expected, $this->fixture->buildLiteralString($value, null, $lang));
         
         $value    = <<<EOT
@@ -199,8 +192,8 @@ EOT;
         );
         $expected = <<<EOT
 <http://example.com/1> <http://example.com/2> <http://example.com/3> .
-<http://example.com/1> <http://example.com/2> """literal 1""" .
-<http://example.com/1> <http://example.com/2> """literal 2"""@en .
+<http://example.com/1> <http://example.com/2> "literal 1" .
+<http://example.com/1> <http://example.com/2> "literal 2"@en .
 <http://example.com/1> <http://example.com/2> "literal 3"^^<http://example.com/4> .
 <http://example.com/1> <http://example.com/2> """literal\n4""" .
 
