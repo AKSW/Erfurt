@@ -102,6 +102,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             exit;
         }
 
+        class_exists('Erfurt_Store', true);//load define()s
         $this->_adapterOptions = $adapterOptions;
         
         // Access the connection in order to check whether it works.
@@ -988,7 +989,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //build Virtuoso/PL query
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
-        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
         $resultId = odbc_exec($this->connection(), $virtuosoPl);
 #var_dump($resultId);exit;
         if (false === $resultId) {
