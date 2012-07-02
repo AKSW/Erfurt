@@ -1,13 +1,13 @@
 <?php
 class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    const SYNTAX_TEST_DIR = 'valid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
      * @access protected
      */
-    protected $_object;
+    protected $_object = null;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,7 +17,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
-        $this->_object = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();    
+        $this->_object = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();   
     }
     
     /**
@@ -41,15 +41,16 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
     {
         $dataArray = array();
         
-        if (is_readable(self::SYNTAX_TEST_DIR)) {
-            $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
+        $dirName = realpath(dirname(dirname(dirname(__FILE__)))) . '/_files/' . self::SYNTAX_TEST_DIR;
+        if (is_readable($dirName)) {
+            $dirIterator = new DirectoryIterator($dirName);
             
             foreach ($dirIterator as $file) {
                 if (!$file->isDot() && !$file->isDir()) {
                     $fileName = $file->getFileName();
                     
-                    if ((substr($fileName, -5) === '.json') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    if ((substr($fileName, -5) === '.json') && is_readable($dirName . $fileName)) {
+                        $dataArray[] = array(($dirName . $fileName));
                     }
                 }
             }

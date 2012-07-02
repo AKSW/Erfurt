@@ -1,7 +1,7 @@
 <?php
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    const SYNTAX_TEST_DIR = 'valid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_Turtle
@@ -126,15 +126,16 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
     {
         $dataArray = array();
         
-        if (is_readable(self::SYNTAX_TEST_DIR)) {
-            $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
+        $dirName = realpath(dirname(dirname(dirname(__FILE__)))) . '/_files/' . self::SYNTAX_TEST_DIR;
+        if (is_readable($dirName)) {
+            $dirIterator = new DirectoryIterator($dirName);
             
             foreach ($dirIterator as $file) {
                 if (!$file->isDot() && !$file->isDir()) {
                     $fileName = $file->getFileName();
                     
-                    if ((substr($fileName, -4) === '.ttl') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    if ((substr($fileName, -4) === '.ttl') && is_readable($dirName . $fileName)) {
+                        $dataArray[] = array(($dirName . $fileName));
                     }
                 }
             }
