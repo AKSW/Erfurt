@@ -1,7 +1,4 @@
 <?php 
-
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_NamespacesTest extends Erfurt_TestCase
 {
     const TEST_GRAPH = 'http://example.com/stub/';

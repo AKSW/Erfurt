@@ -1,11 +1,9 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Store_Adapter_SparqlTest extends Erfurt_TestCase
 {
     public function setUp()
     {   
-        
+        $this->markTestNeedsDatabase();
     }
     
     public function testInstantiation()

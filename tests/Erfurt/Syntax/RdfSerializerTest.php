@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Syntax/RdfSerializer.php';
-
 class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
 {
     /**

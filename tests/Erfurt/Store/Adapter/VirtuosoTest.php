@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Store/Adapter/Virtuoso.php';
-
 class Erfurt_Store_Adapter_VirtuosoTest extends Erfurt_TestCase
 {
     public $fixture = null;

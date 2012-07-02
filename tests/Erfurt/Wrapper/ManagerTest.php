@@ -1,9 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Wrapper/Manager.php';
-require_once 'Erfurt/Wrapper/Registry.php';
-
 class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
 {
     protected $_manager = null;

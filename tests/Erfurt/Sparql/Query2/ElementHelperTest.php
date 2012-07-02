@@ -1,6 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
 if(!class_exists("Element")){
     class Element extends Erfurt_Sparql_Query2_ElementHelper{
         public function getSparql() {

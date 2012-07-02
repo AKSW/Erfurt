@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Syntax/RdfParser.php';
-
 class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
 {
     /**
@@ -9,6 +6,8 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
      * @access protected
      */
     protected $_object;
+    
+    private $_resourcesDirectory = null;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -18,9 +17,13 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
-        $this->_object = new Erfurt_Syntax_RdfParser();    
+        $this->_object = new Erfurt_Syntax_RdfParser();
+        
+        $this->_resourcesDirectory = realpath(dirname(__FILE__)) . '/_files/';
     }
-    
+
+// TODO: Refactor to use HTTP client test adapter    
+/*
     public function testParseWithUrlAndRdfXml()
     {        
         $this->_object->initializeWithFormat('rdfxml');
@@ -64,11 +67,12 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
         
         $this->assertEquals($result1, $result2);
     }
+*/
     
     public function testParseWithFilenameAndRdfXml()
     {
         $this->_object->initializeWithFormat('rdfxml');
-        $filename = 'resources/syntax/valid/conferences.rdf';
+        $filename = $this->_resourcesDirectory . 'valid/conferences.rdf';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
@@ -82,7 +86,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithFilenameAndN3()
     {   
         $this->_object->initializeWithFormat('ttl');
-        $filename = 'resources/syntax/valid/conferences.ttl';
+        $filename = $this->_resourcesDirectory . 'valid/conferences.ttl';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         
@@ -96,7 +100,7 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     public function testParseWithFilenameAndRdfJson()
     {
         $this->_object->initializeWithFormat('rdfjson');
-        $filename = 'resources/syntax/valid/conferences.json';
+        $filename = $this->_resourcesDirectory . 'valid/conferences.json';
         
         $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         

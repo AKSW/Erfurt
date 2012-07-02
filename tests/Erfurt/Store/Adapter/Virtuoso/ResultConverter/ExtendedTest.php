@@ -1,15 +1,15 @@
 <?php 
-
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_TestCase
 {
     protected $_fixture = null;
     
+    protected $_resourcesFolder = null;
+    
     public function setUp()
     {
-        require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Extended.php';
         $this->_fixture = new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended();
+        
+        $this->_resourcesFolder = realpath(dirname(__FILE__)) . '/_files/';
     }
     
     /**
@@ -17,7 +17,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
      */
     public function testInvalid()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-invalid.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-invalid.rdf');
         $array = $this->_fixture->convert($contents);
     }
     
@@ -26,13 +26,13 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
      */
     public function testError()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-error.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-error.rdf');
         $array = $this->_fixture->convert($contents);
     }
     
     public function testTitleResultEmpty()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-empty.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-empty.rdf');
         $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
@@ -47,7 +47,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     
     public function testTitleResult1()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-result1.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-result1.rdf');
         $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
@@ -83,7 +83,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     
     public function testTitleResult2()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-result2.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-result2.rdf');
         $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
@@ -119,7 +119,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     
     public function testTitleResult3()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-result3.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-result3.rdf');
         $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);
@@ -158,7 +158,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_ExtendedTest extends Erfurt_
     
     public function testTitleResult4()
     {
-        $contents = file_get_contents('resources/virtuoso/sparql-result4.rdf');
+        $contents = file_get_contents($this->_resourcesFolder . 'sparql-result4.rdf');
         $converted = $this->_fixture->convert($contents);
         
         $this->assertArrayHasKey('head', $converted);

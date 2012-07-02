@@ -1,8 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Rdf/Literal.php';
-
 class Erfurt_Rdf_LiteralTest extends Erfurt_TestCase
 {
 

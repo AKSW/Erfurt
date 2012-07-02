@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Sparql/Parser.php';
-
 class Erfurt_Sparql_EngineDbTest extends Erfurt_TestCase
 {
     const RDF_TEST_DIR = 'resources/rdf/';
