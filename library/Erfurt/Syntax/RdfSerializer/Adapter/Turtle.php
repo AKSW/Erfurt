@@ -32,12 +32,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     
     protected $_store = null;
     protected $_graphUri = null;
-
-
-    public function  __construct() {
-        $this->_store = Erfurt_App::getInstance()->getStore();
-    }
-
+    
     public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
     {
         $this->handleGraph($graphUri, $useAc);
@@ -74,7 +69,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $offset = 0;
         while (true) {
             $query->setOffset($offset);
-            $result = $this->_store->sparqlQuery($query, array(
+            $result = $this->_getStore()->sparqlQuery($query, array(
 		        'result_format'   => 'extended',
 		        'use_owl_imports' => false,
 		        'use_additional_imports' => false,
@@ -131,7 +126,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->handleNamespace($prefix, $ns);
         }
-        $this->_baseUri = $this->_store->getModel($graphUri, $useAc)->getBaseUri();
+        $this->_baseUri = $this->_getStore()->getModel($graphUri, $useAc)->getBaseUri();
     }
      
     public function startRdf($ad = null)
@@ -358,5 +353,15 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     {
         require_once 'Erfurt/Syntax/RdfSerializerException.php';
         throw new Erfurt_Syntax_RdfSerializerException($msg);
+    }
+    
+    protected function _getStore()
+    {
+        if (null === $this->_store) {
+            // TODO: refactor
+            $this->_store = Erfurt_App::getInstance()->getStore();
+        }
+        
+        return $this->_store;
     }
 }

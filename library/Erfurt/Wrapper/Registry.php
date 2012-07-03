@@ -135,6 +135,9 @@ class Erfurt_Wrapper_Registry
      */
     public function register($wrapperName, $wrapperSpec)
     {
+        // We alway use a lowercase key.
+        $wrapperName = strtolower($wrapperName);
+    
         if (isset($this->_wrapperRegistry[$wrapperName])) {
             require_once 'Erfurt/Wrapper/Exception.php';
             throw new Erfurt_Wrapper_Exception("A wrapper with name '$wrapperName' has already been registered.");

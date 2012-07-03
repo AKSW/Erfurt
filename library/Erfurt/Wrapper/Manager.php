@@ -161,6 +161,7 @@ class Erfurt_Wrapper_Manager
         foreach ($iterator as $file) {
             if (!$file->isDot() && $file->isDir()) {
                 $fileName  = $file->getFileName();
+                
                 $innerPath = $pathSpec . $fileName . DIRECTORY_SEPARATOR;
 
                 // Iff a config file exists add the wrapper
