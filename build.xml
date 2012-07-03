@@ -23,7 +23,7 @@
         <apply executable="php" failonerror="true">
             <arg value="-l" />
 
-            <fileset dir="${basedir}/Erfurt">
+            <fileset dir="${basedir}/library/Erfurt">
                 <include name="**/*.php" />
                 <modified />
             </fileset>
@@ -34,7 +34,7 @@
         <exec executable="phploc">
             <arg value="--log-csv" />
             <arg value="${basedir}/build/logs/phploc.csv" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
     
@@ -43,14 +43,14 @@
             <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
             <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
     
     <target name="phpmd"
             description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
          <exec executable="phpmd">
-             <arg path="${basedir}/Erfurt" />
+             <arg path="${basedir}/library/Erfurt" />
              <arg value="text" />
              <arg value="${basedir}/build/phpmd.xml" />
          </exec>
@@ -59,7 +59,7 @@
      <target name="phpmd-ci"
              description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
         <exec executable="phpmd">
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
             <arg value="xml" />
             <arg value="${basedir}/build/phpmd.xml" />
             <arg value="--reportfile" />
@@ -71,7 +71,7 @@
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
             <arg value="--standard=${basedir}/build/phpcs.xml" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
 
@@ -81,7 +81,7 @@
             <arg value="--report=checkstyle" />
             <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
             <arg value="--standard=${basedir}/build/phpcs.xml" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
 
@@ -89,14 +89,14 @@
         <exec executable="phpcpd">
             <arg value="--log-pmd" />
             <arg value="${basedir}/build/logs/pmd-cpd.xml" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
 
     <target name="phpdoc" description="Generate API documentation using phpDocumentor">
         <exec executable="phpdoc">
             <arg value="--directory" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
             <arg value="--target" />
             <arg path="${basedir}/build/api" />
         </exec>
@@ -111,7 +111,7 @@
             <arg value="--log" />
             <arg path="${basedir}/build/logs" />
             <arg value="--source" />
-            <arg path="${basedir}/Erfurt" />
+            <arg path="${basedir}/library/Erfurt" />
             <arg value="--output" />
             <arg path="${basedir}/build/code-browser" />
         </exec>
