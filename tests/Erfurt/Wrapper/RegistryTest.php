@@ -48,7 +48,6 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
     public function testListActiveWrapperEmpty()
     {
         $result = $this->_registry->listActiveWrapper();
-var_dump($result);exit;
         $this->assertTrue(empty($result));
     }
     

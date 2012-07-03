@@ -121,11 +121,8 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
             if (isset($pArray[EF_RDF_TYPE]) && 
                 $pArray[EF_RDF_TYPE][0]['value'] ===
                  'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#PositiveSyntaxTest') {
-                
-                $queryFileName = substr($filename, 0, strrpos($filename, '/')+1) .
-                                substr($pArray["$mfAction"][0]['value'], 
-                                strrpos($pArray["$mfAction"][0]['value'], '/'));
-                                
+
+                $queryFileName = substr($pArray[$mfAction][0]['value'], 7);
                      
                 $queryArray = array();
                 $queryArray['name']     = $s;
@@ -134,8 +131,12 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                 $queryArray['type']     = 'positive';
                 
                 $handle = fopen($queryFileName, "r");
-                $queryArray['query']    = fread($handle, filesize($queryFileName));
-                fclose($handle);
+                if ($handle) {
+                    $queryArray['query']    = fread($handle, filesize($queryFileName));
+                    fclose($handle);
+                }
+                
+                
                 $queryResultArray[] = array($queryArray);
             } else if (isset($pArray[EF_RDF_TYPE]) &&
                     $pArray[EF_RDF_TYPE][0]['value'] ===
