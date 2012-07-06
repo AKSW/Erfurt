@@ -154,8 +154,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     
     public function sparqlQuery($query, $options=array())
     {
-        //var_dump($query);exit;
-        
         // Make sure, we only query for configured graphs...
         $q = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
         $from = $q->getFrom();
@@ -165,21 +163,23 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 $newFrom[] = $f;
             }
         }
-        //var_dump($this->_configuredGraphs, $from);exit;
+
         if (count($newFrom) === 0) {
             return array();
         }
         $q->setFrom($newFrom);
         
-        
         $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
                 
-        $client = Erfurt_App::getInstance()->getHttpClient($url, array(
-            'maxredirects'  => 10,
-            'timeout'       => 2000
-        ));
+        $client = Erfurt_App::getInstance()->getHttpClient(
+            $url,
+            array(
+                'maxredirects'  => 10,
+                'timeout'       => 2000
+            )
+        );
     
         if (null !== $this->_username) {
             if (substr($url, 0, 7) === 'http://') {
@@ -243,13 +243,10 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         
         $result = array();
         $xmlDoc = new DOMDocument();
-        $xmlDoc->loadXML($sparqlXmlResults);
+        $ret = @$xmlDoc->loadXML($sparqlXmlResults);
 
-        if ($xmlDoc === false) {
-            return array(
-                'head'     => array(),
-                'results' => array('bindings' => array())
-            );
+        if ($ret === false) {
+            throw new OntoWiki_Exception('SPARQL store could not parse the xml result "'.htmlentities($sparqlXmlResults).'"');
         }
         
         $headElems = $xmlDoc->getElementsByTagName('head');
