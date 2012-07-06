@@ -6,6 +6,8 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+require_once 'Erfurt/Store.php';
+
 /**
  * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
  *
@@ -101,6 +103,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $this->_adapterOptions = $adapterOptions;
+        
+        // Access the connection in order to check whether it works.
+        $this->connection();
     }
 
     /**
@@ -642,9 +647,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function sparqlQuery($query, $options=array())
     {
-        $resultFormat = isset($options[STORE_RESULTFORMAT]) ?
-                            $options[STORE_RESULTFORMAT] :
-                            STORE_RESULTFORMAT_PLAIN;
+        $resultFormat = isset($options[Erfurt_Store::RESULTFORMAT]) ?
+                            $options[Erfurt_Store::RESULTFORMAT] :
+                            Erfurt_Store::RESULTFORMAT_PLAIN;
 
         // load query config variables
         extract($this->_getQueryConfig($resultFormat));
@@ -892,12 +897,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         FILTER (' . implode(' || ', $filter) . ')
                     }';
 
-                $result = $queryCache->load($query, STORE_RESULTFORMAT_PLAIN);
+                $result = $queryCache->load($query, Erfurt_Store::RESULTFORMAT_PLAIN);
                 if ($result == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
                     $startTime = microtime(true);
                     $result = $this->sparqlQuery($query);
                     $duration = microtime(true) - $startTime;
-                    $queryCache->save($query, STORE_RESULTFORMAT_PLAIN, $result, $duration);
+                    $queryCache->save($query, Erfurt_Store::RESULTFORMAT_PLAIN, $result, $duration);
                 }
             } while ($result);
 

@@ -6,6 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+require_once 'Erfurt/Store.php';
 require_once 'Erfurt/Store/Adapter/Interface.php';
 require_once 'Erfurt/Store/Sql/Interface.php';
 
@@ -1065,7 +1066,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $options=array())
     {
-        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
 
         $start = microtime(true);
 

@@ -6,6 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+require_once 'Erfurt/Store.php';
 require_once 'Erfurt/Store/Adapter/Sparql.php';
 
 /**
@@ -79,7 +80,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
     
     public function sparqlQuery($query, $options=array())
     {   
-        $resultform =(isset($options[STORE_RESULTFORMAT]))?$options[STORE_RESULTFORMAT]:STORE_RESULTFORMAT_PLAIN;
+        $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
         // Support for FOAF+SSL only when user is authenticated via WebID.
         $identity = Erfurt_App::getInstance()->getAuth()->getIdentity();
         if (!$identity->isWebId()) {

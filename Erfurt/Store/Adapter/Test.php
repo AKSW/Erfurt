@@ -6,6 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
+require_once 'Erfurt/Store.php';
 require_once 'Erfurt/Store/Adapter/Interface.php';
 
 /**
