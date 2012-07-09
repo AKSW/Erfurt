@@ -8,8 +8,6 @@
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @version    $Id$
  */
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 {
     protected $query;

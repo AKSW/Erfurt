@@ -1,14 +1,12 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Store.php';
-require_once 'Erfurt/Store/Adapter/EfZendDb.php';
-
 class Erfurt_Store_Adapter_EfZendDbTest extends Erfurt_TestCase
 {
     public $fixture = null;
     
     public function setUp()
     {    
+        $this->markTestNeedsDatabase();
+    
         $config = array(
             'dbname' => 'ow',
             'username'   => "owuser",

@@ -1,8 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Auth/Adapter/Rdf.php';
-
 class Erfurt_Auth_Adapter_RdfTest extends Erfurt_TestCase
 {
     public function testObjectCreation()

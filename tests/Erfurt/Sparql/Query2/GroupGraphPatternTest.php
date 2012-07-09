@@ -1,6 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Sparql_Query2_GroupGraphPatternTest  extends Erfurt_TestCase{
     protected $pattern;
 

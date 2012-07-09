@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Syntax/RdfSerializer.php';
-
 class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
 {
     /**
@@ -33,10 +30,14 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
                 $object = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($format);
                 
                 if (!($object instanceof Erfurt_Syntax_RdfSerializer)) {
-                    throw new Exception ( 'Object initialization with '. $format .' failed where it should not fail.' );
+                    throw new Exception(
+                        'Object initialization with ' . 
+                        $format . 
+                        ' failed where it should not fail.'
+                    );
                 }
             } catch (Exception $e) {
-                $this->fail($e->getMessage ());
+                $this->fail($e->getMessage());
             }
         }
         

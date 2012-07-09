@@ -1,10 +1,7 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
-
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 {
-    const SYNTAX_TEST_DIR = 'resources/syntax/valid/';
+    const SYNTAX_TEST_DIR = 'valid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_Turtle
@@ -34,10 +31,18 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
     }
     
     /**
+     * This test method requires rapper!
+     *
      * @dataProvider providerTestParseFromFileName
      */
     public function testParseFromFileName($fileName)
     {   
+        // This test method requires rapper!
+        $rapperExistsResult = shell_exec('which rapper');
+        if (null === $rapperExistsResult) {
+            $this->markTestSkipped();
+        }
+        
         $fileHandle = fopen($fileName, 'r');
         $data = fread($fileHandle, filesize($fileName));
         fclose($fileHandle);
@@ -121,6 +126,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             sort($output);
             $actualTriplesString = implode(PHP_EOL, $output);
             
+            $this->assertEquals(count($resultArray), count($output));
             $this->assertEquals($exptecedTriplesString, $actualTriplesString);
         }
     }
@@ -129,15 +135,16 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
     {
         $dataArray = array();
         
-        if (is_readable(self::SYNTAX_TEST_DIR)) {
-            $dirIterator = new DirectoryIterator(self::SYNTAX_TEST_DIR);
+        $dirName = realpath(dirname(dirname(dirname(__FILE__)))) . '/_files/' . self::SYNTAX_TEST_DIR;
+        if (is_readable($dirName)) {
+            $dirIterator = new DirectoryIterator($dirName);
             
             foreach ($dirIterator as $file) {
                 if (!$file->isDot() && !$file->isDir()) {
                     $fileName = $file->getFileName();
                     
-                    if ((substr($fileName, -4) === '.ttl') && is_readable(self::SYNTAX_TEST_DIR . $fileName)) {
-                        $dataArray[] = array((self::SYNTAX_TEST_DIR . $fileName));
+                    if ((substr($fileName, -4) === '.ttl') && is_readable($dirName . $fileName)) {
+                        $dataArray[] = array(($dirName . $fileName));
                     }
                 }
             }
@@ -277,5 +284,35 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             'http://aksw.org/tmp/dl-learner.org',
             $result['http://aksw.org/Projects/DL-Learner']['http://usefulinc.com/ns/doap#homepage'][0]['value']
         );
+    }
+    
+    public function testParseFromFileNameNoBaseUri()
+    {
+        $fileName = realpath(dirname(dirname(dirname(__FILE__)))) 
+                  . '/_files/misc/test_no_base_uri.ttl';
+                  
+        $expectedUri = 'file://' 
+                     . realpath(dirname(dirname(dirname(__FILE__)))) 
+                     . '/_files/misc/ow_ext_community1.rq';
+        
+        $parserResult = null;
+        try {
+            $parserResult = $this->_object->parseFromFilename($fileName);
+        } catch (Erfurt_Syntax_RdfParserException $e) {
+            $this->fail($e->getMessage());
+        }
+        
+        $this->assertTrue(is_array($parserResult));
+        
+        foreach ($parserResult as $s=>$pArray) {
+            foreach ($pArray as $p=>$oArray) {
+                foreach ($oArray as $oSpec) {
+                    if ($oSpec['type'] === 'uri') {
+                        // Check for correct baseUri
+                        $this->assertEquals($expectedUri, $oSpec['value']);
+                    }
+                }
+            }
+        }
     }
 }

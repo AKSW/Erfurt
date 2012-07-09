@@ -1,5 +1,4 @@
 <?php
-
 class Erfurt_Versioning_StoreStub
 {    
     const ROLLBACK_ACTION_QUERY1 = 'SELECT action_type, payload_id, model, parent FROM ef_versioning_actions WHERE ( id = ';
