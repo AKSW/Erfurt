@@ -827,7 +827,7 @@ class Erfurt_Store
                      ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
 
             // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, $useAc)) {
+            if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
                 // instantiate OWL model
                 $modelInstance = new Erfurt_Owl_Model($modelIri);
             } else {
@@ -1179,6 +1179,10 @@ class Erfurt_Store
             Erfurt_Store::USE_OWL_IMPORTS        => true,
             Erfurt_Store::USE_ADDITIONAL_IMPORTS => true
         );
+        
+        if(!is_array($options)){
+            $options = array();
+        }
         $options = array_merge($defaultOptions, $options);
 
         //typechecking
@@ -1329,7 +1333,6 @@ class Erfurt_Store
     public function sparqlAsk($queryObject, $options = array())
     {
         $queryString = $this->_prepareQuery($queryObject, $options);
-
 
         //query from query cache
         $queryCache   = Erfurt_App::getInstance()->getQueryCache();
@@ -1619,7 +1622,7 @@ class Erfurt_Store
               ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
 
         $graphResult = array();
-        $result = $this->sparqlQuery($query, array('use_ac' => $useAc));
+        $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
 
         if ($result) {
             foreach ($result as $row) {
