@@ -1,7 +1,4 @@
 <?php
-require_once realpath(dirname(__FILE__) . '/..') . '/test_base.php';
-require_once 'Erfurt/App.php';
-
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 {
     private $_dbWasUsed      = false;

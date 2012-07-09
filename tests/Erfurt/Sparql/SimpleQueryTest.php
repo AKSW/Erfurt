@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Sparql/SimpleQuery.php';
-
 class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 {
     public function assertQueryEquals($expected, $actual)

@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
-
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonTest extends Erfurt_TestCase
 {
     /**

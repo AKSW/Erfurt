@@ -1,13 +1,10 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Sparql/Parser.php';
-
 class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 {
-    const RAP_TEST_DIR = 'resources/sparql/rap/';
-    const OW_TEST_DIR = 'resources/sparql/ontowiki/';
-    const EF_TEST_DIR = 'resources/sparql/erfurt/';
-    const DAWG_DATA_DIR = 'resources/sparql/w3c-dawg2/data-r2/';
+    const RAP_TEST_DIR = 'rap/';
+    const OW_TEST_DIR = 'ontowiki/';
+    const EF_TEST_DIR = 'erfurt/';
+    const DAWG_DATA_DIR = 'w3c-dawg2/data-r2/';
     
     protected $_parser = null;
     
@@ -67,21 +64,23 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
     {
         $queryArray = array();
         
+        $resourceFileBase = realpath(dirname(__FILE__)) .'/_files/';
+        
         // 1. ow tests 
-        $this->_importFromManifest(self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
+        $this->_importFromManifest($resourceFileBase . self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
         
         // 2. erfurt tests
-        $this->_importFromManifest(self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
+        $this->_importFromManifest($resourceFileBase . self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
         
         // 3. rap tests
-        $this->_importFromManifest(self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
+        $this->_importFromManifest($resourceFileBase . self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
     
         // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
         
-        $result = $parser->parse(self::DAWG_DATA_DIR . 'manifest-syntax.ttl', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        $result = $parser->parse($resourceFileBase . self::DAWG_DATA_DIR . 'manifest-syntax.ttl', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         $keys = array_keys($result);
         $subject = $keys[0];
         $base = $subject;
@@ -92,7 +91,7 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
             $p = EF_RDF_NS . 'first';
             $filename = $result["$object"]["$p"][0]['value'];
 
-            $filename = self::DAWG_DATA_DIR . substr($filename, strlen($base));
+            $filename = $resourceFileBase . self::DAWG_DATA_DIR . substr($filename, strlen($base));
             
             $this->_importFromManifest($filename, $queryArray);
             
@@ -122,11 +121,8 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
             if (isset($pArray[EF_RDF_TYPE]) && 
                 $pArray[EF_RDF_TYPE][0]['value'] ===
                  'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#PositiveSyntaxTest') {
-                
-                $queryFileName = substr($filename, 0, strrpos($filename, '/')+1) .
-                                substr($pArray["$mfAction"][0]['value'], 
-                                strrpos($pArray["$mfAction"][0]['value'], '/'));
-                                
+
+                $queryFileName = substr($pArray[$mfAction][0]['value'], 7);
                      
                 $queryArray = array();
                 $queryArray['name']     = $s;
@@ -135,8 +131,12 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                 $queryArray['type']     = 'positive';
                 
                 $handle = fopen($queryFileName, "r");
-                $queryArray['query']    = fread($handle, filesize($queryFileName));
-                fclose($handle);
+                if ($handle) {
+                    $queryArray['query']    = fread($handle, filesize($queryFileName));
+                    fclose($handle);
+                }
+                
+                
                 $queryResultArray[] = array($queryArray);
             } else if (isset($pArray[EF_RDF_TYPE]) &&
                     $pArray[EF_RDF_TYPE][0]['value'] ===

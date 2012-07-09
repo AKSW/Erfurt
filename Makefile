@@ -1,3 +1,5 @@
+ZENDVERSION=1.11.5
+
 default:
 	@echo "please use:"
 	@echo "     'make cs-install' (install CodeSniffer)"
@@ -20,6 +22,13 @@ default:
 	@echo "     'FPATH=<path>' (run code checking on specific relative path)"
 	@echo "     'SNIFFS=<sniff 1>,<sniff 2>' (run code checking on specific sniffs)"
 	@echo "     'OPTIONS=<option>' (run code checking with specific CodeSniffer options)"
+
+zend:
+	rm -rf library/Zend
+	curl -# -O http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
+	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
+	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
+	rm -rf ZendFramework-${ZENDVERSION}-minimal.tar.gz ZendFramework-${ZENDVERSION}-minimal
 
 # coding standard
 

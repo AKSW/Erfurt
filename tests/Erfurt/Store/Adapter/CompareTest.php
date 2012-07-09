@@ -1,11 +1,9 @@
 <?php
-
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Store_Adapter_CompareTest extends Erfurt_TestCase {
 
-    public function setUp() {
-        
+    public function setUp() 
+    {
+        $this->markTestNeedsVirtuoso();
     }
 
     private function getAdapter() {

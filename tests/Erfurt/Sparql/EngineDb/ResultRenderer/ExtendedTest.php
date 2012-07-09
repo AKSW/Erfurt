@@ -1,6 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Sparql_EngineDb_ResultRenderer_ExtendedTest extends Erfurt_TestCase
 {
     public function testResultHeadVarsHaveCorrectName()

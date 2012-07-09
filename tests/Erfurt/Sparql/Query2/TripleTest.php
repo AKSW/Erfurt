@@ -1,7 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Sparql/Query2/structural-Interfaces.php';
-require_once 'Erfurt/Sparql/Query2/Constraint.php';
 class Erfurt_Sparql_Query2_TripleTest  extends Erfurt_TestCase{
     protected $triple;
 
