@@ -92,7 +92,6 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
             switch($part){
                 case 0:
                     return ($this->subject instanceof Erfurt_Sparql_Query2_Var ? 1 : 0);
-                    break;
                 case 1:
                     $i = 0;
                     foreach($this->propertyList as $prop){
@@ -109,11 +108,16 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
                         }
                     }
                     return $i;
-                    break;
             }
         }
     }
 
+    /**
+     * like strcmp for graph pattern elements
+     * @param type $c1
+     * @param type $c2
+     * @return int
+     */
     public static function compareWeight($c1, $c2){
         switch(true){
             case $c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject:
@@ -138,25 +142,13 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
                 break;
         }
         if (!($c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && $c2 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject)) {
-            return $c1weight - $c2weight;
+            $cmp = $c1weight - $c2weight;
+            return $cmp != 0 ? $cmp : strcmp((string)$c1, (string)$c2); //to avoid 0
         }
 
         //both are normal triples
-        $res = $c1->getWeight() - $c2->getWeight();
-        switch ($res){
-            case $res == 0:
-                // go deeper 
-
-                break;
-            case $res < 0:
-                $ret = -1;
-                break;
-            case $res > 0:
-                $ret = 1;
-                break;
-        }
-
-        return $ret;
+        $cmp = $c1->getWeight() - $c2->getWeight();
+        return $cmp != 0 ? $cmp : strcmp((string)$c1, (string)$c2);
     }
 }
-?>
+

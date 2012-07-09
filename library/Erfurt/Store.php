@@ -1160,6 +1160,19 @@ class Erfurt_Store
      */
     protected function _prepareQuery($queryObject, &$options = array())
     {
+        /*
+         * clone the Query2 Object to not modify the original one
+         * could be used elsewhere, could have side-effects
+         */
+        if ($queryObject instanceof Erfurt_Sparql_Query2) {
+             //always clone
+             //the query will be altered here to implement AC and owl:imports
+             //dont make these changes global
+            $queryObject = clone $queryObject;
+            //bring triples etc. to canonical order
+            $queryObject->optimize(); 
+        }
+
         $defaultOptions = array(
             Erfurt_Store::RESULTFORMAT           => Erfurt_Store::RESULTFORMAT_PLAIN,
             Erfurt_Store::USE_AC                 => true,
@@ -1167,7 +1180,6 @@ class Erfurt_Store
             Erfurt_Store::USE_ADDITIONAL_IMPORTS => true
         );
         $options = array_merge($defaultOptions, $options);
-        $noBindings = false;
 
         //typechecking
         if (is_string($queryObject)) {
@@ -1181,17 +1193,13 @@ class Erfurt_Store
         }
 
         if ($options[Erfurt_Store::USE_AC] == false) {
+            //we are done preparing early
             return $queryObject;
         }
-
-        /*
-         * clone the Query2 Object to not modify the original one
-         * could be used elsewhere, could have side-effects
-         */
-        if ($queryObject instanceof Erfurt_Sparql_Query2) { //always clone?
-            $queryObject = clone $queryObject;
-        }
+        
         $logger = $this->_getQueryLogger();
+        
+        $noBindings = false;
         
         //get available models (readable)
         $available = array();
@@ -1298,8 +1306,17 @@ class Erfurt_Store
                 $ggp->addFilter(false); //unsatisfiable
                 $queryObject->setWhere($ggp);
             }
-        } 
-        return $queryObject;
+        }
+        
+        $replacements = 0;
+        $queryString = str_replace(
+            $this->_bnodePrefix,
+            $this->_backendAdapter->getBlankNodePrefix(),
+            (string)$queryObject,
+            $replacements
+        );
+        
+        return $queryString;
     }
 
     /**
@@ -1309,21 +1326,21 @@ class Erfurt_Store
      * @param string $askSparql
      * @param boolean $useAc Whether to check for access control.
      */
-    public function sparqlAsk($queryObject, $useAc = true)
+    public function sparqlAsk($queryObject, $options = array())
     {
-        $options     = array( Erfurt_Store::USE_AC => $useAc);
-        $queryObject = $this->_prepareQuery($queryObject, $options);
+        $queryString = $this->_prepareQuery($queryObject, $options);
+
 
         //query from query cache
         $queryCache   = Erfurt_App::getInstance()->getQueryCache();
-        $sparqlResult = $queryCache->load((string) $queryObject, 'plain');
+        $sparqlResult = $queryCache->load($queryString, 'plain');
         if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
-            $sparqlResult = $this->_backendAdapter->sparqlAsk((string) $queryObject);
+            $sparqlResult = $this->_backendAdapter->sparqlAsk($queryString);
             self::$_queryCount++;
             $duration = microtime(true) - $startTime;
-            $queryCache->save((string) $queryObject, 'plain', $sparqlResult, $duration);
+            $queryCache->save($queryString, 'plain', $sparqlResult, $duration);
         }
 
         return $sparqlResult;
@@ -1342,19 +1359,13 @@ class Erfurt_Store
         $logger = $this->_getQueryLogger();
 
         $logger->debug('query in: '.(string)$queryObject);
-        $queryObject = $this->_prepareQuery($queryObject, $options);
+        $queryString = $this->_prepareQuery($queryObject, $options);
+        //dont use the query object afterwards anymore - only the string
         
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[Erfurt_Store::RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
 
-        $replacements = 0;
-        $queryString = str_replace(
-            $this->_bnodePrefix,
-            $this->_backendAdapter->getBlankNodePrefix(),
-            (string)$queryObject,
-            $replacements
-        );
         $logger->debug('query after rewriting: '.$queryString);
         if (!isset($options[Erfurt_Store::USE_CACHE]) || $options[Erfurt_Store::USE_CACHE]) {
             $sparqlResult = $queryCache->load($queryString, $resultFormat);
@@ -1417,7 +1428,7 @@ class Erfurt_Store
                         }
                     }
                         
-                    $q = (string)$queryObject;
+                    $q = $queryString;
                     $q = str_replace(PHP_EOL, ' ', $q);
                         
                     $logger->debug(
@@ -1429,7 +1440,7 @@ class Erfurt_Store
             } else {
                 $logger->debug('cached');
             }
-            $queryCache->save((string) $queryObject, $resultFormat, $sparqlResult, $duration);
+            $queryCache->save($queryString, $resultFormat, $sparqlResult, $duration);
         }
         return $sparqlResult;
     }

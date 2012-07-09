@@ -218,8 +218,8 @@ class Erfurt_Sparql_Query2_GroupGraphPattern extends Erfurt_Sparql_Query2_Contai
      * optimize
      * little demo of optimization: 
      * - delete duplicate elements (object identity or syntactically equality)
-     * - sort by weight (number of vars used). slightly related to "Bernstein, OptARQ: A SPARQL Optimization Approach based on
-Triple Pattern Selectivity Estimation, 2007"
+     * - sort by weight (number of vars used). slightly related to:
+     *       "Bernstein, OptARQ: A SPARQL Optimization Approach based on Triple Pattern Selectivity Estimation, 2007"
      *
      * TODO: implement a sophisticated semantic equality check
      * @return Erfurt_Sparql_Query2_GroupGraphPattern $this
@@ -239,35 +239,11 @@ Triple Pattern Selectivity Estimation, 2007"
                         $to_remove[] = $this->elements[$i];
                         
                         //cant delete one without deleting both - need to copy first 
-                        if ($this->elements[$j] instanceof Erfurt_Sparql_Query2_ContainerHelper) {
-                            $copy = $this->elements[$j];
-                            $classname = get_class($this->elements[$j]);
-                            $this->elements[$j] = new $classname;
-                            $this->elements[$j]->setElements($copy->getElements());
-                        } else if ($this->elements[$j] instanceof Erfurt_Sparql_Query2_Triple) {
-                            $this->elements[$j] =
-                                new Erfurt_Sparql_Query2_Triple(
-                                    $this->elements[$j]->getS(),
-                                    $this->elements[$j]->getP(),
-                                    $this->elements[$j]->getO()
-                                );
-                        } else if (
-                            $this->elements[$j] instanceof Erfurt_Sparql_Query2_TriplesSameSubject
-                        ) {
-                           $this->elements[$j] =
-                                new Erfurt_Sparql_Query2_TriplesSameSubject(
-                                    $this->elements[$j]->getSubject(),
-                                    $this->elements[$j]->getPropList()
-                                );
-                        }
-                        continue; //why continue
-                        //TODO cover all cases - cant be generic?!
-                    } else if ($this->elements[$i]->equals($this->elements[$j])
-                        && $this->elements[$i] != $this->elements[$j]) {
+                        $this->elements[$j] = unserialize(serialize($this->elements[$j]));
+                    } else if ($this->elements[$i]->equals($this->elements[$j])) {
                         //they are syntactically equal
 
-                        //if the j of this i-j-pair is already 
-                        //marked for deletion: skip i
+                        //if the j of this i-j-pair is already marked for deletion: skip i
                         if (!in_array($this->elements[$j], $to_remove)) {
                             $to_remove[] = $this->elements[$i];
                         }
@@ -280,7 +256,7 @@ Triple Pattern Selectivity Estimation, 2007"
         }
 
         //sort triples by weight
-        usort($this->elements, array("Erfurt_Sparql_Query2_TriplesSameSubject", "compareWeight"));
+        usort($this->elements, array('Erfurt_Sparql_Query2_TriplesSameSubject', 'compareWeight'));
         
         //optimization is done on this level - proceed on deeper level
         foreach ($this->elements as $element) {
@@ -288,7 +264,7 @@ Triple Pattern Selectivity Estimation, 2007"
                 $element->optimize();
             }
         }
-        
+                
         return $this;
     }
 
