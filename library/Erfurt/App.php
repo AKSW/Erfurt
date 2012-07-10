@@ -618,19 +618,17 @@ class Erfurt_App
         if (isset($config->cache->path)) {
             $matches = array();
             if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->cache->path, $matches) === 1)) {
-                $config->cache->path = EF_BASE . $config->cache->path;
+                $baseDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR;
+                $config->cache->path = $baseDir . $config->cache->path;
             }
 
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
-                // Should throw an exception.
                 return false;
-                //return $this->getTmpDir();
             }
         } else {
             return false;
-            //return $this->getTmpDir();
         }
     }
 
@@ -978,29 +976,6 @@ class Erfurt_App
         }
 
         return $this->_versioning;
-    }
-
-    /**
-     * Returns a wrapper manager instance
-     *
-     * @param boolean $addDefaultWrapperPath Whether to add the default wrapper path
-     * on first call of this method (When the class is instanciated).
-     * @return Erfurt_Wrapper_Manager
-     */
-    public function getWrapperManager($addDefaultWrapperPath = true)
-    {
-        if (null === $this->_wrapperManager) {
-            $config = $this->getConfig();
-
-            require_once 'Erfurt/Wrapper/Manager.php';
-            $this->_wrapperManager = new Erfurt_Wrapper_Manager();
-
-            if ($addDefaultWrapperPath && isset($config->extensions->wrapper)) {
-                $this->_wrapperManager->addWrapperPath(EF_BASE . $config->extensions->wrapper);
-            }
-        }
-
-        return $this->_wrapperManager;
     }
 
     /**

@@ -1,0 +1,18 @@
+SELECT * 
+WHERE { 
+?resourceUri a ?event 
+FILTER (sameTerm(?event, <http://swrc.ontoware.org/ontology#Event>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Conference>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Workshop>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Seminar>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Lecture>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Colloquium>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Exhibition>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#Meeting>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#GraduateClass>) ||
+sameTerm(?event,
+<http://swrc.ontoware.org/ontology#UndergraduateAdvancedClass>) ||
+sameTerm(?event,
+<http://swrc.ontoware.org/ontology#UndergraduateIntermediateClass>) ||
+sameTerm(?event, <http://swrc.ontoware.org/ontology#ProjectMeeting>)) 
+}
