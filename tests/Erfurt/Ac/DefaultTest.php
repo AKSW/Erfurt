@@ -1147,4 +1147,14 @@ class Erfurt_Ac_DefaultTest extends Erfurt_TestCase
         $result = $this->_object->addUserModelRule($modelUri, Erfurt_Ac::ACCESS_TYPE_EDIT, Erfurt_Ac::ACCESS_PERM_DENY);
         $this->assertTrue($result);
     }
+
+    /**
+     * @expectedException Erfurt_Ac_Exception
+     */
+    public function testSetStoreAcGraphNotAvailable()
+    {
+        $storeAdapter = new Erfurt_Store_Adapter_Test();
+        $store = new Erfurt_Store(array('adapterInstance' => $storeAdapter), 'test');
+        $this->_object->setStore($store);
+    }
 }

@@ -505,14 +505,18 @@ class Erfurt_App
             $type = strtolower($config->ac->type);
             if ($type === 'rdf') {
                 require_once 'Erfurt/Ac/Default.php';
-                
+
                 $acConfig = array();
                 if (isset($config->ac->allowDbUser)) {
                     $acConfig['allowDbUser'] = (bool)$config->ac->allowDbUser;
                 }
-                
+
                 $this->_ac = new Erfurt_Ac_Default($acConfig);
-                $this->_ac->setUser($this->getAuth()->getIdentity());
+
+                if ($this->getAuth()->hasIdentity()) {
+                    $this->_ac->setUser($this->getAuth()->getIdentity());
+                }
+
                 $this->_ac->setStore($this->getStore());
             } else if ($type === 'none') {
                 require_once 'Erfurt/Ac/None.php';
@@ -568,6 +572,11 @@ class Erfurt_App
         }
 
         return $this->_auth;
+    }
+
+    public function setAuth(Erfurt_Auth $auth)
+    {
+        $this->_auth = $auth;
     }
 
     /**

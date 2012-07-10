@@ -397,8 +397,8 @@ class Erfurt_Ac_Default extends Erfurt_Ac
     public function setStore(Erfurt_Store $store)
     {
         // Check for AC model!
-        $acModel = $store->getModel($this->_config['acGraphUri'], false);
-        if (!$acModel) {
+        $acModelAvailable = $store->isModelAvailable($this->_config['acGraphUri'], false);
+        if (!$acModelAvailable) {
             require_once 'Erfurt/Ac/Exception.php';
             throw new Erfurt_Ac_Exception('AC model not available with URI: ' . $this->_config['acGraphUri']);
         }

@@ -326,8 +326,20 @@ class Erfurt_AppTest extends Erfurt_TestCase
     
     public function testGetAc()
     { 
+        // We need to set the auth instance explicitly, since we need a auth storage
+        // other than the session storage.
+        $auth = Erfurt_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
+        Erfurt_App::getInstance()->setAuth($auth);
+
+        // We need to set the store
+        $storeAdapter = new Erfurt_Store_Adapter_Test();
+        $storeAdapter->getNewModel('http://localhost/OntoWiki/Config/');
+        $store = new Erfurt_Store(array('adapterInstance' => $storeAdapter), 'test');
+        Erfurt_App::getInstance()->setStore($store);
+
         $ac = Erfurt_App::getInstance()->getAc(); 
-        
+
         if (!($ac instanceof Erfurt_Ac_Default)) {
             $this->fail();
         }
