@@ -1,7 +1,4 @@
 <?php 
-
-require_once 'Erfurt/TestCase.php';
-
 class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXmlTest extends Erfurt_TestCase
 {
     protected $_fixture = null;

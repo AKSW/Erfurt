@@ -1,7 +1,4 @@
 <?php
-require_once realpath(dirname(__FILE__) . '/..') . '/test_base.php';
-require_once 'Erfurt/App.php';
-
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 {
     private $_dbWasUsed      = false;
@@ -147,6 +144,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     {
         if (null === $this->_testConfig) {
             if (is_readable(_TESTROOT . 'config.ini')) {
+                
                 require_once 'Zend/Config/Ini.php';
                 $this->_testConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini'), 'private', array( 'allowModifications' =>true));
             } else {

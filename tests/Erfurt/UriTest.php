@@ -1,8 +1,4 @@
 <?php
-
-require_once 'Erfurt/TestCase.php';
-require_once 'Erfurt/Uri.php';
-
 class Erfurt_UriTest extends Erfurt_TestCase
 {
     public function testCheck()

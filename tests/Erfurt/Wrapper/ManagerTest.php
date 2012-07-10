@@ -1,16 +1,15 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Wrapper/Manager.php';
-require_once 'Erfurt/Wrapper/Registry.php';
-
 class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
 {
     protected $_manager = null;
     
+    protected $_resourcesPath = null;
+    
     protected function setUp()
     {
         $this->_manager = new Erfurt_Wrapper_Manager();
+        
+        $this->_resourcesPath = realpath(dirname(__FILE__)) . '/_files/';
     } 
     
     protected function tearDown()
@@ -26,12 +25,14 @@ class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
     
     public function testAddWrapperPathWithExistingPath()
     {        
-        $this->_manager->addWrapperPath('resources/wrapper');
+        $this->_manager->addWrapperPath($this->_resourcesPath);
         
         $registry = Erfurt_Wrapper_Registry::getInstance();
         $activeWrapper = $registry->listActiveWrapper();
         
-        $this->assertEquals(1, count($activeWrapper));
-        $this->assertEquals('enabled', $activeWrapper[0]);
+        $this->assertEquals(3, count($activeWrapper));
+        $this->assertTrue(in_array('linkeddata', $activeWrapper));
+        $this->assertTrue(in_array('rdfa', $activeWrapper));
+        $this->assertTrue(in_array('enabled', $activeWrapper));
     }
 }

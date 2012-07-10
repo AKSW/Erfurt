@@ -1,6 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
 class Container extends Erfurt_Sparql_Query2_ContainerHelper{
     public function getSparql() {
         return "[".implode(" , ", $this->elements)."]";

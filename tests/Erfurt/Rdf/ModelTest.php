@@ -1,11 +1,4 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Rdf/Model.php';
-require_once 'Erfurt/Rdf/StoreStub.php';
-
-require_once 'Erfurt/Syntax/RdfParser.php';
-
 class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
 {
     protected $_storeStub = null;
