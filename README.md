@@ -1,15 +1,15 @@
 # Erfurt
 
-Erfurt is a PHP / Zend based Semantic Web Framework for Social Semantic Software.
+Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
 
 ## Features
 
-* RDF Parser / Serializer
-* Storage Abstraction / RDF Store
+* RDF Parser/serializer
+* Storage abstraction/RDF Store
 * Versioning
-* SPARQL Query / Update
+* SPARQL querying/update
 * Caching
-* Plugins / Trigger
+* Plugins/trigger
 * ...
 
 ## Developer Info

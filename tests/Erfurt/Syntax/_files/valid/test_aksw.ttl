@@ -1,0 +1,38 @@
+@base <http://aksw.org> .
+@prefix sysont: <http://ns.ontowiki.net/SysOnt/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix sioct: <http://rdfs.org/sioc/types#> .
+@prefix aksw: <http://aksw.org/schema/> .
+@prefix content: <http://purl.org/rss/1.0/modules/content/> .
+@prefix dbpedia: <http://dbpedia.org/resource/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix groups: <http://aksw.org/Groups/> .
+@prefix lod2: <http://lod2.eu/schema/> .
+@prefix ov: <http://open.vocab.org/terms/> .
+@prefix people: <http://aksw.org/> .
+@prefix projects: <http://aksw.org/Projects/> .
+@prefix site: <http://ns.ontowiki.net/SysOnt/Site/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix v: <http://www.w3.org/2006/vcard/ns#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix ns0: <http://localhost/ontowiki/resource/properties/> .
+@prefix ns1: <http://localhost/ontowiki/view/r/> .
+
+<http://aksw.org/> void:dataDump <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml>, <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=turtle> .
+                   
+people:AlexDummy foaf:phone <tel:+49-341-97-32341> .
+
+people:AlexDummy foaf:depiction <http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=dummy+alex> .
+
+people:JensHens foaf:depiction <http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=cn&value=Jens+Hens> .
+
+projects:GENIA doap:homepage <http://www-tsujii.is.s.u-tokyo.ac.jp/GENIA/home/wiki.cgi?page=Relation+annotation> .
+
+projects:DL-Learner doap:homepage </tmp/dl-learner.org> .

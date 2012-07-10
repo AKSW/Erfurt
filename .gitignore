@@ -8,3 +8,11 @@ config.ini
 .DS_Store
 .htaccess
 nbproject
+Erfurt/libraries/Zend/
+cache.properties
+build/api
+build/code-browser
+build/coverage
+build/logs
+build/pdepend
+library/Zend

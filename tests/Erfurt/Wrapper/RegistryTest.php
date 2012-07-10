@@ -1,16 +1,15 @@
 <?php
-require_once 'Erfurt/TestCase.php';
-
-require_once 'Erfurt/Wrapper/Manager.php';
-require_once 'Erfurt/Wrapper/Registry.php';
-
 class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
 {
     protected $_registry = null;
     
+    protected $_resourcesPath = null;
+    
     protected function setUp()
     {
         $this->_registry = Erfurt_Wrapper_Registry::getInstance();
+        
+        $this->_resourcesPath = realpath(dirname(__FILE__)) . '/_files/';
     }
     
     protected function tearDown()
@@ -41,7 +40,7 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
     public function testGetWrapperInstanceWillSucceed()
     {
         $manager = new Erfurt_Wrapper_Manager();
-        $manager->addWrapperPath('resources/wrapper');
+        $manager->addWrapperPath($this->_resourcesPath);
         
         try {
             $this->_registry->getWrapperInstance('enabled');
@@ -50,22 +49,26 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
         }
     }
     
-    public function testListActiveWrapperEmpty()
+    public function testListActiveWrapperEqualsDefaultWrappers()
     {
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertTrue(empty($result));
+        $this->assertEquals(2, count($result));
+        $this->assertTrue(in_array('linkeddata', $result));
+        $this->assertTrue(in_array('rdfa', $result));
     }
     
     public function testListActiveWrapper()
     {
         $manager = new Erfurt_Wrapper_Manager();
-        $manager->addWrapperPath('resources/wrapper');
+        $manager->addWrapperPath($this->_resourcesPath);
         
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertEquals(1, count($result));
-        $this->assertEquals('enabled', $result[0]);
+        $this->assertEquals(3, count($result));
+        $this->assertTrue(in_array('linkeddata', $result));
+        $this->assertTrue(in_array('rdfa', $result));
+        $this->assertTrue(in_array('enabled', $result));
     }
     
     public function testRegister()
@@ -74,8 +77,10 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
         
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertEquals(1, count($result));
-        $this->assertEquals('dummy', $result[0]);
+        $this->assertEquals(3, count($result));
+        $this->assertTrue(in_array('linkeddata', $result));
+        $this->assertTrue(in_array('rdfa', $result));
+        $this->assertTrue(in_array('dummy', $result));
     }
     
     public function testRegisterAlreadyRegistered()
