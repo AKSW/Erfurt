@@ -16,3 +16,4 @@ build/coverage
 build/logs
 build/pdepend
 library/Zend
+cache.sqlite

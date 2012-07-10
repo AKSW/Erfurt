@@ -73,7 +73,11 @@ class Erfurt_Wrapper_Manager
     {
         $path = rtrim($pathSpec, '/\\') . DIRECTORY_SEPARATOR;
 
-        if (is_readable($path) && !isset($this->_wrapperPaths[$path])) {
+        if (!is_readable($path)) {
+            throw new Erfurt_Wrapper_Exception("Path $path is not readable.");
+        }
+
+        if (!isset($this->_wrapperPaths[$path])) {
             $this->_wrapperPaths[$path] = true;
             $this->_scanWrapperPath($path);
         }
