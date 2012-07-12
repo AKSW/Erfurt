@@ -35,8 +35,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasS($s)
     {
-        if ($s === null) {
-            throw new Exception('need an IRI string as first parameter');
+        if (!is_string($s)) {
+            throw new Erfurt_Exception('need an IRI string as first parameter');
         }
         if (isset($this->_statements[$s])) {
             return true;
@@ -55,7 +55,7 @@ class Erfurt_Rdf_MemoryModel
     public function hasO(array $o)
     {
         if ($o === null) {
-            throw new Exception('need an IRI string as first parameter');
+            throw new Erfurt_Exception('need an IRI string as first parameter');
         }
 
         foreach ($this->_statements as $subject => $predicates) {
@@ -86,7 +86,7 @@ class Erfurt_Rdf_MemoryModel
             return false;
         } else {
             if ($p == null) {
-                throw new Exception('need an IRI string as second parameter');
+                throw new Erfurt_Exception('need an IRI string as second parameter');
             }
             if (isset($this->_statements[$s][$p])) {
                 return true;
@@ -109,7 +109,7 @@ class Erfurt_Rdf_MemoryModel
     public function hasSPvalue($s, $p, $value, $matchType = 'strict')
     {
         if ($value == null) {
-            throw new Exception('need a value string as third parameter');
+            throw new Erfurt_Exception('need a value string as third parameter');
         } else {
             $values = $this->getValues($s, $p);
             foreach ($values as $key => $object) {
@@ -127,7 +127,7 @@ class Erfurt_Rdf_MemoryModel
                         }
                         break;
                     default:
-                        throw new Exception('unknown matchType, use strict or preg');
+                        throw new Erfurt_Exception('unknown matchType, use strict or preg');
                         break;
                 }
             }
@@ -257,7 +257,7 @@ class Erfurt_Rdf_MemoryModel
     public function getSP(array $o)
     {
         if ($o === null) {
-            throw new Exception('need an IRI string as first parameter');
+            throw new Erfurt_Exception('need an IRI string as first parameter');
         }
 
         $results = array();
@@ -384,9 +384,9 @@ class Erfurt_Rdf_MemoryModel
     public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject IRI as first parameter');
+            throw new Erfurt_Exception('need a subject IRI as first parameter');
         } else if ($predicate == null) {
-            throw new Exception('need a predicate IRI as second parameter');
+            throw new Erfurt_Exception('need a predicate IRI as second parameter');
         }
 
         $statements = array();
@@ -422,11 +422,11 @@ class Erfurt_Rdf_MemoryModel
     public function addRelation($subject, $relation, $object = null)
     {
         if ($subject == null) {
-            throw new Exception('need a subject IRI as first parameter');
+            throw new Erfurt_Exception('need a subject IRI as first parameter');
         } else if ($relation == null) {
-            throw new Exception('need a predicate IRI as second parameter');
+            throw new Erfurt_Exception('need a predicate IRI as second parameter');
         } else if ($object == null) {
-            throw new Exception('need an object IRI as second parameter');
+            throw new Erfurt_Exception('need an object IRI as second parameter');
         }
 
         $statements = array();
