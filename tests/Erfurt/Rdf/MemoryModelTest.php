@@ -57,7 +57,6 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $this->fixture->addAttribute('http://e.org/r1', 'http://e.org/p1', 10);
         $this->assertTrue($this->fixture->hasSP('http://e.org/r1', 'http://e.org/p1'));
         $this->assertTrue($this->fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 'a-literal'));
-        $this->assertTrue($this->fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 10));
         $this->assertTrue($this->fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', '10'));
         return $this->fixture;
     }
@@ -94,7 +93,7 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $fixture2->removeS('http://e.org/r1');
         $this->assertFalse($fixture2->hasSP('http://e.org/r1', 'http://e.org/p1'));
         $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 'a-literal'));
-        $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 10));
+        $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', '10'));
     }
 
     /**
@@ -106,7 +105,7 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $fixture2->removeSP('http://e.org/r1', 'http://e.org/p1');
         $this->assertFalse($fixture2->hasSP('http://e.org/r1', 'http://e.org/p1'));
         $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 'a-literal'));
-        $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 10));
+        $this->assertFalse($fixture2->hasSPvalue('http://e.org/r1', 'http://e.org/p1', '10'));
     }
 
     /**

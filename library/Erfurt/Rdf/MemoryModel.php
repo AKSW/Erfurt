@@ -54,7 +54,7 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasO(array $o)
     {
-        if ($o === null) {
+        if (!is_array($o)) {
             throw new Erfurt_Exception('need an IRI string as first parameter');
         }
 
@@ -85,7 +85,7 @@ class Erfurt_Rdf_MemoryModel
         if (!$this->hasS($s)) {
             return false;
         } else {
-            if ($p == null) {
+            if (!is_string($p)) {
                 throw new Erfurt_Exception('need an IRI string as second parameter');
             }
             if (isset($this->_statements[$s][$p])) {
@@ -108,7 +108,7 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasSPvalue($s, $p, $value, $matchType = 'strict')
     {
-        if ($value == null) {
+        if (!is_string($value)) {
             throw new Erfurt_Exception('need a value string as third parameter');
         } else {
             $values = $this->getValues($s, $p);
@@ -383,9 +383,9 @@ class Erfurt_Rdf_MemoryModel
      */
     public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
-        if ($subject == null) {
+        if (!is_string($subject)) {
             throw new Erfurt_Exception('need a subject IRI as first parameter');
-        } else if ($predicate == null) {
+        } else if (!is_string($predicate)) {
             throw new Erfurt_Exception('need a predicate IRI as second parameter');
         }
 
@@ -421,11 +421,11 @@ class Erfurt_Rdf_MemoryModel
      */
     public function addRelation($subject, $relation, $object = null)
     {
-        if ($subject == null) {
+        if (!is_string($subject)) {
             throw new Erfurt_Exception('need a subject IRI as first parameter');
-        } else if ($relation == null) {
+        } else if (!is_string($relation)) {
             throw new Erfurt_Exception('need a predicate IRI as second parameter');
-        } else if ($object == null) {
+        } else if (!is_string($object)) {
             throw new Erfurt_Exception('need an object IRI as second parameter');
         }
 
