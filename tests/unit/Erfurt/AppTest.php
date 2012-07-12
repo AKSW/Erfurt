@@ -316,45 +316,54 @@ class Erfurt_AppTest extends Erfurt_TestCase
         
         $configOptions = array(
             'cache' => array(
+                'enable' => true,
+                'type'   => 'sqlite',
                 'sqlite' => array(
                     'dbname' => 'cache.sqlite'
                 )
             )
         );
-        
-        require_once 'Zend/Config.php';
         $tmpConfig = new Zend_Config($configOptions);
         
         $app = Erfurt_App::getInstance(false)->start($tmpConfig);
-        $config = $app->getConfig();
-        $config->cache->enable = true;
-        $config->cache->type   = 'sqlite';
-        $config->cache->sqlite->dbname = 'cache.sqlite';
-        
         $cache = $app->getCache();
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);
     }
     
     public function testGetCacheDir()
     {
-        $app    = Erfurt_App::getInstance();
-        $config = $app->getConfig(); 
+        $app = Erfurt_App::getInstance();
         
         $cachePath = $app->getCacheDir();
-        $this->assertFalse($cachePath);
+        $this->assertTrue(is_writeable($cachePath));
+    }
+    
+    public function testGetCacheDirExplicitCachePath()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig(); 
         
         $baseDir = realpath(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR;
         $cacheDirName = 'cache/';
         $config->cache->path = $cacheDirName;
         
-        // Check if cache dir is writeable. If not, skip the test because of
-        // getCacheDir returned false.
-        if (false === is_writable($baseDir . $config->cache->path)) {
-            $this->markTestSkipped( 'Cache dir '. $baseDir . $config->cache->path . ' is not writeable.' );
-        } else {
-            $cachePath = $app->getCacheDir();
-            $this->assertEquals($baseDir . $cacheDirName, $cachePath);
-        }
+        $cachePath = $app->getCacheDir();
+        $this->assertEquals($baseDir . $cacheDirName, $cachePath);
+    }
+    
+    /**
+     * @expectedException Erfurt_App_Exception
+     */
+    public function testGetCacheDirInvalidCachePath()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig(); 
+        
+        $baseDir = realpath(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR;
+        $cacheDirName = 'somethingNotExisting/';
+        $config->cache->path = $cacheDirName;
+        
+        $cachePath = $app->getCacheDir();
     }
     
     public function testGetConfig()
