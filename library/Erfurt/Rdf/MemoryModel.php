@@ -256,8 +256,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function getSP(array $o)
     {
-        if ($o === null) {
-            throw new Erfurt_Exception('need an IRI string as first parameter');
+        if (!is_array($o)) {
+            throw new Erfurt_Exception('need an object array as first parameter');
         }
 
         $results = array();
