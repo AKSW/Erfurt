@@ -23,6 +23,13 @@ default:
 	@echo "     'SNIFFS=<sniff 1>,<sniff 2>' (run code checking on specific sniffs)"
 	@echo "     'OPTIONS=<option>' (run code checking with specific CodeSniffer options)"
 
+clean:
+	rm -rf cache/* logs/*
+
+directories: clean
+	mkdir -p logs cache
+	chmod 777 logs cache
+
 zend:
 	rm -rf library/Zend
 	curl -# -O http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz

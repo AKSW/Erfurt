@@ -625,10 +625,16 @@ class Erfurt_App
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
-                return false;
+                throw new Erfurt_App_Exception('Cache path is not writable:' . $config->cache->path);
             }
         } else {
-            return false;
+            $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
+            
+            if (is_writable($cacheDir)) {
+                return $cacheDir;
+            } else {
+                throw new Erfurt_App_Exception('Cache path is not writable:' . $cacheDir);
+            }
         }
     }
 
