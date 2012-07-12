@@ -18,7 +18,7 @@ require_once 'Erfurt/Wrapper.php';
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author    Natanael Arndt <arndtn@gmail.com>
  */
-class Erfurt_Wrapper_LinkeDdataWrapper extends Erfurt_Wrapper
+class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
 {
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
