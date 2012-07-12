@@ -35,4 +35,18 @@ class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
         $this->assertTrue(in_array('rdfa', $activeWrapper));
         $this->assertTrue(in_array('enabled', $activeWrapper));
     }
+    
+    public function testWrapperInstantiation()
+    {        
+        $this->_manager->addWrapperPath($this->_resourcesPath);
+        
+        $registry = Erfurt_Wrapper_Registry::getInstance();
+
+        $ldw = $registry->getWrapperInstance('linkeddata');
+        $this->assertInstanceOf('Erfurt_Wrapper_LinkeddataWrapper', $ldw);
+        $rdfaw = $registry->getWrapperInstance('rdfa');
+        $this->assertInstanceOf('Erfurt_Wrapper_RdfaWrapper', $rdfaw);
+        $ew = $registry->getWrapperInstance('enabled');
+        $this->assertInstanceOf('EnabledWrapper', $ew);
+    }
 }
