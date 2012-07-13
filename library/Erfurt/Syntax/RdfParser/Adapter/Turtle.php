@@ -48,9 +48,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     public function parseFromFilename($filename)
     {
         if (strrpos($filename, '#') !== false) {
-            $this->_baseUri = 'file://' . substr($filename, 0, strrpos($filename, '#')+1);
+            $this->_baseUri = 'file://' . str_replace(' ', '%20', substr($filename, 0, strrpos($filename, '#')+1));
         } else {
-            $this->_baseUri = 'file://' . substr($filename, 0, strrpos($filename, '/')+1);
+            $this->_baseUri = 'file://' . str_replace(' ', '%20', substr($filename, 0, strrpos($filename, '/')+1));
         }
         
         $fileHandle = fopen($filename, 'r');

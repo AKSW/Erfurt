@@ -101,7 +101,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             
             // Check for .base file for base URI
             $baseFileName = str_replace('.ttl', '.base', $fileName);
-            $baseUri = 'file:' . $fileName;
+            $baseUri = 'file:' . str_replace(' ', '%20', $fileName);
             if (is_readable($baseFileName)) {
                 $baseUri = trim(file_get_contents($baseFileName));
             }
@@ -113,7 +113,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             fwrite($tmp, $parserResultTriplesString);
             fclose($tmp); 
             
-            $cmd = "rapper -qi turtle -o turtle $tmpFileName | rapper -qi turtle -o ntriples -I $baseUri -";
+            $cmd = "rapper -qi turtle -o turtle \"$tmpFileName\" | rapper -qi turtle -o ntriples -I $baseUri -";
             $output = array();
             $execResult = exec($cmd, $output);
             unlink($tmpFileName);
