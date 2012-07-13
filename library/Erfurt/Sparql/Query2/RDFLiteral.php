@@ -36,7 +36,7 @@ class Erfurt_Sparql_Query2_RDFLiteral extends Erfurt_Sparql_Query2_ElementHelper
     public function __construct($str, $meta = null, $delimiter = '"') {
         $this->delimiter = $delimiter;
         if (!is_string($str)) {
-            throw new RuntimeException('Argument 1 passed to Erfurt_Sparql_Query2_RDFLiteral::__construct must be a string, instance of '.typeHelper($str).' given');
+            $str = (string)$str;
         }
         $this->value = $str;
 

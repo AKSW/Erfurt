@@ -18,7 +18,6 @@
  */
 abstract class Erfurt_Sparql_Query2_ElementHelper {
     protected $id;
-    protected $parents = array();
 
     public function __construct() {
         $this->id = Erfurt_Sparql_Query2::getNextID();
@@ -29,13 +28,11 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
     /**
      * addParent
      * when a ElementHelper-object is added to a ContainerHelper-object this method is called. lets the child know of the new parent
+     * @deprecated - no action
      * @param Erfurt_Sparql_Query2_ContainerHelper $parent
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function addParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
-//        if (!in_array($parent, $this->parents))
-//                $this->parents[] = $parent;
-
         return $this;
     }
 
@@ -51,29 +48,17 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
             $parent->removeElement($this);
         }
 
-//        foreach ($this->parents as $parent) {
-//                $parent->removeElement($this);
-//        }
-
         return $this;
     }
 
     /**
      * removeParent
      * removes a parent
+     * @deprecated - no action
      * @param Erfurt_Sparql_Query2_ContainerHelper $parent
      * @return Erfurt_Sparql_Query2_ElementHelper $this
      */
     public function removeParent(Erfurt_Sparql_Query2_ContainerHelper $parent) {
-//        $new = array();
-//        foreach ($this->parents as $compare) {
-//                if ($compare->equals($parent)) {
-//                        $new[] = $compare;
-//                }
-//        }
-//
-//        $this->parents = $new;
-
         return $this;
     }
 
@@ -83,14 +68,6 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
      */
     public function getID() {
         return $this->id;
-    }
-
-    /**
-     * getParents
-     * @return array an array of Erfurt_Sparql_Query2_ContainerHelper
-     */
-    public function getParents() {
-        return $this->parents;
     }
 
     /**

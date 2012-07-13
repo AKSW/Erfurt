@@ -22,8 +22,11 @@ require_once 'Query2/Constraint.php';
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj)
 {
-    $class = get_class($obj);
-    return !empty($class) ? $class : gettype($obj);
+    if(is_object($obj)){
+         return get_class($obj);
+    } else {
+        return gettype($obj);
+    }
 }
 
 /**
@@ -36,7 +39,7 @@ function typeHelper($obj)
  * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
+class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
 {
     /**
      * @staticvar string a constant for select type
@@ -87,7 +90,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
     
     public function __construct($type = null)
     {
-        parent::__construct();
+        //parent::__construct();
         $this->order = new Erfurt_Sparql_Query2_OrderClause();
         $this->where = new Erfurt_Sparql_Query2_GroupGraphPattern;
 
@@ -121,14 +124,19 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function __call($name, $params)
     {
+        //redirect to where GroupGraphPattern
         if (method_exists($this->where, $name)) {
             $ret = call_user_func_array(array($this->where, $name), $params);  
-        } else throw new RuntimeException("Query2: method $name does not exists");
-            
-        if ($this->where->equals($ret)) 
-            return $this; 
-        else 
-            return $ret;
+        } else {
+            throw new RuntimeException("Query2: method $name does not exists");
+        }
+        
+        //fix fluent interface
+        if ($ret === $this->where) {
+            $ret =  $this; 
+        }
+        
+        return $ret;
     }
 
     
@@ -196,9 +204,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
             $sparql .= 'FROM '.$from->getSparql()." \n";
         }
         
-        if ($this->type != self::typeDescribe){
-            $sparql .= 'WHERE '.$this->where->getSparql();
-        }
+        $sparql .= 'WHERE '.$this->where->getSparql();
 
         if ($this->type != self::typeAsk) {
             if ($this->hasOrderBy()) {
@@ -509,11 +515,7 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
         if ($base->isPrefixed()) {
             throw new RuntimeException('Trying to add base with a prefix');
         }
-        if($this->base !== null){
-            $this->base->removeParent($this);
-        }
         $this->base = $base;
-        $base->addParent($this);
         return $this; //for chaining
     }
     /**
@@ -522,7 +524,6 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function removeBase()
     {
-        $this->base->removeParent($this);
         $this->base = null;
         return $this; //for chaining
     }
@@ -928,6 +929,13 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
 
         return $parents;
     }
+    
+    /**
+     * remove various things from query (variables, froms, triples, prefixes, ...)
+     * @param Erfurt_Sparql_Query2_ElementHelper $element
+     * @param boolean $equal
+     * @return Erfurt_Sparql_Query2
+     */
     public function removeElement($element, $equal = false)
     {
         if ($element instanceof Erfurt_Sparql_Query2_Var) {
@@ -943,45 +951,29 @@ class Erfurt_Sparql_Query2 extends Erfurt_Sparql_Query2_ContainerHelper
             return $this;
         }
         
-        $element->removeParent($this);
         return $this;
     }
-    
-    public function setElements($elements)
-    {
-        //throw
-    }
 
+    /**
+     * invoke parser
+     * @param type $queryString
+     * @param type $parsePartial
+     * @return \Exception
+     * @throws Exception
+     */
     public static function initFromString($queryString, $parsePartial = null){
-        // $parser = new Erfurt_Sparql_Parser_Sparql10();
-        // $fromParser = $parser->initFromString($queryString, array());
-        // if($fromParser['retval'] instanceof Erfurt_Sparql_Query2){
-        //     return $fromParser['retval'];
-        // } else {
-        //     throw new Exception("Error in parser: ". print_r($fromParser['errors'], true));
-        //     return null;
-        // }
-		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+        $parser = new Erfurt_Sparql_Parser_Sparql10();
+        try {
+            $q= $parser->initFromString($queryString, $parsePartial);
+            if ($q['errors']) {
+                    $e = new Exception('Parse Error: ' . implode(',', $q['errors']));
+                    throw $e;
 
-		$q;
-		$parser = new Erfurt_Sparql_Parser_Sparql10();
-		try {
-			$q= $parser->initFromString($queryString, $parsePartial);
-			if ($q['errors']) {
-				$e = new Exception('Parse Error: ' . implode(',', $q['errors']));
-				throw $e;
-				
-			}
-			// var_dump($q);
-			return $q['retval'];
-		} catch (Exception $e) {
-			// if ($querySpec['type'] === 'positive') {
-			//     $this->fail($this->_createErrorMsg($querySpec, $e));		
-			// }
-			return $e;
-	    	}
-
-
+            }
+            return $q['retval'];
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 }
 ?>
