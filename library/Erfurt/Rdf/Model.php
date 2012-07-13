@@ -63,6 +63,8 @@ class Erfurt_Rdf_Model
         'http://www.w3.org/2000/01/rdf-schema#label',
         'http://purl.org/dc/elements/1.1/title'
     );
+    
+    protected $_store = null;
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -74,7 +76,7 @@ class Erfurt_Rdf_Model
      * @param string $modelIri
      * @param string $baseIri
      */
-    public function __construct($modelIri, $baseIri = null)
+    public function __construct($modelIri, $baseIri = null, $store = null)
     {
         $this->_graphUri = $modelIri;
         $this->_baseIri  = $baseIri;
@@ -82,6 +84,12 @@ class Erfurt_Rdf_Model
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
+        }
+        
+        if($store != null){
+            $this->_store = $store;
+        } else {
+            $this->_store = Erfurt_App::getInstance()->getStore();
         }
 
         // namespace module
@@ -112,7 +120,7 @@ class Erfurt_Rdf_Model
      */
     public function addStatement($subject, $predicate, array $object)
     {
-        $this->getStore()->addStatement($this->_graphUri, $subject, $predicate, $object);
+        $this->_store->addStatement($this->_graphUri, $subject, $predicate, $object);
 
         return $this;
     }
@@ -128,7 +136,7 @@ class Erfurt_Rdf_Model
      */
     public function addMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->addMultipleStatements($this->_graphUri, $statements, $useAc);
+        $this->_store->addMultipleStatements($this->_graphUri, $statements, $useAc);
 
         return $this;
     }
@@ -160,7 +168,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteStatement($subject, $predicate, $object)
     {
-        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subject, $predicate, $object);
+        $this->_store->deleteMatchingStatements($this->_graphUri, $subject, $predicate, $object);
     }
 
     /**
@@ -172,7 +180,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->deleteMultipleStatements($this->_graphUri, $statements, $useAc);
+        $this->_store->deleteMultipleStatements($this->_graphUri, $statements, $useAc);
     }
 
     /**
@@ -187,7 +195,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, array $options = array())
     {
-        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec,
+        $this->_store->deleteMatchingStatements($this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec,
             $options);
     }
 
@@ -282,7 +290,7 @@ class Erfurt_Rdf_Model
             }'
         );
 
-            if ($result = $this->getStore()->sparqlQuery($query)) {
+            if ($result = $this->_store->sparqlQuery($query)) {
                 if (is_array($result) && is_array($result[0])) {
                     foreach ($titleProperties as $key => $uri) {
                         if (!empty($result[0][$key])) {
@@ -350,7 +358,6 @@ class Erfurt_Rdf_Model
         $sysOntUri = Erfurt_App::getInstance()->getConfig()->sysont->modelUri;
 
         $options = $this->_getOptions();
-        $store = $this->getStore();
 
         if ($replace && isset($options[$optionUri])) {
             // In this case we need to remove the old values from sysont
@@ -358,7 +365,7 @@ class Erfurt_Rdf_Model
                 'use_ac'       => false, // We disable AC, for we need to write the system ontology.
             );
 
-            $store->deleteMatchingStatements($sysOntUri, $this->_graphUri, $optionUri, null, $options);
+            $this->_store->deleteMatchingStatements($sysOntUri, $this->_graphUri, $optionUri, null, $options);
         }
 
         if (null !== $value) {
@@ -366,7 +373,7 @@ class Erfurt_Rdf_Model
             $addArray[$this->_graphUri] = array();
             $addArray[$this->_graphUri][$optionUri] = $value;
 
-            $store->addMultipleStatements($sysOntUri, $addArray, false);
+            $this->_store->addMultipleStatements($sysOntUri, $addArray, false);
         }
 
         // TODO add this statement on model add?!
@@ -377,7 +384,7 @@ class Erfurt_Rdf_Model
             'value' => 'http://ns.ontowiki.net/SysOnt/Model',
             'type'  => 'uri'
         );
-        $store->addMultipleStatements($sysOntUri, $addArray, false);
+        $this->_store->addMultipleStatements($sysOntUri, $addArray, false);
 
         // Reset the options
         $this->_graphOptions = null;
@@ -425,8 +432,7 @@ class Erfurt_Rdf_Model
     protected function _getOptions()
     {
         if (null === $this->_graphOptions) {
-            $store = $this->getStore();
-            $this->_graphOptions = $store->getGraphConfiguration($this->_graphUri);
+            $this->_graphOptions = $this->_store->getGraphConfiguration($this->_graphUri);
         }
 
         return $this->_graphOptions;
@@ -540,7 +546,7 @@ class Erfurt_Rdf_Model
             $query->setFroms(array($this->_graphUri));
         }
 
-        return $this->getStore()->sparqlQuery($query, $options);
+        return $this->_store->sparqlQuery($query, $options);
     }
 
     /*public function sparqlQueryWithPlainResult($query)
@@ -549,14 +555,19 @@ class Erfurt_Rdf_Model
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $queryObject->addFrom($this->_graphUri);
 
-        return $this->getStore()->sparqlQuery($queryObject);
+        return $this->_store->sparqlQuery($queryObject);
     }*/
+    
+    public function setStore(Erfurt_Store $store)
+    {
+        $this->_store = $store;
+    }
 
+    /*
     public function getStore()
     {
-        require_once 'Erfurt/App.php';
-        return Erfurt_App::getInstance()->getStore();
-    }
+        return $this->_store;
+    }*/
 
     /**
      * Returns an array of namespace IRIs (keys) and prefixes defined
@@ -587,8 +598,7 @@ class Erfurt_Rdf_Model
      */
     public function getNamespacePrefixes()
     {
-        // $store = $this->getStore();
-        // return $store->getNamespacePrefixes($this->_graphUri);
+        // return $this->_store->getNamespacePrefixes($this->_graphUri);
 
         return $this->_namespaces->getNamespacePrefixes($this->getModelUri());
     }
@@ -600,8 +610,7 @@ class Erfurt_Rdf_Model
      */
     public function getNamespacePrefix($namespace)
     {
-        // $store = $this->getStore();
-        // return $store->getNamespacePrefix($this->_graphUri, $namespace);
+        // return $this->_store->getNamespacePrefix($this->_graphUri, $namespace);
 
         return $this->_namespaces->getNamespacePrefix($this->getModelUri(), $namespace);
     }
@@ -613,9 +622,7 @@ class Erfurt_Rdf_Model
      */
     public function addNamespacePrefix($prefix, $namespace)
     {
-        // $ns = $this
-        // $store = $this->getStore();
-        // $store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
+        // $this->_store->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
 
         return $this->_namespaces->addNamespacePrefix($this->getModelUri(), $namespace, $prefix);
     }
@@ -626,8 +633,7 @@ class Erfurt_Rdf_Model
      */
     public function deleteNamespacePrefix($prefix)
     {
-        // $store = $this->getStore();
-        // $store->deleteNamespacePrefix($this->_graphUri, $prefix);
+        // $this->_store->deleteNamespacePrefix($this->_graphUri, $prefix);
 
         return $this->_namespaces->deleteNamespacePrefix($this->getModelUri(), $prefix);
     }
