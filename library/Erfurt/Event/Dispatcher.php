@@ -136,6 +136,9 @@ class Erfurt_Event_Dispatcher
                     if (isset($handler['instance']) && is_object($handler['instance'])) {
                         $handlerObject = $handler['instance'];
                     } else {
+                        if(!isset($handler['class_name']) || !isset($handler['include_path']) || !isset($handler['config'])){
+                            continue;
+                        }
                         // observer is an array, try to load class
                         if (!class_exists($handler['class_name'], false)) {
                             $pathSpec = rtrim($handler['include_path'], '/\\') 
