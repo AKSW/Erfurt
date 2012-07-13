@@ -524,15 +524,13 @@ class Erfurt_Rdf_Model
     public function sparqlQuery($query, $options = array())
     {
         $defaultOptions = array(
-            'result_format' => 'plain'
+            Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_PLAIN
         );
 
         $options = array_merge($defaultOptions, $options);
 
         // Do not allow disabling of ac here!
-        if (isset($options['use_ac'])) {
-            unset($options['use_ac']);
-        }
+        $options[Erfurt_Store::USE_AC] = true;
 
         if (is_string($query)) {
             require_once 'Erfurt/Sparql/SimpleQuery.php';
@@ -563,11 +561,11 @@ class Erfurt_Rdf_Model
         $this->_store = $store;
     }
 
-    /*
+    
     public function getStore()
     {
         return $this->_store;
-    }*/
+    }
 
     /**
      * Returns an array of namespace IRIs (keys) and prefixes defined
