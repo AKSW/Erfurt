@@ -290,7 +290,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
                   . '/_files/misc/test_no_base_uri.ttl';
                   
         $expectedUri = 'file://' 
-                     . realpath(dirname(dirname(dirname(__FILE__)))) 
+                     . str_replace(' ', '%20', realpath(dirname(dirname(dirname(__FILE__))))) 
                      . '/_files/misc/ow_ext_community1.rq';
         
         $parserResult = null;
