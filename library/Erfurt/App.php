@@ -572,6 +572,11 @@ class Erfurt_App
 
         return $this->_auth;
     }
+    
+    public function setAuth(Erfurt_Auth $auth)
+    {
+        $this->_auth = $auth;
+    }
 
     /**
      * Returns a caching instance.

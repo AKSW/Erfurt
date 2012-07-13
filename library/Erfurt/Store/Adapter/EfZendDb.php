@@ -659,7 +659,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function getAvailableModels()
     {
         $modelInfoCache = $this->_getModelInfos();
-
         $models = array();
         foreach ($modelInfoCache as $mInfo) {
             $models[$mInfo['modelIri']] = true;
@@ -1535,7 +1534,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     protected function _getModelInfos()
     {
         if (null === $this->_modelInfoCache) {
-
             try {
                 // try to fetch model and namespace infos... if all tables are present 
                 // this should not lead to an error.

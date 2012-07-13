@@ -1,9 +1,20 @@
 <?php
 class Erfurt_Store_Adapter_CompareIntegrationTest extends Erfurt_TestCase {
 
+    private $_virtuosoOptions = null;
+    private $_zendDbOptions   = null;
+
     public function setUp() 
     {
+/*
         $this->markTestNeedsVirtuoso();
+        $this->markTestNeedsZendDb();
+        
+        $config = Erfurt_App::getInstance()->getConfig();
+        
+        $this->_virtuosoOptions = $config->store->virtuoso;
+        $this->_zendDbOptions = $config->store->zenddb;
+*/
     }
 
     private function getAdapter() {
@@ -16,17 +27,23 @@ class Erfurt_Store_Adapter_CompareIntegrationTest extends Erfurt_TestCase {
             'reference' => new Erfurt_Store_Adapter_Virtuoso($optionsRef),
             'candidate' => new Erfurt_Store_Adapter_EfZendDb($optionsCand)
         );
-
+// TODO fix this... currently returns SPARQL adapter?!
         $adapter = new Erfurt_Store_Adapter_Sparql($options);
         return $adapter;
     }
 
-    public function testInstantiation() {
-        $adapter = $this->getAdapter();
+    public function testInstantiation() 
+    {
+        $this->markTestIncomplete();
+
+        $adapter = $this->getAdapter();        
         $this->assertTrue($adapter instanceof Erfurt_Store_Adapter_Sparql);
     }
 
-    public function testIsModelAvailable() {
+    public function testIsModelAvailable() 
+    {
+        $this->markTestIncomplete();
+    
         $graphUri1 = "http://idontexist.com/";
         $graphUri2 = "http://localhost/OntoWiki/Config/";
         $adapter = $this->getAdapter();
@@ -36,5 +53,4 @@ class Erfurt_Store_Adapter_CompareIntegrationTest extends Erfurt_TestCase {
         $adapter->isModelAvailable($graphUri1);
         $adapter->isModelAvailable($graphUri2);
     }
-
 }

@@ -79,7 +79,7 @@ class Erfurt_Versioning
      */
     public function enableVersioning($versioningEnabled = true)
     {
-        $this->_versioningEnabled = (bool) $versioningEnabled;
+        $this->_versioningEnabled = (bool)$versioningEnabled;
     }
     
     /**

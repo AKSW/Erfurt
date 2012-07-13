@@ -9,7 +9,7 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
     public function testInstantiation()
     {
         $options = array(
-            'serviceurl' => 'http://dbpedia.org/sparql',
+            'serviceUrl' => 'http://dbpedia.org/sparql',
             'graphs'     => array('http://dbpedia.org')
         );
         
@@ -20,13 +20,14 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlWithDbPediaEndpointIssue589()
     {
+// TODO Use HTTP Client test adapter?
         $options = array(
-            'serviceurl' => 'http://dbpedia.org/sparql',
+            'serviceUrl' => 'http://dbpedia.org/sparql',
             'graphs'     => array('http://dbpedia.org')
         );
         $adapter = new Erfurt_Store_Adapter_Sparql($options);
         
-        $sparql = 'SELECT ?s ?p ?o WHERE {?s ?p ?o} LIMIT 10';
+        $sparql = 'SELECT ?p ?o FROM <http://dbpedia.org> WHERE {<http://dbpedia.org/resource/Leipzig> ?p ?o} LIMIT 10';
         $result = $adapter->sparqlQuery($sparql);
         
         $this->assertTrue(is_array($result));

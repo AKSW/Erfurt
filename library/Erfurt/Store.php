@@ -358,6 +358,8 @@ class Erfurt_Store
 
         $returnValue = true;
 
+        $isVersioningEnabled = Erfurt_App::getInstance()->getVersioning()->isVersioningEnabled();
+
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
         // local config!
@@ -391,7 +393,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning($isVersioningEnabled);
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -427,7 +429,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            Erfurt_App::getInstance()->getVersioning()->enableVersioning($isVersioningEnabled);
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }
@@ -1196,10 +1198,12 @@ class Erfurt_Store
             );
         }
 
-        if ($options[Erfurt_Store::USE_AC] == false) {
+        /*
+if ($options[Erfurt_Store::USE_AC] == false) {
             //we are done preparing early
             return $queryObject;
         }
+*/
         
         $logger = $this->_getQueryLogger();
         

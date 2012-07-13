@@ -3,6 +3,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 {        
     public function testImportRdfFrom303Url()
     {
+// TODO fix this by using a http test client!
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
         
@@ -126,7 +127,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
-        $this->markTestNeedsDatabase();
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
@@ -142,7 +142,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlQueryWithCountAndFromIssue174()
     {
-        $this->markTestNeedsDatabase();
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
@@ -155,10 +154,9 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         }';
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
-        
         $result = $store->sparqlQuery($simpleQuery);
-        
-        $this->assertEquals(191, $result);
+
+        $this->assertEquals(197, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()

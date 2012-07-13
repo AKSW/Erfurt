@@ -33,6 +33,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             
             $this->_dbWasUsed = false;
         }
+        
+        $this->_testConfig = null; // force reload on each test e.g. because of db params
     }
     
     public function authenticateAnonymous()
@@ -62,28 +64,24 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsDatabase()
     {
-        if (EF_TEST_CONFIG_SKIP_DB_TESTS) {
-            $this->markTestSkipped();
-        }
-        
-        $this->_loadTestConfig();
-        
-        if ($this->_testConfig === false) {
-            $this->markTestSkipped();
-        }
+        $this->markTestNeedsTestConfig();
         
         $dbName = null;
         if ($this->_testConfig->store->backend === 'virtuoso') {
-            if (isset($this->_testConfig->store->zenddb->dbname)) {
-                 $dbName = $this->_testConfig->store->zenddb->dbname;
+            if (isset($this->_testConfig->store->virtuoso->dsn)) {
+                 $dbName = $this->_testConfig->store->virtuoso->dsn;
             }
         } else if ($this->_testConfig->store->backend === 'zenddb') {
-            if (isset($this->_testConfig->store->virtuoso->dsn)) {
-                 $dbName = $this->_testConfig->store->virtuoso->dsn;            }
+            if (isset($this->_testConfig->store->zenddb->dbname)) {
+                $dbName = $this->_testConfig->store->zenddb->dbname;
+            }
         }
+
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
             $this->markTestSkipped(); // make sure a test db was selected!
         }
+
+        $this->authenticateDbUser();
 
         try {
             $store = Erfurt_App::getInstance()->getStore();
@@ -99,6 +97,11 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         } catch (Erfurt_Exception $e2) {
             $this->markTestSkipped();
         }
+
+        $config = Erfurt_App::getInstance()->getConfig();
+
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->modelUri, false));
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->schemaUri, false));
         
         $this->authenticateAnonymous();
     }
@@ -146,11 +149,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsZendDb()
     {
+        $this->markTestNeedsTestConfig();
+        $this->_testConfig->store->backend = 'zenddb';
         $this->markTestNeedsDatabase();
-        
-        if ($this->_testConfig->store->backend !== 'zenddb') {
-            $this->markTestSkipped();
-        }
     }
     
     private function _loadTestConfig()
@@ -172,5 +173,17 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         } else {
             Erfurt_App::getInstance()->loadConfig();
         }
+        
+        // By default we disable auth and ac!
+        // Needs to be explicitly reactivated if needed!
+        //Erfurt_App::getInstance()->getConfig()->ac->type = 'none';
+        
+        // For tests we have no session!
+        $auth = Erfurt_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
+        Erfurt_App::getInstance()->setAuth($auth);
+        
+        // Disable versioning
+        Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
     }
 }

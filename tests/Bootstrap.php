@@ -1,6 +1,4 @@
 <?php
-define('EF_TEST_CONFIG_SKIP_DB_TESTS', false);
-
 /*
  * Set error reporting to the level to which Erfurt code must comply.
  */

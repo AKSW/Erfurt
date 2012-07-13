@@ -211,6 +211,8 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 
             return $qName;
         }
+        
+        return null;
     }
 
     public function getNamespace()
