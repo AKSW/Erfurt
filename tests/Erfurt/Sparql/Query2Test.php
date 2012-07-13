@@ -166,27 +166,20 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 
             //echo $query->getSparql();
             
-            $usagebefore = memory_get_usage();
-            //$query2 = new Erfurt_Sparql_Query2();
-            //for($i=0;$i<1000; $i++){
-            //    ${"x".$i} = "new";
-            //}
-            $x = "new";
-            $usageafter = memory_get_usage();
-            echo "used " . ($usageafter - $usagebefore) . " bytes for 1 new var";
         } catch(Exception $e){
-            throw $e;
-            $this->assertTrue(false);
+            //throw $e;
+            $this->fail('');
         }
     }
     
 
     public function testOld2 ()
-    {function microtime_float()
     {
-        list($usec, $sec) = explode(" ", microtime());
-        return ((float)$usec + (float)$sec);
-    }
+        function microtime_float()
+        {
+            list($usec, $sec) = explode(" ", microtime());
+            return ((float)$usec + (float)$sec);
+        }
     //require_once '../../../dBug.php';
         try {
             $timesum = (float) 0;
@@ -226,8 +219,8 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
             }
             //echo "$i used avg ".($memorysum/$i) . " bytes and avg " .(number_format($timesum/$i, 9))." seconds";
         } catch(Exception $e){
-            throw $e;
-            $this->assertTrue(false);
+            //throw $e;
+            $this->fail('');
         }
     }
 
@@ -243,12 +236,12 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
 
         $this->query->removeProjectionVar($var);
         $vars = $this->query->getProjectionVars();
-        $this->assertTrue(empty($vars));
+        $this->assertEmpty($vars);
 
         $this->query->addProjectionVar($var);
         $this->query->removeAllProjectionVars();
         $vars = $this->query->getProjectionVars();
-        $this->assertTrue(empty($vars));
+        $this->assertEmpty($vars);
     }
 
     public function testFroms(){
@@ -317,6 +310,119 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
         $this->query->setReduced();
         $this->assertTrue($this->query->isReduced());
         $this->assertFalse($this->query->isDistinct());
+    }
+    
+    public function testType(){
+        //default
+        $this->assertTrue($this->query->getType() == Erfurt_Sparql_Query2::typeSelect, 'query2 needs to be SELECT query by default');
+        //changing
+        $this->query->setQueryType(Erfurt_Sparql_Query2::typeAsk);
+        $this->assertTrue($this->query->getType() == Erfurt_Sparql_Query2::typeAsk);
+        $this->query->setQueryType(Erfurt_Sparql_Query2::typeDescribe);
+        $this->assertTrue($this->query->getType() == Erfurt_Sparql_Query2::typeDescribe);
+        $this->query->setQueryType(Erfurt_Sparql_Query2::typeConstruct);
+        $this->assertTrue($this->query->getType() == Erfurt_Sparql_Query2::typeConstruct);
+        $this->query->setQueryType(Erfurt_Sparql_Query2::typeSelect);
+        $this->assertTrue($this->query->getType() == Erfurt_Sparql_Query2::typeSelect);
+        //invalid argument
+        try {
+            $this->query->setQueryType("INVALID");
+            $this->fail('expected exception when calling setType with invalid param');
+        } catch (Exception $e){
+        }
+    }
+    
+    public function testSerialize(){
+        $s1 = $this->query->getSparql();
+        $q = unserialize(serialize($this->query));
+        $s2 = $q->getSparql();
+        $this->assertEquals($s1, $s2);
+        
+        $c = clone $this->query;
+        $this->assertEquals($this->query, $c);
+        $this->assertNotSame($this->query, $c);
+    }
+    
+    public function testInstantiation(){
+        try{
+        $q1 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeAsk);
+        $this->assertTrue($q1->getType() == Erfurt_Sparql_Query2::typeAsk);
+        $q2 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeDescribe);
+        $this->assertTrue($q2->getType() == Erfurt_Sparql_Query2::typeDescribe);
+        $q3 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeSelect);
+        $this->assertTrue($q3->getType() == Erfurt_Sparql_Query2::typeSelect);
+        $q4 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeConstruct);
+        $this->assertTrue($q4->getType() == Erfurt_Sparql_Query2::typeConstruct);
+        } catch (Exception $e){
+            $this->fail("exception when constructing query2 object");
+        }
+    }
+    
+    public function testCallMagic(){
+        //redirect to where GroupGraphPattern
+        $e = $this->query->getElements();
+        $this->assertTrue(is_array($e));
+        
+        //check fixed return object
+        $r = $this->query->setElements(array()); //setElements returns "where" part, is overwritten to the query itself
+        $this->assertSame($this->query, $r);
+        
+        //check undefined exception
+        try {
+             $r = $this->query->undef();
+             $this->fail("no exception when calling undefined method on query2 object. see __call");
+        } catch (Exception $exc) {
+            $this->assertTrue(true); //increase assertion count :)
+        }
+    }
+    
+    public function testGetSparql(){
+        $q1 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeAsk);
+        $this->assertEquals("ASK  
+WHERE { 
+} 
+", $q1->getSparql());
+        $q2 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeDescribe);
+        $this->assertEquals("DESCRIBE * 
+WHERE { 
+} 
+", $q2->getSparql());
+        $q3 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeSelect);
+        $this->assertEquals("SELECT * 
+WHERE { 
+} 
+", $q3->getSparql());
+        $q4 = new Erfurt_Sparql_Query2(Erfurt_Sparql_Query2::typeConstruct);
+        $constrPure = "CONSTRUCT  
+{ 
+} 
+WHERE { 
+} 
+";
+        $this->assertEquals($constrPure, $q4->getSparql());
+        
+        $q4->setBase(new Erfurt_Sparql_Query2_IriRef('http://base.com'));
+        $this->assertEquals("BASE <http://base.com> 
+CONSTRUCT  
+{ 
+} 
+WHERE { 
+} 
+", $q4->getSparql());
+        $q4->removeBase();
+        $this->assertEquals($constrPure, $q4->getSparql());
+        
+        $q3->setDistinct();
+        $this->assertEquals("SELECT DISTINCT * 
+WHERE { 
+} 
+", $q3->getSparql());
+        
+        $q3->setReduced();
+        $this->assertEquals("SELECT REDUCED * 
+WHERE { 
+} 
+", $q3->getSparql());
     }
 }
 ?>

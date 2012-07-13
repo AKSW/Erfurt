@@ -9,7 +9,7 @@ class Erfurt_Store_Adapter_SparqlTest extends Erfurt_TestCase
     public function testInstantiation()
     {
         $options = array(
-            'serviceurl' => 'http://dbpedia.org/sparql',
+            'serviceUrl' => 'http://dbpedia.org/sparql',
             'graphs'     => array('http://dbpedia.org')
         );
         
@@ -21,7 +21,7 @@ class Erfurt_Store_Adapter_SparqlTest extends Erfurt_TestCase
     public function testSparqlWithDbPediaEndpointIssue589()
     {
         $options = array(
-            'serviceurl' => 'http://dbpedia.org/sparql',
+            'serviceUrl' => 'http://dbpedia.org/sparql',
             'graphs'     => array('http://dbpedia.org')
         );
         $adapter = new Erfurt_Store_Adapter_Sparql($options);

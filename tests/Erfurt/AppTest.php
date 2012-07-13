@@ -173,7 +173,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         Erfurt_App::reset();
         $app = Erfurt_App::getInstance(false)->start($testConfig);
         
-        $this->assertFalse($app->getVersioning()->isVersioningEnabled());
+        $this->assertFalse($app->getVersioning());
     }
     
     public function testStartWithTimezoneNotSet()
