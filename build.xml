@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Erfurt" default="build"> 
-    <target name="build" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit,phpcb"/>
+    
+    <target name="build-unit" depends="prepare,lint,phpunit,phpdoc" />
+    <target name="build-integration" depends="prepare,lint,phpunit-integration,phpdoc" />
+    <target name="build-full" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit-integration,phpcb" />
+    
+    <target name="build" depends="build-integration"/>
 
     <target name="clean" description="Cleanup build artifacts">
         <delete dir="${basedir}/build/api"/>
         <delete dir="${basedir}/build/code-browser"/>
         <delete dir="${basedir}/build/coverage"/>
+        <delete dir="${basedir}/build/coverage-integration"/>
         <delete dir="${basedir}/build/logs"/>
         <delete dir="${basedir}/build/pdepend"/>
     </target>
@@ -15,6 +21,7 @@
         <mkdir dir="${basedir}/build/api"/>
         <mkdir dir="${basedir}/build/code-browser"/>
         <mkdir dir="${basedir}/build/coverage"/>
+        <mkdir dir="${basedir}/build/coverage-integration"/>
         <mkdir dir="${basedir}/build/logs"/>
         <mkdir dir="${basedir}/build/pdepend"/>
     </target>
@@ -101,9 +108,19 @@
             <arg path="${basedir}/build/api" />
         </exec>
     </target>
+    
+    <target name="directories">
+        <exec executable="make">
+            <arg value="directories" />
+        </exec>
+    </target>
 
-    <target name="phpunit" description="Run unit tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true"/>
+    <target name="phpunit" depends="directories" description="Run unit tests with PHPUnit">
+        <exec dir="${basedir}/tests/unit/" executable="phpunit" failonerror="true" />
+    </target>
+    
+    <target name="phpunit-integration" depends="phpunit" description="Run unit tests with PHPUnit">
+        <exec dir="${basedir}/tests/integration/" executable="phpunit" failonerror="true" />
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
