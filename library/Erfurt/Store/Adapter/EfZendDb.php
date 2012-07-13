@@ -1068,7 +1068,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlAsk($query)
     {
-		//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... 
+	//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... 
         //looks like the engine supports it. but there is probably a reason for this not to be supported
 		$start = microtime(true);
 

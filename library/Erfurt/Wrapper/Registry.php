@@ -107,7 +107,11 @@ class Erfurt_Wrapper_Registry
                       . ucfirst($wrapperName) . 'Wrapper.php';
 
             require_once $pathSpec;
-            $instance = new $this->_wrapperRegistry[$wrapperName]['class_name'];
+            $cn = $this->_wrapperRegistry[$wrapperName]['class_name'];
+            if(!class_exists($cn)){
+                throw new Erfurt_Wrapper_Exception("class ".$cn." not found - check class name in ".$pathSpec);
+            }
+            $instance = new $cn;
             $instance->init($this->_wrapperRegistry[$wrapperName]['config']);
             $this->_wrapperRegistry[$wrapperName]['instance'] = $instance;
         }
