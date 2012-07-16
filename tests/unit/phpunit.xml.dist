@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="../Bootstrap.php" colors="true" backupGlobals="false" backupStaticAttributes="false" strict="true" verbose="true">
+<phpunit bootstrap="../Bootstrap.php" colors="false" backupGlobals="false" backupStaticAttributes="false" strict="true" verbose="true">
     <testsuite name="Erfurt API Test Suite">
         <directory suffix="Test.php">./Erfurt</directory>
     </testsuite> 
