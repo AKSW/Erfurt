@@ -358,14 +358,15 @@ class Erfurt_Store
 
         $returnValue = true;
 
-        $isVersioningEnabled = Erfurt_App::getInstance()->getVersioning()->isVersioningEnabled();
+        $versioning = Erfurt_App::getInstance()->getVersioning();
+        $isVersioningEnabled = $versioning->isVersioningEnabled();
 
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
         // local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+            $versioning->enableVersioning(false);
 
             $this->getNewModel($sysOntModel, '', 'owl', false);
             try {
@@ -393,7 +394,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning($isVersioningEnabled);
+            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -401,7 +402,7 @@ class Erfurt_Store
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+            $versioning->enableVersioning(false);
 
             $this->getNewModel($sysOntSchema, '', 'owl', false);
             try {
@@ -429,7 +430,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning($isVersioningEnabled);
+            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }

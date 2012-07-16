@@ -65,7 +65,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     public function markTestNeedsDatabase()
     {
         $this->markTestNeedsTestConfig();
-        
+
         $dbName = null;
         if ($this->_testConfig->store->backend === 'virtuoso') {
             if (isset($this->_testConfig->store->virtuoso->dsn)) {
@@ -80,8 +80,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
             $this->markTestSkipped(); // make sure a test db was selected!
         }
-
-        $this->authenticateDbUser();
 
         try {
             $store = Erfurt_App::getInstance()->getStore();
@@ -166,24 +164,22 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             }
         }
 
+        $app = Erfurt_App::getInstance(false);
+
         // We always reload the config in Erfurt, for a test may have changed values 
         // and we need a clean environment.
         if ($this->_testConfig !== false) {
-            Erfurt_App::getInstance()->loadConfig($this->_testConfig);
+            $app->loadConfig($this->_testConfig);
         } else {
-            Erfurt_App::getInstance()->loadConfig();
+            $app->loadConfig();
         }
-        
-        // By default we disable auth and ac!
-        // Needs to be explicitly reactivated if needed!
-        //Erfurt_App::getInstance()->getConfig()->ac->type = 'none';
-        
+
+        // Disable versioning
+        $app->getVersioning()->enableVersioning(false);
+
         // For tests we have no session!
         $auth = Erfurt_Auth::getInstance();
         $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
-        Erfurt_App::getInstance()->setAuth($auth);
-        
-        // Disable versioning
-        Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+        $app->setAuth($auth);
     }
 }

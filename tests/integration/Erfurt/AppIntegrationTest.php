@@ -7,7 +7,6 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
 {   
     public function testAuthenticateWithDefaultAnonymous()
     {
-        Erfurt_App::reset();
         $this->markTestNeedsDatabase();
 
         // Authenticate as Anonymous
@@ -19,7 +18,6 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
 
     public function testAuthenticateWithExplicitAnonymous()
     {
-        Erfurt_App::reset();
         $this->markTestNeedsDatabase();
 
         // Authenticate as Anonymous
@@ -31,7 +29,6 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
 
     public function testAuthenticateWithAdmin()
     {
-        Erfurt_App::reset();
         $this->markTestNeedsDatabase();
         
         // Authenticate as Anonymous
