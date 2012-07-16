@@ -157,7 +157,25 @@ class Erfurt_App
      */
     private function __construct()
     {
-        // Nothing to do here... We do the heavy stuff in an init method for cleaner design.
+        // Check the PHP version.
+        if (!version_compare(self::_getPhpVersion(), self::EF_MIN_PHP_VERSION, '>=')) {
+            throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
+        }
+
+        // Check whether Zend is loaded with the right version.
+        if (!version_compare(self::_getZendVersion(), self::EF_MIN_ZEND_VERSION, '>=')) {
+            throw new Erfurt_Exception(
+                'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
+            );
+        }
+
+        // Define Erfurt base constant.
+        if (!defined('EF_BASE')) {
+            define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
+        }
+
+        // Include the vocabulary file.
+        require_once EF_BASE . 'include/vocabulary.php';
     }
 
     // ------------------------------------------------------------------------
@@ -208,9 +226,6 @@ class Erfurt_App
 
         // Stop the time for debugging purposes.
         $start = microtime(true);
-
-        // Init the app environment
-        $this->_init();
 
         // Load the configuration first.
         $this->loadConfig($config);
@@ -1189,36 +1204,6 @@ class Erfurt_App
         }
 
         return $this->_queryCacheBackend;
-    }
-
-    private function _init()
-    {
-        // Check the PHP version.
-        if (!version_compare($this->_getPhpVersion(), self::EF_MIN_PHP_VERSION, '>=')) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
-        }
-
-        // Define Erfurt base constant.
-        if (!defined('EF_BASE')) {
-            define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
-
-            // Update the include path, such that libraries like e.g. Zend are available.
-            $includePath  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
-            set_include_path($includePath);
-        }
-
-        // Check whether Zend is loaded with the right version.
-        require_once 'Zend/Version.php';
-        if (!version_compare($this->_getZendVersion(), self::EF_MIN_ZEND_VERSION, '>=')) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception(
-                'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
-            );
-        }
-
-        // Include the vocabulary file.
-        require_once EF_BASE . 'include/vocabulary.php';
     }
 
     protected function _getPhpVersion()

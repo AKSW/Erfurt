@@ -67,7 +67,8 @@ if (!defined('_TESTROOT')) {
     define('_TESTROOT', rtrim(dirname(__FILE__), '\\/') . '/');
 }
 
-
+// Access Erfurt app for constant loading etc.
+Erfurt_App::getInstance(false);
 
 // define('_BASE', rtrim(realpath(_TESTROOT . '../'), '\\/') . '/');
 // 

@@ -137,7 +137,6 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
         $this->markTestNeedsDatabase();
         
         $users = Erfurt_App::getInstance()->getUsers();
-
         $this->assertTrue(array_key_exists('http://localhost/OntoWiki/Config/Admin', $users));
         $this->assertTrue(array_key_exists('http://ns.ontowiki.net/SysOnt/Anonymous', $users));
     }

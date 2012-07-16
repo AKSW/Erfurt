@@ -4,6 +4,8 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     public function testImportRdfFrom303Url()
     {
 // TODO fix this by using a http test client!
+        $this->markTestIncomplete();
+
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
         
@@ -98,7 +100,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     public function testCheckSetupWithZendDb()
     {
         $this->markTestNeedsCleanZendDbDatabase();
-        $this->markTestUsesDb();
         
         $store = Erfurt_App::getInstance()->getStore();
         $config = Erfurt_App::getInstance()->getConfig();
@@ -156,7 +157,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $result = $store->sparqlQuery($simpleQuery);
 
-        $this->assertEquals(197, $result);
+        $this->assertEquals(208, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()
@@ -189,6 +190,19 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($sparql);
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertTrue(is_array($result));
+    }
+    
+    public function testGetImportsClosureMultipleCallsWithDifferentParameters()
+    {
+        $this->markTestNeedsDatabase();
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $importClosure1 = $store->getImportsClosure('http://localhost/OntoWiki/Config/', false, true); // no hidden imports, with ac
+        $this->assertEquals(0, count($importClosure1));
+
+        $importClosure2 = $store->getImportsClosure('http://localhost/OntoWiki/Config/', true, false); // with hidden imports, no ac
+        // Should be 1 in this case (sys ont schema)
+        $this->assertEquals(1, count($importClosure2));
     }
 }
 

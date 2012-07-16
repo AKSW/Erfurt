@@ -738,11 +738,24 @@ class Erfurt_Store
      */
     public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
-        if (array_key_exists($modelIri, $this->_importsClosure)) {
-            return $this->_importsClosure[$modelIri];
+        $cacheId = $modelIri . ($withHiddenImports ? '1' : '0') . ($useAC ? '1' : '0');
+
+        if (array_key_exists($cacheId, $this->_importsClosure)) {
+            return $this->_importsClosure[$cacheId];
         }
+        
         $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-        $this->_importsClosure[$modelIri] = $importsClosure;
+        if ($useAC) {
+            $newImportsClosure = array();
+            foreach ($importsClosure as $key=>$graphUri) {
+                if ($this->_checkAc($graphUri, 'view', $useAC)) {
+                    $newImportsClosure[$graphUri] = $graphUri;
+                }
+            }
+            $importsClosure = $newImportsClosure;
+        }
+        
+        $this->_importsClosure[$cacheId] = $importsClosure;
         return $importsClosure;
     }
 
@@ -751,7 +764,7 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-    private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
+    private function _getImportsClosure($modelIri, $withHiddenImports = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if ($currentLevel == array($modelIri)) {
@@ -1272,6 +1285,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     $options[Erfurt_Store::USE_ADDITIONAL_IMPORTS],
                     $options[Erfurt_Store::USE_AC]
                 );
+
                 $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
 
                 foreach ($importsClosure as $importedGraphUri) {
@@ -1302,6 +1316,8 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 }
             }
         }
+
+
 
         // if there were froms and all got deleted due to access controll - give back empty result set
         // this is achieved by replacing the where-part with an unsatisfiable one

@@ -7,54 +7,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
     public function tearDown()
     {
         Erfurt_App::reset();
-    }    
-
-    public function testGetInstanceWithWrongPhpVersion()
-    {
-        $appMock = $this->getMock('Erfurt_App',
-            array('_getPhpVersion'),
-            array(),
-            '',
-            false
-        );
-        
-        $appMock->expects($this->once())
-                ->method('_getPhpVersion')
-                ->will($this->returnValue('5.1.9'));
- 
-        try {
-            $appMock->start();
-
-            // If we reach this point, expected exception was not thrown.
-            $this->fail('Wrong PHP version should lead to an error.');
-        } catch (Erfurt_Exception $e) {
-            // Nothing to do here.
-        }     
     }
-    
-    public function testGetInstanceWithWrongZendVersion()
-    {
-        $appMock = $this->getMock('Erfurt_App',
-            array('_getZendVersion'),
-            array(),
-            '',
-            false
-        );
-        
-        $appMock->expects($this->once())
-                ->method('_getZendVersion')
-                ->will($this->returnValue('1.4.9'));
-        
-        try {
-            $appMock->start();
-            
-            // If we reach this point, expected exception was not thrown.
-            $this->fail('Wrong Zend version should lead to an error.');
-        } catch (Erfurt_Exception $e) {
-            // Nothing to do here.
-        }
-    }
-    
+
     public function testGetInstanceWithoutAutostart()
     {
         $app = Erfurt_App::getInstance(false);

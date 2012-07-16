@@ -4,15 +4,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     private $_dbWasUsed      = false;
     private $_testConfig     = null;
     
-    public function __construct($name = null, $data = array(), $dataName = '')
-    {
-        // error_reporting(E_ALL | E_STRICT);
-        
-        parent::__construct($name, $data, $dataName);
-        
-        Erfurt_App::getInstance();
-    }
-    
     protected function tearDown()
     {
         // If test case used the database, we delete all models in order to clean up th environment
@@ -35,6 +26,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         }
         
         $this->_testConfig = null; // force reload on each test e.g. because of db params
+        Erfurt_App::reset();
     }
     
     public function authenticateAnonymous()
