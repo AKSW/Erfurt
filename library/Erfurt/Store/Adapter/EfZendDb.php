@@ -152,7 +152,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         $modelInfoCache = $this->_getModelInfos();
 
-        $graphId = $modelInfoCache[$graphUri]['modelId'];
+        $graphId = $modelInfoCache[(string)$graphUri]['modelId'];
 
         $sqlQuery = 'INSERT IGNORE INTO ef_stmt (g,s,p,o,s_r,p_r,o_r,st,ot,ol,od,od_r) VALUES ';
         $insertArray = array();
@@ -1045,7 +1045,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         $modelInfoCache = $this->_getModelInfos();
 
-        if (isset($modelInfoCache[$modelIri])) {
+        if (isset($modelInfoCache[(string)$modelIri])) {
             return true;
         } else {
             return false;
