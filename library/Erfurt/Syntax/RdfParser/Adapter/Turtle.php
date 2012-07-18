@@ -1104,23 +1104,27 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
      * @pram boolean $isUrl whether the input escapes should be encoded url compatible
      * @return String with decoded escape sequences
      */
-      
     protected function _decodeString($value, $isUrl = false)
     {
-        $backSlashIdx = strpos((string)$value, "\\");
-        
+        // make sure we are dealing with a string
+        $value = (string) $value;
+
+        $backSlashIdx = strpos($value, "\\");
+
         if ($backSlashIdx === false) {
+            // there was nothing encoded in this string
             return $value;
         }
-        
+
         $startIdx = 0;
         $length = strlen($value);
         $result = '';
-        
+
         while ($backSlashIdx !== false) {
-            $result .= substr((string)$value, $startIdx, $backSlashIdx-$startIdx);
-            
-            $c = $value[($backSlashIdx+1)];
+            $result .= substr($value, $startIdx, $backSlashIdx - $startIdx);
+
+            // get the character behind the backslash
+            $c = $value[$backSlashIdx + 1];
             switch ($c) {
                 case 't':
                     $result .= "\t";
@@ -1147,26 +1151,33 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
                     $startIdx = $backSlashIdx + 2;
                     break;
                 case 'u':
-                    $xx = substr((string)$value, $backSlashIdx+2, 4);
+                    $xx = substr($value, $backSlashIdx + 2, 4);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 6;
                     $result .= $isUrl ? urlencode($c) : $c;
                     break;
                 case 'U':
-                    $xx = substr((string)$value, $backSlashIdx+2, 8);
+                    $xx = substr($value, $backSlashIdx + 2, 8);
                     $c = $this->_uchr(hexdec($xx));
                     $startIdx = $backSlashIdx + 10;
                     $result .= $isUrl ? urlencode($c) : $c;
                     break;
+                default:
+                    throw new Erfurt_Exception(
+                        'An unrecognized escape sequence was found at position #' . $backSlashIdx .
+                        ' in string: "' . $value . '"'
+                    );
             }
-            
-            $backSlashIdx = strpos((string)$value, "\\", $startIdx);
+
+            // check for further backslashes
+            $backSlashIdx = strpos($value, "\\", $startIdx);
         }
-        
-        $result .= substr((string)$value, $startIdx);
+
+        // append the rest of the string
+        $result .= substr($value, $startIdx);
         return $result;
-    }   
-    
+    }
+
     protected function _uchr($dec)
     {
         if ($dec < 128) {
