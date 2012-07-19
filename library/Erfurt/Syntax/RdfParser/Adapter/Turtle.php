@@ -6,24 +6,21 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
-
 /**
  * @package   Erfurt_Syntax_RdfParser_Adapter
  * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_Adapter_Interface
+class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Adapter_Base
 {
     protected $_data = '';
     protected $_pos  = 0;
     //protected $_lastCharLength = 1;
     
-    protected $_baseUri = null;
     protected $_subject = null;
     protected $_predicate = null;
     protected $_object = null;
-    
+        
     protected $_namespaces = array();
     
     const BNODE_PREFIX = 'node';
@@ -41,23 +38,25 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     public function parseFromDataString($dataString, $baseUri = null)
     {
+        $this->_setBaseUri($baseUri);
         $this->_parse($dataString); 
         return $this->_statements;
     }
     
-    public function parseFromFilename($filename)
+    public function parseFromFilename($filename, $isURL = false)
     {
-        if (strrpos($filename, '#') !== false) {
-            $this->_baseUri = 'file://' . str_replace(' ', '%20', substr($filename, 0, strrpos($filename, '#')+1));
-        } else {
-            $this->_baseUri = 'file://' . str_replace(' ', '%20', substr($filename, 0, strrpos($filename, '/')+1));
-        }
-        
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
             require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
+        }
+        
+        //because this method is reused internally we got to have this $isURL switch
+        if(!$isURL){
+            $this->_setLocalFileBaseUri($filename);
+        } else {
+            $this->_setURLBaseUri($filename);
         }
     
         // TODO support for large files 
@@ -76,9 +75,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     
     public function parseFromUrl($url)
     {
-        $this->_baseUri = $url;
-        
-        return $this->parseFromFilename($url);
+        return $this->parseFromFilename($url, true);
     }
     
     public function parseFromDataStringToStore($data, $graphUri, $useAc = true, $baseUri = null)
@@ -86,7 +83,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_parseToStore = true;
         $this->_graphUri = $graphUri;
         $this->_useAc = $useAc;
-        $this->parseFromDataString($data);
+        $this->parseFromDataString($data, $baseUri);
         
         $this->_writeStatementsToStore();
         $this->_addNamespacesToStore();
@@ -149,7 +146,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
         $this->_data = '';
         $this->_pos  = 0;
         
-        $this->_baseUri = null;
         $this->_subject = null;
         $this->_predicate = null;
         $this->_object = null;
@@ -328,7 +324,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     protected function _resolveUri($uri)
     {
         if ((strlen($uri) > 0) && ($uri[0] === '#') || (strpos($uri, ':') === false)) {
-            $baseUri = $this->_getBaseUri();
+            $baseUri = $this->getBaseUri();
             if ($baseUri !== false) {
                 return $baseUri . $uri;
             }
@@ -336,16 +332,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
             
         return $uri;
     }
-    
-    protected function _getBaseUri()
-    {
-        if (null !== $this->_baseUri) {
-            return $this->_baseUri;
-        } else {
-            return false;
-        }
-    }
-    
     
     protected function _verifyChar($char, $expected)
     {
@@ -358,13 +344,10 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle implements Erfurt_Syntax_RdfParser_
     {
         $this->_skipWS();
         $baseUri = $this->_parseUri();
+        echo "parsed base declaration ".$baseUri;
         $this->_setBaseUri($baseUri);
     }
     
-    protected function _setBaseUri($baseUri)
-    {
-        $this->_baseUri = $baseUri;
-    }
     
     protected function _parseTriples()
     {

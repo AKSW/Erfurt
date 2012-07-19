@@ -17,7 +17,7 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml/PropertyElement.php';
  * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_Adapter_Interface
+class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Adapter_Base
 {
     protected $_data = null;
     protected $_offset = 0;
@@ -33,7 +33,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     protected $_statements = array();
     
     protected $_xmlParser = null;
-    protected $_baseUri = null;
     
     protected $_currentCharData = null;
     
@@ -46,10 +45,13 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     protected $_namespaces = array();
     
-    public function parseFromDataString($dataString, $baseUri = null)
+    public function parseFromDataString($dataString, $baseUri = null, $isUrl = false)
     {
-        if (null !== $baseUri) {
-            $this->_baseUri = $baseUri;
+        //because this method is reused internally we got to have this $isUrl switch
+        if($isUrl){
+            $this->_setURLBaseUri($baseUri);
+        } else {
+            $this->_setBaseUri($baseUri);
         }
         
         $xmlParser = $this->_getXmlParser();
@@ -68,7 +70,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     public function parseFromFilename($filename)
     {
-        $this->_baseUri = $filename;
+        $this->_setLocalFileBaseUri($filename);
         
         stream_context_get_default(array(
             'http' => array(
@@ -127,8 +129,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
     
     public function parseFromUrl($url)
     {
-        $this->_baseUri = $url;
-        
         $client = Erfurt_App::getInstance()->getHttpClient($url, array(
             'maxredirects'  => 10,
             'timeout'       => 30
@@ -137,7 +137,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         $client->setHeaders('Accept', 'application/rdf+xml, text/plain');
         $response = $client->request();
 
-        return $this->parseFromDataString($response->getBody());
+        return $this->parseFromDataString($response->getBody(), $url, true);
     }
     
     public function parseFromUrlToStore($url, $graphUri, $useAc = true)
@@ -224,7 +224,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         
         if ($name === EF_RDF_NS.'RDF') {
             if (isset($attrs[(EF_XML_NS . 'base')])) {
-                $this->_baseUri = $attrs[(EF_XML_NS . 'base')];
+                $this->_setBaseUri($attrs[(EF_XML_NS . 'base')]);
             }
             return;
         }
@@ -667,12 +667,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
 // TODO Handle all relative URIs the right way...
         if (substr($about, 0, 1) === '#' || $about === '' || strpos($about, '/') === false) {
             // Relative URI... Resolve against the base URI.
-            if ($this->_getBaseUri()) {
+            if ($this->getBaseUri()) {
                 // prevent double hash (e.g. http://www.w3.org/TR/owl-guide/wine.rdf Issue 604)
-                if ( substr($about,0,1) === '#' && substr($this->_getBaseUri(),-1) === '#' ) {
+                if ( substr($about,0,1) === '#' && substr($this->getBaseUri(),-1) === '#' ) {
                     $about = substr($about,1);
                 } 
-                return $this->_getBaseUri() . $about;
+                return $this->getBaseUri() . $about;
             }
         } 
         
@@ -710,14 +710,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml implements Erfurt_Syntax_RdfParser_
         return '_:'.$id;
     }
     
-    protected function _getBaseUri()
-    {
-        if (null !== $this->_baseUri) {
-            return $this->_baseUri;
-        } else {
-            return false;
-        }
-    }
     
     protected function _throwException($msg)
     {

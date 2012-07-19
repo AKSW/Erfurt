@@ -116,6 +116,11 @@ class Erfurt_Syntax_RdfParser
         return $result;
     }
     
+    public function getBaseUri()
+    {
+        return $this->_parserAdapter->getBaseUri();
+    }
+    
     public function parseToStore($dataPointer, $pointerType, $modelUri, $useAc = true, $baseUri = null)
     {
         if ($pointerType === self::LOCATOR_URL) {

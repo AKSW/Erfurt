@@ -25,4 +25,6 @@ interface Erfurt_Syntax_RdfParser_Adapter_Interface
     public function parseNamespacesFromDataString($dataString);
     public function parseNamespacesFromFilename($filename);
     public function parseNamespacesFromUrl($url);
+    
+    public function getBaseUri();
 }
