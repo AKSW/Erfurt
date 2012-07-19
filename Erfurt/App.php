@@ -740,6 +740,7 @@ class Erfurt_App
             if (is_writable($config->log->path)) {
                 return $config->log->path;
             } else {
+            	error_log('Attention : Erfurt log.path ('. $config->log->path .') not writable.');
                 return false;
             }
         } else { 
