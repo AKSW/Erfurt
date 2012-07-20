@@ -343,9 +343,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     protected function _parseBase()
     {
         $this->_skipWS();
-        $baseUri = $this->_parseUri();
-        echo "parsed base declaration ".$baseUri;
-        $this->_setBaseUri($baseUri);
+        $base = $this->_parseUri();
+        $this->_setBaseUri($base->getUri());
     }
     
     

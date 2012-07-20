@@ -58,4 +58,21 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJsonTest extends Erfurt_TestCase
         
         return $dataArray;
     }
+    
+    public function testCorrectness()
+    {
+        $triples = array(
+            'http://example.com/s' => array(
+                'http://example.com/p' => array(
+                    array(
+                        'type' => 'uri',
+                        'value'=> 'http://example.com/o'
+                    )
+                )
+            )
+        );
+        $json = json_encode($triples);
+        $result = $this->_object->parseFromDataString($json); //decode
+        $this->assertEquals($triples, $result);
+    }
 }

@@ -664,7 +664,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
             return $about;
         }
         
-// TODO Handle all relative URIs the right way...
+        // TODO Handle all relative URIs the right way...
         if (substr($about, 0, 1) === '#' || $about === '' || strpos($about, '/') === false) {
             // Relative URI... Resolve against the base URI.
             if ($this->getBaseUri()) {
@@ -683,14 +683,14 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     protected function _checkSchemas($about)
     {
         $config = Erfurt_App::getInstance()->getConfig();
-		$schemataArray = $config->uri->schemata->toArray();
-		
-		$regExp = '/^(' . implode(':|', $schemataArray) . ').*$/';
-		if (preg_match($regExp, $about)) {
-		    return true;
-		} else {
-		    return false;
-		}
+        $schemataArray = $config->uri->schemata->toArray();
+
+        $regExp = '/^(' . implode(':|', $schemataArray) . ').*$/';
+        if (preg_match($regExp, $about)) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     protected function _createBNode($id = null)
