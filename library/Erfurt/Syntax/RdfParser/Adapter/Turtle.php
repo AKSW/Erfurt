@@ -48,7 +48,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         
@@ -119,7 +118,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
                 
@@ -394,7 +392,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _throwException($msg)
     {
-        require_once 'Erfurt/Syntax/RdfParserException.php';
         throw new Erfurt_Syntax_RdfParserException($msg.' when parsing '.$this->_baseUri);
     }
     
@@ -479,7 +476,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $c = $this->_read();
             
             if (!$this->_isLanguageStartChar($c)) {
-                require_once 'Erfurt/Syntax/RdfParserException.php';
                 throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed as starting char in language tags.');
             }
             
@@ -488,7 +484,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             
             while ($c !== -1 && !$this->_isWS($c) && !($c === ',') && !($c === '.')) { 
                 if (!$this->_isLanguageChar($c)) {
-                    require_once 'Erfurt/Syntax/RdfParserException.php';
                     throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed in language tags.');
                 }
                 
@@ -965,7 +960,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         // Check whether model exists.
         $store = Erfurt_App::getInstance()->getStore();
         if (!$store->isModelAvailable($this->_graphUri, $this->_useAc)) {
-            throw new Exception('Model with uri ' . $this->_graphUri . ' not available.');
+            throw new Erfurt_Syntax_RdfParserException('Model with uri ' . $this->_graphUri . ' not available.');
         }
         
         if ($this->_stmtCounter > 0) {
@@ -1145,7 +1140,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
                     $result .= $isUrl ? urlencode($c) : $c;
                     break;
                 default:
-                    throw new Erfurt_Exception(
+                    throw new Erfurt_Syntax_RdfParserException(
                         'An unrecognized escape sequence was found at position #' . $backSlashIdx .
                         ' in string: "' . $value . '"'
                     );

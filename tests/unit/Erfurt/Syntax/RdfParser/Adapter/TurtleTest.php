@@ -2,6 +2,7 @@
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 {
     const SYNTAX_TEST_DIR = 'valid/';
+    const SYNTAX_INVALID_TEST_DIR = 'invalid/';
     
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_Turtle
@@ -150,6 +151,41 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             }
         }
         
+        return $dataArray;
+    }
+    
+    /**
+     * @dataProvider providerTestParseFromInvalidDataString
+     * @expectedException Erfurt_Syntax_RdfParserException
+     */
+    public function testParseFromInvalidDataString($fileName)
+    {
+        $fileHandle = fopen($fileName, 'r');
+        $data = fread($fileHandle, filesize($fileName));
+        fclose($fileHandle);
+
+        $result = $this->_object->parseFromDataString($data);
+    }
+    
+    public function providerTestParseFromInvalidDataString()
+    {
+        $dataArray = array();
+
+        $dirName = realpath(dirname(dirname(dirname(__FILE__)))) . '/_files/' . self::SYNTAX_INVALID_TEST_DIR;
+        if (is_readable($dirName)) {
+            $dirIterator = new DirectoryIterator($dirName);
+
+            foreach ($dirIterator as $file) {
+                if (!$file->isDot() && !$file->isDir()) {
+                    $fileName = $file->getFileName();
+
+                    if ((substr($fileName, -4) === '.ttl') && is_readable($dirName . $fileName)) {
+                        $dataArray[] = array(($dirName . $fileName));
+                    }
+                }
+            }
+        }
+
         return $dataArray;
     }
     
