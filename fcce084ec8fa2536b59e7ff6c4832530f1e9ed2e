@@ -1,11 +1,11 @@
 {
   "built_on": "master",
-  "duration": 268.593,
-  "full_display_name": "Erfurt #27",
-  "id": "2012-07-24_12-14-54",
-  "number": 27,
-  "result": "SUCCESS",
+  "duration": 1.128,
+  "full_display_name": "Erfurt #28",
+  "id": "2012-07-24_12-24-25",
+  "number": 28,
+  "result": "FAILURE",
   "status_message": "?",
-  "time": "2012-07-24 12:14:54 +0200",
-  "url": "job/Erfurt/27/"
+  "time": "2012-07-24 12:24:25 +0200",
+  "url": "job/Erfurt/28/"
 }
