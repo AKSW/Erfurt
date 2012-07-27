@@ -35,8 +35,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasS($s)
     {
-        if (!is_string($s)) {
-            throw new Erfurt_Exception('need an IRI string as first parameter');
+        if ($s === null || !is_string($s)) {
+            throw new Erfurt_Exception('Need an IRI string as first parameter');
         }
         if (isset($this->_statements[$s])) {
             return true;
@@ -54,8 +54,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasO(array $o)
     {
-        if (!is_array($o)) {
-            throw new Erfurt_Exception('need an IRI string as first parameter');
+        if ($o === null || !is_array($o)) {
+            throw new Erfurt_Exception('Need an array with type and value as first parameter');
         }
 
         foreach ($this->_statements as $subject => $predicates) {
@@ -82,13 +82,14 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasSP($s, $p)
     {
-        if (!$this->hasS($s)) {
+        if ($s === null) {
+            throw new Exception('Need an IRI string as first parameter');
+        } else if (!$this->hasS($s)) {
             return false;
         } else {
-            if (!is_string($p)) {
-                throw new Erfurt_Exception('need an IRI string as second parameter');
-            }
-            if (isset($this->_statements[$s][$p])) {
+            if ($p === null || !is_string($p)) {
+                throw new Erfurt_Exception('Need an IRI string as second parameter');
+            } else if (isset($this->_statements[$s][$p])) {
                 return true;
             } else {
                 return false;
@@ -108,8 +109,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasSPvalue($s, $p, $value, $matchType = 'strict')
     {
-        if (!is_string($value)) {
-            throw new Erfurt_Exception('need a value string as third parameter');
+        if ($value == null || !is_string($value)) {
+            throw new Erfurt_Exception('Need a value string as third parameter');
         } else {
             $values = $this->getValues($s, $p);
             foreach ($values as $key => $object) {
@@ -221,7 +222,11 @@ class Erfurt_Rdf_MemoryModel
      */
     public function getValue($s, $p)
     {
-        if (!$this->hasSP($s, $p)) {
+        if ($s === null) {
+            throw new Exception('Need an IRI string as first parameter');
+        } else if ($p === null) {
+            throw new Exception('Need an IRI string as second parameter');
+        } else if (!$this->hasSP($s, $p)) {
             return null;
         } else {
             return $this->_statements[$s][$p][0]['value'];
@@ -256,8 +261,8 @@ class Erfurt_Rdf_MemoryModel
      */
     public function getSP(array $o)
     {
-        if (!is_array($o)) {
-            throw new Erfurt_Exception('need an object array as first parameter');
+        if ($o === null || !is_array($o)) {
+            throw new Erfurt_Exception('Need an object array as first parameter');
         }
 
         $results = array();
@@ -383,10 +388,10 @@ class Erfurt_Rdf_MemoryModel
      */
     public function addAttribute($subject, $predicate, $literal = "", $lang = null, $datatype = null)
     {
-        if (!is_string($subject)) {
-            throw new Erfurt_Exception('need a subject IRI as first parameter');
-        } else if (!is_string($predicate)) {
-            throw new Erfurt_Exception('need a predicate IRI as second parameter');
+        if ($subject == null || !is_string($subject)) {
+            throw new Erfurt_Exception('Need a subject IRI as first parameter');
+        } else if ($predicate == null || !is_string($predicate)) {
+            throw new Erfurt_Exception('Need a predicate IRI as second parameter');
         }
 
         $statements = array();
@@ -421,12 +426,12 @@ class Erfurt_Rdf_MemoryModel
      */
     public function addRelation($subject, $relation, $object = null)
     {
-        if (!is_string($subject)) {
-            throw new Erfurt_Exception('need a subject IRI as first parameter');
-        } else if (!is_string($relation)) {
-            throw new Erfurt_Exception('need a predicate IRI as second parameter');
-        } else if (!is_string($object)) {
-            throw new Erfurt_Exception('need an object IRI as second parameter');
+        if ($subject == null || !is_string($subject)) {
+            throw new Erfurt_Exception('Need a subject IRI as first parameter');
+        } else if ($relation == null || !is_string($relation)) {
+            throw new Erfurt_Exception('Need a predicate IRI as second parameter');
+        } else if ($object == null || !is_string($object)) {
+            throw new Erfurt_Exception('Need an object array with type and value as third parameter');
         }
 
         $statements = array();

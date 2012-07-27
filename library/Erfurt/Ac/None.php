@@ -42,7 +42,7 @@ class Erfurt_Ac_None
     public function isModelAllowed($type, $modelUri) 
     {
         $type = strtolower($type);
-        if ($type !== 'view') {
+        if (($type !== 'view') && ($type !== 'edit')) {
             return false;
         }
         

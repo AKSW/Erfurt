@@ -169,11 +169,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             return array();
         }
         $q->setFrom($newFrom);
-        
+
         $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
         
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
-                
+
         $client = Erfurt_App::getInstance()->getHttpClient(
             $url,
             array(
@@ -181,7 +181,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 'timeout'       => 2000
             )
         );
-    
+
         if (null !== $this->_username) {
             if (substr($url, 0, 7) === 'http://') {
                 // We need SSL here!

@@ -6,8 +6,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
-
 /**
  * 
  * @package   Erfurt_Syntax_RdfParser_Adapter
@@ -15,11 +13,23 @@ require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
  * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser_Adapter_Interface
+class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Adapter_Base
 {    
     
-    public function parseFromDataString($dataString)
-    {    
+    public function parseFromDataString($dataString, $baseUri = null, $type = null)
+    {
+        //because this method is reused internally we got to have this $type switch
+        if($type === null){
+            $type = self::TYPE_STRING;
+        }
+        if($type == self::TYPE_FILE){
+            $this->_setLocalFileBaseUri($baseUri);
+        } else if($type == self::TYPE_URL){
+            $this->_setURLBaseUri($baseUri);
+        } else {
+            $this->_setBaseUri($baseUri);
+        }
+        
         $result = json_decode($dataString, true);
         
         if ($result === null) {
@@ -42,7 +52,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
         $dataString = fread($handle, filesize($filename));
         fclose($handle);
         
-        return $this->parseFromDataString($dataString);
+        return $this->parseFromDataString($dataString, $filename, self::TYPE_FILE);
     }
     
     public function parseFromUrl($url) 
@@ -66,12 +76,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson implements Erfurt_Syntax_RdfParser
         
         fclose($handle);
         
-        return $this->parseFromDataString($dataString);
+        return $this->parseFromDataString($dataString, $url, self::TYPE_URL);
     }
     
     public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true)
     {
-        $triples = $this->parseFromDataString($dataString);
+        $triples = $this->parseFromDataString($dataString, $graphUri);
         
         $store = Erfurt_App::getInstance()->getStore();
         

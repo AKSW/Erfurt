@@ -79,7 +79,7 @@ class Erfurt_Versioning
      */
     public function enableVersioning($versioningEnabled = true)
     {
-        $this->_versioningEnabled = (bool) $versioningEnabled;
+        $this->_versioningEnabled = (bool)$versioningEnabled;
     }
     
     /**
@@ -329,11 +329,9 @@ class Erfurt_Versioning
      */
     public function isVersioningEnabled()
     {
-        $this->_checkSetup();
-
-        return (bool) $this->_versioningEnabled;
+        return (bool)$this->_versioningEnabled;
     }
-    
+
     public function setLimit($limit)
     {
         if ($limit <= 0) {
@@ -345,9 +343,13 @@ class Erfurt_Versioning
     
     public function onAddStatement(Erfurt_Event $event)
     {
+        if (!$this->isVersioningEnabled()) {
+            return;
+        }
+
         $this->_checkSetup();
 
-        if ($this->isVersioningEnabled() && is_array($event->statement)) {
+        if (is_array($event->statement)) {
 
             $payload = array (
                 $event->statement['subject'] => array (
@@ -367,9 +369,13 @@ class Erfurt_Versioning
     
     public function onAddMultipleStatements(Erfurt_Event $event)
     {
+        if (!$this->isVersioningEnabled()) {
+            return;
+        }
+
         $this->_checkSetup();
 
-        if ($this->isVersioningEnabled() && is_array($event->statements)) {
+        if (is_array($event->statements)) {
             $graphUri = $event->graphUri;
     
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
@@ -380,33 +386,33 @@ class Erfurt_Versioning
     
     public function onDeleteMatchingStatements(Erfurt_Event $event)
     {
-        $this->_checkSetup();
-
-        if ($this->isversioningEnabled()) {
-            $graphUri = $event->graphUri;
-        
-            if (isset($event->statements)) {
-                $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
-            } else {
-                // In this case, we have no payload. Just add a action without a payload (no rollback possible).
-                $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
-            }
-        } else {
-            // do nothing
+        if (!$this->isVersioningEnabled()) {
+            return;
         }
-    }
-    
-    public function onDeleteMultipleStatements(Erfurt_Event $event)
-    {
+
         $this->_checkSetup();
 
-        if($this->isVersioningEnabled()) {
-            $graphUri = $event->graphUri;
-    
+        $graphUri = $event->graphUri;
+
+        if (isset($event->statements)) {
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
         } else {
-            // do nothing
+            // In this case, we have no payload. Just add a action without a payload (no rollback possible).
+            $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
         }
+    }
+
+    public function onDeleteMultipleStatements(Erfurt_Event $event)
+    {
+        if (!$this->isVersioningEnabled()) {
+            return;
+        }
+
+        $this->_checkSetup();
+
+        $graphUri = $event->graphUri;
+
+        $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
     }
     
 

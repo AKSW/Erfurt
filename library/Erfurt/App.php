@@ -157,7 +157,25 @@ class Erfurt_App
      */
     private function __construct()
     {
-        // Nothing to do here... We do the heavy stuff in an init method for cleaner design.
+        // Check the PHP version.
+        if (!version_compare(self::_getPhpVersion(), self::EF_MIN_PHP_VERSION, '>=')) {
+            throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
+        }
+
+        // Check whether Zend is loaded with the right version.
+        if (!version_compare(self::_getZendVersion(), self::EF_MIN_ZEND_VERSION, '>=')) {
+            throw new Erfurt_Exception(
+                'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
+            );
+        }
+
+        // Define Erfurt base constant.
+        if (!defined('EF_BASE')) {
+            define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
+        }
+
+        // Include the vocabulary file.
+        require_once EF_BASE . 'include/vocabulary.php';
     }
 
     // ------------------------------------------------------------------------
@@ -208,9 +226,6 @@ class Erfurt_App
 
         // Stop the time for debugging purposes.
         $start = microtime(true);
-
-        // Init the app environment
-        $this->_init();
 
         // Load the configuration first.
         $this->loadConfig($config);
@@ -572,6 +587,11 @@ class Erfurt_App
 
         return $this->_auth;
     }
+    
+    public function setAuth(Erfurt_Auth $auth)
+    {
+        $this->_auth = $auth;
+    }
 
     /**
      * Returns a caching instance.
@@ -618,19 +638,23 @@ class Erfurt_App
         if (isset($config->cache->path)) {
             $matches = array();
             if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->cache->path, $matches) === 1)) {
-                $config->cache->path = EF_BASE . $config->cache->path;
+                $baseDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR;
+                $config->cache->path = $baseDir . $config->cache->path;
             }
 
             if (is_writable($config->cache->path)) {
                 return $config->cache->path;
             } else {
-                // Should throw an exception.
-                return false;
-                //return $this->getTmpDir();
+                throw new Erfurt_App_Exception('Cache path is not writable:' . $config->cache->path);
             }
         } else {
-            return false;
-            //return $this->getTmpDir();
+            $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
+            
+            if (is_writable($cacheDir)) {
+                return $cacheDir;
+            } else {
+                throw new Erfurt_App_Exception('Cache path is not writable:' . $cacheDir);
+            }
         }
     }
 
@@ -981,29 +1005,6 @@ class Erfurt_App
     }
 
     /**
-     * Returns a wrapper manager instance
-     *
-     * @param boolean $addDefaultWrapperPath Whether to add the default wrapper path
-     * on first call of this method (When the class is instanciated).
-     * @return Erfurt_Wrapper_Manager
-     */
-    public function getWrapperManager($addDefaultWrapperPath = true)
-    {
-        if (null === $this->_wrapperManager) {
-            $config = $this->getConfig();
-
-            require_once 'Erfurt/Wrapper/Manager.php';
-            $this->_wrapperManager = new Erfurt_Wrapper_Manager();
-
-            if ($addDefaultWrapperPath && isset($config->extensions->wrapper)) {
-                $this->_wrapperManager->addWrapperPath(EF_BASE . $config->extensions->wrapper);
-            }
-        }
-
-        return $this->_wrapperManager;
-    }
-
-    /**
      * Returns the instance of the Erfurt wrapper registry.
      *
      * @param Erfurt_Wrapper_Registry
@@ -1203,36 +1204,6 @@ class Erfurt_App
         }
 
         return $this->_queryCacheBackend;
-    }
-
-    private function _init()
-    {
-        // Check the PHP version.
-        if (!version_compare($this->_getPhpVersion(), self::EF_MIN_PHP_VERSION, '>=')) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception('Erfurt requires at least PHP version ' . self::EF_MIN_PHP_VERSION);
-        }
-
-        // Define Erfurt base constant.
-        if (!defined('EF_BASE')) {
-            define('EF_BASE', rtrim(dirname(__FILE__), '\\/') . '/');
-
-            // Update the include path, such that libraries like e.g. Zend are available.
-            $includePath  = get_include_path() . PATH_SEPARATOR . EF_BASE . 'libraries/' . PATH_SEPARATOR;
-            set_include_path($includePath);
-        }
-
-        // Check whether Zend is loaded with the right version.
-        require_once 'Zend/Version.php';
-        if (!version_compare($this->_getZendVersion(), self::EF_MIN_ZEND_VERSION, '>=')) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception(
-                'Erfurt requires at least Zend Framework in version ' . self::EF_MIN_ZEND_VERSION
-            );
-        }
-
-        // Include the vocabulary file.
-        require_once EF_BASE . 'include/vocabulary.php';
     }
 
     protected function _getPhpVersion()

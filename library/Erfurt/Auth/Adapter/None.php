@@ -20,12 +20,17 @@ require_once 'Zend/Auth/Result.php';
  */
 class Erfurt_Auth_Adapter_None implements Zend_Auth_Adapter_Interface
 {   
+    private $_username = null;
+    private $_password = null;
+
     /**
      * Constructor
      */
     public function __construct($username = null, $password = null) 
     {        
         // Nothing to do here...
+        $this->_username = $username;
+        $this->_password = $password;
     }
     
     /**
@@ -37,10 +42,10 @@ class Erfurt_Auth_Adapter_None implements Zend_Auth_Adapter_Interface
     public function authenticate() 
     {
         $identity = array(
-            'username'  => 'Anonymous', 
-            'uri'       => 'http://ns.ontowiki.net/SysOnt/Anonymous', 
-            'dbuser'    => false, 
-            'anonymous' => true
+            'username'  => $this->_username,
+            'uri'       => 'http://ns.ontowiki.net/SysOnt/' . $this->_username,
+            'dbuser'    => (($this->_username === 'SuperAdmin') ? true : false), 
+            'anonymous' => (($this->_username === 'Anonymous') ? true : false)
         );
         
         require_once 'Erfurt/Auth/Identity.php';

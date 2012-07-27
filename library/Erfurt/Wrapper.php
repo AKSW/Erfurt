@@ -122,18 +122,15 @@ abstract class Erfurt_Wrapper
             'automatic_serialization' => true
         );
 
-        require_once 'Erfurt/Cache/Frontend/ObjectCache.php';
         $frontendAdapter = new Erfurt_Cache_Frontend_ObjectCache($frontendOptions);
 
-        $tmpDir = Erfurt_App::getInstance()->getCacheDir();
-        if ($tmpDir !== false) {
-            $backendOptions = array(
-                'cache_dir' => $tmpDir);
-
-            require_once 'Zend/Cache/Backend/File.php';
+        $backendAdapter = null;
+        try {
+            $tmpDir = Erfurt_App::getInstance()->getCacheDir();
+            
+            $backendOptions = array('cache_dir' => $tmpDir);;
             $backendAdapter = new Zend_Cache_Backend_File($backendOptions);
-        } else {
-            require_once 'Erfurt/Cache/Backend/Null.php';
+        } catch (Erfurt_App_Exception $e) {
             $backendAdapter = new Erfurt_Cache_Backend_Null();
         }
 

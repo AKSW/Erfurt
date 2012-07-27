@@ -302,7 +302,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
     {
         try {
             $sparqlQuery->addFrom($this->_getAcModelUri());
-            $result = $this->_getStore()->sparqlQuery($sparqlQuery, array('use_ac' => false));
+            $result = $this->_getStore()->sparqlQuery($sparqlQuery, array(Erfurt_Store::USE_AC => false));
         } catch (Exception $e) {
             return null;
         }

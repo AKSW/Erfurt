@@ -358,12 +358,15 @@ class Erfurt_Store
 
         $returnValue = true;
 
+        $versioning = Erfurt_App::getInstance()->getVersioning();
+        $isVersioningEnabled = $versioning->isVersioningEnabled();
+
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
         // local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+            $versioning->enableVersioning(false);
 
             $this->getNewModel($sysOntModel, '', 'owl', false);
             try {
@@ -391,7 +394,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -399,7 +402,7 @@ class Erfurt_Store
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(false);
+            $versioning->enableVersioning(false);
 
             $this->getNewModel($sysOntSchema, '', 'owl', false);
             try {
@@ -427,7 +430,7 @@ class Erfurt_Store
                 throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
 
-            Erfurt_App::getInstance()->getVersioning()->enableVersioning(true);
+            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }
@@ -735,11 +738,24 @@ class Erfurt_Store
      */
     public function getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
-        if (array_key_exists($modelIri, $this->_importsClosure)) {
-            return $this->_importsClosure[$modelIri];
+        $cacheId = $modelIri . ($withHiddenImports ? '1' : '0') . ($useAC ? '1' : '0');
+
+        if (array_key_exists($cacheId, $this->_importsClosure)) {
+            return $this->_importsClosure[$cacheId];
         }
+        
         $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
-        $this->_importsClosure[$modelIri] = $importsClosure;
+        if ($useAC) {
+            $newImportsClosure = array();
+            foreach ($importsClosure as $key=>$graphUri) {
+                if ($this->_checkAc($graphUri, 'view', $useAC)) {
+                    $newImportsClosure[$graphUri] = $graphUri;
+                }
+            }
+            $importsClosure = $newImportsClosure;
+        }
+        
+        $this->_importsClosure[$cacheId] = $importsClosure;
         return $importsClosure;
     }
 
@@ -748,7 +764,7 @@ class Erfurt_Store
      *
      * @param string $modelIri
      */
-    private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
+    private function _getImportsClosure($modelIri, $withHiddenImports = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if ($currentLevel == array($modelIri)) {
@@ -1196,10 +1212,12 @@ class Erfurt_Store
             );
         }
 
-        if ($options[Erfurt_Store::USE_AC] == false) {
+        /*
+if ($options[Erfurt_Store::USE_AC] == false) {
             //we are done preparing early
             return $queryObject;
         }
+*/
         
         $logger = $this->_getQueryLogger();
         
@@ -1267,6 +1285,7 @@ class Erfurt_Store
                     $options[Erfurt_Store::USE_ADDITIONAL_IMPORTS],
                     $options[Erfurt_Store::USE_AC]
                 );
+
                 $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
 
                 foreach ($importsClosure as $importedGraphUri) {
@@ -1297,6 +1316,8 @@ class Erfurt_Store
                 }
             }
         }
+
+
 
         // if there were froms and all got deleted due to access controll - give back empty result set
         // this is achieved by replacing the where-part with an unsatisfiable one

@@ -1,6 +1,4 @@
 <?php
-define('EF_TEST_CONFIG_SKIP_DB_TESTS', false);
-
 /*
  * Set error reporting to the level to which Erfurt code must comply.
  */
@@ -19,9 +17,10 @@ unset($phpUnitVersion);
 /*
  * Determine the root, library, and tests directories of Erfurt.
  */
-$efRoot          = realpath(dirname(__DIR__));
-$efLibraryDir    = "$efRoot/library";
-$efTestsDir      = "$efRoot/tests";
+$efRoot                = realpath(dirname(__DIR__));
+$efLibraryDir          = "$efRoot/library";
+$efUnitTestsDir        = "$efRoot/tests/unit";
+$efIntegrationTestsDir = "$efRoot/tests/integration";
 
 // Check for Zend... if we can find it in some standard directories, we add it. Otherwise
 // we assume, that it is already in the include_path
@@ -40,19 +39,21 @@ if (is_dir("$efLibraryDir/Zend")) {
  */
 $path = array(
     $efLibraryDir,
-    $efTestsDir,
+    $efUnitTestsDir,
+    $efIntegrationTestsDir,
     get_include_path(),
 );
 if (null !== $zfDir) {
     $path = array(
         $zfDir,
         $efLibraryDir,
-        $efTestsDir,
+        $efUnitTestsDir,
+        $efIntegrationTestsDir,
         get_include_path(),
     );
 }
 set_include_path(implode(PATH_SEPARATOR, $path));
-unset($efRoot, $efLibraryDir, $efTestsDir, $path);
+unset($efRoot, $efLibraryDir, $efUnitTestsDir, $efIntegrationTestsDir, $path);
 
 /**
  * Setup autoloading
@@ -66,7 +67,8 @@ if (!defined('_TESTROOT')) {
     define('_TESTROOT', rtrim(dirname(__FILE__), '\\/') . '/');
 }
 
-
+// Access Erfurt app for constant loading etc.
+Erfurt_App::getInstance(false);
 
 // define('_BASE', rtrim(realpath(_TESTROOT . '../'), '\\/') . '/');
 // 
