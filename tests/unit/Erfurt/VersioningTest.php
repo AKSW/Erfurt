@@ -107,7 +107,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             // Should not happen if exception is thrown as expected.
             $this->fail();
         } catch (Exception $e) {
-            // If we are here everything went right... so we do nothing.
+            $this->assertTrue(true, 'exception thrown if endAction called without starting first.');
         }
     }
     
@@ -120,7 +120,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             $this->_object->startAction(Erfurt_Versioning::STATEMENT_REMOVED);
             $this->fail();
         } catch (Exception $e) {
-            // If we are here everything went right... so we do nothing.
+            $this->assertTrue(true, 'exception thrown if startAction called twice');
         }
     }
 
@@ -201,7 +201,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             
             $this->fail();
         } catch (Exception $e) {
-            // If we are here everything is fine.
+            $this->assertTrue(true, 'exception thrown if invalid values passed to setLimit.');
         }
     }
 
@@ -351,7 +351,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             
             $this->fail();
         } catch (Exception $e) {
-            // Everything went fine...
+            $this->assertTrue(true, 'exception thrown if No payload for given payload id.');
         }
         
         try {
@@ -359,7 +359,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             
             $this->fail();
         } catch (Exception $e) {
-            // Everything went fine...
+            $this->assertTrue(true, 'exception thrown if Payload id is null');
         }
         
         try {
@@ -367,7 +367,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
             
             $this->fail();
         } catch (Exception $e) {
-            // Everything went fine...
+            $this->assertTrue(true, 'exception thrown if No action with that id');
         }
     }
 
