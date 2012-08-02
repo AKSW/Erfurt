@@ -55,31 +55,31 @@ class Erfurt_Versioning
     protected $_store = null;
     
     protected $_user = null;
-
-    /**
-     * Constructor registers with Erfurt_Event_Dispatcher
-     * and adds triggers for operations on statements (add/del)
-     */
-    public function __construct()
-    {
-        // register for events
-        require_once 'Erfurt/Event/Dispatcher.php';
-        $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
-
-        $eventDispatcher->register('onAddStatement', $this);
-        $eventDispatcher->register('onAddMultipleStatements', $this);
-        $eventDispatcher->register('onDeleteMatchingStatements', $this);
-        $eventDispatcher->register('onDeleteMultipleStatements', $this);
-    }
+    
+    protected $_eventsRegistered = false;
     
     /**
      * Enables or disables versioning.
+     *
+     * When first called registers with Erfurt_Event_Dispatcher
+     * and adds triggers for operations on statements (add/del)
      *
      * @param bool $versioningEnabled True, if versioning is enabled, false otherwise
      */
     public function enableVersioning($versioningEnabled = true)
     {
         $this->_versioningEnabled = (bool)$versioningEnabled;
+        
+        if (!$this->_eventsRegistered) {
+            $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
+
+            $eventDispatcher->register('onAddStatement', $this);
+            $eventDispatcher->register('onAddMultipleStatements', $this);
+            $eventDispatcher->register('onDeleteMatchingStatements', $this);
+            $eventDispatcher->register('onDeleteMultipleStatements', $this);
+            
+            $this->_eventsRegistered = true;
+        }
     }
     
     /**
