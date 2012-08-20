@@ -399,8 +399,8 @@ class Erfurt_Rdf_Model
      */
     public function updateWithMutualDifference(array $original, array $changed, $useAc = true)
     {
-        $addedStatements   = $this->_getStatementsDiff($changed, $original);
-        $removedStatements = $this->_getStatementsDiff($original, $changed);
+        $addedStatements   = self::getStatementsDiff($changed, $original);
+        $removedStatements = self::getStatementsDiff($original, $changed);
 
         if (defined('_EFDEBUG')) {
             require_once 'Erfurt/App.php';
@@ -447,7 +447,7 @@ class Erfurt_Rdf_Model
      *
      * @return array a RDF/PHP array the complement of the intersection
      */
-    private function _getStatementsDiff(array $statementsObject1, array $statementsObject2)
+    public static function getStatementsDiff(array $statementsObject1, array $statementsObject2)
     {
         $difference = array();
 
