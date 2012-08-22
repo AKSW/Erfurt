@@ -179,7 +179,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         /**
      * @see Erfurt_Store_Adapter_Interface
      */
-    public function addStatement($graphUri, $subject, $predicate, $objectSpec, array $options = array())
+    public function addStatement($graphUri, $subject, $predicate, array $objectSpec, array $options = array())
     {
         extract($objectSpec);
 
@@ -301,7 +301,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
     {
         if (empty($graphUri)) {
             throw new Erfurt_Store_Adapter_Exception('No graph URI given.');
