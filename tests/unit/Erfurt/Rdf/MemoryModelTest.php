@@ -164,7 +164,7 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $fixture2 = clone $fixture;
         $pExist = 'http://e.org/p1';
         $pNotExist = 'http://e.org/p2';
-        $this->assertCount(2, $fixture2->getSO($pExist));
+        $this->assertCount(1, $fixture2->getSO($pExist));
         $this->assertCount(0, $fixture2->getSO($pNotExist));
     }
 }

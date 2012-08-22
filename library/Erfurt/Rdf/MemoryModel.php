@@ -33,7 +33,7 @@ class Erfurt_Rdf_MemoryModel
      */
     public function hasResource ($resourceUri)
     {
-        return self::_arraySearchRecursive($this->_statements, $resourceUri);
+        return self::_arraySearchRecursive($this->_statements, $resourceUri, true);
     }
 
     /*
@@ -522,7 +522,7 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /**
-     * Searches recusively haystack for needle
+     * Searches recusively the haystack array for occurences of needle as key or value
      *
      * @return boolean
      */
@@ -533,9 +533,14 @@ class Erfurt_Rdf_MemoryModel
         }
 
         foreach ($haystack as $key => $val) {
-            if (is_array($val) && self::_arraySearchRecursive($val, $needle, $strict)) {
+            if ((!$strict && $key == $needle) || ($strict && $key === $needle)) {
+                echo 'key ';
+                return true;
+            } else if (is_array($val) && self::_arraySearchRecursive($val, $needle, $strict)) {
+                echo 'subarray ';
                 return true;
             } else if ((!$strict && $val == $needle) || ($strict && $val === $needle)) {
+                echo 'val ';
                 return true;
             }
         }
