@@ -64,16 +64,17 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
     /**
      * @depends testAddRelationCorrect
      */
-    public function testHasResource()
+    public function testHasResource($fixture)
     {
-        $this->assertTrue($this->fixture->hasResource('http://e.org/r1'));
-        $this->assertTrue($this->fixture->hasResource('http://e.org/r2'));
-        $this->assertTrue($this->fixture->hasResource('http://e.org/r3'));
-        $this->assertTrue($this->fixture->hasResource('http://e.org/p1'));
-        $this->assertFalse($this->fixture->hasResource('http://e.org/r4'));
-        $this->assertFalse($this->fixture->hasResource('http://e.org/r5'));
-        $this->assertFalse($this->fixture->hasResource('http://e.org/p2'));
-        $this->assertFalse($this->fixture->hasResource('http://e.org/p3'));
+        $fixture2 = clone $fixture;
+        $this->assertTrue($fixture2->hasResource('http://e.org/r1'));
+        $this->assertTrue($fixture2->hasResource('http://e.org/r2'));
+        $this->assertTrue($fixture2->hasResource('http://e.org/r3'));
+        $this->assertTrue($fixture2->hasResource('http://e.org/p1'));
+        $this->assertFalse($fixture2->hasResource('http://e.org/r4'));
+        $this->assertFalse($fixture2->hasResource('http://e.org/r5'));
+        $this->assertFalse($fixture2->hasResource('http://e.org/p2'));
+        $this->assertFalse($fixture2->hasResource('http://e.org/p3'));
     }
 
     /**

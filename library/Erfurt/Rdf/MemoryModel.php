@@ -534,13 +534,10 @@ class Erfurt_Rdf_MemoryModel
 
         foreach ($haystack as $key => $val) {
             if ((!$strict && $key == $needle) || ($strict && $key === $needle)) {
-                echo 'key ';
                 return true;
             } else if (is_array($val) && self::_arraySearchRecursive($val, $needle, $strict)) {
-                echo 'subarray ';
                 return true;
             } else if ((!$strict && $val == $needle) || ($strict && $val === $needle)) {
-                echo 'val ';
                 return true;
             }
         }
