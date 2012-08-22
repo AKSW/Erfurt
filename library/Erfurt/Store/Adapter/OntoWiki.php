@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
         $this->_handleRequest($url);
     }
     
-    public function addStatement($graphUri, $subject, $predicate, $object, array $options = array())
+    public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
         $statementArray = array();
         $statementArray["$subject"] = array();
@@ -55,7 +55,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
         }
     }
     
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
     {
 // TODO 
     }

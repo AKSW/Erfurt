@@ -31,7 +31,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function addStatement($graphUri, $subject, $predicate, $object, array $options = array())
+    public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
         
     }
@@ -51,7 +51,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
     {
         
     }

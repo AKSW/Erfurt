@@ -35,7 +35,7 @@ interface Erfurt_Store_Adapter_Interface
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
-	public function addStatement($graphUri, $subject, $predicate, $object, array $options = array());
+	public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array());
 	
 	/**
 	 * Creates a new empty model (named graph) with the URI specified.
@@ -51,14 +51,14 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $modelIri
      * @param mixed $subject (string or null)
      * @param mixed $predicate (string or null)
-     * @param mixed $object (string or null)
+     * @param array $object
      * @param array $options
      * 
      * @throws Erfurt_Exception
      *
      * @return int The number of statements deleted
      */
-	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array());
+	public function deleteMatchingStatements($modelIri, $subject, $predicate, array $object, array $options = array());
 	
     /**
      * Deletes statements in an array from the graph specified by $graphIri.
