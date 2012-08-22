@@ -27,6 +27,15 @@ class Erfurt_Rdf_MemoryModel
         $this->addStatements($init);
     }
 
+    /**
+     * Check if the given resource is present in this model
+     * @param $resourceUri a resource for which should be searched in this model
+     */
+    public function hasResource ($resourceUri)
+    {
+        return self::_arraySearchRecursive($this->_statements, $resourceUri);
+    }
+
     /*
      * checks if there is at least one statement for resource $s
      *
@@ -190,6 +199,27 @@ class Erfurt_Rdf_MemoryModel
                         }
                         $results[$s][$predicate][] = $o;
                     }
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get all statements, which are connected with the given property
+     *
+     * @param $p the uri of a property
+     * @return array
+     */
+    public function getSO ($p)
+    {
+        $results = array();
+
+        foreach ($this->_statements as $subject => $properties) {
+            foreach ($properties as $property => $objects) {
+                if ($property == $p) {
+                    $results[$subject][$p] = $objects;
                 }
             }
         }
@@ -490,4 +520,26 @@ class Erfurt_Rdf_MemoryModel
     {
         return array_keys($this->_statements);
     }
+
+    /**
+     * Searches recusively haystack for needle
+     *
+     * @return boolean
+     */
+    private static function _arraySearchRecursive ($haystack, $needle, $strict = false)
+    {
+        if (!is_array($haystack)) {
+            return false;
+        }
+
+        foreach ($haystack as $key => $val) {
+            if (is_array($val) && self::_arraySearchRecursive($val, $needle, $strict)) {
+                return true;
+            } else if ((!$strict && $val == $needle) || ($strict && $val === $needle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

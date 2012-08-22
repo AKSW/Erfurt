@@ -62,6 +62,21 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
     }
 
     /**
+     * @depends testAddRelationCorrect
+     */
+    public function testHasResource()
+    {
+        $this->assertTrue($this->fixture->hasResource('http://e.org/r1'));
+        $this->assertTrue($this->fixture->hasResource('http://e.org/r2'));
+        $this->assertTrue($this->fixture->hasResource('http://e.org/r3'));
+        $this->assertTrue($this->fixture->hasResource('http://e.org/p1'));
+        $this->assertFalse($this->fixture->hasResource('http://e.org/r4'));
+        $this->assertFalse($this->fixture->hasResource('http://e.org/r5'));
+        $this->assertFalse($this->fixture->hasResource('http://e.org/p2'));
+        $this->assertFalse($this->fixture->hasResource('http://e.org/p3'));
+    }
+
+    /**
      * @depends testAddAttributeCorrect
      */
     public function testGetSP($fixture)
@@ -139,5 +154,17 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $this->assertFalse($fixture->hasSP('http://e.org/r1', 'http://e.org/p2'));
         $this->assertFalse($fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 'another-literal'));
         $this->assertTrue($fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', '/.*literal/', 'preg'));
+    }
+
+    /**
+     * @depends testAddRelationCorrect
+     */
+    public function testGetSO ($fixture)
+    {
+        $fixture2 = clone $fixture;
+        $pExists = 'http://e.org/p1';
+        $pNotExist = 'http://e.org/p2';
+        $this->assertCount(2, $fixture2->getSO($pExist));
+        $this->assertCount(0, $fixture2->getSO($pNotExist));
     }
 }
