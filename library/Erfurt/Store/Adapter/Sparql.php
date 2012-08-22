@@ -71,7 +71,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         
     }
     
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
 
     }

@@ -51,14 +51,14 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $modelIri
      * @param mixed $subject (string or null)
      * @param mixed $predicate (string or null)
-     * @param array $object
+     * @param mixed $object (array or null)
      * @param array $options
      * 
      * @throws Erfurt_Exception
      *
      * @return int The number of statements deleted
      */
-	public function deleteMatchingStatements($modelIri, $subject, $predicate, array $object, array $options = array());
+	public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array());
 	
     /**
      * Deletes statements in an array from the graph specified by $graphIri.

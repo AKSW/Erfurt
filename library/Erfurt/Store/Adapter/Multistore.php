@@ -137,7 +137,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         return $this->_backends[self::DEFAULT_BACKEND]->createModel($graphUri, $type);
     }
     
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $backend = $this->_getBackend($graphUri);
         

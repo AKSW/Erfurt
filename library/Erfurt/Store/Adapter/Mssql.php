@@ -425,7 +425,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, array $object, array $options = array())
+    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $modelInfoCache = $this->_getModelInfos();
 
