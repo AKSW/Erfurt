@@ -275,7 +275,7 @@ class Erfurt_Rdf_MemoryModel
             return $this->_statements;
         } else {
             if ($this->hasS($s)) {
-                return array( $s => $this->_statements[$s] );
+                return array($s => $this->_statements[$s]);
             } else {
                 return array();
             }
