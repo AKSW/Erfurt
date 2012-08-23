@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
  * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
@@ -23,23 +23,23 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
-     * Contains cached data if the wrapper is used more than once in one 
+     * Contains cached data if the wrapper is used more than once in one
      * request.
-     * 
+     *
      * @var array|null
      */
     private $_cachedData = null;
-    
+
     /**
-     * Contains cached namespaces if the wrapper is used more than once in one 
+     * Contains cached namespaces if the wrapper is used more than once in one
      * request.
-     * 
+     *
      * @var array|null
      */
     private $_cachedNs = null;
-    
+
     /**
      * If the location of the data differs from the tested URI, this property
      * contains the current URL.
@@ -47,28 +47,28 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
      * @var string|null
      */
     private $_url = null;
-    
+
     private $_httpAdapter = null;
-    
+
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     public function getDescription()
     {
         return 'This wrapper checks for Linked Data that is accessible through an URI.';
     }
-    
+
     public function getName()
     {
         return 'Linked Data Wrapper';
     }
-    
+
     public function isAvailable($r, $graphUri, $all = false)
-    { 
+    {
         $uri = $r->getUri();
         $url = $r->getLocator();
-        
+
         // Check whether there is a cache hit...
         if (null !== $this->_cache) {
             $id = $this->_cache->makeId($this, 'isAvailable', array($uri, $graphUri));
@@ -82,7 +82,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 return $result['value'];
             }
         }
-        
+
         $retVal = false;
         $ns = array();
         $data = array();
@@ -100,26 +100,26 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
         } catch (Zend_Uri_Exception $e) {
             return false;
         }
-        
+
         $client->setHeaders('Accept', 'application/rdf+xml');
         $response = $client->request();
         $success = $this->_handleResponse($client, $response, 'application/rdf+xml');
 
         if ($success === true) {
             $response = $client->getLastResponse();
-            
+
             if (null !== $this->_url) {
                 $temp = $this->_url;
             } else {
                 $temp = $url;
             }
-            
+
             if (strrpos($url, '#') !== false) {
                 $baseUri = substr($temp, 0, strrpos($temp, '#'));
             } else {
                 $baseUri = $temp;
             }
-            
+
             $tempArray = $this->_handleResponseBody($response, $baseUri);
             $ns = $tempArray['ns'];
             $data = $tempArray['data'];
@@ -139,32 +139,32 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 // try text/html...
                 $client->setHeaders('Accept', 'text/html');
                 $response = $client->request();
-             
+
                 $success = $this->_handleResponse($client, $response);
                 if ($success === true) {
                     $tempArray = $this->_handleResponseBody($client->getLastResponse(), $url);
                     $ns = $tempArray['ns'];
                     $data = $tempArray['data'];
                     $retVal = true;
-                }    
+                }
             }
-        } 
-        
-        $this->_cachedData = $data;  
+        }
+
+        $this->_cachedData = $data;
         $this->_cachedNs   = $ns;
-        
+
         if (null !== $this->_cache) {
             $cacheVal = array('value' => $retVal, 'data' => $data, 'ns' => $ns);
             $this->_cache->save($cacheVal, $id);
         }
-        
+
         return $retVal;
     }
-    
+
     public function isHandled($r, $graphUri)
     {
         $url = $r->getLocator();
-        
+
         // We only support HTTP URLs.
         if ((substr($url, 0, 7) !== 'http://') && (substr($url, 0, 8) !== 'https://')) {
             return false;
@@ -200,49 +200,49 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
 
         return true;
     }
-    
+
     public function run($r, $graphUri, $all = false)
-    { 
+    {
         if (null === $this->_cachedData) {
             $isAvailable = $this->isAvailable($r, $graphUri, $all);
-        
+
             if ($isAvailable === false) {
                 return false;
             }
         }
-        
+
         $data = $this->_cachedData;
         $ns   = $this->_cachedNs;
-        
+
         $fullResult = array();
         $fullResult['status_codes'] = array(
-            Erfurt_Wrapper::NO_MODIFICATIONS, 
-            Erfurt_Wrapper::RESULT_HAS_ADD, 
+            Erfurt_Wrapper::NO_MODIFICATIONS,
+            Erfurt_Wrapper::RESULT_HAS_ADD,
             Erfurt_Wrapper::RESULT_HAS_NS
         );
-        
+
         $uri = $r->getUri();
- 
+
         $fullResult['status_description'] = "Linked Data found for URI $uri";
         $fullResult['ns'] = $ns;
         $fullResult['add'] = $data;
-         
+
         return $fullResult;
     }
-    
+
     public function setHttpAdapter($adapter)
     {
         $this->_httpAdapter = $adapter;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Handles the different response codes for a given response.
      */
-    private function _handleResponse(&$client, $response, $accept = null) 
+    private function _handleResponse(&$client, $response, $accept = null)
     {
         switch ($response->getStatus()) {
             case 303:
@@ -292,19 +292,19 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 }
 
                 $client->setHeaders(
-                    'Authorization', 
-                    'FOAF+SSL '.base64_encode('ow_auth_user_key="' . $identity->getUri() . '"'), 
+                    'Authorization',
+                    'FOAF+SSL '.base64_encode('ow_auth_user_key="' . $identity->getUri() . '"'),
                     true
                 );
 
                 $response = $client->request();
-            
+
                 return $this->_handleResponse($client, $response, $accept);
             default:
                 return false;
         }
     }
-    
+
     /**
      * Handles the data contained in a response.
      */
@@ -314,7 +314,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
         if ($pos = strpos($contentType, ';')) {
             $contentType = substr($contentType, 0, $pos);
         }
-        
+
         $found = false;
         if ($contentType == 'text/plain' && !empty($baseUri)) {
             //if the mime type does not reveal anything, try file endings. duh
@@ -364,9 +364,9 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                     throw new Erfurt_Wrapper_Exception('Server returned not supported content type: ' . $contentType);
             }
         }
-        
+
         $data = $response->getBody();
-        
+
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
         $result = $parser->parse($data, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, $baseUri);
@@ -377,27 +377,27 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
             'ns'   => $ns
         );
     }
-    
+
     private function _handleResponseBodyHtml($response, $baseUri = null)
     {
         $htmlDoc = new DOMDocument();
         $result = @$htmlDoc->loadHtml($response->getBody());
-        
+
         $relElements = $htmlDoc->getElementsByTagName('link');
-        
+
         $documents = array();
         foreach ($relElements as $relElem) {
             $rel  = $relElem->getAttribute('rel');
             $type = $relElem->getAttribute('type');
-            
+
             if (strtolower($rel) === 'meta' && strtolower($type) === 'application/rdf+xml') {
                 $documents[] = $relElem->getAttribute('href');
             }
         }
-        
+
         $fullNs     = array();
         $fullResult = array();
-        
+
         $client = $this->_getHttpClient(
             null,
             array(
@@ -406,12 +406,12 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
             )
         );
         $client->setHeaders('Accept', 'application/rdf+xml');
-   
+
         foreach ($documents as $docUrl) {
-            
+
             $client->setUri($docUrl);
             $response = $client->request();
-           
+
             $success = $this->_handleResponse($client, $response);
 
             if ($success === true) {
@@ -432,7 +432,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 $tempArray = $this->_handleResponseBody($response, $baseUri);
                 $fullNs = array_merge($tempArray['ns'], $fullNs);
                 $tempArray = $tempArray['data'];
-                
+
                 foreach ($tempArray as $s=>$pArray) {
                     if (isset($fullResult[$s])) {
                         foreach ($pArray as $p=>$oArray) {
@@ -454,7 +454,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 // Do nothing for the moment...
             }
         }
-        
+
         return array(
             'data' => $fullResult,
             'ns'   => $fullNs
@@ -482,26 +482,26 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                 return false;
         }
     }
-    
-    private function _matchUri($pattern, $uri)
+
+    private function _matchUri ($pattern, $uri)
     {
         if ((substr($pattern, 0, 7) !== 'http://')) {
             $pattern = 'http://' . $pattern;
         }
-        
+
         if ((substr($uri, 0, strlen($pattern)) === $pattern)) {
             return true;
         } else {
             return false;
         }
     }
-    
-    private function _getHttpClient($uri, $options = array())
+
+    private function _getHttpClient ($uri, $options = array())
     {
         if (null !== $this->_httpAdapter) {
             $options['adapter'] = $this->_httpAdapter;
         }
-// TODO Create HTTP client here and remove method from Erfurt_App.
+        // TODO Create HTTP client here and remove method from Erfurt_App.
         return Erfurt_App::getInstance()->getHttpClient($uri, $options);
     }
 }
