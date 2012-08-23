@@ -350,6 +350,8 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                     break;
                 case 'text/rdf+n3':
                 case 'text/n3':
+                case 'text/turtle':
+                case 'application/x-turtle':
                     $type = 'rdfn3';
                     break;
                 case 'text/html':
