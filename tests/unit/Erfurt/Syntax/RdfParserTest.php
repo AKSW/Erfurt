@@ -71,16 +71,13 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
     
     public function testParseWithFilenameAndRdfXml()
     {
+        $this->markTestNeedsTestConfig();
+
         $this->_object->initializeWithFormat('rdfxml');
         $filename = $this->_resourcesDirectory . 'valid/conferences.rdf';
         
-        $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
-        $result2 = $adapter->parseFromFilename($filename);
-        
-        $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        $this->assertInternalType('array', $result);
     }
     
     public function testParseWithFilenameAndN3()
@@ -88,13 +85,8 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('ttl');
         $filename = $this->_resourcesDirectory . 'valid/conferences.ttl';
         
-        $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
-        $result2 = $adapter->parseFromFilename($filename);
-        
-        $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        $this->assertInternalType('array', $result);
     }
     
     public function testParseWithFilenameAndRdfJson()
@@ -102,13 +94,8 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('rdfjson');
         $filename = $this->_resourcesDirectory . 'valid/conferences.json';
         
-        $result1 = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
-        $result2 = $adapter->parseFromFilename($filename);
-        
-        $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($filename, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        $this->assertInternalType('array', $result);
     }
     
     public function testParseWithDataStringAndRdfXml()
@@ -128,13 +115,8 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
         </owl:Ontology>
         </rdf:RDF>';
         
-        $result1 = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-        
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
-        $result2 = $adapter->parseFromDataString($dataString);
-        
-        $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+        $this->assertInternalType('array', $result);
     }
     
     public function testParseWithDataStringAndN3()
@@ -145,28 +127,18 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
                                      <label> "Conference Model" ;
                                      <comment> "Demo Model about Conferences and Semantic Web People" .';
         
-        $result1 = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-        
-        require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
-        $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
-        $result2 = $adapter->parseFromDataString($dataString);
-        
-        $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+        $this->assertInternalType('array', $result);
     }
     
     public function testParseWithDataStringAndRdfJson()
     {
-       $this->_object->initializeWithFormat('rdfjson');
+        $this->_object->initializeWithFormat('rdfjson');
 
-       $dataString = '{"http:\/\/3ba.se\/conferences\/":{"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type":[{"type":"uri","value":"http:\/\/www.w3.org\/2002\/07\/owl#Ontology"}],"http:\/\/www.w3.org\/2000\/01\/rdf-schema#label":[{"type":"literal","value":"Conference Model"}],"http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment":[{"type":"literal","value":"Demo Model about Conferences and Semantic Web People"}]}}';
+        $dataString = '{"http:\/\/3ba.se\/conferences\/":{"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type":[{"type":"uri","value":"http:\/\/www.w3.org\/2002\/07\/owl#Ontology"}],"http:\/\/www.w3.org\/2000\/01\/rdf-schema#label":[{"type":"literal","value":"Conference Model"}],"http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment":[{"type":"literal","value":"Demo Model about Conferences and Semantic Web People"}]}}';
 
-       $result1 = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-
-       require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
-       $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
-       $result2 = $adapter->parseFromDataString($dataString);
-
-       $this->assertEquals($result1, $result2);
+        $result = $this->_object->parse($dataString, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+        $this->assertInternalType('array', $result);
     }
     
     public function testBaseJSON()
