@@ -63,19 +63,24 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
     
     public function providerTestParse()
     {
+        $cacheFullPath = realpath(dirname(__FILE__)) .'/_cache/_sparql_parserTest_testParse';
+        if (file_exists($cacheFullPath)) {
+            return unserialize(file_get_contents($cacheFullPath));
+        }
+
         $queryArray = array();
         
         $resourceFileBase = realpath(dirname(__FILE__)) .'/_files/';
         
         // 1. ow tests 
         $this->_importFromManifest($resourceFileBase . self::OW_TEST_DIR . 'manifest.ttl', $queryArray);
-        
+
         // 2. erfurt tests
         $this->_importFromManifest($resourceFileBase . self::EF_TEST_DIR . 'manifest.ttl', $queryArray);
         
         // 3. rap tests
         $this->_importFromManifest($resourceFileBase . self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
-    
+
         // 4. dawg2
         require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = new Erfurt_Syntax_RdfParser();
@@ -104,6 +109,9 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                 $object = $result["$object"]["$p"][0]['value'];
             }
         }
+
+        // cache for faster loading next time
+        file_put_contents($cacheFullPath, serialize($queryArray));
 
         return $queryArray;
     }
