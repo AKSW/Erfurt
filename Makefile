@@ -22,6 +22,9 @@ default:
 	@echo "     'FPATH=<path>' (run code checking on specific relative path)"
 	@echo "     'SNIFFS=<sniff 1>,<sniff 2>' (run code checking on specific sniffs)"
 	@echo "     'OPTIONS=<option>' (run code checking with specific CodeSniffer options)"
+	@echo ""
+	@echo "     -------------------------------------------------------------------"
+	@echo "     test-clean .................. Clean test cache files, etc."
 
 clean:
 	rm -rf cache/* logs/*
@@ -91,3 +94,6 @@ cs-check-emacs:
 	$(CSSPATH)cs-scripts.sh -c "--report=emacs $(REQUESTSTR)"
 cs-check-blame:
 	$(CSSPATH)cs-scripts.sh -s -c "--report=gitblame $(REQUESTSTR)"
+
+test-clean:
+	rm -rf tests/unit/Erfurt/Sparql/_cache/*
