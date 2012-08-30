@@ -19,6 +19,8 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
+        $this->markTestNeedsTestConfig();
+
         $this->_storeStub = new Erfurt_Versioning_StoreStub();
         $this->_authStub  = new Erfurt_Versioning_AuthStub();
         $this->_object    = $this->_getMockedVersioning();

@@ -39,7 +39,9 @@ class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
     }
     
     public function testWrapperInstantiation()
-    {        
+    {
+        $this->markTestNeedsTestConfig();
+
         $this->_manager->addWrapperPath($this->_resourcesPath);
         
         $registry = Erfurt_Wrapper_Registry::getInstance();

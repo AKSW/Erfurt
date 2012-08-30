@@ -251,6 +251,8 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
      
     public function testGetBaseIriWithEmptyBaseReturnsModelIri()
     {
+        $this->markTestNeedsTestConfig();
+
         $model1 = new Erfurt_Rdf_Model('http://example.org/');
         $model2 = new Erfurt_Rdf_Model('http://example.org/', 'http://example.org/resources/');
         

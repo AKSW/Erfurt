@@ -27,6 +27,8 @@ class Erfurt_Owl_ModelTest extends Erfurt_TestCase
 
     public function testObjectCreationWithoutBaseUriAndWithoutImports()
     {
+        $this->markTestNeedsTestConfig();
+
         $model = new Erfurt_Owl_Model('http://example.org/model/');
         $this->assertTrue($model instanceof Erfurt_Owl_Model);
     }
