@@ -20,20 +20,39 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
  */
 class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
-    protected $_data = array();
-        
+    private $_data = array();
+
+    private $_queryResults = array();
+    private $_queryResultIndex = 0;
+
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
         if (isset($this->_data[$graphUri])) {
             $this->_data[$graphUri] = $statementsArray;
+
+            return true;
         }
+
+        return false;
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
-        
+        if (isset($this->_data[$graphUri])) {
+            $statementsArray = array(
+                $subject => array(
+                    $predicate => array($object)
+                )
+            );
+
+            $this->_data[$graphUri] = $statementsArray;
+
+            return true;
+        }
+
+        return false;
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -53,13 +72,13 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
-        
+
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
-        
+
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -73,7 +92,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = false)
     {
-        
+
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -84,7 +103,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
         foreach ($modelsArray as $graphUri) {
             $models[$graphUri] = true;
         }
-        
+
         return $models;
     }
 
@@ -110,7 +129,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     {
         return array();
     }
-    
+
     public function getImportsClosure($modelIri)
     {
         return array();
@@ -152,7 +171,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
 
     public function init()
     {
-        
+
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -170,19 +189,23 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlQuery($query, $options=array())
     {
-        return array();
+        if ($this->_queryResultIndex >= count($this->_queryResults)) {
+            return array(); // empty result by default
+        }
+
+        return $this->_queryResults[$this->_queryResultIndex++];
     }
-    
+
     public function createTable($tableName, array $columns)
     {
-        
+
     }
-    
+
     public function lastInsertId()
     {
-        
+
     }
-    
+
     public function listTables($prefix = '')
     {
         return array(
@@ -190,21 +213,26 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
             'ef_versioning_payloads'
         );
     }
-    
+
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        
+
     }
-    
+
 #pragma mark -
 #pragma mark Helper methods
+
+    public function addQueryResult(array $queryResult)
+    {
+        $this->_queryResults[] = $queryResult;
+    }
 
     public function getStatementsForGraph($graphUri)
     {
         if (isset($this->_data[$graphUri])) {
             return $this->_data[$graphUri];
         }
-        
+
         return array();
     }
 
