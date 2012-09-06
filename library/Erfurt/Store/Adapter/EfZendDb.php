@@ -244,10 +244,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $o['value'] = substr((string)$o['value'], 0, 128) . $objectHash;
                     }
-                        
+
+                    $sValue = $this->_dbConn->quote($s);
+                    $pValue = $this->_dbConn->quote($p);
                     $oValue = $this->_dbConn->quote($o['value']);
                     
-                    $sqlString .= "($graphId, '$s', '$p', $oValue,";
+                    $sqlString .= "($graphId, $sValue, $pValue, $oValue,";
 
                     #$data = array(
                     #    'g'     => $graphId,
