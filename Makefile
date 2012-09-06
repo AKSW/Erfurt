@@ -112,22 +112,22 @@ cs-check-blame:
 
 # test stuff
 
-test-unit:
+test-unit: directories
 	@cd tests && phpunit --bootstrap Bootstrap.php unit/
 
-test-unit-cc:
+test-unit-cc: directories
 	@cd tests/unit && phpunit
 
-test-integration-virtuoso:
+test-integration-virtuoso: directories
 	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-virtuoso-cc:
+test-integation-virtuoso-cc: directories
 	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
 
-test-integration-mysql:
+test-integration-mysql: directories
 	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-mysql-cc:
+test-integation-mysql-cc: directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
 
 test:

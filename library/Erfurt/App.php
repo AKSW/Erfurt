@@ -811,7 +811,7 @@ class Erfurt_App
         if (isset($config->log->path)) {
             $matches = array();
             if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->log->path, $matches) === 1)) {
-                $config->log->path = EF_BASE . $config->log->path;
+                $config->log->path = realpath(EF_BASE . '../../' . $config->log->path);
             }
 
             $config->log->path = rtrim($config->log->path, '/\\') . '/';
@@ -819,7 +819,7 @@ class Erfurt_App
             if (is_writable($config->log->path)) {
                 return $config->log->path;
             } else {
-            	error_log('Attention : Erfurt log.path ('. $config->log->path .') not writable.');
+                error_log('Attention : Erfurt log.path ('. $config->log->path .') not writable.');
                 return false;
             }
         } else {
