@@ -2,30 +2,45 @@ ZENDVERSION=1.11.5
 
 default:
 	@echo "please use:"
-	@echo "     'make cs-install' (install CodeSniffer)"
-	@echo "     'make cs-uninstall' (uninstall CodeSniffer)"
-	@echo "     'make cs-enable' (enable CodeSniffer to check code before every commit)"
-	@echo "     'make cs-disable' (disable CodeSniffer code checking)"
-	@echo "     'make cs-check-commit' (run pre-commit code checking manually)"
-	@echo "     'make cs-check-commit-emacs' (same as cs-check-commit with emacs output)"
-	@echo "     'make cs-check-commit-intensive' (run pre-commit code checking"
-	@echo "             manually with stricter coding standard)"
-	@echo "     'make cs-check (run complete code checking)"
-	@echo "     'make cs-check-full' (run complete code checking with detailed output)"
-	@echo "     'make cs-check-emacs' (run complete code checking with with emacs output)"
-	@echo "     'make cs-check-blame' (run complete code checking with blame list output)"
-	@echo "     'make cs-check-intensive' (run complete code checking with"
-	@echo "             stricter coding standard)"
-	@echo "     'make cs-check-intensive-full' (run complete code checking with"
-	@echo "             stricter coding standard and detailed output)"
-	@echo "     'possible Parameter:"
-	@echo "     'FPATH=<path>' (run code checking on specific relative path)"
-	@echo "     'SNIFFS=<sniff 1>,<sniff 2>' (run code checking on specific sniffs)"
-	@echo "     'OPTIONS=<option>' (run code checking with specific CodeSniffer options)"
 	@echo ""
-	@echo "     -------------------------------------------------------------------"
-	@echo "     test-clean .................. Clean test cache files, etc."
-
+	@echo "  test ......................... Execute unit and integration tests"
+	@echo "  test-cc ...................... Same as above plus code coverage report"
+	@echo "  test-unit .................... Run OntoWiki unit tests"
+	@echo "  test-unit-cc ................. Same as above plus code coverage report"
+	@echo "  test-integration-virtuoso .... Run OntoWiki integration tests with virtuoso"
+	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
+	@echo "  test-integration-mysql ....... Run OntoWiki integration tests with mysql"
+	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
+	@echo "  test-clean ................... Clean test cache files, etc."
+	@echo "  ----------------------------------------------------------------------"
+	@echo "  cs-install ................... install CodeSniffer"
+	@echo "  cs-uninstall ................. uninstall CodeSniffer"
+	@echo "  cs-enable .................... enable CodeSniffer to check code before"
+	@echo "                                 every commit"
+	@echo "  cs-disable ................... disable CodeSniffer code checking"
+	@echo "  cs-check-commit .............. run pre-commit code checking manually)"
+	@echo "  cs-check-commit-emacs' ....... same as above with emacs output)"
+	@echo "  cs-check-commit-intensive .... run pre-commit code checking"
+	@echo "                                 manually with stricter coding"
+	@echo "                                 standard"
+	@echo "  cs-check ..................... run complete code checking"
+	@echo "  cs-check-full ................ run complete code checking with detailed"
+	@echo "                                 output"
+	@echo "  cs-check-emacs ............... run complete code checking with with"
+	@echo "                                 emacs output"
+	@echo "  cs-check-blame ............... run complete code checking with blame"
+	@echo "                                 list output"
+	@echo "  cs-check-intensive ........... run complete code checking with"
+	@echo "                                 stricter coding standard"
+	@echo "  cs-check-intensive-full ...... run complete code checking with"
+	@echo "                                 stricter coding standard and detailed"
+	@echo "                                 output"
+	@echo ""
+	@echo "  Possible parameters:"
+	@echo "   FPATH=<path> (run code checking on specific relative path)"
+	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
+	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
+		
 clean:
 	rm -rf cache/* logs/*
 
@@ -94,6 +109,45 @@ cs-check-emacs:
 	$(CSSPATH)cs-scripts.sh -c "--report=emacs $(REQUESTSTR)"
 cs-check-blame:
 	$(CSSPATH)cs-scripts.sh -s -c "--report=gitblame $(REQUESTSTR)"
+
+# test stuff
+
+test-unit:
+	@cd tests && phpunit --bootstrap Bootstrap.php unit/
+
+test-unit-cc:
+	@cd tests/unit && phpunit
+
+test-integration-virtuoso:
+	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
+
+test-integation-virtuoso-cc:
+	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
+
+test-integration-mysql:
+	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
+
+test-integation-mysql-cc:
+	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
+
+test:
+	@make test-unit
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	@make test-integration-virtuoso
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	@make test-integration-mysql
+
+test-cc:
+	@make test-unit-cc
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	@make test-integration-cc
+
 
 test-clean:
 	rm -rf tests/unit/Erfurt/Sparql/_cache/*

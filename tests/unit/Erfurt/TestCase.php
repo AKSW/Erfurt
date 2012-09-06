@@ -155,6 +155,18 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             } else {
                 $this->_testConfig = false;
             }
+
+            // overwrite store adapter to use with environment variable if set
+            // this is useful, when we want to test with different stores without manually
+            // editing the config
+            if ($this->_testConfig !== false) {
+                $storeAdapter = getenv('EF_STORE_ADAPTER');
+                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
+                    $this->_testConfig->store->backend = $storeAdapter;
+                } else if ($storeAdapter !== false) {
+                    throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
+                }
+            }
         }
 
         $app = Erfurt_App::getInstance(false);
