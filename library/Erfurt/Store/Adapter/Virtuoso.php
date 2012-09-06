@@ -85,6 +85,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         'http://localhost:8890/DAV'
     );
 
+    private $_isOpenSourceVersion = true;
+
     // ------------------------------------------------------------------------
     // --- Magic Methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -103,6 +105,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $this->_adapterOptions = $adapterOptions;
+        if (isset($adapterOptions['is_open_source_version'])) {
+            $this->_isOpenSourceVersion = (bool)$adapterOptions['is_open_source_version'];
+        }
         
         // Access the connection in order to check whether it works.
         $this->connection();
@@ -144,21 +149,21 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     $this->buildTripleString($statementBlock)
                 );
 
-               //split when too many linebreaks (virtuso has a limit of 10'000 - but in sql...?!)
+               //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
                if (substr_count($blockQuery, "\n") > 1000) {
                     $numBlocks *= 2;
                     continue 2;
                }
                $blockQueries[] = $blockQuery;
             }
-            break;  //this only reached if the continue call is not ŕeached
+            break;  //this only reached if the continue call is not reached
         }
 
         $odbcRes = true;
         foreach ($blockQueries as $query) {
             if (defined('_EFDEBUG')) {
                 $logger = Erfurt_App::getInstance()->getLog();
-                $logger->debug('Add mutliple statements query: ' . PHP_EOL . $query);
+                $logger->debug('Add multiple statements query: ' . PHP_EOL . $query);
             }
 
             $odbcRes = $this->_execSparqlUpdate($query);
@@ -782,6 +787,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function buildLiteralString($value, $datatype = null, $lang = null)
     {
+        // This is a Virtuoso commercial edition feature... If we are running on open-source version, we remove the
+        // datatype, since otherwise loading will fail.
+        if ($this->_isOpenSourceVersion) {
+            if ($datatype === 'http://www.openlinksw.com/schemas/virtrdf#Geometry') {
+                $datatype = null;
+            }
+        }
+
         return Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
     }
 
@@ -1013,8 +1026,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
         $resultId = odbc_exec($this->connection(), $virtuosoPl);
+
         if (false === $resultId) {
-            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
+            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
+            echo '<pre>' . $message . '</pre>';exit;
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 

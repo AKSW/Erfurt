@@ -1,0 +1,2388 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:dbpedia-owl="http://dbpedia.org/ontology/"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dbpprop="http://dbpedia.org/property/"
+	xmlns:ns7="http://www.w3.org/ns/prov#" >
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobile">
+    <owl:sameAs rdf:resource="http://ja.dbpedia.org/resource/自動車" />
+    <owl:sameAs rdf:resource="http://de.dbpedia.org/resource/Automobil" />
+    <owl:sameAs rdf:resource="http://it.dbpedia.org/resource/Autovettura" />
+    <owl:sameAs rdf:resource="http://ko.dbpedia.org/resource/자동차" />
+    <owl:sameAs rdf:resource="http://rdf.freebase.com/ns/m.0k4j" />
+    <owl:sameAs rdf:resource="http://pl.dbpedia.org/resource/Samochód" />
+    <owl:sameAs rdf:resource="http://es.dbpedia.org/resource/Automóvil" />
+    <owl:sameAs rdf:resource="http://el.dbpedia.org/resource/Αυτοκίνητο" />
+    <owl:sameAs rdf:resource="http://cs.dbpedia.org/resource/Automobil" />
+    <owl:sameAs rdf:resource="http://fr.dbpedia.org/resource/Automobile" />
+    <owl:sameAs rdf:resource="http://ru.dbpedia.org/resource/Автомобиль" />
+    <owl:sameAs rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <owl:sameAs rdf:resource="http://pt.dbpedia.org/resource/Automóvel" />
+    <rdfs:label xml:lang="ja">自動車</rdfs:label>
+    <rdfs:label xml:lang="zh">汽车</rdfs:label>
+    <rdfs:label xml:lang="nl">Auto</rdfs:label>
+    <rdfs:label xml:lang="no">Bil</rdfs:label>
+    <rdfs:label xml:lang="ru">Автомобиль</rdfs:label>
+    <rdfs:label xml:lang="en">Automobile</rdfs:label>
+    <rdfs:label xml:lang="de">Automobil</rdfs:label>
+    <rdfs:label xml:lang="fr">Automobile</rdfs:label>
+    <rdfs:label xml:lang="ko">자동차</rdfs:label>
+    <rdfs:label xml:lang="vi">Ô tô</rdfs:label>
+    <rdfs:label xml:lang="ca">Automòbil</rdfs:label>
+    <rdfs:label xml:lang="pl">Samochód</rdfs:label>
+    <rdfs:label xml:lang="pt">Automóvel</rdfs:label>
+    <rdfs:label xml:lang="sv">Bil</rdfs:label>
+    <rdfs:label xml:lang="it">Autovettura</rdfs:label>
+    <rdfs:label xml:lang="cs">Automobil</rdfs:label>
+    <rdfs:label xml:lang="uk">Автомобіль</rdfs:label>
+    <rdfs:label xml:lang="hu">Autó</rdfs:label>
+    <rdfs:label xml:lang="fi">Auto</rdfs:label>
+    <rdfs:label xml:lang="es">Automóvil</rdfs:label>
+    <rdfs:comment xml:lang="vi">Ô tô hay xe hơi (tên thường gọi ở miền Nam Việt Nam) là loại phương tiện giao thông chạy bằng bốn bánh có chở theo động cơ của chính nó. Tên gọi ô-tô được nhập từ tiếng Pháp (automobile), tên tiếng Pháp xuất phát từ từ auto (tiếng Hy Lạp, nghĩa là tự thân) và từ mobilis (tiếng La Tinh, nghĩa là vận động). Từ automobile ban đầu chỉ những loại xe tự di chuyển được gồm xe không ngựa và xe có động cơ. Còn từ ô tô trong tiếng Việt chỉ dùng để chỉ các loại có 4 bánh.</rdfs:comment>
+    <rdfs:comment xml:lang="en">An automobile, autocar, motor car or car is a wheeled motor vehicle used for transporting passengers, which also carries its own engine or motor. Most definitions of the term specify that automobiles are designed to run primarily on roads, to have seating for one to eight people, to typically have four wheels, and to be constructed principally for the transport of people rather than goods.</rdfs:comment>
+    <rdfs:comment xml:lang="it">L&#39;autovettura o automobile, comunemente chiamata con la forma contratta auto o popolarmente macchina, è un autoveicolo progettato e costruito per il trasporto privato di persone. Una parte rilevante della sua struttura o carrozzeria, di conseguenza, è dotata di sedili, quello del conducente e quelli dei viaggiatori.</rdfs:comment>
+    <rdfs:comment xml:lang="pl">Samochód – pojazd mechaniczny służący do przewozu osób lub ładunków.</rdfs:comment>
+    <rdfs:comment xml:lang="ko">자동차(自動車)는 자체 엔진에서 동력을 생산해 바퀴에 전달하여 도로에서 승객이나 화물을 운반하는 교통 수단이다. 자동차를 뜻하는 영국 영어 단어인 &#39;car&#39;는 라틴어 &#39;carrus&#39; 혹은 &#39;carrum&#39;(바퀴달린 탈것)에서 왔고, 미국 영어 단어인 &#39;automobile&#39;은 그리스어 &#39;autos&#39;(스스로)와 라틴어 &#39;movere&#39;(움직이다)에서 왔다. 즉, &#39;스스로 움직인다&#39;는 뜻을 가지고 있다. 한국에는 1911년에 대한제국 순종의 전용차와 조선총독부의 관용으로 처음 들어왔다.</rdfs:comment>
+    <rdfs:comment xml:lang="cs">Pojem automobil (auto) znamená dvoustopé osobní nebo nákladní silniční motorové vozidlo. Oproti této definici mezi automobily obvykle neřadíme autobusy. Jedná se o jeden z mnoha dopravních prostředků. Rozdělují se dle druhu pohonu, např. dieselové, zážehové, elektro aj. V roce 2003 bylo na světě 590 000 000 registrovaných automobilů. Na konci roku 2009 bylo na světě registrováno 980 milionů aut a na konci roku 2010 bylo na planetě Zemi registrováno 1 015 milionů automobilů.</rdfs:comment>
+    <rdfs:comment xml:lang="pt">Um automóvel (do grego auto, por si próprio, e do latim mobilis, mobilidade) ou carro, como referência a um objecto responsável pela sua própria locomoção) é um veículo motorizado, com quatro rodas, geralmente destinado ao transporte de passageiros ou mercadoria, sendo um dos meios de transporte mais populares do mundo.</rdfs:comment>
+    <rdfs:comment xml:lang="ca">L’automòbil (comunament cotxe o votura a la Catalunya Nord) és usualment un vehicle de quatre rodes destinat al transport de persones, amb capacitat entre dos i vuit seients. Es desplaça gràcies a un motor d&#39;explosió a base d&#39;una mescla de gasolina, gasoil i aire. En alguns països el combustible es fabrica a partir de determinades plantes en forma d&#39;alcohol etílic.</rdfs:comment>
+    <rdfs:comment xml:lang="zh">汽車，即本身具有動力得以驅動，不須依軌道或電力架設，得以機動行駛之車輛。廣義來說，具有四輪行駛的車輛，普遍多稱為汽車。雖然，長久以來學術各界對「誰是第一位汽車發明者」皆有不同的看法及論述，未有完全一致性的看法，但是，絕大部份學者皆將德國工程師卡爾·賓士視為第一位發明者。而美國人則認為亨利福特為汽車創始人，不過，儘管亨利福特或許不是創始者，但他卻是使得汽車得以普及化的人。</rdfs:comment>
+    <rdfs:comment xml:lang="uk">Автомобі́ль, авто́, автівка (від грец. αὐτός — «сам» і лат. mobilis — «той, що рухається») — самохідна колісна машина, яка приводиться в рух встановленим на ній двигуном і призначена для перевезення людей, вантажу, буксирування транспортних засобів, виконання спеціальних робіт та перевезення спеціального устаткування безрейковими дорогами. Пересувається переважно суходолом.</rdfs:comment>
+    <rdfs:comment xml:lang="es">El término automóvil (del idioma griego αὐτο &quot;uno mismo&quot;, y del latín mobĭlis &quot;que se mueve&quot;) se refiere principalmente a un vehículo autopropulsado por un motor propio y destinado al transporte terrestre de personas o mercancías sin necesidad de carriles. Aunque el término automóvil es utilizado por antonomasia para referirse a los automóviles de turismo, existen otros tipos de automóviles, como camiones, autobuses, furgonetas, motocicletas, motocarros o cuatriciclos.</rdfs:comment>
+    <rdfs:comment xml:lang="ru">Автомоби́ль, автомаши́на — самоходное безрельсовое транспортное средство, предназначенное для передвижения по суше.</rdfs:comment>
+    <rdfs:comment xml:lang="nl">Een auto of automobiel (van Grieks auto- en Latijn mobile) is een zelfstandig voortbewegend rijtuig om mensen, voorwerpen en/of dieren te verplaatsen. Voor de aandrijving worden hoofdzakelijk verbrandingsmotoren toegepast. Alternatieve aandrijvingen zijn de hybride aandrijving, en de elektrische aandrijving met accu’s of een brandstofcel als energiebron. In de loop der jaren zijn er talloze automerken en nog meer modellen op de markt verschenen.</rdfs:comment>
+    <rdfs:comment xml:lang="fi">Auto on pyörillä liikkuva henkilöiden ja tavaran kuljetukseen tarkoitettu moottorin voimin liikkuva ajoneuvo. Auto on nykyisin Suomessa tärkein liikenneväline. Nimitys &#39;auto&#39; on lyhentynyt sanasta automobiili, joka koostuu kreikkalaisesta etuliitteestä άυτο-, áuto-, itse- ja latinan sanasta mobilis, liikkuva. Autoilla matkustetaan töihin, harrastuspaikoille ja lomakohteisiin. Autolla tehdään suuri osa erilaisista kuljetuksista, ja ne palvelevat viranomaisia ja jopa sodankäyntiä.</rdfs:comment>
+    <rdfs:comment xml:lang="sv">Denna artikel handlar om bilen. Se också bil (olika betydelser). Uppslagsordet Automobil transporterar hit. För tidningen, se Automobil (tidning). En bil är ett motorfordon som är försett med åtminstone tre hjul, och som inte kan anses vara en motorcykel eller en moped. Bilar delas in i personbilar (vilket ordet &quot;bil&quot; vanligtvis syftar på), lastbilar och bussar. Från början användes benämningen automobil, från grekiskans αὐτός, autós, &quot;själv&quot; och latinets móbilis, &quot;rörlig&quot;.</rdfs:comment>
+    <rdfs:comment xml:lang="de">Ein Automobil, kurz Auto (auch Kraftwagen, früher Motorwagen), ist ein traditionell mehrspuriges Kraftfahrzeug, das von einem Motor angetrieben wird und zur Beförderung von Personen und Frachtgütern dient. Motorisierte Wagen lösten in nahezu allen Bereichen die von Zugtieren gezogenen Fuhrwerke ab, da sie deutlich schneller und weiter fahren und eine höhere Leistung erbringen können.</rdfs:comment>
+    <rdfs:comment xml:lang="ja">自動車（じどうしゃ）とは、原動機の動力によって陸上を走行する車両のうち、軌条によらずに運転者の操作で進路と速度を変えることができる乗り物である。英語ではautomobile、motorcarなどと言う。</rdfs:comment>
+    <rdfs:comment xml:lang="no">En bil er en motorvogn som kjører på minst tre, oftest fire, hjul og er beregnet til å kjøres på vei, ikke på skinner, og frakte passasjerer eller gods. Ordet «bil» kommer fra den eldre formen &#39;automobil&#39;, fra gresk auto- «selv» og latin mobil «bevegelig», og er et fellesord i de tre skandinaviske språkene. Bil ble foreslått som avløserord for automobil i en konkurranse i avisen Politiken i 1902.</rdfs:comment>
+    <rdfs:comment xml:lang="fr">Une automobile, une voiture, ou un char (Amérique du Nord) est un véhicule terrestre à roues équipé avec un moteur embarqué dans le véhicule. Ce type de véhicule est conçu pour le transport sur route de personnes, mais sa définition peut s&#39;étendre jusqu&#39;au transport de marchandises ainsi que jusqu&#39;à des véhicules pouvant fonctionner sur tout terrains.</rdfs:comment>
+    <rdfs:comment xml:lang="hu">Az autó egy olyan, földön közlekedő, kerekeken guruló jármű, amely képes önálló mozgásra, nem egy másik jármű vagy állat mozgatja. Hétköznapi jelentésében az autó a gépkocsi, egy kerekeken guruló, saját motorja által hajtott jármű. A legtöbb meghatározás olyan szabályszerűségekkel írja le mint elsősorban aszfaltútra tervezték, 1-8 utast szállíthat, jellemzően négy kerékkel rendelkezik, és felépítése a személyszállításra jobban alkalmassá teszi mint áruszállításra.</rdfs:comment>
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.autoandsociety.com/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.fia.com/" />
+    <foaf:depiction rdf:resource="http://upload.wikimedia.org/wikipedia/commons/1/1e/Benz-velo.jpg" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Wheeled_vehicles" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Automobiles" />
+    <dbpprop:name xml:lang="en">Automobile</dbpprop:name>
+    <dbpprop:classification rdf:resource="http://dbpedia.org/resource/Vehicle" />
+    <dbpprop:caption xml:lang="en">Benz &quot;Velo&quot; model  – entered into an early automobile race as a motocycle</dbpprop:caption>
+    <dbpprop:powered xml:lang="en">Yes</dbpprop:powered>
+    <dbpedia-owl:abstract xml:lang="ko">자동차(自動車)는 자체 엔진에서 동력을 생산해 바퀴에 전달하여 도로에서 승객이나 화물을 운반하는 교통 수단이다. 자동차를 뜻하는 영국 영어 단어인 &#39;car&#39;는 라틴어 &#39;carrus&#39; 혹은 &#39;carrum&#39;(바퀴달린 탈것)에서 왔고, 미국 영어 단어인 &#39;automobile&#39;은 그리스어 &#39;autos&#39;(스스로)와 라틴어 &#39;movere&#39;(움직이다)에서 왔다. 즉, &#39;스스로 움직인다&#39;는 뜻을 가지고 있다. 한국에는 1911년에 대한제국 순종의 전용차와 조선총독부의 관용으로 처음 들어왔다.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="de">Ein Automobil, kurz Auto (auch Kraftwagen, früher Motorwagen), ist ein traditionell mehrspuriges Kraftfahrzeug, das von einem Motor angetrieben wird und zur Beförderung von Personen und Frachtgütern dient. Motorisierte Wagen lösten in nahezu allen Bereichen die von Zugtieren gezogenen Fuhrwerke ab, da sie deutlich schneller und weiter fahren und eine höhere Leistung erbringen können. Dieser Vorteil entwickelte sich schließlich zu mehr Transporten, einem massiv gestiegenen Raumbedarf und markanten Umweltproblemen. Dies, obwohl der Verbrennungsmotor mitnichten der Antrieb der ersten Stunde war: 1900 verkehrten in den USA 40 Prozent der Automobile mit Dampf, 38 Prozent elektrisch und nur 22 Prozent fuhren mit Benzin. Der weltweite Fahrzeugbestand steigt kontinuierlich an und lag im Jahr 2007 bei rund 918 Millionen Fahrzeugen.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ru">Автомоби́ль, автомаши́на — самоходное безрельсовое транспортное средство, предназначенное для передвижения по суше.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="no">En bil er en motorvogn som kjører på minst tre, oftest fire, hjul og er beregnet til å kjøres på vei, ikke på skinner, og frakte passasjerer eller gods. Ordet «bil» kommer fra den eldre formen &#39;automobil&#39;, fra gresk auto- «selv» og latin mobil «bevegelig», og er et fellesord i de tre skandinaviske språkene. Bil ble foreslått som avløserord for automobil i en konkurranse i avisen Politiken i 1902. I Norge var de tre største bilmerkene innenfor personbiler i 2007 henholdsvis Toyota, Volkswagen og Ford. http://www. ofv. no/foreningssider/ofv_bilsalg. asp Det var streng rasjonering på biler i Norge helt frem til 1960, men i perioder var det fri omsetning av russiske og østeuropéiske bilmerker, avhengig av den norske fiskeeksporten til disse landene.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ca">L’automòbil (comunament cotxe o votura a la Catalunya Nord) és usualment un vehicle de quatre rodes destinat al transport de persones, amb capacitat entre dos i vuit seients. Es desplaça gràcies a un motor d&#39;explosió a base d&#39;una mescla de gasolina, gasoil i aire. En alguns països el combustible es fabrica a partir de determinades plantes en forma d&#39;alcohol etílic. Recentment s&#39;han començat a produir automòbils que funcionen amb motor elèctric, si bé l&#39;autonomia d&#39;aquests vehicles és encara limitada a causa del pes de les bateries. Les rodes davanteres dels automòbils poden moure&#39;s cap a ambdós costats per a realitzar girs i prendre les corbes.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="fr">Une automobile, une voiture, ou un char (Amérique du Nord) est un véhicule terrestre à roues équipé avec un moteur embarqué dans le véhicule. Ce type de véhicule est conçu pour le transport sur route de personnes, mais sa définition peut s&#39;étendre jusqu&#39;au transport de marchandises ainsi que jusqu&#39;à des véhicules pouvant fonctionner sur tout terrains. L&#39;étymologie du mot explique cette variété de définitions, puisque le terme provient du grec « αὐτός » (« soi-même ») et du latin « mobilis » (« mobile »), référence au caractère auto-propulsé de l&#39;automobile qui la distingue de la voiture. L&#39;automobile est un moyen de transport personnel parmi les plus répandus actuellement sur la planète. Sa capacité habituelle de transport est généralement de cinq personnes, mais peut varier de une à neuf places. L&#39;usage limite l&#39;emploi du terme automobile aux véhicules de dimensions inférieures à celle des bus et des camions, mais englobe parfois les véhicules utilitaires légers à usage personnel. Bien qu&#39;étant des véhicules « automobiles », les deux-roues motorisés ne sont pas classés parmi les automobiles.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="fi">Auto on pyörillä liikkuva henkilöiden ja tavaran kuljetukseen tarkoitettu moottorin voimin liikkuva ajoneuvo. Auto on nykyisin Suomessa tärkein liikenneväline. Nimitys &#39;auto&#39; on lyhentynyt sanasta automobiili, joka koostuu kreikkalaisesta etuliitteestä άυτο-, áuto-, itse- ja latinan sanasta mobilis, liikkuva. Autoilla matkustetaan töihin, harrastuspaikoille ja lomakohteisiin. Autolla tehdään suuri osa erilaisista kuljetuksista, ja ne palvelevat viranomaisia ja jopa sodankäyntiä. Autoja käytetään myös tiestön kunnossapitoon, kuten auraukseen. Suomen lain mukaan auto on &quot;henkilöiden tai tavaran kuljetukseen taikka määrättyyn erikoistehtävään valmistettu moottorikäyttöinen ajoneuvo, jossa on vähintään neljä pyörää tai telat ja jonka suurin rakenteellinen nopeus on suurempi kuin 25 kilometriä tunnissa. &quot; Määritelmän ulkopuolelle jätetään yleisesti myös kevyet nelipyörät eli mopoautot, traktorit, et sekä mönkijät.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="uk">Автомобі́ль, авто́, автівка (від грец. αὐτός — «сам» і лат. mobilis — «той, що рухається») — самохідна колісна машина, яка приводиться в рух встановленим на ній двигуном і призначена для перевезення людей, вантажу, буксирування транспортних засобів, виконання спеціальних робіт та перевезення спеціального устаткування безрейковими дорогами. Пересувається переважно суходолом.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="es">El término automóvil (del idioma griego αὐτο &quot;uno mismo&quot;, y del latín mobĭlis &quot;que se mueve&quot;) se refiere principalmente a un vehículo autopropulsado por un motor propio y destinado al transporte terrestre de personas o mercancías sin necesidad de carriles. Aunque el término automóvil es utilizado por antonomasia para referirse a los automóviles de turismo, existen otros tipos de automóviles, como camiones, autobuses, furgonetas, motocicletas, motocarros o cuatriciclos. En España, el Real Decreto 2822/1998, de 23 de diciembre, por el que se aprueba el Reglamento General de Vehículos, define &#39;automóvil&#39; en el anexo II como «vehículo de motor que sirve, normalmente, para el transporte de personas o mercancías, o de ambas a la vez, o para la tracción de otros vehículos con aquel fin. Se excluyen de esta definición los vehículos especiales». Asimismo, en dicho Real Decreto se define &#39;vehículo de motor&#39; como «vehículo provisto de motor para su propulsión. Se excluyen de esta definición los ciclomotores, los tranvías y los vehículos para personas de movilidad reducida». Un automóvil tiene varias ruedas con neumáticos y capacidad de al menos una plaza para el conductor. Algunas ruedas, normalmente las delanteras, (pueden ser las traseras como en un dumper) pueden cambiar su orientación hacia los lados para permitir giros y tomar curvas, accionadas por el conductor mediante un volante.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ja">自動車（じどうしゃ）とは、原動機の動力によって陸上を走行する車両のうち、軌条によらずに運転者の操作で進路と速度を変えることができる乗り物である。英語ではautomobile、motorcarなどと言う。</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="vi">Ô tô hay xe hơi (tên thường gọi ở miền Nam Việt Nam) là loại phương tiện giao thông chạy bằng bốn bánh có chở theo động cơ của chính nó. Tên gọi ô-tô được nhập từ tiếng Pháp (automobile), tên tiếng Pháp xuất phát từ từ auto (tiếng Hy Lạp, nghĩa là tự thân) và từ mobilis (tiếng La Tinh, nghĩa là vận động). Từ automobile ban đầu chỉ những loại xe tự di chuyển được gồm xe không ngựa và xe có động cơ. Còn từ ô tô trong tiếng Việt chỉ dùng để chỉ các loại có 4 bánh. Chữ &quot;Xe Hơi&quot; bắt nguồn từ chữ Hoa 汽车, phát âm theo Hán Việt là Khí Xa. Còn người Nhật gọi Xe Hơi là 自動車 (Tự Động Xa) nghĩa là Xe Tự Động. Các kiểu khác nhau của xe hơi gồm các loại xe, xe buýt, xe tải. Tới năm 2005 có khoảng 600 triệu xe hơi trên khăp thế giới (0,074 trên đầu người). Khi lần đầu tiên ra mắt, xe hơi được hoanh nghênh như một (phương tiện) cải tiến về môi trường so với ngựa. Trước khi nó ra mắt, ở Thành phố New York, hơn 10.000 tấn phân hàng ngày được dọn khỏi các đường phố. Tuy nhiên, năm 2006, các xe hơi là một trong những nguồn gây ô nhiễm không khí và tiếng ồn cũng như ảnh hưởng tới sức khoẻ trên khắp thế giới.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="hu">Az autó egy olyan, földön közlekedő, kerekeken guruló jármű, amely képes önálló mozgásra, nem egy másik jármű vagy állat mozgatja. Hétköznapi jelentésében az autó a gépkocsi, egy kerekeken guruló, saját motorja által hajtott jármű. A legtöbb meghatározás olyan szabályszerűségekkel írja le mint elsősorban aszfaltútra tervezték, 1-8 utast szállíthat, jellemzően négy kerékkel rendelkezik, és felépítése a személyszállításra jobban alkalmassá teszi mint áruszállításra. Mindazon által a leírások pontossága nem tökéletes, az eltérő feladatokra létrehozott számos különböző gépkocsi típus miatt.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="sv">Denna artikel handlar om bilen. Se också bil (olika betydelser). Uppslagsordet Automobil transporterar hit. För tidningen, se Automobil (tidning). En bil är ett motorfordon som är försett med åtminstone tre hjul, och som inte kan anses vara en motorcykel eller en moped. Bilar delas in i personbilar (vilket ordet &quot;bil&quot; vanligtvis syftar på), lastbilar och bussar. Från början användes benämningen automobil, från grekiskans αὐτός, autós, &quot;själv&quot; och latinets móbilis, &quot;rörlig&quot;. Förkortningen skapades i den danska tidningen Politiken, 1902.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="pl">Samochód – pojazd mechaniczny służący do przewozu osób lub ładunków.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="zh">汽車，即本身具有動力得以驅動，不須依軌道或電力架設，得以機動行駛之車輛。廣義來說，具有四輪行駛的車輛，普遍多稱為汽車。雖然，長久以來學術各界對「誰是第一位汽車發明者」皆有不同的看法及論述，未有完全一致性的看法，但是，絕大部份學者皆將德國工程師卡爾·賓士視為第一位發明者。而美國人則認為亨利福特為汽車創始人，不過，儘管亨利福特或許不是創始者，但他卻是使得汽車得以普及化的人。</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="cs">Pojem automobil (auto) znamená dvoustopé osobní nebo nákladní silniční motorové vozidlo. Oproti této definici mezi automobily obvykle neřadíme autobusy. Jedná se o jeden z mnoha dopravních prostředků. Rozdělují se dle druhu pohonu, např. dieselové, zážehové, elektro aj. V roce 2003 bylo na světě 590 000 000 registrovaných automobilů. Na konci roku 2009 bylo na světě registrováno 980 milionů aut a na konci roku 2010 bylo na planetě Zemi registrováno 1 015 milionů automobilů.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="pt">Um automóvel (do grego auto, por si próprio, e do latim mobilis, mobilidade) ou carro, como referência a um objecto responsável pela sua própria locomoção) é um veículo motorizado, com quatro rodas, geralmente destinado ao transporte de passageiros ou mercadoria, sendo um dos meios de transporte mais populares do mundo. A definição abrange a todos os veículos com autopropulsão movido a combustão interna, que pode ser gerada por álcool, gasolina, gás, diesel, hidrogênio ainda em teste, biodiesel ou qualquer outra mistura de combustível, comburente e calor que provoque a combustão interna, ou híbrido, ou ainda os veículos terrestres que se locomovam por meio de motores elétricos ou a vapor com a finalidade de transporte de passageiros e carga. O automóvel dos dias de hoje dispõe, tipicamente, de um motor de combustão interna, de dois ou quatro tempos, propulsionado a gasolina, diesel ou álcool. No entanto, a sua constituição deve a inúmeras invenções em várias artes e ciências, como a física, matemática, design, etc . Existem aproximadamente 600 milhões de passageiros de automóveis a nível mundial (cerca de um carro para cada onze pessoas). Em todo o mundo, havia cerca de 806 milhões de carros e caminhões leves na estrada em 2007, eles queimam mais de 1 bilhão de m³ (260 bilhões de galões) de gasolina/diesel e combustível por ano. Os números estão aumentando rapidamente, sobretudo na China e na Índia. No contexto legal, a circulação automóvel encontra-se definida pelo código de estrada que pode variar entre países. Por exemplo, no Brasil, o automóvel encontra-se definido no Anexo I do Código de Trânsito Brasileiro como um veículo de transporte até 8 passageiros, excluído o condutor e cujo peso não exceda 3500 kg.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="it">L&#39;autovettura o automobile, comunemente chiamata con la forma contratta auto o popolarmente macchina, è un autoveicolo progettato e costruito per il trasporto privato di persone. Una parte rilevante della sua struttura o carrozzeria, di conseguenza, è dotata di sedili, quello del conducente e quelli dei viaggiatori.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="nl">Een auto of automobiel (van Grieks auto- en Latijn mobile) is een zelfstandig voortbewegend rijtuig om mensen, voorwerpen en/of dieren te verplaatsen. Voor de aandrijving worden hoofdzakelijk verbrandingsmotoren toegepast. Alternatieve aandrijvingen zijn de hybride aandrijving, en de elektrische aandrijving met accu’s of een brandstofcel als energiebron. In de loop der jaren zijn er talloze automerken en nog meer modellen op de markt verschenen. Door de hoeveelheid auto’s, en het intensief gebruik daarvan, doen er zich files voor, voornamelijk bij zogenoemde knooppunten. In Nederland dienen motorvoertuigen regelmatig een Algemene Periodieke Keuring (APK) te ondergaan om aan het verkeer te mogen deelnemen. In andere landen bestaan soortgelijke keuringen, zoals de Belgische Automobielinspectie, de Engelse MOT, de Ierse NCT en de Duitse HU. Daar de auto ontwikkeld is uit onder andere het rijtuig, werden vroeger de carrosserieën van auto&#39;s gemaakt van hout, leder en riet (voor zover bekend alleen de Hanomag 2/10 PS, ook wel Kommissbrot genoemd, de Beacon en de Bisacar). Tegenwoordig wordt meestal metaal of kunststof gekozen. Een personenauto heeft meestal vier wielen die (tegenwoordig) voorzien zijn van luchtbanden (radiaalbanden om precies te zijn). Een enkele keer komen drie, zes of acht wielen voor.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="en">An automobile, autocar, motor car or car is a wheeled motor vehicle used for transporting passengers, which also carries its own engine or motor. Most definitions of the term specify that automobiles are designed to run primarily on roads, to have seating for one to eight people, to typically have four wheels, and to be constructed principally for the transport of people rather than goods. The term motorcar has also been used in the context of electrified rail systems to denote a car which functions as a small locomotive but also provides space for passengers and baggage. These locomotive cars were often used on suburban routes by both interurban and intercity railroad systems. There are approximately 600 million passenger cars worldwide (roughly one car per eleven people). Around the world, there were about 806 million cars and light trucks on the road in 2007; the engines of these burn over a billion cubic meters (260 billion US gallons) of petrol/gasoline and diesel fuel yearly. The numbers are increasing rapidly, especially in China and India.</dbpedia-owl:abstract>
+    <dbpprop:industry xml:lang="en">Various</dbpprop:industry>
+    <dbpprop:wikiPageUsesTemplate rdf:resource="http://dbpedia.org/resource/Template:Infobox_machine" />
+    <dbpedia-owl:thumbnail rdf:resource="http://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Benz-velo.jpg/200px-Benz-velo.jpg" />
+    <dbpprop:inventor rdf:resource="http://dbpedia.org/resource/Ferdinand_Verbiest" />
+    <dbpprop:application rdf:resource="http://dbpedia.org/resource/Transport" />
+    <dbpprop:wheels rdf:datatype="http://www.w3.org/2001/XMLSchema#int">3</dbpprop:wheels>
+    <dbpprop:axles rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</dbpprop:axles>
+    <dbpprop:fuelSource rdf:resource="http://dbpedia.org/resource/Diesel_fuel" />
+    <dbpprop:fuelSource rdf:resource="http://dbpedia.org/resource/Hydrogen" />
+    <dbpprop:fuelSource rdf:resource="http://dbpedia.org/resource/Gasoline" />
+    <dbpprop:fuelSource rdf:resource="http://dbpedia.org/resource/Electricity" />
+    <dbpprop:selfPropelled xml:lang="en">Yes</dbpprop:selfPropelled>
+    <ns7:wasDerivedFrom rdf:resource="http://en.wikipedia.org/wiki/Automobile?oldid=493852526" />
+    <dbpprop:hasPhotoCollection rdf:resource="http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Automobile" />
+    <foaf:isPrimaryTopicOf rdf:resource="http://en.wikipedia.org/wiki/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alfa_Romeo">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/%C5%A0koda_Auto">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsubishi_Motors">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/FAW_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/De_Tomaso">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Auto_Union">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lotus_Cars">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Studebaker">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Duesenberg">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Abbott-Detroit">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volvo_Cars">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mercedes-AMG">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fabryka_Samochod%C3%B3w_Osobowych">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jensen_Motors">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Richard-Brasier">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Daimler_AG">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_New_York_City">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/VM_Motori">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Daimler_Motor_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ferdinand_Pi%C3%ABch">
+    <dbpprop:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ariel_Ltd">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Innocenti">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tofa%C5%9F">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SAIC_Motor">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ransom_E._Olds">
+    <dbpedia-owl:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bizzarrini">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Kaiser_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mahindra_&amp;_Mahindra">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hupmobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Continental_AG">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Steinmetz_Opel_Tuning">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Minerva_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Great_Wall_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Franklin_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Neue_Automobil_Gesellschaft">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Kombat_Armouring">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/PGO_(Automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ETAS_Group">
+    <dbpprop:branche rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Sollers_JSC">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ruf_Automobile">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Carlsson_(car_company)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mastretta">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GM-AvtoVAZ">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/As%C3%BCna">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Guangqi_Honda">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Crawford_Automobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fornasari">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Columbia_Automobile_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Phoenix_Venture_Holdings">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Intermeccanica">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dongfeng_Motor">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pullman_automobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cartercar">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jackson_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bandini_Automobili">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Temperino">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Crouch_Cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Shuanghuan_Auto">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GAC_Toyota">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Knox_Automobile">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/CT&amp;T_United">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bavarian_Auto_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Marlin_(car)">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ram_Trucks">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cooper_Motor_Corporation">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Higer_Bus">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Audi_Senna">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GAC_Group">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ABC_(1906_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ajax_(1921_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Avtoframos">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Micro-Vett">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_Europe">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobile_Craiova">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GM_Vietnam">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Toyota_Motor_Manufacturing_France">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mahindra_Renault_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_Canada">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Covert_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dongfeng_Peugeot-Citro%C3%ABn_Automobile">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Saker_Cars">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/J._Frank_Duryea">
+    <dbpprop:significantAdvance rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lloyd_Cars_Ltd">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Edelbrock">
+    <dbpedia-owl:division rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Octane_(magazine)">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/St._Louis_Motor_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Great_Southern_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jaguar_Land_Rover">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mount_Noro">
+    <dbpprop:easiestRoute rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lithia_Motors">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dongfeng_Honda">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/JC_Whitney">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Zagross_Khodro">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Victory_Auto_Wreckers">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/PPI_Automotive_Design">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Je_Design">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MK-Motorsport">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Toyota_Manufacturing_UK">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Yamaha_RGX">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cliffjumper">
+    <dbpprop:alternatemodes rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pak_Suzuki_Motors">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Honda_Siel_Cars_India">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Master_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volkswagen_India">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Beijing_Hyundai">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Renault_Nissan_Automotive_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Guangzhou_Automobile_Industry_Group">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Steel_and_Industrial_Forgings_Ltd">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BharatBenz">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/CFAO_Ghana">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/COBB_Tuning">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Buckmobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_New_York">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Harold_Sines_Vance">
+    <dbpedia-owl:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Steyr_automobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Citro%C3%ABn">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pontiac">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Infiniti">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Maserati">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/O.S.C.A.">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bugatti">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aston_Martin">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Borgward">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Monteverdi_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Michelin">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Autobianchi">
+    <dbpprop:keyPeople rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:keyPerson rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Kawasaki_Heavy_Industries">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Norinco">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Wanderer_(car)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MG_Cars">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Deutz_AG">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Packard">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rover_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alpine_(automobile)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/AC_Cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hyundai">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Daihatsu">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Siegfried_Marcus">
+    <dbpprop:significantAdvance rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/AvtoVAZ">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Armstrong_Siddeley">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cecil_Kimber">
+    <dbpprop:discipline rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Panhard">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Iso_Rivolta">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Wiesmann">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Iran_Khodro">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hillman">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Abt_Sportsline">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Reliant">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsuoka">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Magna_Steyr">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Isotta-Fraschini">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Herbert_Austin,_1st_Baron_Austin">
+    <dbpprop:significantAdvance rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Eagle_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Venturi_Automobiles">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/HQM_Sachsenring_GmbH">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Marcos_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ginetta_Cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_Performance_Vehicles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/William_Beardmore_and_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rolls-Royce_Motor_Cars">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Delahaye">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Irmscher">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Peerless">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Brilliance_Auto">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Renault_Samsung_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SPA_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ascari_Cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GM_Korea">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Marmon_Motor_Car_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/K%C3%BChlstein">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Thai_Rung_Union_Car">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Changfeng_Automobile">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alta_(vehicles)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Amilcar">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Stearns_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/American_Austin_Car_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/American_Motor_Car_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Br%C3%BCtsch">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Global_Electric_Motorcars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Salmson">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lanchester_Motor_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Gilbern">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/K-R-I-T_Motor_Car_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ABC_(1922_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aerocar_(1905_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Airway_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ardsley_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lambert_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Durant_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Haynes_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pope_Manufacturing_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Phoenix_Motorcars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SCAT_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Storero">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GTM_Cars">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Turner_Sports_Cars">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ghabbour_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hommell">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Optimal_Energy_Joule">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tecnologia_Automotiva_Catarinense">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ZX_AUTO">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Youngman">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dax_Cars">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Oyak-Renault">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Gemballa">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lexus_F">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Marathon_Motors_Engineering">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Chrysler_Europe">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/FAW-VW_Automobile">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Modiran_Vehicle_Manufacturing_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Audi_Motor_Assembly">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Besturn">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Toyota_Australia">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/%C5%A0koda_Auto_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MG_Motor">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Flexcar">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aerocar_International">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Autocar">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/G-Power">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/British_Car_Auctions">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nissan_Motor_Manufacturing_UK">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Moretti_Motor_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Austin_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ajax_(1914_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aquila_racing_cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Queen_(American_automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cleveland_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/AFS_Trinity">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tara_International">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/China_Motor_Corporation">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Moline_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Zastava_Trucks">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BYD_Auto">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Non_Polluting_Vehicle_mark">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Corbin_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Orient_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Yale_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Stillen">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Renntech">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Matheson_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Monaco_Coach_Corporation">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Industrial_Development_and_Renovation_Organization_of_Iran">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Walker_Motor_Car_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SAIC-GM-Wuling_Automobile">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Changan_Suzuki">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Kleemann">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Axon_Automotive">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Toyota_Motor_Manufacturing_Indiana">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Breyton">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GM_Financial">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsubishi_Motors_Philippines">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Toyota_Kirloskar_Motor_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Biltema">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Litocar">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Penske_Motor_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/EnergyCS">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Neobus_(Serbia)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mansory">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Novitec_Rosso">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hondata">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Denway_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/TechArt">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Competition_Cams">
+    <dbpedia-owl:division rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mechanical_Lloyd">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Drift_Tengoku">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MG_Sports_and_Racing_Europe">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motormag">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Swedish_Automobile">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Zotye_International">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Sebring_(sports_car)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Yamaha_electric_guitar_models">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Radical_Performance_Engines">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GAC_Fiat">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hennessey_Performance_Engineering">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Emgrand">
+    <dbpprop:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Davrian">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Simca_do_Brasil">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Arizona">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Monarch_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Inter-State_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Simca">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SEAT">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Acura">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Buick">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mercury_(automobile)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lexus">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mazda">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lincoln_(automobile)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Plymouth_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Car_(disambiguation)">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Chery">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Opel">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Stanley_Motor_Carriage_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SsangYong_Motor_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pininfarina">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tatra_(company)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Horch">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Laurin_&amp;_Klement">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mathis_(cars)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Austro-Daimler">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Morgan_Motor_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ARO">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Vauxhall_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fabryka_Samochod%C3%B3w_Ma%C5%82olitra%C5%BCowych">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BMW_M">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alvis_Car_and_Engineering_Company_Ltd">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aleko">
+    <dbpprop:class rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsubishi_Fuso_Truck_and_Bus_Corporation">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Itala">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/DKW">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Austin_Motor_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Edsel">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fabrika_automobila_Priboj">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MCA">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tempo_(car)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Morris_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Facel">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/White_Motor_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Puch">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nismo">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Vector_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aixam">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cars_(disambiguation)">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Detroit_Electric">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tommy_Kaira">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Moon_Motor_Car">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Santana_Motor">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Siata">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hudson_Motor_Car_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Roewe">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Singer_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/MG_Rover_Group">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Locomobile_Company_of_America">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Noble_Automotive">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/LuAZ">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Neckar_(car)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Industrias_Kaiser_Argentina">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Geo_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Roman_(vehicle_manufacturer)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Allstate_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/SAIPA">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Baker_Motor_Vehicle">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hamann_Motorsport">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Option_(car_magazine)">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Beijing_Benz">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hurtu">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rolland-Pilain">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/TagAZ">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Elmore_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cole_Motor_Car_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Saab">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_Motor_Company_of_New_Zealand">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Able_(1917_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Acme_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Atlas_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Gonow">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fial">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aquila_Italiana">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Elva_(car_manufacturer)">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pars_Khodro">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/CSAV">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Carbon_Motors_Corporation">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Industries_M%C3%A9caniques_Maghr%C3%A9bines">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Edran">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Geely">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Car_and_Driver">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BMW_i">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hyundai_Motor_India_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Best_Motoring">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Twentieth_Century_Motor_Car_Corporation">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Albany_(1907_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Sheridan_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Satra">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/St._Louis_Car_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitchell_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/DS_car_marque">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Arta_Industrial_Group">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Auto">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lightning_Car_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/VAZInterService">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Birchwood_Automotive_Group">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Evo_(magazine)">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dragon_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bugatti_Automobiles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grout_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Van_Wagoner_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volkswagen_Group_of_America">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Envi_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grupo_Tampico">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tata_Daewoo">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/REVA">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bahman_Group">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Chevrolet_Europe">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsubishi_Motors_(Thailand)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/G60">
+    <dbpprop:configuration rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jinbei_(car)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hyderabad_Allwyn_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Holiday_Rambler">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volkswagen_Group_Sales_India">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nissan_Motor_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Opel_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Sports_Car_Market">
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Li-ion_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Soar_Automotive">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_South_America">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Evans_Tuning">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Kleenspeed_Technologies">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Harrison_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bell_Motor_Car_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Subaru">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Saturn_Corporation">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Holden">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Road_&amp;_Track">
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lancia">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pegaso">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ligier">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jaguar_Cars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobile_Dacia">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Zastava_Automobiles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Datsun">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Delage">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Simson_(company)">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fabryka_Samochod%C3%B3w_Ci%C4%99%C5%BCarowych">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pierce-Arrow">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bitter_Cars">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tesla_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Oltcit">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Talbot">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Framo_(car)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Riley_Motor">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Valmet">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Officine_Meccaniche">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Auburn_Automobile">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Brabus">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alpina">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Saleen">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Radical_Sportscars">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mikuni_(company)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Proton_(automobile)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Maruti_Suzuki">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Caterham_Cars">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_Motor_Credit_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BBS_Kraftfahrzeugtechnik">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Winton_Motor_Carriage_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hyundai_Motor_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Shanghai_Volkswagen">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Isdera">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ashok_Leyland">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nash_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Muntz_Car_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ballot_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Holden_Special_Vehicles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Humber_(car)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Lozier">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hongqi_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bufori">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Force_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Otokar">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Renault-Nissan_Alliance">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Valmet_Automotive">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nasr_(car_company)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Otosan">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Graham-Paige">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mercer_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Merkur">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/AMAG_Automobil-_und_Motoren">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Foton_(company)">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Charron_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ace_(1920_automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hartge">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Stoddard-Dayton">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rickenbacker_(car)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/DR_Motor_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Diatto">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/HRG_Engineering_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Opel_Eisenach">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Coda_Automotive">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Gustave_Trouv%C3%A9">
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Alfa_Romeo_Museum">
+    <dbpprop:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rainier_Motor_Car_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Arab_American_Vehicles">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/British_Salmson">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Egyptian_German_Automotive_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Xinkai">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Raw_Engineering">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_Egypt">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Karsan">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Anadol">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Changan_Ford_Mazda">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volkswagen_Group_China">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jiangling_Motors">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_Germany">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_of_Britain">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_Motor_Company_of_Canada">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ford_of_Europe">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Volkswagen_do_Brasil">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Honda_of_the_UK_Manufacturing">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GM_Manufacturing_Luton">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/National_Pescara">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ASA_Aluminium_Body">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dorris_Motors_Corporation">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Northern_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Streetcar_(carsharing)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Opel_Special_Vehicles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Imperial_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Detroit_Auto_Vehicle_Company">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Wolseley_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Bajaj_Group">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/North_German_Automobile_and_Engine">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pathfinder_(1912_automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Eisenhuth_Horseless_Vehicle_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Royal_Motor_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Penske_Automotive_Group">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Babcock_Electric_Carriage_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fenix_Automotive">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_South_Africa">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Avions_Voisin">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Premier_Motor_Manufacturing_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BYD_Company">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Georgia_(U.S._state)">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dongfeng_Motor_Company">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grassroots_Motorsports">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Autom%C3%B3vil_Panamericano">
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mitsubishi_Motors_North_America">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Holden_New_Zealand">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/General_Motors_do_Brasil">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Diardi">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/TD2000">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aurica_Motors">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Classic_Motorsports">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Liberty_Electric_Cars">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Trade_Centre_Wales">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobile_Year">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Luxgen">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Truckin&#39;_Magazine">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Chevrolet_Sales_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Riich_(automobile)">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Renault_India_Private_Limited">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Fiat_India_Automobiles_Limited">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Baojun">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/El_Car">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Roock_Racing">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/List_of_Yamaha_guitars">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tussen_Tunnel">
+    <dbpprop:traffic rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rapid_Motor_Vehicle_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Airscoot_(1947)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Dolson">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grupo_Industrial_Ramirez">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Davis_Motor_Car">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/BMW_India">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Car_Singh">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Soules_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jewell_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Classic_Volkswagens">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:literaryGenre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Paul_G._Hoffman">
+    <dbpedia-owl:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Alabama">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Hawaii">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Manila">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Reading_Steamer">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Stearns_Steam_Carriage_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Visalia">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cyrus_S._Poonawalla">
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Oregon">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Shades_Mountain">
+    <dbpprop:easiestRoute rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Upton_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Atlanta">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Connecticut">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Rauch_and_Lang">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Century_Motor_Vehicle_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Brennan_Motor_Manufacturing_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Snow_Hill_school_bus_collision">
+    <dbpprop:vehicles rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mud_Life_Magazine">
+    <dbpprop:category rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Transportation_in_Las_Vegas">
+    <dbpedia-owl:type rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pierce-Racine_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Moore_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/TCM_Automobiles">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/H._A._Moyer_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Chase_Motor_Truck_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jack_Christian">
+    <dbpedia-owl:occupation rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Iroquois_Motor_Car_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Caterham_Group">
+    <dbpprop:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Qoros">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Denza">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Deere_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Oscar_Lear_Automobile_Company">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Logan_(automobile)">
+    <dbpprop:products rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Two_Guys_Garage">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Delta_Motors_Corporation">
+    <dbpedia-owl:product rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Atlas_(automobile)__Atlas_Motor_Car_Company__1">
+    <dbpedia-owl:industry rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motor_car">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motor_Car">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Ottomobile">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobles">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobil">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Passenger_vehicle">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motorcar">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobiles">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motorization">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motorisation">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cardoor">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Passenger_Cars">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Cars">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/%F0%9F%9A%97">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/%F0%9F%9A%98">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Car">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Autos">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/A_car">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Car_Automobile">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automobilism">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Motor-car">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/The_Automobile">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Passenger_vehicles">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Self-rolling_carriage">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Self-propelling_carriage">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Automotive_vehicle">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://en.wikipedia.org/wiki/Automobile">
+    <foaf:primaryTopic rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://data.nytimes.com/N17112094453570107810">
+    <owl:sameAs rdf:resource="http://dbpedia.org/resource/Automobile" />
+  </rdf:Description>
+</rdf:RDF>

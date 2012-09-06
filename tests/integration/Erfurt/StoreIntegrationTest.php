@@ -1,7 +1,16 @@
 <?php
 class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
-{        
-    public function testImportRdfFrom303Url()
+{
+    private $_fileBase = null;
+
+    public function setUp()
+    {
+        $this->_fileBase = realpath(dirname(__FILE__)) . '/_files/';
+
+        parent::setUp();
+    }
+
+    /*public function testImportRdfFrom303Url()
     {
 // TODO fix this by using a http test client!
         $this->markTestIncomplete();
@@ -20,7 +29,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         } catch (Erfurt_Exception $e) {
             $this->fail($e->getMessage());
         }
-    }
+    }*/
     
     /**
      * This test is introduced in order to reproduce issue 404 (n changing multiple literals, new triples will created)
@@ -203,6 +212,153 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $importClosure2 = $store->getImportsClosure('http://localhost/OntoWiki/Config/', true, false); // with hidden imports, no ac
         // Should be 1 in this case (sys ont schema)
         $this->assertEquals(1, count($importClosure2));
+    }
+
+    /**
+     * We create this test for all backends (although it seems to be an Virtuoso issue), since testing of data import
+     * should be useful for all backends.
+     */
+    public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersionGithubIssue85()
+    {
+        $this->markTestNeedsDatabase();
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $dataPath = $this->_fileBase . 'Grieg_Hall.xml';
+
+        $graphUri = 'http://example.org/testGraph1/';
+
+        // create graph
+        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+
+        // import RDF
+        $result = false;
+        try {
+            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+
+        $this->assertTrue($result);
+    }
+
+    public function testImportDBPediaResourceAutomobileAndQueryWithTitleHelperQueryGithubIssue85()
+    {
+        $this->markTestNeedsDatabase();
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $dataPath = $this->_fileBase . 'Automobile.xml';
+
+        $graphUri = 'http://example.org/testGraphAutomobile/';
+
+        // create graph
+        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+
+        // import RDF
+        $result = false;
+        try {
+            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        $this->assertTrue($result);
+
+        // sparql
+        $sparql = <<<EOF
+SELECT DISTINCT ?property ?value
+FROM <http://example.org/testGraphAutomobile/>
+WHERE {
+    OPTIONAL { <$graphUri> ?property ?value . }
+    FILTER(
+        sameTerm(?property, <http://www.w3.org/2004/02/skos/core#prefLabel>) ||
+        sameTerm(?property, <http://purl.org/dc/elements/1.1/title>) ||
+        sameTerm(?property, <http://purl.org/dc/terms/title>) ||
+        sameTerm(?property, <http://swrc.ontoware.org/ontology#title>) ||
+        sameTerm(?property, <http://xmlns.com/foaf/0.1/name>) ||
+        sameTerm(?property, <http://usefulinc.com/ns/doap#name>) ||
+        sameTerm(?property, <http://rdfs.org/sioc/ns#name>) ||
+        sameTerm(?property, <http://www.holygoat.co.uk/owl/redwood/0.1/tags/name>) ||
+         sameTerm(?property, <http://linkedgeodata.org/vocabulary#name>) ||
+         sameTerm(?property, <http://www.geonames.org/ontology#name>) ||
+         sameTerm(?property, <http://www.geneontology.org/dtds/go.dtd#name>) ||
+         sameTerm(?property, <http://www.w3.org/2000/01/rdf-schema#label>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/accountName>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/nick>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/surname>) ||
+         sameTerm(?property, <http://www.w3.org/2004/02/skos/core#altLabel>)
+    )
+}
+EOF;
+
+        $sparqlResult = $store->sparqlQuery(
+            $sparql,
+            array(
+                 Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                 Erfurt_Store::USE_AC => false
+            )
+        );
+
+        $this->assertInternalType('array', $sparqlResult);
+        $this->assertNotEmpty($sparqlResult);
+    }
+
+    public function testImportDBPediaResourceMachineLearningAndQueryWithTitleHelperQueryGithubIssue85()
+    {
+        $this->markTestNeedsDatabase();
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $dataPath = $this->_fileBase . 'Machine_Learning.xml';
+
+        $graphUri = 'http://example.org/testGraphMLXyz';
+
+        // create graph
+        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+
+        // import RDF
+        $result = false;
+        try {
+            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+        $this->assertTrue($result);
+
+        // sparql
+        $sparql = <<<EOF
+SELECT DISTINCT ?property ?value
+FROM <$graphUri/>
+WHERE {
+    OPTIONAL { <http://dbpedia.org/resource/Machine_learning> ?property ?value . }
+    FILTER(
+        sameTerm(?property, <http://www.w3.org/2004/02/skos/core#prefLabel>) ||
+        sameTerm(?property, <http://purl.org/dc/elements/1.1/title>) ||
+        sameTerm(?property, <http://purl.org/dc/terms/title>) ||
+        sameTerm(?property, <http://swrc.ontoware.org/ontology#title>) ||
+        sameTerm(?property, <http://xmlns.com/foaf/0.1/name>) ||
+        sameTerm(?property, <http://usefulinc.com/ns/doap#name>) ||
+        sameTerm(?property, <http://rdfs.org/sioc/ns#name>) ||
+        sameTerm(?property, <http://www.holygoat.co.uk/owl/redwood/0.1/tags/name>) ||
+         sameTerm(?property, <http://linkedgeodata.org/vocabulary#name>) ||
+         sameTerm(?property, <http://www.geonames.org/ontology#name>) ||
+         sameTerm(?property, <http://www.geneontology.org/dtds/go.dtd#name>) ||
+         sameTerm(?property, <http://www.w3.org/2000/01/rdf-schema#label>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/accountName>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/nick>) ||
+         sameTerm(?property, <http://xmlns.com/foaf/0.1/surname>) ||
+         sameTerm(?property, <http://www.w3.org/2004/02/skos/core#altLabel>)
+    )
+}
+EOF;
+
+        $sparqlResult = $store->sparqlQuery(
+            $sparql,
+            array(
+                 Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                 Erfurt_Store::USE_AC => false
+            )
+        );
+
+        $this->assertInternalType('array', $sparqlResult);
+        $this->assertNotEmpty($sparqlResult);
     }
 }
 
