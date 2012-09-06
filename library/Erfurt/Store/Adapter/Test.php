@@ -25,6 +25,9 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     private $_queryResults = array();
     private $_queryResultIndex = 0;
 
+    private $_countResults = array();
+    private $_countResultsIndex = 0;
+
     /** @see Erfurt_Store_Adapter_Interface */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
@@ -56,9 +59,13 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct = false)
+    public function countWhereMatches($graphUri, $whereSpec, $countSpec, $distinct = false)
     {
-        return 0;
+        if ($this->_countResultsIndex >= count($this->_countResults)) {
+            return 0;
+        }
+
+        return $this->_countResults[$this->_countResultsIndex++];
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -234,6 +241,11 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
         }
 
         return array();
+    }
+
+    public function addCountResult($i)
+    {
+        $this->_countResults[] = $i;
     }
 
 }

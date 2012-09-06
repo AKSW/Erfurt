@@ -19,8 +19,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             }
             
             // Delete system models after all other models are deleted.
-            $store->deleteModel($config->sysont->modelUri);
-            $store->deleteModel($config->sysont->schemaUri);
+// TODO add a way to specify that a test modified the sysonts
+            //$store->deleteModel($config->sysont->modelUri);
+            //$store->deleteModel($config->sysont->schemaUri);
             
             $this->_dbWasUsed = false;
         }
@@ -79,7 +80,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $this->_dbWasUsed = true;
         } catch (Erfurt_Store_Exception $e) {
             if ($e->getCode() === 20) {
-                // Setup successfull
+                // Setup successful
                 $this->_dbWasUsed = true;
             } else {
                 $this->markTestSkipped();
