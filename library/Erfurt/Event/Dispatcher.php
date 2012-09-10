@@ -64,6 +64,11 @@ class Erfurt_Event_Dispatcher
         
         return self::$_instance;
     }
+
+    public static function reset()
+    {
+        self::$_instance = null;
+    }
     
     /**
      * Binds an event handler (class or object) to a specified event.
