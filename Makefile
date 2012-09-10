@@ -4,12 +4,11 @@ default:
 	@echo "please use:"
 	@echo ""
 	@echo "  test ......................... Execute unit and integration tests"
-	@echo "  test-cc ...................... Same as above plus code coverage report"
-	@echo "  test-unit .................... Run OntoWiki unit tests"
+	@echo "  test-unit .................... Run Erfurt unit tests"
 	@echo "  test-unit-cc ................. Same as above plus code coverage report"
-	@echo "  test-integration-virtuoso .... Run OntoWiki integration tests with virtuoso"
+	@echo "  test-integration-virtuoso .... Run Erfurt integration tests with virtuoso"
 	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
-	@echo "  test-integration-mysql ....... Run OntoWiki integration tests with mysql"
+	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
@@ -140,14 +139,6 @@ test:
 	@echo "-----------------------------------"
 	@echo ""
 	@make test-integration-mysql
-
-test-cc:
-	@make test-unit-cc
-	@echo ""
-	@echo "-----------------------------------"
-	@echo ""
-	@make test-integration-cc
-
 
 test-clean:
 	rm -rf tests/unit/Erfurt/Sparql/_cache/*
