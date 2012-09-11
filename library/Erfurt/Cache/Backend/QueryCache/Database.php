@@ -634,15 +634,15 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
        $clauses = array();
        if ($subject) {
-	  $clauses['s.s'] = 's.s = \''.$subject.'\'';
+	  $clauses['s.s'] = 's.s = \''.addslashes($subject).'\'';
        }
 
        if ($predicate) {
-	  $clauses['s.p'] = 's.p = \''.$predicate.'\'';
+	  $clauses['s.p'] = 's.p = \''.addslashes($predicate).'\'';
        }
 
        if ($object) {
-	  $clauses['s.o'] = 's.o = \''.$object.'\'';
+	  $clauses['s.o'] = 's.o = \''.addslashes($object).'\'';
        }
 
        if (sizeOf($clauses) > 0) {
@@ -725,7 +725,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             #initialize query, encapsulate Values with singlequotes and merge tripleValues with defaultValues
             $query = '';
             foreach ( $triplePattern as $key => $value ) {
-                $triplePattern[$key] = '\''.$value.'\'';
+                $escapedValue = addslashes($value);
+                $triplePattern[$key] = '\''.$escapedValue.'\'';
+
             }
             $triplePattern = array_merge( $defaultTP, $triplePattern );
 
@@ -846,6 +848,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     );
                 }
             } else {
+                var_dump($sql);exit;
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql);
             }
