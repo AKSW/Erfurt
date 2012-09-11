@@ -104,6 +104,19 @@ class Erfurt_AppTest extends Erfurt_TestCase
         }
     }
 
+    public function testStartVersioningEnabled()
+    {
+        $this->markTestNeedsTestConfig();
+        $testConfig = $this->getTestConfig();
+        $testConfig->versioning = true;
+
+        Erfurt_App::reset();
+        $app = Erfurt_App::getInstance(false)->start($testConfig);
+
+        $this->assertInstanceOf('Erfurt_Versioning', $app->getVersioning());
+        $this->assertTrue($app->getVersioning()->isVersioningEnabled(), 'Erfurt_Versioning should be enabled after start.');
+    }
+
     public function testStartVersioningDisabled()
     {
         $this->markTestNeedsTestConfig();

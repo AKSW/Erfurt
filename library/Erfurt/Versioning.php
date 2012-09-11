@@ -48,7 +48,7 @@ class Erfurt_Versioning
 
     protected $_currentActionParent = null;
     
-    protected $_versioningEnabled = true;
+    protected $_versioningEnabled = false;
     
     protected $_limit = 10;
     
@@ -69,7 +69,7 @@ class Erfurt_Versioning
     public function enableVersioning($versioningEnabled = true)
     {
         $this->_versioningEnabled = (bool)$versioningEnabled;
-        
+
         if (!$this->_eventsRegistered) {
             $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
 
@@ -245,7 +245,7 @@ class Erfurt_Versioning
             $this->getLimit() + 1, 
             $page * $this->getLimit() - $this->getLimit()
         );
-        
+
         return $result;
     }
 
@@ -377,7 +377,7 @@ class Erfurt_Versioning
 
         if (is_array($event->statements)) {
             $graphUri = $event->graphUri;
-    
+
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_ADDED, $event->statements);
         } else {
             // do nothing

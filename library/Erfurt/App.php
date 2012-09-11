@@ -254,7 +254,9 @@ class Erfurt_App
         try {
             $versioning = $this->getVersioning();
             if ($versioning instanceof Erfurt_Versioning) {
-                if ((boolean)$config->versioning === false) {
+                if ((bool)$config->versioning === true) {
+                    $versioning->enableVersioning(true);
+                } else {
                     $versioning->enableVersioning(false);
                 }
             }
@@ -994,6 +996,7 @@ class Erfurt_App
         if (null === $this->_versioning) {
             $config = $this->getConfig();
             $versioningEnabled = (boolean)$config->versioning;
+
             if (!$versioningEnabled) {
                 return false;
             }

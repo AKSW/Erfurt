@@ -24,6 +24,9 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         $this->_storeStub = new Erfurt_Versioning_StoreStub();
         $this->_authStub  = new Erfurt_Versioning_AuthStub();
         $this->_object    = $this->_getMockedVersioning();
+
+        // Enable by default
+        $this->_object->enableVersioning(true);
     }
 
     
@@ -58,15 +61,24 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
     }
 
 
-    public function testIsVersioningEnabledByDefault() 
-    {    
-        $this->assertTrue($this->_object->isVersioningEnabled());
+    public function testIsVersioningDisabledByDefault()
+    {
+        // clean instance
+        $versioning = $this->_getMockedVersioning();
+
+        $this->assertFalse($versioning->isVersioningEnabled());
     }
     
     public function testIsVersioningEnabledAfterDisabled()
     {
         $this->_object->enableVersioning(false);
         $this->assertFalse($this->_object->isVersioningEnabled());
+    }
+
+    public function testIsVersioningEnabledAfterEnabled()
+    {
+        $this->_object->enableVersioning(true);
+        $this->assertTrue($this->_object->isVersioningEnabled());
     }
     
     public function testIsVersioningEnabledAfterEnabledWithNoParam() 
