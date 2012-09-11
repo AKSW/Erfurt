@@ -130,15 +130,15 @@ test-integation-mysql-cc: directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
 
 test:
-	@make test-unit
+	make test-unit
 	@echo ""
 	@echo "-----------------------------------"
 	@echo ""
-	@make test-integration-virtuoso
+	make test-integration-virtuoso
 	@echo ""
 	@echo "-----------------------------------"
 	@echo ""
-	@make test-integration-mysql
+	make test-integration-mysql
 
 test-clean:
 	rm -rf tests/unit/Erfurt/Sparql/_cache/*
