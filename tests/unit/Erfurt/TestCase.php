@@ -1,8 +1,10 @@
 <?php
 class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 {
-    private $_dbWasUsed      = false;
-    private $_testConfig     = null;
+    protected $_dbWasUsed        = false;
+
+    private $_testConfig       = null;
+    private $_customTestConfig = null;
     
     protected function tearDown()
     {
@@ -134,35 +136,41 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     public function markTestNeedsVirtuoso()
     {
         $this->markTestNeedsTestConfig();
-        $this->_testConfig->store->backend = 'virtuoso';
+        if ($this->_testConfig->store->backend !== 'virtuoso') {
+            $this->markTestSkipped('Skipped since other backend is under test.');
+        }
+
         $this->markTestNeedsDatabase();
     }
     
     public function markTestNeedsZendDb()
     {
         $this->markTestNeedsTestConfig();
-        $this->_testConfig->store->backend = 'zenddb';
+        if ($this->_testConfig->store->backend !== 'zenddb') {
+            $this->markTestSkipped('Skipped since other backend is under test.');
+        }
+
         $this->markTestNeedsDatabase();
     }
     
     private function _loadTestConfig()
     {
-        if (null === $this->_testConfig) {
+        if (null === $this->_customTestConfig) {
             if (is_readable(_TESTROOT . 'config.ini')) {
-                $this->_testConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini'), 'private', array( 'allowModifications' =>true));
+                $this->_customTestConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini'), 'private', array( 'allowModifications' =>true));
             } else if (is_readable(_TESTROOT . 'config.ini.dist')) {
-                $this->_testConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini.dist'), 'private', array( 'allowModifications' =>true));
+                $this->_customTestConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini.dist'), 'private', array( 'allowModifications' =>true));
             } else {
-                $this->_testConfig = false;
+                $this->_customTestConfig = false;
             }
 
             // overwrite store adapter to use with environment variable if set
             // this is useful, when we want to test with different stores without manually
             // editing the config
-            if ($this->_testConfig !== false) {
+            if ($this->_customTestConfig !== false) {
                 $storeAdapter = getenv('EF_STORE_ADAPTER');
                 if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
-                    $this->_testConfig->store->backend = $storeAdapter;
+                    $this->_customTestConfig->store->backend = $storeAdapter;
                 } else if ($storeAdapter !== false) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
                 }
@@ -173,11 +181,12 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 
         // We always reload the config in Erfurt, for a test may have changed values 
         // and we need a clean environment.
-        if ($this->_testConfig !== false) {
-            $app->loadConfig($this->_testConfig);
+        if ($this->_customTestConfig !== false) {
+            $app->loadConfig($this->_customTestConfig);
         } else {
             $app->loadConfig();
         }
+        $this->_testConfig = $app->getConfig();
 
         // Disable versioning
         $app->getVersioning()->enableVersioning(false);
