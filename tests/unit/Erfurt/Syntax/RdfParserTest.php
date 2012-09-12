@@ -212,4 +212,36 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
 
         $this->assertEquals($base1, $this->_object->getBaseUri());
     }
+
+    public function testParseWithUrlAndRdfXml302After303GithubOntoWikiIssue101()
+    {
+        $this->_object->initializeWithFormat('rdfxml');
+        $adapter = new Zend_Http_Client_Adapter_Test();
+        $this->_object->setHttpClientAdapter($adapter);
+
+        $adapter->setResponse(new Zend_Http_Response(
+            302,
+            array(
+                 'Content-Type' => 'text/html; charset=iso-8859-1',
+                 'Location'     => 'http://motools.sourceforge.net/mo/'
+            )
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            303,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'http://motools.sourceforge.net/doc/musicontology.rdfs'
+            )
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            200,
+            array(
+                'Content-Type' => 'application/rdf+xml'
+            ),
+            file_get_contents($this->_resourcesDirectory . 'valid/musicontology.rdfs')
+        ));
+
+        $result = $this->_object->parse('http://purl.org/ontology/mo/', Erfurt_Syntax_RdfParser::LOCATOR_URL);
+        $this->assertInternalType('array', $result);
+    }
 }

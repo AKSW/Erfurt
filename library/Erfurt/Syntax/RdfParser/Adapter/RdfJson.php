@@ -14,8 +14,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Adapter_Base
-{    
-    
+{
     public function parseFromDataString($dataString, $baseUri = null, $type = null)
     {
         //because this method is reused internally we got to have this $type switch
@@ -54,31 +53,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Ad
         
         return $this->parseFromDataString($dataString, $filename, self::TYPE_FILE);
     }
-    
-    public function parseFromUrl($url) 
-    {
-        // replace all whitespaces (prevent possible CRLF Injection attacks)
-        // http://www.acunetix.com/websitesecurity/crlf-injection.htm
-        $url = preg_replace('/\\s+/', '', $url);
 
-        $handle = fopen($url, 'r');
-        
-        if ($handle === false) {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
-            throw new Erfurt_Syntax_RdfParserException("Failed to open file at url '$url'");
-        }
-        
-        $dataString = '';
-        
-        while(!feof($handle)) {
-            $dataString .= fread($handle, 1024);
-        }
-        
-        fclose($handle);
-        
-        return $this->parseFromDataString($dataString, $url, self::TYPE_URL);
-    }
-    
     public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true)
     {
         $triples = $this->parseFromDataString($dataString, $graphUri);
@@ -100,18 +75,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Ad
         
         return true;
     }
-    
-    public function parseFromUrlToStore($url, $graphUri, $useAc = true)
-    {
-        $triples = $this->parseFromUrl($url);
-        
-        $store = Erfurt_App::getInstance()->getStore();
-             
-        $store->addMultipleStatements($graphUri, $triples, $useAc);
-        
-        return true;
-    }
-    
+
     public function parseNamespacesFromDataString($dataString)
     {
         return array();
@@ -121,9 +85,5 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Ad
     {
         return array();
     }
-    
-    public function parseNamespacesFromUrl($url)
-    {
-        return array();
-    }
 }
+

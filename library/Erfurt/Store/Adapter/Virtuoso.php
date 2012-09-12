@@ -87,6 +87,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
     private $_isOpenSourceVersion = true;
 
+    private $_httpClientAdapter = null;
+
     // ------------------------------------------------------------------------
     // --- Magic Methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -560,6 +562,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
         }
 
+        $parser = $this->_rdfParser($type);
         switch ($locator) {
             case Erfurt_Syntax_RdfParser::LOCATOR_FILE:
                 $importSql = $this->_getImportSql('file', $data, $type, $graphUri);
@@ -567,16 +570,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
             case Erfurt_Syntax_RdfParser::LOCATOR_URL:
                 // do some type guesswork
-                if (
-                    substr($data, -2) == 'n3' ||
-                    substr($data, -2) == 'nt' ||
-                    substr($data, -3) == 'ttl'
-                ) {
+                if (substr($data, -2) == 'n3' || substr($data, -2) == 'nt' || substr($data, -3) == 'ttl') {
                     $type = 'n3';
                 }
-                $importSql = $this->_getImportSql('url', $data, $type, $graphUri);
-                break;
 
+                $dataString = $parser->fetchDataFromUrl($data);
+                if (!$dataString) {
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Error importing statements: Failed to retrieve data for URL: ' . $data
+                    );
+                }
+
+                $importSql = $this->_getImportSql('string', $dataString, $type, $graphUri);
+                break;
+            case Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING:
+                $importSql = $this->_getImportSql('string', $data, $type, $graphUri);
+                break;
             default:
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
                 break;
@@ -587,7 +596,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $rid = $this->_execSql($importSql);
 
             // parse namespace prefixes
-            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $namespacePrefixes = $parser->parseNamespaces($data, $locator);
             $namespaces = Erfurt_App::getInstance()->getNamespaces();
 
@@ -1147,6 +1155,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $baseUri,
                 $graphUri
             );
+        } else if ($method === 'string') {
+            $importSql = sprintf(
+                "CALL DB.DBA.%s('%s', '%s', '%s')",
+                $importFunc,
+                addslashes($data),
+                $baseUri,
+                $graphUri
+            );
         } else {
             // import using internal Virtuoso/PL function
             $importSql = sprintf(
@@ -1281,5 +1297,25 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
               . '0ejxgddWM232LQ7v0vY9hqxzJ4i1tD3muG3ILl/hP1HObwrcN/AF5zmzGLB8I2AAAAAElFTkSuQmCC';
 
         return $logo;
+    }
+
+    private function _rdfParser($type)
+    {
+        $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
+        if (null !== $this->_httpClientAdapter) {
+            $parser->setHttpClientAdapter($this->_httpClientAdapter);
+        }
+
+        return $parser;
+    }
+
+    /**
+     * For testing purposes
+     *
+     * @param $httpClientAdapter
+     */
+    public function setHttpClientAdapter($httpClientAdapter)
+    {
+        $this->_httpClientAdapter = $httpClientAdapter;
     }
 }

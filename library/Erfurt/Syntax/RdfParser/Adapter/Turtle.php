@@ -72,11 +72,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         return $this->_statements;
     }
     
-    public function parseFromUrl($url)
-    {
-        return $this->parseFromFilename($url, true);
-    }
-    
     public function parseFromDataStringToStore($data, $graphUri, $useAc = true, $baseUri = null)
     {
         $this->_parseToStore = true;
@@ -101,12 +96,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         return true;
     }
-    
-    public function parseFromUrlToStore($url, $graphUri, $useAc = true)
-    {
-        return $this->parseFromFilenameToStore($url, $graphUri, $useAc);
-    }
-    
+
     public function parseNamespacesFromDataString($data)
     {
         $this->_parseNamespacesOnly($data);
@@ -133,12 +123,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         return $this->_namespaces;
     }
-    
-    public function parseNamespacesFromUrl($url)
-    {
-        return $this->parseNamespacesFromFilename($url);
-    }
-    
+
     public function reset()
     {
         $this->_data = '';

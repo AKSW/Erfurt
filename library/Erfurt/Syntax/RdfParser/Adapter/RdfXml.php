@@ -44,7 +44,10 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     protected $_rdfElementParsed = false;
     
     protected $_namespaces = array();
-    
+
+    private $_httpClient = null;
+    private $_httpClientAdapter = null;
+
     public function parseFromDataString($dataString, $baseUri = null, $isUrl = false)
     {
         //because this method is reused internally we got to have this $isUrl switch
@@ -126,33 +129,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         
         return true;
     }
-    
-    public function parseFromUrl($url)
-    {
-        $client = Erfurt_App::getInstance()->getHttpClient($url, array(
-            'maxredirects'  => 10,
-            'timeout'       => 30
-        ));
-    
-        $client->setHeaders('Accept', 'application/rdf+xml, text/plain');
-        $response = $client->request();
 
-        return $this->parseFromDataString($response->getBody(), $url, true);
-    }
-    
-    public function parseFromUrlToStore($url, $graphUri, $useAc = true)
-    {
-        $this->_parseToStore = true;
-        $this->_graphUri = $graphUri;
-        $this->_useAc = $useAc;
-        $this->parseFromUrl($url);
-
-        $this->_writeStatementsToStore();
-        $this->_addNamespacesToStore();
-
-        return true;
-    }
-    
     public function parseNamespacesFromDataString($data)
     {
         $xmlParser = $this->_getXmlParserNamespacesOnly();
@@ -184,12 +161,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
 
         return $this->_namespaces;
     }
-    
-    public function parseNamespacesFromUrl($url)
-    {
-        return $this->parseNamespacesFromFilename($url);
-    }
-    
+
     /**
      * Call this method after parsing only. The function parseToStore will add namespaces automatically.
      * This method is just for situations, where the namespaces are needed to after a in-memory parsing.
@@ -793,5 +765,32 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
                 $this->_namespaces[$uri] = $prefix;
             }
         }
+    }
+
+    private function _httpClient($url = null)
+    {
+        if (null === $this->_httpClient) {
+            $options = array(
+                'maxredirects' => 10,
+                'timeout'      => 30
+            );
+
+            if (null !== $this->_httpClientAdapter) {
+                $options['adapter'] = $this->_httpClientAdapter;
+            }
+
+            $this->_httpClient = Erfurt_App::getInstance()->getHttpClient(
+                $url,
+                $options
+            );
+            $this->_httpClient->setHeaders('Accept', 'application/rdf+xml, text/plain');
+        }
+
+        return $this->_httpClient;
+    }
+
+    public function setHttpClientAdapter($httpClientAdapter)
+    {
+        $this->_httpClientAdapter = $httpClientAdapter;
     }
 }

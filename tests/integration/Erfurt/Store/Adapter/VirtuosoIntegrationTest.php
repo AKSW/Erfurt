@@ -1,13 +1,18 @@
 <?php
 class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
 {
+    /** @var Erfurt_Store_Adapter_Virtuoso */
     public $fixture = null;
+
+    private $_resourcesDirectory = null;
     
     public function setUp()
     {   
         $this->markTestNeedsVirtuoso();
         $config = $this->getTestConfig()->store->virtuoso->toArray();
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($config);
+
+        $this->_resourcesDirectory = realpath(dirname(dirname(dirname(__FILE__)))) . '/_files/';
     }
     
     public function testInstantiation()
@@ -229,6 +234,47 @@ We will integrate and syndicate linked data with large-scale, existing applicati
 EOT;
 
         $this->assertEquals($expected2, $this->fixture->buildTripleString($statements2));
+    }
+
+    public function testImportRdfWithUrlAndRdfXml302After303GithubOntoWikiIssue101()
+    {
+        $graphUri = 'http://example.org/123/';
+        $url = 'http://purl.org/ontology/mo/';
+
+        $store = Erfurt_App::getInstance(false)->getStore();
+        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+
+        $adapter = new Zend_Http_Client_Adapter_Test();
+        $this->fixture->setHttpClientAdapter($adapter);
+
+        $adapter->setResponse(new Zend_Http_Response(
+            302,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'http://motools.sourceforge.net/mo/'
+            )
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            303,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'http://motools.sourceforge.net/doc/musicontology.rdfs'
+            )
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            200,
+            array(
+                'Content-Type' => 'application/rdf+xml'
+            ),
+            file_get_contents($this->_resourcesDirectory . 'musicontology.rdfs')
+        ));
+
+        try {
+            $result = $this->fixture->importRdf($graphUri, $url, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+
     }
 }
 

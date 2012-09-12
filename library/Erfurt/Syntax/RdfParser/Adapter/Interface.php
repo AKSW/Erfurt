@@ -16,15 +16,12 @@ interface Erfurt_Syntax_RdfParser_Adapter_Interface
 {
     public function parseFromDataString($dataString);
     public function parseFromFilename($filename);
-    public function parseFromUrl($url);
-    
+
     public function parseFromDataStringToStore($dataString, $graphUri, $useAc = true);
     public function parseFromFilenameToStore($filename, $graphUri, $useAc = true);
-    public function parseFromUrlToStore($filename, $graphUri, $useAc = true);
     
     public function parseNamespacesFromDataString($dataString);
     public function parseNamespacesFromFilename($filename);
-    public function parseNamespacesFromUrl($url);
-    
+
     public function getBaseUri();
 }
