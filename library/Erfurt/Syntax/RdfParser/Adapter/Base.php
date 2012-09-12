@@ -14,29 +14,30 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-abstract class Erfurt_Syntax_RdfParser_Adapter_Base implements Erfurt_Syntax_RdfParser_Adapter_Interface {
+abstract class Erfurt_Syntax_RdfParser_Adapter_Base implements Erfurt_Syntax_RdfParser_Adapter_Interface
+{
     protected $_baseUri = null;
     
     const TYPE_FILE = 'file';
     const TYPE_URL = 'url';
     const TYPE_STRING = 'string';
-    
+
     protected function _setLocalFileBaseUri($filename)
     {
-        if($filename == null){
+        if ($filename === null) {
             $filename = '';
         }
-         $this->_setBaseUri('file://'.str_replace(' ', '%20', dirname($filename)).DIRECTORY_SEPARATOR);
+        $this->_setBaseUri('file://' . str_replace(' ', '%20', dirname($filename)) . DIRECTORY_SEPARATOR);
     }
     
     protected function _setURLBaseUri($uri)
     {
         if (strrpos($uri, '#') !== false) {
-                $baseUri = substr($filename, 0, strrpos($uri, '#')+1);
-            } else {
-                $baseUri = substr($filename, 0, strrpos($uri, '/')+1);
-            }
-            $this->_setBaseUri($baseUri);
+            $baseUri = substr($uri, 0, strrpos($uri, '#') + 1);
+        } else {
+            $baseUri = substr($uri, 0, strrpos($uri, '/') + 1);
+        }
+        $this->_setBaseUri($baseUri);
     }
 
     public function getBaseUri()
@@ -52,7 +53,5 @@ abstract class Erfurt_Syntax_RdfParser_Adapter_Base implements Erfurt_Syntax_Rdf
     {
         $this->_baseUri = $baseUri;
     }
-    
 }
 
-?>
