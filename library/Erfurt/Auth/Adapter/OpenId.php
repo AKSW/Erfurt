@@ -110,15 +110,18 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
      */
     public function __construct($id = null, $verifyUrl = null, $redirectUrl = null, $get = null, $sReg = null)
     {
+        if (null !== $id) {
+            // pass by reference
+            Zend_OpenId::normalize($id);
+        }
         $this->_id = $id;
+
         $this->_verifyUrl = $verifyUrl;
         $this->_redirectUrl = $redirectUrl;
         $this->_get = $get;
         $this->_sReg = $sReg;
         
         $app = Erfurt_App::getInstance();
-        $this->_store = $app->getStore();
-        
         $config = $app->getConfig();
         
         $this->_acModelUri = $config->ac->modelUri;
@@ -139,7 +142,12 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
+    public function getId()
+    {
+        return $this->_id;
+    }
+
     /**
      * This method is responsible for the complete OpenID authentication process.
      * In some cases this method does not return, for a redirect is done internally
@@ -149,6 +157,9 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
      */
     public function authenticate()
     {
+        $app = Erfurt_App::getInstance();
+        $this->_store = $app->getStore();
+
         // Check whether OpenId is supported (big integer support is needed.)
         if (!$this->_isOpenIdSupported()) {
             $result = false;
@@ -165,10 +176,9 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             // to login.
             if (null === $this->_sReg) {
                 $userResult = $this->_checkOpenId($this->_id);
-
                 if ($userResult['userUri'] === false) {
                     $result = false;
-                    $msg = 'User does not exist!';
+                    $msg = 'User (' . $this->_id . ') does not exist!';
 
                     require_once 'Zend/Auth/Result.php';
                     return new Zend_Auth_Result($result, null, array($msg));
