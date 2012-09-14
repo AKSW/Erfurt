@@ -245,6 +245,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
     private function _handleResponse(&$client, $response, $accept = null)
     {
         switch ($response->getStatus()) {
+            case 302:
             case 303:
                 // 303 See also... Do a second request with the new url
                 $this->_url = $response->getHeader('Location');
