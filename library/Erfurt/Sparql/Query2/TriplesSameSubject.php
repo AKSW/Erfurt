@@ -142,8 +142,7 @@ class Erfurt_Sparql_Query2_TriplesSameSubject extends Erfurt_Sparql_Query2_Eleme
                 break;
         }
         if (!($c1 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject && $c2 instanceof Erfurt_Sparql_Query2_IF_TriplesSameSubject)) {
-            $cmp = $c1weight - $c2weight;
-            return $cmp != 0 ? $cmp : strcmp((string)$c1, (string)$c2); //to avoid 0
+            return $c1weight - $c2weight;
         }
 
         //both are normal triples
