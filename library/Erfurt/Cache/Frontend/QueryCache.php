@@ -369,6 +369,11 @@ class Erfurt_Cache_Frontend_QueryCache {
         #Creation of SPARQL Parser and parsing the query string
         require_once ('Erfurt/Sparql/Parser.php');
         $parser = new Erfurt_Sparql_Parser ();
+        #hack to get Construct queries running.
+       
+        $isConstruct = strpos(strtolower($queryString), "construct");
+        $queryString = preg_replace("/CONSTRUCT\s*\{[^\}]*\}/mix", "SELECT *", $queryString);
+
         $parsedQuery = $parser->parse( $queryString );
 
         #extract graphUris from FromPart and from FromNamedPart
