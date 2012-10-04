@@ -863,18 +863,8 @@ class Erfurt_Store
     }
 
     /**
-     * Returns the number fo queries committed.
-     *
-     * @return int
-     */
-    public function getQueryCount()
-    {
-        return self::$_queryCount;
-    }
-
-    /**
      * Creates a new empty model instance with IRI $modelIri.
-      *
+     *
      * @param string $modelIri
      * @param string $baseIri
      * @param string $type
@@ -914,6 +904,41 @@ class Erfurt_Store
         // everything ok, create new model
         // no access control since we have already checked
         return $this->getModel($modelIri, $useAc);
+    }
+
+    /**
+     * Returns a model if it exists and else creates it
+     *
+     * @param string $modelIri
+     * @param string $baseIri
+     * @param string $type
+     * @param boolean $useAc
+     *
+     * @throws Erfurt_Store_Exception
+     *
+     * @return Erfurt_Rdf_Model
+     */
+    public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
+    {
+        try {
+            // Create it if it doesn't exist
+            $model = $store->getNewModel($modelIri, $useAc);
+        } catch (Erfurt_Store_Exception $e) {
+            // Get it if it already exists
+            $model = $store->getModel($modelIri, $baseIri, $type, $useAc);
+        }
+
+        return $model;
+    }
+
+    /**
+     * Returns the number fo queries committed.
+     *
+     * @return int
+     */
+    public function getQueryCount()
+    {
+        return self::$_queryCount;
     }
 
     /**
