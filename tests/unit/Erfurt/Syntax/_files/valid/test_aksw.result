@@ -1,0 +1,7 @@
+<http://aksw.org/> <http://rdfs.org/ns/void#dataDump> <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml> .
+<http://aksw.org/> <http://rdfs.org/ns/void#dataDump> <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=turtle> .
+<http://aksw.org/AlexDummy> <http://xmlns.com/foaf/0.1/phone> <tel:+49-341-97-32341> .
+<http://aksw.org/AlexDummy> <http://xmlns.com/foaf/0.1/depiction> <http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=sn&value=dummy+alex> .
+<http://aksw.org/JensHens> <http://xmlns.com/foaf/0.1/depiction> <http://bis.informatik.uni-leipzig.de/images/jpegPhoto.php?name=cn&value=Jens+Hens> .
+<http://aksw.org/Projects/GENIA> <http://usefulinc.com/ns/doap#homepage> <http://www-tsujii.is.s.u-tokyo.ac.jp/GENIA/home/wiki.cgi?page=Relation+annotation> .
+<http://aksw.org/Projects/DL-Learner> <http://usefulinc.com/ns/doap#homepage> <http://aksw.org/tmp/dl-learner.org> .

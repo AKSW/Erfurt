@@ -1,67 +1,144 @@
+ZENDVERSION=1.11.5
+
 default:
 	@echo "please use:"
-	@echo "     'make cs-install' (install CodeSniffer)"
-	@echo "     'make cs-uninstall' (uninstall CodeSniffer)"
-	@echo "     'make cs-enable' (enable CodeSniffer to check code before every commit)"
-	@echo "     'make cs-disable' (disable CodeSniffer code checking)"
-	@echo "     'make cs-check-commit' (run pre-commit code checking manually)"
-	@echo "     'make cs-check-commit-emacs' (same as cs-check-commit with emacs output)"
-	@echo "     'make cs-check-commit-intensive' (run pre-commit code checking"
-	@echo "             manually with stricter coding standard)"
-	@echo "     'make cs-check-path FPATH=<path>' (run code checking on specific path)"
-	@echo "     'make cs-check-path-emacs FPATH=<path>' (same as cs-check-path"
-	@echo "             with emacs output)"
-	@echo "     'make cs-check-path-full FPATH=<path>' (run intensive code checking on"
-	@echo "             specific path)"
-	@echo "     'make cs-check-all' (run complete code checking)"
-	@echo "     'make cs-check-commit-intensive' (run complete code checking with"
-	@echo "             stricter coding standard)"
-	@echo "     'make cs-check-blame' (get blame list)"
+	@echo ""
+	@echo "  test ......................... Execute unit and integration tests"
+	@echo "  test-unit .................... Run Erfurt unit tests"
+	@echo "  test-unit-cc ................. Same as above plus code coverage report"
+	@echo "  test-integration-virtuoso .... Run Erfurt integration tests with virtuoso"
+	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
+	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
+	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
+	@echo "  test-clean ................... Clean test cache files, etc."
+	@echo "  ----------------------------------------------------------------------"
+	@echo "  cs-install ................... install CodeSniffer"
+	@echo "  cs-uninstall ................. uninstall CodeSniffer"
+	@echo "  cs-enable .................... enable CodeSniffer to check code before"
+	@echo "                                 every commit"
+	@echo "  cs-disable ................... disable CodeSniffer code checking"
+	@echo "  cs-check-commit .............. run pre-commit code checking manually)"
+	@echo "  cs-check-commit-emacs' ....... same as above with emacs output)"
+	@echo "  cs-check-commit-intensive .... run pre-commit code checking"
+	@echo "                                 manually with stricter coding"
+	@echo "                                 standard"
+	@echo "  cs-check ..................... run complete code checking"
+	@echo "  cs-check-full ................ run complete code checking with detailed"
+	@echo "                                 output"
+	@echo "  cs-check-emacs ............... run complete code checking with with"
+	@echo "                                 emacs output"
+	@echo "  cs-check-blame ............... run complete code checking with blame"
+	@echo "                                 list output"
+	@echo "  cs-check-intensive ........... run complete code checking with"
+	@echo "                                 stricter coding standard"
+	@echo "  cs-check-intensive-full ...... run complete code checking with"
+	@echo "                                 stricter coding standard and detailed"
+	@echo "                                 output"
+	@echo ""
+	@echo "  Possible parameters:"
+	@echo "   FPATH=<path> (run code checking on specific relative path)"
+	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
+	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
+		
+clean:
+	rm -rf cache/* logs/*
 
+directories: clean
+	mkdir -p logs cache
+	chmod 777 logs cache
+
+zend:
+	rm -rf library/Zend
+	curl -# -O http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget http://framework.zend.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
+	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
+	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
+	rm -rf ZendFramework-${ZENDVERSION}-minimal.tar.gz ZendFramework-${ZENDVERSION}-minimal
 
 # coding standard
 
 # #### config ####
-# if severity classes were chanced aou must run 'cs-install' again
-# standard severity class they must be fulfilled to be able to commit
-SEVERITY = 7
-# intensive severity class they must not be fulfilled to be able to commit,
-# but you are able to check your code with additional coding standards
-SEVERITY_INTENSIVE = 5
-# checkt filetypes
-FILETYPES = php
-# path to the Ontowiki Coding Standard
-CSPATH = tests/CodeSniffer/Standards/Ontowiki
+# cs-script path
+CSSPATH = tests/CodeSniffer/
+# ignore pattern
+IGNOREPATTERN = */libraries/*,*/Parser/Sparql10/*,*/Parser/Sparql11/*
 
-cs-install: cs-enable
-	pear install PHP_CodeSniffer
+# Parameter check
+ifndef FPATH
+	FPATH = "./"
+endif
+ifdef SNIFFS
+	SNIFFSTR = "--sniffs="$(SNIFFS)
+else
+	SNIFFSTR =
+endif
 
-cs-uninstall: cs-disable
+REQUESTSTR = --ignore=$(IGNOREPATTERN) $(OPTIONS) $(SNIFFSTR)  $(FPATH)
 
-cs-enable:
-	ln -s "../../tests/CodeSniffer/pre-commit" .git/hooks/pre-commit
+cs-default:
+	chmod ugo+x "$(CSSPATH)cs-scripts.sh"
+	
+cs-install: cs-default
+	$(CSSPATH)cs-scripts.sh -i
 
-cs-disable:
-	rm .git/hooks/pre-commit
+cs-uninstall: cs-default
+	$(CSSPATH)cs-scripts.sh -u
+
+cs-enable: cs-default
+	$(CSSPATH)cs-scripts.sh -f $(CSSPATH) -e
+
+cs-disable: cs-default
+	$(CSSPATH)cs-scripts.sh -d
 
 cs-check-commit:
-	tests/CodeSniffer/pre-commit
+	$(CSSPATH)cs-scripts.sh -p ""
 cs-check-commit-emacs:
-	tests/CodeSniffer/pre-commit -remacs
+	$(CSSPATH)cs-scripts.sh -p "-remacs"
 cs-check-commit-intensive:
-	tests/CodeSniffer/pre-commit -s5
+	$(CSSPATH)cs-scripts.sh -p "-s"
 
-cs-check-path:
-	phpcs --report=summary --extensions=$(FILETYPES) --severity=$(SEVERITY) -s -p --standard=$(CSPATH) $(FPATH)
-cs-check-path-emacs:
-	phpcs --report=emacs --extensions=$(FILETYPES) --severity=$(SEVERITY) -s -p --standard=$(CSPATH) $(FPATH)
-cs-check-path-full:
-	phpcs --report=full --extensions=$(FILETYPES) --severity=$(SEVERITY) -s -p --standard=$(CSPATH) $(FPATH)
-
-cs-check-all:
-	phpcs --report=summary --extensions=$(FILETYPES) --severity=$(SEVERITY) -s -p --standard=$(CSPATH) *
-cs-check-all-intensive:
-	phpcs --report=summary --extensions=$(FILETYPES) --severity=$(SEVERITY_INTENSIVE) -s -p --standard=$(CSPATH) *
-
+cs-check:
+	$(CSSPATH)cs-scripts.sh -c "-s --report=summary $(REQUESTSTR)"
+cs-check-intensive:
+	$(CSSPATH)cs-scripts.sh -s -c "-s --report=summary $(REQUESTSTR)"
+cs-check-intensive-full:
+	$(CSSPATH)cs-scripts.sh -s -c "-s --report=full $(REQUESTSTR)"
+cs-check-full:
+	$(CSSPATH)cs-scripts.sh -c "-s --report=full $(REQUESTSTR)"
+cs-check-emacs:
+	$(CSSPATH)cs-scripts.sh -c "--report=emacs $(REQUESTSTR)"
 cs-check-blame:
-	phpcs --report=gitblame --extensions=$(FILETYPES) --severity=$(SEVERITY_INTENSIVE) -s -p --standard=$(CSPATH) *
+	$(CSSPATH)cs-scripts.sh -s -c "--report=gitblame $(REQUESTSTR)"
+
+# test stuff
+
+test-unit: directories
+	@cd tests && phpunit --bootstrap Bootstrap.php unit/
+
+test-unit-cc: directories
+	@cd tests/unit && phpunit
+
+test-integration-virtuoso: directories
+	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
+
+test-integation-virtuoso-cc: directories
+	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
+
+test-integration-mysql: directories
+	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
+
+test-integation-mysql-cc: directories
+	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
+
+test:
+	make test-unit
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	make test-integration-virtuoso
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	make test-integration-mysql
+
+test-clean:
+	rm -rf tests/unit/Erfurt/Sparql/_cache/*

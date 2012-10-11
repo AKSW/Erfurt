@@ -8,3 +8,12 @@ config.ini
 .DS_Store
 .htaccess
 nbproject
+Erfurt/libraries/Zend/
+cache.properties
+library/Zend
+cache.sqlite
+
+# build stuff
+build/
+!build/phpcs.xml
+!build/phpcmd.xml

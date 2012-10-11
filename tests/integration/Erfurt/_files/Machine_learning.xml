@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:dbpedia-owl="http://dbpedia.org/ontology/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dbpprop="http://dbpedia.org/property/"
+	xmlns:ns6="http://www.w3.org/ns/prov#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" >
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Waffles_(machine_learning)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Daphne_Koller">
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Machine_Learning_(journal)">
+    <dbpprop:discipline rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:academicDiscipline rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/David_Lary">
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Machine_learning">
+    <owl:sameAs rdf:resource="http://rdf.freebase.com/ns/m.01hyh_" />
+    <owl:sameAs rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <owl:sameAs rdf:resource="http://de.dbpedia.org/resource/Maschinelles_Lernen" />
+    <owl:sameAs rdf:resource="http://es.dbpedia.org/resource/Aprendizaje_automático" />
+    <owl:sameAs rdf:resource="http://fr.dbpedia.org/resource/Apprentissage_automatique" />
+    <owl:sameAs rdf:resource="http://it.dbpedia.org/resource/Apprendimento_automatico" />
+    <owl:sameAs rdf:resource="http://pl.dbpedia.org/resource/Uczenie_maszynowe" />
+    <owl:sameAs rdf:resource="http://cs.dbpedia.org/resource/Strojové_učení" />
+    <owl:sameAs rdf:resource="http://el.dbpedia.org/resource/Μηχανική_μάθηση" />
+    <owl:sameAs rdf:resource="http://ja.dbpedia.org/resource/機械学習" />
+    <owl:sameAs rdf:resource="http://ko.dbpedia.org/resource/기계_학습" />
+    <owl:sameAs rdf:resource="http://pt.dbpedia.org/resource/Aprendizagem_de_máquina" />
+    <owl:sameAs rdf:resource="http://ru.dbpedia.org/resource/Машинное_обучение" />
+    <rdfs:label xml:lang="ja">機械学習</rdfs:label>
+    <rdfs:label xml:lang="zh">机器学习</rdfs:label>
+    <rdfs:label xml:lang="uk">Машинне навчання</rdfs:label>
+    <rdfs:label xml:lang="ca">Aprenentatge automàtic</rdfs:label>
+    <rdfs:label xml:lang="cs">Strojové učení</rdfs:label>
+    <rdfs:label xml:lang="nl">Machinaal leren</rdfs:label>
+    <rdfs:label xml:lang="ko">기계 학습</rdfs:label>
+    <rdfs:label xml:lang="de">Maschinelles Lernen</rdfs:label>
+    <rdfs:label xml:lang="sv">Maskininlärning</rdfs:label>
+    <rdfs:label xml:lang="fi">Koneoppiminen</rdfs:label>
+    <rdfs:label xml:lang="es">Aprendizaje automático</rdfs:label>
+    <rdfs:label xml:lang="no">Maskinlæring</rdfs:label>
+    <rdfs:label xml:lang="pl">Uczenie maszynowe</rdfs:label>
+    <rdfs:label xml:lang="fr">Apprentissage automatique</rdfs:label>
+    <rdfs:label xml:lang="it">Apprendimento automatico</rdfs:label>
+    <rdfs:label xml:lang="en">Machine learning</rdfs:label>
+    <rdfs:label xml:lang="vi">Học máy</rdfs:label>
+    <rdfs:label xml:lang="pt">Aprendizagem de máquina</rdfs:label>
+    <rdfs:label xml:lang="ru">Машинное обучение</rdfs:label>
+    <rdfs:comment xml:lang="pt">A aprendizagem de máquina é um sub-campo da inteligência artificial dedicado ao desenvolvimento de algoritmos e técnicas que permitam ao computador aprender, isto é, que permitam ao computador aperfeiçoar seu desempenho em alguma tarefa. Enquanto que na Inteligência Artificial existem dois tipos de raciocínio: indutivo, que extrai regras e padrões de grandes conjuntos de dados, e dedutivo. A aprendizagem de máquina só se preocupa com o indutivo.</rdfs:comment>
+    <rdfs:comment xml:lang="no">Maskinlæring er en gren av kunstig intelligens, innen informatikk. Det er en vitenskapelig disiplin opptatt av design og utvikling av algoritmer som gjør datamaskiner i stand å utvikle atferd basert på empiriske data. Et hovedfokus innen forskning på maskinlæring er automatisk å lære gjenkjenning av komplekse mønstre og gjøre intelligente beslutninger basert på data. En læringsalgoritme bruker et sett treningsdata for å utvikle eller forbedre en atferd.</rdfs:comment>
+    <rdfs:comment xml:lang="ja">機械学習（きかいがくしゅう、Machine learning）とは、人工知能における研究課題の一つで、人間が自然に行っている学習能力と同様の機能をコンピュータで実現しようとする技術・手法のことである。 ある程度の数のサンプルデータ集合を対象に解析を行い、そのデータから有用な規則、ルール、知識表現、判断基準などを抽出する。なおデータ集合を解析するので統計学との関連が深い。 機械学習は検索エンジン、医療診断、スパムメールの検出、金融市場の予測、DNA配列の分類、音声認識や文字認識などのパターン認識、ゲーム戦略、ロボット、など幅広い分野で用いられている。応用分野の特性に応じて学習手法も適切に選択する必要があり、様々な手法が提案されている。</rdfs:comment>
+    <rdfs:comment xml:lang="en">Machine learning, a branch of artificial intelligence, is a scientific discipline concerned with the design and development of algorithms that allow computers to evolve behaviors based on empirical data, such as from sensor data or databases. A learner can take advantage of examples (data) to capture characteristics of interest of their unknown underlying probability distribution. Data can be seen as examples that illustrate relations between observed variables.</rdfs:comment>
+    <rdfs:comment xml:lang="ca">L&#39;Aprenentatge automàtic és un camp de la intel·ligència artificial que està dedicat al disseny, anàlisi i desenvolupament d&#39;algorismes i tècniques que permeten que les màquines evolucionin. Es tracta de crear programes capaços de generalitzar comportaments a partir del reconeixement de patrons o classificació. L&#39;aprenentatge automàtic està relacionat amb el camp de l&#39;estadística però també té solapament amb els mètodes de construcció de models, o l&#39;aprenentatge estadístic.</rdfs:comment>
+    <rdfs:comment xml:lang="pl">Uczenie maszynowe albo uczenie się maszyn, systemy uczące się (ang. machine learning) – stosunkowo młoda i szybko rozwijająca się dziedzina wchodząca w skład nauk zajmujących się problematyką SI. Jest to nauka interdyscyplinarna ze szczególnym uwzględnieniem takich dziedzin jak informatyka, robotyka i statystyka.</rdfs:comment>
+    <rdfs:comment xml:lang="nl">Automatisch leren of Machinaal leren is een breed onderzoeksveld binnen kunstmatige intelligentie, en houdt zich bezig met de ontwikkeling van algoritmes en technieken waarmee computers kunnen leren. De methodes zijn te verdelen in twee ruwe categorieën: aan-leidinggevend en deductief. Aan-leidinggevende methodes creëren computer programma&#39;s door het vormen van regels of het extraheren van patronen uit data.</rdfs:comment>
+    <rdfs:comment xml:lang="ru">Машинное обучение — обширный подраздел искусственного интеллекта, изучающий методы построения алгоритмов, способных обучаться. Различают два типа обучения. Обучение по прецедентам, или индуктивное обучение, основано на выявлении закономерностей в эмпирических данных. Дедуктивное обучение предполагает формализацию знаний экспертов и их перенос в компьютер в виде базы знаний.</rdfs:comment>
+    <rdfs:comment xml:lang="ko">기계 학습(machine learning)은 인공 지능의 한 분야로, 컴퓨터가 학습할 수 있도록 하는 알고리즘과 기술을 개발하는 분야를 말한다.</rdfs:comment>
+    <rdfs:comment xml:lang="vi">Học máy, có tài liệu gọi là Máy học, là một lĩnh vực của trí tuệ nhân tạo liên quan đến việc phát triển các kĩ thuật cho phép các máy tính có thể &quot;học&quot;. Cụ thể hơn, học máy là một phương pháp để tạo ra các chương trình máy tính bằng việc phân tích các tập dữ liệu. Học máy có liên quan lớn đến thống kê, vì cả hai lĩnh vực đều nghiên cứu việc phân tích dữ liệu, nhưng khác với thống kê, học máy tập trung vào sự phức tạp của các giải thuật trong việc thực thi tính toán.</rdfs:comment>
+    <rdfs:comment xml:lang="cs">Strojové učení je podoblastí umělé inteligence, zabývající se algoritmy a technikami, které umožňují počítačovému systému &#39;učit se&#39;. Učením v daném kontextu rozumíme takovou změnu vnitřního stavu systému, která zefektivní schopnost přizpůsobení se změnám okolního prostředí. Strojové učení se značně prolíná s oblastmi statistiky a dobývaní znalostí a má široké uplatnění. Jeho techniky se využívají např.</rdfs:comment>
+    <rdfs:comment xml:lang="fr">L&#39;apprentissage automatique (machine learning en anglais), un des champs d&#39;étude de l&#39;intelligence artificielle, est la discipline scientifique concernée par le développement, l&#39;analyse et l&#39;implémentation de méthodes automatisables qui permettent à une machine (au sens large) d&#39;évoluer grâce à un processus d&#39;apprentissage, et ainsi de remplir des tâches qu&#39;il est difficile ou impossible de remplir par des moyens algorithmiques plus classiques.</rdfs:comment>
+    <rdfs:comment xml:lang="sv">Maskininlärning är vad man inom artificiell intelligens brukar kalla statistiska metoder för regression eller klassificering.</rdfs:comment>
+    <rdfs:comment xml:lang="uk">Маши́нне навча́ння — узагальнена назва штучної генерації знань з досвіду. Штучна система навчається на прикладах і після закінчення фази навчання може узагальнювати. Тобто система не просто вивчає наведені приклади, а розпізнає певні закономірності в даних для навчання.</rdfs:comment>
+    <rdfs:comment xml:lang="de">Maschinelles Lernen ist ein Oberbegriff für die „künstliche“ Generierung von Wissen aus Erfahrung: Ein künstliches System lernt aus Beispielen und kann nach Beendigung der Lernphase verallgemeinern. Das heißt, es lernt nicht einfach die Beispiele auswendig, sondern es „erkennt“ Gesetzmäßigkeiten in den Lerndaten. So kann das System auch unbekannte Daten beurteilen.</rdfs:comment>
+    <rdfs:comment xml:lang="es">El Aprendizaje Automático o Aprendizaje de Máquinas es una rama de la Inteligencia Artificial cuyo objetivo es desarrollar técnicas que permitan a las computadoras aprender. De forma más concreta, se trata de crear programas capaces de generalizar comportamientos a partir de una información no estructurada suministrada en forma de ejemplos. Es, por lo tanto, un proceso de inducción del conocimiento.</rdfs:comment>
+    <rdfs:comment xml:lang="it">L&#39;apprendimento automatico (noto in letteratura come Machine Learning) rappresenta una delle aree fondamentali dell&#39;intelligenza artificiale e si occupa della realizzazione di sistemi e algoritmi che si basano su osservazioni come dati per la sintesi di nuova conoscenza. L&#39;apprendimento può avvenire catturando caratteristiche di interesse provenienti da esempi, strutture dati o sensori, per analizzarle e valutarne le relazioni tra le variabili osservate.</rdfs:comment>
+    <rdfs:comment xml:lang="zh">机器学习是近20多年兴起的一门多领域交叉学科，涉及概率论、统计学、逼近论、凸分析、算法复杂度理论等多门学科。机器学习理论主要是设计和分析一些让计算机可以自动“学习”的算法。机器学习算法是一类从数据中自动分析获得规律，并利用规律对未知数据进行预测的算法。因为学习算法中涉及了大量的统计学理论，机器学习与统计推断学联系尤为密切，也被称为统计学习理论。算法设计方面，机器学习理论关注可以实现的，行之有效的学习算法。很多推论问题属于无程序可循难度，所以部分的机器学习研究是开发容易处理的近似算法。 机器学习已经有了十分广泛的应用，例如：数据挖掘、计算机视觉、自然语言处理、生物特征识别、搜索引擎、医学诊断、检测信用卡欺诈、证券市场分析、DNA序列测序、语音和手写识别、战略游戏和机器人运用。</rdfs:comment>
+    <rdfs:comment xml:lang="fi">Koneoppiminen on tekoälyn osa-alue, joka tutkitii adaptoituvia funktioita ja niiden ominaisuuksia. Oppimista on kahdenlaista: induktiivista ja deduktiivista. Induktiiviset koneoppimismenetelmät muodostavat sääntöjä ja malleja suurista tietojoukoista. Koneoppimisella on paljon yhteistä tilastotieteen kanssa, koska molemmissa tehdään päätelmiä aineistosta, mutta koneoppimisessa selvitetään ohjelmallisten toteutusten laskennallista vaativuutta.</rdfs:comment>
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://world.std.com/~rjs/indinf56.pdf" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://support-vector.ws" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://machinelearning.org/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.inference.phy.cam.ac.uk/mackay/itila/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://see.stanford.edu/see/courseinfo.aspx?coll=348ca38a-3a6d-4052-937d-cb017338d7b1" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.ml-class.org" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.cs.uic.edu/~liub/WebMiningBook.html" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://learning-from-data.com" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www-stat.stanford.edu/~tibs/ElemStatLearn/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://videolectures.net/Top/Computer_Science/Machine_Learning/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.degruyter.de/journals/jisys/detailEn.cfm" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Learning" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Cybernetics" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Learning_in_computer_vision" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Machine_learning" />
+    <dbpedia-owl:abstract xml:lang="sv">Maskininlärning är vad man inom artificiell intelligens brukar kalla statistiska metoder för regression eller klassificering.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="en">Machine learning, a branch of artificial intelligence, is a scientific discipline concerned with the design and development of algorithms that allow computers to evolve behaviors based on empirical data, such as from sensor data or databases. A learner can take advantage of examples (data) to capture characteristics of interest of their unknown underlying probability distribution. Data can be seen as examples that illustrate relations between observed variables. A major focus of machine learning research is to automatically learn to recognize complex patterns and make intelligent decisions based on data; the difficulty lies in the fact that the set of all possible behaviors given all possible inputs is too large to be covered by the set of observed examples (training data). Hence the learner must generalize from the given examples, so as to be able to produce a useful output in new cases.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="nl">Automatisch leren of Machinaal leren is een breed onderzoeksveld binnen kunstmatige intelligentie, en houdt zich bezig met de ontwikkeling van algoritmes en technieken waarmee computers kunnen leren. De methodes zijn te verdelen in twee ruwe categorieën: aan-leidinggevend en deductief. Aan-leidinggevende methodes creëren computer programma&#39;s door het vormen van regels of het extraheren van patronen uit data. Deductieve methoden hebben als resultaat een functie die net zo generiek is als de invoer data. Automatisch leren is sterk gerelateerd aan statistiek, aangezien beide velden de studie van data analyseren. Automatisch leren is echter meer gericht op de algoritmische complexiteit of de implementatie in programma&#39;s. Het is ook gerelateerd aan data mining, waarin op een geautomatiseerde manier patronen en relaties worden gezocht in grote hoeveelheden gegevens. Veel leer-problemen zijn NP-hard of moeilijker, dus een belangrijk onderdeel van dit vakgebied is algoritmes te ontwikkelen die de oplossing benaderen.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="uk">Маши́нне навча́ння — узагальнена назва штучної генерації знань з досвіду. Штучна система навчається на прикладах і після закінчення фази навчання може узагальнювати. Тобто система не просто вивчає наведені приклади, а розпізнає певні закономірності в даних для навчання. Серед багатьох програмних продуктів варто згадати системи автоматичного діагностування, розпізнавання шахрайства з кредитними картками, аналіз ринку цінних паперів, класифікація ланцюжків ДНК, розпізнавання мови та тексту, автономні системи. Практичне використання відбувається, переважно, за допомогою алгоритмів. Різноманітні алгоритми машинного навчання можна грубо поділити за такою схемою: Навчання з вчителем: алгоритм вивчає функцію на основі наданих пар вхідних та вихідних даних. При цьому, в процесі навчання, «вчитель» вказує вірні вихідні дані для кожного значення вхідних даних. Одним з розділів навчання з вчителем є машинна класифікація. Такі алгоритми застосовуються для розпізнавання текстів. Навчання без вчителя Навчання з закріпленням: алгоритм навчається за допомогою тактики нагороди та покарання для максимізації вигоди для агентів (систем до яких належить компонента, що навчається)</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ru">Машинное обучение — обширный подраздел искусственного интеллекта, изучающий методы построения алгоритмов, способных обучаться. Различают два типа обучения. Обучение по прецедентам, или индуктивное обучение, основано на выявлении закономерностей в эмпирических данных. Дедуктивное обучение предполагает формализацию знаний экспертов и их перенос в компьютер в виде базы знаний. Дедуктивное обучение принято относить к области экспертных систем, поэтому термины машинное обучение и обучение по прецедентам можно считать синонимами. Машинное обучение находится на стыке математической статистики, методов оптимизации и дискретной математики, но имеет также и собственную специфику, связанную с проблемами вычислительной эффективности и переобучения. Многие методы индуктивного обучения разрабатывались как альтернатива классическим статистическим подходам. Многие методы тесно связаны с извлечением информации, интеллектуальным анализом данных (Data Mining).</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ca">L&#39;Aprenentatge automàtic és un camp de la intel·ligència artificial que està dedicat al disseny, anàlisi i desenvolupament d&#39;algorismes i tècniques que permeten que les màquines evolucionin. Es tracta de crear programes capaços de generalitzar comportaments a partir del reconeixement de patrons o classificació. L&#39;aprenentatge automàtic està relacionat amb el camp de l&#39;estadística però també té solapament amb els mètodes de construcció de models, o l&#39;aprenentatge estadístic. També hi ha punts de contacte amb la informàtica teòrica. Això és degut a la complexitat computacional dels problemes. Alguns camps on s&#39;ha aplicat aquest tipus d&#39;aprenentatge són les aplicacions dedicades al processament del llenguatge natural, als algorismes de cerca, la diagnosi mèdica, la bioinformàtica, la detecció de fraus i la classificació. Qualsevol sistema que es consideri intel·ligent ha de tenir l&#39;habilitat d’aprendre, és a dir, de millorar automàticament amb l&#39;experiència. Els programes utilitzats són sistemes d&#39;aprenentatge capaços d&#39;adquirir coneixements d&#39;alt nivell i estratègies per la resolució de problemes mitjançant exemples, de forma anàloga a com ho faria la ment humana.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="es">El Aprendizaje Automático o Aprendizaje de Máquinas es una rama de la Inteligencia Artificial cuyo objetivo es desarrollar técnicas que permitan a las computadoras aprender. De forma más concreta, se trata de crear programas capaces de generalizar comportamientos a partir de una información no estructurada suministrada en forma de ejemplos. Es, por lo tanto, un proceso de inducción del conocimiento. En muchas ocasiones el campo de actuación del Aprendizaje Automático se solapa con el de la Estadística, ya que las dos disciplinas se basan en el análisis de datos. Sin embargo, el Aprendizaje Automático se centra más en el estudio de la Complejidad Computacional de los problemas. Muchos problemas son de clase NP-hard, por lo que gran parte de la investigación realizada en Aprendizaje Automático está enfocada al diseño de soluciones factibles a esos problemas. El Aprendizaje Automático puede ser visto como un intento de automatizar algunas partes del Método Científico mediante métodos matemáticos. El Aprendizaje Automático tiene una amplia gama de aplicaciones, incluyendo motores de búsqueda, diagnósticos médicos, detección de fraude en el uso de tarjetas de crédito, análisis del mercado de valores, clasificación de secuencias de ADN, reconocimiento del habla y del lenguaje escrito, juegos y robótica.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="fi">Koneoppiminen on tekoälyn osa-alue, joka tutkitii adaptoituvia funktioita ja niiden ominaisuuksia. Oppimista on kahdenlaista: induktiivista ja deduktiivista. Induktiiviset koneoppimismenetelmät muodostavat sääntöjä ja malleja suurista tietojoukoista. Koneoppimisella on paljon yhteistä tilastotieteen kanssa, koska molemmissa tehdään päätelmiä aineistosta, mutta koneoppimisessa selvitetään ohjelmallisten toteutusten laskennallista vaativuutta. Monet päättelyongelmat ovat NP-kovia tai vaikeampia, joten koneoppimistutkimukseen kuuluu myös likimääräisten päättelyalgoritmien kehittäminen.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="pl">Uczenie maszynowe albo uczenie się maszyn, systemy uczące się (ang. machine learning) – stosunkowo młoda i szybko rozwijająca się dziedzina wchodząca w skład nauk zajmujących się problematyką SI. Jest to nauka interdyscyplinarna ze szczególnym uwzględnieniem takich dziedzin jak informatyka, robotyka i statystyka. Głównym celem jest praktyczne zastosowanie dokonań w dziedzinie sztucznej inteligencji do stworzenia automatycznego systemu potrafiącego doskonalić się przy pomocy zgromadzonego doświadczenia i nabywania na tej podstawie nowej wiedzy. Uczenie maszynowe jest konsekwencją rozwoju idei sztucznej inteligencji i metod jej wdrażania praktycznego. Dotyczy rozwoju oprogramowania stosowanego zwłaszcza w innowacyjnych technologiach i przemyśle. Odpowiednie algorytmy mają pozwolić oprogramowaniu na zautomatyzowanie procesu pozyskiwania i analizy danych do ulepszania i rozwoju własnego systemu. Uczenie się może być rozpatrywane jako konkretyzacja algorytmu czyli dobór parametrów, nazywanych wiedzą lub umiejętnością. Służy do tego wiele typów metod pozyskiwania wiedzy oraz sposobów reprezentowania wiedzy. Ma to zapewnić zwiększanie: efektywności wydajności bezawaryjności redukcji kosztów</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="pt">A aprendizagem de máquina é um sub-campo da inteligência artificial dedicado ao desenvolvimento de algoritmos e técnicas que permitam ao computador aprender, isto é, que permitam ao computador aperfeiçoar seu desempenho em alguma tarefa. Enquanto que na Inteligência Artificial existem dois tipos de raciocínio: indutivo, que extrai regras e padrões de grandes conjuntos de dados, e dedutivo. A aprendizagem de máquina só se preocupa com o indutivo. Algumas partes da aprendizagem de máquina estão intimamente ligadas à mineração de dados e estatística. Sua pesquisa foca nas propriedades dos métodos estatísticos, assim como sua complexidade computacional. Sua aplicação prática inclui o processamento de linguagem natural, motores de busca, diagnósticos médicos, bioinformática, reconhecimento de fala, reconhecimento de escrita, visão computacional e locomoção de robôs. Abordagens: Aprendizado Supervisionado Aprendizado Não Supervisão (Clustering, Estatística) Aprendizado por Reforço (Informação de entrada como feedback) Transdução (Semelhante ao Supervisionado, mas sem uma função explícita) Aprendizado Multitarefa</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ko">기계 학습(machine learning)은 인공 지능의 한 분야로, 컴퓨터가 학습할 수 있도록 하는 알고리즘과 기술을 개발하는 분야를 말한다.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="vi">Học máy, có tài liệu gọi là Máy học, là một lĩnh vực của trí tuệ nhân tạo liên quan đến việc phát triển các kĩ thuật cho phép các máy tính có thể &quot;học&quot;. Cụ thể hơn, học máy là một phương pháp để tạo ra các chương trình máy tính bằng việc phân tích các tập dữ liệu. Học máy có liên quan lớn đến thống kê, vì cả hai lĩnh vực đều nghiên cứu việc phân tích dữ liệu, nhưng khác với thống kê, học máy tập trung vào sự phức tạp của các giải thuật trong việc thực thi tính toán. Nhiều bài toán suy luận được xếp vào loại bài toán NP-khó, vì thế một phần của học máy là nghiên cứu sự phát triển các giải thuật suy luận xấp xỉ mà có thể xử lí được. Học máy có tính ứng dụng rất cao bao gồm máy truy tìm dữ liệu, chẩn đoán y khoa, phát hiện thẻ tín dụng giả, phân tích thị trường chứng khoán, phân loại các chuỗi DNA, nhận dạng tiếng nói và chữ viết, dịch tự động, chơi trò chơi và cử động rô-bốt (robot locomotion).</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="no">Maskinlæring er en gren av kunstig intelligens, innen informatikk. Det er en vitenskapelig disiplin opptatt av design og utvikling av algoritmer som gjør datamaskiner i stand å utvikle atferd basert på empiriske data. Et hovedfokus innen forskning på maskinlæring er automatisk å lære gjenkjenning av komplekse mønstre og gjøre intelligente beslutninger basert på data. En læringsalgoritme bruker et sett treningsdata for å utvikle eller forbedre en atferd. Et problemområde er det faktum at alle mulige atferder gitt alle mulige inntrykk, er for mange til å dekkes av mengden observerte eksempler. Algoritmen må altså være i stand å generalisere, og finne løsninger på problemer den ikke har observert eksempler på tidligere. Viktige anvendelsene av maskinlæring er innen beslutningsstøttesystemer, der man skal ekstrahere kortfattede oversikter fra store mengder data (også kjent som data mining) stemmegjenkjenning, automatisk føring av kjøretøy, samt andre områder der anledningen til forprogrammering av maskinen er begrenset. Alle norske universitet, og enkelte høgskoler, tilbyr studier som inkluderer maskinlæring som tema. Maskinlæring som fag krever tverrfaglig kompetanse på flere områder, for eksempel sannsynlighetsteori, statistikk, mønstergjenkjenning, kognitiv vitenskap, data mining og informatikk.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="fr">L&#39;apprentissage automatique (machine learning en anglais), un des champs d&#39;étude de l&#39;intelligence artificielle, est la discipline scientifique concernée par le développement, l&#39;analyse et l&#39;implémentation de méthodes automatisables qui permettent à une machine (au sens large) d&#39;évoluer grâce à un processus d&#39;apprentissage, et ainsi de remplir des tâches qu&#39;il est difficile ou impossible de remplir par des moyens algorithmiques plus classiques. Des systèmes complexes peuvent être analysés, y compris pour des données associées à des valeurs symboliques ou un ensemble de modalités possibles sur un attribut numérique ou catégoriel. L&#39;analyse peut même concerner des données présentées sous forme de graphes ou d&#39;arbres, ou encore de courbes (par exemple, la courbe d&#39;évolution temporelle d&#39;une mesure ; on parle alors de données continues, par opposition aux données discrètes associées à des attributs-valeurs classiques). Le premier stade de l&#39;analyse est celui de la classification, qui vise à « étiqueter » chaque donnée en l&#39;associant à une classe. Différents systèmes d&#39;apprentissage existent, listés ci-dessous.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="it">L&#39;apprendimento automatico (noto in letteratura come Machine Learning) rappresenta una delle aree fondamentali dell&#39;intelligenza artificiale e si occupa della realizzazione di sistemi e algoritmi che si basano su osservazioni come dati per la sintesi di nuova conoscenza. L&#39;apprendimento può avvenire catturando caratteristiche di interesse provenienti da esempi, strutture dati o sensori, per analizzarle e valutarne le relazioni tra le variabili osservate.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="de">Maschinelles Lernen ist ein Oberbegriff für die „künstliche“ Generierung von Wissen aus Erfahrung: Ein künstliches System lernt aus Beispielen und kann nach Beendigung der Lernphase verallgemeinern. Das heißt, es lernt nicht einfach die Beispiele auswendig, sondern es „erkennt“ Gesetzmäßigkeiten in den Lerndaten. So kann das System auch unbekannte Daten beurteilen. Aus dem weiten Spektrum möglicher Anwendungen seien hier genannt automatisierte Diagnoseverfahren, Erkennung von Kreditkartenbetrug, Aktienmarktanalysen, Klassifikation von DNA-Sequenzen, Sprach- und Schrifterkennung und autonome Systeme. Das Thema ist eng verwandt mit „Knowledge Discovery in Databases“ und „Data-Mining“, bei dem es jedoch vorwiegend um das Finden von neuen Mustern und Gesetzmäßigkeiten geht. Viele Algorithmen können für beide Ziele verwendet werden, und insbesondere kann „Knowledge Discovery in Databases“ verwendet werden, um Lerndaten für „maschinelles Lernen“ zu produzieren oder vorzuverarbeiten, und Algorithmen aus dem maschinellen Lernen finden beim Data-Mining Anwendung.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="zh">机器学习是近20多年兴起的一门多领域交叉学科，涉及概率论、统计学、逼近论、凸分析、算法复杂度理论等多门学科。机器学习理论主要是设计和分析一些让计算机可以自动“学习”的算法。机器学习算法是一类从数据中自动分析获得规律，并利用规律对未知数据进行预测的算法。因为学习算法中涉及了大量的统计学理论，机器学习与统计推断学联系尤为密切，也被称为统计学习理论。算法设计方面，机器学习理论关注可以实现的，行之有效的学习算法。很多推论问题属于无程序可循难度，所以部分的机器学习研究是开发容易处理的近似算法。 机器学习已经有了十分广泛的应用，例如：数据挖掘、计算机视觉、自然语言处理、生物特征识别、搜索引擎、医学诊断、检测信用卡欺诈、证券市场分析、DNA序列测序、语音和手写识别、战略游戏和机器人运用。</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="cs">Strojové učení je podoblastí umělé inteligence, zabývající se algoritmy a technikami, které umožňují počítačovému systému &#39;učit se&#39;. Učením v daném kontextu rozumíme takovou změnu vnitřního stavu systému, která zefektivní schopnost přizpůsobení se změnám okolního prostředí. Strojové učení se značně prolíná s oblastmi statistiky a dobývaní znalostí a má široké uplatnění. Jeho techniky se využívají např. v biomedicínské informatice, rozlišení nelegálního užití kreditních karet, rozpoznávání řeči a psaného textu, či mnohé další.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ja">機械学習（きかいがくしゅう、Machine learning）とは、人工知能における研究課題の一つで、人間が自然に行っている学習能力と同様の機能をコンピュータで実現しようとする技術・手法のことである。 ある程度の数のサンプルデータ集合を対象に解析を行い、そのデータから有用な規則、ルール、知識表現、判断基準などを抽出する。なおデータ集合を解析するので統計学との関連が深い。 機械学習は検索エンジン、医療診断、スパムメールの検出、金融市場の予測、DNA配列の分類、音声認識や文字認識などのパターン認識、ゲーム戦略、ロボット、など幅広い分野で用いられている。応用分野の特性に応じて学習手法も適切に選択する必要があり、様々な手法が提案されている。</dbpedia-owl:abstract>
+    <ns6:wasDerivedFrom rdf:resource="http://en.wikipedia.org/wiki/Machine_learning?oldid=494804531" />
+    <dbpprop:hasPhotoCollection rdf:resource="http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Machine_learning" />
+    <foaf:isPrimaryTopicOf rdf:resource="http://en.wikipedia.org/wiki/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Shogun_(toolbox)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Orange_(software)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Roger_Jones_(physicist_and_entrepreneur)">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/GraphLab">
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Weka_(machine_learning)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Journal_of_Machine_Learning_Research">
+    <dbpprop:discipline rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:academicDiscipline rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Keel_(software)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Apache_Mahout">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/ML">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/David_J._C._MacKay">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mallet_(software_project)">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Osmar_R._Zaiane">
+    <dbpprop:fields rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Michael_Collins_(computational_linguist)">
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Feature_Selection_Toolbox">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Louis-Philippe_Morency">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Pierre_Baldi">
+    <dbpprop:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Scikit-learn">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Christopher_G._Atkeson">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Yasuo_Matsuyama">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Trevor_Hastie">
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mark_S._Cohen">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Vowpal_Wabbit">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Vasant_Dhar">
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Sargur_Srihari">
+    <dbpprop:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:knownFor rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Jianqing_Fan">
+    <dbpprop:fields rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Tom_M._Mitchell">
+    <dbpprop:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Mlpy">
+    <dbpprop:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+    <dbpedia-owl:genre rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Nir_Friedman">
+    <dbpedia-owl:field rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Machine_learning_algorithm">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Learning_algorithms">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Machine_Learning">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Statistical_learning">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://en.wikipedia.org/wiki/Machine_learning">
+    <foaf:primaryTopic rdf:resource="http://dbpedia.org/resource/Machine_learning" />
+  </rdf:Description>
+</rdf:RDF>

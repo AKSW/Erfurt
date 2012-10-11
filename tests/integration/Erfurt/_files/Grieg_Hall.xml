@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:dbpedia-owl="http://dbpedia.org/ontology/"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:georss="http://www.georss.org/georss/"
+	xmlns:dbpprop="http://dbpedia.org/property/"
+	xmlns:ns9="http://www.w3.org/ns/prov#" >
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Eurovision_Song_Contest_1986">
+    <dbpprop:venue rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Aske_(EP)">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grieg_Hall">
+    <rdf:type rdf:resource="http://dbpedia.org/class/yago/BuildingsAndStruCturesInBergen" />
+    <rdf:type rdf:resource="http://dbpedia.org/class/yago/ConcertHallsInNorway" />
+    <rdf:type rdf:resource="http://www.opengis.net/gml/_Feature" />
+    <owl:sameAs rdf:resource="http://es.dbpedia.org/resource/Grieg_Hall" />
+    <owl:sameAs rdf:resource="http://ru.dbpedia.org/resource/Grieghallen" />
+    <owl:sameAs rdf:resource="http://rdf.freebase.com/ns/m.0byx6q" />
+    <owl:sameAs rdf:resource="http://de.dbpedia.org/resource/Grieghalle" />
+    <owl:sameAs rdf:resource="http://it.dbpedia.org/resource/Grieghallen" />
+    <owl:sameAs rdf:resource="http://ja.dbpedia.org/resource/グリーグホール" />
+    <owl:sameAs rdf:resource="http://pl.dbpedia.org/resource/Grieghallen" />
+    <owl:sameAs rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+    <rdfs:label xml:lang="es">Grieg Hall</rdfs:label>
+    <rdfs:label xml:lang="pl">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="it">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="sv">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="en">Grieg Hall</rdfs:label>
+    <rdfs:label xml:lang="ja">グリーグホール</rdfs:label>
+    <rdfs:label xml:lang="nl">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="no">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="ru">Grieghallen</rdfs:label>
+    <rdfs:label xml:lang="de">Grieghalle</rdfs:label>
+    <rdfs:comment xml:lang="es">El Grieg Hall (inglés) o Grieghallen (noruego), traducible al español como Sala Grieg, es una sala de conciertos con un aforo de 1.500 localidades en Bergen, Noruega. Fue sede del Festival de Eurovisión en 1986. La sala lleva el nombre del compositor noruego nacido en Bergen Edvard Grieg, que fue director musical de la Orquesta Filarmónica de Bergen desde 1880 hasta 1882.</rdfs:comment>
+    <rdfs:comment xml:lang="sv">Grieghallen är ett konserthus i Bergen, ritat av dansken Knud Munk och invigt 1978. Det är uppkallat efter kompositören Edvard Grieg, och används också till opera-, balett- och teaterföreställningar samt till kongresser. Storsalen har 1 504 sittplatser och en scenyta på cirka 900 m², medan Peer Gynt-salen har 750 sittplatser. Grieghallen ägs av ett aktiebolag med Musikselskabet Harmonien, Bergens kommun och Festspelen i Bergen som aktieägare. I Grieghallen hölls Eurovision Song Contest 1986.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The Grieg Hall is a 1,500 seat concert hall in Bergen, Norway. It has been the home of the Bergen Philharmonic Orchestra since the hall&#39;s completion in 1978. It hosted the Eurovision Song Contest in 1986, and is the host of the annual Norwegian Brass Band Championship competition, which occurs in mid-winter. The hall is named after Bergen-born composer Edvard Grieg, who was music director of the Bergen Philharmonic Orchestra from 1880 until 1882.</rdfs:comment>
+    <rdfs:comment xml:lang="de">Die Grieghalle ist eine Konzerthalle mit 1.500 Sitzplätzen in Bergen. Sie ist, seit die Halle 1978 fertiggestellt wurde, der Probe- und Konzertsaal des Philharmonischen Orchesters in Bergen. In ihr wurde 1986 der Eurovision Song Contest ausgetragen, außerdem wird die jährlich im Winter stattfindende Norwegische-Blasinstrumenten-Meisterschaft dort ausgetragen.</rdfs:comment>
+    <rdfs:comment xml:lang="it">La Grieghallen è una sala di concerti da 1,500 posti a Bergen, in Norvegia. È stata la sede dell&#39;Orchestra filarmonica di Bergen fin dalla sua costruzione datata 1978. Ha ospitato l&#39;Eurovision Song Contest nel 1986, ed è la sede dell&#39;annuale competizione norvegese per ottoni, che ha luogo a metà inverno. la sala è intitolata al compositore Edvard Grieg nativo di Bergen, che fu il direttore musicale dell&#39;Orchestra filarmonica di Bergen dal 1880 al 1882.</rdfs:comment>
+    <rdfs:comment xml:lang="no">Grieghallen er en konserthall i Bergen, med en rekke konsert- og bankettsaler og måler 3500m². Griegsalen, med sine 1509 sitteplasser, er den største av disse. Det er til sammen 4468 sitteplasser i Grieghallen. Grieghallen ble ferdigstilt i 1978, og ble tegnet av den danske arkitekten Knud Munk. Konsertsalen er hjemmearena for Bergen filharmoniske orkester. Under Grieghallen er det et parkeringsanlegg med 420 parkeringsplasser.</rdfs:comment>
+    <rdfs:comment xml:lang="ru">Концертный зал Грига — концертрый зал на 1500 мест в Бергене, названный в честь норвежского композитора Эдварда Грига. Здание было спроектировано датским архитектором Кнудом Мунком, выигравшим конкурс на проект будущего концертного зала в 1965 году. С момента окончания строительства в 1978 году является домом для филармонического оркестра Бергена. Был местом проведения конкурса песни Евровидение в 1986 году. Также в зале ежегодно проводится Норвежский чемпионат духовых оркестров (англ.</rdfs:comment>
+    <rdfs:comment xml:lang="nl">Grieghallen is een concerthal in de Noorse stad Bergen. De hal is vernoemd naar de componist Edvard Grieg. In 1986 vond hier het Eurovisiesongfestival plaats. Grieghallen is de thuisbasis van Bergen Filharmoniske Orkester, het oudste symfonieorkest van Noorwegen. In de concerthal vindt een groot deel van de optredens van het jaarlijkse culturele festival Festspillene i Bergen (Bergen International Festival) plaats. Grieghallen is ook in gebruik als beurs- en conferentiecentrum.</rdfs:comment>
+    <rdfs:comment xml:lang="ja">グリーグホール (Grieghallen) はノルウェーのベルゲンにあるホール。客席は1500席ある。1978年のベルゲン国際芸術祭初日にこけら落とし。ベルゲン・フィルハーモニー管弦楽団の本拠地でもある。1986年のユーロビジョン・ソング・コンテストやノルウェーブラスバンド選手権の会場でもある。 名称でもあるグリーグはベルゲン出身の作曲家エドヴァルド・グリーグから由来されている。彼は1880年から1882年までベルゲンフィルの音楽監督を務めた。</rdfs:comment>
+    <rdfs:comment xml:lang="pl">Grieghallen - sala koncertowa w Bergen w Norwegii, licząca 1500 miejsc. Jej nazwa pochodzi od nazwiska norweskiego kompozytora Edvarda Griega. Od powstania w 1978 roku stanowi siedzibę Bergen Filharmoniske Orkester (pol. Orkiestra Filharmoniczna w Bergen). W Grieghallen znajduje się także studio nagraniowe (nor. Grieghallen Lydstudio) kojarzone głównie ze sceną muzyki blackmetalowej, a także osobą inżyniera dźwięku i producenta muzycznego Eirika &quot;Pyttena&quot; Hundvina. W studiu nagrywały m. in.</rdfs:comment>
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.grieghallen.no/" />
+    <dbpedia-owl:wikiPageExternalLink rdf:resource="http://www.grieghallen.no/?l=en" />
+    <foaf:depiction rdf:resource="http://upload.wikimedia.org/wikipedia/commons/6/63/Grieghallen.JPG" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:1978_establishments_in_Norway" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Modernist_architecture_in_Scandinavia" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Visitor_attractions_in_Bergen" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Concert_halls_in_Norway" />
+    <dcterms:subject rdf:resource="http://dbpedia.org/resource/Category:Buildings_and_structures_in_Bergen" />
+    <geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#float">60.3889</geo:lat>
+    <geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#float">5.32821</geo:long>
+    <dbpedia-owl:abstract xml:lang="en">The Grieg Hall is a 1,500 seat concert hall in Bergen, Norway. It has been the home of the Bergen Philharmonic Orchestra since the hall&#39;s completion in 1978. It hosted the Eurovision Song Contest in 1986, and is the host of the annual Norwegian Brass Band Championship competition, which occurs in mid-winter. The hall is named after Bergen-born composer Edvard Grieg, who was music director of the Bergen Philharmonic Orchestra from 1880 until 1882. The Grieg Hall recording studio is also famous within the black metal community, as several of the most important Norwegian black metal albums were recorded there, with Pytten as sound technician.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ja">グリーグホール (Grieghallen) はノルウェーのベルゲンにあるホール。客席は1500席ある。1978年のベルゲン国際芸術祭初日にこけら落とし。ベルゲン・フィルハーモニー管弦楽団の本拠地でもある。1986年のユーロビジョン・ソング・コンテストやノルウェーブラスバンド選手権の会場でもある。 名称でもあるグリーグはベルゲン出身の作曲家エドヴァルド・グリーグから由来されている。彼は1880年から1882年までベルゲンフィルの音楽監督を務めた。</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="nl">Grieghallen is een concerthal in de Noorse stad Bergen. De hal is vernoemd naar de componist Edvard Grieg. In 1986 vond hier het Eurovisiesongfestival plaats. Grieghallen is de thuisbasis van Bergen Filharmoniske Orkester, het oudste symfonieorkest van Noorwegen. In de concerthal vindt een groot deel van de optredens van het jaarlijkse culturele festival Festspillene i Bergen (Bergen International Festival) plaats. Grieghallen is ook in gebruik als beurs- en conferentiecentrum. De concerthal, ontworpen door de Deense architect Knud Munk, kwam gereed in 1978. Het gebouw omvat een oppervlakte van 3500 m en heeft in totaal 4468 zitplaatsen. De grootste concertzaal, Griegsalen, heeft 1509 zitplaatsen. Onder het gebouw is een ondergrondse parkeergarage met ruimte voor 420 auto&#39;s. De hal ligt aan Edvard Griegsplass, in de driehoek van de straten Nygårdsgaten, Strømgaten en Lars Hilles gate. Het gebouw maakt deel uit van het culturele district van Bergen, waartoe ook Bergen Kunstmuseum en Bergen Kunsthall behoren.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="es">El Grieg Hall (inglés) o Grieghallen (noruego), traducible al español como Sala Grieg, es una sala de conciertos con un aforo de 1.500 localidades en Bergen, Noruega. Fue sede del Festival de Eurovisión en 1986. La sala lleva el nombre del compositor noruego nacido en Bergen Edvard Grieg, que fue director musical de la Orquesta Filarmónica de Bergen desde 1880 hasta 1882. El Grieg Hall también es famoso por ser el estudio de grabación y comunidad del Black metal, ya que muchas bandas importantes como Burzum, Mayhem o Immortal grabaron allí sus primeros discos con la discografía Deathlike Silence Productions y con Pytten como técnico de sonido.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="de">Die Grieghalle ist eine Konzerthalle mit 1.500 Sitzplätzen in Bergen. Sie ist, seit die Halle 1978 fertiggestellt wurde, der Probe- und Konzertsaal des Philharmonischen Orchesters in Bergen. In ihr wurde 1986 der Eurovision Song Contest ausgetragen, außerdem wird die jährlich im Winter stattfindende Norwegische-Blasinstrumenten-Meisterschaft dort ausgetragen. Die Halle ist nach dem in Bergen geborenen Edvard Grieg benannt, der von 1880 bis 1882 musikalischer Leiter des Bergener Philharmonischen Orchesters war. Das Gebäude wurde 1978 mit dem norwegischen Architekturpreis Betongtavlen ausgezeichnet.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="no">Grieghallen er en konserthall i Bergen, med en rekke konsert- og bankettsaler og måler 3500m². Griegsalen, med sine 1509 sitteplasser, er den største av disse. Det er til sammen 4468 sitteplasser i Grieghallen. Grieghallen ble ferdigstilt i 1978, og ble tegnet av den danske arkitekten Knud Munk. Konsertsalen er hjemmearena for Bergen filharmoniske orkester. Under Grieghallen er det et parkeringsanlegg med 420 parkeringsplasser.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="ru">Концертный зал Грига — концертрый зал на 1500 мест в Бергене, названный в честь норвежского композитора Эдварда Грига. Здание было спроектировано датским архитектором Кнудом Мунком, выигравшим конкурс на проект будущего концертного зала в 1965 году. С момента окончания строительства в 1978 году является домом для филармонического оркестра Бергена. Был местом проведения конкурса песни Евровидение в 1986 году. Также в зале ежегодно проводится Норвежский чемпионат духовых оркестров (англ. &amp;#160;Norwegian Brass Band Championship). В 1978 году Grieghallen получил архитектурную премию Betongtavlen. Концертный зал также известен своей звукозаписывающей студией в среде поклонников блэк-метала. В ней был записан ряд значимых для жанра альбомов норвежских групп под руководством звукоинженера Эйрика Худвина.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="sv">Grieghallen är ett konserthus i Bergen, ritat av dansken Knud Munk och invigt 1978. Det är uppkallat efter kompositören Edvard Grieg, och används också till opera-, balett- och teaterföreställningar samt till kongresser. Storsalen har 1 504 sittplatser och en scenyta på cirka 900 m², medan Peer Gynt-salen har 750 sittplatser. Grieghallen ägs av ett aktiebolag med Musikselskabet Harmonien, Bergens kommun och Festspelen i Bergen som aktieägare. I Grieghallen hölls Eurovision Song Contest 1986.</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="pl">Grieghallen - sala koncertowa w Bergen w Norwegii, licząca 1500 miejsc. Jej nazwa pochodzi od nazwiska norweskiego kompozytora Edvarda Griega. Od powstania w 1978 roku stanowi siedzibę Bergen Filharmoniske Orkester (pol. Orkiestra Filharmoniczna w Bergen). W Grieghallen znajduje się także studio nagraniowe (nor. Grieghallen Lydstudio) kojarzone głównie ze sceną muzyki blackmetalowej, a także osobą inżyniera dźwięku i producenta muzycznego Eirika &quot;Pyttena&quot; Hundvina. W studiu nagrywały m. in. takie zespoły jak: Immortal, Mayhem, Burzum, Borknagar, Gorgoroth, Emperor, Old Funeral, Hades Almighty oraz Enslaved. Przypisy</dbpedia-owl:abstract>
+    <dbpedia-owl:abstract xml:lang="it">La Grieghallen è una sala di concerti da 1,500 posti a Bergen, in Norvegia. È stata la sede dell&#39;Orchestra filarmonica di Bergen fin dalla sua costruzione datata 1978. Ha ospitato l&#39;Eurovision Song Contest nel 1986, ed è la sede dell&#39;annuale competizione norvegese per ottoni, che ha luogo a metà inverno. la sala è intitolata al compositore Edvard Grieg nativo di Bergen, che fu il direttore musicale dell&#39;Orchestra filarmonica di Bergen dal 1880 al 1882. La sala venne anche stata usata per registrare alcuni tra i più importanti album black metal, norvegesi tra cui Mayhem, Emperor, Burzum e Immortal; la maggior parte di questi venne prodotta da Eirik Hundvin.</dbpedia-owl:abstract>
+    <georss:point xml:lang="en">60.38885833333333 5.328213888888889</georss:point>
+    <dbpedia-owl:thumbnail rdf:resource="http://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Grieghallen.JPG/200px-Grieghallen.JPG" />
+    <ns9:wasDerivedFrom rdf:resource="http://en.wikipedia.org/wiki/Grieg_Hall?oldid=490557237" />
+    <dbpprop:hasPhotoCollection rdf:resource="http://www4.wiwiss.fu-berlin.de/flickrwrappr/photos/Grieg_Hall" />
+    <foaf:isPrimaryTopicOf rdf:resource="http://en.wikipedia.org/wiki/Grieg_Hall" />
+    <geo:geometry rdf:datatype="http://www.openlinksw.com/schemas/virtrdf#Geometry">POINT(5.32821 60.3889)</geo:geometry>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/De_Mysteriis_Dom_Sathanas">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Det_som_engang_var">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Belus_(album)">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Hvis_lyset_tar_oss">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grieg_(disambiguation)">
+    <dbpedia-owl:wikiPageDisambiguates rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Burzum_(album)">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Battles_in_the_North">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Umskiptar">
+    <dbpedia-owl:recordedIn rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/resource/Grieghallen">
+    <dbpedia-owl:wikiPageRedirects rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://en.wikipedia.org/wiki/Grieg_Hall">
+    <foaf:primaryTopic rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://mpii.de/yago/resource/Grieg_Hall">
+    <owl:sameAs rdf:resource="http://dbpedia.org/resource/Grieg_Hall" />
+  </rdf:Description>
+</rdf:RDF>
