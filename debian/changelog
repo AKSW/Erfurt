@@ -1,3 +1,22 @@
+liberfurt-php (1.2) lod2; urgency=low
+
+  * fix OpenID normalization
+  * fix data fetching with redirects
+  * fix query cache string escaping
+  * fix broken history
+  * fix URI quoting in mysql
+  * add new mimetype for turtle
+  * make getStatementsDiff static
+  * fix some issues in MemoryModel
+  * fix default timezone warning
+  * fix getImportsClosure
+  * fix base URI for turtle file parser
+  * much more fixes
+  * add a lot of tests
+  * fixes for Virtuoso 6.1.5
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Thu, 11 Oct 2012 11:32:32 -0700
+
 liberfurt-php (1.1) lod2; urgency=low
 
   * virtuoso backend: fix for double query execution in _execSparql
