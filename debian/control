@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/AKSW/Erfurt
 
 Package: liberfurt-php
 Architecture: all
-Depends: libzend-framework-php, ${misc:Depends}
+Depends: zend-framework | zendframework, ${misc:Depends}
 Description: PHP5 / Zend based Semantic Web API for Social Semantic Software
  Features
   * RDF Parser / Serializer
