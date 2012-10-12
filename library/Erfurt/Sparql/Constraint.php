@@ -161,7 +161,7 @@ class Erfurt_Sparql_Constraint
                 } 
             }
         } else if ($tree['type'] === 'value') {
-            if ($tree['value'][0] === '?' || $tree['value'][0] === '$') {
+            if (strlen($tree['value']) && ($tree['value'][0] === '?' || $tree['value'][0] === '$')) {
                 $usedVars[] = $tree['value'];
             }
         } else {
