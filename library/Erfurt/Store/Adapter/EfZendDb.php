@@ -479,7 +479,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         if ($object !== null && strlen($object['value']) > $this->_getSchemaRefThreshold()) {
-            $object = substr($object['value'], 0, 128) . md5($object['value']);
+            $object['value'] = substr($object['value'], 0, 128) . md5($object['value']);
         }
 
         $whereString = '1';
