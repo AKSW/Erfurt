@@ -921,10 +921,10 @@ class Erfurt_Store
     {
         try {
             // Create it if it doesn't exist
-            $model = $store->getNewModel($modelIri, $useAc);
+            $model = $this->getNewModel($modelIri, $useAc);
         } catch (Erfurt_Store_Exception $e) {
             // Get it if it already exists
-            $model = $store->getModel($modelIri, $baseIri, $type, $useAc);
+            $model = $this->getModel($modelIri, $baseIri, $type, $useAc);
         }
 
         return $model;
