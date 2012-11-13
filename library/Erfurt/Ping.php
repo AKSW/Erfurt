@@ -44,7 +44,7 @@ class Erfurt_Ping
      *
      * @return integer An integer (fault) code
      */
-    public function ping($sourceUri, $targetUri)
+    public function receive ($sourceUri, $targetUri)
     {
         $this->_logInfo('Method ping was called.');
 
@@ -166,7 +166,7 @@ class Erfurt_Ping
         return 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
     }
 
-    protected function _addPingback($s, $p, $o)
+    protected function _addPingback ($s, $p, $o)
     {
         if ($this->_targetGraph === null) {
             return false;
@@ -174,7 +174,7 @@ class Erfurt_Ping
 
         $store = Erfurt_App::getInstance()->getStore();
 
-        $sql = 'INSERT INTO ow_pingback_pingbacks (source, target, relation) '
+        $sql = 'INSERT INTO ef_pingback_pingbacks (source, target, relation) '
             . 'VALUES ("' . $s . '", "' . $o . '", "' . $p . '")';
         $this->_query($sql);
 
@@ -204,7 +204,7 @@ class Erfurt_Ping
         return true;
     }
 
-    protected function _checkTargetExists($targetUri)
+    protected function _checkTargetExists ($targetUri)
     {
         if ($this->_targetGraph == null) {
             $event = new Erfurt_Event('onNeedsGraphForLinkedDataUri');
@@ -222,11 +222,11 @@ class Erfurt_Ping
         }
     }
 
-    function _deleteInvalidPingbacks($sourceUri, $targetUri, $foundPingbackTriples = array())
+    protected function _deleteInvalidPingbacks ($sourceUri, $targetUri, $foundPingbackTriples = array())
     {
         $store = Erfurt_App::getInstance()->getStore();
 
-        $sql = 'SELECT * FROM ow_pingback_pingbacks WHERE source="' . $sourceUri . '" AND target="' . $targetUri . '"';
+        $sql = 'SELECT * FROM ef_pingback_pingbacks WHERE source="' . $sourceUri . '" AND target="' . $targetUri . '"';
         $result = $this->_query($sql);
 
         $removed = false;
@@ -241,7 +241,7 @@ class Erfurt_Ping
                 }
 
                 if (!$found) {
-                    $sql = 'DELETE FROM ow_pingback_pingbacks WHERE id=' . $row['id'];
+                    $sql = 'DELETE FROM ef_pingback_pingbacks WHERE id=' . $row['id'];
                     $this->_query($sql);
 
                     $oSpec = array(
@@ -264,7 +264,7 @@ class Erfurt_Ping
         return $removed;
     }
 
-    protected function _determineInverseProperty($propertyUri)
+    protected function _determineInverseProperty ($propertyUri)
     {
         $client = Erfurt_App::getInstance()->getHttpClient(
             $propertyUri,
@@ -301,7 +301,7 @@ class Erfurt_Ping
         }
     }
 
-    private function _getResourceFromWrapper($sourceUri, $targetUri, $wrapperName = 'Linkeddata')
+    private function _getResourceFromWrapper ($sourceUri, $targetUri, $wrapperName = 'Linkeddata')
     {
         $r = new Erfurt_Rdf_Resource($sourceUri);
 
@@ -329,7 +329,7 @@ class Erfurt_Ping
         return $newStatements;
     }
 
-    protected function _logError($msg)
+    protected function _logError ($msg)
     {
         $logger = Erfurt_App::getInstance()->getLog();
 
@@ -340,7 +340,7 @@ class Erfurt_Ping
         }
     }
 
-    protected function _logInfo($msg)
+    protected function _logInfo ($msg)
     {
         $logger = Erfurt_App::getInstance()->getLog();
 
@@ -351,9 +351,9 @@ class Erfurt_Ping
         }
     }
 
-    protected function _pingbackExists($s, $p, $o)
+    protected function _pingbackExists ($s, $p, $o)
     {
-        $sql = 'SELECT * FROM ow_pingback_pingbacks '
+        $sql = 'SELECT * FROM ef_pingback_pingbacks '
             . 'WHERE source="' . $s . '" AND target="' . $o . '" AND relation="' . $p . '" '
             . 'LIMIT 1';
         $result = $this->_query($sql);
@@ -364,14 +364,14 @@ class Erfurt_Ping
         return false;
     }
 
-    private function _checkDb()
+    private function _checkDb ()
     {
         if ($this->_dbChecked) {
             return;
         }
 
         $store = Erfurt_App::getInstance()->getStore();
-        $sql = 'SELECT * FROM ow_pingback_pingbacks LIMIT 1';
+        $sql = 'SELECT * FROM ef_pingback_pingbacks LIMIT 1';
 
         try {
             $result = $store->sqlQuery($sql);
@@ -382,11 +382,11 @@ class Erfurt_Ping
         $this->_dbChecked = true;
     }
 
-    private function _createTable()
+    private function _createTable ()
     {
         $store = Erfurt_App::getInstance()->getStore();
 
-        $sql = 'CREATE TABLE IF NOT EXISTS ow_pingback_pingbacks (
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_pingback_pingbacks (
             id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             source    VARCHAR(255) COLLATE ascii_bin NOT NULL,
             target    VARCHAR(255) COLLATE ascii_bin NOT NULL,
@@ -396,7 +396,7 @@ class Erfurt_Ping
         return $this->_query($sql, false);
     }
 
-    protected function _query($sql, $withCheck = true)
+    protected function _query ($sql, $withCheck = true)
     {
         if ($withCheck) {
             $this->_checkDb();
