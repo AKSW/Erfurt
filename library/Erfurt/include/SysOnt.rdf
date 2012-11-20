@@ -294,5 +294,17 @@
     <rdfs:comment>Rollback changes on statements to a past version (needs Versioning)</rdfs:comment>
   </Action>
 
+  <rdf:Description rdf:about="&SysOnt;ExtensionConfiguration" rdfs:label="Extension Configuration">
+    <rdfs:comment>Enable, disable as well as configure extensions</rdfs:comment>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;Debug" rdfs:label="Debug">
+    <rdfs:comment>Allow access to debug information via the user interface</rdfs:comment>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;ModelExport" rdfs:label="Model Export">
+    <rdfs:comment>Allow to export complete knowledge bases</rdfs:comment>
+  </rdf:Description>
+
 </rdf:RDF>
 
