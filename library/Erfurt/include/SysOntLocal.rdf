@@ -50,6 +50,7 @@
     <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
     <sysont:grantAccess rdf:resource="&SysOnt;Login"/>
     <sysont:grantAccess rdf:resource="&SysOnt;Rollback"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;ModelExport"/>
     <sysont:denyModelView rdf:resource="&LocalConfig;"/>
     <sysont:denyModelView rdf:resource="&SysOnt;"/>
     <sysont:denyModelEdit rdf:resource="&SysBase;"/>
@@ -60,6 +61,7 @@
 
   <rdf:Description rdf:about="&SysOnt;Anonymous">
     <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;ModelExport"/>
     <sysont:denyAccess rdf:resource="&SysOnt;Login"/>
     <sysont:denyAccess rdf:resource="&SysOnt;Rollback"/>
     <sysont:denyModelView rdf:resource="&LocalConfig;"/>

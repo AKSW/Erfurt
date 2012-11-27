@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
  * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
@@ -18,7 +18,7 @@
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @license http://www.gnu.org/licenses/lgpl.html LGPL
  */
-class Erfurt_Sparql_Constraint 
+class Erfurt_Sparql_Constraint
 {
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
@@ -29,22 +29,22 @@ class Erfurt_Sparql_Constraint
      * 
      * @var string
      */
-    protected $expression;
+    protected $_expression;
 
     /**
      * True if it is an outer filter, false if not.
      * 
      * @var boolean
      */
-    protected $outer;
+    protected $_outer;
 
     /**
      * The expression tree
      *
      * @var array
      */
-    protected $tree = null;
-    
+    protected $_tree = null;
+
     /**
      * Contains all variables that are used in the constraint expression (recursivly).
      * This array is calculated once, if the tree is set in order to avoid multiple calculation.^
@@ -52,7 +52,7 @@ class Erfurt_Sparql_Constraint
      * @var array
      */
     protected $_usedVars = null;
-    
+
     protected $_tokens = null;
 
     // ------------------------------------------------------------------------
@@ -67,7 +67,7 @@ class Erfurt_Sparql_Constraint
      */
     public function addExpression($exp)
     {
-        $this->expression = $exp;
+        $this->_expression = $exp;
     }
 
     /**
@@ -77,23 +77,23 @@ class Erfurt_Sparql_Constraint
      */
     public function getExpression()
     {
-        return $this->expression;
+        return $this->_expression;
     }
-    
+
     public function getTree()
     {
-        return $this->tree;
+        return $this->_tree;
     }
 
     public function getUsedVars()
     {
         if (null === $this->_usedVars) {
-            $this->_usedVars = array_unique($this->_resolveUsedVarsRecursive($this->tree));
+            $this->_usedVars = array_unique($this->_resolveUsedVarsRecursive($this->_tree));
         }
-        
+
         return $this->_usedVars;
     }
-    
+
     /**
      * Returns true if this constraint is an outer filter- false if not.
      *
@@ -101,7 +101,7 @@ class Erfurt_Sparql_Constraint
      */
     public function isOuterFilter()
     {
-        return $this->outer;
+        return $this->_outer;
     }
 
     /**
@@ -113,65 +113,66 @@ class Erfurt_Sparql_Constraint
      */
     public function setOuterFilter($boolean)
     {
-        $this->outer = $boolean;
+        $this->_outer = $boolean;
     }
 
     public function setTree($tree)
     {
-        $this->tree = $tree;
-        
+        $this->_tree = $tree;
+
         // If the tree is set or reset, the used variables need to be resolved again.
         $this->_usedVars = null;
     }
-    
+
     public function parse()
     {
-        $this->_tokens = Erfurt_Sparql_Parser::tokenize($this->expression);
-        
+        $this->_tokens = Erfurt_Sparql_Parser::tokenize($this->_expression);
+
         $this->setOuterFilter(true);
         $this->setTree($this->_parseConstraintTree());
-        
+
         $this->_tokens = null;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Protected methods --------------------------------------------------
-    // ------------------------------------------------------------------------    
-    
-    protected function _resolveUsedVarsRecursive($tree) 
+    // ------------------------------------------------------------------------
+
+    protected function _resolveUsedVarsRecursive($tree)
     {
         $usedVars = array();
-            
+
         if ($tree['type'] === 'function') {
             foreach ($tree['parameter'] as $paramArray) {
                 if ($paramArray['type'] === 'value') {
-                    if (is_string($paramArray['value']) && 
-                            ($paramArray['value'][0] === '?' || $paramArray['value'][0] === '$')) {
-                        
+                    if (
+                        is_string($paramArray['value']) &&
+                        ($paramArray['value'][0] === '?' || $paramArray['value'][0] === '$')
+                    ) {
                         $usedVars[] = $paramArray['value'];
                     }
                 } else if ($paramArray['type'] === 'function') {
                     foreach ($paramArray['parameter'] as $p) {
                         if (is_string($p['value']) &&
                                 ($p['value'][0] === '?' || $p['value'][0] === '$')) {
-                            
+
                             $usedVars[] = $p['value'];
                         }
                     }
-                } 
+                }
             }
         } else if ($tree['type'] === 'value') {
-            if ($tree['value'][0] === '?' || $tree['value'][0] === '$') {
+            if (strlen($tree['value']) && ($tree['value'][0] === '?' || $tree['value'][0] === '$')) {
                 $usedVars[] = $tree['value'];
             }
         } else {
             $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand1']));
-            $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand2']));    
+            $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand2']));
         }
-        
+
         return $usedVars;
     }
-    
+
     protected function _parseConstraintTree($nLevel = 0, $bParameter = false)
     {
         $tree       = array();
@@ -232,7 +233,7 @@ class Erfurt_Sparql_Constraint
                         $nLevel + 1,
                         $bFunc1 || $bFunc2
                     );
-                    
+
                     if ($bFunc1) {
                         $tree['type'] = 'function';
                         $tree['name'] = $part[0]['value'];
@@ -251,7 +252,7 @@ class Erfurt_Sparql_Constraint
                         unset($tree['operand2']['quoted']);
                         $part = array();
                     }
-                    
+
                     if (current($this->_tokens) === ')') {
                         if (substr(next($this->_tokens), 0, 2) === '_:') {
                             // filter ends here
@@ -261,7 +262,7 @@ class Erfurt_Sparql_Constraint
                             prev($this->_tokens);
                         }
                     }
-                    
+
                     continue 2;
                     break;
                 case ' ':
@@ -282,7 +283,7 @@ class Erfurt_Sparql_Constraint
                         $part = array($tree);
                         $tree = array();
                     }
-                    
+
                     $tree['type'] = 'equation';
                     $tree['level'] = $nLevel;
                     $tree['operator'] = $tok;
@@ -295,7 +296,8 @@ class Erfurt_Sparql_Constraint
                     if ($tree != array()) {
                         require_once 'Erfurt/Sparql/ParserException.php';
                         throw new Erfurt_Sparql_ParserException(
-                            'Unexpected "!" negation in constraint.', -1, current($this->_tokens));
+                            'Unexpected "!" negation in constraint.', -1, current($this->_tokens)
+                        );
                     }
                     $tree['negated'] = true;
                     continue 2;
@@ -320,9 +322,13 @@ class Erfurt_Sparql_Constraint
                 if (!$parens && $nLevel === 0) {
                     // Variables need parenthesizes first
                     require_once 'Erfurt/Sparql/ParserException.php';
-                    throw new Erfurt_Sparql_ParserException('FILTER expressions that start with a variable need parenthesizes.', -1, current($this->_tokens));
+                    throw new Erfurt_Sparql_ParserException(
+                        'FILTER expressions that start with a variable need parenthesizes.',
+                        -1,
+                        current($this->_tokens)
+                    );
                 }
-                
+
                 $part[] = array(
                     'type'      => 'value',
                     'value'     => $tok,
@@ -331,8 +337,9 @@ class Erfurt_Sparql_Constraint
             } else if (substr($tok, 0, 2) === '_:') {
                 // syntactic blank nodes not allowed in filter
                 require_once 'Erfurt/Sparql/ParserException.php';
-                throw new Erfurt_Sparql_ParserException('Syntactic Blanknodes not allowed in FILTER.', -1,
-                                current($this->_tokens));
+                throw new Erfurt_Sparql_ParserException(
+                    'Syntactic Blanknodes not allowed in FILTER.', -1, current($this->_tokens)
+                );
             } else if (substr($tok, 0, 2) === '^^') {
                 $part[count($part) - 1]['datatype'] = $this->_query->getFullUri(substr($tok, 2));
             } else if ($tok[0] === '@') {
@@ -371,7 +378,7 @@ class Erfurt_Sparql_Constraint
                 $part = array();
             }
         }
-        
+
         if (!isset($tree['type']) && $bParameter) {
             return $part;
         } else if (isset($tree['type']) && $tree['type'] === 'equation'
@@ -385,7 +392,7 @@ class Erfurt_Sparql_Constraint
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
         }
-        
+
         if (!isset($tree['type']) && isset($part[0])) {
             if (isset($tree['negated'])) {
                 $part[0]['negated'] = true;
@@ -395,13 +402,13 @@ class Erfurt_Sparql_Constraint
 
         return $tree;
     }
-    
+
     protected function _varCheck($token)
     {
         if (isset($token[0]) && ($token{0} == '$' || $token{0} == '?')) {
             return true;
         }
-        
+
         return false;
     }
 }

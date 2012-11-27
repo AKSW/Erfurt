@@ -62,7 +62,7 @@ class Erfurt_Store
      * @var int
      */
     const MODEL_TYPE_OWL = 502;
-    
+
     const RESULTFORMAT           = 'result_format';
     const RESULTFORMAT_PLAIN     = 'plain';
     const RESULTFORMAT_XML       = 'xml';
@@ -275,11 +275,11 @@ class Erfurt_Store
     {
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
-            $logger->info('Store: adding multiple statements: ' . print_r($statementsArray, true));
+            $logger->info('Store: adding multiple statements: ' . var_export($statementsArray, true));
         }
 
         // check whether model is available
-        if (!$this->isModelAvailable($graphUri, $useAc)) {            
+        if (!$this->isModelAvailable($graphUri, $useAc)) {
             throw new Erfurt_Store_Exception('Model '.$graphUri.' is not available.');
         }
 
@@ -567,7 +567,6 @@ class Erfurt_Store
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithModelIri($modelIri);
 
-
         // remove any statements about deleted model from SysOnt
         if (Erfurt_App::getInstance()->getAcModel() !== false) {
             $acModelIri = Erfurt_App::getInstance()->getAcModel()->getModelIri();
@@ -743,7 +742,7 @@ class Erfurt_Store
         if (array_key_exists($cacheId, $this->_importsClosure)) {
             return $this->_importsClosure[$cacheId];
         }
-        
+
         $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
         if ($useAC) {
             $newImportsClosure = array();
@@ -754,7 +753,7 @@ class Erfurt_Store
             }
             $importsClosure = $newImportsClosure;
         }
-        
+
         $this->_importsClosure[$cacheId] = $importsClosure;
         return $importsClosure;
     }
@@ -922,10 +921,10 @@ class Erfurt_Store
     {
         try {
             // Create it if it doesn't exist
-            $model = $store->getNewModel($modelIri, $useAc);
+            $model = $this->getNewModel($modelIri, $useAc);
         } catch (Erfurt_Store_Exception $e) {
             // Get it if it already exists
-            $model = $store->getModel($modelIri, $baseIri, $type, $useAc);
+            $model = $this->getModel($modelIri, $baseIri, $type, $useAc);
         }
 
         return $model;
@@ -1137,13 +1136,13 @@ class Erfurt_Store
     {
         return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
-    
+
     public function isInSyntaxSupported()
     {
         if (method_exists($this->_backendAdapter, 'isInSyntaxSupported')) {
             return $this->_backendAdapter->isInSyntaxSupported();
         }
-        
+
         return false;
     }
 
@@ -1193,9 +1192,17 @@ class Erfurt_Store
             }
         }
     }
-    
-    function toStr($a){$s=''; foreach($a as $aa){$s.=' '.$aa['uri'];} return $s;}
-    
+
+    function toStr ($a)
+    {
+        $s='';
+        foreach ($a as $aa) {
+            $s.=' '.$aa['uri'];
+        }
+
+        return $s;
+    }
+
     /**
      * check and manipulate the declared FROMs according to the access control
      */
@@ -1211,7 +1218,7 @@ class Erfurt_Store
              //dont make these changes global
             $queryObject = clone $queryObject;
             //bring triples etc. to canonical order
-            $queryObject->optimize(); 
+            $queryObject->optimize();
         }
 
         $defaultOptions = array(
@@ -1220,8 +1227,8 @@ class Erfurt_Store
             Erfurt_Store::USE_OWL_IMPORTS        => true,
             Erfurt_Store::USE_ADDITIONAL_IMPORTS => true
         );
-        
-        if(!is_array($options)){
+
+        if (!is_array($options)) {
             $options = array();
         }
         $options = array_merge($defaultOptions, $options);
@@ -1243,11 +1250,11 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             return $queryObject;
         }
 */
-        
+
         $logger = $this->_getQueryLogger();
-        
+
         $noBindings = false;
-        
+
         //get available models (readable)
         $available = array();
         if ($options[Erfurt_Store::USE_AC] === true) {
@@ -1265,7 +1272,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 $available[] = array('uri' => $key, 'named' => false);
             }
         }
-        $logger->debug('AC: available models '.$this->toStr( $available));
+        $logger->debug('AC: available models ' . $this->toStr($available));
 
         // examine froms (for access control and imports) in 5 steps
         // 1. extract froms for easier handling
@@ -1283,18 +1290,20 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 $froms[] = array('uri' => $graphClause, 'named' => true);
             }
         }
-        $logger->debug('AC: requested FROMs'.$this->toStr( $froms));
+        $logger->debug('AC: requested FROMs' . $this->toStr($froms));
 
         // 2. no froms in query -> froms = availableModels
         if (empty($froms)) {
             $logger->debug('AC: no requested FROM -> take all available: '.$this->toStr($available));
             $froms = $available;
         }
-        
+
         // 3. filter froms by availability and existence - if filtering deletes all -> give empty result back
         if ($options[Erfurt_Store::USE_AC] === true) {
             $froms = $this->_maskModelList($froms, $available);
-            $logger->debug('AC: after filtering (read-rights and existence): '.$this->toStr( $froms));
+            $logger->debug(
+                'AC: after filtering (read-rights and existence): ' . $this->toStr($froms)
+            );
 
             if (empty($froms)) {
                 $logger->debug('AC:  all disallowed - empty result');
@@ -1311,7 +1320,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     $options[Erfurt_Store::USE_AC]
                 );
 
-                $logger->debug('AC:  import '.$from['uri'].' -> '.(empty($importsClosure)?'none':implode(' ', $importsClosure)));
+                $logger->debug(
+                    'AC:  import ' . $from['uri'] . ' -> ' .
+                    (empty($importsClosure) ? 'none' : implode(' ', $importsClosure))
+                );
 
                 foreach ($importsClosure as $importedGraphUri) {
                     $addCandidate = array('uri' => $importedGraphUri, 'named' => false);
@@ -1322,7 +1334,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 }
             }
         }
-        $logger->debug('AC:  after imports: '.$this->toStr( $froms));
+        $logger->debug('AC:  after imports: ' . $this->toStr($froms));
 
         // 5. put froms back
         if ($queryObject instanceof Erfurt_Sparql_Query2) {
@@ -1342,8 +1354,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         }
 
-
-
         // if there were froms and all got deleted due to access controll - give back empty result set
         // this is achieved by replacing the where-part with an unsatisfiable one
         // i think this is efficient because otherwise we would have to deal with result formating und variables
@@ -1357,7 +1367,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 $queryObject->setWhere($ggp);
             }
         }
-        
+
         $replacements = 0;
         $queryString = str_replace(
             $this->_bnodePrefix,
@@ -1365,7 +1375,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             (string)$queryObject,
             $replacements
         );
-        
+
         return $queryString;
     }
 
@@ -1410,7 +1420,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         $logger->debug('query in: '.(string)$queryObject);
         $queryString = $this->_prepareQuery($queryObject, $options);
         //dont use the query object afterwards anymore - only the string
-        
+
         //querying SparqlEngine or retrieving Result from QueryCache
         $resultFormat = $options[Erfurt_Store::RESULTFORMAT];
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -1449,7 +1459,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             $duration = microtime(true) - $startTime;
             if (defined('_EFDEBUG')) {
                 $isSlow = true;
-                
+
                 if ($duration > 1) {
                     $slow = ' WARNING SLOW ';
                     $isSlow = true;
@@ -1466,26 +1476,26 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                             if (isset($info['class'])) {
                                 $class = $info['class'];
                             }
-                            
+
                             $function = 'UNKNOWN_FUNCTION';
                             if (isset($info['function'])) {
                                 $function = $info['function'];
                             }
-                            
-                            $additionalInfo .= $class . '@' . $function 
-                                            . ':' . $info['line'] . PHP_EOL;
+
+                            $additionalInfo .= $class . '@' . $function . ':' . $info['line'] .
+                                               PHP_EOL;
                         }
                     }
-                        
+
                     $q = $queryString;
                     $q = str_replace(PHP_EOL, ' ', $q);
-                        
+
                     $logger->debug(
                         'SPARQL *****************' . round((1000 * $duration), 2) .
                         ' msec ' . $slow . PHP_EOL . $q . PHP_EOL . $additionalInfo
                     );
                 }
-                
+
             } else {
                 $logger->debug('cached');
             }
@@ -1757,7 +1767,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param
      * makes it easy to disable access control for internal usage.

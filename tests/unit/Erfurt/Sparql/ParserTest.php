@@ -27,6 +27,36 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
         $this->assertEquals($tokens, Erfurt_Sparql_Parser::tokenize($tokenString));
     }
 
+    public function testTokenizeFilter()
+    {
+        $tokensA = array(
+            'WHERE', '{', '?a', 'p1:p', '?b', ',', '?c', '.', 'FILTER', "(", "xsd:dateTime", '(',
+            '?a', ')', '=', 'xsd:dateTime', '(', '"', '1978-01-08T00:00:00Z', '"', ')', ')', '.',
+            '}'
+        );
+
+        $tokensB = array(
+            'WHERE', '{', '?a', 'p1:p', '?b', ',', '?c', '.', 'FILTER', "(", "xsd:dateTime", '(',
+            '?a', ')', '<=', 'xsd:dateTime', '(', '"', '1978-01-08T00:00:00Z', '"', ')', ')', '.',
+             '}'
+        );
+
+        $queryStringA = '
+            WHERE {
+                ?a p1:p ?b, ?c.
+                FILTER (xsd:dateTime(?a) = xsd:dateTime("1978-01-08T00:00:00Z")).
+            }';
+
+        $queryStringB = '
+            WHERE {
+                ?a p1:p ?b, ?c.
+                FILTER (xsd:dateTime(?a) <= xsd:dateTime("1978-01-08T00:00:00Z")).
+            }';
+
+        $this->assertEquals($tokensA, Erfurt_Sparql_Parser::tokenize($queryStringA));
+        $this->assertEquals($tokensB, Erfurt_Sparql_Parser::tokenize($queryStringB));
+    }
+
     public function testUncomment()
     {
         $queryString = '# bla
