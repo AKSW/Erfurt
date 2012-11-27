@@ -1,3 +1,17 @@
+liberfurt-php (1.3) lod2; urgency=low
+
+  * config ontology: add ModelExport, Debug and ExtensionConfiguration actions
+  * some refactoring of Ping class
+  * add Ping class to Erfurt
+  * fix reference in getModelOrCreate
+  * apply coding standarts to Store.php
+  * Remove debug output commited by mistake
+  * Add test Sparql_Parser Test for Tokenize Filters
+  * coding standard fixes for Constraint.php
+  * Fix query for empty string in filter
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Tue, 27 Nov 2012 13:39:20 +0100
+
 liberfurt-php (1.2) lod2; urgency=low
 
   * fix OpenID normalization
