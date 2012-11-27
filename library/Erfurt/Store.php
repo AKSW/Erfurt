@@ -1783,7 +1783,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
         if ($useAc === false) {
             $logger = $this->_getErfurtLogger();
-            $logger->warn("Store.php->_checkAc: Doing something without Access Controll!!!");
+            $logger->debug("Store.php->_checkAc: Doing something without Access Controll!!!");
             $logger->debug("Store.php->_checkAc: ModelIri: " . $modelIri . " accessType: " . $accessType);
             return true;
         } else {
