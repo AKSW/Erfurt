@@ -31,6 +31,8 @@ class Erfurt_Ac_Default
      * @var Erfurt_Rdf_Model
      */
     private $_acModel = null;
+
+    private $_acModelUri = null;
     
     /**
      * Contains the action configuration from the configurations (both ini and ac model).
@@ -51,6 +53,8 @@ class Erfurt_Ac_Default
     private $_config = null;
     
     private $_isInit = false;
+
+    private $_store = null;
     
     /**
      * Contains the configured ac concept uris.
@@ -130,7 +134,7 @@ class Erfurt_Ac_Default
                       }'
                   );
             
-            $result = $this->_sparql($this->_acModel, $query);
+            $result = $this->_sparql($this->_acModelUri, $query);
             if ($result) {
                 foreach ($result as $row) {
                     $s = $row['s'];
@@ -342,6 +346,7 @@ class Erfurt_Ac_Default
         } else {
             // create action instance
             // array for new statements (an action instance pus label)
+            /*
             $actionStmt = array(
                 $actionUri => array ( 
                     EF_RDF_TYPE => array ( 
@@ -355,6 +360,7 @@ class Erfurt_Ac_Default
             
             $store = Erfurt_App::getInstance()->getStore();
             $store->addMultipleStatements($this->_uris['acModelUri'], $actionStmt, false);
+            */
             
             return false;
         }
@@ -474,7 +480,7 @@ class Erfurt_Ac_Default
 // TODO set the right cache tags, such that cache is invalidated!!!
         $store = Erfurt_App::getInstance()->getStore();
         $store->addStatement(
-            $this->_acModel->getModelUri(), 
+            $this->_acModelUri,
             $user->getUri(), 
             $prop, 
             array('type' => 'uri', 'value' => $modelUri), 
@@ -538,7 +544,7 @@ class Erfurt_Ac_Default
                             }'
                         ); 
             
-            if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
+            if ($result = $this->_sparql($this->_acModelUri, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
             }
             
@@ -554,7 +560,7 @@ class Erfurt_Ac_Default
                             }'
                         );
 
-            if ($result = $this->_sparql($this->_acModel, $sparqlQuery)) {
+            if ($result = $this->_sparql($this->_acModelUri, $sparqlQuery)) {
                 $this->_filterAccess($result, $userRights);
             }
           
@@ -672,11 +678,13 @@ class Erfurt_Ac_Default
         $this->_auth   = $app->getAuth();
         
         // access control informations
-        $this->_acModel = $app->getAcModel();
+        //$this->_acModel = $app->getAcModel();
+        $this->_store = $app->getStore();
+        $this->_acModelUri = $app->getAcModelUri();
         
         // get custom uri configuration
         $this->_uris['acBaseUri']   = $this->_config->ac->baseUri;
-        $this->_uris['acModelUri'] = $this->_acModel->getModelUri();
+        $this->_uris['acModelUri'] = $this->_acModelUri;
         $this->_uris['anonymousUserUri']   = $this->_config->ac->user->anonymousUser;
         $this->_uris['superUserUri']       = $this->_config->ac->user->superAdmin;
         $this->_uris['propAnyModel']       = $this->_config->ac->models->anyModel;
@@ -701,10 +709,10 @@ class Erfurt_Ac_Default
      * @param Erfurt_Sparql_SimpleQuery The SPARQL query.
      * @return array Returns an array containig the result.
      */
-    private function _sparql($model, $sparqlQuery) 
+    private function _sparql($modelUri, $sparqlQuery)
     {
-        $sparqlQuery->addFrom($model->getModelUri());
-        $result = $model->getStore()->sparqlQuery($sparqlQuery, array(Erfurt_Store::USE_AC => false));
+        $sparqlQuery->addFrom($modelUri);
+        $result = $this->_store->sparqlQuery($sparqlQuery, array(Erfurt_Store::USE_AC => false));
         
         return $result;
     }
