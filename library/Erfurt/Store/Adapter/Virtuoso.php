@@ -1236,7 +1236,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
 
             // add row to result array
-            array_push($resultArray, $resultRowNamed);
+            $resultArray[] = $resultRowNamed;
         }
 
         return $resultArray;
