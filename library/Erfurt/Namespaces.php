@@ -240,9 +240,9 @@ class Erfurt_Namespaces
      */
     public function getNamespacesForGraph($graph)
     {
-        $graph = (string)$graph;
+        $graphUri = (string)$graph;
 
-        if (!array_key_exists($graph, $this->_namespaces)) {
+        if (!array_key_exists($graphUri, $this->_namespaces)) {
             $model = $this->getModel($graph);
             $graphNamespaces = array();
 
@@ -262,10 +262,10 @@ class Erfurt_Namespaces
             }
 
             // add to global store
-            $this->_namespaces[$graph] = $graphNamespaces;
+            $this->_namespaces[$graphUri] = $graphNamespaces;
         }
 
-        return $this->_namespaces[$graph];
+        return $this->_namespaces[$graphUri];
     }
 
     /**
