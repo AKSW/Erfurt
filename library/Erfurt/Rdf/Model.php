@@ -656,4 +656,52 @@ class Erfurt_Rdf_Model
     {
         return $this->_namespaces->hasNamespaceByPrefix($this->getModelUri(), $prefix);
     }
+    
+    /**
+     * Questioning the store about the given model. Will return an array with the following information:
+     * - label
+     * - shortdesc
+     * - description
+     * - creator
+     * - revision
+     * - license
+     * 
+     * @return array Array containing general information about the model
+     */
+    public function getMetaInformation () 
+    {
+        // ask the store about certain information about the model
+        $modelInfo = Erfurt_Sparql_ResultHelper::sparqlQueryResultToAssocArray ( $this->sparqlQuery (
+            'PREFIX dc: <http://purl.org/dc/elements/1.1/>
+            PREFIX doap: <http://usefulinc.com/ns/doap#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            SELECT ?s ?p ?o
+            WHERE {
+              ?s ?p ?o.
+              <'. $this->_graphUri .'> ?p ?o.
+              { ?s rdfs:label ?o. } 
+              UNION
+              { ?s doap:shortdesc ?o. } 
+              UNION
+              { ?s dc:description ?o. } 
+              UNION
+              { ?s dc:creator ?o. } 
+              UNION
+              { ?s doap:revision ?o. } 
+              UNION
+              { ?s doap:license ?o. } 
+            }'
+        ), true );
+        
+        // set values from $modelInfo
+        $modelInfo ['label']        = $modelInfo [$this->_graphUri]['rdfs:label'][0];
+        $modelInfo ['shortdesc']    = $modelInfo [$this->_graphUri]['doap:shortdesc'][0];
+        $modelInfo ['description']  = $modelInfo [$this->_graphUri]['doap:shortdesc'][0];
+        $modelInfo ['creator']      = $modelInfo [$this->_graphUri]['dc:creator'][0];
+        $modelInfo ['revision']     = $modelInfo [$this->_graphUri]['doap:revision'][0];
+        $modelInfo ['license']      = $modelInfo [$this->_graphUri]['doap:license'][0];
+        unset ($modelInfo [$this->_graphUri]);
+        
+        return $modelInfo;
+    }
 }
