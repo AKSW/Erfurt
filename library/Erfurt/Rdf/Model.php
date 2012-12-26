@@ -640,8 +640,9 @@ class Erfurt_Rdf_Model
     }
 
     /**
-     * check if a namespace prefix is registered and returns true or false
+     * check if a namespace prefix is registered and return the namespace uri
      * @param $prefix
+     * @throws Erfurt_Namespace_Exception if the namespace is not registered
      */
     public function getNamespaceByPrefix($prefix)
     {
@@ -649,7 +650,7 @@ class Erfurt_Rdf_Model
     }
 
     /**
-     * check if a namespace prefix is registered and return the namespace uri
+     * check if a namespace prefix is registered and returns true or false
      * @param $prefix
      */
     public function hasNamespaceByPrefix($prefix)
