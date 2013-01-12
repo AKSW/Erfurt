@@ -13,6 +13,7 @@
  * @author   Sebastian Tramp <mail@sebastian.tramp.name>
  * @author   Jonas Brekle <jonas.brekle@gmail.com>
  * @author   Natanael Arndt <arndtn@gmail.com>
+ * @author   Norman Radtke <norman.radtke@gmail.com>
  */
 
 class Erfurt_Ping
@@ -21,9 +22,12 @@ class Erfurt_Ping
     protected $_sourceRdf = null;
     private $_dbChecked = false;
     private $_options = array();
+    private $_config = null;
 
     public function __construct ($options = array())
     {
+        $this->_config = Erfurt_App::getInstance()->getConfig();
+
         if (!isset($options['rdfa'])) {
             $options['rdfa'] = true;
         }
@@ -172,11 +176,23 @@ class Erfurt_Ping
             return false;
         }
 
-        $store = Erfurt_App::getInstance()->getStore();
+        $modelUri = $this->_config->ping->modelUri;
+        $nsPing = $this->_config->ping->baseUri;
 
-        $sql = 'INSERT INTO ef_pingback_pingbacks (source, target, relation) '
-            . 'VALUES ("' . $s . '", "' . $o . '", "' . $p . '")';
-        $this->_query($sql);
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getModelOrCreate($modelUri);
+
+        $pingUri = $model->createResourceUri('Ping');
+        $model->addMultipleStatements(
+            array(
+                $pingUri => array (
+                    EF_RDF_NS . 'type' => array(array('type' => 'uri', 'value' => $nsPing . 'Item')),
+                    $nsPing . 'source' => array(array('type' => 'uri', 'value' => $s)),
+                    $nsPing . 'target' => array(array('type' => 'uri', 'value' => $o)),
+                    $nsPing . 'relation' => array(array('type' => 'uri', 'value' => $p))
+                )
+            ), false
+        );
 
         $store->addStatement(
             $this->_targetGraph, $s, $p, array('value' => $o, 'type' => 'uri'), false
@@ -219,20 +235,43 @@ class Erfurt_Ping
                  */
                 return true;
             } else {
-                return false;
+                /*
+                 * If there is no answer to 'onNeedsGraphForLinkedDataUri' we have to ask the store
+                 */
+                $store = Erfurt_App::getInstance()->getStore();
+                $graphs = $store->getReadableGraphsUsingResource($targetUri);
+
+                if ($graphs === null) {
+                    return false;
+                } else {
+                    $this->_targetGraph = $graphs[0];
+                    return true;
+                }
             }
         }
     }
 
     protected function _deleteInvalidPingbacks ($sourceUri, $targetUri, $foundPingbackTriples = array())
     {
-        $store = Erfurt_App::getInstance()->getStore();
+        $modelUri = $this->_config->ping->modelUri;
+        $nsPing = $this->_config->ping->baseUri;
 
-        $sql = 'SELECT * FROM ef_pingback_pingbacks WHERE source="' . $sourceUri . '" AND target="' . $targetUri . '"';
-        $result = $this->_query($sql);
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getModelOrCreate($modelUri);
+
+        $query  = 'PREFIX pingback: <' . $nsPing . '>' . PHP_EOL;
+        $query .= 'SELECT ?ping ?relation' . PHP_EOL;
+        $query .= 'WHERE {' . PHP_EOL;
+        $query .= '    ?ping a pingback:Item;' . PHP_EOL;
+        $query .= '          pingback:relation ?relation;' . PHP_EOL;
+        $query .= '          pingback:source <' . $sourceUri . '>;' . PHP_EOL;
+        $query .= '          pingback:target <' . $targetUri . '>.' . PHP_EOL;
+        $query .= '}';
+
+        $result = $model->sparqlQuery($query);
 
         $removed = false;
-        if ($result !== false) {
+        if (count($result) > 0) {
             foreach ($result as $row) {
                 $found = false;
                 foreach ($foundPingbackTriples as $triple) {
@@ -243,8 +282,7 @@ class Erfurt_Ping
                 }
 
                 if (!$found) {
-                    $sql = 'DELETE FROM ef_pingback_pingbacks WHERE id=' . $row['id'];
-                    $this->_query($sql);
+                    $model->deleteMatchingStatements($row['ping'], null, null, array('use_ac' => false));
 
                     $oSpec = array(
                         'value' => $targetUri,
@@ -355,63 +393,29 @@ class Erfurt_Ping
 
     protected function _pingbackExists ($s, $p, $o)
     {
-        $sql = 'SELECT * FROM ef_pingback_pingbacks '
-            . 'WHERE source="' . $s . '" AND target="' . $o . '" AND relation="' . $p . '" '
-            . 'LIMIT 1';
-        $result = $this->_query($sql);
-        if (is_array($result) && (count($result) === 1)) {
+        $modelUri = $this->_config->ping->modelUri;
+        $nsPing = $this->_config->ping->baseUri;
+
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getModelOrCreate($modelUri);
+
+        $query  = 'PREFIX pingback: <' . $nsPing . '>' . PHP_EOL;
+        $query .= 'ASK' . PHP_EOL;
+        $query .= 'WHERE {' . PHP_EOL;
+        $query .= '    ?ping a pingback:Item;' . PHP_EOL;
+        $query .= '          pingback:source <' . $s . '>;' . PHP_EOL;
+        $query .= '          pingback:target <' . $o . '>.' . PHP_EOL;
+        if ($p !== null) {
+            $query .= '    ?ping pingback:relation <' . $p . '>.' . PHP_EOL;
+        }
+        $query .= '}';
+
+        $exist = $model->sparqlQuery($query);
+
+        if (count($exist) > 0) {
             return true;
-        }
-
-        return false;
-    }
-
-    private function _checkDb ()
-    {
-        if ($this->_dbChecked) {
-            return;
-        }
-
-        $store = Erfurt_App::getInstance()->getStore();
-        $sql = 'SELECT * FROM ef_pingback_pingbacks LIMIT 1';
-
-        try {
-            $result = $store->sqlQuery($sql);
-        } catch (Exception $e) {
-            $this->_createTable();
-        }
-
-        $this->_dbChecked = true;
-    }
-
-    private function _createTable ()
-    {
-        $store = Erfurt_App::getInstance()->getStore();
-
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_pingback_pingbacks (
-            id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            source    VARCHAR(255) COLLATE ascii_bin NOT NULL,
-            target    VARCHAR(255) COLLATE ascii_bin NOT NULL,
-            relation  VARCHAR(255) COLLATE ascii_bin NOT NULL
-        );';
-
-        return $this->_query($sql, false);
-    }
-
-    protected function _query ($sql, $withCheck = true)
-    {
-        if ($withCheck) {
-            $this->_checkDb();
-        }
-
-        $store = Erfurt_App::getInstance()->getStore();
-
-        try {
-            $result = $store->sqlQuery($sql);
-        } catch (Exception $e) {
+        } else {
             return false;
         }
-
-        return $result;
     }
 }
