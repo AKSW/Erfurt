@@ -73,28 +73,9 @@ class Erfurt_Ping
             return $this->_setErrorCode(self::$_errTNotUsable);
         }
 
-        $foundPingbackTriplesGraph = array();
-
-        // 1. Try to dereference the source URI as RDF/XML, N3, Truples, Turtle
-        $foundPingbackTriplesGraph = $this->_getResourceFromWrapper($sourceUri, $targetUri, 'Linkeddata');
-
-        // 2. If nothing was found, try to use as RDFa service
-        if (((boolean) $this->_options['rdfa']) && (count($foundPingbackTriplesGraph) === 0)) {
-            $foundPingbackTriplesGraph = $this->_getResourceFromWrapper($sourceUri, $targetUri, 'Rdfa');
-        }
-
-        $foundPingbackTriples = array();
-        foreach ($foundPingbackTriplesGraph as $s => $predicates) {
-            foreach ($predicates as $p => $objects) {
-                foreach ($objects as $o) {
-                    $foundPingbackTriples[] = array(
-                        's' => $s,
-                        'p' => $p,
-                        'o' => $o['value']
-                    );
-                }
-            }
-        }
+        // 1. & 2. Try to dereference the source URI as RDF/XML, N3, Truples, Turtle
+        // If nothing was found, try to use as RDFa service
+        $foundPingbackTriples = $this->_getResource($sourceUri, $targetUri);
 
         $versioning = Erfurt_App::getInstance()->getVersioning();
         $versioning->startAction(
@@ -418,6 +399,42 @@ class Erfurt_Ping
 
             return null;
         }
+    }
+
+    /**
+     * Get the source resources triples which also contain the target
+     * (source as subject, target as object)
+     *
+     * @param $sourceUri the uri of the ping source
+     * @param $targetUri the uri of the ping target
+     * @return array containing the source triples as array('s', 'p', 'o') entries
+     */
+    protected function _getResource ($sourceUri, $targetUri)
+    {
+        $foundGraph = array();
+
+        // 1. Try to dereference the source URI as RDF/XML, N3, Truples, Turtle
+        $foundGraph = $this->_getResourceFromWrapper($sourceUri, $targetUri, 'Linkeddata');
+
+        // 2. If nothing was found, try to use as RDFa service
+        if (((boolean) $this->_options['rdfa']) && (count($foundGraph) === 0)) {
+            $foundGraph = $this->_getResourceFromWrapper($sourceUri, $targetUri, 'Rdfa');
+        }
+
+        $foundTriples = array();
+        foreach ($foundGraph as $s => $predicates) {
+            foreach ($predicates as $p => $objects) {
+                foreach ($objects as $o) {
+                    $foundTriples[] = array(
+                        's' => $s,
+                        'p' => $p,
+                        'o' => $o['value']
+                    );
+                }
+            }
+        }
+
+        return $foundTriples;
     }
 
     private function _getResourceFromWrapper ($sourceUri, $targetUri, $wrapperName = 'Linkeddata')
