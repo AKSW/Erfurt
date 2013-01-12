@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -22,9 +22,8 @@ class Erfurt_Ping
     private $_dbChecked = false;
     private $_options = array();
 
-    public function __construct ($options)
+    public function __construct ($options = array())
     {
-        $this->_options = $options;
         if (!isset($options['rdfa'])) {
             $options['rdfa'] = true;
         }
@@ -34,6 +33,7 @@ class Erfurt_Ping
         if (!isset($options['generic_relation'])) {
             $options['generic_relation'] = 'http://rdfs.org/sioc/ns#links_to';
         }
+        $this->_options = $options;
     }
 
     /**
@@ -146,8 +146,8 @@ class Erfurt_Ping
         $added = false;
         foreach ($foundPingbackTriples as $triple) {
             if (!$this->_pingbackExists($triple['s'], $triple['p'], $triple['o'])) {
-                $this->_addPingback($triple['s'], $triple['p'], $triple['o']);
-                $added = true;
+                $res = $this->_addPingback($triple['s'], $triple['p'], $triple['o']);
+                if ($res) $added = true;
             }
         }
 
@@ -213,8 +213,10 @@ class Erfurt_Ping
             $graph = $event->trigger();
             if ($graph) {
                 $this->_targetGraph = $graph;
-                // If we get a target graph from linked data plugin, we no that the target uri exists, since
-                // getGraphsUsingResource ist used by store.
+                /*
+                 * If we get a target graph from linked data plugin, we know that the target uri
+                 * exists, since getGraphsUsingResource ist used by store.
+                 */
                 return true;
             } else {
                 return false;
@@ -306,7 +308,7 @@ class Erfurt_Ping
         $r = new Erfurt_Rdf_Resource($sourceUri);
 
         // Try to instanciate the requested wrapper
-        new Erfurt_Wrapper_Manager();
+        Erfurt_Wrapper_Registry::reset();
         $wrapper = Erfurt_Wrapper_Registry::getInstance()->getWrapperInstance($wrapperName);
 
         $wrapperResult = null;
