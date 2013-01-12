@@ -15,7 +15,6 @@
  * @author   Natanael Arndt <arndtn@gmail.com>
  * @author   Norman Radtke <norman.radtke@gmail.com>
  */
-
 class Erfurt_Ping
 {
     protected $_targetGraph = null;
@@ -25,6 +24,20 @@ class Erfurt_Ping
     private $_config = null;
     private $_wrapperRegistry = null;
     private $_httpAdapter = null;
+    private $_errorCode = -1;
+    private $_successMessage = '';
+
+    /**
+     * The XML-RPC error codes for pingback, see also:
+     * http://www.hixie.ch/specs/pingback/pingback#TOC3
+     */
+    private static $_errUnknown         = 0x0000;
+    private static $_errSNotExist       = 0x0010;
+    private static $_errSNoLink         = 0x0011;
+    private static $_errTNotExist       = 0x0020;
+    private static $_errTNotUsable      = 0x0021;
+    private static $_errRegistered      = 0x0030;
+    private static $_errAccessDenied    = 0x0031;
 
     public function __construct ($options = array())
     {
@@ -44,11 +57,12 @@ class Erfurt_Ping
 
     /**
      * receive a ping API
+     * the XML-RPC code is returned by the method getReturnValue()
      *
      * @param string $sourceUri The source URI
      * @param string $targetUri The target URI
      *
-     * @return integer An integer (fault) code
+     * @return boolean whether it was successfull or not
      */
     public function receive ($sourceUri, $targetUri)
     {
@@ -56,8 +70,7 @@ class Erfurt_Ping
 
         // Is $targetUri a valid linked data resource in this namespace?
         if (!$this->_checkTargetExists($targetUri)) {
-            $this->_logError('0x0021');
-            return 0x0021;
+            return $this->_setErrorCode(self::$_errTNotUsable);
         }
 
         $foundPingbackTriplesGraph = array();
@@ -107,7 +120,7 @@ class Erfurt_Ping
             } catch (Exception $e) {
                 $this->_logError($e->getMessage());
                 $versioning->endAction();
-                return 0x0000;
+                return $this->_setErrorCode(self::$_errUnknown);
             }
             if ($response->getStatus() === 200) {
                 $htmlDoc = new DOMDocument();
@@ -126,9 +139,8 @@ class Erfurt_Ping
                     }
                 }
             } else {
-                $this->_logError('0x0010');
                 $versioning->endAction();
-                return 0x0010;
+                return $this->_setErrorCode(self::$_errSNotExist);
             }
         }
 
@@ -138,13 +150,13 @@ class Erfurt_Ping
             $removed = $this->_deleteInvalidPingbacks($sourceUri, $targetUri);
 
             if (!$removed) {
-                $this->_logError('0x0011');
                 $versioning->endAction();
-                return 0x0011;
+                return $this->_setErrorCode(self::$_errSNoLink);
             } else {
                 $this->_logInfo('All existing Pingbacks removed.');
                 $versioning->endAction();
-                return 'Existing Pingbacks have been removed.';
+                $this->_successMessage = 'Existing Pingbacks have been removed.';
+                return true;
             }
         }
 
@@ -161,15 +173,54 @@ class Erfurt_Ping
         $removed = $this->_deleteInvalidPingbacks($sourceUri, $targetUri, $foundPingbackTriples);
 
         if (!$added && !$removed) {
-            $this->_logError('0x0030');
             $versioning->endAction();
-            return 0x0030;
+            return $this->_setErrorCode(self::$_errRegistered);
         }
 
         $this->_logInfo('Pingback registered.');
         $versioning->endAction();
 
-        return 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
+        $this->_successMessage = 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
+        return true;
+    }
+
+    /**
+     * This method sets the current error code for receiving the ping
+     *
+     * @param $error the new error to set
+     * @return boolean false, because errors are not good
+     */
+    private function _setErrorCode ($error)
+    {
+        $this->_logError('error code: ' . $error);
+        $this->_errorCode = $error;
+
+        return false;
+    }
+
+    /**
+     * This method returns the last error code of a ping receive
+     *
+     * @return int the last error code, -1 if the run was successful
+     */
+    public function getErrorCode ()
+    {
+        return $this->_errorCode;
+    }
+
+    /**
+     * This method returns the return value for the client as specified in:
+     * http://www.hixie.ch/specs/pingback/pingback#TOC3
+     *
+     * @return string the return value which sould be send to the client
+     */
+    public function getReturnValue ()
+    {
+        if ($this->_errorCode > 0) {
+            return sprintf('0x%04x', $this->_errorCode);
+        } else {
+            return $this->_successMessage;
+        }
     }
 
     public function setWrapperRegistry ($wrapperRegistry)
