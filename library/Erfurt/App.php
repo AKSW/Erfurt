@@ -757,6 +757,7 @@ class Erfurt_App
             if ((boolean)$config->log->level !== false) {
                 $logDir = $this->getLogDir();
 
+                $logWriter = null;
                 if ($logDir === false) {
                     require_once 'Zend/Log/Writer/Null.php';
                     $logWriter = new Zend_Log_Writer_Null();
