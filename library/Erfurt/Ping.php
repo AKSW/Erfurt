@@ -26,6 +26,7 @@ class Erfurt_Ping
     private $_httpAdapter = null;
     private $_errorCode = -1;
     private $_successMessage = '';
+    private $_receivedData = array();
 
     /**
      * The XML-RPC error codes for pingback, see also:
@@ -51,6 +52,9 @@ class Erfurt_Ping
         }
         if (!isset($options['generic_relation'])) {
             $options['generic_relation'] = 'http://rdfs.org/sioc/ns#links_to';
+        }
+        if (!isset($options['write_data'])) {
+            $options['write_data'] = true;
         }
         $this->_options = $options;
     }
@@ -88,40 +92,13 @@ class Erfurt_Ping
 
         // 3. If still nothing was found, try to find a link in the html
         if (count($foundPingbackTriples) === 0) {
-            $client = Erfurt_App::getInstance()->getHttpClient(
-                $sourceUri,
-                array(
-                    'maxredirects' => 10,
-                    'timeout' => 30
-                )
-            );
+            $result = $this->_getHtmlLink($sourceUri, $targetUri);
 
-            try {
-                $response = $client->request();
-            } catch (Exception $e) {
-                $this->_logError($e->getMessage());
+            if (!is_array($result)) {
                 $versioning->endAction();
-                return $this->_setErrorCode(self::$_errUnknown);
-            }
-            if ($response->getStatus() === 200) {
-                $htmlDoc = new DOMDocument();
-                $result = @$htmlDoc->loadHtml($response->getBody());
-                $aElements = $htmlDoc->getElementsByTagName('a');
-
-                foreach ($aElements as $aElem) {
-                    $a = $aElem->getAttribute('href');
-                    if (strtolower($a) === $targetUri) {
-                        $foundPingbackTriples[] = array(
-                            's' => $sourceUri,
-                            'p' => $_options['generic_relation'],
-                            'o' => $targetUri
-                        );
-                        break;
-                    }
-                }
+                return $this->_setErrorCode($result);
             } else {
-                $versioning->endAction();
-                return $this->_setErrorCode(self::$_errSNotExist);
+                $foundPingbackTriples = $result;
             }
         }
 
@@ -142,13 +119,7 @@ class Erfurt_Ping
         }
 
         // 6. Iterate through pingback triples candidates and add those, who are not already registered.
-        $added = false;
-        foreach ($foundPingbackTriples as $triple) {
-            if (!$this->_pingbackExists($triple['s'], $triple['p'], $triple['o'])) {
-                $res = $this->_addPingback($triple['s'], $triple['p'], $triple['o']);
-                if ($res) $added = true;
-            }
-        }
+        $added = $this->_addPingbacks($foundPingbackTriples);
 
         // Remove all existing pingbacks from that source uri, that were not found this time.
         $removed = $this->_deleteInvalidPingbacks($sourceUri, $targetUri, $foundPingbackTriples);
@@ -158,9 +129,12 @@ class Erfurt_Ping
             return $this->_setErrorCode(self::$_errRegistered);
         }
 
+        if ($this->_options['write_data'] === true) {
+            $this->_writeData();
+        }
+
         $this->_logInfo('Pingback registered.');
         $versioning->endAction();
-
         $this->_successMessage = 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
         return true;
     }
@@ -230,56 +204,25 @@ class Erfurt_Ping
         return $wrapper;
     }
 
-    protected function _addPingback ($s, $p, $o)
+    /**
+     * This method returns the received data, which was found at the source
+     *
+     * @return array of array-triples with the received data
+     */
+    public function getReceivedData ()
     {
-        if ($this->_targetGraph === null) {
-            return false;
-        }
-
-        $modelUri = $this->_config->ping->modelUri;
-        $nsPing = $this->_config->ping->baseUri;
-
-        $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModelOrCreate($modelUri);
-
-        $pingUri = $model->createResourceUri('Ping');
-        $model->addMultipleStatements(
-            array(
-                $pingUri => array (
-                    EF_RDF_NS . 'type' => array(array('type' => 'uri', 'value' => $nsPing . 'Item')),
-                    $nsPing . 'source' => array(array('type' => 'uri', 'value' => $s)),
-                    $nsPing . 'target' => array(array('type' => 'uri', 'value' => $o)),
-                    $nsPing . 'relation' => array(array('type' => 'uri', 'value' => $p))
-                )
-            ), false
-        );
-
-        $store->addStatement(
-            $this->_targetGraph, $s, $p, array('value' => $o, 'type' => 'uri'), false
-        );
-
-        // Add a title to the source resource
-        $titleProps = $this->_options['title_properties'];
-        if ($this->_sourceRdf !== null && count($titleProps) > 0) {
-            foreach ($this->_sourceRdf as $prop => $oArray) {
-                if (in_array($prop, $titleProps)) {
-                    $store->addStatement(
-                        $this->_targetGraph, $s, $prop, $oArray[0], false
-                    );
-                    break; // only one title
-                }
-            }
-        }
-
-        $event = new Erfurt_Event('onPingReceived');
-        $event->s = $s;
-        $event->p = $p;
-        $event->o = $o;
-        $event->trigger();
-
-        return true;
+        return $this->_receivedData;
     }
 
+    /**
+     * This method checks whether the given target already exists in the local target graph.
+     *
+     * Tip: When using the Erfurt_Ping in a different environment you can overload this method to
+     *      search only in your model.
+     *
+     * @param $targetUri the uri of the received target
+     * @return boolean whether the target resource exists or not
+     */
     protected function _checkTargetExists ($targetUri)
     {
         if ($this->_targetGraph == null) {
@@ -311,6 +254,67 @@ class Erfurt_Ping
         }
     }
 
+    /**
+     * This method adds new pingback:Items to the ping model for each received triple.
+     *
+     * @param $foundPingbackTriples an array of array-triples containing the triples between source
+     *                              and target
+     * @return boolean true if new pingback:Items where created, else false
+     */
+    protected function _addPingbacks ($foundPingbackTriples)
+    {
+        if ($this->_targetGraph === null) {
+            return false;
+        }
+
+        $pingModelUri = $this->_config->ping->modelUri;
+        $nsPing = $this->_config->ping->baseUri;
+
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getModelOrCreate($pingModelUri);
+
+        $this->_receivedData['add'] = array();
+        $added = false;
+
+        foreach ($foundPingbackTriples as $triple) {
+            if ($this->_pingbackExists($triple['s'], $triple['p'], $triple['o'])) {
+                // this ping was already received before
+                continue;
+            }
+
+            $pingUri = $model->createResourceUri('Ping');
+            $model->addMultipleStatements(
+                array(
+                    $pingUri => array (
+                        EF_RDF_NS . 'type' => array(
+                            array('type' => 'uri', 'value' => $nsPing . 'Item')
+                        ),
+                        $nsPing . 'source' => array(
+                            array('type' => 'uri', 'value' => $triple['s'])
+                        ),
+                        $nsPing . 'target' => array(
+                            array('type' => 'uri', 'value' => $triple['o'])
+                        ),
+                        $nsPing . 'relation' => array(
+                            array('type' => 'uri', 'value' => $triple['p'])
+                        )
+                    )
+                ), false
+            );
+
+            $this->_receivedData['add'][] = $triple;
+
+            $event = new Erfurt_Event('onPingReceived');
+            $event->s = $triple['s'];
+            $event->p = $triple['p'];
+            $event->o = $triple['o'];
+            $event->trigger();
+
+            $added = true;
+        }
+        return $added;
+    }
+
     protected function _deleteInvalidPingbacks ($sourceUri, $targetUri, $foundPingbackTriples = array())
     {
         $modelUri = $this->_config->ping->modelUri;
@@ -330,7 +334,9 @@ class Erfurt_Ping
 
         $result = $model->sparqlQuery($query);
 
+        $this->_receivedData['delete'] = array();
         $removed = false;
+
         if (count($result) > 0) {
             foreach ($result as $row) {
                 $found = false;
@@ -342,19 +348,11 @@ class Erfurt_Ping
                 }
 
                 if (!$found) {
-                    $model->deleteMatchingStatements($row['ping'], null, null, array('use_ac' => false));
-
-                    $oSpec = array(
-                        'value' => $targetUri,
-                        'type' => 'uri'
+                    $model->deleteMatchingStatements(
+                        $row['ping'], null, null, array('use_ac' => false)
                     );
-
-                    $store->deleteMatchingStatements(
-                        $this->_targetGraph,
-                        $sourceUri,
-                        $row['relation'],
-                        $oSpec,
-                        array('use_ac' => false)
+                    $this->_receivedData['delete'][] = array(
+                        's' => $sourceUri, 'p' => $row['relation'], 'o' => $targetUri
                     );
                     $removed = true;
                 }
@@ -364,40 +362,43 @@ class Erfurt_Ping
         return $removed;
     }
 
-    protected function _determineInverseProperty ($propertyUri)
+    /**
+     * This method writes the received triples to the target graph
+     */
+    protected function _writeData ()
     {
-        $client = Erfurt_App::getInstance()->getHttpClient(
-            $propertyUri,
-            array(
-                'maxredirects' => 10,
-                'timeout' => 30
-            )
-        );
-        $client->setHeaders('Accept', 'application/rdf+xml');
-        try {
-            $response = $client->request();
-        } catch (Exception $e) {
-            return null;
-        }
-        if ($response->getStatus() === 200) {
-            $data = $response->getBody();
+        $store = Erfurt_App::getInstance()->getStore();
+        $model = $store->getModelOrCreate($this->_targetGraph);
 
-            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('rdfxml');
-            try {
-                $result = $parser->parse($data, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-            } catch (Exception $e) {
-                return null;
-            }
+        foreach ($this->_receivedData['add'] as $triple) {
+            $model->addStatement(
+                $triple['s'],
+                $triple['p'],
+                array('value' => $triple['o'], 'type' => 'uri'),
+                false
+            );
 
-            if (isset($result[$propertyUri])) {
-                $pArray = $result[$propertyUri];
-                if (isset($pArray['http://www.w3.org/2002/07/owl#inverseOf'])) {
-                    $oArray = $pArray['http://www.w3.org/2002/07/owl#inverseOf'];
-                    return $oArray[0]['value'];
+            // Add a title to the source resource
+            // seams unused, because _sourceRdf is never written
+            $titleProps = $this->_options['title_properties'];
+            if ($this->_sourceRdf !== null && count($titleProps) > 0) {
+                foreach ($this->_sourceRdf as $prop => $oArray) {
+                    if (in_array($prop, $titleProps)) {
+                        $model->addStatement($triple['s'], $prop, $oArray[0], false);
+                        break; // only one title
+                    }
                 }
             }
 
-            return null;
+        }
+
+        foreach ($this->_receivedData['delete'] as $triple) {
+            $model->deleteMatchingStatements(
+                $triple['s'],
+                $triple['p'],
+                array('value' => $triple['o'], 'type' => 'uri'),
+                array('use_ac' => false)
+            );
         }
     }
 
@@ -444,17 +445,14 @@ class Erfurt_Ping
         // Try to instanciate the requested wrapper
         $wrapper = $this->_getWrapper($wrapperName);
 
-        $wrapperResult = null;
         $wrapperResult = $wrapper->run($r, null, true);
 
-        $newStatements = null;
+        $newStatements = array();
         if ($wrapperResult === false) {
             // IMPORT_WRAPPER_NOT_AVAILABLE;
         } else if (is_array($wrapperResult)) {
-            $newStatements = $wrapperResult['add'];
             // TODO make sure to only import the specified resource
-            $newModel = new Erfurt_Rdf_MemoryModel($newStatements);
-            $newStatements = array();
+            $newModel = new Erfurt_Rdf_MemoryModel($wrapperResult['add']);
             $object = array('type' => 'uri', 'value' => $targetUri);
             $newStatements = $newModel->getP($sourceUri, $object);
         } else {
@@ -462,6 +460,51 @@ class Erfurt_Ping
         }
 
         return $newStatements;
+    }
+
+    /**
+     * This method tries to fetches the source as html and extracts hyperlinks refering to the
+     * target.
+     *
+     * @param $sourceUri the uri of the ping source
+     * @param $targetUri the uri of the ping target
+     * @return array|int on success an array containing the source triples as array('s', 'p', 'o')
+     *         entries or an integer with the error code.
+     */
+    protected function _getHtmlLink ($sourceUri, $targetUri)
+    {
+        $erfurt = Erfurt_App::getInstance();
+        $client = $erfurt->getHttpClient($sourceUri, array( 'maxredirects' => 10, 'timeout' => 30));
+
+        try {
+            $response = $client->request();
+        } catch (Exception $e) {
+            $this->_logError($e->getMessage());
+            return self::$_errUnknown;
+        }
+
+        if ($response->getStatus() === 200) {
+            $htmlDoc = new DOMDocument();
+            $result = @$htmlDoc->loadHtml($response->getBody());
+            $aElements = $htmlDoc->getElementsByTagName('a');
+
+            $foundPingbackTriples = array();
+
+            foreach ($aElements as $aElem) {
+                $a = $aElem->getAttribute('href');
+
+                if (strtolower($a) === $targetUri) {
+                    $foundPingbackTriples[] = array(
+                        's' => $sourceUri,
+                        'p' => $_options['generic_relation'],
+                        'o' => $targetUri
+                    );
+                    return $foundPingbackTriples;
+                }
+            }
+        } else {
+            return self::$_errSNotExist;
+        }
     }
 
     protected function _logError ($msg)
