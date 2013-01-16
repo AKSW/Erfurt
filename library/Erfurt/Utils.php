@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -17,9 +17,10 @@
  */
 class Erfurt_Utils
 {
-    public static function isXmlPrefix ($string) {
+    public static function isXmlPrefix ($string)
+    {
         /*
-         * The folowing regularexpression would match all allowed prefixes, 
+         * The folowing regularexpression would match all allowed prefixes,
          * but couses trouble with PCRE.
          * /[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF\x370-\x37D\x37F-\x1FFF
          * \x200C-\x200D\x2070-\x218F\x2C00-\x2FEF\x3001-\xD7FF\xF900-\xFDCF
@@ -34,15 +35,15 @@ class Erfurt_Utils
         $matches = array();
         $regExp = '/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]{1}'
                 . '[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF.0-9\xB7]*/u';
-        
+
         $matchCount = preg_match($regExp, $string, $matches);
         if ($matchCount > 0 && $matches[0] === $string) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
@@ -55,7 +56,7 @@ class Erfurt_Utils
         $longString = false;
         $quoteChar  = (strpos($value, '"') !== false) ? "'" : '"';
         $value      = (string)$value;
-        
+
         // datatype-specific treatment
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
@@ -82,8 +83,8 @@ class Erfurt_Utils
             case 'http://www.w3.org/2001/XMLSchema#string':
             default:
                 $value = addcslashes($value, $quoteChar);
-                
-                /** 
+
+                /**
                  * Check for characters not allowed in a short literal
                  * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
                  */
@@ -95,19 +96,19 @@ class Erfurt_Utils
                 }
                 break;
         }
-        
+
         // add short, long literal quotes respectively
         $value = $quoteChar . ($longString ? ($quoteChar . $quoteChar) : '')
-               . $value 
+               . $value
                . $quoteChar . ($longString ? ($quoteChar . $quoteChar) : '');
-        
+
         // add datatype URI/lang tag
         if (!empty($datatype)) {
             $value .= '^^<' . (string)$datatype . '>';
         } else if (!empty($lang)) {
             $value .= '@' . (string)$lang;
         }
-        
+
         return $value;
     }
 
@@ -123,7 +124,56 @@ class Erfurt_Utils
         // TODO: implement Unicode codepoint decoding
         //$entityString = preg_replace('/\\\[uU]\+([0-9A-F]{3,5})/', '&#\\1;', $cpString);
         //$utf8String   = html_entity_decode($entityString);
-        
+
         return $cpString;
+    }
+
+    /**
+     * This method fetches a property via Linked Data and tries to determine the inverse of it.
+     * TODO: Use LinkedData Wrapper
+     *
+     * @param $propertyUri the uri of the property whose inverse should be found
+     * @return string|null with the inverse property or null if nothing was found
+     */
+    public static function determineInverseProperty ($propertyUri)
+    {
+        $client = Erfurt_App::getInstance()->getHttpClient(
+            $propertyUri,
+            array(
+                'maxredirects' => 10,
+                'timeout' => 30
+            )
+        );
+
+        $client->setHeaders('Accept', 'application/rdf+xml');
+
+        try {
+            $response = $client->request();
+        } catch (Exception $e) {
+            return null;
+        }
+
+        if ($response->getStatus() === 200) {
+            $data = $response->getBody();
+
+            $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('rdfxml');
+
+            try {
+                $result = $parser->parse($data, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+            } catch (Exception $e) {
+                return null;
+            }
+
+            if (isset($result[$propertyUri])) {
+                $pArray = $result[$propertyUri];
+
+                if (isset($pArray['http://www.w3.org/2002/07/owl#inverseOf'])) {
+                    $oArray = $pArray['http://www.w3.org/2002/07/owl#inverseOf'];
+                    return $oArray[0]['value'];
+                }
+            }
+
+            return null;
+        }
     }
 }
