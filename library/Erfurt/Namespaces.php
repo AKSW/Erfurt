@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -157,8 +157,8 @@ class Erfurt_Namespaces
     {
         $graphPrefixes = $this->getNamespacesForGraph($graph);
 
-        if (array_key_exists($prefix, $graphPrefixes)) {
-            unset($graphPrefixes[$prefix]);
+        if (array_key_exists(strtolower($prefix), $graphPrefixes)) {
+            unset($graphPrefixes[strtolower($prefix)]);
         }
 
         $this->setNamespacesForGraph($graph, $graphPrefixes);
@@ -298,7 +298,8 @@ class Erfurt_Namespaces
         } catch (Erfurt_Exception $e) {
             require_once 'Erfurt/Namespaces/Exception.php';
             throw new Erfurt_Namespaces_Exception(
-                "Insufficient privileges to edit namespace prefixes for graph '$graph'.");
+                'Insufficient privileges to edit namespace prefixes for graph "' . $graph . '".'
+            );
         }
     }
 
@@ -312,7 +313,7 @@ class Erfurt_Namespaces
     {
         $graphPrefixes = $this->getNamespacesForGraph($graph);
 
-        if (array_key_exists($prefix, $graphPrefixes)) {
+        if (array_key_exists(strtolower($prefix), $graphPrefixes)) {
             return true;
         } else {
             return false;
@@ -331,7 +332,7 @@ class Erfurt_Namespaces
             throw new Erfurt_Namespaces_Exception('The given namespace prefix is not registered.');
         } else {
             $graphPrefixes = $this->getNamespacesForGraph($graph);
-            return $graphPrefixes[$prefix];
+            return $graphPrefixes[strtolower($prefix)];
         }
     }
 }
