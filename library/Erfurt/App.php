@@ -62,6 +62,8 @@ class Erfurt_App
      */
     private $_acModel = null;
 
+    private $_acModelUri = null;
+
     /**
      * Contains a reference to Zend_Auth singleton.
      */
@@ -549,10 +551,20 @@ class Erfurt_App
     {
         if (null === $this->_acModel) {
             $config = $this->getConfig();
-            $this->_acModel = $this->getStore()->getModel($config->ac->modelUri, false);
+            $this->_acModel = $this->getStore()->getModel($this->getAcModelUri(), false);
         }
 
         return $this->_acModel;
+    }
+
+    public function getAcModelUri()
+    {
+        if (null === $this->_acModelUri) {
+            $config = $this->getConfig();
+            $this->_acModelUri = $config->ac->modelUri;
+        }
+
+        return $this->_acModelUri;
     }
 
     /**
@@ -745,6 +757,7 @@ class Erfurt_App
             if ((boolean)$config->log->level !== false) {
                 $logDir = $this->getLogDir();
 
+                $logWriter = null;
                 if ($logDir === false) {
                     require_once 'Zend/Log/Writer/Null.php';
                     $logWriter = new Zend_Log_Writer_Null();

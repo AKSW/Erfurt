@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -11,6 +11,7 @@
  * @package  Erfurt
  * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author   Norman Heino <norman.heino@gmail.com>
+ * @author   Natanael Arndt <arndtn@gmail.com>
  */
 
 class Erfurt_Store
@@ -1690,6 +1691,40 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     }
 
     /**
+     * Returns a list of graph URIs, simmilar to getGraphsUsingResource but checks if it is
+     * readable.
+     *
+     * @param string $resourceUri
+     * @return array
+     */
+    public function getReadableGraphsUsingResource($resourceUri)
+    {
+        $result = $this->getGraphsUsingResource($resourceUri, false);
+
+        if ($result) {
+            // get source graph
+            $allowedGraphs = array();
+            $ac = Erfurt_App::getInstance()->getAc();
+            foreach ($result as $g) {
+                if ($ac->isModelAllowed('view', $g)) {
+                    $allowedGraphs[] = $g;
+                }
+            }
+
+            if (count($allowedGraphs) > 0) {
+                return $allowedGraphs;
+            } else {
+                // We use the first matching graph. The user is redirected and the next request
+                // has to decide, whether user is allowed to view or not. (Workaround since there are problems
+                // with linkeddata and https).
+                return $result[0];
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Returns a logo URL.
      *
      * @return string
@@ -1783,7 +1818,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
         if ($useAc === false) {
             $logger = $this->_getErfurtLogger();
-            $logger->warn("Store.php->_checkAc: Doing something without Access Controll!!!");
+            $logger->debug("Store.php->_checkAc: Doing something without Access Controll!!!");
             $logger->debug("Store.php->_checkAc: ModelIri: " . $modelIri . " accessType: " . $accessType);
             return true;
         } else {
