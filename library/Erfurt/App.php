@@ -948,6 +948,15 @@ class Erfurt_App
 
             require_once 'Erfurt/Store.php';
             $this->_store = new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema);
+
+            // Make sure the store is initialized
+            try {
+                $this->_store->checkSetup();
+            } catch (Erfurt_Store_Exception $e) {
+                if ($e->getCode() != 20) {
+                    throw $e;
+                }
+            }
         }
 
         return $this->_store;
