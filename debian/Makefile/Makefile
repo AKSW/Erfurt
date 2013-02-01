@@ -7,6 +7,7 @@ prepare:
 
 clean:
 	rm -rf ../files
+	rm -rf ../*.log
 	rm -rf ../liberfurt-php.substvars
 	rm -rf ../liberfurt-php/
 

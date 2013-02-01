@@ -280,6 +280,10 @@
     <rdfs:comment>Register new users with application/register</rdfs:comment>
   </Action>
 
+  <Action rdf:about="ModelExport" rdfs:label="Model Export">
+      <rdfs:comment>Export complete models (disallow this on models bigger than 40k distinct resources to avoid virtuoso errors)</rdfs:comment>
+  </Action>
+
   <Action rdf:about="ModelManagement" rdfs:label="Model Management">
     <rdfs:comment>Create and remove models from the store</rdfs:comment>
   </Action>
