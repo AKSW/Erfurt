@@ -144,10 +144,10 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         $result = $this->_object->getLastModifiedForResource('http://example.org/resource1', 'http://example.org/');
         
         // Result should contain the following keys.
-        $this->assertArrayHasKey('v2.id', $result);
-        $this->assertArrayHasKey('v2.useruri', $result);
-        $this->assertArrayHasKey('v2.tstamp', $result);
-        $this->assertArrayHasKey('v2.action_type', $result);
+        $this->assertArrayHasKey('id', $result);
+        $this->assertArrayHasKey('useruri', $result);
+        $this->assertArrayHasKey('tstamp', $result);
+        $this->assertArrayHasKey('action_type', $result);
     }
 
     public function testGetHistoryForGraph() 
@@ -177,10 +177,10 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
     
         // Each result row should contain the following keys.
         foreach ($result as $row) {
-            $this->assertArrayHasKey('v2.id', $row);
-            $this->assertArrayHasKey('v2.useruri', $row);
-            $this->assertArrayHasKey('v2.tstamp', $row);
-            $this->assertArrayHasKey('v2.action_type', $row);
+            $this->assertArrayHasKey('id', $row);
+            $this->assertArrayHasKey('useruri', $row);
+            $this->assertArrayHasKey('tstamp', $row);
+            $this->assertArrayHasKey('action_type', $row);
         }
     }
 

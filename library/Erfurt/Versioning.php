@@ -224,20 +224,13 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT v2.id,  v2.useruri, v2.tstamp, v2.action_type
-                FROM ef_versioning_actions AS v1, ef_versioning_actions AS v2
-                WHERE
-                v1.model = \'' . $graphUri . '\' AND
-                v1.resource = \'' . $resourceUri . '\' AND
-                v2.id = v1.parent
-                UNION
-                SELECT id, useruri, tstamp, action_type
-                FROM ef_versioning_actions
-                WHERE
-                model = \'' . $graphUri . '\' AND
-                resource = \'' . $resourceUri . '\' AND
-                parent IS NULL
-                ORDER BY tstamp DESC';
+        $sql = 'SELECT id, resource, useruri, tstamp, action_type' . PHP_EOL;
+        $sql.= 'FROM ef_versioning_actions' . PHP_EOL;
+        $sql.= 'WHERE' . PHP_EOL;
+        $sql.= 'model = \'' . $graphUri . '\' AND' . PHP_EOL;
+        $sql.= 'resource = \'' . $resourceUri . '\'' . PHP_EOL;
+        $sql.= 'AND parent IS NULL' . PHP_EOL;
+        $sql.= 'ORDER BY tstamp DESC';
 
         $result = $this->_sqlQuery(
             $sql,
