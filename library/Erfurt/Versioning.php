@@ -252,11 +252,13 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT id, resource, useruri, tstamp, action_type ' .
-               'FROM ef_versioning_actions WHERE
-                model = \'' . $graphUri . '\' AND ( resource = \'' . implode('\' OR resource = \'', $resources) . '\' )
-                AND parent IS NULL
-                ORDER BY tstamp DESC';
+        $sql = 'SELECT id, resource, useruri, tstamp, action_type ';
+        $sql.= 'FROM ef_versioning_actions ';
+        $sql.= 'WHERE ';
+        $sql.= 'model = \'' . $graphUri . '\' ';
+        $sql.= 'AND (resource = \'' . implode('\' OR resource = \'', $resources) . '\') ';
+        $sql.= 'AND parent IS NULL ';
+        $sql.= 'ORDER BY tstamp DESC';
 
         $result = $this->_sqlQuery(
             $sql,
@@ -440,8 +442,8 @@ class Erfurt_Versioning
                 $modelUri = isset($i['model']) ? $i['model'] : null;
                 $payloadID = (int) $i['payload_id'];
 
-                $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads WHERE id = ' .
-                $payloadID;
+                $payloadsSql = 'SELECT statement_hash FROM ef_versioning_payloads ';
+                $payloadsSql.= 'WHERE id = ' . $payloadID;
 
                 $payloadResult = $this->_sqlQuery($payloadsSql);
 
@@ -620,17 +622,17 @@ class Erfurt_Versioning
             $actionParent = 'NULL';
         }
 
-        $actionsSql .= ' VALUES (\'' .
-                       addslashes($graphUri) . '\', \'' .
-                       addslashes($userUri) . '\', \'' .
-                       addslashes($resource) . '\', \'' . time() . '\', ' .
-                       addslashes($actionType) . ', ' . $actionParent;
+        $actionsSql .= ' VALUES (';
+        $actionsSql .= '\'' . addslashes($graphUri) . '\',';
+        $actionsSql .= '\'' . addslashes($userUri) . '\',';
+        $actionsSql .= '\'' . addslashes($resource) . '\',';
+        $actionsSql .= '\'' . time() . '\',';
+        $actionsSql .= addslashes($actionType) . ', ' . $actionParent;
 
         if (null !== $payloadId) {
-           $actionsSql .= ', ' . $payloadId . ')';
-        } else {
-           $actionsSql .= ')';
+           $actionsSql .= ', ' . $payloadId;
         }
+        $actionsSql .= ')';
 
         $this->_sqlQuery($actionsSql);
 
@@ -642,8 +644,8 @@ class Erfurt_Versioning
 
     private function _execAddPayload($payload)
     {
-        $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) VALUES (\'' .
-                        addslashes(serialize($payload)) . '\')';
+        $payloadsSql = 'INSERT INTO ef_versioning_payloads (statement_hash) ';
+        $payloadsSql.= 'VALUES (\'' . addslashes(serialize($payload)) . '\')';
 
         $this->_sqlQuery($payloadsSql);
         $payloadId = $this->_getStore()->lastInsertId();
