@@ -133,7 +133,12 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
+        $limit = $this->getLimit();
+        $this->setLimit(1);
+
         $history = $this->getHistoryForResource($resourceUri, $graphUri);
+
+        $this->setLimit($limit);
 
         if (is_array($history) && count($history) > 0) {
             return $history[0];
