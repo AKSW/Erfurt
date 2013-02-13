@@ -171,8 +171,14 @@ class Erfurt_Cache_Frontend_QueryCache {
      *  @return     int      $count     number of queries which was affected of the invalidation process
     */
     public function invalidate( $modelIri, $subject, $predicate, $object ) {
+        // cast subject and predicate to string
+        $subject = (string) $subject;
+        $predicate = (string) $predicate;
+        
+        // initialize statements array
         $statements = array();
-        $statements[$subject][$predicate][] = $object ;
+        $statements[$subject] = array();
+        $statements[$subject][$predicate] = array ($object);
 
         $qids = $this->invalidateWithStatements($modelIri, $statements);
         return $qids;

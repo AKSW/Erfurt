@@ -349,13 +349,14 @@ class Erfurt_Versioning
         $this->_checkSetup();
 
         if (is_array($event->statement)) {
-            $payload = array (
-                $event->statement['subject'] => array (
-                    $event->statement['predicate'] => array (
-                        $event->statement['object']
-                    )
-                 )
-            );
+
+            $s = (string) $event->statement['subject'];
+            $p = (string) $event->statement['predicate'];
+            $o = $event->statement['object'];
+
+            $payload = array ();
+            $payload [$s] = array ();
+            $payload [$s][$p] = array ($o);
 
             $payloadId = $this->_execAddPayload($payload);
             $resource = $event->statement['subject'];
