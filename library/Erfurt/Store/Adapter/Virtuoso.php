@@ -324,8 +324,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             } else {
                 $objectSpec = $this->buildLiteralString(
                     $object['value'],
-                    array_key_exists('datatype', $object) ? $object['datatype'] : null,
-                    array_key_exists('lang', $object) ? $object['lang'] : null
+                    true == isset ($object['datatype']) ? $object['datatype'] : null,
+                    true == isset ($object['lang']) ? $object['lang'] : null
                 );
             }
         } else {
