@@ -1886,7 +1886,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         return $list;
     }
 
-
     /**
      * Calculates the transitive closure for a given property and a set of starting nodes.
      *
@@ -1894,9 +1893,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      */
     private function _getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth)
     {
-        $closure = array();
-        $classes = $startResources;
-        $i       = 0;
+        $closure        = array();
+        $classes        = $startResources;
+        $usedClasses    = array();
+        $i              = 0;
 
         $from = '';
         foreach ($this->getImportsClosure($modelIri) as $import) {
@@ -1940,16 +1940,33 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 );
                 $classes[] = $row['child'];
             }
+            $usedClasses = array_merge($usedClasses, $classes);
         }
 
         // prepare start resources inclusion
         $merger = array();
+        
+        $startResources = array_merge($startResources, $merger);
+        
         foreach ($startResources as $startUri) {
             $merger[(string) $startUri] = array(
                 'node'   => $startUri,
                 'parent' => null,
                 'depth'  => 0
             );
+        }
+        
+        // add all parent classes
+        if(false === $inverse) {
+            foreach($usedClasses as $c ) {
+                if(false === isset($merger[$c])){
+                    $merger[$c] = array(
+                        'node'   => $c,
+                        'parent' => null,
+                        'depth'  => 0
+                    );
+                }
+            }
         }
 
         // merge in start resources
