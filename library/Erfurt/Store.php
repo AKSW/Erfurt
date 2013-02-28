@@ -125,6 +125,8 @@ class Erfurt_Store
      */
     protected $_erfurtLogger = null;
 
+    protected $_bnodePrefix = 'nodeID:';
+
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1367,7 +1369,15 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         }
 
-        return (string)$queryObject;
+        $replacements = 0;
+        $queryString = str_replace(
+            $this->_bnodePrefix,
+            $this->_backendAdapter->getBlankNodePrefix(),
+            (string)$queryObject,
+            $replacements
+        );
+
+        return $queryString;
     }
 
     /**
