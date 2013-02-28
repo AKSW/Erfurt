@@ -1219,7 +1219,7 @@ class Erfurt_Store
              //dont make these changes global
             $queryObject = clone $queryObject;
             //bring triples etc. to canonical order
-            // $queryObject->optimize();
+            $queryObject->optimize();
         }
 
         $defaultOptions = array(
