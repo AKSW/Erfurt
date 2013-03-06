@@ -98,12 +98,12 @@ class Erfurt_Sparql_SimpleQuery
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|\s*COUNT|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
-            'from'       => '/FROM\s+<(.+?)>/i', 
-            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
-            'where'      => '/(WHERE\s+)?\{.*\}/si', 
-            'order'      => '/ORDER\s+BY\s+(.+\))+/i', 
-            'limit'      => '/LIMIT\s+(\d+)/i', 
+            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*|count\(\*\))+)/si',
+            'from'       => '/FROM\s+<(.+?)>/i',
+            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
+            'where'      => '/(WHERE\s+)?\{.*\}/si',
+            'order'      => '/ORDER\s+BY\s+(.+\))+/i',
+            'limit'      => '/LIMIT\s+(\d+)/i',
             'offset'     => '/OFFSET\s+(\d+)/i'
         );
 
