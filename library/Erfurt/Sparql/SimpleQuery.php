@@ -42,6 +42,8 @@ class Erfurt_Sparql_SimpleQuery
     
     /** @var int */
     protected $_offset = null;
+
+    protected $_groupBy = null;
     
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -72,8 +74,12 @@ class Erfurt_Sparql_SimpleQuery
         if ($this->_offset !== null) {
             $queryString .= 'OFFSET ' . $this->_offset . PHP_EOL;
         }
+
+        if ($this->_groupBy != null) {
+            $queryString .= 'GROUP BY ' . $this->_groupBy . PHP_EOL;
+        }
         
-        return $queryString;
+        return trim($queryString);
     }
     
     // ------------------------------------------------------------------------
@@ -88,23 +94,25 @@ class Erfurt_Sparql_SimpleQuery
     public static function initWithString($queryString)
     {
         $parts = array(
-            'prologue'   => array(), 
-            'from'       => array(), 
-            'from_named' => array(), 
-            'where'      => array(), 
-            'order'      => array(), 
-            'limit'      => array(), 
-            'offset'     => array()
+            'prologue'   => array(),
+            'from'       => array(),
+            'from_named' => array(),
+            'where'      => array(),
+            'order'      => array(),
+            'limit'      => array(),
+            'offset'     => array(),
+            'groupby'    => array(),
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*|count\(\*\))+)/si',
+            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*|COUNT\(\*\))+)/si',
             'from'       => '/FROM\s+<(.+?)>/i',
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
             'where'      => '/(WHERE\s+)?\{.*\}/si',
             'order'      => '/ORDER\s+BY\s+(.+\))+/i',
             'limit'      => '/LIMIT\s+(\d+)/i',
-            'offset'     => '/OFFSET\s+(\d+)/i'
+            'offset'     => '/OFFSET\s+(\d+)/i',
+            'groupby'    => '/GROUP\s+BY\s+(.+)+/i'
         );
 
         foreach ($tokens as $key => $pattern) {
@@ -114,6 +122,16 @@ class Erfurt_Sparql_SimpleQuery
         $queryObject = new self();
         if (isset($parts['prologue'][0][0])) {
             $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
+        } else {
+            $queryLower = strtolower($queryString);
+            $pos = strpos($queryLower, 'from');
+            if (false === $pos) {
+                $pos = 'where';
+            }
+            if (false !== $pos) {
+                $prologue = trim(substr($queryString, 0, $pos));
+                $queryObject->setProloguePart($prologue);   // whole match
+            }
         }
 
         if (isset($parts['from'][1][0])) {
@@ -138,6 +156,10 @@ class Erfurt_Sparql_SimpleQuery
 
         if (isset($parts['offset'][1][0])) {
             $queryObject->setOffset($parts['offset'][1][0]);
+        }
+
+        if (isset($parts['groupby'][1][0])) {
+            $queryObject->setGroupBy($parts['groupby'][1][0]);
         }
 
         return $queryObject;
@@ -248,6 +270,13 @@ class Erfurt_Sparql_SimpleQuery
             $this->_wherePart = 'WHERE' . $whereString;
         }
         
+        return $this;
+    }
+
+    public function setGroupBy($groupBy)
+    {
+        $this->_groupBy = $groupBy;
+
         return $this;
     }
 }
