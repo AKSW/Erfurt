@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -601,7 +601,7 @@ class Erfurt_App
 
         return $this->_auth;
     }
-    
+
     public function setAuth(Erfurt_Auth $auth)
     {
         $this->_auth = $auth;
@@ -615,16 +615,13 @@ class Erfurt_App
     public function getCache()
     {
         if (null === $this->_cache) {
-			$options	= $this->getConfig()->cache->frontend->toArray();
-			$options['automatic_serialization']	= TRUE;
-			if( !isset( $options['lifetime'] ) || ( (int) $options['lifetime'] < 1 ) ){
-				$options['lifetime']	= NULL;
-			}
-
-			require_once 'Zend/Cache.php'; // workaround, for zend actually does not include it itself
-			require_once 'Erfurt/Cache/Frontend/ObjectCache.php';
-			$this->_cache = new Erfurt_Cache_Frontend_ObjectCache( $options );
-            $this->_cache->setBackend( $this->_getCacheBackend() );
+            $options	= $this->getConfig()->cache->frontend->toArray();
+            $options['automatic_serialization']	= TRUE;
+            if (!isset($options['lifetime']) || ((int)$options['lifetime'] < 1 )) {
+                $options['lifetime']	= NULL;
+            }
+            $this->_cache = new Erfurt_Cache_Frontend_ObjectCache($options);
+            $this->_cache->setBackend($this->_getCacheBackend());
         }
         return $this->_cache;
     }
@@ -653,7 +650,6 @@ class Erfurt_App
             }
         } else {
             $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
-            
             if (is_writable($cacheDir)) {
                 return $cacheDir;
             } else {
@@ -753,11 +749,10 @@ class Erfurt_App
                     $logWriter = new Zend_Log_Writer_Null();
                 } else {
                     require_once 'Zend/Log/Writer/Stream.php';
-                    
                     $logName = $logDir . $logIdentifier;
-            
+
                     // Check whether log can be created with $logName... otherwise append a number.
-                    // This needs to be done, since logs may be created by other processes (e.g. with 
+                    // This needs to be done, since logs may be created by other processes (e.g. with
                     // testing) and thus can't be opened anymore.
                     for ($i = 0; $i<10; ++$i) {
                         try {
@@ -766,7 +761,6 @@ class Erfurt_App
                                 $fullLogName .= '_' . $i;
                             }
                             $fullLogName .= '.log';
-                    
                             $logWriter = new Zend_Log_Writer_Stream($fullLogName);
                             if (null !== $logWriter) {
                                 break;
@@ -775,7 +769,7 @@ class Erfurt_App
                             // Nothing to do... just continue
                         }
                     }
-            
+
                     if (null === $logWriter) {
                         require_once 'Zend/Log/Writer/Null.php';
                         $logWriter = new Zend_Log_Writer_Null();
@@ -1130,40 +1124,43 @@ class Erfurt_App
         if (null === $this->_cacheBackend) {
             $config = $this->getConfig();
 
-			 // check the type an whether type is supported
-			$cacheType	= $config->cache->backend->type;
-			switch( strtolower( $cacheType ) ){
-				case 'memcached':
-					$options	= $config->cache->backend->memcached->toArray();
-					$cache		= new Zend_Cache_Backend_Memcached( $options );
-					break;
-				case 'apc':
-					$cache		= new Zend_Cache_Backend_Apc();
-					break;
-				case 'sqlite':
-					$options	= $config->cache->backend->sqlite->toArray();
-					if( !in_array( 'cache_db_complete_path', array_keys( $options ) ) ){
-						require_once 'Erfurt/Exception.php';
-						throw new Erfurt_Exception( 'Cache database filename must be set for sqlite cache backend (cache_db_complete_path).' );
-					}
-					$cache		= new Zend_Cache_Backend_Sqlite( $options );
-					break;
-				case 'file':
-					$options	= $config->cache->backend->file->toArray();
-					$cache		= new Zend_Cache_Backend_File( $options );
-					break;
-				case 'database':
-					require_once 'Erfurt/Cache/Backend/Database.php';
-					$cache		= new Erfurt_Cache_Backend_Database();
-					break;
-				case 'null':
-					require_once 'Erfurt/Cache/Backend/Null.php';
-					$cache		= new Erfurt_Cache_Backend_Null();
-					break;
-				default:
-					throw new Erfurt_Exception( 'Cache type "'.$cacheType.'" is not supported.' );
-			}
-			$this->_cacheBackend = $cache;
+            // check the type an whether type is supported
+            $cacheType	= $config->cache->backend->type;
+            switch (strtolower($cacheType)) {
+                case 'memcached':
+                    $options	= $config->cache->backend->memcached->toArray();
+                    $cache		= new Zend_Cache_Backend_Memcached($options);
+                    break;
+                case 'apc':
+                    $cache		= new Zend_Cache_Backend_Apc();
+                    break;
+                case 'sqlite':
+                    $options	= $config->cache->backend->sqlite->toArray();
+                    if (!in_array('cache_db_complete_path', array_keys($options))) {
+                        throw new Erfurt_Exception(
+                            'Cache database filename must be set for sqlite cache backend (cache_db_complete_path).'
+                        );
+                    }
+                    $cache		= new Zend_Cache_Backend_Sqlite($options);
+                    break;
+                case 'file':
+                    $options	= $config->cache->backend->file->toArray();
+                    $cache		= new Zend_Cache_Backend_File($options);
+                    break;
+                case 'database':
+                    require_once 'Erfurt/Cache/Backend/Database.php';
+                    $cache		= new Erfurt_Cache_Backend_Database();
+                    break;
+                case 'null':
+                    require_once 'Erfurt/Cache/Backend/Null.php';
+                    $cache		= new Erfurt_Cache_Backend_Null();
+                    break;
+                default:
+                    throw new Erfurt_Exception(
+                        'Cache type "'.$cacheType.'" is not supported.'
+                    );
+            }
+            $this->_cacheBackend = $cache;
         }
         return $this->_cacheBackend;
     }
