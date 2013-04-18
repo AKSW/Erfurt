@@ -919,11 +919,11 @@ class Erfurt_Store
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
         try {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
             // Get it if it already exists
-            $model = $this->getModel($modelIri, $baseIri, $type, $useAc);
+            $model = $this->getModel($modelIri, $useAc);
+        } catch (Erfurt_Store_Exception $e) {
+            // Create it if it doesn't exist
+            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
 
         return $model;
