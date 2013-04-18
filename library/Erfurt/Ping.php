@@ -23,6 +23,8 @@ class Erfurt_Ping
     private $_dbChecked = false;
     private $_options = array();
     private $_config = null;
+    private $_wrapperRegistry = null;
+    private $_httpAdapter = null;
 
     public function __construct ($options = array())
     {
@@ -168,6 +170,32 @@ class Erfurt_Ping
         $versioning->endAction();
 
         return 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
+    }
+
+    public function setWrapperRegistry ($wrapperRegistry)
+    {
+        $this->_wrapperRegistry = $wrapperRegistry;
+    }
+
+    public function setHttpAdapter($adapter)
+    {
+        $this->_httpAdapter = $adapter;
+    }
+
+    private function _getWrapper ($wrapperName)
+    {
+        if ($this->_wrapperRegistry === null) {
+            Erfurt_Wrapper_Registry::reset();
+            $this->_wrapperRegistry = Erfurt_Wrapper_Registry::getInstance();
+        }
+
+        $wrapper = $this->_wrapperRegistry->getWrapperInstance($wrapperName);
+
+        if ($this->_httpAdapter !== null) {
+            $wrapper->setHttpAdapter($this->_httpAdapter);
+        }
+
+        return $wrapper;
     }
 
     protected function _addPingback ($s, $p, $o)
@@ -346,8 +374,7 @@ class Erfurt_Ping
         $r = new Erfurt_Rdf_Resource($sourceUri);
 
         // Try to instanciate the requested wrapper
-        Erfurt_Wrapper_Registry::reset();
-        $wrapper = Erfurt_Wrapper_Registry::getInstance()->getWrapperInstance($wrapperName);
+        $wrapper = $this->_getWrapper($wrapperName);
 
         $wrapperResult = null;
         $wrapperResult = $wrapper->run($r, null, true);
