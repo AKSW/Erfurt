@@ -9,6 +9,8 @@ class Erfurt_PingTest extends Erfurt_TestCase
      */
     protected $ping;
     protected $adapter;
+    protected $_store;
+    protected $_dataDir;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -16,8 +18,8 @@ class Erfurt_PingTest extends Erfurt_TestCase
      */
     protected function setUp()
     {
-
         $this->_dataDir = realpath(dirname(__FILE__)) . '/_files/data/';
+
     }
 
     /**
@@ -30,45 +32,27 @@ class Erfurt_PingTest extends Erfurt_TestCase
 
     /**
      * @covers Erfurt_Ping::receive
-     * @todo   Implement testReceive().
      */
-    public function testReceive()
+    public function testReceiveSuccess()
     {
-        //$this->markTestNeedsDatabase();
-        $this->markTestNeedsTestConfig();
-
-        // prepare Erfurt_App
-        $testConfig = $this->getTestConfig();
-        $testConfig->debug = true;
-        $testConfig->store->backend = 'test';
-
-        Erfurt_App::reset();
-        Erfurt_App::getInstance(false)->start($testConfig);
-
-        $app = Erfurt_App::getInstance();
-        $app->authenticate();
+        $this->_setupStore();
 
         $modelUri = 'http://example.org/';
         $source = 'http://example.org/testResource1';
         $target = 'http://example.org/testResource1target';
 
-        // prepare Model
-        $store = $app->getStore();
-        $store->getModelOrCreate($modelUri);
-        $store->addStatement($modelUri, $target, EF_RDF_TYPE, array('type' => 'uri', 'value' => 'http://object.org'));
-        $all = $store->getGraphsUsingResource($target);
-        $allowed = $store->getReadableGraphsUsingResource($target);
-
-        var_dump($all);
-        var_dump($allowed);
+        $model = $this->_store->getModelOrCreate($modelUri);
+        $model->addStatement($target, EF_RDF_TYPE, array('type' => 'uri', 'value' => 'http://object.org'));
 
         // prepare HTTP adapter
         $this->_adapter = new Zend_Http_Client_Adapter_Test();
-        $this->_adapter->setResponse(new Zend_Http_Response(
-            200,
-            array('Content-type' => 'application/rdf+xml'),
-            file_get_contents($this->_dataDir . 'testResource1.rdf')
-        ));
+        $this->_adapter->setResponse(
+            new Zend_Http_Response(
+                200,
+                array('Content-type' => 'application/rdf+xml'),
+                file_get_contents($this->_dataDir . 'testResource1.rdf')
+            )
+        );
 
         // prepare Ping
         $this->_ping = new Erfurt_Ping;
@@ -76,12 +60,54 @@ class Erfurt_PingTest extends Erfurt_TestCase
 
         $successText = 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
         $this->assertEquals($successText, $this->_ping->receive($source, $target));
-
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete( 'This test has not been implemented yet.');
     }
 
-    protected function newCallback($className)
+    /**
+     * @covers Erfurt_Ping::receive
+     */
+    public function testReceiveTargetNotExists()
     {
+        $this->_setupStore();
+
+        $modelUri = 'http://example.org/';
+        $source = 'http://example.org/testResource1';
+        $target = 'http://example.org/testResource1target';
+
+        // prepare HTTP adapter
+        $this->_adapter = new Zend_Http_Client_Adapter_Test();
+        $this->_adapter->setResponse(
+            new Zend_Http_Response(
+                200,
+                array('Content-type' => 'application/rdf+xml'),
+                file_get_contents($this->_dataDir . 'testResource1.rdf')
+            )
+        );
+
+        // prepare Ping
+        $this->_ping = new Erfurt_Ping;
+        $this->_ping->setHttpAdapter($this->_adapter);
+
+        $failureCode = 0x0021;
+        $this->assertEquals($failureCode, $this->_ping->receive($source, $target));
+    }
+
+    private function _setupStore ()
+    {
+        //$this->markTestNeedsDatabase();
+        $this->markTestNeedsTestConfig();
+
+        // prepare Erfurt_App
+        $testConfig = $this->getTestConfig();
+        $testConfig->debug = true;
+        $testConfig->store->backend = 'memory';
+
+        Erfurt_App::reset();
+        Erfurt_App::getInstance(false)->start($testConfig);
+
+        $app = Erfurt_App::getInstance();
+        $this->authenticateDbUser();
+
+        // prepare Model
+        $this->_store = $app->getStore();
     }
 }
