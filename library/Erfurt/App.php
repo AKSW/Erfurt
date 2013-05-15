@@ -631,6 +631,8 @@ class Erfurt_App
      * If no such (writable) directory is found, false is returned.
      *
      * @return string|false
+	 * @deprecated not used anymore since newer and single cache using Zend_Cache
+	 * @todo to be removed after check and refactoring
      */
     public function getCacheDir()
     {
