@@ -632,7 +632,7 @@ class Erfurt_App
      *
      * @return string|false
 	 * @deprecated not used anymore since newer and single cache using Zend_Cache
-	 * @todo to be removed after check and refactoring
+	 * @todo to be renamed to getTempDir
      */
     public function getCacheDir()
     {
