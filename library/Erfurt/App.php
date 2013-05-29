@@ -1132,6 +1132,11 @@ class Erfurt_App
                 case 'memcached':
                     $options	= $config->cache->backend->memcached->toArray();
                     $cache		= new Zend_Cache_Backend_Memcached($options);
+					if( !$cache->save( time(), 'EF_lastConnect' ) ){
+						throw new Erfurt_Exception(
+							'Memcache server is not available.'
+						);
+					}
                     break;
                 case 'apc':
                     $cache		= new Zend_Cache_Backend_Apc();
@@ -1150,11 +1155,9 @@ class Erfurt_App
                     $cache		= new Zend_Cache_Backend_File($options);
                     break;
                 case 'database':
-                    require_once 'Erfurt/Cache/Backend/Database.php';
                     $cache		= new Erfurt_Cache_Backend_Database();
                     break;
                 case 'null':
-                    require_once 'Erfurt/Cache/Backend/Null.php';
                     $cache		= new Erfurt_Cache_Backend_Null();
                     break;
                 default:
