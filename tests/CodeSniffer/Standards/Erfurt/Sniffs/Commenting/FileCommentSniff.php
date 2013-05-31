@@ -37,6 +37,7 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
 
     function __construct()
     {
+        date_default_timezone_set('Europe/Berlin');
         $this->_date = date("Y");
         $this->_commentStr = array(
         "/**\n",
