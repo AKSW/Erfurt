@@ -627,27 +627,6 @@ class Erfurt_App
     }
 
     /**
-     * Returns path to directory for temporary files, provided by operating system.
-     * If no such directory is set, found and writable, an exception will be thrown.
-     *
-     * @return string
-     * @throws Erfurt_App_Exception if operating system is not providing a temporary directory
-     * @throws Erfurt_App_Exception if temporary directory is not existing
-     * @throws Erfurt_App_Exception if temporary directory is not writable
-     */
-    public function getTempDir()
-    {
-        $path	= realpath(sys_get_temp_dir());
-        if (!$path)
-            throw new Erfurt_App_Exception( 'The operating system is not providing a temporary directory.' );
-        if (!file_exists($path))
-            throw new Erfurt_App_Exception( 'Temporary directory "'.$path.'" is not existing.' );
-        if (!file_exists($path))
-            throw new Erfurt_App_Exception( 'Temporary directory "'.$path.'" is not writable.' );
-        return $path;
-    }
-
-    /**
      * Returns the configuration object.
      *
      * @return Zend_Config
@@ -1117,35 +1096,51 @@ class Erfurt_App
             $cacheType	= $config->cache->backend->type;
             switch (strtolower($cacheType)) {
                 case 'memcached':
-                    $options	= $config->cache->backend->memcached->toArray();
-                    $cache		= new Zend_Cache_Backend_Memcached($options);
-					if( !$cache->save( time(), 'EF_lastConnect' ) ){
-						throw new Erfurt_Exception(
-							'Memcache server is not available.'
-						);
-					}
+                    $options = $config->cache->backend->memcached->toArray();
+                    $cache   = new Zend_Cache_Backend_Memcached($options);
+                    if( !$cache->save(time(), 'EF_lastConnect')) {
+                        throw new Erfurt_Exception(
+                            'Memcache server is not available.'
+                        );
+                    }
                     break;
                 case 'apc':
-                    $cache		= new Zend_Cache_Backend_Apc();
+                    $cache   = new Zend_Cache_Backend_Apc();
                     break;
                 case 'sqlite':
-                    $options	= $config->cache->backend->sqlite->toArray();
+                    $options = $config->cache->backend->sqlite->toArray();
                     if (!in_array('cache_db_complete_path', array_keys($options))) {
                         throw new Erfurt_Exception(
                             'Cache database filename must be set for sqlite cache backend (cache_db_complete_path).'
                         );
                     }
-                    $cache		= new Zend_Cache_Backend_Sqlite($options);
+                    $cache   = new Zend_Cache_Backend_Sqlite($options);
                     break;
                 case 'file':
-                    $options	= $config->cache->backend->file->toArray();
-                    $cache		= new Zend_Cache_Backend_File($options);
+                    $path		= $config->cache->backend->file->cache_dir;
+                    if (!$path){
+                        throw new Erfurt_App_Exception(
+                            'No cache directory configured.'
+                        );
+                    }
+                    if (!file_exists($path)) {
+                        throw new Erfurt_App_Exception(
+                            'Cache directory "'.$path.'" is not existing.'
+                        );
+                    }
+                    if (!is_writable($path)) {
+                        throw new Erfurt_App_Exception(
+                            'Cache directory "'.$path.'" is not writable.'
+                        );
+                    }
+                    $options = $config->cache->backend->file->toArray();
+                    $cache   = new Zend_Cache_Backend_File($options);
                     break;
                 case 'database':
-                    $cache		= new Erfurt_Cache_Backend_Database();
+                    $cache   = new Erfurt_Cache_Backend_Database();
                     break;
                 case 'null':
-                    $cache		= new Erfurt_Cache_Backend_Null();
+                    $cache   = new Erfurt_Cache_Backend_Null();
                     break;
                 default:
                     throw new Erfurt_Exception(
