@@ -36,7 +36,7 @@ default:
 	@echo "                                 output"
 	@echo ""
 	@echo "  Possible parameters:"
-	@echo "   FPATH=<path> (run code checking on specific relative path)"
+	@echo "   CHECKPATH=<path> (run code checking on specific relative path)"
 	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
 	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
 		
@@ -63,8 +63,8 @@ CSSPATH = tests/CodeSniffer/
 IGNOREPATTERN = */libraries/*,*/Parser/Sparql10/*,*/Parser/Sparql11/*
 
 # Parameter check
-ifndef FPATH
-	FPATH = "./"
+ifndef CHECKPATH
+	CHECKPATH = "./"
 endif
 ifdef SNIFFS
 	SNIFFSTR = "--sniffs="$(SNIFFS)
@@ -72,7 +72,7 @@ else
 	SNIFFSTR =
 endif
 
-REQUESTSTR = --ignore=$(IGNOREPATTERN) $(OPTIONS) $(SNIFFSTR)  $(FPATH)
+REQUESTSTR = --ignore=$(IGNOREPATTERN) $(OPTIONS) $(SNIFFSTR)  $(CHECKPATH)
 
 cs-default:
 	chmod ugo+x "$(CSSPATH)cs-scripts.sh"
