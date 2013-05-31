@@ -627,37 +627,24 @@ class Erfurt_App
     }
 
     /**
-     * Returns a directory, which can be used for file-based caching.
-     * If no such (writable) directory is found, false is returned.
+     * Returns path to directory for temporary files, provided by operating system.
+     * If no such directory is set, found and writable, an exception will be thrown.
      *
-     * @return string|false
-	 * @deprecated not used anymore since newer and single cache using Zend_Cache
-	 * @todo to be renamed to getTempDir
+     * @return string
+     * @throws Erfurt_App_Exception if operating system is not providing a temporary directory
+     * @throws Erfurt_App_Exception if temporary directory is not existing
+     * @throws Erfurt_App_Exception if temporary directory is not writable
      */
-    public function getCacheDir()
+    public function getTempDir()
     {
-        $config = $this->getConfig();
-
-        if (isset($config->cache->path)) {
-            $matches = array();
-            if (!(preg_match('/^(\w:[\/|\\\\]|\/)/', $config->cache->path, $matches) === 1)) {
-                $baseDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR;
-                $config->cache->path = $baseDir . $config->cache->path;
-            }
-
-            if (is_writable($config->cache->path)) {
-                return $config->cache->path;
-            } else {
-                throw new Erfurt_App_Exception('Cache path is not writable:' . $config->cache->path);
-            }
-        } else {
-            $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
-            if (is_writable($cacheDir)) {
-                return $cacheDir;
-            } else {
-                throw new Erfurt_App_Exception('Cache path is not writable:' . $cacheDir);
-            }
-        }
+        $path	= realpath(sys_get_temp_dir());
+        if (!$path)
+            throw new Erfurt_App_Exception( 'The operating system is not providing a temporary directory.' );
+        if (!file_exists($path))
+            throw new Erfurt_App_Exception( 'Temporary directory "'.$path.'" is not existing.' );
+        if (!file_exists($path))
+            throw new Erfurt_App_Exception( 'Temporary directory "'.$path.'" is not writable.' );
+        return $path;
     }
 
     /**
