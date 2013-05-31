@@ -40,7 +40,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function __construct($adapterOptions = array())
     {
         $this->_serviceUrl = $adapterOptions['serviceUrl'];
-                
         foreach($adapterOptions['graphs'] as $graphUri) {
             $this->_configuredGraphs[$graphUri] = true;
         }
@@ -149,8 +148,14 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     
     public function sparqlAsk($query)
     {
-// TODO
-        throw new Exception('TODO');
+        $result = $this->sparqlQuery($query);
+        if ($result['boolean'] === "true") {
+            return true;
+        }else if ($result['boolean'] === "false") {
+            return false;
+        } else {
+            throw new Exception('Erfurt: Ask query lead to a nebulous answer. Maybe the query was not designed correctly: ' . (string) $query);
+        }
     }
     
     public function sparqlQuery($query, $options=array())
@@ -193,7 +198,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     
         $client->setHeaders('Accept', 'application/sparql-results+xml');
         $response = $client->request();
-
+        
         if ($response->getStatus() === 200) {
             // OK
             if ($response->getBody() === '') {
@@ -205,21 +210,25 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             $result = array('head' => array(), 'results' => array('bindings' => array()));
         }
 
+
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
-                
-                foreach ($result['results']['bindings'] as $row) {
-                    $newRow = array();
-                    
-                    foreach ($row as $var=>$value) {
-                        // TODO datatype and lang support
-                        $newRow[$var] = $value['value'];
+                //could be an ask query
+                if (empty($result['results']['bindings']) && (!empty($result['boolean'])) ) {
+                    return $result;
+                } else {
+                    foreach ($result['results']['bindings'] as $row) {
+                        $newRow = array();
+                        
+                        foreach ($row as $var=>$value) {
+                            // TODO datatype and lang support
+                            $newRow[$var] = $value['value'];
+                        }
+                        
+                        $newResult[] = $newRow;
                     }
-                    
-                    $newResult[] = $newRow;
                 }
-                
                 return $newResult;
             case 'extended':
                 
@@ -252,7 +261,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         
         $headElems = $xmlDoc->getElementsByTagName('head');
         $varElems = $xmlDoc->getElementsByTagName('variable');
-        
         foreach ($varElems as $i=>$varElem) {
             if ($i === 0) {
                 $result['head'] = array();
@@ -261,8 +269,18 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
             
             $result['head']['vars'][] = $varElem->attributes->getNamedItem('name')->value;
         }
-
+        
         $result['results'] = array('bindings' => array());
+        
+        //if it is a Ask query we have to expect a boolean value
+        $booleanValues = $xmlDoc->getElementsByTagName('boolean');
+        foreach ($booleanValues as $booleanValue) {
+            $result['boolean'] = $booleanValue->nodeValue;
+        }
+        if (!empty($result['boolean'])) {
+                return $result;
+        }
+        
         $resultElems = $xmlDoc->getElementsByTagName('result');
         foreach ($resultElems as $resultElem) {
             $row = array();
