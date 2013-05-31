@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function __construct($adapterOptions = array())
     {
         $this->_serviceUrl = $adapterOptions['serviceUrl'];
-        foreach($adapterOptions['graphs'] as $graphUri) {
+        foreach ($adapterOptions['graphs'] as $graphUri) {
             $this->_configuredGraphs[$graphUri] = true;
         }
 
@@ -151,10 +151,12 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         $result = $this->sparqlQuery($query);
         if ($result['boolean'] === "true") {
             return true;
-        }else if ($result['boolean'] === "false") {
+        } else if ($result['boolean'] === "false") {
             return false;
         } else {
-            throw new Exception('Erfurt: Ask query lead to a nebulous answer. Maybe the query was not designed correctly: ' . (string) $query);
+            throw new Exception(
+                'Erfurt: Ask query lead to a nebulous answer. Maybe the query was not designed correctly.'
+            );
         }
     }
 
@@ -209,13 +211,12 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         } else {
             $result = array('head' => array(), 'results' => array('bindings' => array()));
         }
-
-
         switch ($resultform) {
             case 'plain':
                 $newResult = array();
                 //could be an ask query
                 if (empty($result['results']['bindings']) && (!empty($result['boolean'])) ) {
+#                    var_dump($result);die;
                     return $result;
                 } else {
                     foreach ($result['results']['bindings'] as $row) {
@@ -231,7 +232,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 }
                 return $newResult;
             case 'extended':
-
                 return $result;
                 break;
             case 'json':
@@ -250,7 +250,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 'results' => array('bindings' => array())
             );
         }
-
         $result = array();
         $xmlDoc = new DOMDocument();
         $ret = @$xmlDoc->loadXML($sparqlXmlResults);
@@ -258,7 +257,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if ($ret === false) {
             throw new OntoWiki_Exception('SPARQL store could not parse the xml result "'.htmlentities($sparqlXmlResults).'"');
         }
-
         $headElems = $xmlDoc->getElementsByTagName('head');
         $varElems = $xmlDoc->getElementsByTagName('variable');
         foreach ($varElems as $i=>$varElem) {
@@ -320,11 +318,9 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
                             $val = $vn->nodeValue;
                         }
-
                         break;
                     }
-
-                    if($addRow){
+                    if ($addRow) {
                         $row[$var] = array(
                             'type'  => $type,
                             'value' => $val

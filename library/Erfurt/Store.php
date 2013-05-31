@@ -347,6 +347,13 @@ class Erfurt_Store
      */
     public function checkSetup()
     {
+        $config = Erfurt_App::getInstance()->getConfig();
+        if (isset($config->sysont->enable) ) {
+            if ($config->sysont->enable == false) {
+                return true;
+            }
+        }
+
         $logger         = Erfurt_App::getInstance()->getLog();
         $sysOntSchema   = $this->getOption('schemaUri');
         $schemaLocation = $this->getOption('schemaLocation');
