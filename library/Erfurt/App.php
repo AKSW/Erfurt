@@ -1091,9 +1091,11 @@ class Erfurt_App
     {
         if (null === $this->_cacheBackend) {
             $config = $this->getConfig();
-
             // check the type an whether type is supported
             $cacheType	= $config->cache->backend->type;
+            // caching is not enabled, use fake cache backend
+            if (!$config->cache->frontend->enable)
+                $cacheType = "null";
             switch (strtolower($cacheType)) {
                 case 'memcached':
                     $options = $config->cache->backend->memcached->toArray();
