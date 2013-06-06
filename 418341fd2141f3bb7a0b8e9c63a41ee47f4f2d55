@@ -1,11 +1,11 @@
 {
   "built_on": "master",
-  "duration": 10.977,
-  "full_display_name": "Erfurt-Feature-Branches #5",
-  "id": "2013-05-31_16-13-24",
-  "number": 5,
+  "duration": 6.476,
+  "full_display_name": "Erfurt-Feature-Branches #6",
+  "id": "2013-06-06_13-24-08",
+  "number": 6,
   "result": "FAILURE",
   "status_message": "?",
-  "time": "2013-05-31 16:13:24 +0200",
-  "url": "job/Erfurt-Feature-Branches/5/"
+  "time": "2013-06-06 13:24:08 +0200",
+  "url": "job/Erfurt-Feature-Branches/6/"
 }
