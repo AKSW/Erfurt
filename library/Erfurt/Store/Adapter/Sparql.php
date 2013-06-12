@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -40,12 +40,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function __construct($adapterOptions = array())
     {
         $this->_serviceUrl = $adapterOptions['serviceUrl'];
-        foreach ($adapterOptions['graphs'] as $graphUri) {
-            $this->_configuredGraphs[$graphUri] = true;
+        if (!empty($adapterOptions['graphs'])) {
+            foreach ($adapterOptions['graphs'] as $graphUri) {
+                $this->_configuredGraphs[$graphUri] = true;
+            }
         }
-
-        //TODO add option to retrieve available graphs from the endpoint (slower but complete)
-
         if (isset($adapterOptions['username'])) {
             $this->_username = $adapterOptions['username'];
         }
@@ -97,6 +96,20 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     public function getAvailableModels()
     {
+        if (empty($this->_configuredGraphs)) {
+        //query the store and receive the list of available graphs
+            $query = "
+                SELECT DISTINCT ?g 
+                WHERE { 
+                    GRAPH ?g {
+                        ?s ?p ?o . 
+                    }
+                }";
+            $graphs = $this->sparqlQuery($query);
+            foreach ($graphs as $key => $graph) {
+                $this->_configuredGraphs[$graph['g']] = true;
+            }
+        }
         return $this->_configuredGraphs;
     }
 
@@ -139,7 +152,8 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     public function isModelAvailable($graphUri)
     {
-        if (isset($this->_configuredGraphs[$graphUri])) {
+        $graphs = $this->getAvailableModels();
+        if (isset($graphs[$graphUri])) {
             return true;
         } else {
             return false;
@@ -164,23 +178,29 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     {
         // Make sure, we only query for configured graphs...
         $q = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
-        $from = $q->getFrom();
-        $newFrom = array();
-        foreach ($from as $f) {
-            if (isset($this->_configuredGraphs[$f])) {
-                $newFrom[] = $f;
+
+        //only do this if configured graphs array contain entries
+        if (!empty($this->_configuredGraphs)) {
+            $from = $q->getFrom();
+            $newFrom = array();
+            foreach ($from as $f) {
+                if (isset($this->_configuredGraphs[$f])) {
+                    $newFrom[] = $f;
+                }
             }
+
+            if (count($newFrom) === 0) {
+                return array();
+            }
+            $q->setFrom($newFrom);
         }
 
-        if (count($newFrom) === 0) {
-            return array();
+        $resultform = Erfurt_Store::RESULTFORMAT_PLAIN;
+        if (isset($options[Erfurt_Store::RESULTFORMAT])) {
+            $resultform = $options[Erfurt_Store::RESULTFORMAT];
         }
-        $q->setFrom($newFrom);
-
-        $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
 
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
-
         $client = Erfurt_App::getInstance()->getHttpClient(
             $url,
             array(
@@ -216,7 +236,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 $newResult = array();
                 //could be an ask query
                 if (empty($result['results']['bindings']) && (!empty($result['boolean'])) ) {
-#                    var_dump($result);die;
+
                     return $result;
                 } else {
                     foreach ($result['results']['bindings'] as $row) {
@@ -233,10 +253,8 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 return $newResult;
             case 'extended':
                 return $result;
-                break;
             case 'json':
                 return json_encode($result);
-                break;
             default:
                 throw new Exception('Result form '.$resultform.' not supported yet.');
         }
@@ -255,7 +273,9 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         $ret = @$xmlDoc->loadXML($sparqlXmlResults);
 
         if ($ret === false) {
-            throw new OntoWiki_Exception('SPARQL store could not parse the xml result "'.htmlentities($sparqlXmlResults).'"');
+            throw new OntoWiki_Exception(
+                'SPARQL store could not parse the xml result "'.htmlentities($sparqlXmlResults).'"'
+            );
         }
         $headElems = $xmlDoc->getElementsByTagName('head');
         $varElems = $xmlDoc->getElementsByTagName('variable');
