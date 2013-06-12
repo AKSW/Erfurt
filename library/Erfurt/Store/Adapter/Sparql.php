@@ -236,7 +236,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                 $newResult = array();
                 //could be an ask query
                 if (empty($result['results']['bindings']) && (!empty($result['boolean'])) ) {
-
                     return $result;
                 } else {
                     foreach ($result['results']['bindings'] as $row) {
