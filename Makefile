@@ -110,8 +110,11 @@ cs-check-blame:
 	$(CSSPATH)cs-scripts.sh -s -c "--report=gitblame $(REQUESTSTR)"
 
 # test stuff
+test-directories:
+	rm -rf tests/cache
+	mkdir tests/cache
 
-test-unit: directories
+test-unit: test-directories
 	@cd tests && phpunit --bootstrap Bootstrap.php unit/
 
 test-unit-cc: directories
