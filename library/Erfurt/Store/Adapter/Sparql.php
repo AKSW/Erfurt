@@ -13,9 +13,10 @@ require_once 'Erfurt/Store.php';
 /**
  * This class acts as a backend for SPARQL endpoints.
  *
- * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright  Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author     Michael Martin <martin@informatik.uni-leipzig.de>
  * @package    Erfurt_Store_Adapter
  */
 class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
@@ -39,7 +40,9 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     public function __construct($adapterOptions = array())
     {
-        $this->_serviceUrl = $adapterOptions['serviceUrl'];
+        if (!empty($adapterOptions['serviceUrl'])) {
+            $this->_serviceUrl = $adapterOptions['serviceUrl'];
+        }
         if (!empty($adapterOptions['graphs'])) {
             foreach ($adapterOptions['graphs'] as $graphUri) {
                 $this->_configuredGraphs[$graphUri] = true;
@@ -98,12 +101,14 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     {
         if (empty($this->_configuredGraphs)) {
         //query the store and receive the list of available graphs
+        //Filter(true) is a hack for some versions of Virtuoso
             $query = "
                 SELECT DISTINCT ?g 
                 WHERE { 
                     GRAPH ?g {
                         ?s ?p ?o . 
                     }
+                    Filter(true)
                 }";
             $graphs = $this->sparqlQuery($query);
             foreach ($graphs as $key => $graph) {
@@ -163,9 +168,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function sparqlAsk($query)
     {
         $result = $this->sparqlQuery($query);
-        if ($result['boolean'] === "true") {
+        if (isset($result['boolean']) && $result['boolean'] === "true") {
             return true;
-        } else if ($result['boolean'] === "false") {
+        } else if (isset($result['boolean']) && $result['boolean'] === "false") {
+            return false;
+        } else if (empty($result)) {
             return false;
         } else {
             throw new Exception(
@@ -198,6 +205,10 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         $resultform = Erfurt_Store::RESULTFORMAT_PLAIN;
         if (isset($options[Erfurt_Store::RESULTFORMAT])) {
             $resultform = $options[Erfurt_Store::RESULTFORMAT];
+        }
+
+        if (empty($this->_serviceUrl)) {
+            return array();
         }
 
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);

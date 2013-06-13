@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -601,7 +601,7 @@ class Erfurt_App
 
         return $this->_auth;
     }
-    
+
     public function setAuth(Erfurt_Auth $auth)
     {
         $this->_auth = $auth;
@@ -662,8 +662,11 @@ class Erfurt_App
                 throw new Erfurt_App_Exception('Cache path is not writable:' . $config->cache->path);
             }
         } else {
-            $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
-            
+            $cacheDir = realpath(dirname(dirname(dirname(__FILE__)))) .
+                        DIRECTORY_SEPARATOR .
+                        'cache' .
+                        DIRECTORY_SEPARATOR;
+
             if (is_writable($cacheDir)) {
                 return $cacheDir;
             } else {
@@ -763,11 +766,11 @@ class Erfurt_App
                     $logWriter = new Zend_Log_Writer_Null();
                 } else {
                     require_once 'Zend/Log/Writer/Stream.php';
-                    
+
                     $logName = $logDir . $logIdentifier;
-            
+
                     // Check whether log can be created with $logName... otherwise append a number.
-                    // This needs to be done, since logs may be created by other processes (e.g. with 
+                    // This needs to be done, since logs may be created by other processes (e.g. with
                     // testing) and thus can't be opened anymore.
                     for ($i = 0; $i<10; ++$i) {
                         try {
@@ -776,7 +779,7 @@ class Erfurt_App
                                 $fullLogName .= '_' . $i;
                             }
                             $fullLogName .= '.log';
-                    
+
                             $logWriter = new Zend_Log_Writer_Stream($fullLogName);
                             if (null !== $logWriter) {
                                 break;
@@ -785,7 +788,7 @@ class Erfurt_App
                             // Nothing to do... just continue
                         }
                     }
-            
+
                     if (null === $logWriter) {
                         require_once 'Zend/Log/Writer/Null.php';
                         $logWriter = new Zend_Log_Writer_Null();
@@ -916,6 +919,10 @@ class Erfurt_App
     public function getStore()
     {
         if (null === $this->_store) {
+
+            $event = new Erfurt_Event('onBeforeInitialisingStore');
+            $event->config   = $this->_config;
+            $event->trigger();
             $config = $this->getConfig();
 
             // Backend must be set, else throw an exception.
