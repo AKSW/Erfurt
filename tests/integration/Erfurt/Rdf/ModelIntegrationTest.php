@@ -210,9 +210,6 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 
         $model->renameResource($modelUri.'old', $modelUri.'new');
 
-        $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat('rdfjson');
-        $got = $serializer->serializeGraphToString($modelUri);
-
         $query = Erfurt_Sparql_SimpleQuery::initWithString('SELECT ?s ?p ?o
                                                             FROM <' . $modelUri . '>
                                                             WHERE { ?s ?p ?o . }');
