@@ -93,9 +93,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (!in_array('ef_cache_query_triple', $existingTableNames)) {
             $columnSpec = array(
                 'tid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
-                'subject'       => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
-                'predicate'     => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].'  NULL',
-                'object'        => 'VARCHAR(255) '.$vocabulary['col_utf8_bin'].'   NULL',
+                'subject'       => 'VARCHAR(2048) '.$vocabulary['col_ascii_bin'].'  NULL',
+                'predicate'     => 'VARCHAR(2048) '.$vocabulary['col_ascii_bin'].'  NULL',
+                'object'        => 'VARCHAR(2048) '.$vocabulary['col_utf8_bin'].'   NULL',
             );
             
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
@@ -105,7 +105,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
             $columnSpec = array(
                 'mid'           => 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT',
-                'modelIri'      => 'VARCHAR(255) '.$vocabulary['col_ascii_bin'].' NULL',
+                'modelIri'      => 'VARCHAR(2048) '.$vocabulary['col_ascii_bin'].' NULL',
             );
             
             $this->store->createTable('ef_cache_query_model', $columnSpec);
