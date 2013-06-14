@@ -373,6 +373,13 @@ class Erfurt_Rdf_Model
         $added   = array();
 
         foreach ($result['results']['bindings'] as $s) {
+            // result format from sparqlQuery
+            // isn't the same as format for delete/addMultipleStatements
+            if (array_key_exists('xml:lang', $s['o'])) {
+                $s['o']['lang'] = $s['o']['xml:lang'];
+                unset($s['o']['xml:lang']);
+            }
+
             $removed[$s['s']['value']][$s['p']['value']][] = $s['o'];
 
             foreach ($vars as $var) {
