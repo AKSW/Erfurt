@@ -419,6 +419,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
         $config->cache->query->enable = true;
+        $config->cache->query->type = NULL;
 
         $app->getQueryCache();
     }
@@ -442,7 +443,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
     public function testGetStoreWithBackendNotSet()
     {
         $app = Erfurt_App::getInstance();
-
+        $config = $app->getConfig();
+        $config->store->backend = NULL;
         $store = Erfurt_App::getInstance()->getStore();
     }
 
