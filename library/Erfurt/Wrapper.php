@@ -118,26 +118,8 @@ abstract class Erfurt_Wrapper
      */
     public function init($config)
     {
-        $frontendOptions = array(
-            'automatic_serialization' => true
-        );
-
-        $frontendAdapter = new Erfurt_Cache_Frontend_ObjectCache($frontendOptions);
-
-        $backendAdapter = null;
-        try {
-            $tmpDir = Erfurt_App::getInstance()->getCacheDir();
-            
-            $backendOptions = array('cache_dir' => $tmpDir);;
-            $backendAdapter = new Zend_Cache_Backend_File($backendOptions);
-        } catch (Erfurt_App_Exception $e) {
-            $backendAdapter = new Erfurt_Cache_Backend_Null();
-        }
-
-        $frontendAdapter->setBackend($backendAdapter);
-
-        $this->_cache  = $frontendAdapter;
         $this->_config = $config;
+		Erfurt_App::getInstance()->getCache();									//  sets up single object cache
     }
 
     // ------------------------------------------------------------------------

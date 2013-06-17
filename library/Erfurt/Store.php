@@ -357,8 +357,11 @@ class Erfurt_Store
 
         $returnValue = true;
 
+        $isVersioningEnabled = false ;
         $versioning = Erfurt_App::getInstance()->getVersioning();
-        $isVersioningEnabled = $versioning->isVersioningEnabled();
+        if ($versioning != false) {
+            $isVersioningEnabled = $versioning->isVersioningEnabled();
+        }
 
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the

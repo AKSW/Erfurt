@@ -297,42 +297,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);
     }*/
 
-    public function testGetCacheDir()
-    {
-        $app = Erfurt_App::getInstance();
-
-        $cachePath = $app->getCacheDir();
-        $this->assertTrue(is_writeable($cachePath));
-    }
-
-    public function testGetCacheDirExplicitCachePath()
-    {
-        $app    = Erfurt_App::getInstance();
-        $config = $app->getConfig();
-
-        $baseDir = realpath(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR;
-        $cacheDirName = 'cache/';
-        $config->cache->path = $cacheDirName;
-
-        $cachePath = $app->getCacheDir();
-        $this->assertEquals($baseDir . $cacheDirName, $cachePath);
-    }
-
-    /**
-     * @expectedException Erfurt_App_Exception
-     */
-    public function testGetCacheDirInvalidCachePath()
-    {
-        $app    = Erfurt_App::getInstance();
-        $config = $app->getConfig();
-
-        $baseDir = realpath(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR;
-        $cacheDirName = 'somethingNotExisting/';
-        $config->cache->path = $cacheDirName;
-
-        $cachePath = $app->getCacheDir();
-    }
-
     public function testGetConfig()
     {
         $config = Erfurt_App::getInstance()->getConfig();
