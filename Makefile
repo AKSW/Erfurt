@@ -111,25 +111,27 @@ cs-check-blame:
 
 # test stuff
 test-directories:
-	rm -rf tests/cache
+	rm -rf tests/cache tests/unit/cache tests/integration/cache
 	mkdir tests/cache
+	mkdir tests/unit/cache
+	mkdir tests/integration/cache
 
 test-unit: test-directories
 	@cd tests && phpunit --bootstrap Bootstrap.php unit/
 
-test-unit-cc: directories
+test-unit-cc: test-directories
 	@cd tests/unit && phpunit
 
-test-integration-virtuoso: directories
+test-integration-virtuoso: test-directories
 	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-virtuoso-cc: directories
+test-integation-virtuoso-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
 
-test-integration-mysql: directories
+test-integration-mysql: test-directories
 	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-mysql-cc: directories
+test-integation-mysql-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
 
 test:
