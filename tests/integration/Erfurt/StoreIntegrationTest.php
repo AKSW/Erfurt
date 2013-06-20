@@ -306,7 +306,7 @@ EOF;
         $this->markTestNeedsDatabase();
         $store = Erfurt_App::getInstance()->getStore();
 
-        $dataPath = $this->_fileBase . 'Machine_Learning.xml';
+        $dataPath = $this->_fileBase . 'Machine_learning.xml';
 
         $graphUri = 'http://example.org/testGraphMLXyz';
 
