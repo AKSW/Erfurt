@@ -11,7 +11,6 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $this->assertCount(0, $this->fixture->getStatements());
     }
 
-
     /**
      * @expectedException Erfurt_Exception
      **/
@@ -39,6 +38,22 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
     public function testHasSwrong()
     {
         $this->assertFalse($this->fixture->hasS('http://e.org/not-available'));
+    }
+
+    /**
+     * @depends testAddAttributeCorrect
+     */
+    public function testHasO()
+    {
+        $this->assertFalse($this->fixture->hasO(
+            array('type' => 'url', 'value' => 'http://e.org/not-available'))
+        );
+        $this->assertFalse($this->fixture->hasO(
+            array('type' => 'literal', 'value' => 'not-available-literal'))
+        );
+        $this->assertTrue($this->fixture->hasO(
+            array('type' => 'literal', 'value' => 'a-literal'))
+        );
     }
 
     public function testAddRelationCorrect()
