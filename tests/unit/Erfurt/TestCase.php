@@ -196,4 +196,37 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
         $app->setAuth($auth);
     }
+
+    /**
+     * Asserts that statement sets are the same.
+     *
+     * @param  array  $expected
+     * @param  array  $got
+     * @param  string $message
+     */
+    public static function assertStatementsEqual($expected, $got, $message = '')
+    {
+        $expectedS = array_keys($expected);
+        sort($expectedS);
+        $gotS = array_keys($got);
+        sort($gotS);
+        self::assertEquals($expectedS, $gotS, $message);
+
+        foreach ($expectedS as $s) {
+            $expectedP = array_keys($expected[$s]);
+            sort($expectedP);
+            $gotP = array_keys($got[$s]);
+            sort($gotP);
+            self::assertEquals($expectedP, $gotP, $message);
+
+            foreach ($expectedP as $p) {
+                $sortFn = function($a, $b) {
+                    return strcmp($a['value'], $b['value']);
+                };
+                usort($expected[$s][$p], $sortFn);
+                usort($got[$s][$p], $sortFn);
+                self::assertEquals($expected[$s][$p], $got[$s][$p], $message);
+            }
+        }
+    }
 }
