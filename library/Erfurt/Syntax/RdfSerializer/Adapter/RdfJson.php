@@ -172,4 +172,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
 
         return json_encode($triples);
     }
+
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
+    {
+        throw new Erfurt_Syntax_RdfSerializerException(
+            'The serialization of query results is not yet supported for RDF/JSON'
+        );
+    }
 }

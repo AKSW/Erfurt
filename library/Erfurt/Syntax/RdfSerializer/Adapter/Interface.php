@@ -38,4 +38,16 @@ interface Erfurt_Syntax_RdfSerializer_Adapter_Interface
      * @return string
      */
     public function serializeResourceToString($resourceUri, $graphUri, $pretty = false, $useAc = true);
+
+    /**
+     * Serializes the result of the given query.
+     *
+     * @param Erfurt_Sparql_SimpleQuery|Erfurt_Sparql_Query2 $query
+     * @param string $graphUri
+     * @param bool $pretty
+     * @param bool $useAc
+     *
+     * @return string
+     */
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true);
 }

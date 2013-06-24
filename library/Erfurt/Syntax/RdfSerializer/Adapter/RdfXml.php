@@ -128,6 +128,13 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         return $this->_rdfWriter->getContentString();
     }
 
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
+    {
+        throw new Erfurt_Syntax_RdfSerializerException(
+            'The serialization of query results is not yet supported for RDF/XML'
+        );
+    }
+
     protected function _handleStatement($s, $p, $o, $sType, $oType, $lang = null, $dType = null)
     {
         if (null === $this->_currentSubject) {
