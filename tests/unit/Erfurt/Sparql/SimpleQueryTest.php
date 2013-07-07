@@ -72,6 +72,30 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
 
+    public function testInitWithStringStar()
+    {
+        $queryString = '
+            SELECT *
+            WHERE {
+                ?s ?p ?o
+            }
+        ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringCountStar()
+    {
+        $queryString = '
+            SELECT COUNT(*)
+            WHERE {
+                ?s ?p ?o
+            }
+        ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
     public function testInitWithStringUnusuallyFormatted()
     {
         $queryString = '
