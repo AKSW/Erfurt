@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -16,70 +16,70 @@
  * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-class Erfurt_Sparql_SimpleQuery 
-{    
+class Erfurt_Sparql_SimpleQuery
+{
     // ------------------------------------------------------------------------
     // --- Protected properties -----------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /** @var string */
     protected $_prologuePart = null;
-    
+
     /** @var array */
     protected $_from = array();
-    
+
     /** @var array */
     protected $_fromNamed = array();
-    
+
     /** @var string */
     protected $_wherePart = null;
-    
+
     /** @var string */
     protected $_orderClause = null;
-    
+
     /** @var int */
     protected $_limit = null;
-    
+
     /** @var int */
     protected $_offset = null;
-    
+
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
-    
-    public function __toString() 
+
+    public function __toString()
     {
         $queryString = $this->_prologuePart . PHP_EOL;
-        
+
         foreach (array_unique($this->_from) as $from) {
             $queryString .= 'FROM <' . $from . '>' . PHP_EOL;
         }
-        
+
         foreach (array_unique($this->_fromNamed) as $fromNamed) {
             $queryString .= 'FROM NAMED <' . $fromNamed . '>' . PHP_EOL;
         }
-        
+
         $queryString .= $this->_wherePart . ' ';
-        
+
         if ($this->_orderClause !== null) {
             $queryString .= 'ORDER BY ' . $this->_orderClause . PHP_EOL;
         }
-        
+
         if ($this->_limit !== null) {
             $queryString .= 'LIMIT ' . $this->_limit . PHP_EOL;
         }
-        
+
         if ($this->_offset !== null) {
             $queryString .= 'OFFSET ' . $this->_offset . PHP_EOL;
         }
-        
+
         return $queryString;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Static methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
      * Objective-C style constructor
      *
@@ -88,29 +88,29 @@ class Erfurt_Sparql_SimpleQuery
     public static function initWithString($queryString)
     {
         $parts = array(
-            'prologue'   => array(), 
-            'from'       => array(), 
-            'from_named' => array(), 
-            'where'      => array(), 
-            'order'      => array(), 
-            'limit'      => array(), 
+            'prologue'   => array(),
+            'from'       => array(),
+            'from_named' => array(),
+            'where'      => array(),
+            'order'      => array(),
+            'limit'      => array(),
             'offset'     => array()
         );
 
         $tokens = array(
-            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|\s*COUNT|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',  
-            'from'       => '/FROM\s+<(.+?)>/i', 
-            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i', 
-            'where'      => '/(WHERE\s+)?\{.*\}/si', 
-            'order'      => '/ORDER\s+BY\s+(.+\))+/i', 
-            'limit'      => '/LIMIT\s+(\d+)/i', 
+            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|\s*COUNT|(\s*SELECT\s+(DISTINCT\s+)?)(\?\w+\s+|\*)+)/si',
+            'from'       => '/FROM\s+<(.+?)>/i',
+            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
+            'where'      => '/(WHERE\s+)?\{.*\}/si',
+            'order'      => '/ORDER\s+BY\s+(.+\))+/i',
+            'limit'      => '/LIMIT\s+(\d+)/i',
             'offset'     => '/OFFSET\s+(\d+)/i'
         );
 
         foreach ($tokens as $key => $pattern) {
             preg_match_all($pattern, $queryString, $parts[$key]);
         }
-        
+
         $queryObject = new self();
         if (isset($parts['prologue'][0][0])) {
             $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
@@ -142,50 +142,50 @@ class Erfurt_Sparql_SimpleQuery
 
         return $queryObject;
     }
-    
+
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
-    public function addFrom($iri) 
+
+    public function addFrom($iri)
     {
         $this->_from[] = $iri;
-        
+
         return $this;
     }
-    
+
     public function addFromNamed($iri)
     {
         $this->_fromNamed[] = $iri;
-        
+
         return $this;
     }
-    
+
     public function getFrom()
     {
         return $this->_from;
     }
-    
+
     public function getFromNamed()
     {
         return $this->_fromNamed;
     }
-    
+
     public function getLimit()
     {
         return $this->_limit;
     }
-    
+
     public function getOffset()
     {
         return $this->_offset;
     }
-    
+
     public function getProloguePart()
     {
         return $this->_prologuePart;
     }
-    
+
     public function resetInstance()
     {
         $this->_prologuePart = null;
@@ -195,51 +195,51 @@ class Erfurt_Sparql_SimpleQuery
         $this->_orderClause  = null;
         $this->_limit        = null;
         $this->_offset       = null;
-        
+
         return $this;
     }
-    
+
     public function setFrom(array $newFromArray)
     {
         $this->_from = $newFromArray;
-        
+
         return $this;
     }
-    
+
     public function setFromNamed(array $newFromNamedArray)
     {
         $this->_fromNamed = $newFromNamedArray;
-        
+
         return $this;
     }
-    
+
     public function setLimit($limit)
     {
         $this->_limit = $limit;
-        
+
         return $this;
     }
-    
+
     public function setOffset($offset)
     {
        $this->_offset = $offset;
        return $this;
     }
-        
-    public function setOrderClause($orderString) 
+
+    public function setOrderClause($orderString)
     {
         $this->_orderClause = $orderString;
-        
+
         return $this;
     }
-    
-    public function setProloguePart($prologueString) 
+
+    public function setProloguePart($prologueString)
     {
         $this->_prologuePart = $prologueString;
-        
+
         return $this;
     }
-     
+
     public function setWherePart($whereString)
     {
         if (stripos($whereString, 'where') !== false) {
@@ -247,7 +247,7 @@ class Erfurt_Sparql_SimpleQuery
         } else {
             $this->_wherePart = 'WHERE' . $whereString;
         }
-        
+
         return $this;
     }
 }

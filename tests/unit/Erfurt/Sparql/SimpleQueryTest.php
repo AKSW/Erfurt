@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 {
     public function assertQueryEquals($expected, $actual)
@@ -6,10 +13,10 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         // remove white space and comments before query comparison
         $expectedStripped = preg_replace('/\s|#.*\n/', '', $expected);
         $actualStripped   = preg_replace('/\s|#.*\n/', '', $actual);
-        
+
         return parent::assertEquals($expectedStripped, $actualStripped);
     }
-    
+
     public function testInitWithStringSimple()
     {
         $queryString = '
@@ -23,11 +30,11 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
             }
             ORDER BY DESC(?date)
             LIMIT 6';
-        
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
-    
+
     public function testInitWithStringComplex()
     {
         $queryString = '
@@ -60,13 +67,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
                     OPTIONAL { ?review bsbm:rating2 ?rating2 . } 
                 }
             }';
-        
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
-    
+
     public function testInitWithStringUnusuallyFormatted()
-    {        
+    {
         $queryString = '
             SELECT DISTINCT ?resourceUri FROM
             <http://sebastian.dietzold.de/rdf/foaf.rdf> WHERE {
@@ -74,11 +81,11 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
             <http://xmlns.com/foaf/0.1/pastProject> ?resourceUri FILTER
             (isURI(?resourceUri) && !isBLANK(?resourceUri)) } ORDER BY
             ASC(?resourceUri) LIMIT 10';
-        
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
-    
+
     public function testInitWithString2()
     {
         $queryString = '
@@ -100,18 +107,18 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
             ORDER BY DESC(?ranking) ASC(?poi)
             LIMIT 10 
             OFFSET 0';
-        
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
-    
+
     public function testInitWithString3()
     {
         $queryString = '                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?uri ?literal ?domain ?type                FROM <http://localhost/ontowiki/whostat>                WHERE {                    ?uri ?v1 ?literal .
                     {?v2 ?uri ?v3 .} UNION {?uri a rdf:Property .}                    OPTIONAL {?uri rdfs:domain ?domain .}
                                         OPTIONAL {<http://localhost/ontowiki/whostat> a ?type . }                    FILTER (                        isURI(?uri)                         && isLITERAL(?literal)                         && REGEX(?literal, "title", "i")                         && REGEX(?literal, "^.{1,50}$"))                }                LIMIT 5';
-        
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
