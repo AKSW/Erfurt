@@ -412,10 +412,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                   FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                   WHERE (ef_cache_query_model.modelIri = \''.$modelIri.'\' OR ef_cache_query_model.modelIri IS NULL)';
 
-        $qids = $this->_query($query);
-        foreach ($qids as $qid) {
-            $qid = $qid['qid'];
+        $qidsResult = $this->_query($query);
 
+        $qids = array();
+        foreach ($qidsResult as $qid) {
+            $qids[] = $qid['qid'];
+        }
+
+        foreach ($qids as $qid) {
             //delete entries in query_triple
             $query = ' 
                 SELECT ef_cache_query_rt.tid tid
