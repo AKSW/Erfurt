@@ -15,8 +15,8 @@ class Erfurt_Cache_Backend_QueryCache_DatabaseTest extends Erfurt_TestCase
         $this->markTestNeedsDatabase();
 
         $config = $this->getTestConfig();
-        $config->cache->enable = '1';
-        $config->cache->query->enable = '1';
+        $config->cache->frontend->enable = TRUE;
+        $config->cache->query->enable = TRUE;
 
         $this->_cacheBackend = Erfurt_App::getInstance(false)->getQueryCache()->getBackend();
 

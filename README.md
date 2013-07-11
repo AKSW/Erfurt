@@ -2,6 +2,9 @@
 
 Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
 
+[![Build Status](http://owdev.ontowiki.net/job/Erfurt/badge/icon)](http://owdev.ontowiki.net/job/Erfurt/)
+[API Documentation](http://api.ontowiki.net/)
+
 ## Features
 
 * RDF Parser/serializer
@@ -16,8 +19,7 @@ Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
 
 ### Repository Conventions
 
-We use [Vincent Driessen's branching model](http://nvie.com/posts/a-successful-git-branching-model/)
-and [Tom Preston-Werner's versioning specification](http://semver.org/) for this repository.
+We use [Vincent Driessen's branching model](http://nvie.com/posts/a-successful-git-branching-model/), [Tom Preston-Werner's versioning specification](http://semver.org/) as well as [this note on good commit messages](https://github.com/erlang/otp/wiki/Writing-good-commit-messages) for this repository.
 
 In addition to that, we suggest to use [git-flow](https://github.com/nvie/gitflow)
 to keep naming conventions.

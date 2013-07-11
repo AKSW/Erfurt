@@ -162,4 +162,83 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
             
         }
     }
+
+    public function testRenameResource()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+
+        $modelUri = 'http://example.org/renameTest/';
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $graphs = array();
+        foreach (array('old', 'new') as $diff) {
+            $graphs[$diff] = array(
+                $modelUri => array(
+                    EF_RDF_TYPE => array(
+                        array('value' => EF_OWL_ONTOLOGY, 'type' => 'uri'),
+                    ),
+                ),
+                $modelUri.$diff => array(
+                    $modelUri.$diff => array(
+                        array('value' => $modelUri.$diff, 'type' => 'uri'),
+                    ),
+                    $modelUri.'p1' => array(
+                        array('value' => $modelUri.$diff, 'type' => 'uri'),
+                    ),
+                    $modelUri.'p2' => array(
+                        array('value' => $modelUri.$diff, 'type' => 'uri'),
+                        array('value' => $modelUri.'old', 'type' => 'literal'),
+                        array('value' => $modelUri.'o2', 'type' => 'uri'),
+                    ),
+                    'lang' => array(
+                        array('value' => 'LANG', 'type' => 'literal', 'lang' => 'en'),
+                        array('value' => 'LANG', 'type' => 'literal', 'lang' => 'de'),
+                        array('value' => 'LANG', 'type' => 'literal', 'lang' => 'mn'),
+                    ),
+                    'type' => array(
+                        array('value' => 'TYPE', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#string'),
+                    ),
+                ),
+                $modelUri.'s3' => array(
+                    $modelUri.$diff => array(
+                        array('value' => $modelUri.'o3', 'type' => 'uri'),
+                    ),
+                ),
+                $modelUri.'s4' => array(
+                    $modelUri.'p4' => array(
+                        array('value' => $modelUri.'o4', 'type' => 'uri'),
+                    ),
+                ),
+            );
+        }
+
+        $model = $store->getNewModel($modelUri);
+        $model->addMultipleStatements($graphs['new']);
+        $query = Erfurt_Sparql_SimpleQuery::initWithString('SELECT ?s ?p ?o
+                                                            FROM <' . $modelUri . '>
+                                                            WHERE { ?s ?p ?o . }');
+        $result = $store->sparqlQuery($query, array('result_format' => 'extended'));
+        $expected = array();
+        foreach ($result['results']['bindings'] as $statement) {
+            $expected[$statement['s']['value']][$statement['p']['value']][] = $statement['o'];
+        }
+        $store->deleteModel($modelUri);
+
+        $model = $store->getNewModel($modelUri);
+        $model->addMultipleStatements($graphs['old']);
+
+        $model->renameResource($modelUri.'old', $modelUri.'new');
+
+        $query = Erfurt_Sparql_SimpleQuery::initWithString('SELECT ?s ?p ?o
+                                                            FROM <' . $modelUri . '>
+                                                            WHERE { ?s ?p ?o . }');
+        $result = $store->sparqlQuery($query, array('result_format' => 'extended'));
+        $got = array();
+        foreach ($result['results']['bindings'] as $statement) {
+            $got[$statement['s']['value']][$statement['p']['value']][] = $statement['o'];
+        }
+
+        $this->assertStatementsEqual($expected, $got, 'Graph after resource renaming');
+    }
 }

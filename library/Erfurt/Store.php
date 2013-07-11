@@ -125,8 +125,6 @@ class Erfurt_Store
      */
     protected $_erfurtLogger = null;
 
-    protected $_bnodePrefix = 'nodeID:';
-
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
@@ -359,8 +357,11 @@ class Erfurt_Store
 
         $returnValue = true;
 
+        $isVersioningEnabled = false ;
         $versioning = Erfurt_App::getInstance()->getVersioning();
-        $isVersioningEnabled = $versioning->isVersioningEnabled();
+        if ($versioning != false) {
+            $isVersioningEnabled = $versioning->isVersioningEnabled();
+        }
 
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
@@ -921,11 +922,11 @@ class Erfurt_Store
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
         try {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
             // Get it if it already exists
-            $model = $this->getModel($modelIri, $baseIri, $type, $useAc);
+            $model = $this->getModel($modelIri, $useAc);
+        } catch (Erfurt_Store_Exception $e) {
+            // Create it if it doesn't exist
+            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
 
         return $model;
@@ -1219,7 +1220,7 @@ class Erfurt_Store
              //dont make these changes global
             $queryObject = clone $queryObject;
             //bring triples etc. to canonical order
-            $queryObject->optimize();
+            // $queryObject->optimize();
         }
 
         $defaultOptions = array(
@@ -1369,15 +1370,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         }
 
-        $replacements = 0;
-        $queryString = str_replace(
-            $this->_bnodePrefix,
-            $this->_backendAdapter->getBlankNodePrefix(),
-            (string)$queryObject,
-            $replacements
-        );
-
-        return $queryString;
+        return (string)$queryObject;
     }
 
     /**

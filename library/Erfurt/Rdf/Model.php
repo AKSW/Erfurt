@@ -340,6 +340,63 @@ class Erfurt_Rdf_Model
     }
 
     /**
+     * Moves resource to new URI
+     * renaming all occurences of the resource.
+     *
+     * @param string $oldUri The URI that identifies the resource.
+     * @param string $newUri The URI to move resource to.
+     */
+    public function renameResource($oldUri, $newUri)
+    {
+        $query = new Erfurt_Sparql_Query2();
+        $query->setDistinct(true);
+
+        $vars = array();
+        foreach (array('s', 'p', 'o') as $varName) {
+            $vars[$varName] = new Erfurt_Sparql_Query2_Var($varName);
+            $query->addProjectionVar($vars[$varName]);
+        }
+
+        $oldUriRef = new Erfurt_Sparql_Query2_IriRef($oldUri);
+
+        $union = new Erfurt_Sparql_Query2_GroupOrUnionGraphPattern();
+        foreach ($vars as $var) {
+            $group = new Erfurt_Sparql_Query2_GroupGraphPattern();
+            $group->addTriple($vars['s'], $vars['p'], $vars['o']);
+            $group->addFilter(new Erfurt_Sparql_Query2_sameTerm($var, $oldUriRef));
+            $union->addElement($group);
+        }
+        $query->addElement($union);
+        $result = $this->sparqlQuery($query, array('result_format' => 'extended'));
+
+        $removed = array();
+        $added   = array();
+
+        foreach ($result['results']['bindings'] as $s) {
+            // result format from sparqlQuery
+            // isn't the same as format for delete/addMultipleStatements
+            if (array_key_exists('xml:lang', $s['o'])) {
+                $s['o']['lang'] = $s['o']['xml:lang'];
+                unset($s['o']['xml:lang']);
+            }
+
+            $removed[$s['s']['value']][$s['p']['value']][] = $s['o'];
+
+            foreach ($vars as $var) {
+                $varName = $var->getName();
+                if ($s[$varName]['type'] === 'uri' && $s[$varName]['value'] === $oldUri) {
+                    $s[$varName]['value'] = $newUri;
+                }
+            }
+
+            $added[$s['s']['value']][$s['p']['value']][] = $s['o'];
+        }
+
+        $this->deleteMultipleStatements($removed);
+        $this->addMultipleStatements($added);
+    }
+
+    /**
      * Sets an option for the model in the SysOnt.
      * If no value is given, the option will be unset.
      *

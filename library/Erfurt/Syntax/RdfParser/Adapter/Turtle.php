@@ -27,6 +27,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     
     protected $_bnodeCounter = 0;
     
+    protected $_dataLength = 0;
+    
     protected $_usedBnodeIds = array();
     
     protected $_statements = array();

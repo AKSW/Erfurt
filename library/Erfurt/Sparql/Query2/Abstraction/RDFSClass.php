@@ -22,7 +22,8 @@ class Erfurt_Sparql_Query2_Abstraction_RDFSClass
 		$this->iri = $iri;
 		
  		if($withChilds){
-			$owApp = OntoWiki_Application::getInstance();
+// TODO what the heck???
+			$owApp = OntoWiki::getInstance();
 			$store       = $owApp->erfurt->getStore();
 	        $graph       = $owApp->selectedModel;
 	        $types   = array_keys($store->getTransitiveClosure($graph->getModelIri(), EF_RDFS_SUBCLASSOF, array($iri->getIri()), true));

@@ -1,3 +1,15 @@
+liberfurt-php (1.6) lod2; urgency=low
+
+  * rework caching framework / allow for memcached backend
+  * add renameResource method
+  * Enabling the sparqlAsk functionality in the Sparql backend
+  * Fix getModelOrCreate method in Store
+  * fix rdf import warning by turtle/n3 files
+  * Disable broken and useles query 'optimization'
+  * 50+ other commits
+
+ -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Thu, 11 Jul 2013 11:05:50 +0200
+
 liberfurt-php (1.5) lod2; urgency=low
 
   * fix store init to make sure to load base ontologies
