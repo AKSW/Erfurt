@@ -1007,8 +1007,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
         $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
-        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-        $resultId   = odbc_exec($resultId, $virtuosoPl);
+#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
+#        $resultId   = odbc_exec($resultId, $virtuosoPl);
+        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
@@ -1034,8 +1035,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-        $resultId   = @odbc_exec($resultId, $virtuosoPl);
+#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
+#        $resultId   = odbc_exec($resultId, $virtuosoPl);
+        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
             $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
@@ -1054,8 +1056,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     protected function _execSql($sqlQuery)
     {
-        $resultId   = odbc_prepare($this->connection(), $sqlQuery);
-        $resultId   = @odbc_exec($resultId, $sqlQuery);
+#        $resultId   = odbc_prepare($this->connection(), $sqlQuery);
+#        $resultId   = odbc_exec($resultId, $sqlQuery);
+        $resultId   = odbc_exec($this->connection(), $sqlQuery);
 
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
