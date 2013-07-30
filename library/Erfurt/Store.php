@@ -287,7 +287,7 @@ class Erfurt_Store
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
-        $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
+        $retVal = $this->_backendAdapter->addMultipleStatements($graphUri, $statementsArray);
 
         //invalidate deprecated Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -296,9 +296,12 @@ class Erfurt_Store
         $event = new Erfurt_Event('onAddMultipleStatements');
         $event->graphUri   = $graphUri;
         $event->statements = $statementsArray;
+        $event->addSuccess = $retVal;
         $event->trigger();
 
         $this->_graphConfigurations = null;
+
+        return $retVal;
     }
 
     /**
@@ -323,22 +326,25 @@ class Erfurt_Store
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
-        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
+        $retVal = $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
 
         //invalidate deprecateded Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
         $event = new Erfurt_Event('onAddStatement');
-        $event->graphUri   = $graphUri;
+        $event->graphUri  = $graphUri;
         $event->statement = array(
             'subject'   => $subject,
             'predicate' => $predicate,
             'object'    => $object
         );
+        $event->addSuccess = $retVal;
         $event->trigger();
 
         $this->_graphConfigurations = null;
+
+        return $retVal;
     }
 
     /**
@@ -1520,6 +1526,27 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
         // TODO: will throw an exception
         // throw new Erfurt_Store_Exception('Current backend doesn not support SQL queries.');
+    }
+
+    public function transactionStart()
+    {
+        if (method_exists($this->_backendAdapter, 'transactionStart')) {
+            $thid->_backendAdapter->transactionStart();
+        }
+    }
+
+    public function transactionCommit()
+    {
+        if (method_exists($this->_backendAdapter, 'transactionCommit')) {
+            $thid->_backendAdapter->transactionCommit();
+        }
+    }
+
+    public function transactionRollback()
+    {
+        if (method_exists($this->_backendAdapter, 'transactionRollback')) {
+            $thid->_backendAdapter->transactionRollback();
+        }
     }
 
     /**
