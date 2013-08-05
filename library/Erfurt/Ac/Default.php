@@ -326,13 +326,17 @@ class Erfurt_Ac_Default
      * @param string $action The name of the action.
      * @return boolean Returns whether action is allowed or not.
      */
-    public function isActionAllowed($action) 
+    public function isActionAllowed($action, $isFullUri = false) 
     {
         $this->_init();
 
         $user       = $this->_getUser();
         $userRights = $this->_getUserModelRights($user->getUri());
-        $actionUri  = $this->_uris['acBaseUri'] . $action;
+
+        $actionUri = $action;
+        if (!$isFullUri) {
+            $actionUri  = $this->_uris['acBaseUri'] . $action;
+        }
 
         // Action not allowed (init is optimized on all actions which have an instance)
         if (in_array($actionUri, $userRights['denyAccess'])) {
