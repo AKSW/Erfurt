@@ -486,6 +486,7 @@ class Erfurt_Store
             $options['use_ac'] = true;
         }
 
+        $ret = 0;
         if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
                 $ret = $this->_backendAdapter->deleteMatchingStatements(
@@ -495,9 +496,10 @@ class Erfurt_Store
                 $queryCache = Erfurt_App::getInstance()->getQueryCache();
                 $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
-                $event = new Erfurt_Event('onDeleteMatchingStatements');
-                $event->graphUri = $graphUri;
-                $event->resource = $subject;
+                $event                     = new Erfurt_Event('onDeleteMatchingStatements');
+                $event->graphUri           = $graphUri;
+                $event->resource           = $subject;
+                $event->affectedStatements = $ret;
 
                 // just trigger if really data operations were performed
                 if ((int) $ret > 0) {
@@ -513,8 +515,12 @@ class Erfurt_Store
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
                 Erfurt_Event_Dispatcher::getInstance()->trigger($event);
+
+                throw new Erfurt_Store_Exception($e->getMessage());
             }
         }
+
+        return $ret;
     }
 
     /**
@@ -1531,21 +1537,21 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     public function transactionStart()
     {
         if (method_exists($this->_backendAdapter, 'transactionStart')) {
-            $thid->_backendAdapter->transactionStart();
+            $this->_backendAdapter->transactionStart();
         }
     }
 
     public function transactionCommit()
     {
         if (method_exists($this->_backendAdapter, 'transactionCommit')) {
-            $thid->_backendAdapter->transactionCommit();
+            $this->_backendAdapter->transactionCommit();
         }
     }
 
     public function transactionRollback()
     {
         if (method_exists($this->_backendAdapter, 'transactionRollback')) {
-            $thid->_backendAdapter->transactionRollback();
+            $this->_backendAdapter->transactionRollback();
         }
     }
 

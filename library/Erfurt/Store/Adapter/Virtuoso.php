@@ -373,7 +373,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $objectSpec
         );
 
+        $transActionAlreadyStarted = $this->_inTransaction;
+        if (!$transActionAlreadyStarted) {
+            $this->transactionStart();
+        }
+
         // perform delete
+        $deletedStatements = 0;
         if ($rid = $this->_execSparqlUpdate($deleteSparql)) {
             if (odbc_num_fields($rid) > 0) {
                 // Virtuoso <= 6.1.4 returned 1 row with metadata for update queries!
@@ -384,22 +390,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
                 if (isset($matches[1])) {
                     // return number of deleted statements
-                    return (int)$matches[1];
+                    $deletedStatements = (int)$matches[1];
                 }
             } else {
                 // As of Virtuoso 6.1.5 they do it the documented ODBC way, which means
                 // odbc_num_rows contains the number of affected rows for updated queries.
                 // If no rows were affected Virtuoso returns -1.
                 $affectedRows = odbc_num_rows($rid);
-                if ($affectedRows === -1) {
-                    return 0;
+                if ($affectedRows !== -1) {
+                    $deletedStatements = $affectedRows;
                 }
-                return $affectedRows;
             }
         }
 
-        // no statements deleted
-        return 0;
+        if (!$transActionAlreadyStarted) {
+            if (!$rid) {
+                $this->transactionRollback();
+            } else {
+                $this->transactionCommit();
+            }
+        }
+
+        if (!$rid) {
+            throw new Erfurt_Store_Adapter_Exception('Deleting of matching statements failed');
+        }
+
+        return $deletedStatements;
     }
 
     /**
