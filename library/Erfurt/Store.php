@@ -1366,6 +1366,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
                 $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
                 $ggp->addFilter(false); //unsatisfiable
+                $queryObject->removeAllProjectionVars();
                 $queryObject->setWhere($ggp);
             }
         }
