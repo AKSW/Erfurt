@@ -89,6 +89,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
     private $_httpClientAdapter = null;
 
+    private $_inTransaction = false;
+
     // ------------------------------------------------------------------------
     // --- Magic Methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -161,7 +163,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             break;  //this only reached if the continue call is not reached
         }
 
-        $odbcRes = true;
+        $transActionAlreadyStarted = $this->_inTransaction;
+        if (!$transActionAlreadyStarted) {
+            $this->transactionStart();
+        }
+
+        $odbcRes = false;
         foreach ($blockQueries as $query) {
             if (defined('_EFDEBUG')) {
                 $logger = Erfurt_App::getInstance()->getLog();
@@ -169,7 +176,24 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
 
             $odbcRes = $this->_execSparqlUpdate($query);
+            if (!$odbcRes) {
+                break;
+            }
         }
+
+        if (!$transActionAlreadyStarted) {
+            if (!$odbcRes) {
+                $this->transactionRollback();
+            } else {
+                $this->transactionCommit();
+            }
+        }
+
+        if (!$odbcRes) {
+            return false;
+        }
+
+        return true;
     }
 
     // split the given array into n number of pieces
@@ -211,7 +235,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $logger->debug('Add statement query: ' . PHP_EOL . $insertSparql);
         }
 
-        return $this->_execSparqlUpdate($insertSparql);
+        $odbcRes = $this->_execSparqlUpdate($insertSparql);
+
+        if (!$odbcRes) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -343,7 +373,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $objectSpec
         );
 
+        $transActionAlreadyStarted = $this->_inTransaction;
+        if (!$transActionAlreadyStarted) {
+            $this->transactionStart();
+        }
+
         // perform delete
+        $deletedStatements = 0;
         if ($rid = $this->_execSparqlUpdate($deleteSparql)) {
             if (odbc_num_fields($rid) > 0) {
                 // Virtuoso <= 6.1.4 returned 1 row with metadata for update queries!
@@ -354,22 +390,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 preg_match('/,\s*(\d)\s*triples/i', $deleteResult, $matches);
                 if (isset($matches[1])) {
                     // return number of deleted statements
-                    return (int)$matches[1];
+                    $deletedStatements = (int)$matches[1];
                 }
             } else {
                 // As of Virtuoso 6.1.5 they do it the documented ODBC way, which means
                 // odbc_num_rows contains the number of affected rows for updated queries.
                 // If no rows were affected Virtuoso returns -1.
                 $affectedRows = odbc_num_rows($rid);
-                if ($affectedRows === -1) {
-                    return 0;
+                if ($affectedRows !== -1) {
+                    $deletedStatements = $affectedRows;
                 }
-                return $affectedRows;
             }
         }
 
-        // no statements deleted
-        return 0;
+        if (!$transActionAlreadyStarted) {
+            if (!$rid) {
+                $this->transactionRollback();
+            } else {
+                $this->transactionCommit();
+            }
+        }
+
+        if (!$rid) {
+            throw new Erfurt_Store_Adapter_Exception('Deleting of matching statements failed');
+        }
+
+        return $deletedStatements;
     }
 
     /**
@@ -943,6 +989,32 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (null !== $this->connection()) {
             $message = sprintf('%s (%i)', odbc_errormsg($this->connection()), odbc_error($this->connection()));
             return $message;
+        }
+    }
+
+    public function transactionStart()
+    {
+        if (!$this->_inTransaction) {
+            odbc_autocommit($this->connection(), false);
+            $this->_inTransaction = true;
+        }
+    }
+
+    public function transactionCommit()
+    {
+        if ($this->_inTransaction) {
+            odbc_commit($this->connection());
+            $this->_inTransaction = false;
+            odbc_autocommit($this->connection(), true);
+        }
+    }
+
+    public function transactionRollback()
+    {
+        if ($this->_inTransaction) {
+            odbc_rollback($this->connection());
+            $this->_inTransaction = false;
+            odbc_autocommit($this->connection(), true);
         }
     }
 
