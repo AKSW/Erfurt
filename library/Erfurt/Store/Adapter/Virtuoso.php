@@ -1058,8 +1058,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
 #        $resultId   = odbc_prepare($this->connection(), $sqlQuery);
 #        $resultId   = odbc_exec($resultId, $sqlQuery);
-        $resultId   = odbc_exec($this->connection(), $sqlQuery);
-
+        $resultId   = @odbc_exec($this->connection(), $sqlQuery);
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
