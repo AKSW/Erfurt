@@ -1246,13 +1246,6 @@ class Erfurt_Store
             );
         }
 
-        /*
-if ($options[Erfurt_Store::USE_AC] == false) {
-            //we are done preparing early
-            return $queryObject;
-        }
-*/
-
         $logger = $this->_getQueryLogger();
 
         $noBindings = false;
@@ -1442,8 +1435,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                         $sparqlResult['results'] = array();
                         $sparqlResult['results']['bindings'] = array();
                     } else {
-                        //var_dump($queryString);exit;
-                        //exit;
                         throw new Erfurt_Store_Exception('invalid query result.');
                     }
                 }

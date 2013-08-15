@@ -588,7 +588,6 @@ class Erfurt_Rdf_Model
         $options[Erfurt_Store::USE_AC] = true;
 
         if (is_string($query)) {
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
         }
 
