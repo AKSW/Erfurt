@@ -415,8 +415,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                   WHERE (ef_cache_query_model.modelIri = \''.$modelIri.'\' OR ef_cache_query_model.modelIri IS NULL)';
         $qids = $this->_query($query);
 
+        $ret = array();
         foreach ($qids as $qidEntry) {
             $qid = $qidEntry['qid'];
+            $ret[] = $qid;
             //delete entries in query_triple
             $query = ' 
                 SELECT ef_cache_query_rt.tid tid
@@ -441,7 +443,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             //delete entries in query_model
             $this->_query('DELETE FROM ef_cache_query_model WHERE modelIri = \''.$modelIri.'\'');
         }
-        return $qids;
+        return $ret;
     }
 
     /**
