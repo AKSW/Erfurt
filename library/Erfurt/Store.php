@@ -482,7 +482,70 @@ class Erfurt_Store
 
         if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
-                $ret = $this->_backendAdapter->deleteMatchingStatements(
+                $filter = '';
+                if (null !== $subject) {
+                    $filter = "FILTER (?s = <$subject>) .\n";
+                }
+                if (null !== $predicate) {
+                    $filter = "FILTER (?p = <$predicate>) .\n";
+                }
+                if (null !== $object) {
+                    if ($object['type'] == 'uri') {
+                        $o = $object['value'];
+                        $filter = "FILTER (?o = <$o>) .\n";
+                    } else {
+                        $o = $object['value'];
+                        if (isset($object['datatype'])) {
+                            $dt = $object['datatype'];
+                            $filter = "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                        } else if (isset($object['lang'])) {
+                            $lang = $object['lang'];
+                            $filter = "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                        } else {
+                            $filter = "FILTER (?o = \"$o\") .\n";
+                        }
+                    }
+                }
+
+                $sparql = <<<EOF
+SELECT ?s ?p ?o
+FROM <$graphUri>
+WHERE {
+    ?s ?p ?o .
+    $filter
+}
+EOF;
+                $result = $this->sparqlQuery($sparql, array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED));
+                $ret = count($result);
+                $stmts = array();
+                foreach ($result['results']['bindings'] as $row) {
+                    $s = $row['s']['value'];
+                    $p = $row['p']['value'];
+                    $o = $row['o']['value'];
+
+                    if (!isset($stmts[$s])) {
+                        $stmts[$s] = array();
+                    }
+                    if (!isset($stmts[$s][$p])) {
+                        $stmts[$s][$p] = array();
+                    }
+
+                    $oSpec = array(
+                        'type'  => $row['o']['type'],
+                        'value' => $o,
+                    );
+
+                    if (isset($row['o']['xml:lang'])) {
+                        $oSpec['lang'] = $row['o']['xml:lang'];
+                    }
+                    if (isset($row['o']['datatype'])) {
+                        $oSpec['datatype'] = $row['o']['datatype'];
+                    }
+
+                    $stmts[$s][$p][] = $oSpec;
+                }
+
+                $this->_backendAdapter->deleteMatchingStatements(
                     $graphUri, $subject, $predicate, $object, $options
                 );
 
@@ -492,6 +555,8 @@ class Erfurt_Store
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
+                $event->statements         = $stmts;
+                $event->affectedStatements = $ret;
 
                 // just trigger if really data operations were performed
                 if ((int) $ret > 0) {
