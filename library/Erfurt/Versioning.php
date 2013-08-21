@@ -160,6 +160,7 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
+                AND parent IS NULL
                 ORDER BY tstamp DESC';
 
         $result = $this->_sqlQuery(
