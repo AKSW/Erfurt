@@ -111,6 +111,10 @@ class Erfurt_Versioning
                 'DELETE FROM ef_versioning_actions
                  WHERE id = ' . $this->_currentActionParent
             );
+            $this->_sqlQuery(
+                'DELETE FROM ef_versioning_metadata
+                 WHERE action_id = ' . $this->_currentActionParent
+            );
             $this->endAction();
         } else {
             // do nothing
@@ -617,6 +621,16 @@ class Erfurt_Versioning
                     }
                     $resultPayload = $this->_sqlQuery($sqldeletePayload);
             }
+        }
+
+        $sql = "SELECT id FROM ef_versioning_actions WHERE model = '$graphUri'";
+        $result = $this->_sqlQuery($sql);
+        $idArray = array();
+        foreach ($result as $row) {
+            $idArray[] = $row['id'];
+        }
+        if (count($idArray) > 0) {
+            $this->_sqlQuery('DELETE FROM ef_versioning_metadata WHERE action_id IN (' . implode(',', $idArray) . ')');
         }
 
         // finally delete actions
