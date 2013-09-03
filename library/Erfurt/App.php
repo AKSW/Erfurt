@@ -860,6 +860,18 @@ class Erfurt_App
     }
 
     /**
+     * Returns the ResourceList instance
+     *
+     * @return Erfurt_RDF_ResourceList
+     */
+    public function getResourcePool()
+    {
+        require_once 'Erfurt/Rdf/ResourcePool.php';
+        $rl = Erfurt_Rdf_ResourcePool::getInstance();
+        return $rl;
+    }
+
+    /**
      * Returns a instance of the store.
      *
      * @return Erfurt_Store

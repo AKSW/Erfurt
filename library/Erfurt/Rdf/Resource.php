@@ -134,6 +134,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      */
     public function serialize($notation = 'xml')
     {
+        $modelIri = $this->_model ? $this->_model->getModelIri() : "" ;
         require_once('Erfurt/Syntax/RdfSerializer.php');
         $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($notation);
         return $serializer->serializeResourceToString(
@@ -231,8 +232,14 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         $query->setProloguePart('SELECT ?p ?o')
               ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
         $description = array();
+        $result = null ;
+        if ($this->_model) {
+            $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'));
+        } else {
+            $result = Erfurt_App::getInstance()->getStore()->sparqlQuery($query, array('result_format' => 'extended'));
+        }
 
-        if (($maxDepth > 0) && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
+        if (($maxDepth > 0) && $result) {
             foreach ($result['results']['bindings'] as $row) {
                 $property = $row['p']['value'];
                 $this->_descriptionResource($property);
