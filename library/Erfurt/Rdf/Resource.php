@@ -144,11 +144,30 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         );
     }
 
-    public function getDescription($maxDepth = self::DESCRIPTION_MAX_DEPTH)
+    /*
+     * get the resource description of this resource
+     *
+     * @param array $options array of different options:
+     *     Erfurt_Store::USE_AC=true|false - use access control
+     *     maxDepth=int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return RDF/PHP array description
+     */
+    public function getDescription($options = array())
     {
-        if (null === $this->_description) {
-            $this->_description = $this->_fetchDescription($maxDepth);
-        }
+        // merge given options into default options
+        $options = array_merge(
+            array(
+                'maxDepth'           => self::DESCRIPTION_MAX_DEPTH
+            ), $options
+        );
+
+        $this->_description = Erfurt_App::getInstance()->getStore()->getResourceDescription(
+            $this->getIri(),
+            $this->_model ? $this->_model->getModelIri() : false,
+            $options
+        );
 
         return $this->_description;
     }
