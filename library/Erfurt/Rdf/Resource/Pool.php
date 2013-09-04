@@ -13,7 +13,7 @@
  * @package    Erfurt_Rdf
  * @author     Michael Martin <martin@informatik.uni-leipzig.de>
   */
-class Erfurt_Rdf_ResourcePool
+class Erfurt_Rdf_Resource_Pool
 {
     /**
      * The array of resources.
@@ -30,8 +30,9 @@ class Erfurt_Rdf_ResourcePool
     /**
      * Constructs a new Erfurt_Rdf_ResourcePool instance.
      */
-    public function __construct() {
-    
+    public function __construct()
+    {
+        //maybe something will be here in the future
     }
 
     /**
@@ -55,9 +56,9 @@ class Erfurt_Rdf_ResourcePool
      * @param string graphIri
      * @return boolean state
      */
-    public function addResource($resource, $graphIri = 'store') 
+    public function addResource($resource, $graphIri = 'store')
     {
-        $added = false ;
+        $added = false;
         $graphIri = (string) $graphIri;
 
         if ($resource instanceOf Erfurt_Rdf_Resource) {
@@ -80,11 +81,11 @@ class Erfurt_Rdf_ResourcePool
      * @param string graphIri or null
      * @return Erfurt_Rdf_Resource resource
      */
-    public function getResource($resourceIri, $graphIri = 'store') 
+    public function getResource($resourceIri, $graphIri = 'store')
     {
         $resource = null;
-        if(Erfurt_Uri::check($resourceIri)) {
-            if(!empty($this->_resources[$graphIri][$resourceIri])) {
+        if (Erfurt_Uri::check($resourceIri)) {
+            if (!empty($this->_resources[$graphIri][$resourceIri])) {
                 $resource = $this->_resources[$graphIri][$resourceIri];
             } else {
                 if (defined('_OWDEBUG')) {
@@ -105,7 +106,7 @@ class Erfurt_Rdf_ResourcePool
      * @param string graphIri or null
      * @return array of Erfurt_Rdf_Resource
      */
-    public function getResources($resourceIris = array(), $graphIri = 'store') 
+    public function getResources($resourceIris = array(), $graphIri = 'store')
     {
         $resources = array();
         foreach ($resourceIris as $iri) {
@@ -124,15 +125,15 @@ class Erfurt_Rdf_ResourcePool
      * @param string graphIri or null
      * @return Erfurt_Rdf_Resource resource
      */
-    private function _createResource($resourceIri, $graphIri = 'store') 
+    private function _createResource($resourceIri, $graphIri = 'store')
     {
         $resource = null;
         if (Erfurt_Uri::check($resourceIri)) {
             if ($graphIri == 'store') {
                 $resource = new Erfurt_Rdf_Resource($resourceIri);
-            }  else {
+            } else {
                 if (Erfurt_Uri::check($graphIri)) {
-                    $model = new Erfurt_Rdf_Model($graphIri) ;
+                    $model = new Erfurt_Rdf_Model($graphIri);
                     $resource = new Erfurt_Rdf_Resource($resourceIri, $model);
                 } else {
                     if (defined('_OWDEBUG')) {
