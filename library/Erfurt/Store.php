@@ -2065,7 +2065,12 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             // use complete store if modelIri not given
             $result = $this->sparqlQuery($query, $options);
         } else {
-            $model = $this->getModel($modelIri, $options[Erfurt_Store::USE_AC]);
+            $ac = Erfurt_App::getInstance()->getAc();
+            if ($ac->isModelAllowed('view', $modelIri)) {
+                $model = $this->getModel($modelIri, $options[Erfurt_Store::USE_AC]);
+            } else {
+                $model = false;
+            }
             if (!$model) {
                 // return an empty description if model not available or allowed
                 $result = false;
@@ -2075,9 +2080,8 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         }
 
+        $memoryModel = new Erfurt_Rdf_MemoryModel();
         if ($result) {
-            $memoryModel = new Erfurt_Rdf_MemoryModel();
-
             foreach ($result['results']['bindings'] as $row) {
                 // fake the subject array
                 $s = array (
