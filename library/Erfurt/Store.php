@@ -1554,7 +1554,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         //query from query cache
         $queryCache   = Erfurt_App::getInstance()->getQueryCache();
         $sparqlResult = $queryCache->load($queryString, 'plain');
-        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+        if ($sparqlResult === Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk($queryString);
