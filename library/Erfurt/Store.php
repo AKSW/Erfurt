@@ -2154,7 +2154,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         }
 
-        if ($inverseResult) {
+        if (isset($inverseResult) && $inverseResult !== false) {
             foreach ($inverseResult['results']['bindings'] as $row) {
                 // fake the object array
                 $o = array (
