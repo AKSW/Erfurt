@@ -162,7 +162,18 @@ class Erfurt_Store
      */
     private static $_queryCount = 0;
 
+    /**
+     * importsClosure local cache
+     * @var array
+     */
     private $_importsClosure = array();
+
+    /**
+     * allowedModels local cache
+     * used by getModel()
+     * @var array
+     */
+    private $_allowedModels = array();
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -996,19 +1007,39 @@ EOF;
             // … use it
             $modelInstance = $this->_backendAdapter->getModel($modelIri);
         } else {
-            // use generic implementation
-            $owlQuery = new Erfurt_Sparql_SimpleQuery();
-            $owlQuery->setProloguePart('ASK')
-                     ->addFrom($modelIri)
-                     ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
-
-            // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
-                // instantiate OWL model
-                $modelInstance = new Erfurt_Owl_Model($modelIri);
+            //add here the userid to the identifier
+            $modelType = null;
+            $identity = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+            if (isset($this->_allowedModels[$identity][$modelIri])) {
+                $modelType = $this->_allowedModels[$identity][$modelIri];
             } else {
-                // instantiate RDF-S model
-                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+                // use generic implementation
+                $owlQuery = new Erfurt_Sparql_SimpleQuery();
+                $owlQuery->setProloguePart('ASK')
+                         ->addFrom($modelIri)
+                         ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+
+                if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
+                    // instantiate OWL model
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_OWL;
+                    $modelType = self::MODEL_TYPE_OWL;
+                } else {
+                    // instantiate RDF-S model
+                    $this->_allowedModels[$identity][$modelIri] = MODEL_TYPE_RDFS;
+                    $modelType = self::MODEL_TYPE_RDFS;
+                }
+            }
+
+            switch ($modelType) {
+                case self::MODEL_TYPE_OWL :
+                    $modelInstance = new Erfurt_Owl_Model($modelIri);
+                    break;
+                case self::MODEL_TYPE_RDFS :
+                    $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+                    break;
+                default :
+                    //should never happen
+                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }
         }
 
@@ -1018,7 +1049,6 @@ EOF;
         } else {
             $modelInstance->setEditable(false);
         }
-
         return $modelInstance;
     }
 
