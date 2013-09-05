@@ -2088,30 +2088,48 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         // overwrite result format
         $options[Erfurt_Store::RESULTFORMAT] = Erfurt_Store::RESULTFORMAT_EXTENDED;
 
+        $memoryModel = new Erfurt_Rdf_MemoryModel();
+
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setProloguePart('SELECT ?p ?o')
             ->setWherePart("{<$resourceIri> ?p ?o . }");
 
+        // prepare an additional query for inverse properties
+        if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
+            $inverseQuery = new Erfurt_Sparql_SimpleQuery();
+            $inverseQuery->setProloguePart('SELECT ?s ?p')
+                ->setWherePart("{?s ?p <$resourceIri> . }");
+        } else {
+            $inverseQuery = false;
+        }
+
         if ($modelIri === false) {
             // use complete store if modelIri not given
             $result = $this->sparqlQuery($query, $options);
+            if ($inverseQuery) {
+                $inverseResult = $this->sparqlQuery($inverseQuery, $options);
+            }
         } else {
+            // if model is given, try to get it
             $ac = Erfurt_App::getInstance()->getAc();
             if ($ac->isModelAllowed('view', $modelIri)) {
                 $model = $this->getModel($modelIri, $options[Erfurt_Store::USE_AC]);
             } else {
                 $model = false;
             }
+
             if (!$model) {
                 // return an empty description if model not available or allowed
                 $result = false;
             } else {
                 // use model query method if model valid and readable
                 $result = $model->sparqlQuery($query, $options);
+                if ($inverseQuery) {
+                    $inverseResult = $model->sparqlQuery($inverseQuery, $options);
+                }
             }
         }
 
-        $memoryModel = new Erfurt_Rdf_MemoryModel();
         if ($result) {
             foreach ($result['results']['bindings'] as $row) {
                 // fake the subject array
@@ -2133,6 +2151,21 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
                     //$description[$nodeKey] = $bNode->getDescription($maxDepth-1);
                 //}
+            }
+        }
+
+        if ($inverseResult) {
+            foreach ($inverseResult['results']['bindings'] as $row) {
+                // fake the object array
+                $o = array (
+                    'type'  => 'uri',
+                    'value' => $resourceIri
+                );
+                $memoryModel->addStatementFromExtendedFormatArray(
+                    $row['s'],
+                    $row['p'],
+                    $o
+                );
             }
         }
 
