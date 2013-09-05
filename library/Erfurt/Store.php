@@ -1996,12 +1996,13 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         ksort($options);
 
         // Here we start the object cache id
-        $cacheIdSource = $resourceIri . $modelIri . serialize($options);
-        $cacheId       = 'ResourceDescription_' . md5($cacheIdSource);
+        $identity   = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+        $cacheIdSrc = $resourceIri . $modelIri . $identity . serialize($options);
+        $cacheId    = 'ResourceDescription_' . md5($cacheIdSrc);
 
         // try to load the cached value
-        $objectCache  = OntoWiki::getInstance()->erfurt->getCache();
-        $queryCache   = OntoWiki::getInstance()->erfurt->getQueryCache();
+        $objectCache  = Erfurt_app::getInstance()->getCache();
+        $queryCache   = Erfurt_app::getInstance()->getQueryCache();
         $cachedValue  = $objectCache->load($cacheId);
 
         // bingo: cache hit, everything is fine
