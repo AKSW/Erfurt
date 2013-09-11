@@ -1025,7 +1025,7 @@ EOF;
                     $modelType = self::MODEL_TYPE_OWL;
                 } else {
                     // instantiate RDF-S model
-                    $this->_allowedModels[$identity][$modelIri] = MODEL_TYPE_RDFS;
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_RDFS;
                     $modelType = self::MODEL_TYPE_RDFS;
                 }
             }
