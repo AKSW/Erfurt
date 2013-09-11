@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -10,19 +10,19 @@
  * A set of Statements (memory model) / ARC2 index / phprdf array
  *
  * @category Erfurt
- * @package Erfurt_Rdf
- * @author {@link http://sebastian.tramp.name Sebastian Tramp}
- * @author Jonas Brekle <jonas.brekle@gmail.com>
- * @author Natanael Arndt <arndtn@gmail.com>
+ * @package  Erfurt_Rdf
+ * @author   {@link http://sebastian.tramp.name Sebastian Tramp}
+ * @author   Jonas Brekle <jonas.brekle@gmail.com>
+ * @author   Natanael Arndt <arndtn@gmail.com>
  */
 class Erfurt_Rdf_MemoryModel
 {
     protected $_statements = array();
 
-    /*
+    /**
      * model can be optionally constructed with a given array
      */
-    function __construct( array $init = array())
+    public function __construct( array $init = array())
     {
         $this->addStatements($init);
     }
@@ -36,10 +36,11 @@ class Erfurt_Rdf_MemoryModel
         return self::_arraySearchRecursive($this->_statements, $resourceUri, true);
     }
 
-    /*
+    /**
      * checks if there is at least one statement for resource $s
      *
      * @param string $s - the subject IRI of searched statement
+     *
      * @return boolean
      */
     public function hasS($s)
@@ -54,12 +55,14 @@ class Erfurt_Rdf_MemoryModel
         }
     }
 
-    /*
+    /**
      * checks if there is at least one statement with the object $o
      *
      * @param array $o - an array with the keys 'type' and 'value'
      * @param string $o['type'] - the type of the object ('uri', 'literal' or 'bnode')
      * @param string $o['value'] - the value of the object depending on the type
+     *
+     * @return boolean
      */
     public function hasO(array $o)
     {
@@ -70,7 +73,7 @@ class Erfurt_Rdf_MemoryModel
         foreach ($this->_statements as $subject => $predicates) {
             foreach ($predicates as $predicate => $objects) {
                 foreach ($objects as $object) {
-                    if ($object['type'] == $o[type] && $object['value'] == $o['value']) {
+                    if ($object['type'] == $o['type'] && $object['value'] == $o['value']) {
                         return true;
                     }
                 }
@@ -78,7 +81,7 @@ class Erfurt_Rdf_MemoryModel
         }
 
         // sorry for the worst case costs
-        return $false;
+        return false;
     }
 
     /*
@@ -87,6 +90,7 @@ class Erfurt_Rdf_MemoryModel
      *
      * @param string $s - the subject IRI of searched statement
      * @param string $p - the predicate IRI of searched statement
+     *
      * @return boolean
      */
     public function hasSP($s, $p)
@@ -106,7 +110,7 @@ class Erfurt_Rdf_MemoryModel
         }
     }
 
-    /*
+    /**
      * search for statements where S, P and the value of O is fix and return
      * true if at least one statement is found and false if no statement found
      *
@@ -114,6 +118,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $p - the predicate IRI of searched statement
      * @param string $value - the value of the object of the the searched statement
      * @param string $matchType - strict for strict match, preg for preg_match
+     * 
      * @return boolean
      */
     public function hasSPvalue($s, $p, $value, $matchType = 'strict')
@@ -124,33 +129,33 @@ class Erfurt_Rdf_MemoryModel
             $values = $this->getValues($s, $p);
             foreach ($values as $key => $object) {
                 switch ($matchType) {
-                    case 'strict':
-                        if ($object['value'] == $value) {
-                            return true;
-                        }
-                        break;
-                    case 'preg':
-                        // the pattern is given by function param value
-                        // the object value is tested against the pattern
-                        if (preg_match($value, $object['value']) == 1) {
-                            return true;
-                        }
-                        break;
-                    default:
-                        throw new Erfurt_Exception('unknown matchType, use strict or preg');
-                        break;
+                case 'strict':
+                    if ($object['value'] == $value) {
+                        return true;
+                    }
+                    break;
+                case 'preg':
+                    // the pattern is given by function param value
+                    // the object value is tested against the pattern
+                    if (preg_match($value, $object['value']) == 1) {
+                        return true;
+                    }
+                    break;
+                default:
+                    throw new Erfurt_Exception('unknown matchType, use strict or preg');
                 }
             }
             return false;
         }
     }
 
-    /*
+    /**
      * counts statements where S and P is fix
      * return 0 if no statement was found or an positive integer
      *
      * @param string $s - the subject IRI of searched statement
      * @param string $p - the predicate IRI of searched statement
+     *
      * @return int
      */
     public function countSP($s, $p)
@@ -162,10 +167,11 @@ class Erfurt_Rdf_MemoryModel
         }
     }
 
-    /*
+    /**
      * returns all predicate/object tupel of a given subject IRI
      *
      * @param string $s - the subject IRI
+     *
      * @return array
      */
     public function getPO($s)
@@ -177,11 +183,30 @@ class Erfurt_Rdf_MemoryModel
         }
     }
 
-    /*
+    /**
+     * returns all predicates used in the MemoryModel
+     *
+     * @return array
+     */
+    public function getPredicates()
+    {
+        $results = array();
+        foreach ($this->_statements as $subject => $predicates ) {
+            foreach ($predicates as $predicateUri => $predicate) {
+                if (!isset($results[$predicateUri])) {
+                    $results[$predicateUri] = $predicateUri;
+                }
+            }
+        }
+        return array_values($results);
+    }
+
+    /**
      * returns all subject/predicate/object tupel of a given subject IRI
      *
      * @param string $s - the subject IRI
      * @param array $o - the object array
+     *
      * @return array
      */
     public function getP($s, array $o)
@@ -210,6 +235,7 @@ class Erfurt_Rdf_MemoryModel
      * Get all statements, which are connected with the given property
      *
      * @param $p the uri of a property
+     *
      * @return array
      */
     public function getSO ($p)
@@ -232,6 +258,7 @@ class Erfurt_Rdf_MemoryModel
      *
      * @param string $s - the subject IRI of searched statement
      * @param string $p - the predicate IRI of searched statement
+     *
      * @return array
      */
     public function getValues($s, $p)
@@ -248,6 +275,7 @@ class Erfurt_Rdf_MemoryModel
      *
      * @param string $s - the subject IRI of searched statement
      * @param string $p - the predicate IRI of searched statement
+     *
      * @return string|null
      */
     public function getValue($s, $p)
@@ -267,6 +295,7 @@ class Erfurt_Rdf_MemoryModel
      * return the statement array, optional limited to a subject IRI
      *
      * @param string $s - the subject IRI of searched statements
+     *
      * @return array
      */
     public function getStatements($s = null)
@@ -394,7 +423,6 @@ class Erfurt_Rdf_MemoryModel
                 break;
             default:
                 return; // correct way to skip unwanted types
-                break;
         }
 
         $statement = array();
@@ -515,6 +543,8 @@ class Erfurt_Rdf_MemoryModel
 
     /*
      * returns an array of all subjects
+     *
+     * @return array
      */
     public function getSubjects()
     {

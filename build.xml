@@ -100,12 +100,12 @@
         </exec>
     </target>
 
-    <target name="phpdoc" description="Generate API documentation using phpDocumentor">
-        <exec executable="phpdoc">
-            <arg value="--directory" />
-            <arg path="${basedir}/library/Erfurt" />
-            <arg value="--target" />
-            <arg path="${basedir}/build/api" />
+    <target name="phpdoc" description="Create API doc using DocCreator">
+        <exec dir="/opt/DocCreator/" executable="php">
+            <arg value="/opt/DocCreator/create.php5" />
+            <arg value="--config-file=${basedir}/build/doc.erfurt.xml" />
+            <arg value="--source-folder=${basedir}/library/Erfurt/" />
+            <arg value="--target-folder=${basedir}/build/api/" />
         </exec>
     </target>
 

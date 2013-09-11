@@ -177,8 +177,8 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
     
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
-        $config->cache->enable = true;
-        $config->cache->type   = 'database';
+        $config->cache->frontend->enable = true;
+        $config->cache->backend->type   = 'database';
         
         $cache = $app->getCache();
         $this->assertTrue($cache instanceof Erfurt_Cache_Frontend_ObjectCache);

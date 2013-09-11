@@ -1,15 +1,15 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 /**
- * @copyright  Copyright (c) 2012 {@link http://aksw.org aksw}
+ * @copyright  Copyright (c) 2013 {@link http://aksw.org aksw}
  * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package    Erfurt_Syntax_RdfSerializer_Adapter
  */
@@ -18,26 +18,26 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     protected $_currentSubject = null;
     protected $_currentSubjectType = null;
     protected $_pArray = array();
-    
+
     protected $_store = null;
     protected $_graphUri = null;
-    
+
     protected $_renderedTypes = array();
-    
+
     protected $_rdfWriter = null;
-        
+
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
-      
+
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
-        
+
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
         $graph = $this->_store->getModel($graphUri, $useAc);
-        
+
         $this->_rdfWriter->setGraphUri($graphUri);
 
         $base  = $graph->getBaseUri();
@@ -48,14 +48,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->_rdfWriter->addNamespacePrefix($prefix, $ns);
         }
-		
-		$config = Erfurt_App::getInstance()->getConfig();
+
+        $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->serializer->ad)) {
             $this->_rdfWriter->startDocument($config->serializer->ad);
         } else {
             $this->_rdfWriter->startDocument();
         }
-	
+
         $this->_rdfWriter->setMaxLevel(10);
 
         $this->_serializeType('Ontology specific informations', EF_OWL_ONTOLOGY);
@@ -73,19 +73,21 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         $this->_rdfWriter->endDocument();
         return $this->_rdfWriter->getContentString();
     }
-    
-    public function serializeResourceToString($resource, $graphUri, $pretty = false, $useAc = true, array $additional = array())
+
+    public function serializeResourceToString(
+        $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
+    )
     {
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
         require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
-        
+
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
-        
+
         $this->_store = Erfurt_App::getInstance()->getStore();
         $this->_graphUri = $graphUri;
         $graph = $this->_store->getModel($graphUri, $useAc);
-        
+
         $this->_rdfWriter->setGraphUri($graphUri);
 
         $base  = $graph->getBaseUri();
@@ -96,23 +98,23 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         foreach ($namespaces->getNamespacePrefixes($graphUri) as $prefix => $ns) {
             $this->_rdfWriter->addNamespacePrefix($prefix, $ns);
         }
-		
+
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->serializer->ad)) {
             $this->_rdfWriter->startDocument($config->serializer->ad);
         } else {
             $this->_rdfWriter->startDocument();
         }
-		
+
         $this->_rdfWriter->setMaxLevel(1);
 
-        foreach ($additional as $s=>$pArray) {
-            foreach($pArray as $p=>$oArray) {
+        foreach ($additional as $s => $pArray) {
+            foreach ($pArray as $p => $oArray) {
                 foreach ($oArray as $o) {
                     $sType = (substr($s, 0, 2) === '_:') ? 'bnode' : 'uri';
-                    $lang  = isset($o['lang']) ? $o['lang'] : null; 
+                    $lang  = isset($o['lang']) ? $o['lang'] : null;
                     $dType = isset($o['datatype']) ? $o['datatype'] : null;
-                    
+
                     $this->_handleStatement($s, $p, $o['value'], $sType, $o['type'], $lang, $dType);
                 }
             }
@@ -125,39 +127,46 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
         return $this->_rdfWriter->getContentString();
     }
-    
+
+    public function serializeQueryResultToString($query, $graphUri, $pretty = false, $useAc = true)
+    {
+        throw new Erfurt_Syntax_RdfSerializerException(
+            'The serialization of query results is not yet supported for RDF/XML'
+        );
+    }
+
     protected function _handleStatement($s, $p, $o, $sType, $oType, $lang = null, $dType = null)
-    { 
+    {
         if (null === $this->_currentSubject) {
             $this->_currentSubject = $s;
             $this->_currentSubjectType = $sType;
         }
-        
+
         if ($s === $this->_currentSubject && $sType === $this->_currentSubjectType) {
             // Put the statement on the list.
             if (!isset($this->_pArray[$p])) {
                 $this->_pArray[$p] = array();
             }
-            
+
             if ($oType === 'typed-literal') {
                $oType = 'literal';
             }
-            
+
             $oArray =  array(
                 'value' => $o,
                 'type'  => $oType
             );
-            
+
             if (null !== $lang) {
                 $oArray['lang'] = $lang;
             } else if (null !== $dType) {
                 $oArray['datatype'] = $dType;
             }
-            
+
             $this->_pArray[$p][] = $oArray;
         } else {
             $this->_forceWrite();
-            
+
             $this->_currentSubject = $s;
             $this->_currentSubjectType = $sType;
             $this->_pArray = array($p => array());
@@ -180,29 +189,29 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
             $this->_pArray[$p][] = $oArray;
         }
     }
-    
+
     protected function _forceWrite()
     {
         if (null === $this->_currentSubject) {
             return;
         }
-        
+
         // Write the statements
         $this->_rdfWriter->serializeSubject($this->_currentSubject, $this->_currentSubjectType, $this->_pArray);
-        
+
         $this->_currentSubject = null;
         $this->_currentSubjectType = null;
         $this->_pArray = array();
     }
-    
+
     /**
      * Internal function, which takes a type and a description and serializes all statements of this type in a section.
      *
      * @param string $description A description for the given class of statements (e.g. owl:Class).
      * @param string $class The type which to serialize (e.g. owl:Class).
      */
-    protected function _serializeType($description, $class) 
-    {	
+    protected function _serializeType($description, $class)
+    {
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
@@ -214,33 +223,36 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, array(
-                'result_format'   => 'extended',
-                'use_owl_imports' => false,
-                'use_additional_imports' => false
-            ));
+            $result = $this->_store->sparqlQuery(
+                $query,
+                array(
+                    'result_format'   => 'extended',
+                    'use_owl_imports' => false,
+                    'use_additional_imports' => false
+                )
+            );
 
-        if ($offset === 0 && count($result['results']['bindings']) > 0) {
-            $this->_rdfWriter->addComment($description);
-        }
+            if ($offset === 0 && count($result['results']['bindings']) > 0) {
+                $this->_rdfWriter->addComment($description);
+            }
 
-        foreach ($result['results']['bindings'] as $row) {
-            $s = $row['s']['value'];
-            $p = $row['p']['value'];
-            $o = $row['o']['value'];
-            $sType = $row['s']['type'];
-            $oType = $row['o']['type'];
-            $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
-            $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
+            foreach ($result['results']['bindings'] as $row) {
+                $s = $row['s']['value'];
+                $p = $row['p']['value'];
+                $o = $row['o']['value'];
+                $sType = $row['s']['type'];
+                $oType = $row['o']['type'];
+                $lang  = isset($row['o']['xml:lang']) ? $row['o']['xml:lang'] : null;
+                $dType = isset($row['o']['datatype']) ? $row['o']['datatype'] : null;
 
-            $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
-        }
+                $this->_handleStatement($s, $p, $o, $sType, $oType, $lang, $dType);
+            }
 
-        if (count($result['results']['bindings']) < 1000) {
-            break;
-        }
+            if (count($result['results']['bindings']) < 1000) {
+                break;
+            }
 
-        $offset += 1000;	
+            $offset += 1000;
         }
 
         $this->_forceWrite();
@@ -278,11 +290,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, array(
-                'result_format'   => 'extended',
-                'use_owl_imports' => false,
-                'use_additional_imports' => false
-            ));
+            $result = $this->_store->sparqlQuery(
+                $query,
+                array(
+                    'result_format'   => 'extended',
+                    'use_owl_imports' => false,
+                    'use_additional_imports' => false
+                )
+            );
 
             if ($offset === 0 && count($result['results']['bindings']) > 0) {
                 $this->_rdfWriter->addComment($description);
@@ -326,13 +341,15 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, 
-                    array(
-                        'result_format'   => 'extended',
-                        'use_owl_imports' => false,
-                        'use_additional_imports' => false,
-                        'use_ac' => $useAc
-                    ));
+            $result = $this->_store->sparqlQuery(
+                $query,
+                array(
+                    'result_format'   => 'extended',
+                    'use_owl_imports' => false,
+                    'use_additional_imports' => false,
+                    'use_ac' => $useAc
+                )
+            );
 
             foreach ($result['results']['bindings'] as $row) {
                 $s     = $row['s']['value'];
@@ -385,13 +402,15 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         while (true) {
             $query->setOffset($offset);
 
-            $result = $this->_store->sparqlQuery($query, 
-                    array(
-                        'result_format'   => 'extended',
-                        'use_owl_imports' => false,
-                        'use_additional_imports' => false,
-                        'use_ac' => $useAc
-                    ));
+            $result = $this->_store->sparqlQuery(
+                $query,
+                array(
+                    'result_format'   => 'extended',
+                    'use_owl_imports' => false,
+                    'use_additional_imports' => false,
+                    'use_ac' => $useAc
+                )
+            );
 
             foreach ($result['results']['bindings'] as $row) {
                 $s     = $row['s']['value'];

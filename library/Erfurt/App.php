@@ -861,6 +861,18 @@ class Erfurt_App
     }
 
     /**
+     * Returns the ResourceList instance
+     *
+     * @return Erfurt_RDF_ResourceList
+     */
+    public function getResourcePool()
+    {
+        require_once 'Erfurt/Rdf/Resource/Pool.php';
+        $rl = Erfurt_Rdf_Resource_Pool::getInstance();
+        return $rl;
+    }
+
+    /**
      * Returns a instance of the store.
      *
      * @return Erfurt_Store
@@ -1105,7 +1117,7 @@ class Erfurt_App
                 case 'memcached':
                     $options = $config->cache->backend->memcached->toArray();
                     $cache   = new Zend_Cache_Backend_Memcached($options);
-                    if( !$cache->save(time(), 'EF_lastConnect')) {
+                    if (!$cache->save(time(), 'EF_lastConnect')) {
                         throw new Erfurt_Exception(
                             'Memcache server is not available.'
                         );
@@ -1124,8 +1136,8 @@ class Erfurt_App
                     $cache   = new Zend_Cache_Backend_Sqlite($options);
                     break;
                 case 'file':
-                    $path		= $config->cache->backend->file->cache_dir;
-                    if (!$path){
+                    $path = $config->cache->backend->file->cache_dir;
+                    if (!$path) {
                         throw new Erfurt_App_Exception(
                             'No cache directory configured.'
                         );

@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -13,7 +13,7 @@ require_once 'Erfurt/Wrapper.php';
  *
  * @category  Erfurt
  * @package   Erfurt_Wrapper
- * @copyright Copyright (c) 2012 {@link http://aksw.org aksw}
+ * @copyright Copyright (c) 2013 {@link http://aksw.org aksw}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
  * @author    Natanael Arndt <arndtn@gmail.com>
@@ -126,7 +126,7 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
             $retVal = true;
         } else {
             // try n3
-            $client->setHeaders('Accept', 'text/n3');
+            $client->setHeaders('Accept', 'text/n3, text/turtle');
             $response = $client->request();
 
             $success = $this->_handleResponse($client, $response);

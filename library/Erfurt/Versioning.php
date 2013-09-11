@@ -111,6 +111,10 @@ class Erfurt_Versioning
                 'DELETE FROM ef_versioning_actions
                  WHERE id = ' . $this->_currentActionParent
             );
+            $this->_sqlQuery(
+                'DELETE FROM ef_versioning_metadata
+                 WHERE action_id = ' . $this->_currentActionParent
+            );
             $this->endAction();
         } else {
             // do nothing
@@ -160,6 +164,7 @@ class Erfurt_Versioning
         $sql = 'SELECT id, useruri, resource, tstamp, action_type ' .
                'FROM ef_versioning_actions WHERE
                 model = \'' . $graphUri . '\'
+                AND parent IS NULL
                 ORDER BY tstamp DESC';
 
         $result = $this->_sqlQuery(
@@ -493,9 +498,34 @@ class Erfurt_Versioning
             $resource = $actionSpec['resourceuri'];
             $this->_currentAction = $actionSpec;
             $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType);
+
+            // in order to refer to the action later, we return the id
+            return $this->_currentActionParent;
         } else {
             // do nothing
         }
+    }
+
+    public function addMetadataToAction($actionId, array $metadata)
+    {
+        foreach ($metadata as $key => $value) {
+            $sql  = 'INSERT INTO ef_versioning_metadata (action_id, metadata_key, metadata_value) ';
+            $sql .= "VALUES ($actionId, '$key', '" . addslashes(serialize($value)) . "')";
+            $this->_sqlQuery($sql);
+        }
+    }
+
+    public function getMetadataForAction($actionid)
+    {
+        $sql = "SELECT metadata_key, metadata_value FROM ef_versioning_metadata WHERE action_id = $actionid";
+
+        $retVal = array();
+        $result = $this->_sqlQuery($sql);
+        foreach ($result as $row) {
+            $retVal[$row['metadata_key']] = unserialize($row['metadata_value']);
+        }
+
+        return $retVal;
     }
 
     public function setUserUri($uri)
@@ -591,6 +621,16 @@ class Erfurt_Versioning
                     }
                     $resultPayload = $this->_sqlQuery($sqldeletePayload);
             }
+        }
+
+        $sql = "SELECT id FROM ef_versioning_actions WHERE model = '$graphUri'";
+        $result = $this->_sqlQuery($sql);
+        $idArray = array();
+        foreach ($result as $row) {
+            $idArray[] = $row['id'];
+        }
+        if (count($idArray) > 0) {
+            $this->_sqlQuery('DELETE FROM ef_versioning_metadata WHERE action_id IN (' . implode(',', $idArray) . ')');
         }
 
         // finally delete actions
@@ -719,6 +759,17 @@ class Erfurt_Versioning
             );
 
             $this->_getStore()->createTable('ef_versioning_payloads', $columnSpec);
+        }
+
+        if (!in_array('ef_versioning_metadata', $existingTableNames)) {
+            $columnSpec = array(
+                'id'             => 'INT PRIMARY KEY AUTO_INCREMENT',
+                'action_id'      => 'INT NOT NULL',
+                'metadata_key'   => 'VARCHAR(255) NOT NULL',
+                'metadata_value' => 'LONGTEXT'
+            );
+
+            $this->_getStore()->createTable('ef_versioning_metadata', $columnSpec);
         }
     }
 

@@ -18,7 +18,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * backend Object
      * @var object
     */
-    var $_backend;
+    private $_backend;
 
     /**
      * Transactions for Object issignment to QueryCache
@@ -62,7 +62,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * @param      float   $duration       duration in seconds.microseconds
      * @return     boolean $result         state of the saving process true/false
     */
-    public function save($queryString, $resultFormat = "plain", $queryResult, $duration = 0)
+    public function save($queryString, $resultFormat = "plain", $queryResult = null, $duration = 0)
     {
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
             // create QueryId
@@ -163,17 +163,16 @@ class Erfurt_Cache_Frontend_QueryCache
      * @param      string   $object    object of the triple
      * @return     int      $count     number of queries which was affected of the invalidation process
     */
-    public function invalidate($modelIri, $subject, $predicate, $object)
+    public function invalidate($modelIri, $subject = "", $predicate = "", $object = "")
     {
         // cast subject and predicate to string
         $subject = (string) $subject;
         $predicate = (string) $predicate;
-
+        $object = (string) $object;
         // initialize statements array
         $statements = array();
         $statements[$subject] = array();
         $statements[$subject][$predicate] = array ($object);
-
         $qids = $this->invalidateWithStatements($modelIri, $statements);
         return $qids;
     }
@@ -182,7 +181,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * invalidating CacheResults according to a given modelIRI
      * @access     public
      * @param      string   $modelIri  modelIri
-     * @return     string   $status    status of the process
+     * @return     array    $qids      set of qids that were invalidated
     */
     public function invalidateWithModelIri($modelIri)
     {
@@ -344,8 +343,8 @@ class Erfurt_Cache_Frontend_QueryCache
 
         //delete objects in ObjectCache
         //TODO: _clean im Objectcache umschreiben.
-#        if ($removeByTags == true)
-#            $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
+        //if ($removeByTags == true)
+        //    $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
         if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null)) {
             foreach ($oKeys as $oKey) {
                 $objectCache->remove($oKey);
@@ -370,31 +369,26 @@ class Erfurt_Cache_Frontend_QueryCache
         // Creation of SPARQL Parser and parsing the query string
         $parser = new Erfurt_Sparql_Parser();
 
-        #hack to get Construct queries running.
+        //hack to get Construct queries running.
         $queryString = preg_replace("/CONSTRUCT\s*\{[^\}]*\}/mix", "SELECT *", $queryString);
 
         $parsedQuery = $parser->parse($queryString);
 
-        #extract graphUris from FromPart and from FromNamedPart
+        //extract graphUris from FromPart and from FromNamedPart
         $graphs = $parsedQuery->getFromPart();
         $fromNamedParts = $parsedQuery->getFromNamedPart();
         foreach ($fromNamedParts as $fromNamedPart) {
             array_push($graphs, $fromNamedPart);
         }
-        #extract triplePattern from parsed query and put them in an array.
+        //extract triplePattern from parsed query and put them in an array.
         $triples = array();
-        #triples[0,1,2...] = array('subject' => <subject>, 'predicate' => <predicate>, 'object' => <object>,)
+        //triples[0,1,2...] = array('subject' => <subject>, 'predicate' => <predicate>, 'object' => <object>,)
         $graphPatterns = $parsedQuery->getResultPart();
         foreach ($graphPatterns as $gid => $graphPattern) {
             $triplePatterns = $graphPattern->getTriplePatterns();
             foreach ($triplePatterns as $tid => $triplePattern) {
                 $subject   = (string) $triplePattern->getSubject();
                 $predicate = (string) $triplePattern->getPredicate();
-                #Erfurt_RDF_Literal needs an __toString methode :: is given now , the following was an workaround
-                #if (get_class($triplePattern->getObject())  == 'Erfurt_Rdf_Literal') {
-                #    var_dump($triplePattern->getObject());
-                #    die;
-                #}
                 $object    = (string) $triplePattern->getObject();
 
                 $triple = array();
@@ -406,7 +400,6 @@ class Erfurt_Cache_Frontend_QueryCache
         }
         $queryParts['triples'] = $triples;
         $queryParts['graphs'] = $graphs;
-
         return $queryParts;
     }
 

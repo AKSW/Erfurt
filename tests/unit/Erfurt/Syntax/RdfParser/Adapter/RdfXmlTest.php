@@ -3,13 +3,13 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 {
     const SYNTAX_TEST_DIR = 'valid/';
     const SYNTAX_INVALID_TEST_DIR = 'invalid/';
-    
+
     /**
      * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
      * @access protected
      */
     protected $_object;
-    
+
     protected $_xmlString = null;
 
     /**
@@ -21,7 +21,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
     protected function setUp()
     {
         $this->_object    = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
-        
+
         $this->_xmlString = '<?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE rdf:RDF [
           <!ENTITY owl "http://www.w3.org/2002/07/owl#">
@@ -33,7 +33,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
                  xmlns:rdf="&rdf;"
                  xmlns:rdfs="&rdfs;">';
     }
-    
+
     public function testParseEmpty()
     {
         $xml = $this->_getRdfXmlString('');
@@ -62,19 +62,19 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         $this->assertEquals(1, count($result));
 
         $this->assertTrue(
-            $result['http://example.org/']['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['value'] 
+            $result['http://example.org/']['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['value']
             === 'http://www.w3.org/2002/07/owl#Ontology');
 
         $this->assertTrue(
-            $result['http://example.org/']['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['type'] 
+            $result['http://example.org/']['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['type']
             === 'uri');
 
         $this->assertTrue(
-            $result['http://example.org/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['value'] 
+            $result['http://example.org/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
             === 'Test Label');
 
         $this->assertTrue(
-            $result['http://example.org/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['type'] 
+            $result['http://example.org/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['type']
             === 'literal');
     }
 
@@ -89,22 +89,22 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 
         $this->assertTrue(
             $result['http://ns.ontowiki.net/unittest/xmlparser/']
-            ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['value'] 
+            ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['value']
             === 'http://www.w3.org/2002/07/owl#Ontology');
 
         $this->assertTrue(
             $result['http://ns.ontowiki.net/unittest/xmlparser/']
-            ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['type'] 
+            ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0]['type']
             === 'uri');
 
         $this->assertTrue(
             $result['http://ns.ontowiki.net/unittest/xmlparser/']
-            ['http://www.w3.org/2000/01/rdf-schema#comment'][0]['value'] 
+            ['http://www.w3.org/2000/01/rdf-schema#comment'][0]['value']
             === 'Test comment.');
 
         $this->assertTrue(
             $result['http://ns.ontowiki.net/unittest/xmlparser/']
-            ['http://www.w3.org/2000/01/rdf-schema#comment'][0]['type'] 
+            ['http://www.w3.org/2000/01/rdf-schema#comment'][0]['type']
             === 'literal');
     }
 
@@ -127,12 +127,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 
         $this->assertTrue(
             $result['http://example.org/']
-            ['http://www.w3.org/2000/01/rdf-schema#label'][0]['value'] 
+            ['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
             === 'TTT');
 
         $this->assertTrue(
             $result['http://example.org/']
-            ['http://www.w3.org/2000/01/rdf-schema#label'][0]['type'] 
+            ['http://www.w3.org/2000/01/rdf-schema#label'][0]['type']
             === 'literal');
     }
 
@@ -152,9 +152,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
     public function testElementNodeGeneration()
     {
         $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example" />');
-        
+
         $result = $this->_object->parseFromDataString($xml);
-        
+
         $this->assertEquals(1, count($result));
 
         $keys = array_keys($result);
@@ -165,9 +165,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
     public function testUriLiteral()
     {
         $xml = $this->_getRdfXmlString('<owl:Class rdfs:label="example"><rdfs:comment>http://aksw.org/images/jpegPhoto.php?name=sn&amp;value=Dietzold</rdfs:comment></owl:Class>');
-        
+
         $result = $this->_object->parseFromDataString($xml);
-        
+
         $this->assertEquals(1, count($result));
 
         $keys = array_keys($result);
@@ -202,6 +202,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
 
     /**
      * @dataProvider providerTestParseFromDataString
+     * @medium
      */
     public function testParseFromDataString($fileName)
     {
@@ -287,7 +288,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
         }
     }
 */
-    
+
     public function testParseRecursiveEntity()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -300,15 +301,15 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
           <!ENTITY grddl "http://www.w3.org/2003/g/data-view#">
           <!ENTITY owl "&location;#" >
         ]>
-        
+
         <rdf:RDF xml:base="&location;"
                  xmlns:conferences="&location;"
                  xmlns:owl="&owl;"
                  xmlns:rdf="&rdf;">
-            
+
             <owl:Class rdf:about="#test" />
         </rdf:RDF>';
-        
+
         try {
             $result = $this->_object->parseFromDataString($xml);
             $this->assertEquals('http://www.w3.org/2002/07/owl#Class', $result['http://www.w3.org/2002/07/owl#test'][EF_RDF_TYPE][0]['value']);
@@ -316,9 +317,9 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXmlTest extends Erfurt_TestCase
             $this->fail($e->getMessage());
         }
     }
-    
+
     protected function _getRdfXmlString($innerXml)
     {
         return $this->_xmlString . $innerXml . '</rdf:RDF>';
-    }    
+    }
 }
