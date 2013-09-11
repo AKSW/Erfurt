@@ -155,6 +155,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     }
 
+    public function isInSyntaxSupported()
+    {
+        return true;
+    }
+
     public function isModelAvailable($graphUri)
     {
         $graphs = $this->getAvailableModels();
