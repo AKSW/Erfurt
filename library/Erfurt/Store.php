@@ -2136,7 +2136,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 }
             }
         }
-
         if ($result) {
             foreach ($result['results']['bindings'] as $row) {
                 // fake the subject array
@@ -2144,12 +2143,13 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     'type'  => 'uri',
                     'value' => $resourceIri
                 );
-                $memoryModel->addStatementFromExtendedFormatArray(
-                    $s,
-                    $row['p'],
-                    $row['o']
-                );
-
+                if (isset($row['p']) && $row['o']) {
+                    $memoryModel->addStatementFromExtendedFormatArray(
+                        $s,
+                        $row['p'],
+                        $row['o']
+                    );
+                }
                 // todo: implement blank node fetching here
                 //if ($row['o']['type'] === 'bnode') {
                     //$nodeId  = $row['o']['value'];
