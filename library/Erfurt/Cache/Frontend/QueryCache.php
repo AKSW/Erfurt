@@ -18,7 +18,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * backend Object
      * @var object
     */
-    var $_backend;
+    private $_backend;
 
     /**
      * Transactions for Object issignment to QueryCache
@@ -62,7 +62,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * @param      float   $duration       duration in seconds.microseconds
      * @return     boolean $result         state of the saving process true/false
     */
-    public function save($queryString, $resultFormat = "plain", $queryResult, $duration = 0)
+    public function save($queryString, $resultFormat = "plain", $queryResult = null, $duration = 0)
     {
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
             // create QueryId
@@ -400,7 +400,6 @@ class Erfurt_Cache_Frontend_QueryCache
         }
         $queryParts['triples'] = $triples;
         $queryParts['graphs'] = $graphs;
-
         return $queryParts;
     }
 

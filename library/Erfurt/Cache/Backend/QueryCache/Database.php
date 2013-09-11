@@ -317,7 +317,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (sizeof($statements) == 0) {
             return false;
         }
-        
+
         $qids = array();
         $clauses = array();
         foreach ($statements as $subject => $predicates) {
@@ -354,11 +354,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (empty($clauses)) {
             return false;
         }
-        
+
         if (count($clauses) > 20) {
             return $this->invalidateWithModelIri($modelIri);
         }
-        
+
         $clauseString = implode(' OR ', $clauses);
         // retrieve list of qids which have to be invalidated
         $query = '
@@ -377,10 +377,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             JOIN 
                 ef_cache_query_result result ON result.qid = qid2 
             WHERE result.result IS NOT NULL';
-
-        if (empty($clauses)) {
-        var_dump($query);die;
-        }
 
         $result = $this->_query($query);
         if (!$result) {
