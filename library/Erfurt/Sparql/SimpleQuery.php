@@ -97,8 +97,9 @@ class Erfurt_Sparql_SimpleQuery
             'offset'     => array()
         );
 
+        // /(BASE.*?\s)?(PREFIX.*?\s)*(ASK|((COUNT(\s)*(\(.*?\))))|(SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)+(\(.*?\)(\s)))?(\?\w+\s+|\*)*)/si
         $tokens = array(
-            'prologue'   => '/(BASE.*\s)?(PREFIX.*\s)*(\s*ASK|\s*COUNT|(\s*SELECT\s+(DISTINCT\s+)?(COUNT\s*)?)(\()?(\?\w+\s+|\*)+(\)?)?)/si',
+            'prologue'   =>'/((BASE.*\s)?(PREFIX.*?\s)*(ASK|((SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)*(\(.*?\)(\s)))?)(\?\w+\s+|\*)*))/si',
             'from'       => '/FROM\s+<(.+?)>/i',
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
             'where'      => '/(WHERE\s+)?\{.*\}/si',
