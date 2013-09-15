@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
+
 /**
  * Singleton registry class for job workers.
  *
@@ -22,7 +23,7 @@ class Erfurt_Worker_Registry{
     static $defaultJobOptions   = array();
 
     /**
-     *  Map of default job options.
+     *  Protected singleton instance of registry.
      *  @static
      *  @var    array
      */
@@ -40,14 +41,18 @@ class Erfurt_Worker_Registry{
 .    *  @access     protected
      *  @return     void
      */
-    protected function __construct(){}
+    protected function __construct()
+    {
+    }
 
     /**
      *  Cloning is not allowed.
 .    *  @access     protected
      *  @return     void
      */
-    protected function __clone(){}
+    protected function __clone()
+    {
+    }
 
     /**
      *  Add a job container to the registry.
