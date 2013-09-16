@@ -97,13 +97,14 @@ class Erfurt_Sparql_SimpleQuery
             'offset'     => array()
         );
 
+        $var = '[?$]{1}[\w\d]+';
         // /(BASE.*?\s)?(PREFIX.*?\s)*(ASK|((COUNT(\s)*(\(.*?\))))|(SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)+(\(.*?\)(\s)))?(\?\w+\s+|\*)*)/si
         $tokens = array(
             'prologue'   =>'/((BASE.*\s)?(PREFIX.*?\s)*(ASK|((SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)*(\(.*?\)(\s)))?)(\?\w+\s+|\*)*))/si',
             'from'       => '/FROM\s+<(.+?)>/i',
             'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
             'where'      => '/(WHERE\s+)?\{.*\}/si',
-            'order'      => '/ORDER\s+BY\s+(.+\))+/i',
+            'order'      => '/ORDER\s+BY((\s+' . $var . '|\s+(ASC|DESC)\s*\(\s*' . $var . '\s*\))+)/i',
             'limit'      => '/LIMIT\s+(\d+)/i',
             'offset'     => '/OFFSET\s+(\d+)/i'
         );
@@ -130,7 +131,7 @@ class Erfurt_Sparql_SimpleQuery
         }
 
         if (isset($parts['order'][1][0])) {
-            $queryObject->setOrderClause($parts['order'][1][0]);
+            $queryObject->setOrderClause(trim($parts['order'][1][0]));
         }
 
         if (isset($parts['limit'][1][0])) {
