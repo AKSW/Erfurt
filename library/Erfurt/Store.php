@@ -1065,8 +1065,10 @@ EOF;
 
         // Add a statement <$modelIri> a SysOnt:Model
         $sysOntModelUri = $this->getOption('modelUri');
-        $objectArray = array('value' => 'http://ns.ontowiki.net/SysOnt/Model', 'type'  => 'uri');
-        $this->addStatement($sysOntModelUri, $modelIri, EF_RDF_TYPE, $objectArray);
+        if ($this->isModelAvailable($sysOntModelUri)) {
+            $objectArray = array('value' => 'http://ns.ontowiki.net/SysOnt/Model', 'type'  => 'uri');
+            $this->addStatement($sysOntModelUri, $modelIri, EF_RDF_TYPE, $objectArray);
+        }
 
         // everything ok, create new model
         // no access control since we have already checked
