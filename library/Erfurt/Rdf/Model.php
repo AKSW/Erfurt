@@ -479,16 +479,6 @@ class Erfurt_Rdf_Model
             $this->getStore()->addMultipleStatements($sysOntUri, $addArray, false);
         }
 
-        // TODO add this statement on model add?!
-        // Add a statement graphUri a SysOnt:Model
-        $addArray[$this->_graphUri] = array();
-        $addArray[$this->_graphUri][EF_RDF_TYPE] = array();
-        $addArray[$this->_graphUri][EF_RDF_TYPE][] = array(
-            'value' => 'http://ns.ontowiki.net/SysOnt/Model',
-            'type'  => 'uri'
-        );
-        $this->getStore()->addMultipleStatements($sysOntUri, $addArray, false);
-
         // Reset the options
         $this->_graphOptions = null;
     }
