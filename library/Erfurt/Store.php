@@ -1580,7 +1580,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     {
         $logger = $this->_getQueryLogger();
 
-        $logger->debug('query in: '.(string)$queryObject);
+        $type = gettype($queryObject);
+        $typeStr = 'type: ' . $type . ($type == 'object' ? ', class: ' . get_class($queryObject) : '');
+        $logger->debug('query in (' . $typeStr . '): '.(string)$queryObject);
+
         $queryString = $this->_prepareQuery($queryObject, $options);
         //dont use the query object afterwards anymore - only the string
 
