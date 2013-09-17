@@ -160,19 +160,21 @@ class Erfurt_Cache_Frontend_QueryCache
      * @access     public
      * @param      string   $subject   subject of the triple
      * @param      string   $predicate predicate of the triple
-     * @param      string   $object    object of the triple
+     * @param      array    $object    object of the triple
      * @return     int      $count     number of queries which was affected of the invalidation process
     */
-    public function invalidate($modelIri, $subject = "", $predicate = "", $object = "")
+    public function invalidate($modelIri, $subject = "", $predicate = "", $object)
     {
         // cast subject and predicate to string
         $subject = (string) $subject;
         $predicate = (string) $predicate;
-        $object = (string) $object;
         // initialize statements array
+        if (empty($object)) {
+            $object = array ($object);
+        }
         $statements = array();
         $statements[$subject] = array();
-        $statements[$subject][$predicate] = array ($object);
+        $statements[$subject][$predicate] = $object;
         $qids = $this->invalidateWithStatements($modelIri, $statements);
         return $qids;
     }
