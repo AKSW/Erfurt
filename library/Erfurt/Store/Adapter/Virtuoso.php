@@ -1217,8 +1217,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 if (substr($fieldType, 0, 4) == 'LONG') {
                     // LONG VARCHAR or LONG VARBINARY
                     // get the field value in parts
-                    while ($segment = odbc_result($odbcResult, $i)) {
-                        $value .= (string)$segment;
+                    while (true) {
+                        $segment = odbc_result($odbcResult, $i);
+                        if ($segment !== false && $segment !== null) {
+                            $value .= (string)$segment;
+                        } else {
+                            break;
+                        }
                     }
                 } else {
                     // get the field value normally
