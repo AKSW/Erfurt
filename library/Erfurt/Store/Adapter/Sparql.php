@@ -340,17 +340,15 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
                             $type = $valueType;
                             $val  = $vn->nodeValue;
                         } else {
-                            if (null !== $vn->attributes->getNamedItem('datatype')) {
-                                $type = 'typed-literal';
-                                $dt = $vn->attributes->getNamedItem('datatype')->nodeValue;
-                            } else {
-                                $type = 'literal';
+                            foreach ($vn->attributes as $attr) {
+                                if ($attr->name == "datatype") {
+                                    $type = 'typed-literal';
+                                    $dt = $attr->value;
+                                } else if ($attr->name == "lang") {
+                                    $type = 'literal';
+                                    $lang=$attr->value;
+                                }
                             }
-
-                            if (null !== $vn->attributes->getNamedItem('xml:lang')) {
-                                $lang = $vn->attributes->getNamedItem('xml:lang')->nodeValue;
-                            }
-
                             $val = $vn->nodeValue;
                         }
                         break;
