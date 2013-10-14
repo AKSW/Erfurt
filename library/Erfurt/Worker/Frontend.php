@@ -23,6 +23,12 @@ class Erfurt_Worker_Frontend
     static protected $instance;
 
     /**
+     *  Job handle of latest called (async) job.
+     *  @var    string
+     */
+    protected $lastJobHandle;
+    
+    /**
      *  Construction is not allowed.
      *  Please use getInstance() instead.
 .    *  @access     protected
@@ -42,27 +48,23 @@ class Erfurt_Worker_Frontend
     protected function __clone()
     {
     }
-    
+
     /**
-     *  Calls for synchronous execution of an registrered worker job.
-     *  This method only allows synchronous job execution. Use callAsync() for asynchronous job execution.
+     *  Calls for asynchronous or synchronous execution of an registrered worker job.
      *  @access     public
      *  @param      string      $jobName
      *  @param      mixed       $workload       Workload for job, may be empy
      *  @param      integer     $priority       Flag: priority of execution, 1: high, 0: normal, -1: low, default: normal
-     *  @return     string      Job result (may be serialized)
+     *  @param      integer     $mode           Flag: mode of execution, 0: asynchronous, 1: synchronous, default: asynchronous
+     *  @return     void
      */
-    public function call( $jobName, $workload = NULL, $priority = 0 )
-    {
-        $method = "doNormal";
-        if( $priority === 1 ){
-            $method = "doHigh";
+    public function call( $jobName, $workload = NULL, $priority = 0, $mode = 0 ){
+        if( (int)$mode === 0 ){
+            $this->callAsync( $jobName, $workload, $priority );
         }
-        else if( $priority === -1 ){
-            $method = "doLow";
+        else if( (int)$mode === 1 ){
+            $this->callSync( $jobName, $workload, $priority );
         }
-        $workload   = $this->prepareWorkload( $workload );
-        return $this->client->$method( $jobName, $workload );
     }
 
     /**
@@ -83,13 +85,34 @@ class Erfurt_Worker_Frontend
             $method = "doLowBackground";
         }
         $workload   = $this->prepareWorkload( $workload );
-        $jobHandle  = $this->client->$method( $jobName, $workload );
+        $this->lastJobHandle    = $this->client->$method( $jobName, $workload );
         if( $this->client->returnCode() !== GEARMAN_SUCCESS ){
             throw new Erfurt_Worker_Exception(
                 "Asynchronous job call failed"
             );
         }
-        return $jobHandle;
+    }
+
+    /**
+     *  Calls for synchronous execution of an registrered worker job.
+     *  This method only allows synchronous job execution. Use callAsync() for asynchronous job execution.
+     *  @access     public
+     *  @param      string      $jobName
+     *  @param      mixed       $workload       Workload for job, may be empy
+     *  @param      integer     $priority       Flag: priority of execution, 1: high, 0: normal, -1: low, default: normal
+     *  @return     void
+     */
+    public function callSync( $jobName, $workload = NULL, $priority = 0 )
+    {
+        $method = "doNormal";
+        if( $priority === 1 ){
+            $method = "doHigh";
+        }
+        else if( $priority === -1 ){
+            $method = "doLow";
+        }
+        $workload   = $this->prepareWorkload( $workload );
+        $this->client->$method( $jobName, $workload );
     }
 
     /**
@@ -119,12 +142,28 @@ class Erfurt_Worker_Frontend
     }
 
     /**
+     *  Returns handle of latest called asynchronous job.
+     *  @access     public
+     *  @return     string      ASync: Job handle assigned by the Gearman server
+     */
+    public function getLastJobHandle(){
+        return $this->lastJobHandle;
+    }
+
+    /**
      *  Indicates whether a asynchronous job is still running.
      *  @access     public
      *  @param      string      $jobHandle      Job handle assigned by the Gearman server
      *  @return     boolean
      */
-    public function isStillRunning( $jobHandle ){
+    public function isStillRunning( $jobHandle = NULL ){
+        if( $jobHandle === NULL ){
+            $jobHandle  = $this->getLastJobHandle();
+            if( $jobHandle === NULL )
+                throw new InvalidArgumentException(
+                    'No job handle given'
+                );
+        }
         $status = $this->client->jobStatus( $jobHandle );
         return $status[0];
     }
@@ -139,7 +178,7 @@ class Erfurt_Worker_Frontend
         switch( strtolower( gettype( $workload ) ) ){
             case "array":
             case "object":
-                $workload   = serialize( $workload );
+                $workload   = json_encode( $workload );
                 break;
         }
         return $workload;

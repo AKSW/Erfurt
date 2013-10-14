@@ -16,15 +16,15 @@
 class Erfurt_Worker_Backend
 {
     /**
-     * Registry for existing jobs.
-     *
-     * @var Erfurt_Worker_Registry
+     *  @var Erfurt_Worker_Registry Registry for existing jobs
      */
     protected $registry;
 
     /**
-     * The constructor of this class.
-     *
+     *  The constructor of this class.
+     *  @access     public
+     *  @param      Erfurt_Worker_Registry  Worker registry instance
+     *  @return     void
      */
     public function __construct( Erfurt_Worker_Registry $registry )
     {
@@ -55,9 +55,12 @@ class Erfurt_Worker_Backend
                     "Worker job class '".$job->className."' is not existing"
                 );
             }
-            $object     = new $job->className;
+            print( '- '.$job->className." (".$job->classFile.")\n" );
+            
+            $object     = new $job->className( $job->config );
             $callback   = array( $object, "run" );
-            $worker->addFunction( $job->name, $callback );
+            $worker->addFunction( $job->name, $callback, $job->options );
+            print( "Waiting for job calls now...\n" );
         }
         while( $worker->work() );
     }

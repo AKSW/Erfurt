@@ -33,7 +33,7 @@ class Erfurt_Worker_Registry{
      *  List of registered jobs.
      *  @var type 
      */
-    protected $jobs				= array();
+    protected $jobs             = array();
 
     /**
      *  Construction is not allowed.
@@ -95,16 +95,19 @@ class Erfurt_Worker_Registry{
      *  @param      string      $name           Key name of worker job
      *  @param      string      $classFile      File name of job class
      *  @param      string      $className      Class name of job class
+     *  @param      Zend_Config $config         Extension configuration
      *  @param      string      $options        Map of job options
      *  @return     void
      */
-    public function registerJob( $name, $classFile, $className, $options = array() )
+    public function registerJob( $name, $classFile, $className, $config = NULL, $options = array() )
     {
+        $options    = is_array( $options ) ? $options : array();
         $options    = array_merge( self::$defaultJobOptions, $options );
         $job        = new Erfurt_Worker_Job_Container(
             $name,
             $classFile,
             $className,
+            $config,
             $options
         );
         $this->addJob( $job );
