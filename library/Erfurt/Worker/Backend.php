@@ -26,7 +26,7 @@ class Erfurt_Worker_Backend
      *  @param      Erfurt_Worker_Registry  Worker registry instance
      *  @return     void
      */
-    public function __construct( Erfurt_Worker_Registry $registry )
+    public function __construct(Erfurt_Worker_Registry $registry)
     {
         $this->registry = $registry;
     }
@@ -42,26 +42,36 @@ class Erfurt_Worker_Backend
     public function listen()
     {
         $worker = new GearmanWorker();
-        $worker->addServer();
+
+        try {
+            $worker->addServer();
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            print('Exception: '. $message . PHP_EOL);
+            print('Is gearmand running?' . PHP_EOL);
+            exit;
+        }
+
         foreach ($this->registry->getJobs() as $job) {
-            if (!file_exists("../".$job->classFile)) {
+            if (!file_exists('../' . $job->classFile)) {
                 throw new Erfurt_Worker_Exception(
-                    "Class file of worker job '".$job->className."' is not existing"
+                    'Class file of worker job "' . $job->className . '" is not existing'
                 );
             }
-            require_once "../".$job->classFile;
+            require_once '../' . $job->classFile;
             if (!class_exists($job->className)) {
                 throw new Erfurt_Worker_Exception(
-                    "Worker job class '".$job->className."' is not existing"
+                    'Worker job class "' . $job->className . '" is not existing'
                 );
             }
-            print('- '.$job->className." (".$job->classFile.")\n");
+            print('- ' . $job->className . ' (' . $job->classFile . ')' . PHP_EOL);
 
             $object     = new $job->className($job->config);
-            $callback   = array($object, "run");
+            $callback   = array($object, 'run');
             $worker->addFunction($job->name, $callback, $job->options);
-            print("Waiting for job calls now...\n");
+            print('Waiting for job calls now...' . PHP_EOL);
         }
-        while( $worker->work() );
+
+        while ($worker->work());
     }
 }
