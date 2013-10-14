@@ -10,8 +10,8 @@
  * Backend class for worker jobs.
  *
  * @category Erfurt
- * @package Erfurt
- * @author Christian Würker <christian.wuerker@ceusmedia.de>
+ * @package  Erfurt_Worker
+ * @author   Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Erfurt_Worker_Backend
 {
@@ -43,24 +43,24 @@ class Erfurt_Worker_Backend
     {
         $worker = new GearmanWorker();
         $worker->addServer();
-        foreach( $this->registry->getJobs() as $job ){
-            if( !file_exists( "../".$job->classFile ) ){
+        foreach ($this->registry->getJobs() as $job) {
+            if (!file_exists("../".$job->classFile)) {
                 throw new Erfurt_Worker_Exception(
                     "Class file of worker job '".$job->className."' is not existing"
                 );
             }
             require_once "../".$job->classFile;
-            if( !class_exists( $job->className ) ){
+            if (!class_exists($job->className)) {
                 throw new Erfurt_Worker_Exception(
                     "Worker job class '".$job->className."' is not existing"
                 );
             }
-            print( '- '.$job->className." (".$job->classFile.")\n" );
-            
-            $object     = new $job->className( $job->config );
-            $callback   = array( $object, "run" );
-            $worker->addFunction( $job->name, $callback, $job->options );
-            print( "Waiting for job calls now...\n" );
+            print('- '.$job->className." (".$job->classFile.")\n");
+
+            $object     = new $job->className($job->config);
+            $callback   = array($object, "run");
+            $worker->addFunction($job->name, $callback, $job->options);
+            print("Waiting for job calls now...\n");
         }
         while( $worker->work() );
     }

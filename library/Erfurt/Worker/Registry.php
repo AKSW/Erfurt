@@ -10,11 +10,11 @@
  * Singleton registry class for job workers.
  *
  * @category Erfurt
- * @package Erfurt
- * @author Christian Würker <christian.wuerker@ceusmedia.de>
+ * @package  Erfurt_Worker
+ * @author   Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Erfurt_Worker_Registry{
-
+class Erfurt_Worker_Registry
+{
     /**
      *  Map of default job options.
      *  @static
@@ -31,7 +31,7 @@ class Erfurt_Worker_Registry{
 
     /**
      *  List of registered jobs.
-     *  @var type 
+     *  @var type
      */
     protected $jobs             = array();
 
@@ -69,11 +69,11 @@ class Erfurt_Worker_Registry{
      *  Returns singleton instance of registry.
      *  @static
      *  @access     public
-     *  @return     Erfurt_Worker_Registry     Singleton instance of registry 
+     *  @return     Erfurt_Worker_Registry     Singleton instance of registry
      */
     static public function getInstance()
     {
-        if( !self::$instance ){
+        if (!self::$instance) {
             self::$instance = new self;
         }
         return self::$instance;
@@ -101,8 +101,8 @@ class Erfurt_Worker_Registry{
      */
     public function registerJob( $name, $classFile, $className, $config = NULL, $options = array() )
     {
-        $options    = is_array( $options ) ? $options : array();
-        $options    = array_merge( self::$defaultJobOptions, $options );
+        $options    = is_array($options) ? $options : array();
+        $options    = array_merge(self::$defaultJobOptions, $options);
         $job        = new Erfurt_Worker_Job_Container(
             $name,
             $classFile,
@@ -110,6 +110,6 @@ class Erfurt_Worker_Registry{
             $config,
             $options
         );
-        $this->addJob( $job );
+        $this->addJob($job);
     }
 }
