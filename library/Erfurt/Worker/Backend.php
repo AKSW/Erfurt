@@ -21,6 +21,11 @@ class Erfurt_Worker_Backend
     protected $registry;
 
     /**
+     *  @var GearmanWorker instance
+     */
+    protected $worker;
+
+    /**
      *  The constructor of this class.
      *  @access     public
      *  @param      Erfurt_Worker_Registry  Worker registry instance
@@ -41,10 +46,10 @@ class Erfurt_Worker_Backend
      */
     public function listen()
     {
-        $worker = new GearmanWorker();
+        $this->worker = new GearmanWorker();
 
         try {
-            $worker->addServer();
+            $this->worker->addServer();
         } catch (Exception $e) {
             $message = $e->getMessage();
             print('Exception: '. $message . PHP_EOL);
@@ -70,10 +75,19 @@ class Erfurt_Worker_Backend
 
             $object     = new $job->className($job->config);
             $callback   = array($object, 'run');
-            $worker->addFunction($job->name, $callback, $job->options);
+            $this->worker->addFunction($job->name, $callback, $job->options);
             print('Waiting for job calls now...' . PHP_EOL);
         }
+        $this->run();
+    }
 
-        while ($worker->work());
+    protected function run(){
+        try{
+            while ($this->worker->work());
+        }
+        catch( Exception $e ){
+            print("Exception: " . $e->getMessage()."\n");
+            $this->run();
+        }
     }
 }
