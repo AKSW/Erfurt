@@ -71,13 +71,13 @@ class Erfurt_Worker_Backend
                     'Worker job class "' . $job->className . '" is not existing'
                 );
             }
-            print('- ' . $job->className . ' (' . $job->classFile . ')' . PHP_EOL);
+            print('- ' . $job->name . "(Class: " . $job->className . " | File: " . $job->classFile . ")" . PHP_EOL);
 
             $object     = new $job->className($job->config);
-            $callback   = array($object, 'run');
+            $callback   = array($object, "run");
             $this->worker->addFunction($job->name, $callback, $job->options);
-            print('Waiting for job calls now...' . PHP_EOL);
         }
+        print("Waiting for job calls now..." . PHP_EOL);
         $this->run();
     }
 
@@ -86,7 +86,7 @@ class Erfurt_Worker_Backend
             while ($this->worker->work());
         }
         catch( Exception $e ){
-            print("Exception: " . $e->getMessage()."\n");
+            print("Exception: " . $e->getMessage() . PHP_EOL);
             $this->run();
         }
     }
