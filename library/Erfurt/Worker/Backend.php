@@ -53,12 +53,14 @@ class Erfurt_Worker_Backend
         }
 
         foreach ($this->registry->getJobs() as $job) {
-            if (!file_exists('../' . $job->classFile)) {
+            $requiredClassFile = ONTOWIKI_ROOT . $job->classFile;
+
+            if (!file_exists($requiredClassFile)) {
                 throw new Erfurt_Worker_Exception(
                     'Class file of worker job "' . $job->className . '" is not existing'
                 );
             }
-            require_once '../' . $job->classFile;
+            require_once $requiredClassFile;
             if (!class_exists($job->className)) {
                 throw new Erfurt_Worker_Exception(
                     'Worker job class "' . $job->className . '" is not existing'
