@@ -314,7 +314,7 @@ class Erfurt_Store
         // check whether model is available
         if (!$this->isModelAvailable($graphUri, $useAc)) {
             throw new Erfurt_Store_Exception(
-                'Model '.$graphUri.' is not available.'
+                'Model "' . $graphUri . '" is not available.'
             );
         }
 
@@ -356,12 +356,12 @@ class Erfurt_Store
     {
         // check whether model is available
         if ($useAc && !$this->isModelAvailable($graphUri)) {
-            throw new Erfurt_Store_Exception('Model is not available.');
+            throw new Erfurt_Store_Exception('Model "' . $graphUri . '" is not available.');
         }
 
         // check whether model is editable
         if ($useAc && !$this->_checkAc($graphUri, 'edit')) {
-            throw new Erfurt_Store_Exception('No permissions to edit model.');
+            throw new Erfurt_Store_Exception('No permissions to edit model "' . $graphUri . '".');
         }
 
         $this->_backendAdapter->addStatement(
@@ -684,7 +684,7 @@ EOF;
     {
         // check whether model is available
         if (!$this->isModelAvailable($graphUri)) {
-            throw new Erfurt_Store_Exception('Model is not available.');
+            throw new Erfurt_Store_Exception('Model "' . $graphUri . '" is not available.');
         }
 
         // check whether model is editable
@@ -721,7 +721,7 @@ EOF;
         // check whether model is available
         if (!$this->isModelAvailable($modelIri, $useAc)) {
             throw new Erfurt_Store_Exception(
-                "Model <$modelIri> is not available and therefore not removable."
+                'Model "' . $modelIri . '" is not available and therefore not removable.'
             );
         }
 
@@ -780,7 +780,7 @@ EOF;
 
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
-            throw new Erfurt_Store_Exception("Model <$modelIri> cannot be exported. Model is not available.");
+            throw new Erfurt_Store_Exception('Model "' . $modelIri . '" cannot be exported. Model is not available.');
         }
 
         if (in_array($serializationType, $this->_backendAdapter->getSupportedExportFormats())) {
@@ -995,10 +995,10 @@ EOF;
 
                 // still not available?
                 if (!$this->isModelAvailable($modelIri, $useAc)) {
-                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+                    throw new Erfurt_Store_Exception('Model "' . $modelIri . '" is not available.');
                 }
             } else {
-                throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+                throw new Erfurt_Store_Exception('Model "' . $modelIri . '" is not available.');
             }
         }
 
@@ -1090,6 +1090,11 @@ EOF;
                 throw new Erfurt_Store_Exception('Failed creating the model.');
             }
         }
+
+        // Add a statement <$modelIri> a SysOnt:Model
+        $sysOntModelUri = $this->getOption('modelUri');
+        $objectArray = array('value' => 'http://ns.ontowiki.net/SysOnt/Model', 'type'  => 'uri');
+        $this->addStatement($sysOntModelUri, $modelIri, EF_RDF_TYPE, $objectArray, false);
 
         // everything ok, create new model
         // no access control since we have already checked
@@ -1608,7 +1613,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     {
         $logger = $this->_getQueryLogger();
 
-        $logger->debug('query in: '.(string)$queryObject);
+        $type = gettype($queryObject);
+        $typeStr = 'type: ' . $type . ($type == 'object' ? ', class: ' . get_class($queryObject) : '');
+        $logger->debug('query in (' . $typeStr . '): '.(string)$queryObject);
+
         $queryString = $this->_prepareQuery($queryObject, $options);
         //dont use the query object afterwards anymore - only the string
 
@@ -1807,7 +1815,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 }
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
             } else {
-                throw new Erfurt_Store_Exception('Model <' . $graphIri . '> is not available.');
+                throw new Erfurt_Store_Exception('Model "' . $graphIri . '" is not available.');
             }
         } else {
             throw new Erfurt_Store_Exception('Count is not supported by backend.');
