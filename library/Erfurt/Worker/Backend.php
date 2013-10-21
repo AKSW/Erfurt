@@ -75,7 +75,7 @@ class Erfurt_Worker_Backend
             print('- ' . $job->name . "(Class: " . $job->className . " | File: " . $job->classFile . ")" . PHP_EOL);
 
             $object     = new $job->className($job->options);
-            $callback   = array($object, "run");
+            $callback   = array($object, "work");
             $this->worker->addFunction($job->name, $callback, $job->context);
         }
         print("Waiting for job calls now..." . PHP_EOL);

@@ -12,6 +12,7 @@
  * @category Erfurt
  * @package Erfurt
  * @author Christian Würker <christian.wuerker@ceusmedia.de>
+ * @deprecated use Erfurt_Worker_Job_Abstract instead
  */
 interface Erfurt_Worker_Job_Interface
 {
