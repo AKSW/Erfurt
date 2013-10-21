@@ -95,11 +95,10 @@ class Erfurt_Worker_Registry
      *  @param      string      $name           Key name of worker job
      *  @param      string      $classFile      File name of job class
      *  @param      string      $className      Class name of job class
-     *  @param      Zend_Config $config         Extension configuration
-     *  @param      string      $options        Map of job options
+     *  @param      array       $options        Map of options
      *  @return     void
      */
-    public function registerJob( $name, $classFile, $className, $config = NULL, $options = array() )
+    public function registerJob( $name, $classFile, $className, $options = array() )
     {
         $options    = is_array($options) ? $options : array();
         $options    = array_merge(self::$defaultJobOptions, $options);
@@ -107,7 +106,6 @@ class Erfurt_Worker_Registry
             $name,
             $classFile,
             $className,
-            $config,
             $options
         );
         $this->addJob($job);

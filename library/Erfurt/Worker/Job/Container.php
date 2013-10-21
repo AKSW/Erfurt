@@ -31,9 +31,9 @@ class Erfurt_Worker_Job_Container
     public $className;
 
     /**
-     *  @var Zend_Config Extension configuration
+     *  @var application context (not used yet)
      */
-    public $config     = array();
+    public $context;
 
     /**
      *  @var type Map of options for worker job
@@ -46,16 +46,14 @@ class Erfurt_Worker_Job_Container
      *  @param      string      $name           Key name of worker job
      *  @param      string      $classFile      File name of job class
      *  @param      string      $className      Class name of job class
-     *  @param      Zend_Config $config         Extension configuration
-     *  @param      string      $options        Map of job options
+     *  @param      array       $options        Map of options
      *  @return     void
      */
-    public function __construct( $name, $classFile, $className, $config = NULL, $options = array() )
+    public function __construct( $name, $classFile, $className, $options = array() )
     {
         $this->name         = $name;
         $this->classFile    = $classFile;
         $this->className    = $className;
-        $this->config       = $config;
         $this->options      = $options;
     }
 }

@@ -15,6 +15,7 @@
  */
 class Erfurt_Worker_Backend
 {
+
     /**
      *  @var Erfurt_Worker_Registry Registry for existing jobs
      */
@@ -73,9 +74,9 @@ class Erfurt_Worker_Backend
             }
             print('- ' . $job->name . "(Class: " . $job->className . " | File: " . $job->classFile . ")" . PHP_EOL);
 
-            $object     = new $job->className($job->config);
+            $object     = new $job->className($job->options);
             $callback   = array($object, "run");
-            $this->worker->addFunction($job->name, $callback, $job->options);
+            $this->worker->addFunction($job->name, $callback, $job->context);
         }
         print("Waiting for job calls now..." . PHP_EOL);
         $this->run();

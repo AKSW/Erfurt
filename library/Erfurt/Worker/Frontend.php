@@ -15,6 +15,22 @@
  */
 class Erfurt_Worker_Frontend
 {
+    static public $backends = array(
+        'gearman'
+    );
+
+    /**
+     *  Indicates whether frontend is fully configured and ready to use.
+     *  @var    boolean
+     */
+    protected $configured   = FALSE;
+
+    /**
+     *  Indicates whether frontend is enabled to use or not.
+     *  @var    boolean
+     */
+    protected $enabled      = TRUE;
+
     /**
      *  Protected singleton instance of worker frontend.
      *  @static
@@ -34,10 +50,10 @@ class Erfurt_Worker_Frontend
 .    *  @access     protected
      *  @return     void
      */
-    protected function __construct(Zend_Config $config)
+    protected function __construct()
     {
-        $this->client = new GearmanClient();
-        $this->client->addServers($config->worker->servers);
+        $this->client       = new GearmanClient();
+        $this->configured   = FALSE;
     }
 
     /**
@@ -60,10 +76,12 @@ class Erfurt_Worker_Frontend
      */
     public function call($jobName, $workload = NULL, $priority = 0, $mode = 0)
     {
-        if ((int)$mode === 0) {
-            $this->callAsync($jobName, $workload, $priority);
-        } else if ((int)$mode === 1) {
-            $this->callSync($jobName, $workload, $priority);
+        if($this->isEnabled()){
+            if ((int)$mode === 0) {
+                $this->callAsync($jobName, $workload, $priority);
+            } else if ((int)$mode === 1) {
+                $this->callSync($jobName, $workload, $priority);
+            }
         }
     }
 
@@ -122,20 +140,10 @@ class Erfurt_Worker_Frontend
      *  @throws     RuntimeException            if worker is not configured
      *  @throws     RuntimeException            if worker is not enabled
      */
-    static public function getInstance(Zend_Config $config)
+    static public function getInstance()
     {
         if (!self::$instance) {
-            if (!$config->worker) {
-                throw new RuntimeException(
-                    "Worker not configured"
-                );
-            }
-            if (!$config->worker->enable) {
-                throw new RuntimeException(
-                    "Worker is not enabled"
-                );
-            }
-            self::$instance = new self($config);
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -184,5 +192,29 @@ class Erfurt_Worker_Frontend
                 break;
         }
         return $workload;
+    }
+
+    public function isEnabled(){
+        if(!$this->configured){
+            throw new RuntimeException(
+                'Worker frontend is not fully configured'
+            );
+        }
+        return (boolean)$this->enabled;
+    }
+
+    public function setBackend($backend){
+        $backend    = strtolower(trim($backend));
+        if(!in_array($backend, self::$backends)){
+            throw new InvalidArgumentException(
+                'Backend "'.$backend.'" not supported'
+            );
+        }
+        $this->backend  = $backend;
+    }
+
+    public function setServers($servers){
+        $this->client->addServers($servers);
+        $this->configured   = TRUE;
     }
 }
