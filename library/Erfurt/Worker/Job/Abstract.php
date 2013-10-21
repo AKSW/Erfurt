@@ -39,15 +39,16 @@ abstract class Erfurt_Worker_Job_Abstract{
             $this->logWriter    = new Zend_Log_Writer_Stream($this->defaultLogFile);
         }
         $log    = new Zend_Log($this->logWriter);
+        $logger->addPriority('SUCC', 8);
         switch($level){
             case self::LOG_SUCCESS:
-                $log->info($message);
+                $log->info($message, 8);
                 break;
             case self::LOG_FAILURE:
-                $log->warn($message);
+                $log->log($message, 3);
                 break;
             case self::LOG_EXCEPTION:
-                $log->emerg($message);
+                $log->log($message, 0);
                 break;
         }
     }
