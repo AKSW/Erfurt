@@ -14,8 +14,20 @@
  */
 class Erfurt_Worker_TestJob extends Erfurt_Worker_Job_Abstract
 {
-    public function run($workload){
-        print ('Erfurt_Worker_TestJob started' . PHP_EOL);
-        $this->logSuccess('Erfurt_Worker_TestJob started');
+    public function run($load) {
+        if (empty($load)) {
+            $this->logSuccess('Erfurt_Worker_TestJob started (without workload)');
+        } else {
+            if (!empty($load->repeat) && (int)$load->repeat > 0) {
+                $repeat = $load->repeat;
+                $this->logSuccess("Erfurt_Worker_TestJob started ('$repeat' to go)");
+                OntoWiki::getInstance()->callJob(
+                    'test',
+                    array('repeat' => $repeat-1)
+                );
+            } else {
+                $this->logSuccess('Erfurt_Worker_TestJob started');
+            }
+        }
     }
 }
