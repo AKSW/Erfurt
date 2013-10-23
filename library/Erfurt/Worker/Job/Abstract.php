@@ -19,8 +19,7 @@ abstract class Erfurt_Worker_Job_Abstract{
     const LOG_FAILURE   = 2;
     const LOG_EXCEPTION = 4;
 
-    public $defaultLogFile  = "logs/worker.server.log";
-    protected $logWriter;
+    public $logWriter    = array();
     protected $options;
 
     /**
@@ -31,24 +30,54 @@ abstract class Erfurt_Worker_Job_Abstract{
      */
     public function __construct($options = array()){
         $this->options  = $options;
+        $this->configureLogWriter("Stream", array(
+            'url'   => "logs/worker.server.log"
+        ));
         $this->__init();
     }
 
-    protected function log($message, $level){
-        if(!$this->logWriter){
-            $this->logWriter    = new Zend_Log_Writer_Stream($this->defaultLogFile);
+    /**
+     *  Set parameters for log writer.
+     *  @access     public
+     *  @param      string      $writerName     Name of writer backend)
+     *  @param      null|array  $writerParams   Parameters of writer backend
+     *  @param      null|string $filterName     Name of filter
+     *  @param      null|array  $filterParams   Parameters of filter
+     *  @see        http://framework.zend.com/manual/1.8/en/zend.log.writers.html
+     */
+    public function configureLogWriter($writerName, $writerParams = NULL, $filterName = NULL, $filterParams = NULL){
+        $config = array();
+        if($writerName !== NULL){
+            $config['writerName']   = $writerName;
+            if($writerParams !== NULL){
+                $config['writerParams']   = $writerParams;
+            }
+            if($filterName !== NULL){
+                $config['filterName']   = $filterName;
+                $config['filterParams']   = $filterParams;
+            }
+           $this->logWriter    = $config;
         }
-        $log    = new Zend_Log($this->logWriter);
-        $log->addPriority('SUCC', 8);
+    }
+
+    /**
+     *  Writes messages of several levels into configured log.
+     *  @access     public
+     *  @param      string      $message        Message to write into log
+     *  @param      integer     $level          Level of log entry
+     */
+    protected function log($message, $level){
+        $logger    = Zend_Log::factory(array($this->logWriter));
+        $logger->addPriority('SUCC', 8);
         switch($level){
             case self::LOG_SUCCESS:
-                $log->info($message, 8);
+                $logger->info($message, 8);
                 break;
             case self::LOG_FAILURE:
-                $log->log($message, 3);
+                $logger->log($message, 3);
                 break;
             case self::LOG_EXCEPTION:
-                $log->log($message, 0);
+                $logger->log($message, 0);
                 break;
         }
     }
@@ -65,12 +94,21 @@ abstract class Erfurt_Worker_Job_Abstract{
         $this->log($message, self::LOG_FAILURE);
     }
 
+    /**
+     *  Implement this method in your job class.
+     *  @abstract
+     *  @access     public
+     *  @param      mixed       $workload
+     *  @return     void
+     */
     public abstract function run($workload);
 
-    public function setLogWriter(Zend_Log_Writer_Abstract $logWriter){
-        $this->logWriter    = $logWriter;
-    }
-
+    /**
+     *  Calls job main method and logs possibly caught exception.
+     *  @access     public
+     *  @param      GearmanJob  $job
+     *  @return     boolean
+     */
     public function work(GearmanJob $job){
         try{
             $workload   = json_decode($job->workload());
