@@ -37,6 +37,14 @@ abstract class Erfurt_Worker_Job_Abstract{
     }
 
     /**
+     *  Override this method to handle constructions of needed resources in your job class.
+     *  @access     protected
+     *  @return     void;
+     */
+    protected function __init(){
+    }
+
+    /**
      *  Set parameters for log writer.
      *  @access     public
      *  @param      string      $writerName     Name of writer backend)
@@ -71,7 +79,7 @@ abstract class Erfurt_Worker_Job_Abstract{
         $logger->addPriority('SUCC', 8);
         switch($level){
             case self::LOG_SUCCESS:
-                $logger->info($message, 8);
+                $logger->log($message, 8);
                 break;
             case self::LOG_FAILURE:
                 $logger->log($message, 3);

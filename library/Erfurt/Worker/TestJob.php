@@ -14,12 +14,6 @@
  */
 class Erfurt_Worker_TestJob extends Erfurt_Worker_Job_Abstract
 {
-    public function __construct($config = NULL)
-    {
-        $this->_owApp           = OntoWiki::getInstance();
-        $this->_config          = $this->_owApp->config;
-    }
-
     public function run($workload){
         print ('Erfurt_Worker_TestJob started' . PHP_EOL);
         $this->logSuccess('Erfurt_Worker_TestJob started');
