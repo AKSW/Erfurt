@@ -58,7 +58,7 @@ class Erfurt_Event
      */
     public function __get($propertyName)
     {
-        if (isset($this->$propertyName)) {
+        if ($this->__isset($propertyName)) {
             return $this->_parameters[$propertyName];
         }
     }
