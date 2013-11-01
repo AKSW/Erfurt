@@ -28,9 +28,11 @@ class Erfurt_Worker_Backend
 
     /**
      *  The constructor of this class.
-     *  @access     public
-     *  @param      Erfurt_Worker_Registry  Worker registry instance
+     *
+     *  @param Erfurt_Worker_Registry $registry Worker registry instance
+     *
      *  @return     void
+     *  @access     public
      */
     public function __construct(Erfurt_Worker_Registry $registry)
     {
@@ -40,10 +42,12 @@ class Erfurt_Worker_Backend
     /**
      *  Loads classes of all registered worker jobs and starts listening for job calls.
      *  This method keeps listening and will neither end nor return something.
-     *  @access     public
+     *
      *  @return     void
+     *
      *  @throws     Erfurt_Worker_Exception if file of registered worker job is not existing
      *  @throws     Erfurt_Worker_Exception if class of registered worker job is not existing
+     *  @access     public
      */
     public function listen()
     {
@@ -72,9 +76,9 @@ class Erfurt_Worker_Backend
                     'Worker job class "' . $job->className . '" is not existing'
                 );
             }
-            print('- ' . $job->name . "(Class: " . $job->className . " | File: " . $job->classFile . ")" . PHP_EOL);
+            print('- ' . $job->name . " (Class: " . $job->className . " | File: " . $job->classFile . ")" . PHP_EOL);
 
-            $object     = new $job->className($job->options);
+            $object     = new $job->className($job->name, $job->options);
             $callback   = array($object, "work");
             $this->worker->addFunction($job->name, $callback, $job->context);
         }
@@ -82,7 +86,8 @@ class Erfurt_Worker_Backend
         $this->run();
     }
 
-    protected function run(){
+    protected function run()
+    {
         try{
             while ($this->worker->work());
         }
