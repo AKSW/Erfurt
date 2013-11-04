@@ -1007,12 +1007,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _isWS($c)
     {
+        $ca = ord($c); // convert the char to ASCII
+        $c = ord($c);
         // ws ::= #x9 | #xA | #xD | #x20 | comment ('#' ( [^#xA#xD] )*)
         return (
-            ord($c) === 0x9  ||
-            ord($c) === 0xA  ||
-            ord($c) === 0xD  ||
-            ord($c) === 0x20 ||
+            $ca === 0x9  ||
+            $ca === 0xA  ||
+            $ca === 0xD  ||
+            $ca === 0x20 ||
             $c === '#'
         );   
     }
