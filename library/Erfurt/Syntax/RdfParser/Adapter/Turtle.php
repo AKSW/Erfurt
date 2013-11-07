@@ -178,8 +178,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _parse($data)
     {
-        $this->_data = $data;
-        $this->_dataLength = strlen($data);
+        $this->_data = preg_replace('/\s+/', ' ', trim($data));
+        $this->_dataLength = strlen($this->_data);
         $this->_pos  = 0;
 
         $c = $this->_skipWS();
