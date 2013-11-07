@@ -178,6 +178,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _parse($data)
     {
+        // Replace all whitespace by a single space to reduce chars to parse
         $this->_data = preg_replace('/\s+/', ' ', trim($data));
         $this->_dataLength = strlen($this->_data);
         $this->_pos  = 0;
