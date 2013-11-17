@@ -298,7 +298,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             // success?
             if (false === $this->_connection) {
                 throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
-                exit;
             }
         }
 
