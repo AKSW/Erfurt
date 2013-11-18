@@ -332,13 +332,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         // URIs must not contain backslashes.
         $expectedUri = str_replace('\\', '/', $expectedUri);
 
-        $parserResult = null;
-        try {
-            $parserResult = $this->_object->parseFromFilename($fileName);
-        } catch (Erfurt_Syntax_RdfParserException $e) {
-            $this->fail($e->getMessage());
-        }
-
+        $parserResult = $this->_object->parseFromFilename($fileName);
         $this->assertInternalType('array', $parserResult);
 
         foreach ($parserResult as $s=>$pArray) {
