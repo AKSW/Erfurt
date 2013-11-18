@@ -165,8 +165,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
      */
     public function markTestNeedsProgram($name)
     {
-        $rapperExistsResult = shell_exec('which ' . $name);
-        if (null === $rapperExistsResult) {
+        $programExists = shell_exec('which ' . $name);
+        if (null === $programExists) {
             $message = 'This test needs the command line program "' . $name . '", '
                      . 'which is not available on this system.';
             $this->markTestSkipped($message);
