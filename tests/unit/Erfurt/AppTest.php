@@ -337,6 +337,9 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($log instanceof Zend_Log);
     }
 
+    /**
+     * Ensures that relative log directory paths are interpreted relative to the Erfurt root directory.
+     */
     public function testGetLogDirUsesPathRelativeToErfurtRootDirectoryIfRelativePathIsProvided()
     {
         $app    = Erfurt_App::getInstance();
