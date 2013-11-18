@@ -1,5 +1,8 @@
 language: php
 
+services:
+  - mysql
+
 php:
   - 5.3
   - 5.4
@@ -9,5 +12,12 @@ install:
   - make zend
   - make directories
 
+before_script:
+  # Create a new database for testing.
+  - mysql -e 'create database erfurt_TEST;'
+  # Activate the Travis Integration Test configuration.
+  - cp tests/config.ini.travis tests/config.ini
+
 script:
   - phpunit --coverage-text --colors --bootstrap=tests/Bootstrap.php tests/unit
+  - make test-integration-mysql
