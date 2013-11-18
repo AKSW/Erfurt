@@ -27,7 +27,12 @@ abstract class Erfurt_Syntax_RdfParser_Adapter_Base implements Erfurt_Syntax_Rdf
         if ($filename === null) {
             $filename = '';
         }
-        $this->_setBaseUri('file://' . str_replace(' ', '%20', dirname($filename)) . DIRECTORY_SEPARATOR);
+        $mapping = array(
+            ' '  => '%20',
+            '\\' => '/'
+        );
+        $uri = 'file://' . str_replace(array_keys($mapping), array_values($mapping), dirname($filename)) . '/';
+        $this->_setBaseUri($uri);
     }
     
     protected function _setURLBaseUri($uri)

@@ -325,18 +325,14 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $expectedUri = 'file://'
                      . str_replace(' ', '%20', realpath(dirname(dirname(dirname(__FILE__)))))
                      . '/_files/misc/ow_ext_community1.rq';
+        // URIs must not contain backslashes.
+        $expectedUri = str_replace('\\', '/', $expectedUri);
 
-        $parserResult = null;
-        try {
-            $parserResult = $this->_object->parseFromFilename($fileName);
-        } catch (Erfurt_Syntax_RdfParserException $e) {
-            $this->fail($e->getMessage());
-        }
+        $parserResult = $this->_object->parseFromFilename($fileName);
+        $this->assertInternalType('array', $parserResult);
 
-        $this->assertTrue(is_array($parserResult));
-
-        foreach ($parserResult as $s=>$pArray) {
-            foreach ($pArray as $p=>$oArray) {
+        foreach ($parserResult as $pArray) {
+            foreach ($pArray as $oArray) {
                 foreach ($oArray as $oSpec) {
                     if ($oSpec['type'] === 'uri') {
                         // Check for correct baseUri
