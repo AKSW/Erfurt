@@ -590,7 +590,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             default:
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
-                break;
         }
 
         try {
@@ -1174,7 +1173,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $importSql = sprintf(
                 "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')",
                 $importFunc,
-                $data,
+                // Escape backslashes ("\"), as these otherwise lead to errors on Windows systems.
+                addslashes($data),
                 $baseUri,
                 $graphUri
             );
