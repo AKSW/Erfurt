@@ -375,8 +375,9 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app    = Erfurt_App::getInstance();
         $config = $app->getConfig();
 
-        $config->log->path = '/tmp';
-        $expectedPath = '/tmp/';
+        $path = dirname(__FILE__) . '/_files/logs';
+        $config->log->path = $path;
+        $expectedPath = $path . '/';
         $resolvedPath = $app->getLogDir();
         $this->assertEquals($expectedPath, $resolvedPath);
     }
@@ -390,10 +391,10 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app    = Erfurt_App::getInstance();
         $config = $app->getConfig();
 
-        $config->log->path = '/tmp/';
-        $expectedPath = '/tmp/';
+        $path = dirname(__FILE__) . '/_files/logs/';
+        $config->log->path = $path;
         $resolvedPath = $app->getLogDir();
-        $this->assertEquals($expectedPath, $resolvedPath);
+        $this->assertEquals($path, $resolvedPath);
     }
 
     /**
