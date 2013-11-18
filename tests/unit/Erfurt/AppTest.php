@@ -345,8 +345,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app    = Erfurt_App::getInstance();
         $config = $app->getConfig();
 
-        $config->log->path = 'logs';
-        $expectedPath = realpath(EF_BASE . '../../logs') . '/';
+        $config->log->path = 'tests/Unit/Erfurt/_files/logs';
+        $expectedPath = realpath(EF_BASE . '../../tests/Unit/Erfurt/_files/logs') . '/';
         $resolvedPath = $app->getLogDir();
         $this->assertEquals($expectedPath, $resolvedPath);
     }
