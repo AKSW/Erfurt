@@ -2088,7 +2088,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 WHERE {
                     ' . $where . ' OPTIONAL {?child <http://ns.ontowiki.net/SysOnt/order> ?order}
                     FILTER (
-                        sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
+                        ?parent IN (<' . implode('>, <', $classes) . '>)
                     )
                 }
                 ORDER BY ASC(?order)';
