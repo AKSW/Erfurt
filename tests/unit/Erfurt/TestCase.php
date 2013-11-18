@@ -212,6 +212,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         sort($gotS);
         self::assertEquals($expectedS, $gotS, $message);
 
+        $sortFn = function($a, $b) {
+            return strcmp($a['value'], $b['value']);
+        };
+        
         foreach ($expectedS as $s) {
             $expectedP = array_keys($expected[$s]);
             sort($expectedP);
@@ -220,9 +224,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             self::assertEquals($expectedP, $gotP, $message);
 
             foreach ($expectedP as $p) {
-                $sortFn = function($a, $b) {
-                    return strcmp($a['value'], $b['value']);
-                };
                 usort($expected[$s][$p], $sortFn);
                 usort($got[$s][$p], $sortFn);
                 self::assertEquals($expected[$s][$p], $got[$s][$p], $message);
