@@ -10,4 +10,4 @@ install:
   - make directories
 
 script:
-  - phpunit tests/unit --coverage-text --colors
+  - phpunit --coverage-text --colors tests/unit
