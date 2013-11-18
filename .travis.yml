@@ -19,5 +19,5 @@ before_script:
   - cp tests/config.ini.travis tests/config.ini
 
 script:
-  - phpunit --coverage-text --colors --bootstrap=tests/Bootstrap.php tests/unit
+  - make test-unit
   - make test-integration-mysql
