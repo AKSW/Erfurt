@@ -335,8 +335,8 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $parserResult = $this->_object->parseFromFilename($fileName);
         $this->assertInternalType('array', $parserResult);
 
-        foreach ($parserResult as $s=>$pArray) {
-            foreach ($pArray as $p=>$oArray) {
+        foreach ($parserResult as $pArray) {
+            foreach ($pArray as $oArray) {
                 foreach ($oArray as $oSpec) {
                     if ($oSpec['type'] === 'uri') {
                         // Check for correct baseUri
