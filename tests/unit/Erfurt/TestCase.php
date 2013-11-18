@@ -152,7 +152,27 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 
         $this->markTestNeedsDatabase();
     }
-    
+
+    /**
+     * Use this method to ensure that the command line program $name
+     * is available.
+     *
+     * Example:
+     *
+     *     $this->markTestNeedsProgram('find');
+     *
+     * @param string $name
+     */
+    public function markTestNeedsProgram($name)
+    {
+        $rapperExistsResult = shell_exec('which ' . $name);
+        if (null === $rapperExistsResult) {
+            $message = 'This test needs the command line program "' . $name . '", '
+                     . 'which is not available on this system.';
+            $this->markTestSkipped($message);
+        }
+    }
+
     private function _loadTestConfig()
     {
         if (null === $this->_customTestConfig) {
