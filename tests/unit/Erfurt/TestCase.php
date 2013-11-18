@@ -238,6 +238,20 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         sort($gotS);
         self::assertEquals($expectedS, $gotS, $message);
 
+        $sortFn = function(array $a, array $b) {
+            // The attributes that are used for sorting, in descending order.
+            $sortAttributes = array('value', 'type', 'xml:lang');
+            foreach ($sortAttributes as $key) {
+                $valueA = isset($a[$key]) ? $a[$key] : '';
+                $valueB = isset($b[$key]) ? $b[$key] : '';
+                $result = strcmp($valueA, $valueB);
+                if ($result !== 0) {
+                    return $result;
+                }
+            }
+            return 0;
+        };
+
         foreach ($expectedS as $s) {
             $expectedP = array_keys($expected[$s]);
             sort($expectedP);
@@ -246,9 +260,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             self::assertEquals($expectedP, $gotP, $message);
 
             foreach ($expectedP as $p) {
-                $sortFn = function($a, $b) {
-                    return strcmp($a['value'], $b['value']);
-                };
                 usort($expected[$s][$p], $sortFn);
                 usort($got[$s][$p], $sortFn);
                 self::assertEquals($expected[$s][$p], $got[$s][$p], $message);
