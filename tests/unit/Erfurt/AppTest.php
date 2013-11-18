@@ -352,6 +352,21 @@ class Erfurt_AppTest extends Erfurt_TestCase
     }
 
     /**
+     * Ensures that getLogDir() does not change a log directory that is
+     * configured as absolute path.
+     */
+    public function testGetLogDirDoesNotChangeAbsolutePath()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
+
+        $path = dirname(__FILE__) . '/_files/logs';
+        $config->log->path = $path;
+        $resolvedPath = $app->getLogDir();
+        $this->assertEquals(realpath($path), realpath($resolvedPath));
+    }
+
+    /**
      * Ensures that getLogDir() adds a trailing slash to the configured
      * log directory if necessary.
      */
