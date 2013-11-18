@@ -10,4 +10,4 @@ install:
   - make directories
 
 script:
-  - phpunit --coverage-text --colors tests/unit
+  - phpunit --coverage-text --colors --bootstrap=tests/Bootstrap.php tests/unit
