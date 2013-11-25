@@ -349,7 +349,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $resolvedPath = $app->getLogDir();
 
         // Ensure that the expected directory exists.
-        $expectedPath = EF_BASE . '../../tests/Unit/Erfurt/_files/logs';
+        $expectedPath = EF_BASE . '../../tests/unit/Erfurt/_files/logs';
         $this->assertFileExists($expectedPath);
         // Normalize the path.
         $expectedPath = realpath($expectedPath) . '/';
