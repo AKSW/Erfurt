@@ -1022,18 +1022,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
     private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
     {
-        $graphUri = (string)$graphUri;
-
-        if (!empty($graphUri)) {
-            // enquote
-            $graphUri = '\'' . $graphUri . '\'';
-            $graphSpec = 'define input:default-graph-uri <' . $graphUri . '> ';
-        } else {
-            // set Virtuoso NULL
-            $graphUri = 'NULL';
-            $graphSpec = '';
-        }
-
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
         $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
