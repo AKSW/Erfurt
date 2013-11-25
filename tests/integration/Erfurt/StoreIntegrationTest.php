@@ -237,12 +237,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
-        $result = false;
-        try {
-            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
 
         $this->assertTrue($result);
     }
@@ -260,12 +255,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
-        $result = false;
-        try {
-            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         $this->assertTrue($result);
 
         // sparql
@@ -320,12 +310,7 @@ EOF;
         $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
-        $result = false;
-        try {
-            $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
         $this->assertTrue($result);
 
         // sparql
