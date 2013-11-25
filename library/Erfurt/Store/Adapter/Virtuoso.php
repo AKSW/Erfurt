@@ -1036,8 +1036,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-#        $resultId   = odbc_exec($resultId, $virtuosoPl);
         $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
