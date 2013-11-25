@@ -1039,7 +1039,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
-            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
+            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), $sparqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 
