@@ -234,7 +234,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $graphUri = 'http://example.org/testGraph1/';
 
         // create graph
-        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+        $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
         $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
@@ -252,7 +252,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $graphUri = 'http://example.org/testGraphAutomobile/';
 
         // create graph
-        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+        $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
         $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
@@ -307,7 +307,7 @@ EOF;
         $graphUri = 'http://example.org/testGraphMLXyz';
 
         // create graph
-        $model = $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
+        $store->getNewModel($graphUri, '', Erfurt_Store::MODEL_TYPE_OWL, false);
 
         // import RDF
         $result = $store->importRdf($graphUri, $dataPath, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_FILE);
