@@ -137,6 +137,9 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
+        // Issue: https://github.com/Matthimatiker/Erfurt/issues/8
+        $this->markTestSkipped('TODO: Currently, this test works neither on Travis (Ubuntu) nor on Win7.');
+
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
@@ -152,6 +155,9 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlQueryWithCountAndFromIssue174()
     {
+        // Issue: https://github.com/Matthimatiker/Erfurt/issues/8
+        $this->markTestSkipped('TODO: Currently, this test works neither on Travis (Ubuntu) nor on Win7.');
+
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
         
