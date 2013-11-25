@@ -1020,7 +1020,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $resultId;
     }
 
-    private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
+    private function _execSparqlUpdate($sparqlQuery)
     {
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
