@@ -8,6 +8,7 @@
         "library"
     ],
     "require": {
-        "zendframework/zendframework1": ">=1.11.5"
+        "zendframework/zendframework1": ">=1.11.5",
+        "doctrine/dbal": "~2.4.1"
     }
 }
