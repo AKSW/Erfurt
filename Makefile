@@ -1,5 +1,3 @@
-ZENDVERSION=1.11.5
-
 default:
 	@echo "please use:"
 	@echo ""
@@ -47,12 +45,17 @@ directories: clean
 	mkdir -p logs cache
 	chmod 777 logs cache
 
-zend:
+install:
+# Remove existing Composer files to guarantee a clean install.
+	rm -rf composer.phar
+	rm -rf vendor
+# Download the latest Composer version.
+	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+# Install dependencies.
+	php composer.phar install
+
+zend: install
 	rm -rf libraries/Zend
-	curl -L -# -O https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
-	rm -rf ZendFramework-${ZENDVERSION}-minimal.tar.gz ZendFramework-${ZENDVERSION}-minimal
 
 # coding standard
 

@@ -13,6 +13,11 @@ cache.properties
 library/Zend
 cache.sqlite
 
+# Composer
+composer.phar
+composer.lock
+vendor/
+
 # build stuff
 build/
 !build/phpcs.xml
