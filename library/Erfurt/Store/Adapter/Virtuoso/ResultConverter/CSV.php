@@ -29,7 +29,11 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_CSV
      */
     public function convert($resultsArray)
     {
-        $csv = array($this->_convertArrayRowToCSV(array_keys($resultsArray[0])));
+        $csv = array();
+        if (count($resultsArray) > 0)
+        {
+            $csv[] = $this->_convertArrayRowToCSV(array_keys($resultsArray[0]));
+        }
         foreach($resultsArray as $row)
         {
             $csv[] = $this->_convertArrayRowToCSV($row);
