@@ -51,12 +51,7 @@ install:
 	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
 	php composer.phar install
 
-zend:
-	rm -rf libraries/Zend
-	curl -L -# -O https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
-	rm -rf ZendFramework-${ZENDVERSION}-minimal.tar.gz ZendFramework-${ZENDVERSION}-minimal
+zend: install
 
 # coding standard
 
