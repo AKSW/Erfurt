@@ -4,6 +4,9 @@
     "keywords": ["semantic", "sparql", "rdf"],
     "homepage": "http://erfurt-framework.org/",
     "minimum-stability": "stable",
+    "include-path": [
+        "library"
+    ],
     "require": {
         "zendframework/zendframework1": ">=1.11.5"
     }

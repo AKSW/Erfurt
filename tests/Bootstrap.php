@@ -23,7 +23,6 @@ unset($phpUnitVersion);
  * Determine the root, library, and tests directories of Erfurt.
  */
 $efRoot                = realpath(dirname(__DIR__));
-$efLibraryDir          = "$efRoot/library";
 $efUnitTestsDir        = "$efRoot/tests/unit";
 $efIntegrationTestsDir = "$efRoot/tests/integration";
 
@@ -34,13 +33,12 @@ $efIntegrationTestsDir = "$efRoot/tests/integration";
  * this copy.
  */
 $path = array(
-    $efLibraryDir,
     $efUnitTestsDir,
     $efIntegrationTestsDir,
     get_include_path(),
 );
 set_include_path(implode(PATH_SEPARATOR, $path));
-unset($efRoot, $efLibraryDir, $efUnitTestsDir, $efIntegrationTestsDir, $path);
+unset($efRoot, $efUnitTestsDir, $efIntegrationTestsDir, $path);
 
 /**
  * Setup autoloading
