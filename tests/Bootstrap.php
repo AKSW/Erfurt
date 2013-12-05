@@ -27,15 +27,6 @@ $efLibraryDir          = "$efRoot/library";
 $efUnitTestsDir        = "$efRoot/tests/unit";
 $efIntegrationTestsDir = "$efRoot/tests/integration";
 
-// Check for Zend... if we can find it in some standard directories, we add it. Otherwise
-// we assume, that it is already in the include_path
-$zfDir = null;
-if (is_dir("$efLibraryDir/Zend")) {
-    $zfDir = null; // Already in include path!
-} else if (is_dir(realpath(dirname(dirname(__DIR__)).'/Zend'))) {
-    $zfDir = realpath(dirname(dirname(__DIR__)));
-}
-
 /*
  * Prepend the Erfurt class base directory, libraries/ and tests/ directories to the
  * include_path. This allows the tests to run out of the box and helps prevent
@@ -48,22 +39,13 @@ $path = array(
     $efIntegrationTestsDir,
     get_include_path(),
 );
-if (null !== $zfDir) {
-    $path = array(
-        $zfDir,
-        $efLibraryDir,
-        $efUnitTestsDir,
-        $efIntegrationTestsDir,
-        get_include_path(),
-    );
-}
 set_include_path(implode(PATH_SEPARATOR, $path));
 unset($efRoot, $efLibraryDir, $efUnitTestsDir, $efIntegrationTestsDir, $path);
 
 /**
  * Setup autoloading
  */
-require_once 'Zend/Loader/Autoloader.php';
+require_once(__DIR__ . '/../vendor/autoload.php');
 $loader = Zend_Loader_Autoloader::getInstance();
 $loader->registerNamespace('Erfurt_');
 
