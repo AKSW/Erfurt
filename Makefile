@@ -47,6 +47,10 @@ directories: clean
 	mkdir -p logs cache
 	chmod 777 logs cache
 
+install:
+	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+	php composer.phar install
+
 zend:
 	rm -rf libraries/Zend
 	curl -L -# -O https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
