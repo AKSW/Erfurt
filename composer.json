@@ -1,0 +1,6 @@
+{
+    "name": "matthimatiker/erfurt",
+    "description": "PHP5 / Zend based Semantic Web API for Social Semantic Software",
+    "homepage": "http://erfurt-framework.org/",
+    "minimum-stability": "stable"
+}
