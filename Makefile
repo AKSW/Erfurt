@@ -46,9 +46,12 @@ directories: clean
 	chmod 777 logs cache
 
 install:
-	# Download the latest Composer version.
+# Remove existing Composer files to guarantee a clean install.
+	rm -rf composer.phar
+	rm -rf vendor
+# Download the latest Composer version.
 	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-	# Install dependencies.
+# Install dependencies.
 	php composer.phar install
 
 zend: install
