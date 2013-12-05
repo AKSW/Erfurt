@@ -165,16 +165,27 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
      */
     public function markTestNeedsProgram($name)
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $message = 'This test needs the command line program "' . $name . '", '
-                     . 'but checking for program existence is currently not implemented'
-                     . 'on Windows.';
-            $this->markTestSkipped($message);
-        }
+        $message = 'This test needs the command line program "' . $name . '", '
+                 . 'but checking for program existence is currently not implemented'
+                 . 'on Windows.';
+        $this->skipIfWindows($message);
+
         $programExists = shell_exec('which ' . $name);
         if (null === $programExists) {
             $message = 'This test needs the command line program "' . $name . '", '
                      . 'which is not available on this system.';
+            $this->markTestSkipped($message);
+        }
+    }
+
+    /**
+     * Skips the current test if executed on a Windows system.
+     *
+     * @param string $message
+     */
+    public function skipIfWindows($message = '')
+    {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped($message);
         }
     }

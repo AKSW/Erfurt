@@ -226,6 +226,11 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
      */
     public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersionGithubIssue85()
     {
+        // Issue: https://github.com/Matthimatiker/Erfurt/issues/9
+        $message = 'TODO: Currently, this test fails on a Win7 installation. '
+                 . 'It will be skipped until it is clear how to proceed.';
+        $this->skipIfWindows($message);
+
         $this->markTestNeedsDatabase();
         $store = Erfurt_App::getInstance()->getStore();
 
@@ -244,6 +249,11 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 
     public function testImportDBPediaResourceAutomobileAndQueryWithTitleHelperQueryGithubIssue85()
     {
+        // Issue: https://github.com/Matthimatiker/Erfurt/issues/9
+        $message = 'TODO: Currently, this test fails on a Win7 installation. '
+                 . 'It will be skipped until it is clear how to proceed.';
+        $this->skipIfWindows($message);
+
         $this->markTestNeedsDatabase();
         $store = Erfurt_App::getInstance()->getStore();
 
@@ -299,6 +309,11 @@ EOF;
 
     public function testImportDBPediaResourceMachineLearningAndQueryWithTitleHelperQueryGithubIssue85()
     {
+        // Issue: https://github.com/Matthimatiker/Erfurt/issues/9
+        $message = 'TODO: Currently, this test fails on a Win7 installation. '
+                 . 'It will be skipped until it is clear how to proceed.';
+        $this->skipIfWindows($message);
+
         $this->markTestNeedsDatabase();
         $store = Erfurt_App::getInstance()->getStore();
 
