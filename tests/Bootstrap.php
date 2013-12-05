@@ -56,20 +56,3 @@ if (!defined('_TESTROOT')) {
 
 // Access Erfurt app for constant loading etc.
 Erfurt_App::getInstance(false);
-
-// define('_BASE', rtrim(realpath(_TESTROOT . '../'), '\\/') . '/');
-// 
-// // add Erfurt lib to include path
-// $includePath  = get_include_path()          . PATH_SEPARATOR;
-// $includePath .= _BASE                       . PATH_SEPARATOR;
-// $includePath .= _BASE . 'Erfurt/libraries/' . PATH_SEPARATOR;
-// $includePath .= _BASE . 'Erfurt/libraries/antlr/Php' . PATH_SEPARATOR;
-// $includePath .= _BASE . '../' . PATH_SEPARATOR;
-// set_include_path($includePath);
-// 
-// // We need a session for authentication
-// require_once 'Zend/Session/Namespace.php';
-// $session = new Zend_Session_Namespace('Erfurt_Test');
-// 
-// 
-
