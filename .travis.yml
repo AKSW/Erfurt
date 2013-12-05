@@ -9,7 +9,7 @@ php:
   - 5.5
 
 install:
-  - make zend
+  - make install
   - make directories
 
 before_script:
