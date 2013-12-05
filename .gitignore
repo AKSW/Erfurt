@@ -13,6 +13,7 @@ cache.properties
 library/Zend
 cache.sqlite
 composer.phar
+vendor/
 
 # build stuff
 build/
