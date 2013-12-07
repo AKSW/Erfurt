@@ -31,7 +31,7 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $predicate (IRI, no blank node!)
      * @param array $object
      * @param array $options It is possible to disable automatic escaping special
-     * characters (like \n) whith the option: "escapeLiteral" and the possible values true and false.
+     * characters (like \n) with the option: "escapeLiteral" and the possible values true and false.
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
