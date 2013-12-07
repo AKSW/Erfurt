@@ -129,13 +129,13 @@ test-unit-cc: test-directories
 test-integration-virtuoso: test-directories
 	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-virtuoso-cc: test-directories
+test-integration-virtuoso-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
 
 test-integration-mysql: test-directories
 	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
 
-test-integation-mysql-cc: test-directories
+test-integration-mysql-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
 
 test-integration-oracle: test-directories
