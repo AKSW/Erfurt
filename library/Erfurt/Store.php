@@ -1861,7 +1861,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     }
 
     /**
-     * Returns a list of graph URIs, simmilar to getGraphsUsingResource but checks if it is
+     * Returns a list of graph URIs, similar to getGraphsUsingResource but checks if it is
      * readable.
      *
      * @param string $resourceUri
