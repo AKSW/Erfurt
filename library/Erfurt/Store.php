@@ -47,7 +47,7 @@ class Erfurt_Store
     const HIDDEN_PROPERTY = 'http://ns.ontowiki.net/SysOnt/hidden';
 
     /**
-     * The maximum number of iterations for recursive operatiosn.
+     * The maximum number of iterations for recursive operations.
      * @var int
      */
     const MAX_ITERATIONS = 100;
