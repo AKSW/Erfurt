@@ -8,6 +8,7 @@ default:
 	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
 	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
+	@echo "  test-integration-oracle ...... Run Erfurt integration tests with Oracle"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
 	@echo "  cs-install ................... install CodeSniffer"
@@ -136,6 +137,9 @@ test-integration-mysql: test-directories
 
 test-integation-mysql-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
+
+test-integration-oracle: test-directories
+	@cd tests/integration && EF_STORE_ADAPTER=oracle phpunit
 
 test:
 	make test-unit
