@@ -114,24 +114,24 @@ interface Erfurt_Store_Adapter_Interface
 	 * @return  array
 	 */
 	public function getSupportedImportFormats();
-	
-	/**
-	 * 
-	 * @param string $modelIri
-	 * @param string $locator Either a URL or a absolute file name.
-	 * @param string $type One of: 
-	 *        - 'auto' => Tries to detect the type automatically in the following order:
-	 *           1. Detect XML by XML-Header => rdf/xml
-	 *           2. If this fails use the extension of the file
-	 *           3. If this fails throw an exception
-	 *        - 'xml'
-	 *        - 'n3' or 'nt'
-	 * @param boolean $stream Denotes whether $data contains the actual data.
-	 * 
-	 * @throws Erfurt_Exception
-	 *
-	 * @return boolean On success
-	 */
+
+    /**
+     *
+     * @param string $modelIri
+     * @param string $data
+     * @param string $type One of:
+     *        - 'auto' => Tries to detect the type automatically in the following order:
+     *           1. Detect XML by XML-Header => rdf/xml
+     *           2. If this fails use the extension of the file
+     *           3. If this fails throw an exception
+     *        - 'xml'
+     *        - 'n3' or 'nt'
+     * @param string $locator Either a URL or a absolute file name.
+     *
+     * @throws Erfurt_Exception
+     *
+     * @return boolean On success
+     */
 	public function importRdf($modelIri, $data, $type, $locator);
 	
 	/**
