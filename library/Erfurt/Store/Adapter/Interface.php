@@ -148,7 +148,6 @@ interface Erfurt_Store_Adapter_Interface
 	/**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
-     * @param string $modelIri
      * @param string $query
      * @return boolean
      */
