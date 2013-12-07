@@ -1897,7 +1897,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     /**
      * Returns a logo URL.
      *
-     * @return string
+     * @return string|null
      */
     public function getLogoUri()
     {
