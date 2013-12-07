@@ -21,7 +21,7 @@ interface Erfurt_Store_Adapter_Interface
      *
      * @param string $graphIri
      * @param array  $statementsArray
-     * @param array  $options ("escapeLiteral" => true/false) to disable automatical escaping characters 
+     * @param array  $options ("escapeLiteral" => true/false) to disable automatic escaping characters
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array());
     
