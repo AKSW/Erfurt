@@ -103,7 +103,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // check for odbc extension
         if (!extension_loaded('odbc')) {
             throw new Erfurt_Store_Adapter_Exception('Virtuoso adapter requires the ODBC extension to be loaded.');
-            exit;
         }
 
         $this->_adapterOptions = $adapterOptions;
