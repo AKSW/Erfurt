@@ -206,11 +206,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             // editing the config
             if ($this->_customTestConfig !== false) {
                 $storeAdapter = getenv('EF_STORE_ADAPTER');
-                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
-                    $this->_customTestConfig->store->backend = $storeAdapter;
-                } else if ($storeAdapter !== false) {
+                if (!isset($this->_customTestConfig->store->{$storeAdapter})) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
                 }
+                $this->_customTestConfig->store->backend = $storeAdapter;
             }
         }
 
