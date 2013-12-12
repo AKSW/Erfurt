@@ -16,7 +16,8 @@ store.virtuoso.dsn      = VOS_TEST ; needs to end with _TEST
 store.virtuoso.username = dba
 store.virtuoso.password = dba
 
-store.oracle.dbname   = "SID"
-store.oracle.user     = "USERNAME"
-store.oracle.password = "PASSWORD"
-store.oracle.host     = "IP_OR_HOSTNAME"
+store.oracle.connection.dbname   = "SID"
+store.oracle.connection.user     = "USERNAME"
+store.oracle.connection.password = "PASSWORD"
+store.oracle.connection.host     = "IP_OR_HOSTNAME"
+store.oracle.connection.port     = 1521
