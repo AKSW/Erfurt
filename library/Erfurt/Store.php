@@ -376,9 +376,7 @@ class Erfurt_Store
             $logger->info('System configuration model not found. Loading model ...');
             $this->unversioned(array($this, 'loadSystemOntologyModel'));
             if (!$this->hasSystemOntologyModel()) {
-                throw new Erfurt_Store_Exception(
-                    'Unable to load System Ontology model.'
-                );
+                throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
             }
             $logger->info('System model successfully loaded.');
             $returnValue = false;
@@ -389,9 +387,7 @@ class Erfurt_Store
             $logger->info('System schema model not found. Loading model ...');
             $this->unversioned(array($this, 'loadSystemSchemaModel'));
             if (!$this->hasSystemSchemaModel()) {
-                throw new Erfurt_Store_Exception(
-                    'Unable to load System Ontology schema.'
-                );
+                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
             }
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
@@ -2102,38 +2098,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             '/',
             EF_BASE . $this->getOption('modelPath')
         );
-
-        $this->getNewModel($sysOntModel, '', 'owl', false);
-        try {
-            if (is_readable($modelPath)) {
-                // load SysOnt Model from file
-                $this->importRdf(
-                    $sysOntModel,
-                    $modelPath,
-                    'rdfxml',
-                    Erfurt_Syntax_RdfParser::LOCATOR_FILE,
-                    false
-                );
-            } else {
-                // load SysOnt Model from Web
-                $this->importRdf(
-                    $sysOntModel,
-                    $modelLocation,
-                    'rdfxml',
-                    Erfurt_Syntax_RdfParser::LOCATOR_URL,
-                    false
-                );
-            }
-        } catch (Erfurt_Exception $e) {
-            // clear query cache completly
-            $queryCache = Erfurt_App::getInstance()->getQueryCache();
-            $queryCache->cleanUpCache(array('mode' => 'uninstall'));
-            // Delete the model, for the import failed.
-            $this->_backendAdapter->deleteModel($sysOntModel);
-            throw new Erfurt_Store_Exception(
-                "Import of '$sysOntModel' failed -> " . $e->getMessage()
-            );
-        }
+        $this->loadSystemModel($sysOntModel, $modelPath, $modelLocation);
     }
 
     /**
@@ -2151,35 +2116,46 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             EF_BASE . $this->getOption('schemaPath')
         );
 
-        $this->getNewModel($sysOntSchema, '', 'owl', false);
+        $this->loadSystemModel($sysOntSchema, $schemaPath, $schemaLocation);
+    }
+
+    /**
+     * Loads the provided system model.
+     *
+     * @param string $modelIri The model IRI.
+     * @param string $modelPath Path to local model file.
+     * @param string $modelLocation Path to model information on the web.
+     * @throws Erfurt_Store_Exception
+     */
+    private function loadSystemModel($modelIri, $modelPath, $modelLocation)
+    {
+        $this->getNewModel($modelIri, '', 'owl', false);
         try {
-            if (is_readable($schemaPath)) {
-                // load SysOnt from file
+            if (is_readable($modelPath)) {
                 $this->importRdf(
-                    $sysOntSchema,
-                    $schemaPath,
+                    $modelIri,
+                    $modelPath,
                     'rdfxml',
                     Erfurt_Syntax_RdfParser::LOCATOR_FILE,
                     false
                 );
             } else {
-                // load SysOnt from Web
                 $this->importRdf(
-                    $sysOntSchema,
-                    $schemaLocation,
+                    $modelIri,
+                    $modelLocation,
                     'rdfxml',
                     Erfurt_Syntax_RdfParser::LOCATOR_URL,
                     false
                 );
             }
         } catch (Erfurt_Exception $e) {
-            // clear query cache completly
+            // clear query cache completely
             $queryCache = Erfurt_App::getInstance()->getQueryCache();
             $queryCache->cleanUpCache(array('mode' => 'uninstall'));
             // Delete the model, for the import failed.
-            $this->_backendAdapter->deleteModel($sysOntSchema);
+            $this->_backendAdapter->deleteModel($modelIri);
             throw new Erfurt_Store_Exception(
-                "Import of '$sysOntSchema' failed -> " . $e->getMessage()
+                "Import of '$modelIri' failed -> " . $e->getMessage()
             );
         }
     }
@@ -2212,4 +2188,5 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         }
         return $result;
     }
+
 }
