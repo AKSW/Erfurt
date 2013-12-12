@@ -139,21 +139,38 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsVirtuoso()
     {
-        $this->markTestNeedsTestConfig();
-        if ($this->_testConfig->store->backend !== 'virtuoso') {
-            $this->markTestSkipped('Skipped since other backend is under test.');
-        }
-
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsBackend('virtuoso');
     }
     
     public function markTestNeedsZendDb()
     {
-        $this->markTestNeedsTestConfig();
-        if ($this->_testConfig->store->backend !== 'zenddb') {
-            $this->markTestSkipped('Skipped since other backend is under test.');
-        }
+        $this->markTestNeedsBackend('zenddb');
+    }
 
+    /**
+     * Indicates that a test needs the Oracle adapter.
+     *
+     * Skips the test if another adapter is in use.
+     */
+    public function markTestNeedsOracle()
+    {
+        $this->markTestNeedsBackend('oracle');
+    }
+
+    /**
+     * Indicates that a test needs the backend adapter $name.
+     *
+     * Skips the test if another adapter is in use.
+     */
+    protected function markTestNeedsBackend($name)
+    {
+        $this->markTestNeedsTestConfig();
+        $currentBackend = $this->_testConfig->store->backend;
+        if ($currentBackend !== $name) {
+            $message = 'This test needs the backend "%s", but "%s" is in use.';
+            $message = sprintf($message, $name, $currentBackend);
+            $this->markTestSkipped($message);
+        }
         $this->markTestNeedsDatabase();
     }
 
