@@ -112,12 +112,8 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         
         $store = Erfurt_App::getInstance()->getStore();
         $config = Erfurt_App::getInstance()->getConfig();
-        
-        try {
-            $store->checkSetup();
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+
+        $store->checkSetup();
         
         $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
         $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
