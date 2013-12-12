@@ -45,7 +45,6 @@ unset($efRoot, $efUnitTestsDir, $efIntegrationTestsDir, $path);
  */
 require_once(__DIR__ . '/../vendor/autoload.php');
 $loader = Zend_Loader_Autoloader::getInstance();
-$loader->registerNamespace('Erfurt_');
 
 // TODO: can we remove this?
 if (!defined('_TESTROOT')) {
