@@ -365,42 +365,7 @@ class Erfurt_Store
      */
     public function checkSetup()
     {
-        $logger = Erfurt_App::getInstance()->getLog();
-
-        $returnValue = true;
-
-        // check for system configuration model
-        // We need to import this first, for the schema model has namespaces
-        // definitions, which will be stored in the local config!
-        if (!$this->hasSystemOntologyModel()) {
-            $logger->info('System configuration model not found. Loading model ...');
-            $this->unversioned(array($this, 'loadSystemOntologyModel'));
-            if (!$this->hasSystemOntologyModel()) {
-                throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
-            }
-            $logger->info('System model successfully loaded.');
-            $returnValue = false;
-        }
-
-        // check for system ontology
-        if (!$this->hasSystemSchemaModel()) {
-            $logger->info('System schema model not found. Loading model ...');
-            $this->unversioned(array($this, 'loadSystemSchemaModel'));
-            if (!$this->hasSystemSchemaModel()) {
-                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
-            }
-            $logger->info('System schema successfully loaded.');
-            $returnValue = false;
-        }
-
-        if ($returnValue === false) {
-            throw new Erfurt_Store_Exception(
-                'One or more system models imported.',
-                20
-            );
-        }
-
-        return true;
+        return $this->loadMissingSystemModels();
     }
 
 
@@ -2191,6 +2156,46 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             throw $e;
         }
         return $result;
+    }
+
+    /**
+     * @return bool
+     * @throws Erfurt_Store_Exception
+     */
+    private function loadMissingSystemModels()
+    {
+        $logger = Erfurt_App::getInstance()->getLog();
+        $returnValue = true;
+        // check for system configuration model
+        // We need to import this first, for the schema model has namespaces
+        // definitions, which will be stored in the local config!
+        if (!$this->hasSystemOntologyModel()) {
+            $logger->info('System configuration model not found. Loading model ...');
+            $this->unversioned(array($this, 'loadSystemOntologyModel'));
+            if (!$this->hasSystemOntologyModel()) {
+                throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
+            }
+            $logger->info('System model successfully loaded.');
+            $returnValue = false;
+        }
+
+        // check for system ontology
+        if (!$this->hasSystemSchemaModel()) {
+            $logger->info('System schema model not found. Loading model ...');
+            $this->unversioned(array($this, 'loadSystemSchemaModel'));
+            if (!$this->hasSystemSchemaModel()) {
+                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
+            }
+            $logger->info('System schema successfully loaded.');
+            $returnValue = false;
+        }
+        if ($returnValue === false) {
+            throw new Erfurt_Store_Exception(
+                'One or more system models imported.',
+                20
+            );
+        }
+        return true;
     }
 
 }
