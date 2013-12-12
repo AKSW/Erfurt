@@ -12,6 +12,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
 {
 
     /**
+     * The database connection that is used.
+     *
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection = null;
+
+    /**
      * Creates an adapter that uses the provided database connection to interact
      * with the Oracle Triple Store.
      *
@@ -19,7 +26,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function __construct(Connection $connection)
     {
-
+        $this->connection = $connection;
     }
 
     /**
@@ -27,7 +34,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function init()
     {
-        // TODO: Implement init() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -39,7 +46,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        // TODO: Implement addMultipleStatements() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -54,7 +61,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
-        // TODO: Implement addStatement() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -66,7 +73,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
-        // TODO: Implement createModel() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -83,7 +90,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
-        // TODO: Implement deleteMatchingStatements() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -94,7 +101,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
-        // TODO: Implement deleteMultipleStatements() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -104,7 +111,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteModel($modelIri)
     {
-        // TODO: Implement deleteModel() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -120,7 +127,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
     {
-        // TODO: Implement exportRdf() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -129,7 +136,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getAvailableModels()
     {
-        // TODO: Implement getAvailableModels() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -139,7 +146,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getBlankNodePrefix()
     {
-        // TODO: Implement getBlankNodePrefix() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -149,7 +156,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getSupportedExportFormats()
     {
-        // TODO: Implement getSupportedExportFormats() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -159,7 +166,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getSupportedImportFormats()
     {
-        // TODO: Implement getSupportedImportFormats() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -181,7 +188,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function importRdf($modelIri, $data, $type, $locator)
     {
-        // TODO: Implement importRdf() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -190,7 +197,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function isModelAvailable($modelIri)
     {
-        // TODO: Implement isModelAvailable() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -201,7 +208,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function sparqlAsk($query)
     {
-        // TODO: Implement sparqlAsk() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -212,7 +219,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function sparqlQuery($query, $options = array())
     {
-        // TODO: Implement sparqlQuery() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
 }
