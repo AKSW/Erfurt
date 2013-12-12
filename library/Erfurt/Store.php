@@ -115,14 +115,16 @@ class Erfurt_Store
     /**
      * Special zend logger, which protocolls all queries
      * Call with function to initialize
-     * @var Zend Logger
+     *
+     * @var Zend_Log
      */
     protected $_queryLogger = null;
 
     /**
      * Special zend logger, which protocolls erfurt messages
      * Call with function to initialize
-     * @var Zend Logger
+     *
+     * @var Zend_Log
      */
     protected $_erfurtLogger = null;
 
@@ -223,8 +225,13 @@ class Erfurt_Store
             throw new Erfurt_Store_Exception($msg);
         }
 
-        // instantiate backend adapter
-        $this->_backendAdapter = new $className($backendOptions);
+        $adapterInfo = new ReflectionClass($className);
+        if ($adapterInfo->implementsInterface('Erfurt_Store_Adapter_FactoryInterface')) {
+            $this->_backendAdapter = call_user_func(array($className, 'createFromOptions'), $backendOptions);
+        } else {
+            // instantiate backend adapter
+            $this->_backendAdapter = new $className($backendOptions);
+        }
 
         // check interface conformance
         // but do not check the comparer adapter since we use __call there
