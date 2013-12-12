@@ -85,10 +85,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 // Setup successful
                 $this->_dbWasUsed = true;
             } else {
-                $this->markTestSkipped();
+                $this->markTestSkipped($e->getMessage());
             }
         } catch (Erfurt_Exception $e2) {
-            $this->markTestSkipped();
+            $this->markTestSkipped($e2->getMessage());
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
