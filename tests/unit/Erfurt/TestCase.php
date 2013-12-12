@@ -70,6 +70,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             if (isset($this->_testConfig->store->zenddb->dbname)) {
                 $dbName = $this->_testConfig->store->zenddb->dbname;
             }
+        } else {
+            // Skip the naming test, as it is not that easy to rename/create
+            // a new database for adapters like Oracle.
+            $dbName = '_TEST';
         }
 
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
