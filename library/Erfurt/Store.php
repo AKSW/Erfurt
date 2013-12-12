@@ -174,7 +174,7 @@ class Erfurt_Store
      * @param array       $storeOptions   options array
      * @param string      $backend        virtuoso, mysqli, adodb, redland
      * @param array       $backendOptions options array
-     * @param string/null $schema         rap
+     * @param string|null $schema         rap
      *
      * @throws Erfurt_Store_Exception if store is not supported or store does not
      * implement the store adapter interface.
