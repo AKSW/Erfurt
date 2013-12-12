@@ -225,8 +225,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             // overwrite store adapter to use with environment variable if set
             // this is useful, when we want to test with different stores without manually
             // editing the config
-            if ($this->_customTestConfig !== false) {
-                $storeAdapter = getenv('EF_STORE_ADAPTER');
+            $storeAdapter = getenv('EF_STORE_ADAPTER');
+            if ($this->_customTestConfig !== false && $storeAdapter !== false) {
                 if (!isset($this->_customTestConfig->store->{$storeAdapter})) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
                 }
