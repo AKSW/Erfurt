@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\DriverManager;
+
 /**
  * Acts as a factory that creates the Oracle Triple Store adapter.
  *
@@ -18,7 +20,9 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createFromOptions(array $adapterOptions)
     {
-
+        $connectionParams = $adapterOptions['connection'] + array('driver' => 'oci8', 'port' => 1521);
+        $connection       = DriverManager::getConnection($connectionParams);
+        return new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
     }
 
 }
