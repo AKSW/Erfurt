@@ -11,6 +11,12 @@ use Doctrine\DBAL\Connection;
 class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter_Interface
 {
 
+    /**
+     * Creates an adapter that uses the provided database connection to interact
+     * with the Oracle Triple Store.
+     *
+     * @param Connection $connection
+     */
     public function __construct(Connection $connection)
     {
 
