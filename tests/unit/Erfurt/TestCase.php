@@ -73,7 +73,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         }
 
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
-            $this->markTestSkipped(); // make sure a test db was selected!
+            $this->markTestSkipped('Name of the test database must end with "_TEST".');
         }
 
         try {
