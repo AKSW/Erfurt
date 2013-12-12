@@ -128,7 +128,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_loadTestConfig();
 
         if ($this->_testConfig === false) {
-            $this->markTestSkipped();
+            $this->markTestSkipped('Failed to load test config.');
         }
     }
     
