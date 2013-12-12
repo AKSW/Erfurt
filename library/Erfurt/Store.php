@@ -374,8 +374,7 @@ class Erfurt_Store
     public function checkSetup()
     {
         if ($this->inSetupPhase) {
-            $message = 'Recursion detected: Setup is already running.';
-            throw new Erfurt_Store_Exception($message);
+            return false;
         }
         $this->inSetupPhase = true;
         try {
