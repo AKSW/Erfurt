@@ -7,11 +7,19 @@
     "include-path": [
         "library"
     ],
+    "autoload": {
+        "psr-0": {
+            "Erfurt_": "library"
+        }
+    },
     "require": {
         "zendframework/zendframework1": ">=1.11.5",
         "doctrine/dbal": "~2.4.1"
     },
     "suggest": {
         "ext-oci8": "To use the Oracle Triple Store."
+    },
+    "config": {
+        "use-include-path": true
     }
 }
