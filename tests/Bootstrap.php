@@ -44,7 +44,6 @@ unset($efRoot, $efUnitTestsDir, $efIntegrationTestsDir, $path);
  * Setup autoloading
  */
 require_once(__DIR__ . '/../vendor/autoload.php');
-$loader = Zend_Loader_Autoloader::getInstance();
 
 // TODO: can we remove this?
 if (!defined('_TESTROOT')) {
