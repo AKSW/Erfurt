@@ -144,18 +144,10 @@ class Erfurt_Store
 
     /**
      * The backend adapter instance in use.
-     * 
+     *
      * @var Erfurt_Store_Adapter_Interface
      */
     private $_backendAdapter = null;
-
-    /**
-     * Optional methods a backend adapter can implement
-     * @var array
-     */
-    private $_optionalMethods = array(
-        'countWhereMatches'
-    );
 
     /**
      * Number of queries committed
