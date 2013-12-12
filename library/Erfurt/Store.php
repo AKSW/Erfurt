@@ -2087,6 +2087,8 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     /**
      * Tries to load the system ontology model.
      *
+     * Hint: This method is used in a callback during checkSetup().
+     *
      * @throws Erfurt_Store_Exception
      */
     private function loadSystemOntologyModel()
@@ -2103,6 +2105,8 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
     /**
      * Tries to load the system schema model.
+     *
+     * Hint: This method is used in a callback during checkSetup().
      *
      * @throws Erfurt_Store_Exception
      */
