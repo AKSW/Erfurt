@@ -112,12 +112,8 @@ class Erfurt_AppIntegrationTest extends Erfurt_TestCase
         Erfurt_App::reset();
         $this->markTestNeedsCleanZendDbDatabase();
         
-        try {
-            $store = Erfurt_App::getInstance()->getStore();
-        } catch (Erfurt_Exception $e) {
-            // Should not fail! Instead should initialize the db tables.
-            $this->fail('Something went wrong while initialization of new db environment: ' . $e->getMessage());
-        }
+        $this->setExpectedException(null);
+        Erfurt_App::getInstance()->getStore();
     }   
     
     public function testGetSysOntModel()
