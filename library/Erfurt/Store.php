@@ -366,13 +366,6 @@ class Erfurt_Store
     public function checkSetup()
     {
         $logger         = Erfurt_App::getInstance()->getLog();
-        $sysOntSchema   = $this->getOption('schemaUri');
-        $schemaLocation = $this->getOption('schemaLocation');
-        $schemaPath     = preg_replace(
-            '/[\/\\\\]/',
-            '/',
-            EF_BASE . $this->getOption('schemaPath')
-        );
 
         $returnValue = true;
 
@@ -406,37 +399,7 @@ class Erfurt_Store
             $logger->info('System schema model not found. Loading model ...');
             $versioning->enableVersioning(false);
 
-            $this->getNewModel($sysOntSchema, '', 'owl', false);
-            try {
-                if (is_readable($schemaPath)) {
-                    // load SysOnt from file
-                    $this->importRdf(
-                        $sysOntSchema,
-                        $schemaPath,
-                        'rdfxml',
-                        Erfurt_Syntax_RdfParser::LOCATOR_FILE,
-                        false
-                    );
-                } else {
-                    // load SysOnt from Web
-                    $this->importRdf(
-                        $sysOntSchema,
-                        $schemaLocation,
-                        'rdfxml',
-                        Erfurt_Syntax_RdfParser::LOCATOR_URL,
-                        false
-                    );
-                }
-            } catch (Erfurt_Exception $e) {
-                // clear query cache completly
-                $queryCache = Erfurt_App::getInstance()->getQueryCache();
-                $queryCache->cleanUpCache(array('mode' => 'uninstall'));
-                // Delete the model, for the import failed.
-                $this->_backendAdapter->deleteModel($sysOntSchema);
-                throw new Erfurt_Store_Exception(
-                    "Import of '$sysOntSchema' failed -> " . $e->getMessage()
-                );
-            }
+            $this->loadSystemSchemaModel();
 
             if (!$this->hasSystemSchemaModel()) {
                 throw new Erfurt_Store_Exception(
@@ -2184,6 +2147,54 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             $this->_backendAdapter->deleteModel($sysOntModel);
             throw new Erfurt_Store_Exception(
                 "Import of '$sysOntModel' failed -> " . $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Tries to load the system schema model.
+     *
+     * @throws Erfurt_Store_Exception
+     */
+    private function loadSystemSchemaModel()
+    {
+        $sysOntSchema   = $this->getOption('schemaUri');
+        $schemaLocation = $this->getOption('schemaLocation');
+        $schemaPath     = preg_replace(
+            '/[\/\\\\]/',
+            '/',
+            EF_BASE . $this->getOption('schemaPath')
+        );
+
+        $this->getNewModel($sysOntSchema, '', 'owl', false);
+        try {
+            if (is_readable($schemaPath)) {
+                // load SysOnt from file
+                $this->importRdf(
+                    $sysOntSchema,
+                    $schemaPath,
+                    'rdfxml',
+                    Erfurt_Syntax_RdfParser::LOCATOR_FILE,
+                    false
+                );
+            } else {
+                // load SysOnt from Web
+                $this->importRdf(
+                    $sysOntSchema,
+                    $schemaLocation,
+                    'rdfxml',
+                    Erfurt_Syntax_RdfParser::LOCATOR_URL,
+                    false
+                );
+            }
+        } catch (Erfurt_Exception $e) {
+            // clear query cache completly
+            $queryCache = Erfurt_App::getInstance()->getQueryCache();
+            $queryCache->cleanUpCache(array('mode' => 'uninstall'));
+            // Delete the model, for the import failed.
+            $this->_backendAdapter->deleteModel($sysOntSchema);
+            throw new Erfurt_Store_Exception(
+                "Import of '$sysOntSchema' failed -> " . $e->getMessage()
             );
         }
     }
