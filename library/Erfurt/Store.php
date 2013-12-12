@@ -2209,6 +2209,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             $returnValue = false;
         }
         if ($returnValue === false) {
+            // TODO This exception is explicitly ignored elsewhere. Why is it needed?
             throw new Erfurt_Store_Exception(
                 'One or more system models imported.',
                 20
