@@ -365,31 +365,21 @@ class Erfurt_Store
      */
     public function checkSetup()
     {
-        $logger         = Erfurt_App::getInstance()->getLog();
+        $logger = Erfurt_App::getInstance()->getLog();
 
         $returnValue = true;
-
-        $isVersioningEnabled = false ;
-        $versioning = Erfurt_App::getInstance()->getVersioning();
-        if ($versioning != false) {
-            $isVersioningEnabled = $versioning->isVersioningEnabled();
-        }
 
         // check for system configuration model
         // We need to import this first, for the schema model has namespaces
         // definitions, which will be stored in the local config!
         if (!$this->hasSystemOntologyModel()) {
             $logger->info('System configuration model not found. Loading model ...');
-            $versioning->enableVersioning(false);
-            $this->loadSystemOntologyModel();
-
+            $this->unversioned(array($this, 'loadSystemOntologyModel'));
             if (!$this->hasSystemOntologyModel()) {
                 throw new Erfurt_Store_Exception(
                     'Unable to load System Ontology model.'
                 );
             }
-
-            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -397,17 +387,12 @@ class Erfurt_Store
         // check for system ontology
         if (!$this->hasSystemSchemaModel()) {
             $logger->info('System schema model not found. Loading model ...');
-            $versioning->enableVersioning(false);
-
-            $this->loadSystemSchemaModel();
-
+            $this->unversioned(array($this, 'loadSystemSchemaModel'));
             if (!$this->hasSystemSchemaModel()) {
                 throw new Erfurt_Store_Exception(
                     'Unable to load System Ontology schema.'
                 );
             }
-
-            $versioning->enableVersioning($isVersioningEnabled);
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }
@@ -2197,5 +2182,34 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 "Import of '$sysOntSchema' failed -> " . $e->getMessage()
             );
         }
+    }
+
+    /**
+     * Executes the provided operation with versioning disabled.
+     *
+     * @param mixed $operation A callback.
+     * @return mixed The result of the operation.
+     * @throws InvalidArgumentException If no valid callback is passed.
+     * @throws Exception If an exception occurred during operation.
+     */
+    private function unversioned($operation)
+    {
+        if (!is_callable($operation)) {
+            throw new InvalidArgumentException('Provided operation must be an executable callback.');
+        }
+        $versioning = Erfurt_App::getInstance()->getVersioning();
+        $versioningEnabledBefore = $versioning->isVersioningEnabled();
+        // Disable versioning...
+        $versioning->enableVersioning(false);
+        try {
+            $result = call_user_func($operation);
+            // ... and restore versioning mode after executing the operation.
+            $versioning->enableVersioning($versioningEnabledBefore);
+        } catch (Exception $e) {
+            // Restore versioning mode in case of error.
+            $versioning->enableVersioning($versioningEnabledBefore);
+            throw $e;
+        }
+        return $result;
     }
 }
