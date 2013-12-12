@@ -115,14 +115,16 @@ class Erfurt_Store
     /**
      * Special zend logger, which protocolls all queries
      * Call with function to initialize
-     * @var Zend Logger
+     *
+     * @var Zend_Log
      */
     protected $_queryLogger = null;
 
     /**
      * Special zend logger, which protocolls erfurt messages
      * Call with function to initialize
-     * @var Zend Logger
+     *
+     * @var Zend_Log
      */
     protected $_erfurtLogger = null;
 
