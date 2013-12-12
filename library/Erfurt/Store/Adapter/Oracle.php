@@ -20,8 +20,17 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createFromOptions(array $adapterOptions)
     {
+        if (!isset($adapterOptions['connection'])) {
+            throw new InvalidArgumentException('Connection options are missing for Oracle adapter.');
+        }
         $connectionParams = $adapterOptions['connection'] + array('driver' => 'oci8', 'port' => 1521);
-        $connection       = DriverManager::getConnection($connectionParams);
+        $requiredParams   = array('dbname', 'user', 'password', 'host', 'port');
+        $missing          = array_diff($requiredParams, array_keys($connectionParams));
+        if (count($missing) > 0) {
+            $message = 'The following Oracle adapter connection options are missing: ' . implode(', ', $missing);
+            throw new InvalidArgumentException($message);
+        }
+        $connection = DriverManager::getConnection($connectionParams);
         return new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
     }
 
