@@ -14,6 +14,7 @@ interface Erfurt_Store_Adapter_FactoryInterface
      *
      * @param array(string=>mixed) $adapterOptions
      * @return \Erfurt_Store_Adapter_Interface
+     * @throws \InvalidArgumentException If options are missing or wrong options are provided.
      */
     public static function createFromOptions(array $adapterOptions);
 
