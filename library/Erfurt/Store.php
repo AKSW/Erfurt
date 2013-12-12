@@ -159,6 +159,13 @@ class Erfurt_Store
 
     private $_importsClosure = array();
 
+    /**
+     * Flag that indicates if the system setup is currently running.
+     *
+     * @var boolean
+     */
+    protected $inSetupPhase = false;
+
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -361,11 +368,24 @@ class Erfurt_Store
      * Checks whether the store has been set up yet and imports system
      * ontologies if necessary.
      *
-     * @return bool
+     * @return boolean
+     * @throws Exception If an error occurs during setup.
      */
     public function checkSetup()
     {
-        return $this->loadMissingSystemModels();
+        if ($this->inSetupPhase) {
+            $message = 'Recursion detected: Setup is already running.';
+            throw new Erfurt_Store_Exception($message);
+        }
+        $this->inSetupPhase = true;
+        try {
+            $result = $this->loadMissingSystemModels();
+        } catch (Exception $e) {
+            $this->inSetupPhase = false;
+            throw $e;
+        }
+        $this->inSetupPhase = false;
+        return $result;
     }
 
 
