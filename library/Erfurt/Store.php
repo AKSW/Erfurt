@@ -402,7 +402,7 @@ class Erfurt_Store
         }
 
         // check for system ontology
-        if (!$this->isModelAvailable($sysOntSchema, false)) {
+        if (!$this->hasSystemSchemaModel()) {
             $logger->info('System schema model not found. Loading model ...');
             $versioning->enableVersioning(false);
 
@@ -438,7 +438,7 @@ class Erfurt_Store
                 );
             }
 
-            if (!$this->isModelAvailable($sysOntSchema, false)) {
+            if (!$this->hasSystemSchemaModel()) {
                 throw new Erfurt_Store_Exception(
                     'Unable to load System Ontology schema.'
                 );
@@ -1963,6 +1963,17 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     {
         $sysOntModel = $this->getOption('modelUri');
         return $this->isModelAvailable($sysOntModel, false);
+    }
+
+    /**
+     * Checks if the system schema model is available.
+     *
+     * @return boolean
+     */
+    private function hasSystemSchemaModel()
+    {
+        $sysOntSchema = $this->getOption('schemaUri');
+        return $this->isModelAvailable($sysOntSchema, false);
     }
 
     /**
