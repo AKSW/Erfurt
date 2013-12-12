@@ -14,7 +14,8 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
      */
     public function testImplementsFactoryInterface()
     {
-
+        $info = new ReflectionClass('Erfurt_Store_Adapter_Oracle');
+        $this->assertTrue($info->implementsInterface('Erfurt_Store_Adapter_FactoryInterface'));
     }
 
     /**
@@ -23,7 +24,10 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromOptionsThrowsExceptionIfConnectionOptionsAreOmitted()
     {
+        $options = array();
 
+        $this->setExpectedException('InvalidArgumentException');
+        Erfurt_Store_Adapter_Oracle::createFromOptions($options);
     }
 
     /**
@@ -32,7 +36,12 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromOptionsThrowsExceptionIfInvalidConnectionOptionsArePassed()
     {
+        $options = array(
+            'connection' => array()
+        );
 
+        $this->setExpectedException('InvalidArgumentException');
+        Erfurt_Store_Adapter_Oracle::createFromOptions($options);
     }
 
     /**
@@ -40,7 +49,18 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromOptionsReturnsAdapterInstanceIfOptionsAreValid()
     {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 1521
+            )
+        );
+        $adapter = Erfurt_Store_Adapter_Oracle::createFromOptions($options);
 
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Oracle_OracleAdapter', $adapter);
     }
 
 }
