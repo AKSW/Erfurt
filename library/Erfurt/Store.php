@@ -217,26 +217,10 @@ class Erfurt_Store
             $this->_backendName = ucfirst($backend);
         }
 
-        // backend file
-        $fileName = 'Store/Adapter/'
-                  . $schemaName
-                  . $this->_backendName
-                  . '.php';
-
         // backend class
         $className  = 'Erfurt_Store_Adapter_'
                     . $schemaName
                     . $this->_backendName;
-
-        // import backend adapter file
-        if (is_readable((EF_BASE . $fileName))) {
-            require_once $fileName;
-        } else {
-            $msg = "Backend '$this->_backendName' "
-                 . ($schema ? "with schema '$schemaName'" : "")
-                 . " not supported. No suitable backend adapter found.";
-            throw new Erfurt_Store_Exception($msg);
-        }
 
         // check class existence
         if (!class_exists($className)) {
