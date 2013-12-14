@@ -9,6 +9,10 @@
 class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function testSparqlQueryThrowsExceptionIfInvalidQueryIsPassed()
+    {
+        
+    }
 
     public function testSparqlQueryReturnsArrayIfSelectQueryIsPassed()
     {
