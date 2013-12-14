@@ -1,0 +1,5 @@
+connection.dbname   = "SID"
+connection.user     = "USERNAME"
+connection.password = "PASSWORD"
+connection.host     = "IP_OR_HOSTNAME"
+connection.port     = 1521

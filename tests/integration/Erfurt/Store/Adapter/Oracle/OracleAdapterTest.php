@@ -10,6 +10,31 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
 {
 
     /**
+     * System under test.
+     *
+     * @var \Erfurt_Store_Adapter_Oracle_OracleAdapter
+     */
+    protected $adapter = null;
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->adapter = Erfurt_Store_Adapter_Oracle::createFromOptions($this->getConfig());
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->adapter = null;
+        parent::tearDown();
+    }
+
+    /**
      * Ensures that an exception is thrown if a syntactically invalid
      * SPARQL query is passed to sparqlQuery().
      */
@@ -69,6 +94,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     public function testSparqlQueryResultIsOrderedCorrectly()
     {
 
+    }
+
+    /**
+     * Loads the configuration for the adapter.
+     *
+     * @return array(mixed)
+     */
+    protected function getConfig()
+    {
+        $path = __DIR__ . '/../../../../../oracle.ini';
+        if (!is_file($path)) {
+            $message = 'This test requires an Oracle adapter configuration in the file '
+                     . 'oracle.ini in the test root. Use oracle.ini.dist as a template.';
+            $this->markTestSkipped($message);
+        }
+        $config = new Zend_Config_Ini($path);
+        return $config->toArray();
     }
 
 }
