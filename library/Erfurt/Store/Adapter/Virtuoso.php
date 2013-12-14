@@ -182,7 +182,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return array_merge(array($a), $b);
     }
 
-        /**
+    /**
      * @see Erfurt_Store_Adapter_Interface
      */
     public function addStatement($graphUri, $subject, $predicate, array $objectSpec, array $options = array())
