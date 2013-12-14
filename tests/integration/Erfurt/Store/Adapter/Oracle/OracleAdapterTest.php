@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\DriverManager;
+
 /**
  * Tests the Oracle adapter.
  *
@@ -22,7 +24,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected function setUp()
     {
         parent::setUp();
-        $this->adapter = Erfurt_Store_Adapter_Oracle::createFromOptions($this->getConfig());
+        $connection    = $this->getConnection();
+        $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
     }
 
     /**
@@ -97,6 +100,16 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Returns the database connection that is used for testing.
+     *
+     * @return \Doctrine\DBAL\Connection
+     */
+    protected function getConnection()
+    {
+        return DriverManager::getConnection($this->getConfig() + array('driver' => 'oci8'));
+    }
+
+    /**
      * Loads the configuration for the adapter.
      *
      * @return array(mixed)
@@ -105,7 +118,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $path = __DIR__ . '/../../../../../oracle.ini';
         if (!is_file($path)) {
-            $message = 'This test requires an Oracle adapter configuration in the file '
+            $message = 'This test requires an Oracle connection configuration in the file '
                      . 'oracle.ini in the test root. Use oracle.ini.dist as a template.';
             $this->markTestSkipped($message);
         }
