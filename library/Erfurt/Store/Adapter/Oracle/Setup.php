@@ -8,7 +8,7 @@ use Doctrine\DBAL\Driver\Connection;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 14.12.13
  */
-class Setup
+class Erfurt_Store_Adapter_Oracle_Setup
 {
 
     public function __construct(Connection $connection)
