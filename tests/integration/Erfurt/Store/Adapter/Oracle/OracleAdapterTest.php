@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Connection;
 
 /**
  * Tests the Oracle adapter.
@@ -24,7 +25,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected function setUp()
     {
         parent::setUp();
-        $connection    = $this->getConnection();
+        $connection = $this->getConnection();
+        $this->installTripleStore($connection);
         $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
     }
 
@@ -176,6 +178,20 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         );
         $graphIri = 'http://example.org/graph';
         $this->adapter->addStatement($graphIri, $subjectIri, $predicateIri, $object);
+    }
+
+    /**
+     * Creates a clean installation of the Triple Store.
+     *
+     * @param Connection $connection
+     */
+    protected function installTripleStore(Connection $connection)
+    {
+        $setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
+        if ($setup->isInstalled()) {
+            $setup->uninstall();
+        }
+        $setup->install();
     }
 
     /**
