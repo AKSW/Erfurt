@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
@@ -60,9 +61,9 @@ class Erfurt_Store_Adapter_Oracle_Setup
             )
         );
         $this->getSchemaManager()->createTable($dataTable);
-        $query  = 'EXECUTE SEM_APIS.CREATE_SEM_MODEL(:model, :dataTable, :tripleColumn)';
+        $query  = 'BEGIN SEM_APIS.CREATE_SEM_MODEL(:model, :dataTable, :tripleColumn); END;';
         $params = array(
-            'model'        => 'erfurt',
+            'model'        => 'erfurt_test',
             'dataTable'    => 'erfurt_semantic_data',
             'tripleColumn' => 'triple'
         );
@@ -76,10 +77,19 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function uninstall()
     {
-        $query  = 'EXECUTE SEM_APIS.DROP_SEM_MODEL(:model)';
-        $params = array('model' => 'erfurt');
-        $this->connection->executeQuery($query, $params);
-        $this->getSchemaManager()->dropTable('erfurt_semantic_data');
+        $query  = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
+        $params = array('model' => 'erfurt_test');
+        try {
+            $this->connection->executeQuery($query, $params);
+        } catch (DBALException $e) {
+            // Ignore exception from not existing model.
+            if (strpos($e->getMessage(), 'ORA-55300') === false) {
+                throw $e;
+            }
+        }
+        if ($this->getSchemaManager()->tablesExist(array('erfurt_semantic_data'))) {
+            $this->getSchemaManager()->dropTable('erfurt_semantic_data');
+        }
     }
 
     /**
