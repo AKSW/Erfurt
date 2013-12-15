@@ -1,3 +1,5 @@
+; Make sure to use a separate user for testing, as the
+; Triple Store is removed and re-installed during tests.
 dbname   = "SID"
 user     = "USERNAME"
 password = "PASSWORD"
