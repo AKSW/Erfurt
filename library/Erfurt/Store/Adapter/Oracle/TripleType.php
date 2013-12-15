@@ -22,7 +22,7 @@ class Erfurt_Store_Adapter_Oracle_TripleType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return SDO_RDF_TRIPLE_S;
+        return 'SDO_RDF_TRIPLE_S';
     }
 
     /**
