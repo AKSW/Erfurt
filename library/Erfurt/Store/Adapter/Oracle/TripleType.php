@@ -11,29 +11,28 @@ use Doctrine\DBAL\Types\Type;
  */
 class Erfurt_Store_Adapter_Oracle_TripleType extends Type
 {
+    const TRIPLE = 'sdo_rdf_triple_s';
+
     /**
      * Gets the SQL declaration snippet for a field of this type.
      *
      * @param array $fieldDeclaration The field declaration.
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform         The currently used database platform.
-     *
+     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
      * @return string
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        // TODO: Implement getSQLDeclaration() method.
+        return SDO_RDF_TRIPLE_S;
     }
 
     /**
      * Gets the name of this type.
      *
      * @return string
-     *
-     * @todo Needed?
      */
     public function getName()
     {
-        // TODO: Implement getName() method.
+        return static::TRIPLE;
     }
 
 
