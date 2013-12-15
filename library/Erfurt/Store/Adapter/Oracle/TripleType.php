@@ -35,5 +35,4 @@ class Erfurt_Store_Adapter_Oracle_TripleType extends Type
         return static::TRIPLE;
     }
 
-
 }
