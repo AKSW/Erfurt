@@ -81,7 +81,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
     {
         $query = 'BEGIN SEM_APIS.CREATE_SEM_MODEL(:model, :dataTable, :tripleColumn); END;';
         $params = array(
-            'model'        => 'erfurt_test',
+            'model'        => $this->getModelName(),
             'dataTable'    => 'erfurt_semantic_data',
             'tripleColumn' => 'triple'
         );
@@ -95,7 +95,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     protected function dropModel()
     {
-        $model = 'erfurt_test';
+        $model = $this->getModelName();
         if ($this->modelExists($model)) {
             $query = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
             $params = array('model' => $model);
@@ -149,6 +149,16 @@ class Erfurt_Store_Adapter_Oracle_Setup
     protected function tableExists($table)
     {
         return $this->getSchemaManager()->tablesExist(array($table));
+    }
+
+    /**
+     * Returns the name of the semantic model that is used.
+     *
+     * @return string
+     */
+    protected function getModelName()
+    {
+        return $this->connection->getUsername() . '_erfurt';
     }
 
     /**
