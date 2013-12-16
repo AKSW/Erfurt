@@ -95,17 +95,11 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     protected function dropModel()
     {
-        $query = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
-        $params = array('model' => 'erfurt_test');
-        try {
+        $model = 'erfurt_test';
+        if ($this->modelExists($model)) {
+            $query = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
+            $params = array('model' => $model);
             $this->connection->executeQuery($query, $params);
-            return $query;
-        } catch (DBALException $e) {
-            // Ignore exception from not existing model.
-            if (strpos($e->getMessage(), 'ORA-55300') === false) {
-                throw $e;
-            }
-            return $query;
         }
     }
 
@@ -118,6 +112,28 @@ class Erfurt_Store_Adapter_Oracle_Setup
             $query = 'DROP TABLE erfurt_semantic_data';
             $this->connection->executeQuery($query);
         }
+    }
+
+    /**
+     * Checks if the provided semantic model exists.
+     *
+     * @param string $model
+     * @return boolean
+     */
+    protected function modelExists($model)
+    {
+        $query = 'SELECT m.MODEL_NAME FROM MDSYS.SEM_MODEL$ m '
+               . 'WHERE OWNER=SYS_CONTEXT(:namespace, :parameter) AND '
+               . 'MODEL_NAME=:modelName';
+        $params = array(
+            'namespace' => 'USERENV',
+            'parameter' => 'CURRENT_USER',
+            'modelName' => strtoupper($model)
+        );
+        $statement = $this->connection->prepare($query);
+        $statement->execute($params);
+        $rows = $statement->fetchAll();
+        return count($rows) > 0;
     }
 
     /**
