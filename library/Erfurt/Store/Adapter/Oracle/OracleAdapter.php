@@ -19,6 +19,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     protected $connection = null;
 
     /**
+     * A prepared insert statement or null if it was not created yet.
+     *
+     * @var \Doctrine\DBAL\Driver\Statement|null
+     */
+    protected $insertStatement = null;
+
+    /**
      * Creates an adapter that uses the provided database connection to interact
      * with the Oracle Triple Store.
      *
@@ -61,7 +68,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $params = array(
+            'modelAndGraph' => $this->getModelName() . ':<' . $graphUri . '>',
+            'subject'       => '<' . $subject . '>',
+            'predicate'     => '<' . $predicate . '>',
+            'object'        => $this->objectToString($object)
+        );
+        $this->getInsertStatement()->execute($params);
     }
 
     /**
@@ -221,5 +234,71 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
+
+    /**
+     * Prepares a statement that is used to insert a triple.
+     *
+     * The statement requires the following parameters:
+     *
+     * # modelAndGraph - Model name and graph IRI, separated by colon (":").
+     * # subject       - Subject IRI.
+     * # predicate     - Predicate IRI.
+     * # object        - Encoded object.
+     *
+     * IRI must be enclosed by angle braces ("<", ">").
+     * Objects must be IRIs or encoded literals, for example:
+     *
+     * # "literal"
+     * # "literal"@de
+     * # "literal"^^xsd:string
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    protected function getInsertStatement()
+    {
+        if ($this->insertStatement === null) {
+            $query = 'INSERT INTO erfurt_semantic_data (triple) '
+                   . 'VALUES ('
+                   . '  SDO_RDF_TRIPLE_S('
+                   . '    :modelAndGraph,'
+                   . '    :subject,'
+                   . '    :predicate,'
+                   . '    :object'
+                   . '  )'
+                   . ')';
+            $this->insertStatement = $this->connection->prepare($query);
+        }
+        return $this->insertStatement;
+    }
+
+    /**
+     * Uses the provided object specification to encode it
+     * into a string.
+     *
+     * @param array(string=>string) $objectSpec
+     * @return string
+     */
+    protected function objectToString(array $objectSpec)
+    {
+        if ($objectSpec['type'] === 'uri') {
+            return '<' . $objectSpec['value'] . '>';
+        }
+        return Erfurt_Utils::buildLiteralString(
+            $objectSpec['value'],
+            isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null,
+            isset($objectSpec['lang']) ? $objectSpec['lang'] : null
+        );
+    }
+
+    /**
+     * Returns the name of the semantic model that is used.
+     *
+     * @return string
+     */
+    protected function getModelName()
+    {
+        return $this->connection->getUsername() . '_erfurt';
+    }
+
 
 }
