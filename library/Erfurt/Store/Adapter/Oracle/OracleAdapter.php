@@ -232,7 +232,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function sparqlQuery($query, $options = array())
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $statement = $this->createSparqlStatement($query);
+        $statement->execute();
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
     }
 
     /**
@@ -269,6 +272,31 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $this->insertStatement = $this->connection->prepare($query);
         }
         return $this->insertStatement;
+    }
+
+    /**
+     * Creates a statement that is used to perform a SPARQL query.
+     *
+     * @param string $sparqlQuery The SPARQL query.
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    protected function createSparqlStatement($sparqlQuery)
+    {
+        $query = 'SELECT * '
+               . 'FROM TABLE('
+               . '  SEM_MATCH('
+               . '    ' . $this->connection->quote($sparqlQuery) . ','
+               . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL'
+               . '  )'
+               . ')';
+        return $this->connection->prepare($query);
     }
 
     /**
