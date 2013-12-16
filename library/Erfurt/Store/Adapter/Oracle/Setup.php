@@ -111,6 +111,10 @@ class Erfurt_Store_Adapter_Oracle_Setup
         if ($this->getSchemaManager()->tablesExist(array('erfurt_semantic_data'))) {
             $query = 'DROP TABLE erfurt_semantic_data';
             $this->connection->executeQuery($query);
+            // This might avoid a bug that occurs when using the new IDENTITY column feature.
+            // If the bug is encountered, the database complains about a NOT NULL CONSTRAINT
+            // that cannot be dropped.
+            $this->connection->executeQuery('PURGE RECYCLEBIN');
         }
     }
 
