@@ -92,10 +92,6 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     protected function getSchemaManager()
     {
-        if (!Type::hasType('sdo_rdf_triple_s') && !Type::hasType('id')) {
-            Type::addType('sdo_rdf_triple_s', '\Erfurt_Store_Adapter_Oracle_TripleType');
-            Type::addType('id', '\Erfurt_Store_Adapter_Oracle_IdType');
-        }
         return $this->connection->getSchemaManager();
     }
 
