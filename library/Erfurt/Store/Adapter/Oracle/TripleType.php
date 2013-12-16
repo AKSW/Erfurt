@@ -11,6 +11,10 @@ use Doctrine\DBAL\Types\Type;
  */
 class Erfurt_Store_Adapter_Oracle_TripleType extends Type
 {
+
+    /**
+     * The name of this type.
+     */
     const TRIPLE = 'sdo_rdf_triple_s';
 
     /**
