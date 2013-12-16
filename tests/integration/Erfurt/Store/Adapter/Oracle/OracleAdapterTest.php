@@ -149,6 +149,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
 
         $this->assertInternalType('array', $result);
         $subjects = array_map(function (array $row) {
+            \PHPUnit_Framework_Assert::assertArrayHasKey('subject', $row);
             return $row['subject'];
         }, $result);
         $expected = array(
