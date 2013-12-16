@@ -39,7 +39,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
     public function isInstalled()
     {
         // We assume that the Triple Store was installed if the data table already exists.
-        return $this->getSchemaManager()->tablesExist(array('erfurt_semantic_data'));
+        return $this->tableExists('erfurt_semantic_data');
     }
 
     /**
@@ -60,16 +60,6 @@ class Erfurt_Store_Adapter_Oracle_Setup
     {
         $this->dropModel();
         $this->dropTable();
-    }
-
-    /**
-     * Returns the schema manager for the connection.
-     *
-     * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
-     */
-    protected function getSchemaManager()
-    {
-        return $this->connection->getSchemaManager();
     }
 
     /**
@@ -128,6 +118,27 @@ class Erfurt_Store_Adapter_Oracle_Setup
             $query = 'DROP TABLE erfurt_semantic_data';
             $this->connection->executeQuery($query);
         }
+    }
+
+    /**
+     * Checks if the given table exists.
+     *
+     * @param string $table
+     * @return boolean
+     */
+    protected function tableExists($table)
+    {
+        return $this->getSchemaManager()->tablesExist(array($table));
+    }
+
+    /**
+     * Returns the schema manager for the connection.
+     *
+     * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
+     */
+    protected function getSchemaManager()
+    {
+        return $this->connection->getSchemaManager();
     }
 
 }
