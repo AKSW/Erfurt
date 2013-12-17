@@ -235,6 +235,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $statement = $this->createSparqlStatement($query);
         $statement->execute();
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $results = array_map(function (array $row) {
+            return array_change_key_case($row, CASE_LOWER);
+        }, $results);
         return $results;
     }
 
