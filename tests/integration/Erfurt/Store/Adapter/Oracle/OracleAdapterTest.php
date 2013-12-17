@@ -90,7 +90,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT ?subject AS aliased WHERE { ?subject ?predicate ?object. }';
+        $query  = 'SELECT (?subject AS ?aliased) WHERE { ?subject ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
