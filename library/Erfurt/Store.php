@@ -562,25 +562,25 @@ class Erfurt_Store
             try {
                 $filter = '';
                 if (null !== $subject) {
-                    $filter = "FILTER (?s = <$subject>) .\n";
+                    $filter .= "FILTER (?s = <$subject>) .\n";
                 }
                 if (null !== $predicate) {
-                    $filter = "FILTER (?p = <$predicate>) .\n";
+                    $filter .= "FILTER (?p = <$predicate>) .\n";
                 }
                 if (null !== $object) {
                     if ($object['type'] == 'uri') {
                         $o = $object['value'];
-                        $filter = "FILTER (?o = <$o>) .\n";
+                        $filter .= "FILTER (?o = <$o>) .\n";
                     } else {
                         $o = $object['value'];
                         if (isset($object['datatype'])) {
                             $dt = $object['datatype'];
-                            $filter = "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
                         } else if (isset($object['lang'])) {
                             $lang = $object['lang'];
-                            $filter = "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
                         } else {
-                            $filter = "FILTER (?o = \"$o\") .\n";
+                            $filter .= "FILTER (?o = \"$o\") .\n";
                         }
                     }
                 }
@@ -597,7 +597,7 @@ EOF;
                     $sparql,
                     array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED)
                 );
-                $ret = count($result);
+                $ret = count($result['results']['bindings']);
                 $stmts = array();
                 foreach ($result['results']['bindings'] as $row) {
                     $s = $row['s']['value'];
