@@ -54,7 +54,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testSparqlQueryThrowsExceptionIfInvalidQueryIsPassed()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('Erfurt_Exception');
         $this->adapter->sparqlQuery('Hello world!');
     }
 
