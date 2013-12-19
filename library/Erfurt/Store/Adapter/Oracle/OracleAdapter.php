@@ -305,7 +305,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                . '    NULL,'
                . '    NULL'
                . '  )'
-               . ')';
+               . ')'
+               . 'ORDER BY SEM$ROWNUM';
         return $this->connection->prepare($query);
     }
 
