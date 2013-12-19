@@ -20,13 +20,21 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected $adapter = null;
 
     /**
+     * Helper object that is used to set up and clean the database.
+     *
+     * @var \Erfurt_Store_Adapter_Oracle_Setup::__construct
+     */
+    protected $setup = null;
+
+    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
         $connection = $this->getConnection();
-        $this->installTripleStore($connection);
+        $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
+        $this->installTripleStore($this->setup);
         $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
     }
 
@@ -36,6 +44,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected function tearDown()
     {
         $this->adapter = null;
+        $this->uninstallTripleStore($this->setup);
         parent::tearDown();
     }
 
@@ -184,15 +193,24 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     /**
      * Creates a clean installation of the Triple Store.
      *
-     * @param Connection $connection
+     * @param \Erfurt_Store_Adapter_Oracle_Setup $setup
      */
-    protected function installTripleStore(Connection $connection)
+    protected function installTripleStore(Erfurt_Store_Adapter_Oracle_Setup $setup)
     {
-        $setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
+        $this->uninstallTripleStore($setup);
+        $setup->install();
+    }
+
+    /**
+     * Removes the Triple Store that was used for testing.
+     *
+     * @param Erfurt_Store_Adapter_Oracle_Setup $setup
+     */
+    protected function uninstallTripleStore(Erfurt_Store_Adapter_Oracle_Setup $setup)
+    {
         if ($setup->isInstalled()) {
             $setup->uninstall();
         }
-        $setup->install();
     }
 
     /**
