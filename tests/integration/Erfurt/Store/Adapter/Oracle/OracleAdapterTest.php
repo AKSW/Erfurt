@@ -170,6 +170,31 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that sparqlQuery() returns only the variables that were
+     * requested in the SPARQL query.
+     */
+    public function testSparqlQueryReturnsOnlyRequestedVariables()
+    {
+        $this->insertTriple();
+
+        $query  = 'SELECT ?subject ?object WHERE { ?subject ?predicate ?object. }';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $expectedKeys = array(
+            'subject',
+            'object'
+        );
+        $this->assertInternalType('array', $result);
+        foreach ($result as $row) {
+            /* @var $row array(string=>string) */
+            $this->assertInternalType('array', $row);
+            $keys           = array_keys($row);
+            $additionalKeys = array_diff($keys, $expectedKeys);
+            $this->assertEquals(array(), $additionalKeys, 'Additional keys in result rows detected.');
+        }
+    }
+
+    /**
      * Inserts the provided triple into the database.
      *
      * @param string $subjectIri
