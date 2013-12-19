@@ -225,20 +225,27 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
+     * Executes the provided SPARQL query and returns the result.
+     *
      * @param string $query A string containing a sparql query
      * @param array $options Option array to push down parameters to adapters
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
-     * @throws Erfurt_Exception Throws an exception if query is no string.
+     * @throws Erfurt_Exception If the SPARQL query is invalid or the execution fails.
      */
     public function sparqlQuery($query, $options = array())
     {
-        $statement = $this->createSparqlStatement($query);
-        $statement->execute();
-        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $results = array_map(function (array $row) {
-            return array_change_key_case($row, CASE_LOWER);
-        }, $results);
-        return $results;
+        try {
+            $statement = $this->createSparqlStatement($query);
+            $statement->execute();
+            $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $results = array_map(function (array $row) {
+                return array_change_key_case($row, CASE_LOWER);
+            }, $results);
+            return $results;
+        } catch (Exception $e) {
+            // Normalize the exception.
+            throw new Erfurt_Exception($e->getMessage(), 0, $e);
+        }
     }
 
     /**
