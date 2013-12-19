@@ -239,6 +239,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $statement->execute();
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
             $results = array_map(function (array $row) {
+                foreach (array_keys($row) as $key) {
+                    // Remove additional data that contains meta data,
+                    // which is provided by Oracle.
+                    if (strpos($key, '$') !== false) {
+                        unset($row[$key]);
+                    }
+                }
                 return array_change_key_case($row, CASE_LOWER);
             }, $results);
             return $results;
