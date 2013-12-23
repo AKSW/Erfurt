@@ -238,17 +238,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $statement = $this->createSparqlStatement($query);
             $statement->execute();
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $results = array_map(function (array $row) {
-                foreach (array_keys($row) as $key) {
-                    // Remove additional data that contains meta data,
-                    // which is provided by Oracle.
-                    if (strpos($key, '$') !== false) {
-                        unset($row[$key]);
-                    }
-                }
-                return array_change_key_case($row, CASE_LOWER);
-            }, $results);
-            return $results;
+            return $this->normalizeResultSet($results);
         } catch (Exception $e) {
             // Normalize the exception.
             throw new Erfurt_Exception($e->getMessage(), 0, $e);
@@ -344,6 +334,28 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     protected function getModelName()
     {
         return $this->connection->getUsername() . '_erfurt';
+    }
+
+    /**
+     * Normalizes the provided result set, which means that keys
+     * are normalized and that unnecessary elements are removed.
+     *
+     * @param array(string=>string) $results
+     * @return array(string=>string)
+     */
+    protected function normalizeResultSet($results)
+    {
+        $results = array_map(function (array $row) {
+            foreach (array_keys($row) as $key) {
+                // Remove additional data that contains meta data,
+                // which is provided by Oracle.
+                if (strpos($key, '$') !== false) {
+                    unset($row[$key]);
+                }
+            }
+            return array_change_key_case($row, CASE_LOWER);
+        }, $results);
+        return $results;
     }
 
 
