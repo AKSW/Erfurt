@@ -371,11 +371,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         }
     }
 
+    /**
+     * Ensures that isModelAvailable() returns false if the provided
+     * graph does not exist.
+     */
     public function testIsModelAvailableReturnsFalseIfGraphDoesNotExist()
     {
 
     }
 
+    /**
+     * Ensures that isModelAvailable() returns true if the provided
+     * graph exists.
+     */
     public function testIsModelAvailableReturnsTrueIfGraphExists()
     {
 
