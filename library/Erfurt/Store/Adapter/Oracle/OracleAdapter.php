@@ -377,5 +377,4 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         return $results;
     }
 
-
 }
