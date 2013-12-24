@@ -213,6 +213,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
 
     }
 
+    public function testDeleteModelDoesNotRemoveTriplesFromOtherGraphs()
+    {
+
+    }
+
     public function testGetAvailableModelsReturnsEmptyArrayIfNoGraphsExist()
     {
 
