@@ -203,31 +203,53 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
 
     }
 
+    /**
+     * Ensures that deleteModel() does nothing if no triples belong to
+     * the given graph.
+     */
     public function testDeleteModelDoesNothingIfNoCorrespondingTriplesExist()
     {
 
     }
 
+    /**
+     * Checks if deleteModel() removes all triples that belong to the
+     * provided graph.
+     */
     public function testDeleteModelRemovesAllTriplesThatBelongToTheGivenGraph()
     {
 
     }
 
+    /**
+     * Ensures that deleteModel() does not remove triples from other graphs.
+     */
     public function testDeleteModelDoesNotRemoveTriplesFromOtherGraphs()
     {
 
     }
 
+    /**
+     * Ensures that getAvailableModels() returns an empty array if
+     * no graphs exist yet.
+     */
     public function testGetAvailableModelsReturnsEmptyArrayIfNoGraphsExist()
     {
 
     }
 
+    /**
+     * Checks if getAvailableModels() returns the existing graphs as key.
+     */
     public function testGetAvailableModelsReturnsExistingGraphsAsKey()
     {
 
     }
 
+    /**
+     * Ensures that the array, which is returned by getAvailableModels(),
+     * contains only the boolean value true as array values.
+     */
     public function testGetAvailableModelsContainsOnlyTrueAsValue()
     {
 
