@@ -372,10 +372,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     protected function countTriples()
     {
-        $query = 'SELECT COUNT(*) AS numberOfTriples FROM erfurt_semantic_data';
+        $query = 'SELECT COUNT(*) AS NUMBER_OF_TRIPLES FROM erfurt_semantic_data';
         $result = $this->connection->query($query);
         $rows = $result->fetchAll();
-        return $rows[0]['numberOfTriples'];
+        return (int)$rows[0]['NUMBER_OF_TRIPLES'];
     }
 
     /**
