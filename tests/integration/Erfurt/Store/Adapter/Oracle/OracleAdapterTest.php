@@ -73,7 +73,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT ?subject WHERE { ?subject ?predicate ?object. }';
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> WHERE { ?subject ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -87,7 +87,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object. }';
+        $query  = 'SELECT ?subject ?predicate ?object FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -107,7 +108,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT (?subject AS ?aliased) WHERE { ?subject ?predicate ?object. }';
+        $query  = 'SELECT (?subject AS ?aliased) FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -125,7 +127,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT ?object WHERE { <http://testing.org/subject> ?predicate ?object. }';
+        $query  = 'SELECT ?object FROM <http://example.org/graph> '
+                . 'WHERE { <http://testing.org/subject> ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -142,7 +145,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         $this->insertTriple('http://example.org/subject', 'http://example.org/predicate2');
         $this->insertTriple('http://example.org/another-subject');
 
-        $query  = 'SELECT ?object WHERE { <http://example.org/subject> ?predicate ?object. }';
+        $query  = 'SELECT ?object FROM <http://example.org/graph> '
+                . 'WHERE { <http://example.org/subject> ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -161,7 +165,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         $this->insertTriple('http://example.org/001');
         $this->insertTriple('http://example.org/002');
 
-        $query  = 'SELECT ?subject WHERE { ?subject ?predicate ?object. } ORDER BY ASC(?subject)';
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object. } ORDER BY ASC(?subject)';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -185,7 +190,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->insertTriple();
 
-        $query  = 'SELECT ?subject ?object WHERE { ?subject ?predicate ?object. }';
+        $query  = 'SELECT ?subject ?object FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object. }';
         $result = $this->adapter->sparqlQuery($query);
 
         $expectedKeys = array(
