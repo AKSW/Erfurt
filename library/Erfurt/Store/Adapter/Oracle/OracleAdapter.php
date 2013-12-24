@@ -114,7 +114,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+       return true;
     }
 
     /**
@@ -133,7 +133,20 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getAvailableModels()
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $sparqlQuery = 'SELECT DISTINCT ?graph '
+                     . 'WHERE {'
+                     . '    GRAPH ?graph {'
+                     . '        ?subject ?predicate ?object .'
+                     . '    }'
+                     . '}';
+        $result = $this->sparqlQuery($sparqlQuery);
+        if (count($result) === 0) {
+            return array();
+        }
+        $graphs = array_map(function (array $row) {
+            return $row['graph'];
+        }, $result);
+        return array_combine($graphs, array_fill(0, count($graphs), true));
     }
 
     /**
