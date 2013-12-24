@@ -371,6 +371,16 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         }
     }
 
+    public function testIsModelAvailableReturnsFalseIfGraphDoesNotExist()
+    {
+
+    }
+
+    public function testIsModelAvailableReturnsTrueIfGraphExists()
+    {
+
+    }
+
     /**
      * Counts all triples in the database.
      *
