@@ -156,17 +156,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
-     *
-     * @param string $modelIri
-     * @param string $serializationType One of:
-     *        - 'xml'
-     *        - 'n3' or 'nt'
-     * @param mixed $filename Either a string containing a absolute filename or null. In case null is given,
-     * this method returns a string containing the serialization.
-     *
-     * @return string|null
+     * @param string $modelIri The Iri, which identifies the model to look for.
+     * @return boolean Returns true if model exists and is available for the user ($useAc === true).
      */
-    public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
+    public function isModelAvailable($modelIri)
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
@@ -187,6 +180,22 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * @return  array
      */
     public function getSupportedExportFormats()
+    {
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+    }
+
+    /**
+     *
+     * @param string $modelIri
+     * @param string $serializationType One of:
+     *        - 'xml'
+     *        - 'n3' or 'nt'
+     * @param mixed $filename Either a string containing a absolute filename or null. In case null is given,
+     * this method returns a string containing the serialization.
+     *
+     * @return string|null
+     */
+    public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
@@ -219,15 +228,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * @return boolean On success
      */
     public function importRdf($modelIri, $data, $type, $locator)
-    {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
-    }
-
-    /**
-     * @param string $modelIri The Iri, which identifies the model to look for.
-     * @return boolean Returns true if model exists and is available for the user ($useAc === true).
-     */
-    public function isModelAvailable($modelIri)
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
