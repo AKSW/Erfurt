@@ -377,7 +377,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testIsModelAvailableReturnsFalseIfGraphDoesNotExist()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
 
+        $available = $this->adapter->isModelAvailable('http://example.org/missing-graph');
+        $this->assertFalse($available);
     }
 
     /**
@@ -386,7 +394,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testIsModelAvailableReturnsTrueIfGraphExists()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
 
+        $available = $this->adapter->isModelAvailable('http://example.org/graph');
+        $this->assertTrue($available);
     }
 
     /**
