@@ -78,18 +78,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
-     * Creates a new empty model (named graph) with the URI specified.
-     *
-     * @param string $graphUri
-     * @param int $type
-     * @return boolean true on success, false otherwise
-     */
-    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
-    {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
-    }
-
-    /**
      *
      * @param string $modelIri
      * @param mixed $subject (string or null)
@@ -118,11 +106,32 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
+     * Creates a new empty model (named graph) with the URI specified.
+     *
+     * @param string $graphUri
+     * @param int $type
+     * @return boolean true on success, false otherwise
+     */
+    public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
+    {
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+    }
+
+    /**
      * @param string $modelIri The Iri, which identifies the model.
      *
      * @throws Erfurt_Exception Throws an exception if no permission, model not existing or deletion fails.
      */
     public function deleteModel($modelIri)
+    {
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+    }
+
+    /**
+     * @return array Returns an associative array, where the key is the URI of a graph and the value
+     * is true.
+     */
+    public function getAvailableModels()
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
@@ -139,15 +148,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * @return string|null
      */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
-    {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
-    }
-
-    /**
-     * @return array Returns an associative array, where the key is the URI of a graph and the value
-     * is true.
-     */
-    public function getAvailableModels()
     {
         throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
