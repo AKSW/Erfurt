@@ -124,7 +124,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteModel($modelIri)
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $query = 'DELETE FROM erfurt_semantic_data d '
+               . 'WHERE d.triple.GET_MODEL() = :modelAndGraph';
+        $statement = $this->connection->prepare($query);
+        $params = array(
+            'modelAndGraph' => strtoupper($this->getModelName()) . ':<' . $modelIri . '>'
+        );
+        $statement->execute($params);
     }
 
     /**
