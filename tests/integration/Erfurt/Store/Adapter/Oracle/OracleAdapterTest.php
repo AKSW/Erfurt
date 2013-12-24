@@ -27,15 +27,22 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected $setup = null;
 
     /**
+     * The connection that is used for testing.
+     *
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection = null;
+
+    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
-        $connection = $this->getConnection();
-        $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
+        $this->connection = $this->createConnection();
+        $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->connection);
         $this->installTripleStore($this->setup);
-        $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
+        $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($this->connection);
     }
 
     /**
@@ -45,6 +52,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->adapter = null;
         $this->uninstallTripleStore($this->setup);
+        $this->connection = null;
         parent::tearDown();
     }
 
@@ -200,7 +208,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testCreateModelReturnsTrue()
     {
-
+        $this->assertTrue($this->adapter->createModel('http://example.org'));
     }
 
     /**
@@ -209,7 +217,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteModelDoesNothingIfNoCorrespondingTriplesExist()
     {
-
+        $this->setExpectedException(null);
+        $this->adapter->deleteModel('http://example.org');
     }
 
     /**
@@ -218,7 +227,22 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteModelRemovesAllTriplesThatBelongToTheGivenGraph()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
 
+        $this->adapter->deleteModel('http://example.org/graph');
+
+        $this->assertEquals(0, $this->countTriples());
     }
 
     /**
@@ -226,7 +250,28 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteModelDoesNotRemoveTriplesFromOtherGraphs()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/another-graph'
+        );
 
+        $this->adapter->deleteModel('http://example.org/graph');
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
@@ -235,7 +280,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testGetAvailableModelsReturnsEmptyArrayIfNoGraphsExist()
     {
+        $models = $this->adapter->getAvailableModels();
 
+        $this->assertInternalType('array', $models);
+        $this->assertEmpty($models);
     }
 
     /**
@@ -243,7 +291,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testGetAvailableModelsReturnsExistingGraphsAsKey()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/another-graph'
+        );
 
+        $models = $this->adapter->getAvailableModels();
+
+        $this->assertInternalType('array', $models);
+        $graphIris = array_keys($models);
+        $this->assertContains('http://example.org/graph', $graphIris);
+        $this->assertContains('http://example.org/another-graph', $graphIris);
     }
 
     /**
@@ -252,7 +318,39 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testGetAvailableModelsContainsOnlyTrueAsValue()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/another-graph'
+        );
 
+        $models = $this->adapter->getAvailableModels();
+
+        $this->assertInternalType('array', $models);
+        foreach ($models as $graphIri => $value) {
+            $message = 'Value not true for entry "' .  $graphIri . '".';
+            $this->assertTrue($value, $message);
+        }
+    }
+
+    /**
+     * Counts all triples in the database.
+     *
+     * @return integer The number of triples.
+     */
+    protected function countTriples()
+    {
+        $query = 'SELECT COUNT(*) AS numberOfTriples FROM erfurt_semantic_data';
+        $result = $this->connection->query($query);
+        $rows = $result->fetchAll();
+        return $rows[0]['numberOfTriples'];
     }
 
     /**
@@ -261,18 +359,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      * @param string $subjectIri
      * @param string $predicateIri
      * @param string $objectIri
+     * @param string $graphIri
      */
     protected function insertTriple(
         $subjectIri   = 'http://example.org/subject',
         $predicateIri = 'http://example.org/predicate',
-        $objectIri    = 'http://example.org/object'
+        $objectIri    = 'http://example.org/object',
+        $graphIri     = 'http://example.org/graph'
     )
     {
         $object = array(
             'value' => $objectIri,
             'type' => 'uri'
         );
-        $graphIri = 'http://example.org/graph';
         $this->adapter->addStatement($graphIri, $subjectIri, $predicateIri, $object);
     }
 
@@ -304,7 +403,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      *
      * @return \Doctrine\DBAL\Connection
      */
-    protected function getConnection()
+    protected function createConnection()
     {
         return DriverManager::getConnection($this->getConfig() + array('driver' => 'oci8'));
     }
