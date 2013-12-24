@@ -161,7 +161,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function isModelAvailable($modelIri)
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $models = $this->getAvailableModels();
+        return isset($models[$modelIri]);
     }
 
     /**
