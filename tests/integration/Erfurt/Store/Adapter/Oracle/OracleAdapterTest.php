@@ -251,13 +251,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     public function testDeleteModelDoesNotRemoveTriplesFromOtherGraphs()
     {
         $this->insertTriple(
-            'http://example.org/subject',
+            'http://example.org/subject1',
             'http://example.org/predicate',
             'http://example.org/object',
             'http://example.org/graph'
         );
         $this->insertTriple(
-            'http://example.org/subject',
+            'http://example.org/subject2',
             'http://example.org/predicate',
             'http://example.org/object',
             'http://example.org/graph'
@@ -310,6 +310,31 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         $graphIris = array_keys($models);
         $this->assertContains('http://example.org/graph', $graphIris);
         $this->assertContains('http://example.org/another-graph', $graphIris);
+    }
+
+    /**
+     * Ensures that getAvailableModels() returns the correct number of graphs even
+     * if multiple triples are assigned to a single graph.
+     */
+    public function testGetAvailableModelsReturnsCorrectNumberOfGraphsIfGraphContainsMultipleTriples()
+    {
+        $this->insertTriple(
+            'http://example.org/subject1',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+        $this->insertTriple(
+            'http://example.org/subject2',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph'
+        );
+
+        $models = $this->adapter->getAvailableModels();
+
+        $this->assertInternalType('array', $models);
+        $this->assertCount(1, $models);
     }
 
     /**
