@@ -195,6 +195,40 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if createModel() returns always true, as there are
+     * no preparation steps necessary to create a new named graph.
+     */
+    public function testCreateModelReturnsTrue()
+    {
+
+    }
+
+    public function testDeleteModelDoesNothingIfNoCorrespondingTriplesExist()
+    {
+
+    }
+
+    public function testDeleteModelRemovesAllTriplesThatBelongToTheGivenGraph()
+    {
+
+    }
+
+    public function testGetAvailableModelsReturnsEmptyArrayIfNoGraphsExist()
+    {
+
+    }
+
+    public function testGetAvailableModelsReturnsExistingGraphsAsKey()
+    {
+
+    }
+
+    public function testGetAvailableModelsContainsOnlyTrueAsValue()
+    {
+
+    }
+
+    /**
      * Inserts the provided triple into the database.
      *
      * @param string $subjectIri
