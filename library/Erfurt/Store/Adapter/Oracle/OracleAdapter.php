@@ -317,7 +317,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                . '    NULL,'
                . '    NULL,'
                . '    NULL,'
-               . '    NULL,'
+               . '    ' . $this->connection->quote('STRICT_DEFAULT=T') . ','
                . '    NULL,'
                . '    NULL'
                . '  )'
