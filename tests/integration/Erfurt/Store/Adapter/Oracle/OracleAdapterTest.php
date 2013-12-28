@@ -411,7 +411,28 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementsDeleteGraphIfOnlyModelIriIsPassed()
     {
+        $this->insertTriple();
+        $this->insertTriple(
+            'http://example.org/subject1',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph-that-will-be-deleted'
+        );
+        $this->insertTriple(
+            'http://example.org/subject2',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph-that-will-be-deleted'
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph-that-will-be-deleted',
+            null,
+            null,
+            null
+        );
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
@@ -420,7 +441,24 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementsRemovesAllTriplesWithProvidedSubject()
     {
+        $this->insertTriple();
+        $this->insertTriple(
+            'http://example.org/some-subject',
+            'http://example.org/predicate1'
+        );
+        $this->insertTriple(
+            'http://example.org/some-subject',
+            'http://example.org/predicate2'
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/some-subject',
+            null,
+            null
+        );
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
@@ -429,7 +467,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementsDeletesSpecificTripleIfAllInformationIsPassed()
     {
+        $this->insertTriple();
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/another-predicate',
+            'http://example.org/another-object',
+            'http://example.org/graph'
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/another-predicate',
+            array(
+                'value' => 'http://example.org/another-object',
+                'type'  => 'uri'
+            )
+        );
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
@@ -438,7 +494,28 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementsDeletesTripleWithObjectLiteral()
     {
+        $this->insertTriple();
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/another-predicate',
+            array(
+                'value' => 'Hello world!',
+                'type'  => 'literal'
+            ),
+            'http://example.org/graph'
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/another-predicate',
+            array(
+                'value' => 'Hello world!',
+                'type'  => 'literal'
+            )
+        );
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
@@ -446,7 +523,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementReturnsZeroIfNoTripleWasDeleted()
     {
+        $this->insertTriple();
 
+        $deleted = $this->adapter->deleteMatchingStatements(
+            'http://example.org/not-existing-graph',
+            null,
+            null,
+            null
+        );
+
+        $this->assertInternalType('integer', $deleted);
+        $this->assertEquals(0, $deleted);
     }
 
     /**
@@ -454,6 +541,31 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testDeleteMatchingStatementsReturnsNumberOfDeletedTriples()
     {
+        $this->insertTriple();
+        $this->insertTriple(
+            'http://example.org/subject1',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph-that-will-be-deleted'
+        );
+        $this->insertTriple(
+            'http://example.org/subject2',
+            'http://example.org/predicate',
+            'http://example.org/object',
+            'http://example.org/graph-that-will-be-deleted'
+        );
+        $before = $this->countTriples();
+
+        $deleted = $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph-that-will-be-deleted',
+            null,
+            null,
+            null
+        );
+
+        $after = $this->countTriples();
+        $this->assertInternalType('integer', $deleted);
+        $this->assertEquals($before - $after, $deleted);
 
     }
 
@@ -475,20 +587,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      *
      * @param string $subjectIri
      * @param string $predicateIri
-     * @param string $objectIri
+     * @param string|array(string=>string) $objectIriOrSpecification
      * @param string $graphIri
      */
     protected function insertTriple(
-        $subjectIri   = 'http://example.org/subject',
-        $predicateIri = 'http://example.org/predicate',
-        $objectIri    = 'http://example.org/object',
-        $graphIri     = 'http://example.org/graph'
+        $subjectIri               = 'http://example.org/subject',
+        $predicateIri             = 'http://example.org/predicate',
+        $objectIriOrSpecification = 'http://example.org/object',
+        $graphIri                 = 'http://example.org/graph'
     )
     {
-        $object = array(
-            'value' => $objectIri,
-            'type' => 'uri'
-        );
+        if (is_array($objectIriOrSpecification)) {
+            // Specification provided.
+            $object = $objectIriOrSpecification;
+        } else {
+            // Object URI passed.
+            $object = array(
+                'value' => $objectIriOrSpecification,
+                'type'  => 'uri'
+            );
+        }
         $this->adapter->addStatement($graphIri, $subjectIri, $predicateIri, $object);
     }
 
