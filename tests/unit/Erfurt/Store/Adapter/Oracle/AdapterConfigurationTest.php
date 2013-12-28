@@ -1,4 +1,5 @@
 <?php
+
 use Symfony\Component\Config\Definition\Processor;
 
 /**
@@ -57,7 +58,10 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
      */
     public function testConfigurationIsRejectedIfConnectionParametersAreOmitted()
     {
+        $options = array(
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -65,7 +69,15 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
      */
     public function testConfigurationIsRejectedIfConnectionParametersAreIncomplete()
     {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 1521
+            )
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -73,15 +85,59 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
      */
     public function testCompleteConfigurationIsAccepted()
     {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 1521
+            )
+        );
 
+        $this->assertConfigurationAccepted($options);
     }
 
     /**
      * Checks if the configuration accepts the port number as a string.
+     *
+     * The port might be passed as string if *.ini config files are used.
      */
     public function testConfigurationAcceptsPortAsString()
     {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => '1521'
+            )
+        );
 
+        $this->assertConfigurationAccepted($options);
+    }
+
+    /**
+     * asserts that the provided options are accepted.
+     *
+     * @param array(string=>mixed) $options
+     */
+    protected function assertConfigurationAccepted(array $options)
+    {
+        $this->setExpectedException(null);
+        $this->processOptions($options);
+    }
+
+    /**
+     * Asserts that the provided options are rejected.
+     *
+     * @param array(string=>mixed) $options
+     */
+    protected function assertConfigurationRejected(array $options)
+    {
+        $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+        $this->processOptions($options);
     }
 
     /**
