@@ -24,7 +24,26 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
         $adapterOptions   = static::normalizeOptions($adapterOptions);
         $connectionParams = $adapterOptions['connection'] + array('driver' => 'oci8');
         $connection       = DriverManager::getConnection($connectionParams);
+        if ($adapterOptions['auto_setup']) {
+            static::installTripleStoreIfNecessary($connection);
+        }
         return new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
+    }
+
+    /**
+     * Uses the provided connection to install the Triple Store components
+     * if that is necessary.
+     *
+     * @param \Doctrine\DBAL\Connection $connection
+     */
+    protected function installTripleStoreIfNecessary($connection)
+    {
+        $setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
+        if ($setup->isInstalled()) {
+            // The Triple Store components are already installed.
+            return;
+        }
+        $setup->install();
     }
 
     /**

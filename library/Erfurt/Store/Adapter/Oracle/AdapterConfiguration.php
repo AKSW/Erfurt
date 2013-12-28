@@ -48,6 +48,9 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                         ->end()
                     ->end()
                 ->end()
+                ->booleanNode('auto_setup')
+                    ->defaultFalse()
+                ->end()
             ->end();
         return $builder;
     }
