@@ -51,4 +51,19 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
         $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $builder);
     }
 
+    public function testConfigurationIsRejectedIfConnectionParametersAreOmitted()
+    {
+
+    }
+
+    public function testConfigurationIsRejectedIfConnectionParametersAreIncomplete()
+    {
+
+    }
+
+    public function testConfigurationAcceptsPortAsString()
+    {
+        
+    }
+
 }
