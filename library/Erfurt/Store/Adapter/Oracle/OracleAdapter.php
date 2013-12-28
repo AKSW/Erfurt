@@ -78,16 +78,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
+     * Deletes statements that match the given criteria.
+     *
+     * Use null as a wildcard.
      *
      * @param string $modelIri
      * @param mixed $subject (string or null)
      * @param mixed $predicate (string or null)
      * @param mixed $object (array or null)
      * @param array $options
-     *
+     * @return integer The number of statements deleted
      * @throws Erfurt_Exception
-     *
-     * @return int The number of statements deleted
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {

@@ -406,6 +406,58 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if deleteMatchingStatements() removes a complete graph if only the
+     * model IRI is passed.
+     */
+    public function testDeleteMatchingStatementsDeleteGraphIfOnlyModelIriIsPassed()
+    {
+
+    }
+
+    /**
+     * Ensures that deleteMatchingStatements() removes all triples that match the
+     * provided model/subject combination.
+     */
+    public function testDeleteMatchingStatementsRemovesAllTriplesWithProvidedSubject()
+    {
+
+    }
+
+    /**
+     * Checks if deleteMatchingStatements() removes a specific triple if all details (subject,
+     * predicate, object) are passed.
+     */
+    public function testDeleteMatchingStatementsDeletesSpecificTripleIfAllInformationIsPassed()
+    {
+
+    }
+
+    /**
+     * Checks if deleteMatchingStatements() is able to remove a triple with literal as
+     * object.
+     */
+    public function testDeleteMatchingStatementsDeletesTripleWithObjectLiteral()
+    {
+
+    }
+
+    /**
+     * Ensures that deleteMatchingStatements() returns 0 if no statement was deleted.
+     */
+    public function testDeleteMatchingStatementReturnsZeroIfNoTripleWasDeleted()
+    {
+
+    }
+
+    /**
+     * Checks if deleteMatchingStatements() returns the number of removed triples.
+     */
+    public function testDeleteMatchingStatementsReturnsNumberOfDeletedTriples()
+    {
+
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
