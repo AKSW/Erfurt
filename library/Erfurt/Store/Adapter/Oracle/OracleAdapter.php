@@ -92,7 +92,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        $params = array(
+            'modelAndGraph' => strtoupper($this->getModelName()) . ':<' . $modelIri . '>'
+        );
+        $query = $this->connection->createQueryBuilder()
+                                  ->delete('erfurt_semantic_data', 'd')
+                                  ->where('d.triple.GET_MODEL() = :modelAndGraph');
+        if ($subject !== null) {
+            $query->andWhere('d.triple.GET_SUBJECT() = :subject');
+            $params['subject'] = '<' . $subject . '>';
+        }
+        if ($predicate !== null) {
+            $query->andWhere('d.triple.GET_PROPERTY() = :predicate');
+            $params['predicate'] = '<' . $predicate . '>';
+        }
+        if ($object !== null) {
+            $query->andWhere('d.triple.GET_TRIPLE().object = :object');
+            $params['object'] = $this->objectToString($object);
+        }
+        $query->setParameters($params);
+        return $query->execute();
     }
 
     /**
