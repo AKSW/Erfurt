@@ -1,4 +1,5 @@
 <?php
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * Tests the Oracle adapter configuration.
@@ -51,19 +52,48 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
         $this->assertInstanceOf('Symfony\Component\Config\Definition\Builder\TreeBuilder', $builder);
     }
 
+    /**
+     * Ensures that a configuration, which omits the connection part, is rejected.
+     */
     public function testConfigurationIsRejectedIfConnectionParametersAreOmitted()
     {
 
     }
 
+    /**
+     * Ensures that a configuration is rejected if the connection parameters are incomplete.
+     */
     public function testConfigurationIsRejectedIfConnectionParametersAreIncomplete()
     {
 
     }
 
+    /**
+     * Checks if a complete configuration is accepted.
+     */
+    public function testCompleteConfigurationIsAccepted()
+    {
+
+    }
+
+    /**
+     * Checks if the configuration accepts the port number as a string.
+     */
     public function testConfigurationAcceptsPortAsString()
     {
-        
+
+    }
+
+    /**
+     * Uses the configuration to process the provided options.
+     *
+     * @param array(string=>mixed) $options
+     * @return array(string=>mixed) The processed options.
+     */
+    protected function processOptions(array $options)
+    {
+        $processor = new Processor();
+        return $processor->processConfiguration($this->configuration, array($options));
     }
 
 }
