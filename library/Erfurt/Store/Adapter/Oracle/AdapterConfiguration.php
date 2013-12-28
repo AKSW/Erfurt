@@ -21,6 +21,35 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
     public function getConfigTreeBuilder()
     {
         $builder = new TreeBuilder();
+        $root = $builder->root('oracle');
+        $root
+            ->children()
+                ->arrayNode('connection')
+                    ->isRequired()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('dbname')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('user')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('password')
+                            ->isRequired()
+                        ->end()
+                        ->scalarNode('host')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->integerNode('port')
+                            ->defaultValue(1521)
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+        return $builder;
     }
 
 }

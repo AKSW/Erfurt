@@ -26,7 +26,7 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
     {
         $options = array();
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         Erfurt_Store_Adapter_Oracle::createFromOptions($options);
     }
 
@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
             'connection' => array()
         );
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         Erfurt_Store_Adapter_Oracle::createFromOptions($options);
     }
 
