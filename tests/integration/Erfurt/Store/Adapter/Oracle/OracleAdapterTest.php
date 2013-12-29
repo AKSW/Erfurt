@@ -210,6 +210,34 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if sparqlQuery() works with Unix new line values ("\n")
+     * in the query.
+     */
+    public function testSparqlQueryHandlesUnixNewLines()
+    {
+        $query  = "SELECT ?subject ?object\n"
+                . "FROM <http://example.org/graph>\n"
+                . "WHERE { ?subject ?predicate ?object. }";
+
+        $this->setExpectedException(null);
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
+     * Checks if sparqlQuery() works with Windows new line values ("\r\n")
+     * in the query.
+     */
+    public function testSparqlQueryHandlesWindowsNewLines()
+    {
+        $query  = "SELECT ?subject ?object\r\n"
+                . "FROM <http://example.org/graph>\r\n"
+                . "WHERE { ?subject ?predicate ?object. }";
+
+        $this->setExpectedException(null);
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
