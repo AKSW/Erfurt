@@ -26,6 +26,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     protected $insertStatement = null;
 
     /**
+     * Contains IRIs of graphs that have been created in this request,
+     * but which might not contain triples yet.
+     *
+     * The in-memory graph management is necessary, as models that are
+     * created via createModel() would not be detected instantly otherwise.
+     *
+     * @var array(string) List of graph IRIs.
+     */
+    protected $currentlyCreatedGraphs = array();
+
+    /**
      * Creates an adapter that uses the provided database connection to interact
      * with the Oracle Triple Store.
      *
@@ -134,7 +145,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
-       return true;
+        if (!in_array($graphUri, $this->currentlyCreatedGraphs)) {
+            $this->currentlyCreatedGraphs[] = $graphUri;
+        }
+        return true;
     }
 
     /**
@@ -144,6 +158,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteModel($modelIri)
     {
+        if (($index = array_search($modelIri, $this->currentlyCreatedGraphs)) !== false) {
+            unset($this->currentlyCreatedGraphs[$index]);
+        }
         $this->deleteMatchingStatements($modelIri, null, null, null);
     }
 
@@ -161,12 +178,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                      . '}';
         $result = $this->sparqlQuery($sparqlQuery);
         if (count($result) === 0) {
-            return array();
+            return $this->toModelResult($this->currentlyCreatedGraphs);
         }
-        $graphs = array_map(function (array $row) {
-            return $row['graph'];
-        }, $result);
-        return array_combine($graphs, array_fill(0, count($graphs), true));
+        $graphs = array_reduce($result, function (array $graphs, array $row) {
+            $graphs[] = $row['graph'];
+            return $graphs;
+        }, $this->currentlyCreatedGraphs);
+        return $this->toModelResult($graphs);
     }
 
     /**
@@ -402,6 +420,24 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     public function __call($name, $args)
     {
         throw new BadMethodCallException('Method ' . $name . ' is not available.');
+    }
+
+    /**
+     * Converts the provided graph list into a model result.
+     *
+     * The model result contains the IRIs as key and true as value
+     * for all entries.
+     *
+     * @param array(string) $graphs List of model IRIs.
+     * @return array(string=>boolean)
+     */
+    protected function toModelResult(array $graphs)
+    {
+        if (count($graphs) === 0) {
+            return array();
+        }
+        $graphs = array_unique($graphs);
+        return array_combine($graphs, array_fill(0, count($graphs), true));
     }
 
 }
