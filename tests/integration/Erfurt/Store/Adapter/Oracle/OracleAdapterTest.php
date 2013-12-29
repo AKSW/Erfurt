@@ -238,6 +238,21 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that the adapter rejects queries that contain the internal escape
+     * sequence.
+     *
+     * This is not optimal, but at least it should prevent SQL injection attacks.
+     */
+    public function testSparqlQueryRejectsQueriesThatContainsEscapeSequence()
+    {
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate "This is the escape sequence: ~\'"@en . }';
+
+        $this->setExpectedException('Erfurt_Exception');
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */

@@ -357,7 +357,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $query = 'SELECT * '
                . 'FROM TABLE('
                . '  SEM_MATCH('
-               . '    q\'[' . $sparqlQuery . ']\','
+               . '    ' . $this->escapeSparql($sparqlQuery) . ','
                . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
                . '    NULL,'
                . '    NULL,'
@@ -389,6 +389,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null,
             isset($objectSpec['lang']) ? $objectSpec['lang'] : null
         );
+    }
+
+    /**
+     * Uses the Oracle q operator to escape a SPARQL query string.
+     *
+     * Usually it is much better to use prepared statements, but
+     * parameters like the SPARQL query must be available at
+     * compile time for optimization reasons.
+     *
+     * @param string $query
+     * @return string
+     * @throws \InvalidArgumentException If the string contains the escape sequence.
+     */
+    protected function escapeSparql($query)
+    {
+        if (strpos($query, "~'") !== false) {
+            $message = 'SPARQL query must not contain the sequence "~\'", which is used internally for escaping."';
+            throw new \InvalidArgumentException($message);
+        }
+        return "q'~$query~'";
     }
 
     /**
