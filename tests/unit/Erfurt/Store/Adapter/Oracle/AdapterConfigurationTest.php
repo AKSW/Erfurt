@@ -119,6 +119,24 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that a port number, which is obviously invalid, is rejected.
+     */
+    public function testConfigurationRejectsInvalidPortNumber()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 'hello'
+            )
+        );
+
+        $this->assertConfigurationRejected($options);
+    }
+
+    /**
      * asserts that the provided options are accepted.
      *
      * @param array(string=>mixed) $options
