@@ -298,6 +298,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
+     * Recursively gets owl:imported model IRIs starting with $modelUri as root.
+     *
+     * Note: What exactly should be returned? What is the intention?
+     *
+     * @param string $modelUri
+     * @return array(string=>string)
+     */
+    public function getImportsClosure($modelUri)
+    {
+        return array();
+    }
+
+    /**
      * Prepares a statement that is used to insert a triple.
      *
      * The statement requires the following parameters:
