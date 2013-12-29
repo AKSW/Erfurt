@@ -345,6 +345,35 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that getAvailableModels() returns graphs that have been added via createModel() in this request,
+     * even if no statement has been assigned to that graph yet.
+     */
+    public function testGetAvailableModelsReturnsModelsThatHaveBeenCreatedInCurrentRequestButNotYetFilled()
+    {
+        $this->adapter->createModel('http://example.org/new-graph');
+
+        $models = $this->adapter->getAvailableModels();
+
+        $this->assertInternalType('array', $models);
+        $this->assertArrayHasKey('http://example.org/new-graph', $models);
+    }
+
+    /**
+     * Ensures that getAvailableModels() does not returns graphs that have been created and deleted in
+     * the current request.
+     */
+    public function testGetAvailableModelsDoesNotReturnModelsThatHaveBeenCreatedAndDeletedInCurrentRequest()
+    {
+        $this->adapter->createModel('http://example.org/new-graph');
+        $this->adapter->deleteModel('http://example.org/new-graph');
+
+        $models = $this->adapter->getAvailableModels();
+
+        $this->assertInternalType('array', $models);
+        $this->assertArrayNotHasKey('http://example.org/new-graph', $models);
+    }
+
+    /**
      * Ensures that the array, which is returned by getAvailableModels(),
      * contains only the boolean value true as array values.
      */
