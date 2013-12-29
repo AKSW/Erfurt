@@ -137,6 +137,49 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
     }
 
     /**
+     * Checks if number strings like "1" and "0" can be used for
+     * the auto_setup option.
+     *
+     * This is important if On and Off values are used in *.ini
+     * configuration files.
+     */
+    public function testConfigurationAcceptsNumbersForAutoSetup()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 1521
+            ),
+            'auto_setup' => '1'
+        );
+
+        $this->assertConfigurationAccepted($options);
+    }
+
+    /**
+     * Checks if the configuration rejects an invalid auto_setup
+     * option value.
+     */
+    public function testConfigurationRejectsInvalidAutoSetupValue()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'port'     => 1521
+            ),
+            'auto_setup' => 'hello world'
+        );
+
+        $this->assertConfigurationRejected($options);
+    }
+
+    /**
      * asserts that the provided options are accepted.
      *
      * @param array(string=>mixed) $options
