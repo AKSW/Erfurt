@@ -1287,13 +1287,6 @@ EOF;
             );
         }
 
-        /*
-if ($options[Erfurt_Store::USE_AC] == false) {
-            //we are done preparing early
-            return $queryObject;
-        }
-*/
-
         $logger = $this->_getQueryLogger();
 
         $noBindings = false;
