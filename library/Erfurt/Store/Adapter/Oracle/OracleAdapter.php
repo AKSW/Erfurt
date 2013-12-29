@@ -357,7 +357,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $query = 'SELECT * '
                . 'FROM TABLE('
                . '  SEM_MATCH('
-               . '    ' . $this->connection->quote($sparqlQuery) . ','
+               . '    q\'[' . $sparqlQuery . ']\','
                . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
                . '    NULL,'
                . '    NULL,'
