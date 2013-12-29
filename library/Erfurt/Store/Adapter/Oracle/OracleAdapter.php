@@ -392,4 +392,16 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         return $results;
     }
 
+    /**
+     * Fallback for requested (but undeclared) methods.
+     *
+     * @param string $name
+     * @param array(mixed) $args
+     * @throws BadMethodCallException
+     */
+    public function __call($name, $args)
+    {
+        throw new BadMethodCallException('Method ' . $name . ' is not available.');
+    }
+
 }
