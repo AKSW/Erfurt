@@ -323,7 +323,7 @@ class Erfurt_Store
      * @param string $graphUri  the model URI
      * @param string $subject   (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
-     * @param array  $object    conaining keys "value", "type", "datatype", "lang"
+     * @param array  $object    containing keys "value", "type", "datatype", "lang"
      * @param bool   $useAc     use Access Control or not
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
