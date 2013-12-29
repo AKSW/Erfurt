@@ -55,6 +55,12 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                     ->end()
                 ->end()
                 ->booleanNode('auto_setup')
+                    ->beforeNormalization()
+                        ->ifInArray(array('0', '1'))
+                        ->then(function($value) {
+                            return (bool)$value;
+                        })
+                    ->end()
                     ->defaultFalse()
                 ->end()
             ->end();
