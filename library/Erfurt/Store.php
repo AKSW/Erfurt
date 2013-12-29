@@ -348,7 +348,7 @@ class Erfurt_Store
             $graphUri, $subject, $predicate, $object
         );
 
-        //invalidate deprecateded Cache Objects
+        //invalidate deprecated Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
