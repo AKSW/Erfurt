@@ -1390,9 +1390,9 @@ EOF;
             }
         }
 
-        // if there were froms and all got deleted due to access controll - give back empty result set
+        // if there were froms and all got deleted due to access control - give back empty result set
         // this is achieved by replacing the where-part with an unsatisfiable one
-        // i think this is efficient because otherwise we would have to deal with result formating und variables
+        // i think this is efficient because otherwise we would have to deal with result formatting und variables
         if ($noBindings) {
             $logger->debug('AC: force no bindings');
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
