@@ -1575,7 +1575,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
     /**
      * Get the configuration for a graph.
-     * @param string $graphUri to specity the graph
+     * @param string $graphUri to specify the graph
      * @return array
      */
     public function getGraphConfiguration($graphUri)
