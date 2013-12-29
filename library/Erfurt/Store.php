@@ -906,7 +906,7 @@ EOF;
      */
     public function getNewModel($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
-        // check model availablity
+        // check model availability
         if ($this->isModelAvailable($modelIri, false)) {
             // if debug mode is enabled create a more detailed exception description. If debug mode is disabled the
             // user should not know why this fails.
