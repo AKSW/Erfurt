@@ -927,7 +927,7 @@ EOF;
             if (defined('_EFDEBUG')) {
                 throw $e;
             } else {
-                throw new Erfurt_Store_Exception('Failed creating the model.');
+                throw new Erfurt_Store_Exception('Failed creating the model.', 0, $e);
             }
         }
 
