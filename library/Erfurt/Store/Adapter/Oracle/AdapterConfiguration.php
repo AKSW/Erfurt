@@ -44,6 +44,12 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                             ->cannotBeEmpty()
                         ->end()
                         ->integerNode('port')
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(function($value) {
+                                    return is_numeric($value) ? (int) $value : $value;
+                                })
+                            ->end()
                             ->defaultValue(1521)
                         ->end()
                     ->end()
