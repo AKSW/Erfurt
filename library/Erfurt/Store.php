@@ -1480,8 +1480,6 @@ EOF;
                         $sparqlResult['results'] = array();
                         $sparqlResult['results']['bindings'] = array();
                     } else {
-                        //var_dump($queryString);exit;
-                        //exit;
                         throw new Erfurt_Store_Exception('invalid query result.');
                     }
                 }
