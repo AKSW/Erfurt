@@ -1480,7 +1480,7 @@ EOF;
                         $sparqlResult['results'] = array();
                         $sparqlResult['results']['bindings'] = array();
                     } else {
-                        $message = 'Invalid result for the following SPARQL query; ' . $queryString;
+                        $message = 'Invalid result for the following SPARQL query: ' . $queryString;
                         throw new Erfurt_Store_Exception($message);
                     }
                 }
