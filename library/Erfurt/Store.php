@@ -867,25 +867,19 @@ EOF;
             }
         }
 
-        // if backend adapter provides its own implementation
-        if (method_exists($this->_backendAdapter, 'getModel')) {
-            // … use it
-            $modelInstance = $this->_backendAdapter->getModel($modelIri);
-        } else {
-            // use generic implementation
-            $owlQuery = new Erfurt_Sparql_SimpleQuery();
-            $owlQuery->setProloguePart('ASK')
-                     ->addFrom($modelIri)
-                     ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+        // use generic model implementation
+        $owlQuery = new Erfurt_Sparql_SimpleQuery();
+        $owlQuery->setProloguePart('ASK')
+                 ->addFrom($modelIri)
+                 ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
 
-            // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
-                // instantiate OWL model
-                $modelInstance = new Erfurt_Owl_Model($modelIri);
-            } else {
-                // instantiate RDF-S model
-                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
-            }
+        // TODO: cache this
+        if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
+            // instantiate OWL model
+            $modelInstance = new Erfurt_Owl_Model($modelIri);
+        } else {
+            // instantiate RDF-S model
+            $modelInstance = new Erfurt_Rdfs_Model($modelIri);
         }
 
         // check for edit possibility
