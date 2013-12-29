@@ -36,7 +36,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      *
      * @param \Doctrine\DBAL\Connection $connection
      */
-    protected function installTripleStoreIfNecessary($connection)
+    protected static function installTripleStoreIfNecessary($connection)
     {
         $setup = new Erfurt_Store_Adapter_Oracle_Setup($connection);
         if ($setup->isInstalled()) {
