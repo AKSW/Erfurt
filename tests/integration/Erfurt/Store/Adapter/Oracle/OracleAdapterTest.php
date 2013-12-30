@@ -305,6 +305,35 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that sparqlAsk() returns false if no triple matches
+     * the provided query.
+     */
+    public function testSparqlAskReturnsFalseIfNoTripleMatches()
+    {
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+
+        $result = $this->adapter->sparqlAsk($query);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Ensures that sparqlAsk() returns true if at least one triple matches
+     * the provided SPARQL query.
+     */
+    public function testSparqlAskReturnsTrueIfAtLeastOneTripleMatchesPattern()
+    {
+        $this->insertTriple();
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+
+        $result = $this->adapter->sparqlAsk($query);
+
+        $this->assertTrue($result);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
