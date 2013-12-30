@@ -253,6 +253,22 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that an exception is thrown by sparqlQuery() if the requested result
+     * format is not supported or does not exist.
+     */
+    public function testSparqlQueryThrowsExceptionIfResultFormatIsNotSupported()
+    {
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+        $options = array(
+            Erfurt_Store::RESULTFORMAT => 'unknown'
+        );
+
+        $this->setExpectedException('Erfurt_Exception');
+        $this->adapter->sparqlQuery($query, $options);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
