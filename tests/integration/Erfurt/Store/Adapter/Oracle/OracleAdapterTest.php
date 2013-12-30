@@ -269,6 +269,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that sparqlQuery() returns the result in extended format if that is requested.
+     */
+    public function testSparqlQueryReturnsExtendedResultFormatIfRequested()
+    {
+        $this->insertTriple();
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+        $options = array(
+            Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED
+        );
+
+        $result = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertInternalType('array', $result);
+        $this->assertArrayHasKey('head', $result);
+        $this->assertArrayHasKey('results', $result);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
