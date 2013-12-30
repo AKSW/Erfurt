@@ -21,6 +21,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
+    implements Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
     // ------------------------------------------------------------------------
     // --- Protected Properties -----------------------------------------------
