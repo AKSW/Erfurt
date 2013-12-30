@@ -14,6 +14,7 @@ interface Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
      *
      * @param array(array(string=>string))|mixed $resultSet
      * @return array(array(string=>string))|mixed
+     * @throws \Erfurt_Store_Adapter_ResultConverter_Exception If conversion is not possible.
      */
     public function convert($resultSet);
 
