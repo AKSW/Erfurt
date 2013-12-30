@@ -433,28 +433,20 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     protected function formatResultSet($results, $format = null)
     {
-        $results = array_map(function (array $row) {
-            foreach (array_keys($row) as $key) {
-                // Remove additional data that contains meta data,
-                // which is provided by Oracle.
-                if (strpos($key, '$') !== false) {
-                    unset($row[$key]);
-                }
-            }
-            return array_change_key_case($row, CASE_LOWER);
-        }, $results);
         switch ($format) {
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
+                $converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter();
                 break;
             case Erfurt_Store::RESULTFORMAT_PLAIN:
             case null:
+                $converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
                 break;
             default:
                 $message = 'The result format "%s" is not supported by adapter %s';
                 $message = sprintf($message, $format, get_class($this));
                 throw new Erfurt_Exception($message);
         }
-        return $results;
+        return $converter->convert($results);
     }
 
     /**
