@@ -290,7 +290,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $statement = $this->createSparqlStatement($query);
             $statement->execute();
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-            return $this->normalizeResultSet($results);
+            $format  = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
+            return $this->formatResultSet($results, $format);
         } catch (Exception $e) {
             // Normalize the exception.
             throw new Erfurt_Exception($e->getMessage(), 0, $e);
@@ -426,9 +427,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * are normalized and that unnecessary elements are removed.
      *
      * @param array(string=>string) $results
+     * @param string|null $format One of the Erfurt_Store::RESULTFORMAT_* constants or null for plain format.
      * @return array(string=>string)
+     * @throws Erfurt_Exception If the result format is not supported.
      */
-    protected function normalizeResultSet($results)
+    protected function formatResultSet($results, $format = null)
     {
         $results = array_map(function (array $row) {
             foreach (array_keys($row) as $key) {
@@ -440,6 +443,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             }
             return array_change_key_case($row, CASE_LOWER);
         }, $results);
+        switch ($format) {
+            case Erfurt_Store::RESULTFORMAT_EXTENDED:
+                break;
+            case Erfurt_Store::RESULTFORMAT_PLAIN:
+            case null:
+                break;
+            default:
+                $message = 'The result format "%s" is not supported by adapter %s';
+                $message = sprintf($message, $format, get_class($this));
+                throw new Erfurt_Exception($message);
+        }
         return $results;
     }
 
