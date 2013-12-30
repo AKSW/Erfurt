@@ -8,7 +8,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 30.12.13
  */
-class Erfurt_Store_Adapter_Oracle_RawToSimpleConverter
+class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter
     implements Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
 
