@@ -305,6 +305,20 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that sparqlQuery() returns a boolean value if an ASK
+     * query is passed.
+     */
+    public function testSparqlQueryReturnsBooleanIfAskQueryIsPassed()
+    {
+        $query  = 'ASK FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('boolean', $result);
+    }
+
+    /**
      * Ensures that sparqlAsk() returns false if no triple matches
      * the provided query.
      */
