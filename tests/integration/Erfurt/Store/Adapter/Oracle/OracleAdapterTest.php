@@ -288,6 +288,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if sparqlQuery() supports the raw Oracle result format.
+     */
+    public function testSparqlQuerySupportsRawFormat()
+    {
+        $this->insertTriple();
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+        $options = array(
+            Erfurt_Store::RESULTFORMAT => 'raw'
+        );
+
+        $result = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertInternalType('array', $result);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
