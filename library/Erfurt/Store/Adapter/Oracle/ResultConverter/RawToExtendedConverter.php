@@ -6,6 +6,35 @@
  * The extended format contains additional information about
  * the variable types.
  *
+ * The extended format has the following structure:
+ *
+ *     array(
+ *         'head' => array(
+ *             'vars' => array(
+ *                 // Contains the names of all variables that occur in the result set.
+ *                 'variable1',
+ *                 'variable2'
+ *             )
+ *         )
+ *         'results' => array(
+ *             'bindings' => array(
+ *                 // Contains one entry for each result set row.
+ *                 // Each entry contains the variable name as key and a set
+ *                 // of additional information as value:
+ *                 array(
+ *                     'variable1' => array(
+ *                         'value' => 'http://example.org',
+ *                         'type'  => 'uri'
+ *                     ),
+ *                     'variable2' => array(
+ *                         'value' => 'Hello world!',
+ *                         'type'  => 'literal'
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     )
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 30.12.13
  */
