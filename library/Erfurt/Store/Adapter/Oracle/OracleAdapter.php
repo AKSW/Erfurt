@@ -374,6 +374,29 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
+     * Returns the converter that must be used to create the given result format.
+     *
+     * @param string|null $format
+     * @return \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     * @throws Erfurt_Exception If the result format is not supported.
+     */
+    protected function getConverterFor($format)
+    {
+        switch ($format) {
+            case Erfurt_Store::RESULTFORMAT_EXTENDED:
+                return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter();
+            case Erfurt_Store::RESULTFORMAT_PLAIN:
+            case null:
+                return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
+            case 'raw':
+                return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
+        }
+        $message = 'The result format "%s" is not supported by adapter %s';
+        $message = sprintf($message, $format, get_class($this));
+        throw new Erfurt_Exception($message);
+    }
+
+    /**
      * Uses the provided object specification to encode it
      * into a string.
      *
@@ -429,26 +452,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * @param array(string=>string) $results
      * @param string|null $format One of the Erfurt_Store::RESULTFORMAT_* constants or null for plain format.
      * @return array(string=>string)
-     * @throws Erfurt_Exception If the result format is not supported.
      */
     protected function formatResultSet($results, $format = null)
     {
-        switch ($format) {
-            case Erfurt_Store::RESULTFORMAT_EXTENDED:
-                $converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter();
-                break;
-            case Erfurt_Store::RESULTFORMAT_PLAIN:
-            case null:
-                $converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
-                break;
-            case 'raw':
-                $converter = new Erfurt_Store_Adapter_ResultConverter_NullConverter();
-                break;
-            default:
-                $message = 'The result format "%s" is not supported by adapter %s';
-                $message = sprintf($message, $format, get_class($this));
-                throw new Erfurt_Exception($message);
-        }
+        $converter = $this->getConverterFor($format);
         return $converter->convert($results);
     }
 
