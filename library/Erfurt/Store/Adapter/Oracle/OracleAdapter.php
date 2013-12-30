@@ -441,6 +441,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             case null:
                 $converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
                 break;
+            case 'raw':
+                $converter = new Erfurt_Store_Adapter_ResultConverter_NullConverter();
+                break;
             default:
                 $message = 'The result format "%s" is not supported by adapter %s';
                 $message = sprintf($message, $format, get_class($this));
