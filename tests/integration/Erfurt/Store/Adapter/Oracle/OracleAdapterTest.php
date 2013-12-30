@@ -310,7 +310,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testSparqlAskReturnsFalseIfNoTripleMatches()
     {
-        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+        $query  = 'ASK FROM <http://example.org/graph> '
                 . 'WHERE { ?subject ?predicate ?object . }';
 
         $result = $this->adapter->sparqlAsk($query);
@@ -325,7 +325,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     public function testSparqlAskReturnsTrueIfAtLeastOneTripleMatchesPattern()
     {
         $this->insertTriple();
-        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+        $query  = 'ASK FROM <http://example.org/graph> '
                 . 'WHERE { ?subject ?predicate ?object . }';
 
         $result = $this->adapter->sparqlAsk($query);
