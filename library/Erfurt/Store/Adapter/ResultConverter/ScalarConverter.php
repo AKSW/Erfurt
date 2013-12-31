@@ -24,7 +24,16 @@ class Erfurt_Store_Adapter_ResultConverter_ScalarConverter
      */
     public function convert($resultSet)
     {
-        // TODO: Implement convert() method.
+        if (!is_array($resultSet)) {
+            $message = 'Expected array for conversion.';
+            throw new Erfurt_Store_Adapter_ResultConverter_Exception($message);
+        }
+        if (count($resultSet) === 0) {
+            // The result set is empty.
+            return null;
+        }
+        // Return the first value in the first row.
+        return current(current($resultSet));
     }
 
 }
