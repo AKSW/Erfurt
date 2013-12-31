@@ -61,7 +61,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertDoesNotChangeNumberOfRows()
     {
+        $exampleData = $this->getRawResultSet();
 
+        $converted = $this->converter->convert($exampleData);
+
+        $this->assertInternalType('array', $converted);
+        $this->assertCount(count($exampleData), $converted);
     }
 
     /**
@@ -69,7 +74,29 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertDoesChangeNumberOfColumns()
     {
+        $exampleData = $this->getRawResultSet();
 
+        $converted = $this->converter->convert($exampleData);
+
+        $this->assertInternalType('array', $converted);
+        $expectedColumns = count(current($exampleData));
+        foreach ($converted as $row) {
+            /* @var $row array(string=>mixed) */
+            $this->assertInternalType('array', $row);
+            $this->assertCount($expectedColumns, $row);
+        }
+    }
+
+    /**
+     * Ensures that convert() does not change URI values.
+     */
+    public function testConvertDoesNotChangeUri()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $value = $this->getValueFromRow($converted, 0);
+        $this->assertInternalType('string', $value);
+        $this->assertEquals('http://www.example.org/object', $value);
     }
 
     /**
@@ -77,7 +104,10 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertConvertsBooleanValueCorrectly()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 1);
+        $this->assertFalse($value);
     }
 
     /**
@@ -85,7 +115,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertConvertsIntegerValueCorrectly()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 2);
+        $this->assertInternalType('integer', $value);
+        $this->assertEquals(42, $value);
     }
 
     /**
@@ -93,7 +127,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertConvertsDoubleValueCorrectly()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 3);
+        $this->assertInternalType('float', $value);
+        $this->assertEquals(42.42, $value);
     }
 
     /**
@@ -101,7 +139,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertConvertsStringValueCorrectly()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 4);
+        $this->assertInternalType('string', $value);
+        $this->assertEquals('Hello world!', $value);
     }
 
     /**
@@ -109,7 +151,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertDoesNotChangeUntypedValue()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 5);
+        $this->assertInternalType('string', $value);
+        $this->assertEquals('Hello world!', $value);
     }
 
     /**
@@ -117,7 +163,29 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
      */
     public function testConvertDoesNotChangeValuesOfUnknownType()
     {
+        $converted = $this->converter->convert($this->getRawResultSet());
 
+        $value = $this->getValueFromRow($converted, 6);
+        $this->assertInternalType('string', $value);
+        $this->assertEquals('5 * (2 + 3)', $value);
+    }
+
+    /**
+     * Returns the data value from row $rowIndex in the
+     * provided result set.
+     *
+     * @param array(string=>mixed) $converted
+     * @param integer $rowIndex
+     * @return mixed
+     */
+    protected function getValueFromRow($converted, $rowIndex)
+    {
+        $this->assertInternalType('array', $converted);
+        $this->assertArrayHasKey($rowIndex, $converted);
+        $row = $converted[$rowIndex];
+        $this->assertInternalType('array', $row);
+        $this->assertArrayHasKey('OBJECT', $row);
+        return $row['OBJECT'];
     }
 
     /**
