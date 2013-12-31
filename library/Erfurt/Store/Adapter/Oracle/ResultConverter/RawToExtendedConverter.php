@@ -55,7 +55,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter
             $message = 'Expected array for conversion.';
             throw new Erfurt_Store_Adapter_ResultConverter_Exception($message);
         }
-        $variables = $this->getVariables($resultSet);
+        $variables = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::getVariables($resultSet);
         $bindings  = array();
         foreach ($resultSet as $row) {
             /* @var $row array(string=>string|null) */
@@ -108,34 +108,6 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter
             default:
                 return strtolower($oracleTypeInformation);
         }
-    }
-
-    /**
-     * Returns an array with the names of the variables that occur
-     * in the provided result set.
-     *
-     * The variable names are returned as they are in the result set,
-     * which means that they are in upper case.
-     *
-     * @param array(array(string=>string|null)) $resultSet
-     * @return array(string)
-     */
-    protected function getVariables(array $resultSet)
-    {
-        if (count($resultSet) === 0) {
-            // Result set is empty, no variables are bound.
-            return array();
-        }
-        $firstRow = current($resultSet);
-        $variables = array();
-        foreach (array_keys($firstRow) as $column) {
-            /* @var $column string */
-            if (strpos($column, '$') === false) {
-                // This is not a meta data, but a variable column.
-                $variables[] = $column;
-            }
-        }
-        return $variables;
     }
 
 }
