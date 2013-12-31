@@ -41,6 +41,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
      * Converts the provided value into a native PHP type.
      *
      * The provided data type URI determines which conversion is used.
+     * The existing data types are documented at {@link http://www.w3.org/TR/xmlschema-2/#built-in-datatypes}.
+     * Currently only a subset of these is supported by this method.
      *
      * Example:
      *
