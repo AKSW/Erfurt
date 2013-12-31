@@ -1,14 +1,9 @@
 <?php
 
 /**
- * Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest
+ * Tests the RawToTyped converter.
  *
- * @category PHP
- * @package 
- * @author Matthias Molitor <matthias@matthimatiker.de>
- * @copyright 2013 Wuzzitor
- * @license proprietary
- * @link https://github.com/Wuzzitor/Erfurt
+ * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 31.12.13
  */
 class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extends \PHPUnit_Framework_TestCase
