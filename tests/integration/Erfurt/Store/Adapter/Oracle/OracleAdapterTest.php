@@ -734,7 +734,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         $after = $this->countTriples();
         $this->assertInternalType('integer', $deleted);
         $this->assertEquals($before - $after, $deleted);
+    }
 
+    /**
+     * Checks if getSupportedImportFormats() returns an array.
+     */
+    public function testGetSupportedImportFormatsReturnsArray()
+    {
+        $supported = $this->adapter->getSupportedImportFormats();
+
+        $this->assertInternalType('array', $supported);
+    }
+
+    /**
+     * Checks if getSupportedExportFormats() returns an array.
+     */
+    public function testGetSupportedExportFormatsReturnsArray()
+    {
+        $supported = $this->adapter->getSupportedExportFormats();
+
+        $this->assertInternalType('array', $supported);
     }
 
     /**
