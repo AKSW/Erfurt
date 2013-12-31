@@ -11,6 +11,25 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverter
     implements \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
 
+
+    /**
+     * The inner converters.
+     *
+     * @var array(Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface)
+     */
+    protected $converters = array();
+
+    /**
+     * Creates a composite that will apply the provided converters to result sets,
+     * which are passed to convert().
+     *
+     * @param array(Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface) $converters
+     */
+    public function __construct(array $converters)
+    {
+        $this->converters = $converters;
+    }
+
     /**
      * Converts the provided result set.
      *
@@ -19,7 +38,11 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverter
      */
     public function convert($resultSet)
     {
-        // TODO: Implement convert() method.
+        foreach ($this->converters as $converter) {
+            /* @var $converter Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface */
+            $resultSet = $converter->convert($resultSet);
+        }
+        return $resultSet;
     }
 
 }
