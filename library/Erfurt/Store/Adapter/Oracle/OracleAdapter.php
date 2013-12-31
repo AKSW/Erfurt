@@ -214,7 +214,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function getSupportedExportFormats()
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        return array();
     }
 
     /**
@@ -236,11 +236,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     /**
      * Returns the formats this store can import.
      *
-     * @return  array
+     * @return array
      */
     public function getSupportedImportFormats()
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        return array();
     }
 
     /**
