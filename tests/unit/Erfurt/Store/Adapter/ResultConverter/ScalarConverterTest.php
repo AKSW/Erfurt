@@ -10,11 +10,36 @@ class Erfurt_Store_Adapter_ResultConverter_ScalarConverterTest extends \PHPUnit_
 {
 
     /**
+     * System under test.
+     *
+     * @var Erfurt_Store_Adapter_ResultConverter_ScalarConverter
+     */
+    protected $converter = null;
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->converter = new Erfurt_Store_Adapter_ResultConverter_ScalarConverter();
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->converter = null;
+        parent::tearDown();
+    }
+
+    /**
      * Checks if the converter implements the required interface.
      */
     public function testImplementsInterface()
     {
-
+        $this->assertInstanceOf('\Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface', $this->converter);
     }
 
     /**
@@ -22,7 +47,8 @@ class Erfurt_Store_Adapter_ResultConverter_ScalarConverterTest extends \PHPUnit_
      */
     public function testConvertThrowsExceptionIfNoArrayIsPassed()
     {
-
+        $this->setExpectedException('Erfurt_Store_Adapter_ResultConverter_Exception');
+        $this->converter->convert(new stdClass());
     }
 
     /**
@@ -30,7 +56,7 @@ class Erfurt_Store_Adapter_ResultConverter_ScalarConverterTest extends \PHPUnit_
      */
     public function testConvertReturnsNullIfResultSetIsEmpty()
     {
-
+        $this->assertNull($this->converter->convert(array()));
     }
 
     /**
@@ -38,7 +64,20 @@ class Erfurt_Store_Adapter_ResultConverter_ScalarConverterTest extends \PHPUnit_
      */
     public function testConvertReturnsFirstValueInFirstRow()
     {
+        $resultSet = array(
+            array(
+                'first'  => 42,
+                'second' => 7
+            ),
+            array(
+                'first'  => 13,
+                'second' => 23
+            )
+        );
 
+        $converted = $this->converter->convert($resultSet);
+
+        $this->assertEquals(42, $converted);
     }
 
 }
