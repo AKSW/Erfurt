@@ -417,11 +417,20 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     {
         switch ($format) {
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
-                return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter();
+                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
+                ));
             case Erfurt_Store::RESULTFORMAT_PLAIN:
-                return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
+                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter()
+                ));
             case 'scalar':
-                return new Erfurt_Store_Adapter_ResultConverter_ScalarConverter();
+                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
+                ));
             case 'raw':
                 return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
         }
