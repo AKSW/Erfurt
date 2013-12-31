@@ -8,6 +8,18 @@
  * @since 31.12.13
  */
 class Erfurt_Store_Adapter_ResultConverter_CompositeConverter
+    implements \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
+
+    /**
+     * Converts the provided result set.
+     *
+     * @param array(array(string=>string))|mixed $resultSet
+     * @return array(array(string=>string))|mixed
+     */
+    public function convert($resultSet)
+    {
+        // TODO: Implement convert() method.
+    }
 
 }

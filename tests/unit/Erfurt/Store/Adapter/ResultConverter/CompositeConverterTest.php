@@ -10,11 +10,56 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverterTest extends \PHPUn
 {
 
     /**
+     * System under test.
+     *
+     * @var Erfurt_Store_Adapter_ResultConverter_CompositeConverter
+     */
+    protected $converter = null;
+
+    /**
+     * The first mocked converter in the composite.
+     *
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $firstInnerConverter = null;
+
+    /**
+     * The second mocked converter in the composite.
+     *
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $secondInnerConverter = null;
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->firstInnerConverter  = $this->getMock('Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface');
+        $this->secondInnerConverter = $this->getMock('Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface');
+        $this->converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(
+            array($this->firstInnerConverter, $this->secondInnerConverter)
+        );
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->secondInnerConverter = null;
+        $this->firstInnerConverter  = null;
+        $this->converter            = null;
+        parent::tearDown();
+    }
+
+    /**
      * Checks if the converter implements the necessary interface.
      */
     public function testImplementsInterface()
     {
-
+        $this->assertInstanceOf('\Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface', $this->converter);
     }
 
     /**
@@ -23,7 +68,12 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverterTest extends \PHPUn
      */
     public function testCompositeReturnsUnchangedResultIfNoConverterIsProvided()
     {
+        $resultSet = array(array(1, 2, 3));
+        $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array());
 
+        $converted = $converter->convert($resultSet);
+
+        $this->assertEquals($resultSet, $converted);
     }
 
     /**
@@ -31,7 +81,11 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverterTest extends \PHPUn
      */
     public function testCompositePassesResultSetToFirstConverter()
     {
+        $this->firstInnerConverter->expects($this->once())
+                                  ->method('convert')
+                                  ->with(42);
 
+        $this->converter->convert(42);
     }
 
     /**
@@ -40,7 +94,14 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverterTest extends \PHPUn
      */
     public function testCompositePassesResultFromFirstToSecondConverter()
     {
+        $this->firstInnerConverter->expects($this->any())
+                                  ->method('convert')
+                                  ->will($this->returnValue(7));
+        $this->secondInnerConverter->expects($this->once())
+                                   ->method('convert')
+                                   ->with(7);
 
+        $this->converter->convert(42);
     }
 
     /**
@@ -48,7 +109,13 @@ class Erfurt_Store_Adapter_ResultConverter_CompositeConverterTest extends \PHPUn
      */
     public function testCompositeReturnsResultFromLastConverter()
     {
+        $this->secondInnerConverter->expects($this->once())
+                                   ->method('convert')
+                                   ->will($this->returnValue(7));
 
+        $converted = $this->converter->convert(42);
+
+        $this->assertEquals(7, $converted);
     }
 
 }
