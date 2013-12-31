@@ -273,7 +273,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function sparqlAsk($query)
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        return $this->sparqlQuery($query, array(Erfurt_Store::RESULTFORMAT => 'scalar'));
     }
 
     /**
@@ -291,7 +291,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $statement->execute();
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
             $format  = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
-            return $this->formatResultSet($results, $format);
+            return $this->formatResultSet($results, $this->determineResultFormat($format, $query));
         } catch (Exception $e) {
             // Normalize the exception.
             throw new Erfurt_Exception($e->getMessage(), 0, $e);
@@ -309,6 +309,39 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     public function getImportsClosure($modelUri)
     {
         return array();
+    }
+
+    /**
+     * Determines the result format, depending on requested format and query type.
+     *
+     * @param string|null $requestedFormat
+     * @param string $query The SPARQL query.
+     * @return string The result format.
+     */
+    protected function determineResultFormat($requestedFormat, $query)
+    {
+        if ($requestedFormat === null) {
+            return $this->isAskQuery($query) ? 'scalar' : Erfurt_Store::RESULTFORMAT_PLAIN;
+        }
+        return $requestedFormat;
+    }
+
+    /**
+     * Checks if the provided SPARQL query is an ASK query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isAskQuery($query)
+    {
+        if (strpos($query, 'ASK') === false) {
+            // Query does not even contain the ASK keyword, no further
+            // detection required.
+            return false;
+        }
+        $parser = new Erfurt_Sparql_Parser();
+        $info   = $parser->parse($query);
+        return $info->getResultForm() === 'ask';
     }
 
     /**
@@ -376,7 +409,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     /**
      * Returns the converter that must be used to create the given result format.
      *
-     * @param string|null $format
+     * @param string $format
      * @return \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
      * @throws Erfurt_Exception If the result format is not supported.
      */
@@ -386,12 +419,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
                 return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter();
             case Erfurt_Store::RESULTFORMAT_PLAIN:
-            case null:
                 return new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter();
+            case 'scalar':
+                return new Erfurt_Store_Adapter_ResultConverter_ScalarConverter();
             case 'raw':
                 return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
         }
-        $message = 'The result format "%s" is not supported by adapter %s';
+        $message = 'The result format "%s" is not supported by adapter %s.';
         $message = sprintf($message, $format, get_class($this));
         throw new Erfurt_Exception($message);
     }
@@ -450,10 +484,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * are normalized and that unnecessary elements are removed.
      *
      * @param array(string=>string) $results
-     * @param string|null $format One of the Erfurt_Store::RESULTFORMAT_* constants or null for plain format.
+     * @param string $format One of the Erfurt_Store::RESULTFORMAT_* constants or an adapter specific format string.
      * @return array(string=>string)
      */
-    protected function formatResultSet($results, $format = null)
+    protected function formatResultSet($results, $format)
     {
         $converter = $this->getConverterFor($format);
         return $converter->convert($results);
