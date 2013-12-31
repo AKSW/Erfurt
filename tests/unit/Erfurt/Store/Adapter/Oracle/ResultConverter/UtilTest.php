@@ -9,39 +9,69 @@
 class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * Ensures that getVariables() returns an empty array if the provided
+     * result set is empty.
+     */
     public function testGetVariablesReturnsEmptyArrayIfResultSetIsEmpty()
     {
 
     }
 
+    /**
+     * Checks if getVariables() returns the variable names from a raw result set.
+     */
     public function testGetVariablesReturnsVariablesNames()
     {
 
     }
 
+    /**
+     * Ensures that convertToType() does not change string values.
+     */
     public function testConvertToTypeDoesNotChangeStrings()
     {
 
     }
 
+    /**
+     * Checks if convertToType() converts integer values correctly.
+     */
     public function testConvertToTypeConvertsIntegerCorrectly()
     {
 
     }
 
+    /**
+     * Checks if convertToType() converts double values correctly.
+     */
     public function testConvertToTypeConvertsDoubleCorrectly()
     {
 
     }
 
+    /**
+     * Checks if convertToType() converts boolean values correctly.
+     */
+    public function testConvertToTypeConvertsBooleanCorrectly()
+    {
+
+    }
+
+    /**
+     * Ensures that convertToType() can handle a missing data type (null).
+     */
     public function testConvertToTypeCanHandleUntypedValue()
     {
 
     }
 
+    /**
+     * Ensures that convertToType() ignores custom types without raising an error.
+     */
     public function testConvertToTypeIgnoresCustomType()
     {
-        
+
     }
 
     /**
