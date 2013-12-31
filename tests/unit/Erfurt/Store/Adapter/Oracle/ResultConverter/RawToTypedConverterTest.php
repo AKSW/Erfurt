@@ -56,36 +56,66 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
         $this->converter->convert(new stdClass());
     }
 
+    /**
+     * Ensures that convert() does not change the number of rows in the result set.
+     */
     public function testConvertDoesNotChangeNumberOfRows()
     {
 
     }
 
+    /**
+     * Ensures that convert() does not change the number of columns in the result set.
+     */
     public function testConvertDoesChangeNumberOfColumns()
     {
 
     }
 
+    /**
+     * Checks if convert() changes a boolean value correctly.
+     */
     public function testConvertConvertsBooleanValueCorrectly()
     {
 
     }
+
+    /**
+     * Checks if convert() changes integer values correctly.
+     */
     public function testConvertConvertsIntegerValueCorrectly()
     {
 
     }
 
+    /**
+     * Checks if convert() changes double values correctly.
+     */
     public function testConvertConvertsDoubleValueCorrectly()
     {
 
     }
 
+    /**
+     * Checks if convert() returns string values correctly typed.
+     */
     public function testConvertConvertsStringValueCorrectly()
     {
 
     }
 
+    /**
+     * Ensures that convert() does not change untyped values.
+     */
     public function testConvertDoesNotChangeUntypedValue()
+    {
+
+    }
+
+    /**
+     * Checks if convert() ignores unknown types.
+     */
+    public function testConvertDoesNotChangeValuesOfUnknownType()
     {
 
     }
