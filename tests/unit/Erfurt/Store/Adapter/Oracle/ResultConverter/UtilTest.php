@@ -15,7 +15,9 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testGetVariablesReturnsEmptyArrayIfResultSetIsEmpty()
     {
+        $variables = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::getVariables(array());
 
+        $this->assertEquals(array(), $variables);
     }
 
     /**
@@ -23,7 +25,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testGetVariablesReturnsVariablesNames()
     {
+        $variables = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::getVariables($this->getRawResultSet());
 
+        $this->assertInternalType('array', $variables);
+        $this->assertContains('SUBJECT', $variables);
+        $this->assertContains('PREDICATE', $variables);
+        $this->assertContains('OBJECT', $variables);
+        $this->assertCount(3, $variables);
     }
 
     /**
@@ -31,7 +39,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeDoesNotChangeStrings()
     {
+        $value    = 'Hello!';
+        $dataType = 'http://www.w3.org/2001/XMLSchema#string';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertInternalType('string', $converted);
+        $this->assertEquals($value, $converted);
     }
 
     /**
@@ -39,7 +53,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeConvertsIntegerCorrectly()
     {
+        $value    = '42';
+        $dataType = 'http://www.w3.org/2001/XMLSchema#integer';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertInternalType('integer', $converted);
+        $this->assertEquals(42, $converted);
     }
 
     /**
@@ -47,7 +67,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeConvertsDoubleCorrectly()
     {
+        $value    = '42.42';
+        $dataType = 'http://www.w3.org/2001/XMLSchema#float';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertInternalType('float', $converted);
+        $this->assertEquals(42.42, $converted);
     }
 
     /**
@@ -55,7 +81,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeConvertsBooleanCorrectly()
     {
+        $value    = 'true';
+        $dataType = 'http://www.w3.org/2001/XMLSchema#boolean';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertTrue($converted);
     }
 
     /**
@@ -63,7 +94,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeCanHandleUntypedValue()
     {
+        $value    = 'Hello!';
+        $dataType = null;
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertInternalType('string', $converted);
+        $this->assertEquals($value, $converted);
     }
 
     /**
@@ -71,7 +108,13 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertToTypeIgnoresCustomType()
     {
+        $value    = serialize(new stdClass());
+        $dataType = 'http://example.org/object';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType($value, $dataType);
+
+        $this->assertInternalType('string', $converted);
+        $this->assertEquals($value, $converted);
     }
 
     /**
