@@ -64,18 +64,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
-            /* @var $subject string */
-            /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
-            foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
-                /* @var $predicate string */
-                /* @var $objectDefinition array(array(string=>string)) */
-                foreach ($objectDefinitions as $object) {
-                    /* @var $object array(string=>string) */
-                    $this->addStatement($graphIri, $subject, $predicate, $object, $options);
+        // Insert all statements in a transaction to ensure, that only the full batch
+        // must be written to disk instead of each triple.
+        $adapter = $this;
+        $this->connection->transactional(function () use($adapter, $graphIri, $statementsArray, $options) {
+            foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
+                /* @var $subject string */
+                /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
+                foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
+                    /* @var $predicate string */
+                    /* @var $objectDefinition array(array(string=>string)) */
+                    foreach ($objectDefinitions as $object) {
+                        /* @var $object array(string=>string) */
+                        $adapter->addStatement($graphIri, $subject, $predicate, $object, $options);
+                    }
                 }
             }
-        }
+        });
     }
 
     /**
