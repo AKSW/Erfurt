@@ -64,7 +64,18 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
+            /* @var $subject string */
+            /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
+            foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
+                /* @var $predicate string */
+                /* @var $objectDefinition array(array(string=>string)) */
+                foreach ($objectDefinitions as $object) {
+                    /* @var $object array(string=>string) */
+                    $this->addStatement($graphIri, $subject, $predicate, $object, $options);
+                }
+            }
+        }
     }
 
     /**
