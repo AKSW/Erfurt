@@ -52,7 +52,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function init()
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
