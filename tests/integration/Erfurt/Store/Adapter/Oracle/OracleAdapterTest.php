@@ -374,6 +374,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if the adapter stores (and returns) a literal that contains
+     * a single quote ("'") correctly.
+     */
+    public function testAdapterStoresLiteralWithQuoteCorrectly()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
