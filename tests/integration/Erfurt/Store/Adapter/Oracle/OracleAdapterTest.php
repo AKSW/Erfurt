@@ -804,6 +804,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that init() does not raise any error when called.
+     */
+    public function testInitDoesNotRaiseError()
+    {
+        $this->setExpectedException(null);
+        $this->adapter->init();
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
