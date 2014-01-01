@@ -19,6 +19,30 @@ interface Erfurt_Store_Adapter_Interface
     /**
      * Adds statements in an array to the graph specified by $graphIri.
      *
+     * The statements are provided as multi-dimensional array:
+     *
+     *     array(
+     *         'http://example.org/subject1' => array(
+     *             'http://example.org/predicate1' => array(
+     *                 array(
+     *                     'type' => 'literal',
+     *                     'value' => 'Hello world.'
+     *                 )
+     *             ),
+     *             'http://example.org/predicate2' => array(
+     *                 array(
+     *                     'type' => 'uri',
+     *                     'value' => 'http://example.org/object'
+     *                 )
+     *             )
+     *         )
+     *     );
+     *
+     * The subject URIs are used as keys, the corresponding predicates are used as
+     * keys in the value array. This array contains a list of objects that form
+     * triples with the subject and predicate. Each object (even URIs) is represented
+     * by an array that contains at least type and value.
+     *
      * @param string $graphIri
      * @param array  $statementsArray
      * @param array  $options ("escapeLiteral" => true/false) to disable automatic escaping characters
