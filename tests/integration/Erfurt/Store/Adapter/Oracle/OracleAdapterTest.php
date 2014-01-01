@@ -332,6 +332,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if sparqlQuery() supports queries that contain IRIs with special characters.
+     */
+    public function testSparqlQuerySupportsIriWithSpecialCharacters()
+    {
+        $query = 'SELECT ?p ?o '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/iri/with/quote/x\'y> ?p ?o . }';
+
+        $this->setExpectedException(null);
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Ensures that sparqlAsk() returns false if no triple matches
      * the provided query.
      */
