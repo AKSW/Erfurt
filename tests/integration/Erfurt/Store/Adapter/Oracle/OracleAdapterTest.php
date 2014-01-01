@@ -757,6 +757,53 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if addMultipleStatements() injects the defined triples.
+     */
+    public function testAddMultipleStatementsInsertsTriples()
+    {
+        $tripleDefinition = array(
+            'http://example.org/subject1' => array(
+                'http://example.org/predicate1-1' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Hello world!'
+                    ),
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object1-1-1'
+                    )
+                ),
+                'http://example.org/predicate1-2' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Test'
+                    ),
+                )
+            ),
+            'http://example.org/subject2' => array(
+                'http://example.org/predicate2-1' => array(
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object2-1-1'
+                    )
+                )
+            )
+        );
+
+        $this->adapter->addMultipleStatements('http://example.org', $tripleDefinition);
+
+        $expectedNumber = 0;
+        foreach ($tripleDefinition as $objectDefinitionsByPredicate) {
+            /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
+            foreach ($objectDefinitionsByPredicate as $objectDefinitions) {
+                /* @var $objectDefinitions array(array(string=>string)) */
+                $expectedNumber += count($objectDefinitions);
+            }
+        }
+        $this->assertEquals($expectedNumber, $this->countTriples());
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
