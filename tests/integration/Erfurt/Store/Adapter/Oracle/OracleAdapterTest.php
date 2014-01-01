@@ -319,6 +319,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that sparqlQuery() can handle queries, which contain variable
+     * identifiers that are reserved words in Oracle SQL.
+     */
+    public function testSparqlQueryWorksEvenIfReservedWordIsUsedAsVariable()
+    {
+        $query  = 'SELECT ?group FROM <http://example.org/graph> '
+                . 'WHERE { ?group <http://example.org/relation#contains> <http:/example.org/user/matthias> . }';
+
+        $this->setExpectedException(null);
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Ensures that sparqlAsk() returns false if no triple matches
      * the provided query.
      */
