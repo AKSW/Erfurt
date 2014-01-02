@@ -379,7 +379,21 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testAdapterStoresLiteralWithQuoteCorrectly()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $object = array(
+            'type'  => 'literal',
+            'value' => 'Literal with quote (\').'
+        );
+        $this->insertTriple('http://example.org/subject','http://example.org/predicate', $object);
+
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
+
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $value = current(current($result));
+        $this->assertEquals($object['value'], $value);
     }
 
     /**
