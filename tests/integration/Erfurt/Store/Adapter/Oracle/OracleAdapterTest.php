@@ -385,10 +385,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         );
         $this->insertTriple('http://example.org/subject','http://example.org/predicate', $object);
 
-        $query = 'SELECT ?object '
-               . 'FROM <http://example.org/graph> '
-               . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
-
+        $query  = 'SELECT ?object '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
@@ -407,10 +406,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         );
         $this->insertTriple('http://example.org/subject','http://example.org/predicate', $object);
 
-        $query = 'SELECT ?subject '
-               . 'FROM <http://example.org/graph> '
-               . 'WHERE { ?subject ?predicate %s . }';
-        $query = sprintf($query, Erfurt_Utils::buildLiteralString($object['value']));
+        $query  = 'SELECT ?subject '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate %s . }';
+        $query  = sprintf($query, Erfurt_Utils::buildLiteralString($object['value']));
         $result = $this->adapter->sparqlQuery($query);
 
         $this->assertInternalType('array', $result);
