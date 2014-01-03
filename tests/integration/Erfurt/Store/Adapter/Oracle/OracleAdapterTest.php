@@ -397,6 +397,27 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if it is possible to use literals with quotes in SPARQL graph patterns.
+     */
+    public function testSparqlQueryAllowsSearchingForLiteralsWithQuote()
+    {
+        $object = array(
+            'type'  => 'literal',
+            'value' => 'Literal with quote (\').'
+        );
+        $this->insertTriple('http://example.org/subject','http://example.org/predicate', $object);
+
+        $query = 'SELECT ?subject '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { ?subject ?predicate %s . }';
+        $query = sprintf($query, Erfurt_Utils::buildLiteralString($object['value']));
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
