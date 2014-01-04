@@ -975,7 +975,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     protected function createConnection()
     {
-        return DriverManager::getConnection($this->getConfig() + array('driver' => 'oci8'));
+        return Erfurt_Store_Adapter_Oracle::createConnection($this->getConfig());
     }
 
     /**

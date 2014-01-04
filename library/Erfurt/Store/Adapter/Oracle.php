@@ -22,12 +22,25 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
     public static function createFromOptions(array $adapterOptions)
     {
         $adapterOptions   = static::normalizeOptions($adapterOptions);
-        $connectionParams = $adapterOptions['connection'] + array('driver' => 'oci8');
-        $connection       = DriverManager::getConnection($connectionParams);
+        $connectionParams = $adapterOptions['connection'];
+        $connection       = static::createConnection($connectionParams);
         if ($adapterOptions['auto_setup']) {
             static::installTripleStoreIfNecessary($connection);
         }
         return new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
+    }
+
+    /**
+     * Creates a database connection that can be used by the adapter.
+     *
+     * @param array(string=>string) $params
+     * @return @return \Doctrine\DBAL\Connection
+     */
+    public static function createConnection(array $params)
+    {
+        $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
+        $connectionParams = $params + $additionalParams;
+        return DriverManager::getConnection($connectionParams);
     }
 
     /**
