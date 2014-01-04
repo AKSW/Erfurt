@@ -121,23 +121,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $params = array(
             'modelAndGraph' => strtoupper($this->getModelName()) . ':<' . $modelIri . '>'
         );
-        $query = $this->connection->createQueryBuilder()
+        $builder = $this->connection->createQueryBuilder()
                                   ->delete('erfurt_semantic_data', 'd')
                                   ->where('d.triple.GET_MODEL() = :modelAndGraph');
         if ($subject !== null) {
-            $query->andWhere('d.triple.GET_SUBJECT() = :subject');
+            $builder->andWhere('d.triple.GET_SUBJECT() = :subject');
             $params['subject'] = '<' . $subject . '>';
         }
         if ($predicate !== null) {
-            $query->andWhere('d.triple.GET_PROPERTY() = :predicate');
+            $builder->andWhere('d.triple.GET_PROPERTY() = :predicate');
             $params['predicate'] = '<' . $predicate . '>';
         }
         if ($object !== null) {
-            $query->andWhere('d.triple.GET_TRIPLE().object = :object');
+            $builder->andWhere('d.triple.GET_TRIPLE().object = :object');
             $params['object'] = $this->objectToString($object);
         }
-        $query->setParameters($params);
-        return $query->execute();
+        $query     = $builder->getSQL();
+        $statement = $this->connection->prepare($query);
+        $statement->execute($params);
+        return $statement->rowCount();
     }
 
     /**
@@ -308,8 +310,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $format  = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
             return $this->formatResultSet($results, $this->determineResultFormat($format, $query));
         } catch (Exception $e) {
-            // Normalize the exception.
-            throw new Erfurt_Exception($e->getMessage(), 0, $e);
+            if (!($e instanceof Erfurt_Exception)) {
+                // Normalize the exception.
+                throw new Erfurt_Exception($e->getMessage(), 0, $e);
+            }
+            throw $e;
         }
     }
 
@@ -406,7 +411,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $query = 'SELECT * '
                . 'FROM TABLE('
                . '  SEM_MATCH('
-               . '    ' . $this->escapeSparql($sparqlQuery) . ','
+               . '    ' . $this->escapeSparql($this->rewriteSparql($sparqlQuery)) . ','
                . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
                . '    NULL,'
                . '    NULL,'
@@ -471,6 +476,18 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null,
             isset($objectSpec['lang']) ? $objectSpec['lang'] : null
         );
+    }
+
+    /**
+     * Rewrites the given SPARQL query to prepare it for execution
+     * by the Oracle database.
+     *
+     * @param string $query
+     * @return string
+     */
+    protected function rewriteSparql($query)
+    {
+        return $query;
     }
 
     /**

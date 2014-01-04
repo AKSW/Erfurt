@@ -85,7 +85,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
             'dataTable'    => 'erfurt_semantic_data',
             'tripleColumn' => 'triple'
         );
-        $this->connection->executeQuery($query, $params);
+        $this->connection->prepare($query)->execute($params);
     }
 
     /**
@@ -99,7 +99,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
         if ($this->modelExists($model)) {
             $query = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
             $params = array('model' => $model);
-            $this->connection->executeQuery($query, $params);
+            $this->connection->prepare($query)->execute($params);
         }
     }
 
