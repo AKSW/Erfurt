@@ -308,8 +308,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             $format  = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
             return $this->formatResultSet($results, $this->determineResultFormat($format, $query));
         } catch (Exception $e) {
-            // Normalize the exception.
-            throw new Erfurt_Exception($e->getMessage(), 0, $e);
+            if (!($e instanceof Erfurt_Exception)) {
+                // Normalize the exception.
+                throw new Erfurt_Exception($e->getMessage(), 0, $e);
+            }
+            throw $e;
         }
     }
 
