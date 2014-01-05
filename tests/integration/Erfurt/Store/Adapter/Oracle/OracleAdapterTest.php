@@ -464,6 +464,27 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if sparqlQuery() handles camel cased variables (for example ?resourceUri)
+     * correctly.
+     */
+    public function testSparqlQuerySupportsCamelCasedVariables()
+    {
+        $this->insertTriple();
+
+        $query  = 'SELECT ?camelCasedObject '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?camelCasedObject . }';
+
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
+        $row = current($result);
+        $this->assertInternalType('array', $row);
+        $this->assertArrayHasKey('camelCasedObject', $row);
+    }
+
+    /**
      * Checks if createModel() returns always true, as there are
      * no preparation steps necessary to create a new named graph.
      */
