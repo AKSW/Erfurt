@@ -424,6 +424,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
      */
     public function testAdapterCanWorkWithSparqlQueryThatContainsLiteralInStringLiteral()
     {
+        $this->markTestSkipped('Rewriting of literals in SPARQL queries is required for this one to work.');
         $object = array(
             'type'  => 'literal',
             'value' => 'SELECT ?subject WHERE { ?subject ?predicate "This is a ?test variable." . }'
