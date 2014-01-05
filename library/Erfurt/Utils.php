@@ -46,9 +46,12 @@ class Erfurt_Utils
     /**
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
-     * @see {http://www.w3.org/TeamSubmission/turtle/}
-     * @param array literal object
+     *
+     * @param string Literal value.
+     * @param string|null $datatype The datatype, for example "http://www.w3.org/2001/XMLSchema#boolean".
+     * @param string|null $lang A language code like "en" or "de".
      * @return string
+     * @see {http://www.w3.org/TeamSubmission/turtle/}
      */
     public static function buildLiteralString($value, $datatype = null, $lang = null)
     {
