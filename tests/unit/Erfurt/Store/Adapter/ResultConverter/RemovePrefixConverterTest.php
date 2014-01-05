@@ -56,7 +56,16 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterTest extends \PH
      */
     public function testConvertDoesNotChangeVariableWithoutPrefix()
     {
+        $input = array(
+            array('no_prefix' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $this->assertInternalType('array', $converted);
+        $row = current($converted);
+        $this->assertInternalType('array', $row);
+        $this->assertArrayHasKey('no_prefix', $row);
     }
 
     /**
@@ -64,7 +73,32 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterTest extends \PH
      */
     public function testConvertRemovesPrefix()
     {
+        $input = array(
+            array('pre_test' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $this->assertInternalType('array', $converted);
+        $row = current($converted);
+        $this->assertInternalType('array', $row);
+        $this->assertArrayHasKey('test', $row);
+    }
+
+    /**
+     * Ensures that convert() does not change the column value.
+     */
+    public function testConvertDoesNotChangeColumnValue()
+    {
+        $input = array(
+            array('pre_test' => 42)
+        );
+
+        $converted = $this->converter->convert($input);
+
+        $this->assertInternalType('array', $converted);
+        $value = current(current($converted));
+        $this->assertEquals(42, $value);
     }
 
     /**
@@ -72,7 +106,16 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterTest extends \PH
      */
     public function testConvertRemovesPreviousKey()
     {
+        $input = array(
+            array('pre_test' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $this->assertInternalType('array', $converted);
+        $row = current($converted);
+        $this->assertInternalType('array', $row);
+        $this->assertArrayNotHasKey('pre_test', $row);
     }
 
 }
