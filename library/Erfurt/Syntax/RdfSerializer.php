@@ -13,7 +13,13 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Syntax_RdfSerializer
-{   
+{
+
+    /**
+     * The adapter that is used for serialization.
+     *
+     * @var Erfurt_Syntax_RdfSerializer_Adapter_Interface
+     */
     protected $_serializerAdapter = null;
     
     public static function rdfSerializerWithFormat($format)
