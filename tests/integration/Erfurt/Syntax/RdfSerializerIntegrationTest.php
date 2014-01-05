@@ -1,9 +1,9 @@
 <?php
+
 class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
 {
     /**
-     * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
-     * @access protected
+     * @var Erfurt_Syntax_RdfSerializer
      */
     protected $_object;
 
