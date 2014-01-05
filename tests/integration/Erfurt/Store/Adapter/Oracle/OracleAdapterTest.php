@@ -403,7 +403,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $object = array(
             'type'  => 'literal',
-            'value' => 'SELECT ?subject WHERE { ?subject ?predicate ?object . }'
+            'value' => 'SELECT ?subject WHERE { ?subject ?predicate "This is a ?test variable." . }'
         );
         $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
 
