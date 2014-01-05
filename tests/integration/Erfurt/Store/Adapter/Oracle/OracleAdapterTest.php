@@ -403,6 +403,29 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $object = array(
             'type'  => 'literal',
+            'value' => 'SELECT ?subject WHERE { ?subject ?predicate ?object . }'
+        );
+        $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
+
+        $query  = 'SELECT ?subject '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate %s . }';
+        $query  = sprintf($query, Erfurt_Utils::buildLiteralString($object['value']));
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        // The inserted triple should have been selected.
+        $this->assertCount(1, $result);
+    }
+
+    /**
+     * Checks if the adapter can work with SPARQL query that is passed as string literal
+     * and that contains another literal itself.
+     */
+    public function testAdapterCanWorkWithSparqlQueryThatContainsLiteralInStringLiteral()
+    {
+        $object = array(
+            'type'  => 'literal',
             'value' => 'SELECT ?subject WHERE { ?subject ?predicate "This is a ?test variable." . }'
         );
         $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
