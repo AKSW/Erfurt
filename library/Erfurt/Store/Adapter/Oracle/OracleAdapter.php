@@ -12,6 +12,12 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
 {
 
     /**
+     * Prefix that is used for SPARQL variables to avoid
+     * conflicts with keywords.
+     */
+    const VARIABLE_PREFIX = 'var_';
+
+    /**
      * The database connection that is used.
      *
      * @var \Doctrine\DBAL\Connection
@@ -439,12 +445,14 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
                 ));
             case Erfurt_Store::RESULTFORMAT_PLAIN:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter()
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtolower(static::VARIABLE_PREFIX)),
                 ));
             case 'scalar':
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
@@ -487,7 +495,41 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     protected function rewriteSparql($query)
     {
-        return $query;
+        $rewritten = '';
+        $state     = new \SplStack();
+        $state->push('in_query');
+        foreach (str_split($query) as $byte) {
+            /* @var $byte string */
+            if ($state->top() === 'escape_character') {
+                $rewritten .= $byte;
+                continue;
+            }
+            switch ($byte) {
+                case '?':
+                case '$':
+                    if ($state->top() === 'in_query') {
+                        $rewritten .= '?' . static::VARIABLE_PREFIX;
+                        break;
+                    }
+                case '\'':
+                    if ($state->top() === 'in_query') {
+                        $state->push('in_quote_literal');
+                    } else if ($state->top === 'in_quote_literal') {
+                        $state->pop();
+                    }
+                case '"':
+                    if ($state->top() === 'in_query') {
+                        $state->push('in_double_quote_literal');
+                    } else if ($state->top() === 'in_double_quote_literal') {
+                        $state->pop();
+                    }
+                case '\\':
+                    $state->push('escape_character');
+                default:
+                    $rewritten .= $byte;
+            }
+        }
+        return $rewritten;
     }
 
     /**
