@@ -501,30 +501,38 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         foreach (str_split($query) as $byte) {
             /* @var $byte string */
             if ($state->top() === 'escape_character') {
+                $state->pop();
                 $rewritten .= $byte;
                 continue;
             }
             switch ($byte) {
                 case '?':
                 case '$':
+                    $rewritten .= $byte;
                     if ($state->top() === 'in_query') {
-                        $rewritten .= '?' . static::VARIABLE_PREFIX;
-                        break;
+                        $rewritten .= static::VARIABLE_PREFIX;
                     }
+                    break;
                 case '\'':
                     if ($state->top() === 'in_query') {
                         $state->push('in_quote_literal');
-                    } else if ($state->top === 'in_quote_literal') {
+                    } else if ($state->top() === 'in_quote_literal') {
                         $state->pop();
                     }
+                    $rewritten .= $byte;
+                    break;
                 case '"':
                     if ($state->top() === 'in_query') {
                         $state->push('in_double_quote_literal');
                     } else if ($state->top() === 'in_double_quote_literal') {
                         $state->pop();
                     }
+                    $rewritten .= $byte;
+                    break;
                 case '\\':
                     $state->push('escape_character');
+                    $rewritten .= $byte;
+                    break;
                 default:
                     $rewritten .= $byte;
             }
