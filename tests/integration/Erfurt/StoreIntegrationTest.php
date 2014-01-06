@@ -74,8 +74,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
+
+        $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
+        $result = $model->sparqlQuery($sparql);
+        $initialTriples = count($result);
+
+        // Turtle string with 11 triples.
         $turtleString = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -103,12 +107,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
-        $this->assertEquals(12, count($result));
+        $this->assertEquals($initialTriples + 11, count($result));
         
         $store->deleteMatchingStatements($modelUri, 'http://bis.ontowiki.net/PeterPan', null, null);
         
         $result = $model->sparqlQuery($sparql);
-        $this->assertEquals(1, count($result));
+        $this->assertEquals($initialTriples, count($result));
     }
     
     public function testCheckSetupWithZendDb()
