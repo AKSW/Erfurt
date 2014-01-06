@@ -1,4 +1,5 @@
 <?php
+
 class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 {
     protected $_storeStub = null;
@@ -29,7 +30,8 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $modelUri = 'http://example.org/updateTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri);
-        
+
+        // Turtle string with 11 statements:
         $turtle1 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -51,7 +53,8 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
                          foaf:icqChatID "123-456-789" ;
                          foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
                          foaf:surname "PanPühn" .';
-        
+
+        // Turtle string with 9 triples:
         $turtle2 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
