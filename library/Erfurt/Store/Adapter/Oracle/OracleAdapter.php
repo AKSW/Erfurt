@@ -128,8 +128,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             'modelAndGraph' => strtoupper($this->getModelName()) . ':<' . $modelIri . '>'
         );
         $builder = $this->connection->createQueryBuilder()
-                                  ->delete('erfurt_semantic_data', 'd')
-                                  ->where('d.triple.GET_MODEL() = :modelAndGraph');
+                                    ->delete('erfurt_semantic_data', 'd')
+                                    ->where('d.triple.GET_MODEL() = :modelAndGraph');
         if ($subject !== null) {
             $builder->andWhere('d.triple.GET_SUBJECT() = :subject');
             $params['subject'] = '<' . $subject . '>';
@@ -156,7 +156,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
-        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+        // Delete all statements in a transaction to ensure, that only the full modification set
+        // must be written to disk instead of each triple.
+        $adapter = $this;
+        $this->connection->transactional(function () use($adapter, $graphIri, $statementsArray) {
+            foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
+                /* @var $subject string */
+                /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
+                foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
+                    /* @var $predicate string */
+                    /* @var $objectDefinition array(array(string=>string)) */
+                    foreach ($objectDefinitions as $object) {
+                        /* @var $object array(string=>string) */
+                        $adapter->deleteMatchingStatements($graphIri, $subject, $predicate, $object);
+                    }
+                }
+            }
+        });
     }
 
     /**
