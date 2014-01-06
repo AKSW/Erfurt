@@ -498,8 +498,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $rewritten = '';
         $state     = new \SplStack();
         $state->push('in_query');
-        foreach (str_split($query) as $byte) {
+        $bytes  = str_split($query);
+        $length = count($bytes);
+        for ($i = 0; $i < $length; $i++) {
             /* @var $byte string */
+            $byte = $bytes[$i];
             if ($state->top() === 'escape_character') {
                 $state->pop();
                 $rewritten .= $byte;
@@ -510,7 +513,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                 case '$':
                     $rewritten .= $byte;
                     if ($state->top() === 'in_query') {
-                        $rewritten .= static::VARIABLE_PREFIX;
+                        $variableName    = $this->getNameOfVariableAt($query, $i);
+                        $newVariableName = $this->encodeUpperCaseCharacters($variableName);
+                        $rewritten .= static::VARIABLE_PREFIX . $newVariableName;
+                        $i += strlen($variableName);
                     }
                     break;
                 case '\'':
@@ -538,6 +544,40 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             }
         }
         return $rewritten;
+    }
+
+    /**
+     * Returns the name of the variable (without ? or $) that starts
+     * in $query at position (byte-index) $index.
+     *
+     * @param string $query The SPARQL query.
+     * @param integer $index The byte index of the ? or $ character.
+     * @return string The name of the variable.
+     */
+    protected function getNameOfVariableAt($query, $index)
+    {
+        $matches = array();
+        preg_match('/[a-zA-Z]+[a-zA-Z_0-9]*/', $query, $matches, 0, $index + 1);
+        return $matches[0];
+    }
+
+    /**
+     * Uses underscores to encode all uppercase characters in the provided variable name.
+     *
+     * Example:
+     *
+     *     $variable = 'camelCasedVariable';
+     *     // Returns 'camel_cased_variable'
+     *     $encoded = $this->encodeUpperCaseCharacters($variable);
+     *
+     * @param string $variable
+     * @return string
+     */
+    protected function encodeUpperCaseCharacters($variable)
+    {
+        return preg_replace_callback('/[A-Z_]/', function (array $match) {
+            return '_' . strtolower($match[0]);
+        }, $variable);
     }
 
     /**
