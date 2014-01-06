@@ -18,7 +18,38 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreVariableNamesConverter
      */
     public function convert($resultSet)
     {
-        // TODO: Implement convert() method.
+        if (!is_array($resultSet)) {
+            $message = 'Expected array for conversion.';
+            throw new Erfurt_Store_Adapter_ResultConverter_Exception($message);
+        }
+        foreach ($resultSet as $index => $row) {
+            /* @var $row array(string=>mixed) */
+            foreach ($row as $name => $value) {
+                /* @var $name string */
+                /* @var $value mixed */
+                $newName = $this->convertName($name);
+                if ($newName !== $name) {
+                    // The name changed.
+                    $resultSet[$index][$newName] = $value;
+                    unset($resultSet[$index][$name]);
+                }
+            }
+        }
+        return $resultSet;
+    }
+
+    /**
+     * Restores upper case characters in the provided variable name.
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function convertName($name)
+    {
+        $name = strtolower($name);
+        return preg_replace_callback('/_([a-z_])/', function (array $match) {
+            return strtoupper($match[1]);
+        }, $name);
     }
 
 }
