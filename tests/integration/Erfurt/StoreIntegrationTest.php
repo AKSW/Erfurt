@@ -42,23 +42,28 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
-        $turtleString = '<http://model.org/model#localName> a 
-                            <http://model.org/model#className1>, <http://model.org/model#className2> ;
-                            <http://www.w3.org/2000/01/rdf-schema#label> "label1", "label2"@nl .';
+
+        $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
+        $result = $model->sparqlQuery($sparql);
+        $initialTriples = count($result);
+
+        // Turtle string with 4 triples.
+        $turtleString = '<http://model.org/model#localName> a <http://model.org/model#className1>,
+                                                              <http://model.org/model#className2> ;
+                                             <http://www.w3.org/2000/01/rdf-schema#label> "label1",
+                                                                                          "label2"@nl .';
         
         $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
         
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
-        $this->assertEquals(5, count($result));
+        $this->assertEquals($initialTriples + 4, count($result));
        
         $store->deleteMatchingStatements($modelUri, 'http://model.org/model#localName', null, null);
         
         $result = $model->sparqlQuery($sparql);
-        $this->assertEquals(1, count($result));
+        $this->assertEquals($initialTriples, count($result));
     }
     
     public function testDeleteMatchingStatementsIssue436MultipleLanguageTags()
