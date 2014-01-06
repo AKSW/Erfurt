@@ -847,8 +847,6 @@ EOF;
      */
     protected function getImportsClosureViaSparql($modelIri)
     {
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-
         $models = array();
         $result = array(
             // mock first result
@@ -874,14 +872,7 @@ EOF;
                     ?model <' . EF_OWL_NS . 'imports> ?o.
                     FILTER (' . implode(' || ', $filter) . ')
                 }';
-
-            $result = $queryCache->load($query, Erfurt_Store::RESULTFORMAT_PLAIN);
-            if ($result == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
-                $startTime = microtime(true);
-                $result = $this->_backendAdapter->sparqlQuery($query);
-                $duration = microtime(true) - $startTime;
-                $queryCache->save($query, Erfurt_Store::RESULTFORMAT_PLAIN, $result, $duration);
-            }
+            $result = $this->_backendAdapter->sparqlQuery($query);
         } while ($result);
 
         // unset root node
