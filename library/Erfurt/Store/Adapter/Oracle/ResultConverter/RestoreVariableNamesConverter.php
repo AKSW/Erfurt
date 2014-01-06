@@ -6,7 +6,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 06.01.14
  */
-class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverter
+class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreVariableNamesConverter
     implements Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
     /**

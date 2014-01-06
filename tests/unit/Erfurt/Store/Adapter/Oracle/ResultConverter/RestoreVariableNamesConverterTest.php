@@ -6,13 +6,13 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 06.01.14
  */
-class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreVariableNamesConverterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverter
+     * @var Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreVariableNamesConverter
      */
     protected $converter = null;
 
@@ -22,7 +22,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
     protected function setUp()
     {
         parent::setUp();
-        $this->converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverter();
+        $this->converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreVariableNamesConverter();
     }
 
     /**
@@ -56,6 +56,14 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
      */
     public function testConverterChangesCharacterAfterUnderscoreToUppercase()
     {
+        $input = array(
+            array('upper_case' => 42)
+        );
+
+        $converted = $this->converter->convert($input);
+
+        $variable = $this->getVariableName($converted);
+        $this->assertEquals('upperCase', $variable);
 
     }
 
@@ -64,7 +72,14 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
      */
     public function testConverterDoesNotChangeVariableWithoutUnderscores()
     {
+        $input = array(
+            array('case' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $variable = $this->getVariableName($converted);
+        $this->assertEquals('case', $variable);
     }
 
     /**
@@ -72,7 +87,14 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
      */
     public function testConverterRestoresUnderscoresThatAreEscapedViaUnderscore()
     {
+        $input = array(
+            array('real__underscore' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $variable = $this->getVariableName($converted);
+        $this->assertEquals('real_underscore', $variable);
     }
 
     /**
@@ -81,7 +103,29 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
      */
     public function testConverterChangesCharactersThatAreNotPrefixedByUnderscoreToLowercase()
     {
+        $input = array(
+            array('UPPER_CASE' => 42)
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $variable = $this->getVariableName($converted);
+        $this->assertEquals('upperCase', $variable);
+    }
+
+    /**
+     * Returns the variable name in the converted result set.
+     *
+     * @param array(array(string=>mixed))|mixed $converted
+     * @return string
+     */
+    protected function getVariableName($converted)
+    {
+        $this->assertInternalType('array', $converted);
+        $this->assertGreaterThan(0, count($converted));
+        $row = current($converted);
+        $this->assertInternalType('array', $row);
+        return current(array_keys($row));
     }
 
 }
