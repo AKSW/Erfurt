@@ -874,6 +874,58 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if deleteMultipleStatements() removes the provided statements.
+     */
+    public function testDeleteMultipleStatementsRemovesProvidedStatements()
+    {
+        $tripleDefinition = array(
+            'http://example.org/subject1' => array(
+                'http://example.org/predicate1-1' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Hello world!'
+                    ),
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object1-1-1'
+                    )
+                ),
+                'http://example.org/predicate1-2' => array(
+                    array(
+                        'type'  => 'literal',
+                        'value' => 'Test'
+                    ),
+                )
+            ),
+            'http://example.org/subject2' => array(
+                'http://example.org/predicate2-1' => array(
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object2-1-1'
+                    )
+                )
+            )
+        );
+        // Insert all the test triples.
+        foreach ($tripleDefinition as $subject => $objectDefinitionsByPredicate) {
+            /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
+            foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
+                /* @var $objectDefinitions array(array(string=>string)) */
+                foreach ($objectDefinitions as $object) {
+                    /* @var $definition array(string=>string) */
+                    $this->insertTriple('http://example.org/graph/will-be-deleted', $subject, $predicate, $object);
+                }
+            }
+        }
+        // Insert a triple that will not be deleted.
+        $this->insertTriple();
+
+        $this->adapter->deleteMultipleStatements('http://example.org/graph/will-be-deleted', $tripleDefinition);
+
+        $this->assertEquals(1, $this->countTriples());
+    }
+
+    /**
      * Checks if getSupportedImportFormats() returns an array.
      */
     public function testGetSupportedImportFormatsReturnsArray()
