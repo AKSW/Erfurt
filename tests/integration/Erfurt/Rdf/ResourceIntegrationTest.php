@@ -50,11 +50,14 @@ class Erfurt_Rdf_ResourceIntegrationTest extends Erfurt_TestCase
         $resource = new Erfurt_Rdf_Resource('http://ns.ontowiki.net/SysOnt/Anonymous', $model);
 
         $description = $resource->getDescription();
-        $this->assertTrue(isset($description['http://ns.ontowiki.net/SysOnt/Anonymous']));
+
+        $this->assertInternalType('array', $description);
+        $this->assertArrayHasKey('http://ns.ontowiki.net/SysOnt/Anonymous', $description);
         $anonymousDesc = $description['http://ns.ontowiki.net/SysOnt/Anonymous'];
 
-        $this->assertTrue(isset($anonymousDesc['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']));
-        $this->assertTrue(isset($anonymousDesc['http://www.w3.org/2000/01/rdf-schema#label']));
-        $this->assertTrue(isset($anonymousDesc['http://www.w3.org/2000/01/rdf-schema#comment']));
+        $this->assertArrayHasKey('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $anonymousDesc);
+        $this->assertArrayHasKey('http://www.w3.org/2000/01/rdf-schema#label', $anonymousDesc);
+        $this->assertArrayHasKey('http://www.w3.org/2000/01/rdf-schema#comment', $anonymousDesc);
     }
+    
 }
