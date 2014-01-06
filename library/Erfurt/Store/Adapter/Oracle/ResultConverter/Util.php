@@ -80,7 +80,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
      *
      *     $variable = 'camelCasedVariable';
      *     // Returns 'camel_cased_variable'
-     *     $encoded = $this->encodeUpperCaseCharacters($variable);
+     *     $encoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeUpperCaseCharacters($variable);
      *
      * @param string $variable
      * @return string
@@ -94,6 +94,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
 
     /**
      * Restores upper case characters in the provided variable name.
+     *
+     * Example:
+     *
+     *     $variable = 'upper_case';
+     *     // Returns 'upperCase'
+     *     $decoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($variable);
      *
      * @param string $name
      * @return string
