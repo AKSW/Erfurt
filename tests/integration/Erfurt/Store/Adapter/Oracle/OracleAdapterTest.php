@@ -913,7 +913,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
                 /* @var $objectDefinitions array(array(string=>string)) */
                 foreach ($objectDefinitions as $object) {
                     /* @var $definition array(string=>string) */
-                    $this->insertTriple('http://example.org/graph/will-be-deleted', $subject, $predicate, $object);
+                    $this->insertTriple($subject, $predicate, $object, 'http://example.org/graph/will-be-deleted');
                 }
             }
         }
