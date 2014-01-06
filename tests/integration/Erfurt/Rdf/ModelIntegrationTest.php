@@ -31,6 +31,10 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri);
 
+        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
+        $result = $model->sparqlQuery($sparql);
+        $initialTriples = count($result);
+
         // Turtle string with 11 statements:
         $turtle1 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
@@ -85,15 +89,15 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $turtleParser->reset();
         $statements2 = $turtleParser->parse($turtle2, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
 
-        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
+
         $result = $model->sparqlQuery($sparql);
 
-        $this->assertEquals(12, count($result));
+        $this->assertEquals($initialTriples + 11, count($result));
         
         $model->updateWithMutualDifference($statements1, $statements2);
         
         $result = $model->sparqlQuery($sparql);
-        $this->assertEquals(10, count($result));
+        $this->assertEquals($initialTriples + 9, count($result));
     }
     
     public function testAddAndGetAndDeleteNamespacePrefix()
@@ -244,4 +248,11 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 
         $this->assertStatementsEqual($expected, $got, 'Graph after resource renaming');
     }
+
+    protected function countTriplesInGraph($graph)
+    {
+        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
+        $result = $this->_storeStub->sparqlQuery($sparql);
+    }
+
 }
