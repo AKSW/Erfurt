@@ -14,7 +14,7 @@
  * @packaget
  * @author Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class ISQL
+class Erfurt_Isql
 {
     static public $pathToBinary = 'isql-vt';
 
