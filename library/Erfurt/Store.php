@@ -1343,20 +1343,32 @@ EOF;
         $available = array();
         if ($options[Erfurt_Store::USE_AC] === true) {
             $logger->debug('AC: use ac ');
-
-            $availablepre = $this->getAvailableModels(true); //all readable (with ac)
-            foreach ($availablepre as $key => $true) {
-                $available[] = array('uri' => $key, 'named' => false);
-                $available[] = array('uri' => $key, 'named' => true);
-            }
+            $models = $this->getAvailableModels(true); //all readable (with ac)
         } else {
             $logger->debug('AC: dont use ac ');
-
-            $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
-            foreach ($allpre as $key => $true) {
-                $available[] = array('uri' => $key, 'named' => false);
-                $available[] = array('uri' => $key, 'named' => true);
-            }
+            $models = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
+        }
+        foreach ($models as $key => $true) {
+            /*
+             * Add models as NAMED graph and import them into the default graph as
+             * we do not know the context of the query.
+             *
+             * Queries like the following do not make much sense when applied to the default graph:
+             *
+             *     SELECT DISTINCT ?graph
+             *     FROM <http://localhost/OntoWiki/Config/>
+             *     FROM <http://ns.ontowiki.net/SysOnt/>
+             *     WHERE {GRAPH ?graph {<http://localhost/OntoWiki/Config/> ?p ?o.}}
+             *
+             * In this example the models are imported into the default graph, which means that are
+             * not connected to there graph anymore (during query execution). But the GRAPH keyword
+             * indicates that only triples with a graph should be considered as a result, which must
+             * be empty in this case.
+             * However, vendors seem to handle this situation differently. Virtuoso returns a result
+             * (as long as FROM and FROM NAMED are not mixed) whereas Oracle returns an empty result.
+             */
+            $available[] = array('uri' => $key, 'named' => false);
+            $available[] = array('uri' => $key, 'named' => true);
         }
         $logger->debug('AC: available models ' . $this->toStr($available));
 
