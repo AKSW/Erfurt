@@ -73,4 +73,37 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
         }
     }
 
+    /**
+     * Uses underscores to encode all uppercase characters in the provided variable name.
+     *
+     * Example:
+     *
+     *     $variable = 'camelCasedVariable';
+     *     // Returns 'camel_cased_variable'
+     *     $encoded = $this->encodeUpperCaseCharacters($variable);
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function encodeVariableName($variable)
+    {
+        return preg_replace_callback('/[A-Z_]/', function (array $match) {
+            return '_' . strtolower($match[0]);
+        }, $variable);
+    }
+
+    /**
+     * Restores upper case characters in the provided variable name.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function decodeVariableName($name)
+    {
+        $name = strtolower($name);
+        return preg_replace_callback('/_([a-z_])/', function (array $match) {
+            return strtoupper($match[1]);
+        }, $name);
+    }
+
 }

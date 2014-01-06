@@ -118,6 +118,95 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
     }
 
     /**
+     * Checks if encodeVariableName() encodes upper case characters in the
+     * variable name via underscore.
+     */
+    public function testEncodeVariableNameEncodesUpperCaseCharactersViaUnderscore()
+    {
+        $variable = 'upperCase';
+
+        $encoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeVariableName($variable);
+
+        $this->assertEquals('upper_case', $encoded);
+    }
+
+    /**
+     * Ensures that encodeVariableName() escapes underscores in the original
+     * variable name via underscore.
+     */
+    public function testEncodeVariableNameEscapesUnderscores()
+    {
+        $variable = 'under_score';
+
+        $encoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeVariableName($variable);
+
+        $this->assertEquals('under__score', $encoded);
+    }
+
+    /**
+     * Ensures that encodeVariableName() does not change variables that contain
+     * only lower case characters.
+     */
+    public function testEncodeVariableNameDoesNotChangeLowerCaseVariables()
+    {
+        $variable = 'lowercase';
+
+        $encoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeVariableName($variable);
+
+        $this->assertEquals('lowercase', $encoded);
+    }
+
+    /**
+     * Checks if decodeVariableName() converts characters after underscores to uppercase.
+     */
+    public function testDecodeVariableNameChangesCharacterAfterUnderscoreToUppercase()
+    {
+        $name = 'upper_case';
+
+        $decoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($name);
+
+        $this->assertEquals('upperCase', $decoded);
+
+    }
+
+    /**
+     * Ensures that decodeVariableName() does not change variable names without underscores.
+     */
+    public function testConverterDoesNotChangeVariableWithoutUnderscores()
+    {
+        $name = 'case';
+
+        $decoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($name);
+
+        $this->assertEquals('case', $decoded);
+    }
+
+    /**
+     * Checks if decodeVariableName() restores escaped underscores ("__").
+     */
+    public function testConverterRestoresUnderscoresThatAreEscapedViaUnderscore()
+    {
+        $name = 'real__underscore';
+
+        $decoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($name);
+
+        $this->assertEquals('real_underscore', $decoded);
+    }
+
+    /**
+     * Ensures that decodeVariableName() converts characters that are not prefixed by an underscore
+     * to lower case.
+     */
+    public function testConverterChangesCharactersThatAreNotPrefixedByUnderscoreToLowercase()
+    {
+        $name = 'UPPER_CASE';
+
+        $decoded = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($name);
+
+        $this->assertEquals('upperCase', $decoded);
+    }
+
+    /**
      * Returns an example result set.
      *
      * @return array(array(string=>string|null))
