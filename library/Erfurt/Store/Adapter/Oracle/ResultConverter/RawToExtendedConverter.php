@@ -62,19 +62,30 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter
             $binding = array();
             foreach ($variables as $variable) {
                 /* @var $variable string */
-                $binding[strtolower($variable)] = $this->extractVariableInformation($variable, $row);
+                $binding[$this->decodeVariableName($variable)] = $this->extractVariableInformation($variable, $row);
             }
             $bindings[] = $binding;
         }
         $extendedResult = array(
             'head' => array(
-                'vars' => array_map('strtolower', $variables)
+                'vars' => array_map(array($this, 'decodeVariableName'), $variables)
             ),
             'results' => array(
                 'bindings' => $bindings
             )
         );
         return $extendedResult;
+    }
+
+    /**
+     * Decodes the given variable name and restores the original upper/lower case characters.
+     *
+     * @param string $variable
+     * @return string
+     */
+    protected function decodeVariableName($variable)
+    {
+        return Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($variable);
     }
 
     /**

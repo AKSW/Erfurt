@@ -2,7 +2,7 @@
 
 /**
  * Converts an raw Oracle result set into a simple form, which contains all
- * variables in lower case and does not provide additional information such
+ * variables in original case and does not provide additional information such
  * as the type of a variable.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
@@ -31,9 +31,16 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter
                 // which is provided by Oracle.
                 if (strpos($key, '$') !== false) {
                     unset($row[$key]);
+                    continue;
+                }
+                // Restore original variable names if necessary.
+                $newKey = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($key);
+                if ($newKey !== $key) {
+                    $row[$newKey] = $row[$key];
+                    unset($row[$key]);
                 }
             }
-            return array_change_key_case($row, CASE_LOWER);
+            return $row;
         }, $resultSet);
     }
 

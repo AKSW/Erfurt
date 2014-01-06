@@ -451,8 +451,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             case Erfurt_Store::RESULTFORMAT_PLAIN:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtolower(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter()
+
                 ));
             case 'scalar':
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
@@ -490,6 +491,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      * Rewrites the given SPARQL query to prepare it for execution
      * by the Oracle database.
      *
+     * Prefixes variables to avoid problems with reserved SQL keywords like "group"
+     * and encodes variable names to be able to restore upper case characters in
+     * the result set.
+     *
      * @param string $query
      * @return string
      */
@@ -514,7 +519,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                     $rewritten .= $byte;
                     if ($state->top() === 'in_query') {
                         $variableName    = $this->getNameOfVariableAt($query, $i);
-                        $newVariableName = $this->encodeUpperCaseCharacters($variableName);
+                        $newVariableName = $this->encodeVariableName($variableName);
                         $rewritten .= static::VARIABLE_PREFIX . $newVariableName;
                         $i += strlen($variableName);
                     }
@@ -562,22 +567,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
-     * Uses underscores to encode all uppercase characters in the provided variable name.
-     *
-     * Example:
-     *
-     *     $variable = 'camelCasedVariable';
-     *     // Returns 'camel_cased_variable'
-     *     $encoded = $this->encodeUpperCaseCharacters($variable);
+     * Encodes the provided variable name to be able to restore upper/lower case characters
+     * in the results.
      *
      * @param string $variable
      * @return string
      */
-    protected function encodeUpperCaseCharacters($variable)
+    protected function encodeVariableName($variable)
     {
-        return preg_replace_callback('/[A-Z_]/', function (array $match) {
-            return '_' . strtolower($match[0]);
-        }, $variable);
+        return \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeVariableName($variable);
     }
 
     /**
