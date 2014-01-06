@@ -1347,6 +1347,7 @@ EOF;
             $availablepre = $this->getAvailableModels(true); //all readable (with ac)
             foreach ($availablepre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
+                $available[] = array('uri' => $key, 'named' => true);
             }
         } else {
             $logger->debug('AC: dont use ac ');
@@ -1354,6 +1355,7 @@ EOF;
             $allpre = $this->_backendAdapter->getAvailableModels(); //really all (without ac)
             foreach ($allpre as $key => $true) {
                 $available[] = array('uri' => $key, 'named' => false);
+                $available[] = array('uri' => $key, 'named' => true);
             }
         }
         $logger->debug('AC: available models ' . $this->toStr($available));
@@ -1427,6 +1429,7 @@ EOF;
                 $queryObject->addFrom($from['uri'], $from['named']);
             }
         } else {
+            /* @var $queryObject Erfurt_Sparql_SimpleQuery */
             $queryObject->setFrom(array());
             $queryObject->setFromNamed(array());
             foreach ($froms as $from) {
