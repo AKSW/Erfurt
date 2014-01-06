@@ -804,7 +804,11 @@ EOF;
      */
     private function _getImportsClosure($modelIri, $withHiddenImports = true)
     {
-        $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
+        if (method_exists($this->_backendAdapter, 'getImportsClosure')) {
+            $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
+        } else {
+            $currentLevel = $this->getImportsClosureViaSparql($modelIri);
+        }
         if ($currentLevel == array($modelIri)) {
             return $currentLevel;
         }
@@ -833,6 +837,57 @@ EOF;
         }
 
         return array_unique($currentLevel);
+    }
+
+    /**
+     * Uses SPARQL queries to determine the imports closure of the given model.
+     *
+     * @param string $modelIri
+     * @return array(string)
+     */
+    protected function getImportsClosureViaSparql($modelIri)
+    {
+        $queryCache = Erfurt_App::getInstance()->getQueryCache();
+
+        $models = array();
+        $result = array(
+            // mock first result
+            array('o' => $modelIri)
+        );
+
+        do {
+            $from    = '';
+            $filter   = array();
+            foreach ($result as $row) {
+                $from    .= ' FROM <' . $row['o'] . '>' . "\n";
+                $filter[] = 'sameTerm(?model, <' . $row['o'] . '>)';
+
+                // ensure no model is added twice
+                if (!array_key_exists($row['o'], $models)) {
+                    $models[$row['o']] = $row['o'];
+                }
+            }
+            $query = '
+                SELECT ?o' .
+                $from . '
+                WHERE {
+                    ?model <' . EF_OWL_NS . 'imports> ?o.
+                    FILTER (' . implode(' || ', $filter) . ')
+                }';
+
+            $result = $queryCache->load($query, Erfurt_Store::RESULTFORMAT_PLAIN);
+            if ($result == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+                $startTime = microtime(true);
+                $result = $this->_backendAdapter->sparqlQuery($query);
+                $duration = microtime(true) - $startTime;
+                $queryCache->save($query, Erfurt_Store::RESULTFORMAT_PLAIN, $result, $duration);
+            }
+        } while ($result);
+
+        // unset root node
+        unset($models[$modelIri]);
+
+        return array_keys($models);
     }
 
     /**
