@@ -799,6 +799,8 @@ EOF;
      * Recursively gets owl:imported model IRIs starting with $modelIri as root.
      *
      * @param string $modelIri
+     * @param boolean $withHiddenImports
+     * @return array(string)
      */
     private function _getImportsClosure($modelIri, $withHiddenImports = true)
     {
