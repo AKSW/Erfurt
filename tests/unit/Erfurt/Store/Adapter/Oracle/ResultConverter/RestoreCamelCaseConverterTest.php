@@ -51,19 +51,37 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RestoreCamelCaseConverterTest 
         $this->converter->convert(new stdClass());
     }
 
-    public function testConverterChangesCharacterAfterUnderScoreToUppercase()
+    /**
+     * Checks if characters after underscores are converted to uppercase.
+     */
+    public function testConverterChangesCharacterAfterUnderscoreToUppercase()
     {
 
     }
 
+    /**
+     * Ensures that variable names without underscores are not changed.
+     */
     public function testConverterDoesNotChangeVariableWithoutUnderscores()
     {
 
     }
 
+    /**
+     * Checks if escaped underscores ("__") are restored.
+     */
     public function testConverterRestoresUnderscoresThatAreEscapedViaUnderscore()
     {
-        
+
+    }
+
+    /**
+     * Ensures that characters that are not prefixed by an underscore are converted
+     * to lower case.
+     */
+    public function testConverterChangesCharactersThatAreNotPrefixedByUnderscoreToLowercase()
+    {
+
     }
 
 }
