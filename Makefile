@@ -139,7 +139,10 @@ test-integration-mysql-cc: test-directories
 	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit --exclude-group Oracle
 
 test-integration-oracle: test-directories
-	@cd tests && EF_STORE_ADAPTER=oracle phpunit --bootstrap Bootstrap.php integration/
+	@cd tests && EF_STORE_ADAPTER=oracle phpunit --bootstrap Bootstrap.php --exclude-group Oracle integration/
+
+test-adapter-oracle:
+	@cd tests && phpunit --bootstrap Bootstrap.php --group Oracle integration/
 
 test:
 	make test-unit
