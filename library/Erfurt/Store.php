@@ -783,7 +783,7 @@ EOF;
         $importsClosure = $this->_getImportsClosure($modelIri, $withHiddenImports, $useAC);
         if ($useAC) {
             $newImportsClosure = array();
-            foreach ($importsClosure as $key=>$graphUri) {
+            foreach ($importsClosure as $graphUri) {
                 if ($this->_checkAc($graphUri, 'view', $useAC)) {
                     $newImportsClosure[$graphUri] = $graphUri;
                 }
