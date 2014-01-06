@@ -128,7 +128,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         
         $graphs = $store->getGraphsUsingResource($resource, false);
         
-        $this->assertTrue(in_array($resource, $graphs));
+        $this->assertContains($resource, $graphs);
     }
     
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
