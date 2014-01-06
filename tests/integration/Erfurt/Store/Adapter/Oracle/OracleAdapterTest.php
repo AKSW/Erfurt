@@ -494,6 +494,24 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if createModel() adds a marker triple to an OWL ontology.
+     */
+    public function testCreateModelMarksOwlOntology()
+    {
+        $this->adapter->createModel('http://example.org', Erfurt_Store::MODEL_TYPE_OWL);
+        $this->assertEquals(1, $this->countTriples());
+    }
+
+    /**
+     * Ensures that non-OWL models are not marked by createModel().
+     */
+    public function testCreateModelDoesNotMarkNonOwlModels()
+    {
+        $this->adapter->createModel('http://example.org', Erfurt_Store::MODEL_TYPE_RDFS);
+        $this->assertEquals(0, $this->countTriples());
+    }
+
+    /**
      * Ensures that deleteModel() does nothing if no triples belong to
      * the given graph.
      */
