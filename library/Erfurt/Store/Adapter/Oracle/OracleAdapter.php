@@ -187,6 +187,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         if (!in_array($graphUri, $this->currentlyCreatedGraphs)) {
             $this->currentlyCreatedGraphs[] = $graphUri;
         }
+        if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
+            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, array('type' => 'uri', 'value' => EF_OWL_ONTOLOGY));
+        }
         return true;
     }
 
