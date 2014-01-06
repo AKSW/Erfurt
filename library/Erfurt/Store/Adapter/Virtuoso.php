@@ -546,7 +546,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /**
      * @see Erfurt_Store_Adapter_Interface
      */
-    public function importRdf($graphUri, $data, $type, $locator)
+    public function importRdf($graphUri, $data, $type, $locator, array $options = array())
     {
         // check type parameter
         switch (strtolower($type)) {

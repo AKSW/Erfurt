@@ -800,7 +800,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function importRdf($modelUri, $data, $type, $locator)
+    public function importRdf($modelUri, $data, $type, $locator, array $options = array())
     {
 // TODO fix or remove
 

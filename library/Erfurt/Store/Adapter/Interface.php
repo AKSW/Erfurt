@@ -132,7 +132,7 @@ interface Erfurt_Store_Adapter_Interface
 	 *
 	 * @return boolean On success
 	 */
-	public function importRdf($modelIri, $data, $type, $locator);
+	public function importRdf($modelIri, $data, $type, $locator, array $options = array());
 	
 	/**
 	 * This method allows the backend to (re)initialize itself, e.g. when an import was done.

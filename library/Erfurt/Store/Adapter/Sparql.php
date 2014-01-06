@@ -127,7 +127,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         return array();
     }
 
-    public function importRdf($modelUri, $data, $type, $locator)
+    public function importRdf($modelUri, $data, $type, $locator, array $options = array())
     {
         return false;
     }

@@ -171,7 +171,7 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function importRdf($modelUri, $data, $type, $locator)
+    public function importRdf($modelUri, $data, $type, $locator, array $options = array())
     {
 
     }
