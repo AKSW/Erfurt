@@ -341,19 +341,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     }
 
     /**
-     * Recursively gets owl:imported model IRIs starting with $modelUri as root.
-     *
-     * Note: What exactly should be returned? What is the intention?
-     *
-     * @param string $modelUri
-     * @return array(string=>string)
-     */
-    public function getImportsClosure($modelUri)
-    {
-        return array();
-    }
-
-    /**
      * Determines the result format, depending on requested format and query type.
      *
      * @param string|null $requestedFormat
