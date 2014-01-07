@@ -17,14 +17,32 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
 {
 
     /**
+     * The inner SPARQL adapter.
+     *
+     * @var \Erfurt_Store_Adapter_Interface
+     */
+    protected $sparqlAdapter = null;
+
+    /**
+     * The inner SQL adapter.
+     *
+     * @var \Erfurt_Store_Sql_Interface
+     */
+    protected $sqlAdapter = null;
+
+    /**
      * Uses the given adapters to provide SPARQL as well as SQL capabilities.
      *
      * @param Erfurt_Store_Adapter_Interface $sparqlAdapter
      * @param Erfurt_Store_Sql_Interface $sqlAdapter
      */
-    public function __construct(Erfurt_Store_Adapter_Interface $sparqlAdapter, Erfurt_Store_Sql_Interface $sqlAdapter)
+    public function __construct(
+        Erfurt_Store_Adapter_Interface $sparqlAdapter,
+        Erfurt_Store_Sql_Interface $sqlAdapter
+    )
     {
-
+        $this->sparqlAdapter = $sparqlAdapter;
+        $this->sqlAdapter    = $sqlAdapter;
     }
 
     /**
@@ -60,7 +78,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        // TODO: Implement addMultipleStatements() method.
+        return $this->sparqlAdapter->addMultipleStatements($graphIri, $statementsArray, $options);
     }
 
     /**
