@@ -108,7 +108,7 @@ interface Erfurt_Store_Adapter_Interface
 	 * @param mixed $filename Either a string containing a absolute filename or null. In case null is given,
 	 * this method returns a string containing the serialization.
 	 * 
-	 * @return string/null
+	 * @return string|null
 	 */
 	public function exportRdf($modelIri, $serializationType = 'xml', $filename = null);
 	
