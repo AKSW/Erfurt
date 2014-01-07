@@ -249,7 +249,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
     }
 
     /// SQL METHODS
-    
+
     /**
      * Creates the table specified by $tableSpec according to backend-specific
      * create table statement.
