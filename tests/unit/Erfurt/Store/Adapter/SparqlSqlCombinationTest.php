@@ -63,23 +63,57 @@ class Erfurt_Store_Adapter_SparqlSqlCombinationTest extends \PHPUnit_Framework_T
     public function testSparqlAdapterCallsAreDelegatedCorrectly($method, $expectedArguments, $expectedReturn)
     {
         $this->assertInterfaceContains('Erfurt_Store_Adapter_Interface', $method);
-        $call = $this->sparqlAdapter->expects($this->once())->method($method);
-        $call = call_user_func_array(array($call, 'with'), $expectedArguments);
-        $call->will($this->returnValue($expectedReturn));
+        $this->simulateMethod($this->sparqlAdapter, $method, $expectedArguments, $expectedReturn);
 
         $return = call_user_func_array(array($this->adapter, $method), $expectedArguments);
 
         $this->assertEquals($expectedReturn, $return);
     }
 
-    public function testSqlAdapterCallsAreDelegatedCorrectly()
+    /**
+     * Checks if the methods in the SQL adapter interface are delegated correctly.
+     *
+     * @param string $method
+     * @param array(mixed) $expectedArguments
+     * @param mixed $expectedReturn
+     * @dataProvider getSqlAdapterCalls
+     */
+    public function testSqlAdapterCallsAreDelegatedCorrectly($method, $expectedArguments, $expectedReturn)
     {
-        // check if still in interface
-        // check call
-        // check arguments
-        // check return value
+        $this->assertInterfaceContains('Erfurt_Store_Sql_Interface', $method);
+        $this->simulateMethod($this->sqlAdapter, $method, $expectedArguments, $expectedReturn);
+
+        $return = call_user_func_array(array($this->adapter, $method), $expectedArguments);
+
+        $this->assertEquals($expectedReturn, $return);
     }
 
+    /**
+     * Prepares a mock object to simulate (and expect) a method call.
+     *
+     * @param PHPUnit_Framework_MockObject_MockObject $mock
+     * @param string $method
+     * @param array(mixed) $expectedArguments
+     * @param mixed $returnValue
+     */
+    protected function simulateMethod(
+        PHPUnit_Framework_MockObject_MockObject $mock,
+        $method,
+        $expectedArguments,
+        $returnValue
+    )
+    {
+        $call = $mock->expects($this->once())->method($method);
+        $call = call_user_func_array(array($call, 'with'), $expectedArguments);
+        $call->will($this->returnValue($returnValue));
+    }
+
+    /**
+     * Asserts that the provided interface defines the given method.
+     *
+     * @param string $interface
+     * @param string $method
+     */
     protected function assertInterfaceContains($interface, $method)
     {
         $methods = get_class_methods($interface);
@@ -219,7 +253,49 @@ class Erfurt_Store_Adapter_SparqlSqlCombinationTest extends \PHPUnit_Framework_T
                 array()
             ),
         );
+    }
 
+    /**
+     * Returns SQL adapter method names as well as corresponding
+     * arguments and return values.
+     *
+     * @return array(mixed)
+     */
+    public function getSqlAdapterCalls()
+    {
+        return array(
+            array(
+                'createTable',
+                array(
+                    'test_table',
+                    array('id' => 'INT NOT NULL', 'name' => 'VARCHAR(255) NOT NULL')
+                ),
+                null
+            ),
+            array(
+                'lastInsertId',
+                array(),
+                42
+            ),
+
+            array(
+                'listTables',
+                array(
+                    'prefix_'
+                ),
+                array('prefix_a_table')
+            ),
+
+            array(
+                'sqlQuery',
+                array(
+                    'SELECT * FROM DUAL',
+                    42,
+                    7
+                ),
+                array()
+            )
+        );
     }
 
 }
