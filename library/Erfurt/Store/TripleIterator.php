@@ -152,6 +152,9 @@ class Erfurt_Store_TripleIterator implements \Iterator
     {
         if (reset($this->statements) === false) {
             // The list is empty.
+            $this->subject        = null;
+            $this->predicate      = null;
+            $this->objectPosition = null;
             return;
         }
         $this->subject = key($this->statements);
@@ -165,6 +168,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
     {
         if (reset($this->statements[$this->subject]) === false) {
             // The list is empty.
+            $this->predicate      = null;
+            $this->objectPosition = null;
             return;
         }
         $this->predicate = key($this->statements[$this->subject]);
@@ -178,6 +183,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
     {
         if (reset($this->statements[$this->subject][$this->predicate]) === false) {
             // The list is empty.
+            $this->objectPosition = null;
             return;
         }
         $this->objectPosition = key($this->statements[$this->subject][$this->predicate]);
