@@ -62,16 +62,25 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    /**
+     * Checks if the iterator is (somehow) traversable.
+     */
     public function testIteratorIsTraversable()
     {
 
     }
 
+    /**
+     * Checks if the iterator returns the correct number of triples.
+     */
     public function testIteratorContainsCorrectTriples()
     {
 
     }
 
+    /**
+     * Ensures that the iterator returns the correct triple data.
+     */
     public function testIteratorReturnsCorrectNumberOfTriples()
     {
 
