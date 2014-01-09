@@ -1221,6 +1221,11 @@ EOF;
         return ($this->_backendAdapter instanceof Erfurt_Store_Sql_Interface);
     }
 
+    /**
+     * TODO: Seems as if this is never used. Therefore, the method could be removed.
+     *
+     * @return bool
+     */
     public function isInSyntaxSupported()
     {
         if (method_exists($this->_backendAdapter, 'isInSyntaxSupported')) {
