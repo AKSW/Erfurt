@@ -130,4 +130,15 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Checks if it is possible to iterate multiple times over the triples.
+     */
+    public function testIteratorCanBeReUsed()
+    {
+        // Use the number of items as checksum:
+        $numberInFirstIteration  = iterator_count($this->iterator);
+        $numberInSecondIteration = iterator_count($this->iterator);
+        $this->assertEquals($numberInFirstIteration, $numberInSecondIteration);
+    }
+
 }
