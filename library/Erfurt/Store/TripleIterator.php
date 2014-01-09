@@ -61,11 +61,11 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function rewind()
     {
-        reset($this->statements);
+        $this->resetSubjectList();
         $this->subjectPosition = key($this->statements);
-        reset($this->statements[$this->subjectPosition]);
+        $this->resetPredicateList();
         $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        $this->resetObjectList();
         $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
@@ -122,17 +122,41 @@ class Erfurt_Store_TripleIterator implements \Iterator
                     return;
                 } else {
                     $this->subjectPosition = key($this->statements);
-                    reset($this->statements[$this->subjectPosition]);
+                    $this->resetPredicateList();
                     $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-                    reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+                    $this->resetObjectList();
                 }
             } else {
                 $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-                reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+                $this->resetObjectList();
             }
         }
         $this->predicatePosition = key($this->statements[$this->subjectPosition]);
         $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+    }
+
+    /**
+     * Resets the current object list to the first element.
+     */
+    protected function resetObjectList()
+    {
+        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+    }
+
+    /**
+     * Resets the current predicate list to the first element.
+     */
+    protected function resetPredicateList()
+    {
+        reset($this->statements[$this->subjectPosition]);
+    }
+
+    /**
+     * Resets the subject list to the first element.
+     */
+    protected function resetSubjectList()
+    {
+        reset($this->statements);
     }
 
 }
