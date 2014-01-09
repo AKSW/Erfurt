@@ -125,14 +125,16 @@ class Erfurt_Store_TripleIterator implements \Iterator
                     $this->resetPredicateList();
                     $this->predicatePosition = key($this->statements[$this->subjectPosition]);
                     $this->resetObjectList();
+                    $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
                 }
             } else {
                 $this->predicatePosition = key($this->statements[$this->subjectPosition]);
                 $this->resetObjectList();
+                $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
             }
+        } else {
+            $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
         }
-        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-        $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
     /**
