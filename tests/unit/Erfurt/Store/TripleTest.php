@@ -43,7 +43,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSubjectReturnsCorrectValue()
     {
-
+        $this->assertEquals('http://example.org/subject', $this->triple->getSubject());
     }
 
     /**
@@ -51,7 +51,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPredicateReturnsCorrectValue()
     {
-
+        $this->assertEquals('http://example.org/predicate', $this->triple->getPredicate());
     }
 
     /**
@@ -59,7 +59,8 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetObjectReturnsCorrectValue()
     {
-
+        $expectedObject = array('type' => 'uri', 'value' => 'http://example.org/subject');
+        $this->assertEquals($expectedObject, $this->triple->getObject());
     }
 
     /**
@@ -67,7 +68,12 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsTripleWithUriObjectCorrectly()
     {
+        $turtle = (string)$this->triple;
 
+        $expected = '<http://example.org/subject> '
+                  . '<http://example.org/predicate> '
+                  . '<http://example.org/object> .';
+        $this->assertEquals($expected, $turtle);
     }
 
     /**
@@ -75,7 +81,17 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsTripleWithLiteralObjectCorrectly()
     {
+        $triple = new Erfurt_Store_Triple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array('type' => 'literal', 'value' => 'Hello world!')
+        );
+        $turtle = (string)$triple;
 
+        $expected = '<http://example.org/subject> '
+                  . '<http://example.org/predicate> '
+                  . '"Hello world!" .';
+        $this->assertEquals($expected, $turtle);
     }
 
 }
