@@ -120,27 +120,26 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function next()
     {
-        if (next($this->statements[$this->subjectPosition][$this->predicatePosition]) === false) {
-            // End of object list reached, move to next in predicate list.
-            if (next($this->statements[$this->subjectPosition]) === false) {
-                // End of predicate list reached, move to next in subject list.
-                if (next($this->statements) === false) {
-                    // End of triple list reached.
-                    $this->subjectPosition   = null;
-                    $this->predicatePosition = null;
-                    $this->objectPosition    = null;
-                    return;
-                } else {
-                    $this->subjectPosition = key($this->statements);
-                    $this->resetPredicateList();
-                }
-            } else {
-                $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-                $this->resetObjectList();
-            }
-        } else {
+        if (next($this->statements[$this->subjectPosition][$this->predicatePosition]) !== false) {
             $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+            return;
         }
+        // End of object list reached, move to next in predicate list.
+        if (next($this->statements[$this->subjectPosition]) !== false) {
+            $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+            $this->resetObjectList();
+            return;
+        }
+        // End of predicate list reached, move to next in subject list.
+        if (next($this->statements) !== false) {
+            $this->subjectPosition = key($this->statements);
+            $this->resetPredicateList();
+            return;
+        }
+        // End of triple list reached.
+        $this->subjectPosition   = null;
+        $this->predicatePosition = null;
+        $this->objectPosition    = null;
     }
 
     /**
