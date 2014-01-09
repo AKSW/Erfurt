@@ -39,6 +39,12 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected $statements = null;
 
+    protected $subjectPosition = null;
+
+    protected $predicatePosition = null;
+
+    protected $objectPosition = null;
+
     /**
      * @param array(string=>array(string=>array(string=>string))) $statements
      */
@@ -55,7 +61,10 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function rewind()
     {
-        // TODO: Implement rewind() method.
+        reset($this->statements);
+        $this->subjectPosition   = key($this->statements);
+        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+        $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
     /**
@@ -66,7 +75,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function valid()
     {
-        // TODO: Implement valid() method.
+        return isset($this->statements[$this->subjectPosition][$this->predicatePosition][$this->objectPosition]);
     }
 
     /**
@@ -77,7 +86,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function current()
     {
-        // TODO: Implement current() method.
+        $object = $this->statements[$this->subjectPosition][$this->predicatePosition][$this->objectPosition];
+        return new Erfurt_Store_Triple($this->subjectPosition, $this->predicatePosition, $object);
     }
 
     /**
@@ -88,7 +98,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function key()
     {
-        // TODO: Implement key() method.
+        return $this->subjectPosition .':' . $this->predicatePosition . ':' . $this->objectPosition;
     }
 
     /**
@@ -98,7 +108,22 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function next()
     {
-        // TODO: Implement next() method.
+        if (next($this->statements[$this->subjectPosition][$this->predicatePosition]) === false) {
+            // End of object list reached, move to next in predicate list.
+            if (next($this->statements[$this->subjectPosition]) === false) {
+                // End of predicate list reached, move to next in subject list.
+                if (next($this->statements) === false) {
+                    // End of triple list reached.
+                    $this->subjectPosition   = null;
+                    $this->predicatePosition = null;
+                    $this->objectPosition    = null;
+                    return;
+                }
+            }
+        }
+        $this->subjectPosition   = key($this->statements);
+        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+        $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
 }
