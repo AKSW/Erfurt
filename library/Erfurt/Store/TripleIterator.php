@@ -21,6 +21,10 @@
  *             )
  *         )
  *     );
+ *     $iterator = new Erfurt_Store_TripleIterator($statements);
+ *     foreach ($iterator as $triple) {
+ *         /*@var $triple Erfurt_Store_Triple *\/
+ *     }
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
