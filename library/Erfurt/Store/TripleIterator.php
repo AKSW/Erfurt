@@ -77,11 +77,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
     public function rewind()
     {
         $this->resetSubjectList();
-        $this->subjectPosition = key($this->statements);
         $this->resetPredicateList();
-        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
         $this->resetObjectList();
-        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
     /**
@@ -138,14 +135,11 @@ class Erfurt_Store_TripleIterator implements \Iterator
                 } else {
                     $this->subjectPosition = key($this->statements);
                     $this->resetPredicateList();
-                    $this->predicatePosition = key($this->statements[$this->subjectPosition]);
                     $this->resetObjectList();
-                    $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
                 }
             } else {
                 $this->predicatePosition = key($this->statements[$this->subjectPosition]);
                 $this->resetObjectList();
-                $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
             }
         } else {
             $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
@@ -158,6 +152,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
     protected function resetObjectList()
     {
         reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
     /**
@@ -166,6 +161,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
     protected function resetPredicateList()
     {
         reset($this->statements[$this->subjectPosition]);
+        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
     }
 
     /**
@@ -174,6 +170,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
     protected function resetSubjectList()
     {
         reset($this->statements);
+        $this->subjectPosition = key($this->statements);
     }
 
 }
