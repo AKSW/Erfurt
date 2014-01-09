@@ -150,7 +150,10 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected function resetSubjectList()
     {
-        reset($this->statements);
+        if (reset($this->statements) === false) {
+            // The list is empty.
+            return;
+        }
         $this->subject = key($this->statements);
         $this->resetPredicateList();
     }
@@ -160,7 +163,10 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected function resetPredicateList()
     {
-        reset($this->statements[$this->subject]);
+        if (reset($this->statements[$this->subject]) === false) {
+            // The list is empty.
+            return;
+        }
         $this->predicate = key($this->statements[$this->subject]);
         $this->resetObjectList();
     }
@@ -170,7 +176,10 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected function resetObjectList()
     {
-        reset($this->statements[$this->subject][$this->predicate]);
+        if (reset($this->statements[$this->subject][$this->predicate]) === false) {
+            // The list is empty.
+            return;
+        }
         $this->objectPosition = key($this->statements[$this->subject][$this->predicate]);
     }
 
