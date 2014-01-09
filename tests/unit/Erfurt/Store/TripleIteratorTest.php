@@ -147,7 +147,34 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
     public function testIteratorWorksWithEmptyStatementsArray()
     {
         $iterator = new Erfurt_Store_TripleIterator(array());
+        $this->assertCount(0, $iterator);
+    }
 
+    /**
+     * Ensures that the iterator can be used if no predicates are
+     * assigned to a subject entry.
+     */
+    public function testIteratorWorksIfPredicateListIsEmpty()
+    {
+        $statements = array(
+            'http://example.org/subject1' => array()
+        );
+        $iterator = new Erfurt_Store_TripleIterator($statements);
+        $this->assertCount(0, $iterator);
+    }
+
+    /**
+     * Ensures that the iterator can be used if no objects are
+     * assigned to a predicate entry.
+     */
+    public function testIteratorWorksIfObjectListIsEmpty()
+    {
+        $statements = array(
+            'http://example.org/subject1' => array(
+                'http://example.org/predicate1_1' => array(),
+            )
+        );
+        $iterator = new Erfurt_Store_TripleIterator($statements);
         $this->assertCount(0, $iterator);
     }
 
