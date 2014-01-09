@@ -32,4 +32,12 @@
 class Erfurt_Store_TripleIterator
 {
 
+    /**
+     * @param array(string=>array(string=>array(string=>string))) $statements
+     */
+    public function __construct(array $statements)
+    {
+
+    }
+
 }
