@@ -77,8 +77,6 @@ class Erfurt_Store_TripleIterator implements \Iterator
     public function rewind()
     {
         $this->resetSubjectList();
-        $this->resetPredicateList();
-        $this->resetObjectList();
     }
 
     /**
@@ -135,7 +133,6 @@ class Erfurt_Store_TripleIterator implements \Iterator
                 } else {
                     $this->subjectPosition = key($this->statements);
                     $this->resetPredicateList();
-                    $this->resetObjectList();
                 }
             } else {
                 $this->predicatePosition = key($this->statements[$this->subjectPosition]);
@@ -147,12 +144,13 @@ class Erfurt_Store_TripleIterator implements \Iterator
     }
 
     /**
-     * Resets the current object list to the first element.
+     * Resets the subject list to the first element.
      */
-    protected function resetObjectList()
+    protected function resetSubjectList()
     {
-        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
-        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        reset($this->statements);
+        $this->subjectPosition = key($this->statements);
+        $this->resetPredicateList();
     }
 
     /**
@@ -162,15 +160,16 @@ class Erfurt_Store_TripleIterator implements \Iterator
     {
         reset($this->statements[$this->subjectPosition]);
         $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+        $this->resetObjectList();
     }
 
     /**
-     * Resets the subject list to the first element.
+     * Resets the current object list to the first element.
      */
-    protected function resetSubjectList()
+    protected function resetObjectList()
     {
-        reset($this->statements);
-        $this->subjectPosition = key($this->statements);
+        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
 }
