@@ -73,7 +73,7 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Checks if the iterator returns the correct number of triples.
      */
-    public function testIteratorContainsCorrectTriples()
+    public function testIteratorContainsCorrectNumberOfTriples()
     {
         $numberOfTriples = iterator_count($this->iterator);
 
@@ -83,7 +83,7 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Ensures that the iterator returns the correct triple data.
      */
-    public function testIteratorReturnsCorrectNumberOfTriples()
+    public function testIteratorReturnsCorrectTriples()
     {
         $expectedTriples = array(
             new Erfurt_Store_Triple(
