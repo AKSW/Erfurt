@@ -417,7 +417,7 @@ class Erfurt_Store
      * @param array  $options   An array containing two keys
      *     'subject_type' and 'object_type'. The value of each is one of the
      *     defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and
-     *     TYPE_LITERAL. In addtion to this two keys the options array can contain
+     *     TYPE_LITERAL. In addition to this two keys the options array can contain
      *     two keys 'literal_language' and 'literal_datatype'.
      *
      * @throws Erfurt_Exception
