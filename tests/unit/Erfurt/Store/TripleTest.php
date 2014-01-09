@@ -25,7 +25,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
         $this->triple = new Erfurt_Store_Triple(
             'http://example.org/subject',
             'http://example.org/predicate',
-            array('type' => 'uri', 'value' => 'http://example.org/subject')
+            array('type' => 'uri', 'value' => 'http://example.org/object')
         );
     }
 
@@ -59,7 +59,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetObjectReturnsCorrectValue()
     {
-        $expectedObject = array('type' => 'uri', 'value' => 'http://example.org/subject');
+        $expectedObject = array('type' => 'uri', 'value' => 'http://example.org/object');
         $this->assertEquals($expectedObject, $this->triple->getObject());
     }
 
