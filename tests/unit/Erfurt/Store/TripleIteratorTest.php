@@ -141,4 +141,14 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($numberInFirstIteration, $numberInSecondIteration);
     }
 
+    /**
+     * Ensures that the iterator can be used with an empty statements list.
+     */
+    public function testIteratorWorksWithEmptyStatementsArray()
+    {
+        $iterator = new Erfurt_Store_TripleIterator(array());
+
+        $this->assertCount(0, $iterator);
+    }
+
 }
