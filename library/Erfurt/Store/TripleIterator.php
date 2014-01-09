@@ -39,10 +39,25 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected $statements = null;
 
+    /**
+     * The key of the current position in the subject-level list.
+     *
+     * @var string
+     */
     protected $subjectPosition = null;
 
+    /**
+     * The key of the current position in the active predicate-level list.
+     *
+     * @var string
+     */
     protected $predicatePosition = null;
 
+    /**
+     * The key of the current position in the active object-level list.
+     *
+     * @var string
+     */
     protected $objectPosition = null;
 
     /**
