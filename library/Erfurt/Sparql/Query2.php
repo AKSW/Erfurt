@@ -416,7 +416,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function setStar($bool = true)
     {
-        // delete projection vars if set to star mode - usefull?
+        // delete projection vars if set to star mode - useful?
         if ($bool === true) {
             $this->projectionVars = array();
         } 
@@ -435,7 +435,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
     
     /**
      * setCountStar
-     * set a query to count-star-mode (qhen the query is of the form SELECT count(*) FROM...)
+     * set a query to count-star-mode (when the query is of the form SELECT count(*) FROM...)
      * @param bool $bool true to turn on, false to turn off count-star-mode
      * @return Erfurt_Sparql_Query2 $this
      */
