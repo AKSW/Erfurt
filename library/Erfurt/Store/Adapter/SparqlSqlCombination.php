@@ -93,7 +93,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
-        // TODO: Implement addStatement() method.
+        return $this->sparqlAdapter->addStatement($graphUri, $subject, $predicate, $object, $options);
     }
 
     /**
@@ -105,7 +105,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
-        // TODO: Implement createModel() method.
+        return $this->sparqlAdapter->createModel($graphUri, $type);
     }
 
     /**
@@ -122,7 +122,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
-        // TODO: Implement deleteMatchingStatements() method.
+        return $this->sparqlAdapter->deleteMatchingStatements($modelIri, $subject, $predicate, $object, $options);
     }
 
     /**
@@ -133,7 +133,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
-        // TODO: Implement deleteMultipleStatements() method.
+        return $this->sparqlAdapter->deleteMultipleStatements($graphIri, $statementsArray);
     }
 
     /**
@@ -143,7 +143,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function deleteModel($modelIri)
     {
-        // TODO: Implement deleteModel() method.
+        return $this->sparqlAdapter->deleteModel($modelIri);
     }
 
     /**
@@ -159,7 +159,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
     {
-        // TODO: Implement exportRdf() method.
+        return $this->sparqlAdapter->exportRdf($modelIri, $serializationType, $filename);
     }
 
     /**
@@ -168,7 +168,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function getAvailableModels()
     {
-        // TODO: Implement getAvailableModels() method.
+        return $this->sparqlAdapter->getAvailableModels();
     }
 
     /**
@@ -178,7 +178,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function getBlankNodePrefix()
     {
-        // TODO: Implement getBlankNodePrefix() method.
+        return $this->sparqlAdapter->getBlankNodePrefix();
     }
 
     /**
@@ -188,7 +188,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function getSupportedExportFormats()
     {
-        // TODO: Implement getSupportedExportFormats() method.
+        return $this->sparqlAdapter->getSupportedExportFormats();
     }
 
     /**
@@ -198,7 +198,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function getSupportedImportFormats()
     {
-        // TODO: Implement getSupportedImportFormats() method.
+        return $this->sparqlAdapter->getSupportedImportFormats();
     }
 
     /**
@@ -220,7 +220,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function importRdf($modelIri, $data, $type, $locator)
     {
-        // TODO: Implement importRdf() method.
+        return $this->sparqlAdapter->importRdf($modelIri, $data, $type, $locator);
     }
 
     /**
@@ -228,7 +228,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function init()
     {
-        // TODO: Implement init() method.
+        return $this->sparqlAdapter->init();
     }
 
     /**
@@ -237,7 +237,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function isModelAvailable($modelIri)
     {
-        // TODO: Implement isModelAvailable() method.
+        return $this->sparqlAdapter->isModelAvailable($modelIri);
     }
 
     /**
@@ -248,7 +248,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function sparqlAsk($query)
     {
-        // TODO: Implement sparqlAsk() method.
+        return $this->sparqlAdapter->sparqlAsk($query);
     }
 
     /**
@@ -263,10 +263,8 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function sparqlQuery($query, $options = array())
     {
-        // TODO: Implement sparqlQuery() method.
+        return $this->sparqlAdapter->sparqlQuery($query, $options);
     }
-
-    /// SQL METHODS
 
     /**
      * Creates the table specified by $tableSpec according to backend-specific
@@ -277,7 +275,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function createTable($tableName, array $columns)
     {
-        // TODO: Implement createTable() method.
+        return $this->sqlAdapter->createTable($tableName, $columns);
     }
 
     /**
@@ -287,7 +285,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function lastInsertId()
     {
-        // TODO: Implement lastInsertId() method.
+        return $this->sqlAdapter->lastInsertId();
     }
 
     /**
@@ -298,7 +296,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function listTables($prefix = '')
     {
-        // TODO: Implement listTables() method.
+        return $this->sqlAdapter->listTables($prefix);
     }
 
     /**
@@ -311,7 +309,7 @@ class Erfurt_Store_Adapter_SparqlSqlCombination
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        // TODO: Implement sqlQuery() method.
+        return $this->sqlAdapter->sqlQuery($sqlQuery, $limit, $offset);
     }
 
 }
