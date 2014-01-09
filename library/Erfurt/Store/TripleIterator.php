@@ -40,23 +40,26 @@ class Erfurt_Store_TripleIterator implements \Iterator
     protected $statements = null;
 
     /**
-     * The key of the current position in the subject-level list.
+     * The key of the current position in the subject-level list,
+     * which is equal to the subject URI.
      *
      * @var string
      */
-    protected $subjectPosition = null;
+    protected $subject = null;
 
     /**
-     * The key of the current position in the active predicate-level list.
+     * The key of the current position in the active predicate-level list,
+     * which is equal to the predicate URI.
      *
      * @var string
      */
-    protected $predicatePosition = null;
+    protected $predicate = null;
 
     /**
-     * The key of the current position in the active object-level list.
+     * The key of the current position in the active object-level list,
+     * which is an integer that points to an object definition (as array).
      *
-     * @var string
+     * @var integer
      */
     protected $objectPosition = null;
 
@@ -87,7 +90,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function valid()
     {
-        return isset($this->statements[$this->subjectPosition][$this->predicatePosition][$this->objectPosition]);
+        return isset($this->statements[$this->subject][$this->predicate][$this->objectPosition]);
     }
 
     /**
@@ -98,8 +101,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function current()
     {
-        $object = $this->statements[$this->subjectPosition][$this->predicatePosition][$this->objectPosition];
-        return new Erfurt_Store_Triple($this->subjectPosition, $this->predicatePosition, $object);
+        $object = $this->statements[$this->subject][$this->predicate][$this->objectPosition];
+        return new Erfurt_Store_Triple($this->subject, $this->predicate, $object);
     }
 
     /**
@@ -110,7 +113,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function key()
     {
-        return $this->subjectPosition .':' . $this->predicatePosition . ':' . $this->objectPosition;
+        return $this->subject . ':' . $this->predicate . ':' . $this->objectPosition;
     }
 
     /**
@@ -120,26 +123,26 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     public function next()
     {
-        if (next($this->statements[$this->subjectPosition][$this->predicatePosition]) !== false) {
-            $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        if (next($this->statements[$this->subject][$this->predicate]) !== false) {
+            $this->objectPosition = key($this->statements[$this->subject][$this->predicate]);
             return;
         }
         // End of object list reached, move to next in predicate list.
-        if (next($this->statements[$this->subjectPosition]) !== false) {
-            $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+        if (next($this->statements[$this->subject]) !== false) {
+            $this->predicate = key($this->statements[$this->subject]);
             $this->resetObjectList();
             return;
         }
         // End of predicate list reached, move to next in subject list.
         if (next($this->statements) !== false) {
-            $this->subjectPosition = key($this->statements);
+            $this->subject = key($this->statements);
             $this->resetPredicateList();
             return;
         }
         // End of triple list reached.
-        $this->subjectPosition   = null;
-        $this->predicatePosition = null;
-        $this->objectPosition    = null;
+        $this->subject        = null;
+        $this->predicate      = null;
+        $this->objectPosition = null;
     }
 
     /**
@@ -148,7 +151,7 @@ class Erfurt_Store_TripleIterator implements \Iterator
     protected function resetSubjectList()
     {
         reset($this->statements);
-        $this->subjectPosition = key($this->statements);
+        $this->subject = key($this->statements);
         $this->resetPredicateList();
     }
 
@@ -157,8 +160,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected function resetPredicateList()
     {
-        reset($this->statements[$this->subjectPosition]);
-        $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+        reset($this->statements[$this->subject]);
+        $this->predicate = key($this->statements[$this->subject]);
         $this->resetObjectList();
     }
 
@@ -167,8 +170,8 @@ class Erfurt_Store_TripleIterator implements \Iterator
      */
     protected function resetObjectList()
     {
-        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
-        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        reset($this->statements[$this->subject][$this->predicate]);
+        $this->objectPosition = key($this->statements[$this->subject][$this->predicate]);
     }
 
 }
