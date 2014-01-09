@@ -62,9 +62,11 @@ class Erfurt_Store_TripleIterator implements \Iterator
     public function rewind()
     {
         reset($this->statements);
-        $this->subjectPosition   = key($this->statements);
+        $this->subjectPosition = key($this->statements);
+        reset($this->statements[$this->subjectPosition]);
         $this->predicatePosition = key($this->statements[$this->subjectPosition]);
-        $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
+        $this->objectPosition = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
 
     /**
@@ -118,10 +120,17 @@ class Erfurt_Store_TripleIterator implements \Iterator
                     $this->predicatePosition = null;
                     $this->objectPosition    = null;
                     return;
+                } else {
+                    $this->subjectPosition = key($this->statements);
+                    reset($this->statements[$this->subjectPosition]);
+                    $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+                    reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
                 }
+            } else {
+                $this->predicatePosition = key($this->statements[$this->subjectPosition]);
+                reset($this->statements[$this->subjectPosition][$this->predicatePosition]);
             }
         }
-        $this->subjectPosition   = key($this->statements);
         $this->predicatePosition = key($this->statements[$this->subjectPosition]);
         $this->objectPosition    = key($this->statements[$this->subjectPosition][$this->predicatePosition]);
     }
