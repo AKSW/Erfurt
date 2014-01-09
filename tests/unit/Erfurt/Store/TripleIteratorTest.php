@@ -81,6 +81,14 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Checks if the iterator returns Triple objects.
+     */
+    public function testIteratorReturnsTripleObjects()
+    {
+        $this->assertContainsOnly('Erfurt_Store_Triple', $this->iterator);
+    }
+
+    /**
      * Ensures that the iterator returns the correct triple data.
      */
     public function testIteratorReturnsCorrectTriples()
