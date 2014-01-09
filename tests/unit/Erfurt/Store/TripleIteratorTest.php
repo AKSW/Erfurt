@@ -67,7 +67,7 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorIsTraversable()
     {
-
+        $this->assertInstanceOf('Traversable', $this->iterator);
     }
 
     /**
@@ -75,7 +75,9 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorContainsCorrectTriples()
     {
+        $numberOfTriples = iterator_count($this->iterator);
 
+        $this->assertEquals(4, $numberOfTriples);
     }
 
     /**
@@ -83,7 +85,49 @@ class Erfurt_Store_TripleIteratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIteratorReturnsCorrectNumberOfTriples()
     {
+        $expectedTriples = array(
+            new Erfurt_Store_Triple(
+                'http://example.org/subject1',
+                'http://example.org/predicate1_1',
+                array(
+                    'type'  => 'literal',
+                    'value' => 'Hello world.'
+                )
+            ),
+            new Erfurt_Store_Triple(
+                'http://example.org/subject1',
+                'http://example.org/predicate1_2',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object1_2_1'
+                )
+            ),
+            new Erfurt_Store_Triple(
+                'http://example.org/subject1',
+                'http://example.org/predicate1_2',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object1_2_2'
+                )
+            ),
+            new Erfurt_Store_Triple(
+                'http://example.org/subject2',
+                'http://example.org/predicate2_1',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object2_1_1'
+                )
+            )
+        );
 
+        $triplesAsTurtle = array_map(function ($triple) {
+            return (string)$triple;
+        }, iterator_to_array($this->iterator));
+
+        foreach ($expectedTriples as $triple) {
+            /* @var $triple \Erfurt_Store_Triple */
+            $this->assertContains((string)$triple, $triplesAsTurtle);
+        }
     }
 
 }
