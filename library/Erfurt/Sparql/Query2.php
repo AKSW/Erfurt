@@ -319,7 +319,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
     /**
      * setConstructTemplate
      * set a ConstructTemplate in the query 
-     * (only usefull if the query is a construct query)
+     * (only useful if the query is a construct query)
      * @param Erfurt_Sparql_Query2_ConstructTemplate $npattern
      * @return Erfurt_Sparql_Query2 $this
      */    
