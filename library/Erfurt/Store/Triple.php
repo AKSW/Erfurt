@@ -10,6 +10,27 @@ class Erfurt_Store_Triple
 {
 
     /**
+     * The subject URI.
+     *
+     * @var null
+     */
+    protected $subject = null;
+
+    /**
+     * The predicate URI.
+     *
+     * @var null
+     */
+    protected $predicate = null;
+
+    /**
+     * The object definition.
+     *
+     * @var array(string=>string)
+     */
+    protected $object = array();
+
+    /**
      * Creates a triple that contains the given components.
      *
      * @param string $subject
@@ -18,7 +39,9 @@ class Erfurt_Store_Triple
      */
     public function __construct($subject, $predicate, array $object)
     {
-
+        $this->subject   = $subject;
+        $this->predicate = $predicate;
+        $this->object    = $object;
     }
 
     /**
@@ -28,7 +51,7 @@ class Erfurt_Store_Triple
      */
     public function getSubject()
     {
-
+        return $this->subject;
     }
 
     /**
@@ -38,7 +61,7 @@ class Erfurt_Store_Triple
      */
     public function getPredicate()
     {
-
+        return $this->predicate;
     }
 
     /**
@@ -48,7 +71,7 @@ class Erfurt_Store_Triple
      */
     public function getObject()
     {
-
+        return $this->object;
     }
 
     /**
@@ -69,7 +92,17 @@ class Erfurt_Store_Triple
      */
     public function __toString()
     {
-
+        if ($this->object['type'] === 'uri') {
+            $object = '<' . $this->object['value'] . '>';
+        } else {
+            $object = Erfurt_Utils::buildLiteralString(
+                $this->object['value'],
+                isset($this->object['datatype']) ? $this->object['datatype'] : null,
+                isset($this->object['lang']) ? $this->object['lang'] : null
+            );
+        }
+        $template = '<%s> <%s> %s .';
+        return sprintf($template, $this->subject, $this->predicate, $object);
     }
 
 }
