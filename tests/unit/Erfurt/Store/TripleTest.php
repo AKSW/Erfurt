@@ -38,26 +38,41 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    /**
+     * Checks if getSubject() returns the correct value.
+     */
     public function testGetSubjectReturnsCorrectValue()
     {
 
     }
 
+    /**
+     * Checks if getPredicate() returns the correct value.
+     */
     public function testGetPredicateReturnsCorrectValue()
     {
 
     }
 
+    /**
+     * Checks if getObject() returns the correct value.
+     */
     public function testGetObjectReturnsCorrectValue()
     {
 
     }
 
+    /**
+     * Checks if __toString() formats a triple that contains only URIs correctly.
+     */
     public function testToStringFormatsTripleWithUriObjectCorrectly()
     {
 
     }
 
+    /**
+     * Checks if __toString() formats a triple with literal object correctly.
+     */
     public function testToStringFormatsTripleWithLiteralObjectCorrectly()
     {
 
