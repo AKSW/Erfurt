@@ -72,18 +72,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         // Insert all statements in a transaction to ensure, that only the full batch
         // must be written to disk instead of each triple.
         $adapter = $this;
-        $this->connection->transactional(function () use($adapter, $graphIri, $statementsArray, $options) {
-            foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
-                /* @var $subject string */
-                /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
-                foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
-                    /* @var $predicate string */
-                    /* @var $objectDefinition array(array(string=>string)) */
-                    foreach ($objectDefinitions as $object) {
-                        /* @var $object array(string=>string) */
-                        $adapter->addStatement($graphIri, $subject, $predicate, $object, $options);
-                    }
-                }
+        $triples = new Erfurt_Store_TripleIterator($statementsArray);
+        $this->connection->transactional(function () use($adapter, $graphIri, $triples, $options) {
+            foreach ($triples as $triple) {
+                /* @var $triple \Erfurt_Store_Triple */
+                $adapter->addStatement(
+                    $graphIri,
+                    $triple->getSubject(),
+                    $triple->getPredicate(),
+                    $triple->getObject(),
+                    $options
+                );
             }
         });
     }
@@ -159,18 +158,16 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         // Delete all statements in a transaction to ensure, that only the full modification set
         // must be written to disk instead of each triple.
         $adapter = $this;
-        $this->connection->transactional(function () use($adapter, $graphIri, $statementsArray) {
-            foreach ($statementsArray as $subject => $objectDefinitionsByPredicate) {
-                /* @var $subject string */
-                /* @var $objectDefinitionsByPredicate array(string=>array(array(string=>string))) */
-                foreach ($objectDefinitionsByPredicate as $predicate => $objectDefinitions) {
-                    /* @var $predicate string */
-                    /* @var $objectDefinition array(array(string=>string)) */
-                    foreach ($objectDefinitions as $object) {
-                        /* @var $object array(string=>string) */
-                        $adapter->deleteMatchingStatements($graphIri, $subject, $predicate, $object);
-                    }
-                }
+        $triples = new Erfurt_Store_TripleIterator($statementsArray);
+        $this->connection->transactional(function () use($adapter, $graphIri, $triples) {
+            foreach ($triples as $triple) {
+                /* @var $triple \Erfurt_Store_Triple */
+                $adapter->deleteMatchingStatements(
+                    $graphIri,
+                    $triple->getSubject(),
+                    $triple->getPredicate(),
+                    $triple->getObject()
+                );
             }
         });
     }
