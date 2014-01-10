@@ -86,4 +86,34 @@ class Erfurt_Isql
         }
         return FALSE;
     }
+    
+    /**
+     * Runs ISQL script file using ISQL shell command.
+     * @static
+     * @access public
+     * @return array Line array returned by the isql binary
+     * @throws RuntimeException if ISQL reports an error
+     */
+    static public function runScript($scriptPath, $server = "localhost", $port = 1111)
+    {
+        // script path
+        if (!file_exists($scriptPath)) {
+            throw new RuntimeException("Invalid file: $scriptPath.");
+        }
+        // isql binary
+        if (!self::detectBinary()) {
+            throw new RuntimeException('Path to ISQL binary not available.');
+        }
+        // isql call
+        $output = array();
+        exec(self::$pathToBinary . " $server:$port < " . realpath($scriptPath) ." 2>&1", $output);
+        // error
+        $matches = array();
+        if (preg_match('/(Error .+)$/s', implode(PHP_EOL, $output), $matches)) {
+            $lines = array_slice(explode(PHP_EOL, $matches[1]), 0, 6); // up to 6 error lines
+            $errorMessage = implode(PHP_EOL, $lines);
+            throw new RuntimeException($errorMessage);
+        }
+        return $output;
+    }
 }
