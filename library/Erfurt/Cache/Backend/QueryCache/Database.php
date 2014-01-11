@@ -35,7 +35,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         } else if (is_array($result) && count($result) > 0) {
             return true;
         } else {
-        return false;
+            return false;
         }
     }
 
