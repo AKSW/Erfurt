@@ -1,7 +1,6 @@
 <?php
 
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Connection;
 
 /**
  * Tests the Oracle adapter.
@@ -10,7 +9,7 @@ use Doctrine\DBAL\Connection;
  * @since 14.12.13
  * @group Oracle
  */
-class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCase
 {
 
     /**
@@ -28,19 +27,11 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     protected $setup = null;
 
     /**
-     * The connection that is used for testing.
-     *
-     * @var \Doctrine\DBAL\Connection
-     */
-    protected $connection = null;
-
-    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->connection = $this->createConnection();
         $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->connection);
         $this->installTripleStore($this->setup);
         $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($this->connection);
@@ -53,7 +44,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
     {
         $this->adapter = null;
         $this->uninstallTripleStore($this->setup);
-        $this->connection = null;
         parent::tearDown();
     }
 
@@ -1081,33 +1071,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \PHPUnit_Framework_T
         if ($setup->isInstalled()) {
             $setup->uninstall();
         }
-    }
-
-    /**
-     * Returns the database connection that is used for testing.
-     *
-     * @return \Doctrine\DBAL\Connection
-     */
-    protected function createConnection()
-    {
-        return Erfurt_Store_Adapter_Oracle::createConnection($this->getConfig());
-    }
-
-    /**
-     * Loads the configuration for the adapter.
-     *
-     * @return array(mixed)
-     */
-    protected function getConfig()
-    {
-        $path = __DIR__ . '/../../../../../oracle.ini';
-        if (!is_file($path)) {
-            $message = 'This test requires an Oracle connection configuration in the file '
-                     . 'oracle.ini in the test root. Use oracle.ini.dist as a template.';
-            $this->markTestSkipped($message);
-        }
-        $config = new Zend_Config_Ini($path);
-        return $config->toArray();
     }
 
 }
