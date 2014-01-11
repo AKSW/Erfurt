@@ -4,6 +4,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
+use PHPSQL\Creator;
 
 /**
  * Access layer for the basic Oracle SQL functionality.
@@ -128,6 +129,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $this->connection->exec($sqlQuery);
             return array();
         }
+        $sqlQuery = $this->rewriteSelect($sqlQuery);
         if ($limit !== PHP_INT_MAX || $offset > 0) {
             $sqlQuery = $this->connection->getDatabasePlatform()->modifyLimitQuery($sqlQuery, $limit, $offset);
         }
@@ -135,6 +137,35 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         return array_map(function (array $row) {
             return array_change_key_case($row, CASE_LOWER);
         }, $rows);
+    }
+
+    /**
+     * Rewrites the provided SELECT query to remove MySQL specific parts
+     * and apply proper escaping.
+     *
+     * @param string $query
+     * @return string
+     */
+    protected function rewriteSelect($query)
+    {
+        $parser = new \PHPSQL\Parser();
+        $parsed = $parser->parse($query);
+        foreach (array_keys($parsed['SELECT']) as $index) {
+            /* @var $index integer */
+            if ($parsed['SELECT'][$index]['expr_type'] === 'colref') {
+                $name = strtoupper($parsed['SELECT'][$index]['base_expr']);
+                $parsed['SELECT'][$index]['base_expr'] = $this->connection->quoteIdentifier($name);
+            }
+        }
+        foreach (array_keys($parsed['FROM']) as $index) {
+            /* @var $index integer */
+            if (isset($parsed['FROM'][$index]['alias']) && $parsed['FROM'][$index]['alias'] !== false) {
+                $parsed['FROM'][$index]['alias']['as'] = false;
+            }
+        }
+        $creator = new Creator();
+        $rewritten = $creator->create($parsed);
+        return $rewritten;
     }
 
     /**
