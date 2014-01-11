@@ -47,6 +47,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
     {
         $table = new Table($tableName);
         $autoIncrementColumns = array();
+        $primaryKeyColumns    = array();
         foreach ($columns as $name => $specification) {
             /* @var $name string */
             /* @var $specification string */
@@ -66,7 +67,13 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             if (strpos($specification, 'AUTO_INCREMENT')) {
                 $autoIncrementColumns[] = $name;
             }
+            if (strpos($specification, 'PRIMARY KEY') !== false) {
+                $primaryKeyColumns[] = $name;
+            }
             $table->addColumn($name, $type, $options);
+        }
+        if (count($primaryKeyColumns) > 0) {
+            $table->setPrimaryKey($primaryKeyColumns);
         }
         $this->connection->getSchemaManager()->dropAndCreateTable($table);
         foreach ($autoIncrementColumns as $name) {
