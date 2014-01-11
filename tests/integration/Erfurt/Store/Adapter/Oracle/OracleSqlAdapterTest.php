@@ -221,6 +221,41 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if sqlQuery() can handle aliases in MySQL style, for example
+     * "SELECT * FROM data AS d".
+     */
+    public function testSqlQueryCanHandleTableAliases()
+    {
+        $columns = array(
+            'name' => 'VARCHAR(255)',
+            'age'  => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_data', $columns);
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', 42)');
+
+        $result = $this->adapter->sqlQuery('SELECT d.name FROM test_data AS d');
+
+        $this->assertInternalType('array', $result);
+        $this->assertContains(array('name' => 'Test'), $result);
+    }
+
+    /**
+     * Checks if the adapter can handle the column names "model" and "resource"
+     * in the table definition and in queries.
+     */
+    public function testAdapterCanHandleModelAndResourceColumnNamesInQueries()
+    {
+        $columns = array(
+            'model'    => 'VARCHAR(255)',
+            'resource' => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $this->setExpectedException(null);
+        $this->adapter->sqlQuery('SELECT model, resource FROM test_data');
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
