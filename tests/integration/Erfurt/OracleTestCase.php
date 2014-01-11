@@ -86,6 +86,10 @@ abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function restoreSchema()
     {
+        if ($this->connection === null) {
+            // Seems as if the test was skipped during setUp().
+            return;
+        }
         $modifiedSchema = $this->connection->getSchemaManager()->createSchema();
         $sql = $modifiedSchema->getMigrateToSql($this->originalSchema, $this->connection->getDatabasePlatform());
         foreach ($sql as $query) {
