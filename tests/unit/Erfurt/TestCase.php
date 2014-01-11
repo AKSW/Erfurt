@@ -91,8 +91,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             } else {
                 throw $e;
             }
-        } catch (Erfurt_Exception $e2) {
-            $this->markTestSkipped($e2->getMessage());
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
