@@ -35,49 +35,82 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         parent::tearDown();
     }
 
+    /**
+     * Checks if createTable() can be used to create a simple table
+     * without primary key or auto increment columns.
+     */
     public function testCreateTableCreatesSimpleTable()
     {
 
     }
 
+    /**
+     * Ensures that createTable() can be used to create a table with
+     * auto increment column.
+     */
     public function testCreateTableCreatesTableWithAutoIncrementColumn()
     {
 
     }
 
+    /**
+     * Checks if createTable() can be used to create a table with
+     * primary key.
+     */
     public function testCreateTableCreatesTableWithPrimaryKey()
     {
 
     }
 
+    /**
+     * Checks if listTables() returns all table names (if no further parameters
+     * have been provided).
+     */
     public function testListTablesReturnsTableNames()
     {
 
     }
 
+    /**
+     * Checks if listTables() returns only those tables whose prefix is
+     * equal to the provided one.
+     */
     public function testListTablesReturnsOnlyTablesWithProvidedPrefix()
     {
 
     }
 
+    /**
+     * Checks if lastInsertId() returns the ID of the record that was
+     * inserted last.
+     */
     public function testLastInsertIdReturnsIdOfLastInsertQuery()
     {
 
     }
 
+    /**
+     * Checks if sqlQuery() returns the results of a select query.
+     */
     public function testSqlQueryReturnsResultOfSelectQuery()
     {
 
     }
 
+    /**
+     * Ensures that sqlQuery() applies the provided limit.
+     */
     public function testSqlQueryAppliesLimit()
     {
 
     }
 
+    /**
+     * Ensures that sqlQuery() applies the provided offset.
+     */
     public function testSqlQueryAppliesOffset()
     {
-        
+
     }
 
 }
