@@ -23,7 +23,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     final public function checkCacheVersion()
     {
-        $result = false;
         try {
             $query = 'SELECT num FROM ef_cache_query_version';
             $result = $this->store->sqlQuery($query);
