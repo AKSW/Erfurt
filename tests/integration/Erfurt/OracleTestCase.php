@@ -90,7 +90,7 @@ abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
         $sql = $modifiedSchema->getMigrateToSql($this->originalSchema, $this->connection->getDatabasePlatform());
         foreach ($sql as $query) {
             /* @var $query string */
-            $this->connection->exec($sql);
+            $this->connection->exec($query);
         }
     }
 
