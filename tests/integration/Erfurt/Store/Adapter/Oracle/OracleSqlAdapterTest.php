@@ -228,7 +228,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     protected function assertTableExists($name)
     {
         $names = $this->connection->getSchemaManager()->listTableNames();
-        $this->assertContains($name, $names);
+        $this->assertContains(strtoupper($name), $names);
     }
 
 }
