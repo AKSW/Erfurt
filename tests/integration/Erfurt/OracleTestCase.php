@@ -7,7 +7,7 @@
  * @since 11.01.14
  * @Group Oracle
  */
-class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
+abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
 {
 
     /**
