@@ -101,6 +101,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
 
         $names = $this->adapter->listTables();
 
+        $this->assertInternalType('array', $names);
         $this->assertContains('test_one', $names);
         $this->assertContains('test_two', $names);
         $this->assertContains('test_three', $names);
@@ -123,6 +124,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
 
         $names = $this->adapter->listTables('test_demo');
 
+        $this->assertInternalType('array', $names);
         $this->assertContains('test_demo1', $names);
         $this->assertContains('test_demo2', $names);
         $this->assertNotContains('test_other', $names);
