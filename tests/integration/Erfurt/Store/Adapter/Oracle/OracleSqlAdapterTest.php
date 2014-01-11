@@ -41,7 +41,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testCreateTableCreatesSimpleTable()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255) NOT NULL',
+            'age'  => 'INT DEFAULT NULL'
+        );
 
+        $this->adapter->createTable('test_simple', $columns);
+
+        $this->assertTableExists('test_simple');
     }
 
     /**
@@ -50,6 +57,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testCreateTableCreatesTableWithAutoIncrementColumn()
     {
+        $columns = array(
+            'id'  => 'INT AUTO_INCREMENT',
+            'age' => 'INT DEFAULT NULL'
+        );
+
+        $this->adapter->createTable('test_auto_increment', $columns);
+
+        $this->assertTableExists('test_auto_increment');
 
     }
 
@@ -59,7 +74,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testCreateTableCreatesTableWithPrimaryKey()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255) PRIMARY KEY NOT NULL',
+            'age'  => 'INT DEFAULT NULL'
+        );
 
+        $this->adapter->createTable('test_simple', $columns);
+
+        $this->assertTableExists('test_simple');
     }
 
     /**
@@ -68,7 +90,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testListTablesReturnsTableNames()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255) NOT NULL',
+            'age'  => 'INT DEFAULT NULL'
+        );
 
+        $this->adapter->createTable('test_one', $columns);
+        $this->adapter->createTable('test_two', $columns);
+        $this->adapter->createTable('test_three', $columns);
+
+        $names = $this->adapter->listTables();
+
+        $this->assertContains('test_one', $names);
+        $this->assertContains('test_two', $names);
+        $this->assertContains('test_three', $names);
     }
 
     /**
@@ -77,7 +112,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testListTablesReturnsOnlyTablesWithProvidedPrefix()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255) NOT NULL',
+            'age'  => 'INT DEFAULT NULL'
+        );
 
+        $this->adapter->createTable('test_demo1', $columns);
+        $this->adapter->createTable('test_demo2', $columns);
+        $this->adapter->createTable('test_other', $columns);
+
+        $names = $this->adapter->listTables('test_demo');
+
+        $this->assertContains('test_demo1', $names);
+        $this->assertContains('test_demo2', $names);
+        $this->assertNotContains('test_other', $names);
     }
 
     /**
@@ -86,7 +134,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testLastInsertIdReturnsIdOfLastInsertQuery()
     {
+        $columns = array(
+            'id'  => 'INT AUTO_INCREMENT',
+            'age' => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_id', $columns);
 
+        $this->adapter->sqlQuery('INSERT INTO test_id (age) VALUES (27)');
+
+        $id = $this->adapter->lastInsertId();
+        $this->assertInternalType('integer', $id);
+        $rows = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id')
+                                 ->bindValue('id', $id)
+                                 ->fetchAll();
+        $this->assertCount(1, $rows);
     }
 
     /**
@@ -94,7 +155,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testSqlQueryReturnsResultOfSelectQuery()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255)',
+            'age'  => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_data', $columns);
 
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", 42)');
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Demo", 25)');
+
+        $results = $this->adapter->sqlQuery('SELECT * FROM test_data');
+
+        $this->assertInternalType('array', $results);
+        $this->assertContains(array('name' => 'Test', 'age' => 42), $results);
+        $this->assertContains(array('name' => 'Demo', 'age' => 25), $results);
     }
 
     /**
@@ -102,7 +176,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testSqlQueryAppliesLimit()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255)',
+            'age'  => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_data', $columns);
 
+        for ($i = 0; $i < 20; $i++) {
+            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", ' . $i . ')');
+        }
+
+        $results = $this->adapter->sqlQuery('SELECT * FROM test_data', 10);
+
+        $this->assertInternalType('array', $results);
+        $this->assertCount(10, $results);
     }
 
     /**
@@ -110,7 +197,36 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testSqlQueryAppliesOffset()
     {
+        $columns = array(
+            'name' => 'VARCHAR(255)',
+            'age'  => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_data', $columns);
 
+        for ($i = 0; $i < 20; $i++) {
+            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", ' . $i . ')');
+        }
+
+        $results = $this->adapter->sqlQuery('SELECT * FROM test_data ORDER BY age ASC', 10, 5);
+
+        $this->assertInternalType('array', $results);
+        foreach ($results as $row) {
+            /* @var $row array(string=>mixed) */
+            $this->assertInternalType('array', $row);
+            $this->assertArrayHasKey('age', $row);
+            $this->assertGreaterThan(5, $row['age']);
+        }
+    }
+
+    /**
+     * Asserts that a table with the provided name exists.
+     *
+     * @param string $name
+     */
+    protected function assertTableExists($name)
+    {
+        $names = $this->connection->getSchemaManager()->listTableNames();
+        $this->assertContains($name, $names);
     }
 
 }
