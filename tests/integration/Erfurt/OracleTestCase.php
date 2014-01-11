@@ -7,7 +7,7 @@ use Doctrine\DBAL\Schema\Schema;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.01.14
- * @Group Oracle
+ * @group Oracle
  */
 abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
 {

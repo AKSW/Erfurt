@@ -5,7 +5,7 @@
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.01.14
- * @Group Oracle
+ * @group Oracle
  */
 class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTestCase
 {
