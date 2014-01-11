@@ -147,7 +147,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
 
         $this->assertInternalType('integer', $id);
         $statement = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id');
-        $statement->execute(array('id', $id));
+        $statement->execute(array('id' => $id));
         $rows = $statement->fetchAll();
         $this->assertCount(1, $rows);
     }
