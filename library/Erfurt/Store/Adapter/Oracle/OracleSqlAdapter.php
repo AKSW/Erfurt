@@ -5,6 +5,7 @@ use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 use PHPSQL\Creator;
+use PHPSQL\Parser;
 
 /**
  * Access layer for the basic Oracle SQL functionality.
@@ -148,11 +149,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function rewriteSelect($query)
     {
-        $parser = new \PHPSQL\Parser();
+        $parser = new Parser();
         $parsed = $parser->parse($query);
         foreach (array_keys($parsed['SELECT']) as $index) {
             /* @var $index integer */
-            if ($parsed['SELECT'][$index]['expr_type'] === 'colref') {
+            if ($parsed['SELECT'][$index]['expr_type'] === 'colref' && $parsed['SELECT'][$index]['base_expr'] !== '*') {
                 $name = strtoupper($parsed['SELECT'][$index]['base_expr']);
                 $parsed['SELECT'][$index]['base_expr'] = $this->connection->quoteIdentifier($name);
             }
