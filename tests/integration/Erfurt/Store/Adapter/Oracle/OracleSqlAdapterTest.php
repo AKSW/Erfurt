@@ -251,8 +251,27 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         );
         $this->adapter->createTable('test_data', $columns);
 
+        $result = $this->adapter->sqlQuery('SELECT model, resource FROM test_data');
+
+        $this->assertInternalType('array', $result);
+    }
+
+    /**
+     * Checks if createTable() overwrites a table with the same name if it already exists.
+     */
+    public function testCreateTableOverwritesPreviousTable()
+    {
+        $columns = array(
+            'name'    => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+        $columns = array(
+            'id'    => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
         $this->setExpectedException(null);
-        $this->adapter->sqlQuery('SELECT model, resource FROM test_data');
+        $this->adapter->sqlQuery('INSERT INTO test_data (id) VALUES (\'hello\')');
     }
 
     /**
