@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\Schema\Schema;
+
 /**
  * Base class for tests that use an Oracle database.
  *
@@ -18,12 +20,20 @@ abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
     protected $connection = null;
 
     /**
+     * The database schema before the test was executed.
+     *
+     * @var \Doctrine\DBAL\Schema\Schema
+     */
+    protected $originalSchema = null;
+
+    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
         $this->connection = $this->createConnection();
+        $this->backupSchema();
     }
 
     /**
@@ -31,6 +41,7 @@ abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        $this->restoreSchema();
         $this->connection = null;
         parent::tearDown();
     }
@@ -60,6 +71,27 @@ abstract class Erfurt_OracleTestCase extends \PHPUnit_Framework_TestCase
         }
         $config = new Zend_Config_Ini($path);
         return $config->toArray();
+    }
+
+    /**
+     * Creates a backup of the current database schema.
+     */
+    protected function backupSchema()
+    {
+        $this->originalSchema = clone $this->connection->getSchemaManager()->createSchema();
+    }
+
+    /**
+     * Restores the original database schema.
+     */
+    protected function restoreSchema()
+    {
+        $modifiedSchema = $this->connection->getSchemaManager()->createSchema();
+        $sql = $modifiedSchema->getMigrateToSql($this->originalSchema, $this->connection->getDatabasePlatform());
+        foreach ($sql as $query) {
+            /* @var $query string */
+            $this->connection->exec($sql);
+        }
     }
 
 }
