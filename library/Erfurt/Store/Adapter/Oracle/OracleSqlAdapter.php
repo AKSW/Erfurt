@@ -51,6 +51,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         foreach ($columns as $name => $specification) {
             /* @var $name string */
             /* @var $specification string */
+            // Always use the upper case as column name, otherwise column names
+            // might not match in SQL queries as Oracle interprets all identifiers
+            // as uppercase (if not quoted).
+            $name = strtoupper($name);
             if (strpos($specification, 'INT') !== false) {
                 $type = Type::INTEGER;
             } else if (strpos($specification, 'TEXT') !== false) {
