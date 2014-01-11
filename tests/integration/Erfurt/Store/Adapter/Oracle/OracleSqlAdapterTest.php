@@ -143,12 +143,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         $this->adapter->createTable('test_id', $columns);
 
         $this->adapter->sqlQuery('INSERT INTO test_id (age) VALUES (27)');
-
         $id = $this->adapter->lastInsertId();
+        
         $this->assertInternalType('integer', $id);
-        $rows = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id')
-                                 ->bindValue('id', $id)
-                                 ->fetchAll();
+        $statement = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id');
+        $statement->execute(array('id', $id));
+        $rows = $statement->fetchAll();
         $this->assertCount(1, $rows);
     }
 
