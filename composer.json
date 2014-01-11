@@ -15,7 +15,8 @@
     "require": {
         "zendframework/zendframework1": ">=1.11.5",
         "doctrine/dbal": "~2.4.1",
-        "symfony/config": "~2.3.0"
+        "symfony/config": "~2.3.0",
+        "soundintheory/php-sql-parser": "~1.0.0"
     },
     "suggest": {
         "ext-oci8": "To use the Oracle Triple Store."
