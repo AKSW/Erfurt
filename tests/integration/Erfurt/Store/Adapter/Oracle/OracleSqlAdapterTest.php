@@ -144,7 +144,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
 
         $this->adapter->sqlQuery('INSERT INTO test_id (age) VALUES (27)');
         $id = $this->adapter->lastInsertId();
-        
+
         $this->assertInternalType('integer', $id);
         $statement = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id');
         $statement->execute(array('id', $id));
@@ -163,8 +163,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         );
         $this->adapter->createTable('test_data', $columns);
 
-        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", 42)');
-        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Demo", 25)');
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', 42)');
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Demo\', 25)');
 
         $results = $this->adapter->sqlQuery('SELECT * FROM test_data');
 
@@ -185,7 +185,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         $this->adapter->createTable('test_data', $columns);
 
         for ($i = 0; $i < 20; $i++) {
-            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", ' . $i . ')');
+            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', ' . $i . ')');
         }
 
         $results = $this->adapter->sqlQuery('SELECT * FROM test_data', 10);
@@ -206,7 +206,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         $this->adapter->createTable('test_data', $columns);
 
         for ($i = 0; $i < 20; $i++) {
-            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES ("Test", ' . $i . ')');
+            $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', ' . $i . ')');
         }
 
         $results = $this->adapter->sqlQuery('SELECT * FROM test_data ORDER BY age ASC', 10, 5);
