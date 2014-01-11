@@ -257,6 +257,24 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can handle aliased variables in WHERE clauses.
+     */
+    public function testAdapterCanHandleAliasedVariablesInWhereClause()
+    {
+        $columns = array(
+            'name' => 'VARCHAR(255)',
+            'age'  => 'INT DEFAULT NULL'
+        );
+        $this->adapter->createTable('test_data', $columns);
+        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', 42)');
+
+        $result = $this->adapter->sqlQuery('SELECT * FROM test_data AS d WHERE d.name=\'Test\'');
+
+        $this->assertInternalType('array', $result);
+        $this->assertContains(array('name' => 'Test', 'age' => 42), $result);
+    }
+
+    /**
      * Checks if createTable() overwrites a table with the same name if it already exists.
      */
     public function testCreateTableOverwritesPreviousTable()
