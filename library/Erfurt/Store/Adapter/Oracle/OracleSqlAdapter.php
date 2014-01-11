@@ -113,7 +113,28 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $this->connection->exec($sqlQuery);
+        if (!$this->isSelect($sqlQuery)) {
+            $this->connection->exec($sqlQuery);
+            return array();
+        }
+        if ($limit !== PHP_INT_MAX || $offset > 0) {
+            $sqlQuery = $this->connection->getDatabasePlatform()->modifyLimitQuery($sqlQuery, $limit, $offset);
+        }
+        $rows = $this->connection->query($sqlQuery)->fetchAll();
+        return array_map(function (array $row) {
+            return array_change_key_case($row, CASE_LOWER);
+        }, $rows);
+    }
+
+    /**
+     * Checks if $query is a SELECT query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isSelect($query)
+    {
+        return strpos(ltrim($query), 'SELECT ') === 0;
     }
 
     /**
