@@ -26,4 +26,12 @@ class Erfurt_Store_Adapter_Oracle_Doctrine_Driver extends OracleDriver
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getSchemaManager(\Doctrine\DBAL\Connection $conn)
+    {
+        return new \Erfurt_Store_Adapter_Oracle_Doctrine_SchemaManager($conn);
+    }
+
 }
