@@ -60,7 +60,7 @@ class Erfurt_Store_Adapter_OracleTest extends \PHPUnit_Framework_TestCase
         );
         $adapter = Erfurt_Store_Adapter_Oracle::createFromOptions($options);
 
-        $this->assertInstanceOf('Erfurt_Store_Adapter_Oracle_OracleAdapter', $adapter);
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Interface', $adapter);
     }
 
 }
