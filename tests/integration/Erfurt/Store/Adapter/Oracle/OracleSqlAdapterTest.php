@@ -216,7 +216,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
             /* @var $row array(string=>mixed) */
             $this->assertInternalType('array', $row);
             $this->assertArrayHasKey('age', $row);
-            $this->assertGreaterThan(5, $row['age']);
+            $this->assertGreaterThanOrEqual(5, $row['age']);
         }
     }
 
