@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Access layer for the basic Oracle SQL functionality.
@@ -12,13 +14,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
 {
 
     /**
+     * The connection that is used.
+     *
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection = null;
+
+    /**
      * Creates an adapter that uses the provided database connection.
      *
      * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
-
+        $this->connection = $connection;
     }
 
     /**
@@ -30,7 +39,29 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function createTable($tableName, array $columns)
     {
-        // TODO: Implement createTable() method.
+        $table = new Table($tableName);
+        foreach ($columns as $name => $specification) {
+            /* @var $name string */
+            /* @var $specification string */
+            if (strpos($specification, 'INT') !== false) {
+                $type = Type::INTEGER;
+            } else if (strpos($specification, 'TEXT') !== false) {
+                $type = Type::TEXT;
+            } else {
+                $type = Type::STRING;
+            }
+            $options = array();
+            if (strpos($specification, 'DEFAULT NULL') !== false) {
+                $options['default'] = null;
+            } else if (strpos($specification, 'NOT NULL') !== false) {
+                $options['notnull'] = true;
+            }
+            if (strpos($specification, 'AUTO_INCREMENT')) {
+                // TODO sequence?
+            }
+            $table->addColumn($name, $type, $options);
+        }
+        $this->connection->getSchemaManager()->dropAndCreateTable($table);
     }
 
     /**
@@ -51,7 +82,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function listTables($prefix = '')
     {
-        // TODO: Implement listTables() method.
+        $names = $this->connection->getSchemaManager()->listTableNames();
+        $names = array_map('strtolower', $names);
+        if ($prefix !== '') {
+            $names = array_filter($names, function ($name) use ($prefix) {
+                return strpos($name, $prefix) === 0;
+            });
+        }
+        return $names;
     }
 
     /**
@@ -64,7 +102,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        // TODO: Implement sqlQuery() method.
+        $this->connection->exec($sqlQuery);
     }
 
 }
