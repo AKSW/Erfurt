@@ -280,16 +280,34 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     public function testCreateTableOverwritesPreviousTable()
     {
         $columns = array(
-            'name'    => 'VARCHAR(255)'
+            'name' => 'VARCHAR(255)'
         );
         $this->adapter->createTable('test_data', $columns);
         $columns = array(
-            'id'    => 'VARCHAR(255)'
+            'id' => 'VARCHAR(255)'
         );
         $this->adapter->createTable('test_data', $columns);
 
         $this->setExpectedException(null);
         $this->adapter->sqlQuery('INSERT INTO test_data (id) VALUES (\'hello\')');
+    }
+
+    /**
+     * Checks if the adapter is able to handle quoted single quote characters
+     * in queries.
+     */
+    public function testAdapterCanHandleQuotedSingleQuotes()
+    {
+        $columns = array(
+            'name' => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $this->adapter->sqlQuery('INSERT INTO test_data (id) VALUES (\'hello \\\' quote\')');
+        $result = $this->adapter->sqlQuery('SELECT * FROM test_data WHERE name=\'hello \\\' quote\'');
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
     }
 
     /**
