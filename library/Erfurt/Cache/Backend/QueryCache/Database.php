@@ -91,7 +91,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $this->store->createTable('ef_cache_query_result', $columnSpec);
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
+                'CREATE INDEX ef_cqr_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
             );
         }
 
@@ -114,7 +114,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
+                'CREATE INDEX ef_cqm_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
             );
         }
 
