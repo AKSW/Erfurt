@@ -79,6 +79,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             if (strpos($specification, 'PRIMARY KEY') !== false) {
                 $primaryKeyColumns[] = $name;
             }
+            $matches = array();
+            if (preg_match('/VARCHAR\((\d+)\)/', $specification, $matches)) {
+                $options['length'] = (int)$matches[1];
+            }
             $table->addColumn($name, $type, $options);
         }
         if (count($primaryKeyColumns) > 0) {
