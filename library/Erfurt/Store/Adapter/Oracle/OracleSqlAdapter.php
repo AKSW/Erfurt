@@ -47,7 +47,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function createTable($tableName, array $columns)
     {
-        $table = new Table($tableName);
+        $tableName = strtoupper($tableName);
+        $table     = new Table($tableName);
         $autoIncrementColumns = array();
         $primaryKeyColumns    = array();
         foreach ($columns as $name => $specification) {
@@ -163,12 +164,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $parsed['SELECT'] = $this->quoteIdentifiers($parsed['SELECT']);
         }
         if (isset($parsed['FROM'])) {
-            foreach (array_keys($parsed['FROM']) as $index) {
-                /* @var $index integer */
-                if (isset($parsed['FROM'][$index]['alias']) && $parsed['FROM'][$index]['alias'] !== false) {
-                    $parsed['FROM'][$index]['alias']['as'] = false;
-                }
-            }
+            $parsed['FROM'] = $this->quoteIdentifiers($parsed['FROM']);
         }
         if (isset($parsed['WHERE'])) {
             $parsed['WHERE'] = $this->quoteIdentifiers($parsed['WHERE']);
@@ -190,6 +186,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             /* @var $index integer */
             if ($parts[$index]['expr_type'] === 'colref' && $parts[$index]['base_expr'] !== '*') {
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
+            } else if ($parts[$index]['expr_type'] === 'table') {
+                $parts[$index]['table'] = $this->quoteIdentifier($parts[$index]['table']);
+            }
+            if (isset($parts[$index]['alias']) && $parts[$index]['alias'] !== false) {
+                $parts[$index]['alias']['as'] = false;
+                $parts[$index]['alias']['name'] = $this->quoteIdentifier($parts[$index]['alias']['name']);
             }
         }
         return $parts;
