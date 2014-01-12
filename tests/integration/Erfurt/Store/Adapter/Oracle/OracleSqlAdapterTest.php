@@ -342,6 +342,15 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter normalizes the exception that are thrown.
+     */
+    public function testAdapterNormalizesExceptions()
+    {
+        $this->setExpectedException('Erfurt_Store_Adapter_Exception');
+        $this->adapter->sqlQuery('NOT VALID');
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
