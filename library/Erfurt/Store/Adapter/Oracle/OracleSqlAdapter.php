@@ -127,31 +127,47 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $sqlQuery = $this->rewriteQuery($sqlQuery);
+        $converted = $this->rewriteQuery($sqlQuery);
         if (!$this->isSelect($sqlQuery)) {
-            $this->connection->exec($sqlQuery);
+            $statement = $this->connection->prepare($converted->query);
+            $statement->execute($converted->params);
             return array();
         }
         if ($limit !== PHP_INT_MAX || $offset > 0) {
-            $sqlQuery = $this->connection->getDatabasePlatform()->modifyLimitQuery($sqlQuery, $limit, $offset);
+            $platform = $this->connection->getDatabasePlatform();
+            $converted->query = $platform->modifyLimitQuery(
+                $converted->query,
+                $limit,
+                $offset
+            );
         }
-        $rows = $this->connection->query($sqlQuery)->fetchAll();
+        $statement = $this->connection->prepare($converted->query);
+        $statement->execute($converted->params);
+        $rows = $statement->fetchAll();
         return array_map(function (array $row) {
             return array_change_key_case($row, CASE_LOWER);
         }, $rows);
     }
 
     /**
-     * Rewrites the provided SELECT query to remove MySQL specific parts
+     * Rewrites the provided query to remove MySQL specific parts
      * and apply proper escaping.
      *
+     * Returns an object that contains the query as well as associated
+     * parameters.
+     * The object has the following attributes:
+     *
+     * * query  - The rewritten query as string.
+     * * params - A map from parameter names to parameter values.
+     *
      * @param string $query
-     * @return string
+     * @return \stdClass
      */
     protected function rewriteQuery($query)
     {
         $parser = new Parser();
         $parsed = $parser->parse($query);
+        $params = array();
         if (isset($parsed['INSERT'])) {
             // Assign the first INSERT entry. Otherwise the creator seems to fail
             // when creating the statement.
@@ -160,16 +176,66 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parsed['INSERT']['columns'] = $this->quoteIdentifiers($parsed['INSERT']['columns']);
             }
         }
+        if (isset($parsed['VALUES'])) {
+            foreach ($parsed['VALUES'] as $recordIndex => $record) {
+                /* @var $record array(string=>mixed) */
+                $conversion = $this->convertLiteralsToParams($record['data'], 'VALUES' . $recordIndex);
+                $parsed['VALUES'][$recordIndex]['data'] = $conversion->parts;
+                $params = $params + $conversion->params;
+            }
+        }
         foreach (array('SELECT', 'FROM', 'WHERE') as $partName) {
             /* @var $partName string */
             if (!isset($parsed[$partName])) {
                 continue;
             }
             $parsed[$partName] = $this->quoteIdentifiers($parsed[$partName]);
+            $conversion = $this->convertLiteralsToParams($parsed[$partName], $partName);
+            $parsed[$partName] = $conversion->parts;
+            $params = $params + $conversion->params;
         }
         $creator = new Creator();
-        $rewritten = $creator->create($parsed);
-        return $rewritten;
+        $result  = new \stdClass();
+        $result->query = $creator->create($parsed);
+        $result->params = $params;
+        return $result;
+    }
+
+    /**
+     * Replaces literals by parameters that can be used with prepared
+     * statements.
+     *
+     * Returns an object with the following attributes:
+     *
+     * * parts  - The rewritten query parts.
+     * * params - Map from parameter name to parameter value.
+     *
+     * @param array(array(string=>mixed)) $parts
+     * @param string $prefix Prefix for the parameters.
+     * @return stdClass
+     */
+    protected function convertLiteralsToParams(array $parts, $prefix)
+    {
+        $params = array();
+        foreach (array_keys($parts) as $index) {
+            /* @var $index integer */
+            if ($parts[$index]['expr_type'] === 'const') {
+                $literal = $parts[$index]['base_expr'];
+                // Remove the surrounding quotes...
+                $literal = trim($literal, "'");
+                // ... and revert the quoting.
+                $literal = stripcslashes($literal);
+                // Replace the literal by a parameter...
+                $paramName = 'p_' . $prefix . '_' . count($params);
+                $parts[$index]['base_expr'] = ':' . $paramName;
+                // ... and add the parameter to the map.
+                $params[$paramName] = $literal;
+            }
+        }
+        $conversion = new \stdClass();
+        $conversion->parts  = $parts;
+        $conversion->params = $params;
+        return $conversion;
     }
 
     /**
