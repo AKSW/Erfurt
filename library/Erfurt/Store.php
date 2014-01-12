@@ -1822,9 +1822,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * one statement where the given resource URI is used as a subject.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getGraphsUsingResource($resourceUri, $useAc = true)
+    public function getGraphsUsingResource($resourceUri, $useAc = true, $order = false)
     {
         if (method_exists($this->_backendAdapter, 'getGraphsUsingResource')) {
             $backendResult = $this->_backendAdapter->getGraphsUsingResource($resourceUri);
@@ -1838,26 +1839,32 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     }
                 }
 
-                return $realResult;
+                $graphs = $realResult;
             } else {
-                return $backendResult;
+                $graphs = $backendResult;
             }
+        } else {
+            $query = new Erfurt_Sparql_SimpleQuery();
+            $query->setProloguePart('SELECT DISTINCT ?graph')
+                ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
+
+            $graphResult = array();
+            $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
+
+            if ($result) {
+                foreach ($result as $row) {
+                    $graphResult[] = $row['graph'];
+                }
+            }
+
+            $graphs = $graphResult;
         }
 
-        $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT DISTINCT ?graph')
-              ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
-
-        $graphResult = array();
-        $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
-
-        if ($result) {
-            foreach ($result as $row) {
-                $graphResult[] = $row['graph'];
-            }
+        if ($order) {
+            $graphs = $this->_compareResourceUriToModelUri($graphs, $resourceUri);
         }
 
-        return $graphResult;
+        return $graphs;
     }
 
     /**
@@ -1865,11 +1872,12 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * readable.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getReadableGraphsUsingResource($resourceUri)
+    public function getReadableGraphsUsingResource($resourceUri, $order = false)
     {
-        $result = $this->getGraphsUsingResource($resourceUri, false);
+        $result = $this->getGraphsUsingResource($resourceUri, false, $order);
 
         if ($result) {
             // get source graph
@@ -2170,5 +2178,32 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     protected function _getErfurtLogger()
     {
         return $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
+    }
+
+    /**
+     * This method compares a list of graphs to a resourceUri and orders the graphs according to
+     * their accordance of the namespace.
+     *
+     * @param array $graphs list of graph URIs
+     * @param string $resourceUri the URI of the resource
+     * @return array containing the ordered graph URIs
+     */
+    protected function _compareResourceUriToModelUri($graphs, $resourceUri)
+    {
+        $namespaceMatch = array();
+        $rest = array();
+        foreach ($graphs as $graphUri) {
+            if (strpos($resourceUri, $graphUri) === 0) {
+                $namespaceMatch[] = $graphUri;
+            } else {
+                $rest[] = $graphUri;
+            }
+        }
+
+        usort($namespaceMatch, function($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
+        return array_merge($namespaceMatch, $rest);
     }
 }
