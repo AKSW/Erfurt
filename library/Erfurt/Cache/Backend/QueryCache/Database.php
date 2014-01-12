@@ -150,9 +150,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
-            $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)'
-            );
         }
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
