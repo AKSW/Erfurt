@@ -77,7 +77,16 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $autoIncrementColumns[] = $name;
             }
             if (strpos($specification, 'PRIMARY KEY') !== false) {
-                $primaryKeyColumns[] = $name;
+                $matches = array();
+                preg_match('/PRIMARY KEY \(([a-zA-Z ,]+)\)/', $specification, $matches);
+                if (isset($matches[1])) {
+                    // Multiple columns are specified as primary key here...
+                    $names = explode(', ', $matches[1]);
+                    $names = array_map('trim', $names);
+                    $primaryKeyColumns = array_merge($primaryKeyColumns, $names);
+                } else {
+                    $primaryKeyColumns[] = $name;
+                }
             }
             $matches = array();
             if (preg_match('/VARCHAR\((\d+)\)/', $specification, $matches)) {
@@ -85,6 +94,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             }
             $table->addColumn($name, $type, $options);
         }
+        $primaryKeyColumns = array_unique($primaryKeyColumns);
         if (count($primaryKeyColumns) > 0) {
             $table->setPrimaryKey($primaryKeyColumns);
         }
