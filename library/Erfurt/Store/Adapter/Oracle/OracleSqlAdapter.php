@@ -62,10 +62,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $type = Type::INTEGER;
             } else if (strpos($specification, 'TEXT') !== false) {
                 $type = Type::TEXT;
+            } else if (strpos($specification, 'FLOAT')) {
+                $type = Type::FLOAT;
             } else {
                 $type = Type::STRING;
             }
-            $options = array();
+            $options = array('notnull' => false);
             if (strpos($specification, 'DEFAULT NULL') !== false) {
                 $options['default'] = null;
             } else if (strpos($specification, 'NOT NULL') !== false) {
@@ -171,8 +173,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function rewriteQuery($query)
     {
-        if ($this->isDropQuery($query)) {
-            // Do not rewrite DROP queries as these are not supported
+        if ($this->isDropQuery($query) || $this->isQueryOfType($query, 'CREATE')) {
+            // Do not rewrite DROP and DROP queries as these are not supported
             // by the creator.
             $result  = new \stdClass();
             $result->query = $query;
@@ -370,7 +372,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function isDropQuery($query)
     {
-        return strpos(ltrim($query), 'DROP') === 0;
+        return $this->isQueryOfType($query, 'DROP');
     }
 
     /**
@@ -381,7 +383,23 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function isSelectQuery($query)
     {
-        return strpos(ltrim($query), 'SELECT ') === 0;
+        return $this->isQueryOfType($query, 'SELECT');
+    }
+
+    /**
+     * Checks if the query is of the provided type.
+     *
+     * Example:
+     *
+     *     $this->isQueryOfType('SELECT * FROM DUAL', 'SELECT');
+     *
+     * @param string $query
+     * @param string $type
+     * @return boolean
+     */
+    protected function isQueryOfType($query, $type)
+    {
+        return strpos(ltrim($query), $type) === 0;
     }
 
     /**
