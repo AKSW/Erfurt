@@ -170,6 +170,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 }
             }
         }
+        if (isset($parsed['WHERE'])) {
+            $parsed['WHERE'] = $this->quoteIdentifiers($parsed['WHERE']);
+        }
         $creator = new Creator();
         $rewritten = $creator->create($parsed);
         return $rewritten;
