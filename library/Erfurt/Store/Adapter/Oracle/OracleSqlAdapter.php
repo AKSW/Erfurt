@@ -126,11 +126,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
+        $sqlQuery = $this->rewriteSelect($sqlQuery);
         if (!$this->isSelect($sqlQuery)) {
             $this->connection->exec($sqlQuery);
             return array();
         }
-        $sqlQuery = $this->rewriteSelect($sqlQuery);
         if ($limit !== PHP_INT_MAX || $offset > 0) {
             $sqlQuery = $this->connection->getDatabasePlatform()->modifyLimitQuery($sqlQuery, $limit, $offset);
         }
@@ -151,22 +151,56 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
     {
         $parser = new Parser();
         $parsed = $parser->parse($query);
-        foreach (array_keys($parsed['SELECT']) as $index) {
-            /* @var $index integer */
-            if ($parsed['SELECT'][$index]['expr_type'] === 'colref' && $parsed['SELECT'][$index]['base_expr'] !== '*') {
-                $name = strtoupper($parsed['SELECT'][$index]['base_expr']);
-                $parsed['SELECT'][$index]['base_expr'] = $this->connection->quoteIdentifier($name);
+        if (isset($parsed['INSERT'])) {
+            // Assign the first INSERT entry. Otherwise the creator seems to fail
+            // when creating the statement.
+            $parsed['INSERT'] = current($parsed['INSERT']);
+            if (isset($parsed['INSERT']['columns']) && is_array($parsed['INSERT']['columns'])) {
+                $parsed['INSERT']['columns'] = $this->quoteIdentifiers($parsed['INSERT']['columns']);
             }
         }
-        foreach (array_keys($parsed['FROM']) as $index) {
-            /* @var $index integer */
-            if (isset($parsed['FROM'][$index]['alias']) && $parsed['FROM'][$index]['alias'] !== false) {
-                $parsed['FROM'][$index]['alias']['as'] = false;
+        if (isset($parsed['SELECT'])) {
+            $parsed['SELECT'] = $this->quoteIdentifiers($parsed['SELECT']);
+        }
+        if (isset($parsed['FROM'])) {
+            foreach (array_keys($parsed['FROM']) as $index) {
+                /* @var $index integer */
+                if (isset($parsed['FROM'][$index]['alias']) && $parsed['FROM'][$index]['alias'] !== false) {
+                    $parsed['FROM'][$index]['alias']['as'] = false;
+                }
             }
         }
         $creator = new Creator();
         $rewritten = $creator->create($parsed);
         return $rewritten;
+    }
+
+    /**
+     * Quotes the identifiers that occur in the provided query parts.
+     *
+     * @param array(array(string=>mixed)) $parts
+     * @return array(array(string=>mixed))
+     */
+    protected function quoteIdentifiers(array $parts)
+    {
+        foreach (array_keys($parts) as $index) {
+            /* @var $index integer */
+            if ($parts[$index]['expr_type'] === 'colref' && $parts[$index]['base_expr'] !== '*') {
+                $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
+            }
+        }
+        return $parts;
+    }
+
+    /**
+     * Quotes the provided identifier.
+     *
+     * @param string $identifier
+     * @return string
+     */
+    protected function quoteIdentifier($identifier)
+    {
+        return $this->connection->quoteIdentifier(strtoupper($identifier));
     }
 
     /**

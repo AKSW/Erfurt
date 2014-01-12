@@ -257,21 +257,21 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
-     * Checks if the adapter can handle aliased variables in WHERE clauses.
+     * Checks if the adapter can handle aliased variables (reserved words) in WHERE clauses.
      */
-    public function testAdapterCanHandleAliasedVariablesInWhereClause()
+    public function testAdapterCanHandleAliasedReservedWordVariablesInWhereClause()
     {
         $columns = array(
-            'name' => 'VARCHAR(255)',
-            'age'  => 'INT DEFAULT NULL'
+            'resource' => 'VARCHAR(255)',
+            'model'    => 'VARCHAR(255)'
         );
         $this->adapter->createTable('test_data', $columns);
-        $this->adapter->sqlQuery('INSERT INTO test_data (name, age) VALUES (\'Test\', 42)');
+        $this->adapter->sqlQuery('INSERT INTO test_data (resource, model) VALUES (\'Test\', \'42\')');
 
-        $result = $this->adapter->sqlQuery('SELECT * FROM test_data AS d WHERE d.name=\'Test\'');
+        $result = $this->adapter->sqlQuery('SELECT * FROM test_data AS d WHERE d.resource=\'Test\' AND d.model=\'42\'');
 
         $this->assertInternalType('array', $result);
-        $this->assertContains(array('name' => 'Test', 'age' => 42), $result);
+        $this->assertContains(array('resource' => 'Test', 'model' => '42'), $result);
     }
 
     /**
