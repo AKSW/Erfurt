@@ -128,7 +128,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         $converted = $this->rewriteQuery($sqlQuery);
-        if (!$this->isSelect($sqlQuery)) {
+        if (!$this->isSelectQuery($sqlQuery)) {
             $statement = $this->connection->prepare($converted->query);
             $statement->execute($converted->params);
             return array();
@@ -165,6 +165,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function rewriteQuery($query)
     {
+        if ($this->isDropQuery($query)) {
+            // Do not rewrite DROP queries as these are not supported
+            // by the creator.
+            $result  = new \stdClass();
+            $result->query = $query;
+            $result->params = array();
+            return $result;
+        }
         $parser = new Parser();
         $parsed = $parser->parse($query);
         $params = array();
@@ -184,6 +192,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $params = $params + $conversion->params;
             }
         }
+        if (isset($parsed['SELECT'])) {
+            $parsed['SELECT'] = $this->removeBracketExpressions($parsed['SELECT']);
+        }
         foreach (array('SELECT', 'FROM', 'WHERE') as $partName) {
             /* @var $partName string */
             if (!isset($parsed[$partName])) {
@@ -199,6 +210,27 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         $result->query = $creator->create($parsed);
         $result->params = $params;
         return $result;
+    }
+
+    /**
+     * Removes bracket expressions from the provided query parts.
+     *
+     * This might be necessary as the creator is not able to handle these
+     * expressions in the SELECT part.
+     *
+     * @param array(array(string=>mixed)) $parts
+     * @return array(array(string=>mixed))
+     */
+    protected function removeBracketExpressions(array $parts)
+    {
+        foreach (array_keys($parts) as $index) {
+            /* @var $index integer */
+            if ($parts[$index]['expr_type'] === 'bracket_expression') {
+                // Move up the sub tree that is stored in the brackets.
+                $parts[$index] = $parts[$index]['sub_tree'];
+            }
+        }
+        return $parts;
     }
 
     /**
@@ -273,12 +305,23 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
     }
 
     /**
+     * Checks if the provided query is a DROP query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isDropQuery($query)
+    {
+        return strpos(ltrim($query), 'DROP') === 0;
+    }
+
+    /**
      * Checks if $query is a SELECT query.
      *
      * @param string $query
      * @return boolean
      */
-    protected function isSelect($query)
+    protected function isSelectQuery($query)
     {
         return strpos(ltrim($query), 'SELECT ') === 0;
     }
