@@ -52,10 +52,6 @@ EOF;
         $queryResult = serialize(array());
         $duration = 1000;
 
-        try {
-            $this->_cacheBackend->save($queryId, $sparql, $modelIris, $triplesPatterns, $queryResult, $duration);
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $this->_cacheBackend->save($queryId, $sparql, $modelIris, $triplesPatterns, $queryResult, $duration);
     }
 }
