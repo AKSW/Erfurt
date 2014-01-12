@@ -249,10 +249,4 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $this->assertStatementsEqual($expected, $got, 'Graph after resource renaming');
     }
 
-    protected function countTriplesInGraph($graph)
-    {
-        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
-        $result = $this->_storeStub->sparqlQuery($sparql);
-    }
-
 }
