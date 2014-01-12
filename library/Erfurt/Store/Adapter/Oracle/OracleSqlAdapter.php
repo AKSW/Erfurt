@@ -127,7 +127,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $sqlQuery = $this->rewriteSelect($sqlQuery);
+        $sqlQuery = $this->rewriteQuery($sqlQuery);
         if (!$this->isSelect($sqlQuery)) {
             $this->connection->exec($sqlQuery);
             return array();
@@ -148,7 +148,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      * @param string $query
      * @return string
      */
-    protected function rewriteSelect($query)
+    protected function rewriteQuery($query)
     {
         $parser = new Parser();
         $parsed = $parser->parse($query);
