@@ -328,6 +328,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can handle DELETE queries.
+     */
+    public function testAdapterCanHandleDeleteQueries()
+    {
+        $columns = array(
+            'name' => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $this->setExpectedException(null);
+        $this->adapter->sqlQuery('DELETE FROM test_data WHERE name=\'Matthias\'');
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
