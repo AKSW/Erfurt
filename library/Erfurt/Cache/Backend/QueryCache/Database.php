@@ -854,7 +854,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     $logger->debug($se->getMessage());
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception(
-                        'Something went wrong while building query cache structure: ' . $se->getMessage()
+                        'Something went wrong while building query cache structure: ' . $se->getMessage(),
+                        0,
+                        $e
                     );
                 }
             } else {
