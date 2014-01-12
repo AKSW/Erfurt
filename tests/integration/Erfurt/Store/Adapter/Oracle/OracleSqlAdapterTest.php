@@ -303,7 +303,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         );
         $this->adapter->createTable('test_data', $columns);
 
-        $this->adapter->sqlQuery('INSERT INTO test_data (id) VALUES (\'hello \\\' quote\')');
+        $this->adapter->sqlQuery('INSERT INTO test_data (name) VALUES (\'hello \\\' quote\')');
         $result = $this->adapter->sqlQuery('SELECT * FROM test_data WHERE name=\'hello \\\' quote\'');
 
         $this->assertInternalType('array', $result);
