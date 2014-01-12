@@ -127,8 +127,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-
         }
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
