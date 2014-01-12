@@ -161,13 +161,9 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $this->assertFalse($model->isEditable());
         
         $ac->setUserModelRight('http://example.org/', 'view', 'deny');
-        try {
-            $model = $store->getModel('http://example.org/');
-            
-            $this->fail('Model should not be readable here.');
-        } catch (Exception $e) {
-            
-        }
+        
+        $this->setExpectedException('Exception');
+        $store->getModel('http://example.org/');
     }
 
     public function testRenameResource()
