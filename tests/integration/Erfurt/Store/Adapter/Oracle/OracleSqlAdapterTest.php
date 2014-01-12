@@ -317,7 +317,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     public function testAdapterCanHandleGroupedPartsInWhereSection()
     {
         $columns = array(
-            'resource' => 'VARCHAR(255)'
+            'name' => 'VARCHAR(255)'
         );
         $this->adapter->createTable('test_data', $columns);
 
