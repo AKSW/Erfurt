@@ -60,9 +60,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $name = strtoupper($name);
             if (strpos($specification, 'INT') !== false) {
                 $type = Type::INTEGER;
-            } else if (strpos($specification, 'TEXT') !== false) {
+            } else if (strpos($specification, 'TEXT') !== false || strpos($specification, 'LONG') !== false) {
                 $type = Type::TEXT;
-            } else if (strpos($specification, 'FLOAT')) {
+            } else if (strpos($specification, 'FLOAT') !== false) {
                 $type = Type::FLOAT;
             } else {
                 $type = Type::STRING;
