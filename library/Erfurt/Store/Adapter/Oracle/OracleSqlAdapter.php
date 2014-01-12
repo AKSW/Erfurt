@@ -124,29 +124,35 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      * @param int $limit Maximum number of results to return
      * @param int $offset The number of results to skip from the beginning
      * @return array
+     * @throws Erfurt_Store_Adapter_Exception If an error occurs.
      */
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
-        $converted = $this->rewriteQuery($sqlQuery);
-        if (!$this->isSelectQuery($sqlQuery)) {
+        try {
+            $converted = $this->rewriteQuery($sqlQuery);
+            if (!$this->isSelectQuery($sqlQuery)) {
+                $statement = $this->connection->prepare($converted->query);
+                $statement->execute($converted->params);
+                return array();
+            }
+            if ($limit !== PHP_INT_MAX || $offset > 0) {
+                $platform = $this->connection->getDatabasePlatform();
+                $converted->query = $platform->modifyLimitQuery(
+                    $converted->query,
+                    $limit,
+                    $offset
+                );
+            }
             $statement = $this->connection->prepare($converted->query);
             $statement->execute($converted->params);
-            return array();
+            $rows = $statement->fetchAll();
+            return array_map(function (array $row) {
+                return array_change_key_case($row, CASE_LOWER);
+            }, $rows);
+        } catch (Exception $e) {
+            // Normalize the exception type.
+            throw new Erfurt_Store_Adapter_Exception($e->getMessage(), 0, $e);
         }
-        if ($limit !== PHP_INT_MAX || $offset > 0) {
-            $platform = $this->connection->getDatabasePlatform();
-            $converted->query = $platform->modifyLimitQuery(
-                $converted->query,
-                $limit,
-                $offset
-            );
-        }
-        $statement = $this->connection->prepare($converted->query);
-        $statement->execute($converted->params);
-        $rows = $statement->fetchAll();
-        return array_map(function (array $row) {
-            return array_change_key_case($row, CASE_LOWER);
-        }, $rows);
     }
 
     /**
