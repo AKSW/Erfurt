@@ -262,6 +262,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parts[$index]['base_expr'] = ':' . $paramName;
                 // ... and add the parameter to the map.
                 $params[$paramName] = $literal;
+            } else if ($parts[$index]['expr_type'] === 'bracket_expression') {
+                // Sub tree must be processed.
+                $subTree = $parts[$index]['sub_tree'];
+                $subTreeConversion = $this->convertLiteralsToParams($subTree, $prefix . '_' . $index);
+                $parts[$index]['sub_tree'] = $subTreeConversion->parts;
+                $params = $params + $subTreeConversion->params;
             }
         }
         $conversion = new \stdClass();
@@ -284,6 +290,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
             } else if ($parts[$index]['expr_type'] === 'table') {
                 $parts[$index]['table'] = $this->quoteIdentifier($parts[$index]['table']);
+            } else if ($parts[$index]['expr_type'] === 'bracket_expression') {
+                // Sub tree must be processed.
+                $parts[$index]['sub_tree'] = $this->quoteIdentifiers($parts[$index]['sub_tree']);
             }
             if (isset($parts[$index]['alias']) && $parts[$index]['alias'] !== false) {
                 $parts[$index]['alias']['as'] = false;
