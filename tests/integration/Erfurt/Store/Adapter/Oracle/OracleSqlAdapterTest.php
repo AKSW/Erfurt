@@ -311,6 +311,23 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Ensures that the adapter can handle condition parts in the WHERE section, that
+     * are grouped via brackets.
+     */
+    public function testAdapterCanHandleGroupedPartsInWhereSection()
+    {
+        $columns = array(
+            'resource' => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $result = $this->adapter->sqlQuery('SELECT * FROM test_data WHERE (name=\'Matthias\' OR name=\'Max\')');
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(0, $result);
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
