@@ -253,6 +253,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             /* @var $index integer */
             if ($parts[$index]['expr_type'] === 'const') {
                 $literal = $parts[$index]['base_expr'];
+                if ($literal === 'NULL') {
+                    // Do not touch the NULL keyword in expressions
+                    // like "column IS NULL".
+                    continue;
+                }
                 // Remove the surrounding quotes...
                 $literal = trim($literal, "'");
                 // ... and revert the quoting.
