@@ -175,7 +175,18 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         }
         $parser = new Parser();
         $parsed = $parser->parse($query);
+
         $params = array();
+        $isDelete = isset($parsed['DELETE']);
+        if ($isDelete) {
+            // The creator does not handle DELETE statements correctly.
+            // Therefore, simulate a SELECT and correct the statement afterwards.
+            $simulated = $parser->parse('SELECT * FROM DUAL');
+            unset($simulated['FROM']);
+            unset($parsed['DELETE']);
+            // Prepend the dummy SELECT.
+            $parsed = $simulated + $parsed;
+        }
         if (isset($parsed['INSERT'])) {
             // Assign the first INSERT entry. Otherwise the creator seems to fail
             // when creating the statement.
@@ -209,6 +220,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         $result  = new \stdClass();
         $result->query = $creator->create($parsed);
         $result->params = $params;
+        if ($isDelete) {
+            // Correct DELETE queries by replacing the SELECT * part.
+            $result->query = 'DELETE ' . substr($result->query, strlen('SELECT * '));
+        }
         return $result;
     }
 
