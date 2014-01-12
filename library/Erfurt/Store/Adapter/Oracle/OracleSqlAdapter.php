@@ -160,14 +160,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parsed['INSERT']['columns'] = $this->quoteIdentifiers($parsed['INSERT']['columns']);
             }
         }
-        if (isset($parsed['SELECT'])) {
-            $parsed['SELECT'] = $this->quoteIdentifiers($parsed['SELECT']);
-        }
-        if (isset($parsed['FROM'])) {
-            $parsed['FROM'] = $this->quoteIdentifiers($parsed['FROM']);
-        }
-        if (isset($parsed['WHERE'])) {
-            $parsed['WHERE'] = $this->quoteIdentifiers($parsed['WHERE']);
+        foreach (array('SELECT', 'FROM', 'WHERE') as $partName) {
+            /* @var $partName string */
+            if (!isset($parsed[$partName])) {
+                continue;
+            }
+            $parsed[$partName] = $this->quoteIdentifiers($parsed[$partName]);
         }
         $creator = new Creator();
         $rewritten = $creator->create($parsed);
