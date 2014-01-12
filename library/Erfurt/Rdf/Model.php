@@ -379,7 +379,7 @@ class Erfurt_Rdf_Model
 
     /**
      * Moves resource to new URI
-     * renaming all occurences of the resource.
+     * renaming all occurrences of the resource.
      *
      * @param string $oldUri The URI that identifies the resource.
      * @param string $newUri The URI to move resource to.
