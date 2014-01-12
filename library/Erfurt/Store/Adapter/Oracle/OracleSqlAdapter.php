@@ -238,14 +238,33 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      */
     protected function removeBracketExpressions(array $parts)
     {
-        foreach (array_keys($parts) as $index) {
+        $replace = array();
+        $originalKeys = array_keys($parts);
+        foreach ($originalKeys as $index) {
             /* @var $index integer */
             if ($parts[$index]['expr_type'] === 'bracket_expression') {
                 // Move up the sub tree that is stored in the brackets.
-                $parts[$index] = $parts[$index]['sub_tree'];
+                // The sub tree may consist of several expressions.
+                $replace[$index] = $parts[$index]['sub_tree'];
+                unset($parts[$index]);
             }
         }
-        return $parts;
+        if (count($replace) === 0) {
+            // Nothing to replace.
+            return $parts;
+        }
+        $newParts = array();
+        foreach ($originalKeys as $index) {
+            /* @var $index integer */
+            if (isset($parts[$index])) {
+                // The previous value can be used.
+                $newParts[] = $parts[$index];
+            } else {
+                // Insert all sub tree elements at the new position.
+                $newParts = array_merge($newParts, $replace[$index]);
+            }
+        }
+        return $newParts;
     }
 
     /**
@@ -306,6 +325,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
     {
         foreach (array_keys($parts) as $index) {
             /* @var $index integer */
+            if (!isset($parts[$index]['expr_type'])) {
+                $test = 1;
+                continue;
+            }
             if ($parts[$index]['expr_type'] === 'colref' && $parts[$index]['base_expr'] !== '*') {
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
             } else if ($parts[$index]['expr_type'] === 'table') {
