@@ -549,10 +549,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     public function importRdf($graphUri, $data, $type, $locator, array $options = array())
     {
         if (isset($options['useISQL'])) {
-            if (!Erfurt_Isql::detectBinary()) {
+            if (!Erfurt_Store_Adapter_Virtuoso_Isql::detectBinary()) {
                 throw new RuntimeException('ISQL not available');
             }
-            return Erfurt_Isql::importFile($graphUri, $data);                
+            return Erfurt_Store_Adapter_Virtuoso_Isql::importFile($graphUri, $data);                
         }
         
         // check type parameter
