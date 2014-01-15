@@ -2,17 +2,19 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright  Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @author     Christian Würker <christian.wuerker@ceusmedia.de>
+ * @copyright  2014, Eccenca GmbH
  */
 
 /**
  * OntoWiki utility class.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @packaget
- * @author Christian Würker <christian.wuerker@ceusmedia.de>
+ * @copyright  Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @license    http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @deprecated use Erfurt_Store_Adapter_Virtuoso_Isql instead
+ * @author     Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Erfurt_Isql
 {
@@ -86,7 +88,7 @@ class Erfurt_Isql
         }
         return FALSE;
     }
-    
+
     /**
      * Runs ISQL script file using ISQL shell command.
      * @static

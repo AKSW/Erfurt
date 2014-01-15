@@ -4,15 +4,18 @@
  *
  * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @author    Christian Würker <christian.wuerker@ceusmedia.de>
+ * @author    Benjamin Nowack
+ * @copyright 2014, Eccenca GmbH
  */
 
 /**
- * OntoWiki utility class.
+ * Support for ISQL imports.
  *
  * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @packaget
- * @author Christian Würker <christian.wuerker@ceusmedia.de>
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @author    Christian Würker <christian.wuerker@ceusmedia.de>
+ * @author    Benjamin Nowack
  */
 class Erfurt_Store_Adapter_Virtuoso_Isql
 {
@@ -58,8 +61,13 @@ class Erfurt_Store_Adapter_Virtuoso_Isql
      */
     static public function importFile($graphUri, $filepath, $server = "localhost", $port = 1111)
     {
+        // script path
         if (!file_exists($filepath)) {
             throw new RuntimeException('Invalid file: '.$filepath);
+        }
+        // isql binary
+        if (!self::detectBinary()) {
+            throw new RuntimeException('ISQL is not available');
         }
         $filepath   = realpath( $filepath );
         $isql       = self::$pathToBinary.' '.$server.':'.$port;
@@ -67,12 +75,15 @@ class Erfurt_Store_Adapter_Virtuoso_Isql
         $command    = sprintf($template, $filepath, $graphUri);
         $a          = array();
         $b          = 0;
+        // isql call
         @exec ('echo "'.$command.'" | '.$isql.' 2>&1', $a, $b);
         if ($b === 0) {
             $a  = array_slice($a, 5, -1);
+            // success
             if (preg_match("/^Done./", $a[0])) {
                 return TRUE;
             }
+            // error
             if (preg_match("/ Error /", $a[0])) {
                 $parts  = explode(": ", $a[0]);
                 if (count($parts) > 1) {
@@ -85,5 +96,35 @@ class Erfurt_Store_Adapter_Virtuoso_Isql
             }
         }
         return FALSE;
+    }
+
+    /**
+     * Runs ISQL script file using ISQL shell command.
+     * @static
+     * @access public
+     * @return array Line array returned by the isql binary
+     * @throws RuntimeException if ISQL reports an error
+     */
+    static public function runScript($scriptPath, $server = "localhost", $port = 1111)
+    {
+        // script path
+        if (!file_exists($scriptPath)) {
+            throw new RuntimeException("Invalid file: $scriptPath.");
+        }
+        // isql binary
+        if (!self::detectBinary()) {
+            throw new RuntimeException('ISQL is not available');
+        }
+        // isql call
+        $output = array();
+        exec(self::$pathToBinary . " $server:$port < " . realpath($scriptPath) ." 2>&1", $output);
+        // error
+        $matches    = array();
+        if (preg_match('/(Error .+)$/s', implode(PHP_EOL, $output), $matches)) {
+            $lines = array_slice(explode(PHP_EOL, $matches[1]), 0, 6); // up to 6 error lines
+            $errorMessage = implode(PHP_EOL, $lines);
+            throw new RuntimeException($errorMessage);
+        }
+        return $output;
     }
 }
