@@ -483,6 +483,14 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         if ($objectSpec['type'] === 'uri') {
             return '<' . $objectSpec['value'] . '>';
         }
+        if (isset($objectSpec['datatype']) && $objectSpec['datatype'] === 'http://www.w3.org/2001/XMLSchema#string') {
+            // The triples in the table are stored with their data type, but when loading
+            // data via SPARQL query, then Oracle does not distinguish between untyped and
+            // string literals.
+            // To avoid further problems resulting from this mismatch, strings are not explicitly
+            // marked.
+            unset($objectSpec['datatype']);
+        }
         return Erfurt_Utils::buildLiteralString(
             $objectSpec['value'],
             isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null,
