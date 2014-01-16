@@ -972,8 +972,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      * Checks if the triple definition from the extended SPARQL select result set can be used
      * to delete the specified triples via deleteMatchingStatements().
      *
-     * This test checks if the desired behavior works for triple with typed object and language
-     * definition.
+     * This test checks if the desired behavior works for triple with a typed object.
      */
     public function testTripleDefinitionFromExtendedSelectResultCanBePassedToDeleteMatchingStatements()
     {
@@ -983,8 +982,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
             array(
                 'value'    => 'Hello',
                 'type'     => 'literal',
-                'datatype' => EF_XSD_NS . 'string',
-                'lang'     => 'en'
+                'datatype' => EF_XSD_NS . 'string'
             )
         );
 
@@ -995,8 +993,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
         $options = array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED);
         $result = $this->adapter->sparqlQuery($query, $options);
         $this->assertInternalType('array', $result);
-        $this->assertTrue(isset($result['result']['bindings']), 'Missing bindings in result set.');
-        $triple = current($result['result']['bindings']);
+        $this->assertTrue(isset($result['results']['bindings']), 'Missing bindings in result set.');
+        $triple = current($result['results']['bindings']);
         // ... and pass its definition to the delete method.
         $this->adapter->deleteMatchingStatements(
             'http://example.org/graph',
