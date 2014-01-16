@@ -881,17 +881,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
         $this->assertEquals($before - $after, $deleted);
     }
 
-    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsThatAreTypeAsString()
+    /**
+     * Checks if triples with objects that are typed as string are removed correctly.
+     */
+    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsStringCorrectly()
     {
 
     }
 
-    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsThatAreTypeAsInteger()
+    /**
+     * Checks if triples that contain a literal object of type integer are removed correctly.
+     */
+    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsIntegerCorrectly()
     {
 
     }
 
-    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsWithLanguage()
+    /**
+     * Checks if triples with object literal that has a language are removed correctly.
+     */
+    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsWithLanguageCorrectly()
     {
 
     }
