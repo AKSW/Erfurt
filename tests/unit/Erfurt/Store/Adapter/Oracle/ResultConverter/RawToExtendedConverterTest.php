@@ -76,10 +76,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
      */
     public function testConvertAddsCorrectNumberOfBindings()
     {
-        $converted = $this->converter->convert($this->getRawResultSet());
+        $rawResultSet = $this->getRawResultSet();
+        $converted = $this->converter->convert($rawResultSet);
 
         $bindings = $this->getBindings($converted);
-        $this->assertCount(2, $bindings);
+        $this->assertCount(count($rawResultSet), $bindings);
     }
 
     /**
@@ -106,6 +107,76 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
         $bindings = $this->getBindings($converted);
         $this->assertEquals('http://www.example.org/subject', $bindings[1]['subject']['value']);
         $this->assertEquals('Object literal.', $bindings[1]['object']['value']);
+    }
+
+    /**
+     * Ensures that convert() assigns the language to a literal if it is available.
+     */
+    public function testConvertAssignsLanguageIfAvailable()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $bindings = $this->getBindings($converted);
+        $this->assertArrayHasKey(2, $bindings);
+        $this->assertArrayHasKey('lang', $bindings[2]['object']);
+        $this->assertEquals('de', $bindings[2]['object']['lang']);
+    }
+
+    /**
+     * Ensures that convert() does not assign a language entry to an object literal
+     * if the language is not available.
+     */
+    public function testConvertDoesNotAssignLanguageIfItIsNotDefined()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $bindings = $this->getBindings($converted);
+        $this->assertArrayHasKey(1, $bindings);
+        $this->assertArrayNotHasKey('lang', $bindings[1]['object']);
+    }
+
+    /**
+     * Ensures that convert() assigns the data type to an object literal if
+     * it is available.
+     */
+    public function testConvertAssignsDataTypeIfAvailable()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $bindings = $this->getBindings($converted);
+        $this->assertArrayHasKey(3, $bindings);
+        $this->assertArrayHasKey('datatype', $bindings[3]['object']);
+        $this->assertEquals(EF_XSD_NS . 'string', $bindings[3]['object']['datatype']);
+    }
+
+    /**
+     * Ensures that convert() does not add a data type entry t o an object
+     * literal if the data type is not explicitly defined.
+     */
+    public function testConvertDoesNotAssignDataTypeIfItIsNotDefined()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $bindings = $this->getBindings($converted);
+        $this->assertArrayHasKey(1, $bindings);
+        $this->assertArrayNotHasKey('datatype', $bindings[1]['object']);
+    }
+
+    /**
+     * Checks if convert() can handle an empty input array.
+     */
+    public function testConvertCanHandleEmptyArrays()
+    {
+        $expected = array(
+            'head' => array(
+                'vars' => array()
+            ),
+            'results' => array(
+                'bindings' => array()
+            )
+        );
+
+        $this->assertEquals($expected, $this->converter->convert(array()));
     }
 
     /**
@@ -139,23 +210,6 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
             }
         }
         return $bindings;
-    }
-
-    /**
-     * Checks if convert() can handle an empty input array.
-     */
-    public function testConvertCanHandleEmptyArrays()
-    {
-        $expected = array(
-            'head' => array(
-                'vars' => array()
-            ),
-            'results' => array(
-                'bindings' => array()
-            )
-        );
-
-        $this->assertEquals($expected, $this->converter->convert(array()));
     }
 
     /**
@@ -222,6 +276,62 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
                 'OBJECT$RDFLTYP'    => null,
                 'OBJECT$RDFLANG'    => null,
                 'SEM$ROWNUM'        => 2
+            ),
+            // Contains object literal with language.
+            array(
+                'SUBJECT'           => 'http://www.example.org/subject',
+                'SUBJECT$RDFVID'    => 7614293122126211127,
+                'SUBJECT$_PREFIX'   => 'http://www.example.org/',
+                'SUBJECT$_SUFFIX'   => 'subject',
+                'SUBJECT$RDFVTYP'   => 'URI',
+                'SUBJECT$RDFCLOB'   => null,
+                'SUBJECT$RDFLTYP'   => null,
+                'SUBJECT$RDFLANG'   => null,
+                'PREDICATE'         => 'http://www.example.org/predicate',
+                'PREDICATE$RDFVID'  => 8663359142594985318,
+                'PREDICATE$_PREFIX' => 'http://www.example.org/',
+                'PREDICATE$_SUFFIX' => 'predicate',
+                'PREDICATE$RDFVTYP' => 'URI',
+                'PREDICATE$RDFCLOB' => null,
+                'PREDICATE$RDFLTYP' => null,
+                'PREDICATE$RDFLANG' => null,
+                'OBJECT'            => 'Object literal.',
+                'OBJECT$RDFVID'     => 4890984317608187388,
+                'OBJECT$_PREFIX'    => 'Object literal.',
+                'OBJECT$_SUFFIX'    => null,
+                'OBJECT$RDFVTYP'    => 'LIT',
+                'OBJECT$RDFCLOB'    => null,
+                'OBJECT$RDFLTYP'    => null,
+                'OBJECT$RDFLANG'    => 'de',
+                'SEM$ROWNUM'        => 3
+            ),
+            // Contains object literal with data type.
+            array(
+                'SUBJECT'           => 'http://www.example.org/subject',
+                'SUBJECT$RDFVID'    => 7614293122126211127,
+                'SUBJECT$_PREFIX'   => 'http://www.example.org/',
+                'SUBJECT$_SUFFIX'   => 'subject',
+                'SUBJECT$RDFVTYP'   => 'URI',
+                'SUBJECT$RDFCLOB'   => null,
+                'SUBJECT$RDFLTYP'   => null,
+                'SUBJECT$RDFLANG'   => null,
+                'PREDICATE'         => 'http://www.example.org/predicate',
+                'PREDICATE$RDFVID'  => 8663359142594985318,
+                'PREDICATE$_PREFIX' => 'http://www.example.org/',
+                'PREDICATE$_SUFFIX' => 'predicate',
+                'PREDICATE$RDFVTYP' => 'URI',
+                'PREDICATE$RDFCLOB' => null,
+                'PREDICATE$RDFLTYP' => null,
+                'PREDICATE$RDFLANG' => null,
+                'OBJECT'            => 'Object literal.',
+                'OBJECT$RDFVID'     => 4890984317608187388,
+                'OBJECT$_PREFIX'    => 'Object literal.',
+                'OBJECT$_SUFFIX'    => null,
+                'OBJECT$RDFVTYP'    => 'LIT',
+                'OBJECT$RDFCLOB'    => null,
+                'OBJECT$RDFLTYP'    => EF_XSD_NS . 'string',
+                'OBJECT$RDFLANG'    => null,
+                'SEM$ROWNUM'        => 4
             )
         );
     }
