@@ -388,6 +388,7 @@ class Erfurt_Rdf_Model
      */
     public function renameResource($oldUri, $newUri)
     {
+        // Select all triples that contain the $oldUri as subject, predicate or object.
         $query = new Erfurt_Sparql_Query2();
         $query->setDistinct(true);
 
@@ -409,9 +410,10 @@ class Erfurt_Rdf_Model
         $query->addElement($union);
         $result = $this->sparqlQuery($query, array('result_format' => 'extended'));
 
+        // Remove the matching triples and replace them by new ones that contain
+        // the new uri.
         $removed = array();
         $added   = array();
-
         foreach ($result['results']['bindings'] as $s) {
             // result format from sparqlQuery
             // isn't the same as format for delete/addMultipleStatements
