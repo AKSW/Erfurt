@@ -881,6 +881,21 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
         $this->assertEquals($before - $after, $deleted);
     }
 
+    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsThatAreTypeAsString()
+    {
+
+    }
+
+    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsThatAreTypeAsInteger()
+    {
+
+    }
+
+    public function testDeleteMatchingStatementsCanRemoveObjectLiteralsWithLanguage()
+    {
+
+    }
+
     /**
      * Checks if deleteMultipleStatements() removes the provided statements.
      */
