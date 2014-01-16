@@ -281,6 +281,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                       . implode(PHP_EOL, $additionalTriples);
         }
 
-        self::assertEquals($expectedTriples, $gotTriples, rtrim($message));
+        self::assertEquals($expectedTriples, $gotTriples, rtrim($message) . PHP_EOL . PHP_EOL);
     }
 }
