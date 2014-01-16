@@ -886,7 +886,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsStringCorrectly()
     {
+        $object = array(
+            'value'    => 'Hello',
+            'type'     => 'literal',
+            'datatype' => EF_XSD_NS . 'string'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
+
+        $this->assertEquals(0, $this->countTriples());
     }
 
     /**
@@ -894,7 +912,25 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsIntegerCorrectly()
     {
+        $object = array(
+            'value'    => 42,
+            'type'     => 'literal',
+            'datatype' => EF_XSD_NS . 'integer'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
+
+        $this->assertEquals(0, $this->countTriples());
     }
 
     /**
@@ -902,7 +938,34 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testDeleteMatchingStatementsCanRemovesObjectLiteralsWithLanguageCorrectly()
     {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'value' => 'hallo',
+                'type'  => 'literal',
+                'lang'  => 'de'
+            )
+        );
+        $object = array(
+            'value' => 'hello',
+            'type'  => 'literal',
+            'lang'  => 'en'
+        );
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
+
+        $this->assertEquals(1, $this->countTriples());
     }
 
     /**
