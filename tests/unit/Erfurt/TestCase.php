@@ -269,6 +269,18 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $gotTriples = array_map('strval', $gotTriples);
         sort($gotTriples);
 
-        self::assertEquals($expectedTriples, $gotTriples, $message);
+        $missingTriples    = array_diff($expectedTriples, $gotTriples);
+        $additionalTriples = array_diff($gotTriples, $expectedTriples);
+        $message = $message . PHP_EOL . PHP_EOL;
+        if (count($missingTriples) > 0) {
+            $message .= 'The following triples are missing in the provided statement set: '. PHP_EOL
+                      . implode(PHP_EOL, $missingTriples) . PHP_EOL . PHP_EOL;
+        }
+        if (count($additionalTriples) > 0) {
+            $message .= 'The following triples were not expected, but exist in the provided statement set:' . PHP_EOL
+                      . implode(PHP_EOL, $additionalTriples);
+        }
+
+        self::assertEquals($expectedTriples, $gotTriples, rtrim($message));
     }
 }
