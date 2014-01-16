@@ -35,6 +35,15 @@
  *         )
  *     )
  *
+ * If available the language and the data type will be added to literal values, for example:
+ *
+ *     array(
+ *         'value'     => 'Hello world!',
+ *         'type'      => 'literal',
+ *         'lang'      => 'en',
+ *         'datataype' => 'http://www.w3.org/2001/XMLSchema#string'
+ *     )
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 30.12.13
  */
