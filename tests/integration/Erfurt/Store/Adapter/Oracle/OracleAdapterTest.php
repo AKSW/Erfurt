@@ -969,6 +969,46 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if the triple definition from the extended SPARQL select result set can be used
+     * to delete the specified triples via deleteMatchingStatements().
+     *
+     * This test checks if the desired behavior works for triple with typed object and language
+     * definition.
+     */
+    public function testTripleDefinitionFromExtendedSelectResultCanBePassedToDeleteMatchingStatements()
+    {
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'value'    => 'Hello',
+                'type'     => 'literal',
+                'datatype' => EF_XSD_NS . 'string',
+                'lang'     => 'en'
+            )
+        );
+
+        // Select the triple...
+        $query = 'SELECT ?subject ?predicate ?object '
+               . 'FROM <http://example.org/graph> '
+               . '{ ?subject ?predicate ?object . }';
+        $options = array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED);
+        $result = $this->adapter->sparqlQuery($query, $options);
+        $this->assertInternalType('array', $result);
+        $this->assertTrue(isset($result['result']['bindings']), 'Missing bindings in result set.');
+        $triple = current($result['result']['bindings']);
+        // ... and pass its definition to the delete method.
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            $triple['subject']['value'],
+            $triple['predicate']['value'],
+            $triple['object']
+        );
+
+        $this->assertEquals(0, $this->countTriples());
+    }
+
+    /**
      * Checks if deleteMultipleStatements() removes the provided statements.
      */
     public function testDeleteMultipleStatementsRemovesProvidedStatements()
