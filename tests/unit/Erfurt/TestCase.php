@@ -261,38 +261,14 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
      */
     public static function assertStatementsEqual($expected, $got, $message = '')
     {
-        $expectedS = array_keys($expected);
-        sort($expectedS);
-        $gotS = array_keys($got);
-        sort($gotS);
-        self::assertEquals($expectedS, $gotS, $message);
+        $expectedTriples = iterator_to_array(new Erfurt_Store_TripleIterator($expected));
+        $expectedTriples = array_map('strval', $expectedTriples);
+        sort($expectedTriples);
 
-        $sortFn = function(array $a, array $b) {
-            // The attributes that are used for sorting, in descending order.
-            $sortAttributes = array('value', 'type', 'xml:lang');
-            foreach ($sortAttributes as $key) {
-                $valueA = isset($a[$key]) ? $a[$key] : '';
-                $valueB = isset($b[$key]) ? $b[$key] : '';
-                $result = strcmp($valueA, $valueB);
-                if ($result !== 0) {
-                    return $result;
-                }
-            }
-            return 0;
-        };
+        $gotTriples = iterator_to_array(new Erfurt_Store_TripleIterator($got));
+        $gotTriples = array_map('strval', $gotTriples);
+        sort($gotTriples);
 
-        foreach ($expectedS as $s) {
-            $expectedP = array_keys($expected[$s]);
-            sort($expectedP);
-            $gotP = array_keys($got[$s]);
-            sort($gotP);
-            self::assertEquals($expectedP, $gotP, $message);
-
-            foreach ($expectedP as $p) {
-                usort($expected[$s][$p], $sortFn);
-                usort($got[$s][$p], $sortFn);
-                self::assertEquals($expected[$s][$p], $got[$s][$p], $message);
-            }
-        }
+        self::assertEquals($expectedTriples, $gotTriples, $message);
     }
 }
