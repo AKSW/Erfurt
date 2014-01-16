@@ -106,10 +106,17 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter
      */
     protected function extractVariableInformation($variable, array $row)
     {
-        return array(
+        $data = array(
             'value' => $row[$variable],
             'type'  => $this->toTypeIdentifier($row[$variable . '$RDFVTYP'])
         );
+        if ($row[$variable . '$RDFLANG'] !== null) {
+            $data['lang'] = $row[$variable . '$RDFLANG'];
+        }
+        if ($row[$variable . '$RDFLTYP'] !== null) {
+            $data['datatype'] = $row[$variable . '$RDFLTYP'];
+        }
+        return $data;
     }
 
     /**
