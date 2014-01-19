@@ -18,7 +18,7 @@ class Erfurt_Store_Adapter_ResultConverter_ToJsonConverter
      */
     public function convert($resultSet)
     {
-        
+        return Zend_Json::encode($resultSet);
     }
 
 }
