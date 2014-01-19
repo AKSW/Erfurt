@@ -328,6 +328,23 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can handle number references to columns in the SELECT part.
+     */
+    public function testAdapterCanHandleColumnReferencesViaNumber()
+    {
+        $columns = array(
+            'id'   => 'INT',
+            'name' => 'VARCHAR(255)'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $result = $this->adapter->sqlQuery('SELECT id, name FROM test_data ORDER BY 1');
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(0, $result);
+    }
+
+    /**
      * Checks if the adapter can handle DELETE queries.
      */
     public function testAdapterCanHandleDeleteQueries()
