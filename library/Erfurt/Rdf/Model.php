@@ -67,7 +67,8 @@ class Erfurt_Rdf_Model
 
     /**
      * Erfurt Store Object
-     * @var Erfurt_Store
+     * 
+     * @var Erfurt_Store|null
      */
     protected $_store = null;
 
