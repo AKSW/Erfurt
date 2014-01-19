@@ -459,6 +459,13 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter(),
                     new Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml()
                 ));
+            case 'json':
+                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_ToJsonConverter()
+                ));
             case Erfurt_Store::RESULTFORMAT_PLAIN:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
