@@ -63,6 +63,12 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                     ->end()
                     ->defaultFalse()
                 ->end()
+                ->scalarNode('username')
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('password')
+                    ->cannotBeEmpty()
+                ->end()
             ->end();
         return $builder;
     }
