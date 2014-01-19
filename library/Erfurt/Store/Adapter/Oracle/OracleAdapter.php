@@ -99,9 +99,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
+        $subject = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
         $params = array(
             'modelAndGraph' => $this->getModelName() . ':<' . $graphUri . '>',
-            'subject'       => '<' . $subject . '>',
+            'subject'       => $subject,
             'predicate'     => '<' . $predicate . '>',
             'object'        => $this->objectToString($object)
         );
@@ -482,6 +483,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     {
         if ($objectSpec['type'] === 'uri') {
             return '<' . $objectSpec['value'] . '>';
+        }
+        if ($objectSpec['type'] === 'bnode') {
+            // Blank node identifier passed. It must not be escaped or enclosed in angle brackets.
+            return $objectSpec['value'];
         }
         if (isset($objectSpec['datatype']) && $objectSpec['datatype'] === 'http://www.w3.org/2001/XMLSchema#string') {
             // The triples in the table are stored with their data type, but when loading
