@@ -313,6 +313,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if sparqlQuery() supports result sets in JSON format.
+     */
+    public function testSparqlQuerySupportsJsonFormat()
+    {
+        $this->insertTriple();
+        $query  = 'SELECT ?subject FROM <http://example.org/graph> '
+                . 'WHERE { ?subject ?predicate ?object . }';
+        $options = array(
+            Erfurt_Store::RESULTFORMAT => 'json'
+        );
+
+        $result = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertInternalType('string', $result);
+    }
+
+    /**
      * Checks if sparqlQuery() supports the raw Oracle result format.
      */
     public function testSparqlQuerySupportsRawFormat()
