@@ -327,6 +327,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
         $result = $this->adapter->sparqlQuery($query, $options);
 
         $this->assertInternalType('string', $result);
+
+        $this->setExpectedException(null);
+        Zend_Json::decode($result);
     }
 
     /**
