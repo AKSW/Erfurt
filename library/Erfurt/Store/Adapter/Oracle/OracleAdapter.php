@@ -573,7 +573,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     protected function getNameOfVariableAt($query, $index)
     {
         $matches = array();
-        preg_match('/[a-zA-Z]+[a-zA-Z_0-9]*/', $query, $matches, 0, $index + 1);
+        preg_match('/[a-zA-Z_0-9]+/', $query, $matches, 0, $index + 1);
         return $matches[0];
     }
 
