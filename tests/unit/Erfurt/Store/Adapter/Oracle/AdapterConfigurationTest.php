@@ -180,6 +180,30 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
     }
 
     /**
+     * Checks if the configuration accepts the credentials of the Super Admin.
+     *
+     * These credentials are used by OntoWiki for login. They are not related to
+     * the Oracle adapter, but many of the existing adapters rely on this dual
+     * use, so there does not seem to be a clean way to remove this unnecessary
+     * dependency.
+     */
+    public function testConfigurationAcceptsUsernameAndPasswordOfSuperAdmin()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+            ),
+            'username' => 'super',
+            'password' => 'admin'
+        );
+
+        $this->assertConfigurationAccepted($options);
+    }
+
+    /**
      * asserts that the provided options are accepted.
      *
      * @param array(string=>mixed) $options
