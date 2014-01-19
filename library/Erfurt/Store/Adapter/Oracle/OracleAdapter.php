@@ -572,8 +572,17 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     protected function getNameOfVariableAt($query, $index)
     {
+        // Regular expression for variable names according to
+        // <http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#rVARNAME>
+        $pnCharsBase = '[A-Z]|[a-z]|[\x{00C0}-\x{00D6}]|[\x{00D8}-\x{00F6}]|[\x{00F8}-\x{02FF}]'
+                     . '|[\x{0370}-\x{037D}]|[\x{037F}-\x{1FFF}]|[\x{200C}-\x{200D}]|[\x{2070}-\x{218F}]'
+                     . '|[\x{2C00}-\x{2FEF}]|[\x{3001}-\x{D7FF}]|[\x{F900}-\x{FDCF}]|[\x{FDF0}-\x{FFFD}]'
+                     . '|[\x{10000}-\x{EFFFF}]';
+        $pnCharsU = $pnCharsBase . '|[_]';
+        $varName = '(' . $pnCharsU . '|[0-9])' // First character.
+                 . '(' . $pnCharsU . '|[0-9]|[\x{00B7}]|[\x{0300}-\x{036F}]|[\x{203F}-\x{2040}]})*';
         $matches = array();
-        preg_match('/[a-zA-Z_0-9]+/', $query, $matches, 0, $index + 1);
+        preg_match('/' . $varName . '/u', $query, $matches, 0, $index + 1);
         return $matches[0];
     }
 
