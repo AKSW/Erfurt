@@ -67,7 +67,7 @@ class Erfurt_Rdf_Model
 
     /**
      * Erfurt Store Object
-     * 
+     *
      * @var Erfurt_Store|null
      */
     protected $_store = null;
@@ -804,6 +804,20 @@ class Erfurt_Rdf_Model
         return $this->_namespaces->hasNamespaceByPrefix(
             $this->getModelUri(), $prefix
         );
+    }
+
+    /**
+     * Hooks into the serialization process and avoids the serialization
+     * of the store object.
+     *
+     * @return array(string) Names of attributes that may be serialized.
+     */
+    public function __sleep()
+    {
+        $serializableAttributes = get_object_vars($this);
+        // Serialization of the store is not allowed.
+        unset($serializableAttributes['_store']);
+        return array_keys($serializableAttributes);
     }
 
 }
