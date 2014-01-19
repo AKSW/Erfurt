@@ -1153,6 +1153,30 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if the adapter can handle blank nodes.
+     *
+     * Blank nodes should not be treated as URIs and it should be possible
+     * to use the SPARQL function isBLANK() to detect blank nodes.
+     */
+    public function testAdapterSupportsBlankNodes()
+    {
+        $this->insertTriple();
+        $this->insertTriple('_:b1', 'http://example.org/predicate', array('value' => '_:b2', 'type' => 'bnode'));
+
+        // Select the blank nodes.
+        $query  = 'SELECT ?subject ?predicate ?object '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE {'
+                . '    ?subject ?predicate ?object . '
+                . '    FILTER(isBLANK(?subject) && isBLANK(?object))'
+                . '}';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
