@@ -309,7 +309,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
         $result = $this->adapter->sparqlQuery($query, $options);
 
-        $this->assertInternalType('array', $result);
+        $this->assertInternalType('string', $result);
     }
 
     /**
