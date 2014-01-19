@@ -228,7 +228,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         if (isset($parsed['SELECT'])) {
             $parsed['SELECT'] = $this->removeBracketExpressions($parsed['SELECT']);
         }
-        foreach (array('SELECT', 'FROM', 'WHERE') as $partName) {
+        foreach (array('SELECT', 'FROM', 'WHERE', 'GROUP', 'ORDER', 'LIMIT') as $partName) {
             /* @var $partName string */
             if (!isset($parsed[$partName])) {
                 continue;
@@ -348,10 +348,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         foreach (array_keys($parts) as $index) {
             /* @var $index integer */
             if (!isset($parts[$index]['expr_type'])) {
-                $test = 1;
                 continue;
             }
-            if ($parts[$index]['expr_type'] === 'colref' && $parts[$index]['base_expr'] !== '*') {
+            if ($parts[$index]['expr_type'] === 'pos') {
+                // A column is referenced via its positional number.
+                // It must not be quoted, but the expression type is changed
+                // as the creator cannot handle positional references natively.
+                $parts[$index]['expr_type'] = 'colref';
+            } else if ($parts[$index]['expr_type'] === 'colref' && $parts[$index]['base_expr'] !== '*') {
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
             } else if ($parts[$index]['expr_type'] === 'table') {
                 $parts[$index]['table'] = $this->quoteIdentifier($parts[$index]['table']);
