@@ -174,6 +174,24 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if sparqlQuery() accepts a query that uses numbers as variable identifiers.
+     *
+     * @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#rVARNAME
+     */
+    public function testSparqlQueryAcceptsQueryThatUsesNumbersAsVariables()
+    {
+        $query = 'SELECT ?1 '
+               . 'FROM <http://example.org> '
+               . 'WHERE {'
+               . '    {?1 a <http://example.org/animal>} UNION {?1 a <http://example.org/human>}'
+               . '}';
+
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+    }
+
+    /**
      * Ensures that sparqlQuery() returns only the variables that were
      * requested in the SPARQL query.
      */
