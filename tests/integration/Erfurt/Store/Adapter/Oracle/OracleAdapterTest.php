@@ -1232,6 +1232,23 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if the adapter is able to insert a triple that contains a literal that is longer
+     * than 4000 bytes.
+     */
+    public function testAdapterCanInsertTripleWithVeryLongLiteral()
+    {
+        $this->setExpectedException(null);
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'literal',
+                'value' => str_repeat('x', 4200)
+            )
+        );
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
