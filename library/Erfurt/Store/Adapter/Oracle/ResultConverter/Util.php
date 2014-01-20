@@ -112,4 +112,29 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
         }, $name);
     }
 
+    /**
+     * Accepts an already escaped literal value and uses double quotes instead
+     * of single quotes to enclose it.
+     *
+     * This is necessary as the Oracle store shows some fails to process literals
+     * that are enclosed by single quotes under certain conditions (for example
+     * if a custom data type is assigned to the literal).
+     *
+     * If the literal value is already enclosed by double quotes, then it
+     * will be returned without any modification.
+     *
+     * Example:
+     *
+     *     $value = "'Hello \"world\"!'";
+     *     // Returns '"Hello \\\"world\\\"!'.
+     *     $converted = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($value);
+     *
+     * @param string $escapedLiteralValue
+     * @return string
+     */
+    public static function convertSingleToDoubleQuotes($escapedLiteralValue)
+    {
+
+    }
+
 }
