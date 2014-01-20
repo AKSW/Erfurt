@@ -1219,7 +1219,16 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testAdapterCanInsertValuesWithCustomTypeAndDoubleQuoteAsContent()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->setExpectedException(null);
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => 'Hello "world"!',
+                'datatype' => 'http://example.org/sentence'
+            )
+        );
     }
 
     /**
