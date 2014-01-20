@@ -256,7 +256,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
 
         $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
 
-        $expected = '"""This is a long \\"literal\\". """';
+        $expected = '"""This is a long \\"literal\\"."""';
         $this->assertEquals($expected, $converted);
     }
 
