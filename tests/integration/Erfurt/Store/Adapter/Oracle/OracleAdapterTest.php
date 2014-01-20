@@ -1214,10 +1214,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
-     * Ensures that the adapter is able to insert values that contain quotes
+     * Ensures that the adapter is able to insert values that contain double quotes
      * and which use a custom data type.
      */
-    public function testAdapterCanInsertValuesWithCustomTypeAndQuotesAsContent()
+    public function testAdapterCanInsertValuesWithCustomTypeAndDoubleQuoteAsContent()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
