@@ -212,7 +212,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertSingleToDoubleQuotesDoesNotModifyLiteralWithDoubleQuotes()
     {
+        $literalValue = '"Hello \'world\'!"';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
+
+        $this->assertEquals($literalValue, $converted);
     }
 
     /**
@@ -221,7 +225,11 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertSingleToDoubleQuotesDoesNotModifyLongLiteralWithDoubleQuotes()
     {
+        $literalValue = '"""This is a long \'literal\'."""';
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
+
+        $this->assertEquals($literalValue, $converted);
     }
 
     /**
@@ -230,7 +238,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertSingleToDoubleQuotesRewritesSingleQuoteLiteral()
     {
+        $literalValue = "'Hello \"world\"!'";
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
+
+        $expected = '"Hello \\"world\\"!"';
+        $this->assertEquals($expected, $converted);
     }
 
     /**
@@ -239,7 +252,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertSingleToDoubleQuotesRewritesLongSingleQuoteLiteral()
     {
+        $literalValue = "'''This is a long \"literal\".'''";
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
+
+        $expected = '"""This is a long \\"literal\\". """';
+        $this->assertEquals($expected, $converted);
     }
 
     /**
@@ -248,7 +266,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      */
     public function testConvertSingleToDoubleQuotesWorksIfLiteralHasDataType()
     {
+        $literalValue = "'Hello \"world\"!'^^<http://www.w3.org/2001/XMLSchema#string>";
 
+        $converted = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literalValue);
+
+        $expected = '"Hello \\"world\\"!"^^<http://www.w3.org/2001/XMLSchema#string>';
+        $this->assertEquals($expected, $converted);
     }
 
     /**
