@@ -207,6 +207,51 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that convertSingleToDoubleQuotes() does not modify a literal that is enclosed
+     * by double quotes.
+     */
+    public function testConvertSingleToDoubleQuotesDoesNotModifyLiteralWithDoubleQuotes()
+    {
+
+    }
+
+    /**
+     * Ensures that convertSingleToDoubleQuotes() does not modify a long literal that is enclosed
+     * by 3 double quotes.
+     */
+    public function testConvertSingleToDoubleQuotesDoesNotModifyLongLiteralWithDoubleQuotes()
+    {
+
+    }
+
+    /**
+     * Checks if convertSingleToDoubleQuotes() rewrites a literal that is enclosed by single
+     * quotes correctly.
+     */
+    public function testConvertSingleToDoubleQuotesRewritesSingleQuoteLiteral()
+    {
+
+    }
+
+    /**
+     * Checks if convertSingleToDoubleQuotes() rewrites a long literal that is enclosed by 3 single
+     * quotes correctly.
+     */
+    public function testConvertSingleToDoubleQuotesRewritesLongSingleQuoteLiteral()
+    {
+
+    }
+
+    /**
+     * Ensures that convertSingleToDoubleQuotes() even works if the provided literal
+     * has a data type.
+     */
+    public function testConvertSingleToDoubleQuotesWorksIfLiteralHasDataType()
+    {
+
+    }
+
+    /**
      * Returns an example result set.
      *
      * @return array(array(string=>string|null))
