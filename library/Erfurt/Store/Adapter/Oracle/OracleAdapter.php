@@ -106,7 +106,14 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             'predicate'     => '<' . $predicate . '>',
             'object'        => $this->objectToString($object)
         );
-        $this->getInsertStatement()->execute($params);
+        $statement = $this->getInsertStatement();
+        if (strlen($params['object']) > 4000) {
+            // Literal is too long, therefore, bind it as a CLOB.
+            $object = $params['object'];
+            unset($params['object']);
+            $statement->bindParam('object', $object, PDO::PARAM_LOB);
+        }
+        $statement->execute($params);
     }
 
     /**
