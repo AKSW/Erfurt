@@ -1,11 +1,5 @@
 <nav class="nav-sidelinks">
 <ul>
-<li><strong class="headline">sub groups</strong>
-{{query where="?resourceUri aiiso:part_of groups:AKSW." template="liplain"}}
-</li>
-<li><strong class="headline">current funded projects</strong>
-{{query where="?resourceUri a aksw:FundedProject. OPTIONAL { ?resourceUri aksw:status ?status }  FILTER (?status != 'finished')" template="liplain"}}
-</li>
 <li><strong class="headline">featured projects</strong>
 {{query where="?resourceUri aksw:promoted 'true'^^xsd:boolean." template="liplain"}}
 </li>
