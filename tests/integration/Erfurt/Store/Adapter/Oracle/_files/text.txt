@@ -1,0 +1,57 @@
+<nav class="nav-sidelinks">
+<ul>
+<li><strong class="headline">sub groups</strong>
+{{query where="?resourceUri aiiso:part_of groups:AKSW." template="liplain"}}
+</li>
+<li><strong class="headline">current funded projects</strong>
+{{query where="?resourceUri a aksw:FundedProject. OPTIONAL { ?resourceUri aksw:status ?status }  FILTER (?status != 'finished')" template="liplain"}}
+</li>
+<li><strong class="headline">featured projects</strong>
+{{query where="?resourceUri aksw:promoted 'true'^^xsd:boolean." template="liplain"}}
+</li>
+</nav>
+
+**Dr. Sören Auer**
+
+Telefon: [+49 341 97-32367](tel:+493419732367)<br />
+Telefax: [+49 341 97–32329](tel:+493419732329)<br />
+E-Mail: [auer@informatik.uni-leipzig.de](mailto:auer@informatik.uni-leipzig.de)
+
+    Universität Leipzig
+    Institut für Informatik
+    Abt. Betriebliche Informationssysteme
+    Augustusplatz 10
+    04109 Leipzig
+    Deutschland
+
+Die Universität Leipzig ist eine Körperschaft des öffentlichen Rechts. Sie wird vertreten durch den Rektor. Weitere Informationen, insbesondere zur Aufsichtsbehörde, finden sich im [Impressum der Universität Leipzig](http://www.uni-leipzig.de/info/impressum.html).
+
+
+# Haftungshinweis
+
+## Haftung für Inhalte
+Wir bemühen uns die Inhalte unserer Seite aktuell zu halten. Trotz sorgfältiger Bearbeitung bleibt eine Haftung ausgeschlossen.
+
+Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+
+Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen. Bei bekannt werden von Rechtsverletzungen, werden wir diese Inhalte umgehend entfernen. Eine diesbezügliche Haftung übernehmen wir erst ab dem Zeitpunkt der Kenntnis einer möglichen Rechtsverletzung.
+
+## Haftung für Links
+Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Für die Inhalte und die Richtigkeit der Informationen verlinkter Websites fremder Informationsanbieter wird keine Gewähr übernommen.
+
+Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße OHNE BEANSTANDUNG überprüft. Bei bekannt werden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+
+## Urheberrecht
+Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+
+## Datenschutz
+Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich. Eine Vertraulichkeit im Hinblick auf die Datenschutzbestimmungen wird nur unter der vorstehenden Einschränkung gewährleistet. Insbesondere sollen alle Mitteilungen von personenbezogenen Daten über das Internet nur erfolgen, soweit nicht Rechte Dritter berührt werden. Es sei denn der Dritte hat in Kenntnis der vorstehenden Sicherheitslücken ebenfalls seine Zustimmung erklärt. Eine Haftung des Seitenbetreibers wird für die durch solche Sicherheitslücken entstehenden Schäden oder Unterlassungsansprüche ausgeschlossen.
+
+Der Nutzung von allen veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung wird widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.
+
+**Quelle: S&K Rechtsanwälte [www.streifler.de](http://www.streifler.de/)**
+
+# Gestaltung
+
+* [Maxi Bley . www.bleystift.de](http://bleystift.de) - Screendesign
+* [Michael Haschke - 48augen Webentwicklung](http://48augen.de) - Umsetzung HTML/CSS

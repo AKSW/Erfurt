@@ -1249,6 +1249,26 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if the adapter can insert a long text literal that contains several
+     * special characters (quotes, types definitions as text etc.).
+     */
+    public function testAdapterCanInsertComplexTextLiteral()
+    {
+        $text = file_get_contents(__DIR__ . '/_files/text.txt');
+
+        $this->setExpectedException(null);
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $text,
+                'datatype' => 'http://ns.ontowiki.net/SysOnt/Markdown'
+            )
+        );
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
