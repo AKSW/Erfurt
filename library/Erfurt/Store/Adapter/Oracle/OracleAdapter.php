@@ -109,7 +109,19 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $statement = $this->getInsertStatement();
         if (strlen($params['object']) > 4000) {
             // Literal is too long, therefore, bind it as a CLOB.
-            $largeLiteral = $params['object'];
+            $escapeSequences = array(
+                "\t" => '\t',
+                "\n" => '\n',
+                "\r" => '\r',
+                '"'  => '\"',
+                '\\' => '\\\\',
+                '^^' => '\\^\\^'
+            );
+            $largeLiteral = strtr($object['value'], $escapeSequences);
+            $largeLiteral = '"' . $largeLiteral . '"';
+            if (isset($object['datatype'])) {
+                $largeLiteral .= '^^<' . $object['datatype'] . '>';
+            }
             unset($params['object']);
             $statement->bindValue('object', $largeLiteral, PDO::PARAM_LOB);
         }
