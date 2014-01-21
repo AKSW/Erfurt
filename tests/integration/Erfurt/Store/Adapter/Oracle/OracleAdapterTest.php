@@ -1255,6 +1255,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     public function testAdapterCanInsertComplexTextLiteral()
     {
         $text = file_get_contents(__DIR__ . '/_files/text.txt');
+        $text = str_pad($text, 4001, 'x', STR_PAD_RIGHT);
 
         $this->setExpectedException(null);
         $this->insertTriple(
