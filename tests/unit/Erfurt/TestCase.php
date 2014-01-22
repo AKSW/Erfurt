@@ -79,8 +79,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             }
         }
 
+        // make sure a test db was selected!
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
-            $this->markTestSkipped(); // make sure a test db was selected!
+            $this->markTestSkipped('The $dbName is not a valide test-database name: "' . $dbName . '"');
         }
 
         try {
@@ -92,10 +93,12 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 // Setup successful
                 $this->_dbWasUsed = true;
             } else {
-                $this->markTestSkipped();
+                $this->markTestSkipped(
+                    'An Erfurt_Store_Exception occurred when establishing a connection: ' . $e->getMessage()
+                );
             }
         } catch (Erfurt_Exception $ee) {
-            $this->markTestSkipped();
+            $this->markTestSkipped('An Erfurt_Exception occurred when establishing a connection: ' . $ee->getMessage());
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
@@ -196,7 +199,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 
         // We always reload the config in Erfurt, for a test may have changed values
         // and we need a clean environment.
-        if ($this->_customTestConfig !== false) {
+        if ($this->_customTestConfig !== false && $this->_customTestConfig !== null) {
             $app->loadConfig($this->_customTestConfig);
         } else {
             $app->loadConfig();
