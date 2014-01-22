@@ -10,7 +10,7 @@
  * Data container for each defined job.
  *
  * @category Erfurt
- * @package Erfurt
+ * @package  Erfurt_Worker_Job
  * @author Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Erfurt_Worker_Job_Container
