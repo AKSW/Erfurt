@@ -22,31 +22,17 @@ class Erfurt_Rdf_Resource_Pool
     protected $_resources = null;
 
     /**
-     * The Erfurt_Rdf_ResourcePool instance.
-     * @var Erfurt_Rdf_ResourcePool
+     * The currently valide instance of Erfurt_App
      */
-    private static $_instance = null;
+    private $_app;
 
     /**
      * Constructs a new Erfurt_Rdf_ResourcePool instance.
      */
-    public function __construct()
+    public function __construct($erfurtApp)
     {
         //maybe something will be here in the future
-    }
-
-    /**
-     * Singleton instance
-     *
-     * @return Instance of Erfurt_Rdf_ResourcePool
-     */
-    public static function getInstance()
-    {
-        if (null === self::$_instance) {
-            self::$_instance = new self();
-        }
-
-        return self::$_instance;
+        $this->_app = $erfurtApp;
     }
 
     /**
@@ -67,7 +53,7 @@ class Erfurt_Rdf_Resource_Pool
             $added = true ;
         } else {
             if (defined('_OWDEBUG')) {
-                $logger = OntoWiki::getInstance()->logger;
+                $logger = $this->_app->getLog();
                 $logger->info('ResourcePool: Given item is not of correct Type and will not be added to the List.');
             }
         }
@@ -89,7 +75,7 @@ class Erfurt_Rdf_Resource_Pool
                 $resource = $this->_resources[$graphIri][$resourceIri];
             } else {
                 if (defined('_OWDEBUG')) {
-                    $logger = OntoWiki::getInstance()->logger;
+                    $logger = $this->_app->getLog();
                     $logger->info('ResourcePool: Resource not available and will be created now.');
                 }
                 $resource = $this->_createResource($resourceIri, $graphIri);
@@ -133,18 +119,18 @@ class Erfurt_Rdf_Resource_Pool
                 $resource = new Erfurt_Rdf_Resource($resourceIri);
             } else {
                 if (Erfurt_Uri::check($graphIri)) {
-                    $model = new Erfurt_Rdf_Model($graphIri);
-                    $resource = new Erfurt_Rdf_Resource($resourceIri, $model);
+                    $model = $this->_app->getStore()->getModelOrCreate($graphIri);
+                    $resource = $model->getResource($resourceIri);
                 } else {
                     if (defined('_OWDEBUG')) {
-                        $logger = OntoWiki::getInstance()->logger;
+                        $logger = $this->_app->getLog();
                         $logger->info('ResourcePool: Given GraphIri not valid.');
                     }
                 }
             }
         } else {
             if (defined('_OWDEBUG')) {
-                $logger = OntoWiki::getInstance()->logger;
+                $logger = $this->_app->getLog();
                 $logger->info('ResourcePool: Given ResourceIri not valid.');
             }
         }

@@ -147,6 +147,8 @@ class Erfurt_App
      */
     private $_wrapperManager = null;
 
+    private $_resourcePool = null;
+
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -866,9 +868,10 @@ class Erfurt_App
      */
     public function getResourcePool()
     {
-        require_once 'Erfurt/Rdf/Resource/Pool.php';
-        $rl = Erfurt_Rdf_Resource_Pool::getInstance();
-        return $rl;
+        if ($this->_resourcePool === null) {
+            $this->_resourcePool = new Erfurt_Rdf_Resource_Pool($this);
+        }
+        return $this->_resourcePool;
     }
 
     /**
