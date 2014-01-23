@@ -119,7 +119,7 @@ class Erfurt_Rdf_Resource_Pool
                 $resource = new Erfurt_Rdf_Resource($resourceIri);
             } else {
                 if (Erfurt_Uri::check($graphIri)) {
-                    $model = $this->_app->getStore()->getModelOrCreate($graphIri);
+                    $model = $this->_app->getStore()->getModel($graphIri, false);
                     $resource = $model->getResource($resourceIri);
                 } else {
                     if (defined('_OWDEBUG')) {
