@@ -1466,8 +1466,10 @@ EOF;
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
                 $queryObject->setWherePart('{?subject ?predicate ?object . FILTER(false)}');
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
+                /* @var $queryObject Erfurt_Sparql_Query2 */
                 $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
                 $ggp->addFilter(false); //unsatisfiable
+                $queryObject->setDistinct(false);
                 $queryObject->removeAllProjectionVars();
                 $queryObject->setWhere($ggp);
             }
