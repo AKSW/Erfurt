@@ -1464,7 +1464,7 @@ EOF;
         if ($noBindings) {
             $logger->debug('AC: force no bindings');
             if ($queryObject instanceof Erfurt_Sparql_SimpleQuery) {
-                $queryObject->setWherePart('{FILTER(false)}');
+                $queryObject->setWherePart('{?subject ?predicate ?object . FILTER(false)}');
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
                 $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
                 $ggp->addFilter(false); //unsatisfiable
