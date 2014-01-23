@@ -1087,15 +1087,14 @@ EOF;
      */
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
-        try {
-            // Get it if it already exists
-            $model = $this->getModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
+        // Check if Model is availabe without AC to see if it exists
+        if ($this->isModelAvailable($modelIri, false)) {
+            // Try to get it if it already exists
+            return $this->getModel($modelIri, $useAc);
+        } else {
+            // Try to create it if it doesn't exist
+            return $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
-
-        return $model;
     }
 
     /**
