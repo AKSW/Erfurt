@@ -1249,12 +1249,12 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
-     * Checks if the adapter can insert a long text literal that contains several
-     * special characters (quotes, types definitions as text etc.).
+     * Checks if the adapter can insert a long text literal that contains a
+     * type definition (as text).
      */
-    public function testAdapterCanInsertComplexTextLiteral()
+    public function testAdapterCanInsertLongLiteralThatContainsTypeDefinitionAsText()
     {
-        $text = file_get_contents(__DIR__ . '/_files/text.txt');
+        $text = '{{query where="?resourceUri aksw:promoted \'true\'^^xsd:boolean." template="liplain"}}';
         $text = str_pad($text, 4001, 'x', STR_PAD_RIGHT);
 
         $this->setExpectedException(null);

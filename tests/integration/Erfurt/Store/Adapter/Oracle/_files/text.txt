@@ -1,6 +1,0 @@
-<nav class="nav-sidelinks">
-<ul>
-<li><strong class="headline">featured projects</strong>
-{{query where="?resourceUri aksw:promoted 'true'^^xsd:boolean." template="liplain"}}
-</li>
-</nav>
