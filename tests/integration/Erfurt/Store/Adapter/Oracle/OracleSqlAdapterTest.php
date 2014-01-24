@@ -368,6 +368,18 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter is able to process IN() statements that contain
+     * more than 1000 expressions.
+     *
+     * Usually this is a constraint in Oracle databases. Some details are documented
+     * in issue #24 {@link https://github.com/Matthimatiker/Erfurt/issues/24}.
+     */
+    public function testAdapterSupportsInStatementsWithMoreThan1000Expressions()
+    {
+
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
