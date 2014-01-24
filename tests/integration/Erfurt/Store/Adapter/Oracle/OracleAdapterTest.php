@@ -1249,10 +1249,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
-     * Checks if the adapter can insert a long text literal that contains a
+     * Checks if the adapter can insert a large text literal that contains a
      * type definition (as text).
      */
-    public function testAdapterCanInsertLongLiteralThatContainsTypeDefinitionAsText()
+    public function testAdapterCanInsertLargeLiteralThatContainsTypeDefinitionAsText()
     {
         $literal = '{{query where="?resourceUri aksw:promoted \'true\'^^xsd:boolean." template="liplain"}}';
         $literal = str_pad($literal, 4001, 'x', STR_PAD_RIGHT);
@@ -1270,9 +1270,9 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
-     * Checks if sparqlQuery() returns the content of a lomng literal correctly.
+     * Checks if sparqlQuery() returns the content of a large literal correctly.
      */
-    public function testSparqlQueryReturnsContentOfLongLiteral()
+    public function testSparqlQueryReturnsContentOfLargeLiteral()
     {
         $literal = str_repeat('x', 4200);
         $this->insertTriple(
@@ -1295,6 +1295,70 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
         $row   = current($result);
         $value = current($row);
         $this->assertEquals($literal, $value);
+    }
+
+    /**
+     * Checks if a literal that will be converted into a long literal ("""test""")
+     * is returned correctly by the adapter.
+     */
+    public function testAdapterReturnsValueOfLongLiteralCorrectly()
+    {
+        // Single quotes in the literal ensure that double quotes are used for escaping.
+        // The line break leads to the usage of a long literal.
+        $literal = "Hello\n 'world'!";
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $literal
+            )
+        );
+
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE {'
+               . '    <http://example.org/subject> <http://example.org/predicate> ?object .'
+               . '}';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $row   = current($result);
+        $value = current($row);
+        $this->assertEquals($literal, $value);
+    }
+
+    /**
+     * Ensures that the adapter stores literal type and value correctly if the the literal
+     * value contains a type definition (which must be considered as text).
+     */
+    public function testAdapterRecognizesTypeOfLiteralThatContainsTypeDefinitionAsTextCorrectly()
+    {
+        $literal  = '"?resourceUri aksw:promoted \'true\'^^xsd:boolean."';
+        $dataType = 'http://example.org/type/query';
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $literal,
+                'datatype' => $dataType
+            )
+        );
+
+        $query = 'SELECT ?object (DATATYPE(?object) AS ?dataType)'
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE {'
+               . '    <http://example.org/subject> <http://example.org/predicate> ?object .'
+               . '}';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $row = current($result);
+        $this->assertArrayHasKey('object', $row);
+        $this->assertArrayHasKey('dataType', $row);
+        $this->assertEquals($literal, $row['object']);
+        $this->assertEquals($dataType, $row['dataType']);
     }
 
     /**
