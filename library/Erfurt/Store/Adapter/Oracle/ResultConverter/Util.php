@@ -161,7 +161,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
 
     /**
      * Encodes the provided literal value so that it can be used
-     * within a short literal (for example "hello").
+     * within a short literal with double quotes (for example "hello").
      *
      * See {@link http://www.w3.org/TR/2013/REC-sparql11-query-20130321/} section 19.7
      * for escape sequences.
@@ -197,16 +197,55 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
      *     $value = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral($object);
      *
      * @param array(string=>mixed) $objectSpecification
+     * @param boolean $escape True if the value must be escaped.
      * @return string
      */
-    public static function buildLiteral(array $objectSpecification)
+    public static function buildLiteralFromSpec(array $objectSpecification, $escape = true)
     {
-        $value = static::encodeLiteralValue($objectSpecification['value']);
+        if ($objectSpecification['type'] === 'uri') {
+            return '<' . $objectSpecification['value'] . '>';
+        }
+        if ($objectSpecification['type'] === 'bnode') {
+            // Blank node identifier passed. It must not be escaped or enclosed in angle brackets.
+            return $objectSpecification['value'];
+        }
+        $value = $objectSpecification['value'];
+        if ($escape) {
+            $value = static::encodeLiteralValue($value);
+        }
+        return static::buildLiteral(
+            $value,
+            (isset($objectSpecification['datatype']) ? $objectSpecification['datatype'] : null),
+            (isset($objectSpecification['lang']) ? $objectSpecification['lang'] : null)
+        );
+    }
+
+    /**
+     * Builds a literal from the provided object components.
+     *
+     * The value is enclosed in double quotes and treated as a short literal.
+     * No further escaping is applied.
+     *
+     * @param string $value
+     * @param string|null $dataType
+     * @param string|null $lang
+     * @return string
+     */
+    public static function buildLiteral($value, $dataType = null, $lang = null)
+    {
+        if ($dataType === 'http://www.w3.org/2001/XMLSchema#string') {
+            // The triples in the table are stored with their data type, but when loading
+            // data via SPARQL query, then Oracle does not distinguish between untyped and
+            // string literals.
+            // To avoid further problems resulting from this mismatch, strings are not explicitly
+            // marked.
+           $dataType = null;
+        }
         $value = '"' . $value . '"';
-        if (!empty($objectSpecification['datatype'])) {
-            $value .= '^^<' . (string)$objectSpecification['datatype'] . '>';
-        } else if (!empty($objectSpecification['lang'])) {
-            $value .= '@' . $objectSpecification['lang'];
+        if ($dataType !== null) {
+            $value .= '^^<' . $dataType . '>';
+        } else if ($lang !== null) {
+            $value .= '@' .$lang;
         }
         return $value;
     }

@@ -104,24 +104,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             'modelAndGraph' => $this->getModelName() . ':<' . $graphUri . '>',
             'subject'       => $subject,
             'predicate'     => '<' . $predicate . '>',
-            'object'        => $this->objectToString($object)
+            'object'        => Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object, false)
         );
         $statement = $this->getInsertStatement();
         if (strlen($params['object']) > 4000) {
             // Literal is too long, therefore, bind it as a CLOB.
-            $escapeSequences = array(
-                "\t" => '\t',
-                "\n" => '\n',
-                "\r" => '\r',
-                '"'  => '\"',
-                '\\' => '\\\\',
-                '^^' => '\\^\\^'
-            );
-            $largeLiteral = strtr($object['value'], $escapeSequences);
-            $largeLiteral = '"' . $largeLiteral . '"';
-            if (isset($object['datatype'])) {
-                $largeLiteral .= '^^<' . $object['datatype'] . '>';
-            }
+            // Escape "^" characters as Oracle seems to treat the part after the first occurrence of "^^"
+            // as type definition.
+            $object['value'] = str_replace('^', '\\^', $object['value']);
+            $largeLiteral    = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object, false);
             unset($params['object']);
             $statement->bindValue('object', $largeLiteral, PDO::PARAM_LOB);
         }
@@ -159,7 +150,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         }
         if ($object !== null) {
             $builder->andWhere('d.triple.GET_TRIPLE().object = :object');
-            $params['object'] = $this->objectToString($object);
+            $params['object'] = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object, false);
         }
         $query     = $builder->getSQL();
         $statement = $this->connection->prepare($query);
@@ -503,34 +494,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         $message = 'The result format "%s" is not supported by adapter %s.';
         $message = sprintf($message, $format, get_class($this));
         throw new Erfurt_Exception($message);
-    }
-
-    /**
-     * Uses the provided object specification to encode it
-     * into a string.
-     *
-     * @param array(string=>string) $objectSpec
-     * @return string
-     */
-    protected function objectToString(array $objectSpec)
-    {
-        if ($objectSpec['type'] === 'uri') {
-            return '<' . $objectSpec['value'] . '>';
-        }
-        if ($objectSpec['type'] === 'bnode') {
-            // Blank node identifier passed. It must not be escaped or enclosed in angle brackets.
-            return $objectSpec['value'];
-        }
-        if (isset($objectSpec['datatype']) && $objectSpec['datatype'] === 'http://www.w3.org/2001/XMLSchema#string') {
-            // The triples in the table are stored with their data type, but when loading
-            // data via SPARQL query, then Oracle does not distinguish between untyped and
-            // string literals.
-            // To avoid further problems resulting from this mismatch, strings are not explicitly
-            // marked.
-            unset($objectSpec['datatype']);
-        }
-        $literal = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral($objectSpec);
-        return $literal;
     }
 
     /**
