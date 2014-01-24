@@ -29,7 +29,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter
             foreach ($variables as $variable) {
                 /* @var $variable string */
                 $resultSet[$index][$variable] = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType(
-                    $row[$variable],
+                    ($row[$variable . '$RDFCLOB'] !== null) ? $row[$variable . '$RDFCLOB'] : $row[$variable],
                     $row[$variable . '$RDFLTYP']
                 );
             }
