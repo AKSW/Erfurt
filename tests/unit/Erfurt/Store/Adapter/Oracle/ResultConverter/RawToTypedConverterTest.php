@@ -166,6 +166,19 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
     }
 
     /**
+     * Checks if long literal values are extracted correctly.
+     */
+    public function testConvertExtractsLongLiteralsCorrectly()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $value = $this->getValueFromRow($converted, 7);
+
+        $this->assertInternalType('string', $value);
+        $this->assertEquals(str_repeat('x', 4200), $value);
+    }
+
+    /**
      * Returns the data value from row $rowIndex in the
      * provided result set.
      *
@@ -279,6 +292,18 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
                 'OBJECT$RDFLTYP'    => 'http://example.org/types#formula',
                 'OBJECT$RDFLANG'    => null,
                 'SEM$ROWNUM'        => 7
+            ),
+            // Long literal (more that 4000 characters)
+            array(
+                'OBJECT'            => 'ORALL1',
+                'OBJECT$RDFVID'     => 6944352155936009570,
+                'OBJECT$_PREFIX'    => null,
+                'OBJECT$_SUFFIX'    => null,
+                'OBJECT$RDFVTYP'    => 'LIT',
+                'OBJECT$RDFCLOB'    => str_repeat('x', 4200),
+                'OBJECT$RDFLTYP'    => null,
+                'OBJECT$RDFLANG'    => null,
+                'SEM$ROWNUM'        => 8
             )
         );
     }
