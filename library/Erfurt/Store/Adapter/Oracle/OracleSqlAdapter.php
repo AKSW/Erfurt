@@ -265,32 +265,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         foreach (array_keys($parts) as $index) {
             /* @var $index integer */
             if ($parts[$index]['expr_type'] === 'in-list' && count($parts[$index]['sub_tree']) > 1000) {
-                $colRef           = $parts[$index - 2];
-                $listOperator     = $parts[$index - 1];
-                $expressionChunks = array_chunk($parts[$index]['sub_tree'], 1000);
-                // Build an expression that uses multiple lists:
-                // (x IN (...) OR x IN (...))
-                $condition = array(
-                    'expr_type' => 'bracket_expression',
-                    'sub_tree'  => array()
-                );
-                $orExpression = array(
-                    'expr_type' => 'operator',
-                    'base_expr' => 'OR',
-                    'sub_tree'  => false
-                );
-                foreach ($expressionChunks as $chunk) {
-                    /* var $chunk array(string=>mixed) */
-                    $condition['sub_tree'][] = $colRef;
-                    $condition['sub_tree'][] = $listOperator;
-                    $condition['sub_tree'][] = array(
-                        'expr_type' => 'in-list',
-                        'sub_tree'  => $chunk
-                    );
-                    $condition['sub_tree'][] = $orExpression;
-                }
-                // Remove the last OR, which is not followed by another expression.
-                unset($condition['sub_tree'][count($condition['sub_tree']) - 1]);
+                $colRef       = $parts[$index - 2];
+                $listOperator = $parts[$index - 1];
+                $items        = $parts[$index]['sub_tree'];
+                $condition    = $this->splitList($colRef, $listOperator, $items);
                 // Replace the original expression by the new version.
                 $parts[$index - 2] = $condition;
                 unset($parts[$index - 1]);
@@ -298,6 +276,47 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             }
         }
         return array_values($parts);
+    }
+
+    /**
+     * Splits an IN list with more than 1000 item into multiple
+     * ones that are connected by OR expressions.
+     *
+     * Example:
+     * (x IN ([first 1000 items]) OR x IN ([next 1000 items]))
+     *
+     * @param array(string=>mixed) $colRef
+     * @param array(string=>mixed) $listOperator
+     * @param array(mixed) $items
+     * @return array(string=>mixed)
+     */
+    protected function splitList($colRef, $listOperator, $items)
+    {
+        $expressionChunks = array_chunk($items, 1000);
+        // Build an expression that uses multiple lists:
+        // (x IN (...) OR x IN (...))
+        $condition = array(
+            'expr_type' => 'bracket_expression',
+            'sub_tree' => array()
+        );
+        $orExpression = array(
+            'expr_type' => 'operator',
+            'base_expr' => 'OR',
+            'sub_tree' => false
+        );
+        foreach ($expressionChunks as $chunk) {
+            /* var $chunk array(string=>mixed) */
+            $condition['sub_tree'][] = $colRef;
+            $condition['sub_tree'][] = $listOperator;
+            $condition['sub_tree'][] = array(
+                'expr_type' => 'in-list',
+                'sub_tree' => $chunk
+            );
+            $condition['sub_tree'][] = $orExpression;
+        }
+        // Remove the last OR, which is not followed by another expression.
+        unset($condition['sub_tree'][count($condition['sub_tree']) - 1]);
+        return $condition;
     }
 
     /**
