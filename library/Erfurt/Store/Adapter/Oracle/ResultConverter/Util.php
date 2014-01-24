@@ -159,4 +159,56 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
         return $escapedLiteralValue;
     }
 
+    /**
+     * Encodes the provided literal value so that it can be used
+     * within a short literal (for example "hello").
+     *
+     * See {@link http://www.w3.org/TR/2013/REC-sparql11-query-20130321/} section 19.7
+     * for escape sequences.
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function encodeLiteralValue($value)
+    {
+        $replacements = array(
+            '\\'   => '\\\\',
+            "\t"   => '\t',
+            "\n"   => '\n',
+            "\r"   => '\r',
+            chr(8) => '\b', // Backspace
+            '"'    => '\\"',
+            '\''   => '\\\''
+        );
+        return strtr($value, $replacements);
+    }
+
+    /**
+     * Uses the given object specification to build a literal string
+     * than can be processed by Oracle.
+     *
+     * Example:
+     *
+     *     $object = array(
+     *         'value'    => 'This is a "test"!',
+     *         'datatype' => 'http://example.org/test'
+     *     );
+     *     // Returns "This is a \"test\"!"^^<http://example.org/test>
+     *     $value = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral($object);
+     *
+     * @param array(string=>mixed) $objectSpecification
+     * @return string
+     */
+    public static function buildLiteral(array $objectSpecification)
+    {
+        $value = static::encodeLiteralValue($objectSpecification['value']);
+        $value = '"' . $value . '"';
+        if (!empty($objectSpecification['datatype'])) {
+            $value .= '^^<' . (string)$objectSpecification['datatype'] . '>';
+        } else if (!empty($objectSpecification['lang'])) {
+            $value .= '@' . $objectSpecification['lang'];
+        }
+        return $value;
+    }
+
 }

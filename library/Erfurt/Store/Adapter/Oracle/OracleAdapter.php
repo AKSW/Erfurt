@@ -529,12 +529,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             // marked.
             unset($objectSpec['datatype']);
         }
-        $literal = Erfurt_Utils::buildLiteralString(
-            $objectSpec['value'],
-            isset($objectSpec['datatype']) ? $objectSpec['datatype'] : null,
-            isset($objectSpec['lang']) ? $objectSpec['lang'] : null
-        );
-        $literal = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($literal);
+        $literal = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral($objectSpec);
         return $literal;
     }
 
