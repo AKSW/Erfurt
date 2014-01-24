@@ -376,7 +376,13 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     public function testAdapterSupportsInStatementsWithMoreThan1000Expressions()
     {
+        $columns = array(
+            'id'   => 'INT'
+        );
+        $this->adapter->createTable('test_data', $columns);
 
+        $this->setExpectedException(null);
+        $this->adapter->sqlQuery('DELETE FROM test_data WHERE id IN (' . implode(',', range(1, 1001)). ')');
     }
 
     /**
