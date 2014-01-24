@@ -469,7 +469,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testAdapterCanWorkWithSparqlQueryThatContainsLiteralInStringLiteral()
     {
-        $this->markTestSkipped('Rewriting of literals in SPARQL queries is required for this one to work.');
         $object = array(
             'type'  => 'literal',
             'value' => 'SELECT ?subject WHERE { ?subject ?predicate "This is a ?test variable." . }'
@@ -1281,6 +1280,37 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
             array(
                 'type'     => 'literal',
                 'value'    => $literal
+            )
+        );
+
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE {'
+               . '    <http://example.org/subject> <http://example.org/predicate> ?object .'
+               . '}';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $row   = current($result);
+        $value = current($row);
+        $this->assertEquals($literal, $value);
+    }
+
+    /**
+     * Checks if sparqlQuery() returns a large literal, which contains special characters,
+     * correctly.
+     */
+    public function testSparqlQueryReturnsContentOfLargeLiteralWithSpecialCharactersCorrectly()
+    {
+        $literal = '{{query where="?resourceUri aksw:promoted \'true\'^^xsd:boolean." template="liplain"}}';
+        $literal = str_pad($literal, 4001, 'x', STR_PAD_RIGHT);
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $literal,
+                'datatype' => 'http://ns.ontowiki.net/SysOnt/Markdown'
             )
         );
 
