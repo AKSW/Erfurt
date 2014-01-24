@@ -377,7 +377,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     public function testAdapterSupportsInStatementsWithMoreThan1000Expressions()
     {
         $columns = array(
-            'id'   => 'INT'
+            'id' => 'INT'
         );
         $this->adapter->createTable('test_data', $columns);
 

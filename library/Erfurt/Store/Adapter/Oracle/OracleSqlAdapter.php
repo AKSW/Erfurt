@@ -238,6 +238,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $parsed[$partName] = $conversion->parts;
             $params = $params + $conversion->params;
         }
+        if (isset($parsed['WHERE'])) {
+            $parsed['WHERE'] = $this->splitLargeInLists($parsed['WHERE']);
+        }
         $creator = new Creator();
         $result  = new \stdClass();
         $result->query = $creator->create($parsed);
@@ -247,6 +250,54 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $result->query = 'DELETE ' . substr($result->query, strlen('SELECT * '));
         }
         return $result;
+    }
+
+    /**
+     * Oracle does not allow IN() lists with more than 1000 expressions.
+     *
+     * Therefore, these lists are split into multiple ones.
+     *
+     * @param array(array(string=>mixed)) $parts
+     * @return array(array(string=>mixed))
+     */
+    protected function splitLargeInLists(array $parts)
+    {
+        foreach (array_keys($parts) as $index) {
+            /* @var $index integer */
+            if ($parts[$index]['expr_type'] === 'in-list' && count($parts[$index]['sub_tree']) > 1000) {
+                $colRef           = $parts[$index - 2];
+                $listOperator     = $parts[$index - 1];
+                $expressionChunks = array_chunk($parts[$index]['sub_tree'], 1000);
+                // Build an expression that uses multiple lists:
+                // (x IN (...) OR x IN (...))
+                $condition = array(
+                    'expr_type' => 'bracket_expression',
+                    'sub_tree'  => array()
+                );
+                $orExpression = array(
+                    'expr_type' => 'operator',
+                    'base_expr' => 'OR',
+                    'sub_tree'  => false
+                );
+                foreach ($expressionChunks as $chunk) {
+                    /* var $chunk array(string=>mixed) */
+                    $condition['sub_tree'][] = $colRef;
+                    $condition['sub_tree'][] = $listOperator;
+                    $condition['sub_tree'][] = array(
+                        'expr_type' => 'in-list',
+                        'sub_tree'  => $chunk
+                    );
+                    $condition['sub_tree'][] = $orExpression;
+                }
+                // Remove the last OR, which is not followed by another expression.
+                unset($condition['sub_tree'][count($condition['sub_tree']) - 1]);
+                // Replace the original expression by the new version.
+                $parts[$index - 2] = $condition;
+                unset($parts[$index - 1]);
+                unset($parts[$index]);
+            }
+        }
+        return array_values($parts);
     }
 
     /**
