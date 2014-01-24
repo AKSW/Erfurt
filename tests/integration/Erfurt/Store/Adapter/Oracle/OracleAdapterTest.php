@@ -1254,8 +1254,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      */
     public function testAdapterCanInsertLongLiteralThatContainsTypeDefinitionAsText()
     {
-        $text = '{{query where="?resourceUri aksw:promoted \'true\'^^xsd:boolean." template="liplain"}}';
-        $text = str_pad($text, 4001, 'x', STR_PAD_RIGHT);
+        $literal = '{{query where="?resourceUri aksw:promoted \'true\'^^xsd:boolean." template="liplain"}}';
+        $literal = str_pad($literal, 4001, 'x', STR_PAD_RIGHT);
 
         $this->setExpectedException(null);
         $this->insertTriple(
@@ -1263,10 +1263,38 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
             'http://example.org/predicate',
             array(
                 'type'     => 'literal',
-                'value'    => $text,
+                'value'    => $literal,
                 'datatype' => 'http://ns.ontowiki.net/SysOnt/Markdown'
             )
         );
+    }
+
+    /**
+     * Checks if sparqlQuery() returns the content of a lomng literal correctly.
+     */
+    public function testSparqlQueryReturnsContentOfLongLiteral()
+    {
+        $literal = str_repeat('x', 4200);
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $literal
+            )
+        );
+
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE {'
+               . '    <http://example.org/subject> <http://example.org/predicate> ?object .'
+               . '}';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $row   = current($result);
+        $value = current($row);
+        $this->assertEquals($literal, $value);
     }
 
     /**
