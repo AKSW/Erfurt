@@ -102,8 +102,16 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriter
         }
         $rawValue = substr($literalValue, $enclosingSequenceLength, -$enclosingSequenceLength);
         $rawValue = str_replace('\\' . $enclosingQuote, $enclosingQuote, $rawValue);
-        $rawValue = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeLiteralValue($rawValue);
-        return '"' . $rawValue . '"';
+        return '"' . $this->encodeLiteral($rawValue) . '"';
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected function encodeLiteral($value)
+    {
+        return Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeLiteralValue($value);
     }
 
     /**
