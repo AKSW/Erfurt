@@ -98,7 +98,13 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     public function testRewriterModifiesLongLiteralsInDoubleQuotes()
     {
+        $query = 'SELECT ?subject '
+               . 'WHERE { ?subject ?predicate """This is a long literal.""" . }';
 
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"This is a long literal."', $rewritten);
+        $this->assertNotContains('"""', $rewritten);
     }
 
     /**
@@ -107,7 +113,13 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     public function testRewriterModifiesLongLiteralsInSingleQuotes()
     {
+        $query = 'SELECT ?subject '
+               . 'WHERE { ?subject ?predicate \'\'\'This is a long literal.\'\'\' . }';
 
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"This is a long literal."', $rewritten);
+        $this->assertNotContains('\'\'\'', $rewritten);
     }
 
     /**
@@ -116,7 +128,12 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     public function testRewriterModifiesShortLiteralsInSingleQuotes()
     {
+        $query = 'SELECT ?subject '
+               . 'WHERE { ?subject ?predicate \'This is a short literal.\' . }';
 
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"This is a short literal."', $rewritten);
     }
 
     /**
@@ -124,7 +141,12 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     public function testRewriterKeepsShortLiteralsInDoubleQuotes()
     {
+        $query = 'SELECT ?subject '
+               . 'WHERE { ?subject ?predicate "This is a short literal." . }';
 
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"This is a short literal."', $rewritten);
     }
 
     /**
