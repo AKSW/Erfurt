@@ -149,6 +149,16 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
         $this->assertContains('"This is a short literal."', $rewritten);
     }
 
+    public function testRewriterWorksIfLiteralContainsEscapedQuotes()
+    {
+        $query = 'SELECT ?subject '
+               . 'WHERE { ?subject ?predicate """This is a \\"short\\" literal.""" . }';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"This is a \\"short\\" literal."', $rewritten);
+    }
+
     /**
      * Prepends the prefix to the given variable name.
      *
