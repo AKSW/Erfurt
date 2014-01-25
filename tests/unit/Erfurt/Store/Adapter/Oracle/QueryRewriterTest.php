@@ -92,24 +92,39 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
         $this->assertContains('camel_case', $rewritten);
     }
 
+    /**
+     * Ensures that long literals in double quotes are rewritten to short
+     * literals in double quotes.
+     */
     public function testRewriterModifiesLongLiteralsInDoubleQuotes()
     {
 
     }
 
+    /**
+     * Ensures that long literals in single quotes are rewritten to short
+     * literals in double quotes.
+     */
     public function testRewriterModifiesLongLiteralsInSingleQuotes()
     {
 
     }
 
+    /**
+     * Ensures that short literals in single quotes are rewritten to short
+     * literals in double quotes.
+     */
     public function testRewriterModifiesShortLiteralsInSingleQuotes()
     {
 
     }
 
+    /**
+     * Ensures that the rewriter keeps short literals in double quotes.
+     */
     public function testRewriterKeepsShortLiteralsInDoubleQuotes()
     {
-        
+
     }
 
     /**
