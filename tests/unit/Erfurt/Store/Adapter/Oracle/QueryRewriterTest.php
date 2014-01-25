@@ -69,6 +69,18 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that the rewriter modifies variable aliases.
+     */
+    public function testRewriterChangesAliasNames()
+    {
+        $query = 'SELECT (?subject AS ?another) WHERE { ?subject ?predicate ?object . }';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('?'. $this->prefix('another'), $rewritten);
+    }
+
+    /**
      * Checks if the rewriter encodes upper case characters.
      */
     public function testRewriterEncodesUpperCaseCharactersInVariables()
