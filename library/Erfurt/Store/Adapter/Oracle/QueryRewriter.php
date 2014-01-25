@@ -106,12 +106,14 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriter
     }
 
     /**
+     * Encodes a literal value.
+     *
      * @param string $value
      * @return string
      */
     protected function encodeLiteral($value)
     {
-        return Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeLiteralValue($value);
+        return addcslashes($value, '"\\');
     }
 
     /**
