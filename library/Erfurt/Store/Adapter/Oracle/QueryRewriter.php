@@ -51,11 +51,27 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriter
                         $i += strlen($variableName);
                     }
                     break;
+                case '<':
+                    $rewritten .= $byte;
+                    if ($state->top() === 'in_query') {
+                        $state->push('in_iri');
+                    }
+                    break;
+                case '>':
+                    $rewritten .= $byte;
+                    if ($state->top() === 'in_iri') {
+                        $state->pop();
+                    }
+                    break;
                 case '\'':
                 case '"':
-                    $literal    = $this->getLiteralAt($query, $i);
-                    $rewritten .= $this->rewriteLiteral($literal);
-                    $i += strlen($literal);
+                    if ($state->top() === 'in_query') {
+                        $literal    = $this->getLiteralAt($query, $i);
+                        $rewritten .= $this->rewriteLiteral($literal);
+                        $i += strlen($literal);
+                    } else {
+                        $rewritten .= $byte;
+                    }
                     break;
                 case '\\':
                     $state->push('escape_character');
