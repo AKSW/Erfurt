@@ -68,7 +68,7 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriter
                     if ($state->top() === 'in_query') {
                         $literal    = $this->getLiteralAt($query, $i);
                         $rewritten .= $this->rewriteLiteral($literal);
-                        $i += strlen($literal);
+                        $i += strlen($literal) - 1;
                     } else {
                         $rewritten .= $byte;
                     }

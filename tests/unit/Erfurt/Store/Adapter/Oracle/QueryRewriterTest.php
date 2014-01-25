@@ -175,6 +175,20 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that the rewriter does not destroy any type information.
+     */
+    public function testRewriterPreservesTypeInformation()
+    {
+        $query = 'SELECT ?p ?o '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { ?s ?p "abc"^^<http://www.w3.org/2001/XMLSchema#string> . }';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"abc"^^<http://www.w3.org/2001/XMLSchema#string>', $rewritten);
+    }
+
+    /**
      * Prepends the prefix to the given variable name.
      *
      * @param string $variable
