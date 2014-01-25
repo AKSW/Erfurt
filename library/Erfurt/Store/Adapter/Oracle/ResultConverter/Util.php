@@ -114,53 +114,6 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
     }
 
     /**
-     * Accepts an already escaped literal value and uses double quotes instead
-     * of single quotes to enclose it.
-     *
-     * This is necessary as the Oracle store shows some fails to process literals
-     * that are enclosed by single quotes under certain conditions (for example
-     * if a custom data type is assigned to the literal).
-     *
-     * If the literal value is already enclosed by double quotes, then it
-     * will be returned without any modification.
-     *
-     * Example:
-     *
-     *     $value = "'Hello \"world\"!'";
-     *     // Returns '"Hello \\\"world\\\"!'.
-     *     $converted = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertSingleToDoubleQuotes($value);
-     *
-     * @param string $escapedLiteralValue
-     * @return string
-     */
-    public static function convertSingleToDoubleQuotes($escapedLiteralValue)
-    {
-        $isSingleQuoteLiteral = strpos($escapedLiteralValue, "'") === 0;
-        if (!$isSingleQuoteLiteral) {
-            // This literal does not use single quotes, no conversion is needed.
-            return $escapedLiteralValue;
-        }
-        // Rewrite single quotes to double quotes.
-        $isLongLiteral = strpos($escapedLiteralValue, "'''") === 0;
-        // Single quotes do not have to be escaped in a double quote literal...
-        $escapedLiteralValue = str_replace('\\\'', '\'', $escapedLiteralValue);
-        // ... but of course the double quotes must be quoted now.
-        $escapedLiteralValue = addcslashes($escapedLiteralValue, '"');
-        $delimiter    = str_repeat("'", ($isLongLiteral ? 3 : 1));
-        $newDelimiter = str_repeat('"', ($isLongLiteral ? 3 : 1));
-        // Replace the delimiter at the beginning...
-        $escapedLiteralValue = substr_replace($escapedLiteralValue, $newDelimiter, 0, strlen($newDelimiter));
-        // ... and the one at the end, which might be followed by a data type definition.
-        $escapedLiteralValue = substr_replace(
-            $escapedLiteralValue,
-            $newDelimiter,
-            strrpos($escapedLiteralValue, $delimiter),
-            strlen($newDelimiter)
-        );
-        return $escapedLiteralValue;
-    }
-
-    /**
      * Encodes the provided literal value so that it can be used
      * within a short literal with double quotes (for example "hello").
      *
