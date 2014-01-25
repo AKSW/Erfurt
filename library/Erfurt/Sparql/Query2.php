@@ -958,7 +958,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
      * invoke parser
      * @param type $queryString
      * @param type $parsePartial
-     * @return \Exception
+     * @return \Erfurt_Sparql_Query2
      * @throws Exception
      */
     public static function initFromString($queryString, $parsePartial = null){
