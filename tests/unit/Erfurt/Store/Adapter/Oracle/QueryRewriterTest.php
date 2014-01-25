@@ -92,6 +92,26 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
         $this->assertContains('camel_case', $rewritten);
     }
 
+    public function testRewriterModifiesLongLiteralsInDoubleQuotes()
+    {
+
+    }
+
+    public function testRewriterModifiesLongLiteralsInSingleQuotes()
+    {
+
+    }
+
+    public function testRewriterModifiesShortLiteralsInSingleQuotes()
+    {
+
+    }
+
+    public function testRewriterKeepsShortLiteralsInDoubleQuotes()
+    {
+        
+    }
+
     /**
      * Prepends the prefix to the given variable name.
      *
