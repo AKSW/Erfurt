@@ -69,7 +69,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
             case 'http://www.w3.org/2001/XMLSchema#string':
             case null:
             default:
-                return $value;
+                // Literal encoding must be managed manually, therefore we have to decode the string value here.
+                return static::decodeLiteralValue($value);
         }
     }
 
@@ -171,16 +172,18 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
      */
     public static function encodeLiteralValue($value)
     {
-        $replacements = array(
-            '\\'   => '\\\\',
-            "\t"   => '\t',
-            "\n"   => '\n',
-            "\r"   => '\r',
-            chr(8) => '\b', // Backspace
-            '"'    => '\\"',
-            '\''   => '\\\''
-        );
-        return strtr($value, $replacements);
+        return strtr($value, static::getEscapeSequences());
+    }
+
+    /**
+     * Decodes the provided literal value.
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function decodeLiteralValue($value)
+    {
+        return strtr($value, array_flip(static::getEscapeSequences()));
     }
 
     /**
@@ -248,6 +251,27 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
             $value .= '@' .$lang;
         }
         return $value;
+    }
+
+    /**
+     * Returns a map of characters and their corresponding escape sequence.
+     *
+     * @return array(string=>string)
+     */
+    protected static function getEscapeSequences()
+    {
+        return array(
+            '\\'   => '\\\\',
+            "\t"   => '\t',
+            "\n"   => '\n',
+            "\r"   => '\r',
+            chr(8) => '\b', // Backspace
+            '"'    => '\\"',
+            '\''   => '\\\'',
+            // Escape "^" characters as Oracle seems to treat the part after the first occurrence of "^^"
+            // as type definition when occurring in large literals (more than 4000 bytes).
+            '^'    => '\\^'
+        );
     }
 
 }

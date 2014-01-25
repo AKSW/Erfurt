@@ -113,7 +113,7 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriter
      */
     protected function encodeLiteral($value)
     {
-        return addcslashes($value, '"\\');
+        return \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeLiteralValue($value);
     }
 
     /**

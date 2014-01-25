@@ -29,7 +29,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter
             foreach ($variables as $variable) {
                 /* @var $variable string */
                 if ($row[$variable . '$RDFCLOB'] !== null) {
-                    $value = str_replace('\\^', '^', $row[$variable . '$RDFCLOB']);
+                    $value = $row[$variable . '$RDFCLOB'];
                 } else {
                     $value =  $row[$variable];
                 }

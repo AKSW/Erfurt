@@ -98,15 +98,12 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             'modelAndGraph' => $this->getModelName() . ':<' . $graphUri . '>',
             'subject'       => $subject,
             'predicate'     => '<' . $predicate . '>',
-            'object'        => Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object, false)
+            'object'        => Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object)
         );
         $statement = $this->getInsertStatement();
         if (strlen($params['object']) > 4000) {
             // Literal is too long, therefore, bind it as a CLOB.
-            // Escape "^" characters as Oracle seems to treat the part after the first occurrence of "^^"
-            // as type definition.
-            $object['value'] = str_replace('^', '\\^', $object['value']);
-            $largeLiteral    = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec($object, false);
+            $largeLiteral = $params['object'];
             unset($params['object']);
             $statement->bindValue('object', $largeLiteral, PDO::PARAM_LOB);
         }
