@@ -12,12 +12,6 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
 {
 
     /**
-     * Prefix that is used for SPARQL variables to avoid
-     * conflicts with keywords.
-     */
-    const VARIABLE_PREFIX = 'var_';
-
-    /**
      * The database connection that is used.
      *
      * @var \Doctrine\DBAL\Connection
@@ -459,27 +453,27 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
                 ));
             case Erfurt_Store::RESULTFORMAT_XML:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter(),
                     new Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml()
                 ));
             case 'json':
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter(),
                     new Erfurt_Store_Adapter_ResultConverter_ToJsonConverter()
                 ));
             case Erfurt_Store::RESULTFORMAT_PLAIN:
                 return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(static::VARIABLE_PREFIX)),
+                    new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
                     new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToSimpleConverter()
 
                 ));
@@ -509,91 +503,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
      */
     protected function rewriteSparql($query)
     {
-        $rewritten = '';
-        $state     = new \SplStack();
-        $state->push('in_query');
-        $bytes  = str_split($query);
-        $length = count($bytes);
-        for ($i = 0; $i < $length; $i++) {
-            /* @var $byte string */
-            $byte = $bytes[$i];
-            if ($state->top() === 'escape_character') {
-                $state->pop();
-                $rewritten .= $byte;
-                continue;
-            }
-            switch ($byte) {
-                case '?':
-                case '$':
-                    $rewritten .= $byte;
-                    if ($state->top() === 'in_query') {
-                        $variableName    = $this->getNameOfVariableAt($query, $i);
-                        $newVariableName = $this->encodeVariableName($variableName);
-                        $rewritten .= static::VARIABLE_PREFIX . $newVariableName;
-                        $i += strlen($variableName);
-                    }
-                    break;
-                case '\'':
-                    if ($state->top() === 'in_query') {
-                        $state->push('in_quote_literal');
-                    } else if ($state->top() === 'in_quote_literal') {
-                        $state->pop();
-                    }
-                    $rewritten .= $byte;
-                    break;
-                case '"':
-                    if ($state->top() === 'in_query') {
-                        $state->push('in_double_quote_literal');
-                    } else if ($state->top() === 'in_double_quote_literal') {
-                        $state->pop();
-                    }
-                    $rewritten .= $byte;
-                    break;
-                case '\\':
-                    $state->push('escape_character');
-                    $rewritten .= $byte;
-                    break;
-                default:
-                    $rewritten .= $byte;
-            }
-        }
-        return $rewritten;
-    }
-
-    /**
-     * Returns the name of the variable (without ? or $) that starts
-     * in $query at position (byte-index) $index.
-     *
-     * @param string $query The SPARQL query.
-     * @param integer $index The byte index of the ? or $ character.
-     * @return string The name of the variable.
-     */
-    protected function getNameOfVariableAt($query, $index)
-    {
-        // Regular expression for variable names according to
-        // <http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#rVARNAME>
-        $pnCharsBase = '[A-Z]|[a-z]|[\x{00C0}-\x{00D6}]|[\x{00D8}-\x{00F6}]|[\x{00F8}-\x{02FF}]'
-                     . '|[\x{0370}-\x{037D}]|[\x{037F}-\x{1FFF}]|[\x{200C}-\x{200D}]|[\x{2070}-\x{218F}]'
-                     . '|[\x{2C00}-\x{2FEF}]|[\x{3001}-\x{D7FF}]|[\x{F900}-\x{FDCF}]|[\x{FDF0}-\x{FFFD}]'
-                     . '|[\x{10000}-\x{EFFFF}]';
-        $pnCharsU = $pnCharsBase . '|[_]';
-        $varName = '(' . $pnCharsU . '|[0-9])' // First character.
-                 . '(' . $pnCharsU . '|[0-9]|[\x{00B7}]|[\x{0300}-\x{036F}]|[\x{203F}-\x{2040}]})*';
-        $matches = array();
-        preg_match('/' . $varName . '/u', $query, $matches, 0, $index + 1);
-        return $matches[0];
-    }
-
-    /**
-     * Encodes the provided variable name to be able to restore upper/lower case characters
-     * in the results.
-     *
-     * @param string $variable
-     * @return string
-     */
-    protected function encodeVariableName($variable)
-    {
-        return \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::encodeVariableName($variable);
+        $rewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
+        return $rewriter->rewrite($query);
     }
 
     /**
