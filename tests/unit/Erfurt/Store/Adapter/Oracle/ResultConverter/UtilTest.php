@@ -172,7 +172,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
     /**
      * Ensures that decodeVariableName() does not change variable names without underscores.
      */
-    public function testConverterDoesNotChangeVariableWithoutUnderscores()
+    public function testDecodeVariableNameDoesNotChangeVariableWithoutUnderscores()
     {
         $name = 'case';
 
@@ -184,7 +184,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
     /**
      * Checks if decodeVariableName() restores escaped underscores ("__").
      */
-    public function testConverterRestoresUnderscoresThatAreEscapedViaUnderscore()
+    public function testDecodeVariableNameRestoresUnderscoresThatAreEscapedViaUnderscore()
     {
         $name = 'real__underscore';
 
@@ -197,7 +197,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
      * Ensures that decodeVariableName() converts characters that are not prefixed by an underscore
      * to lower case.
      */
-    public function testConverterChangesCharactersThatAreNotPrefixedByUnderscoreToLowercase()
+    public function testDecodeVariableNameChangesCharactersThatAreNotPrefixedByUnderscoreToLowercase()
     {
         $name = 'UPPER_CASE';
 
