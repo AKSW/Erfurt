@@ -160,6 +160,21 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that a query that contains an IRI with quote is treated correctly.
+     */
+    public function testRewriterHandlesIriWithQuoteCorrectly()
+    {
+        $query = 'SELECT ?p ?o '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/iri/with/quote/x\'y> ?p ?o . }';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        // The rewriter must not modify the IRI.
+        $this->assertContains('<http://example.org/iri/with/quote/x\'y>', $rewritten);
+    }
+
+    /**
      * Prepends the prefix to the given variable name.
      *
      * @param string $variable
