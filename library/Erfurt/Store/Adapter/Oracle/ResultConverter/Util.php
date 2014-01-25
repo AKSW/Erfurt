@@ -200,10 +200,9 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
      *     $value = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral($object);
      *
      * @param array(string=>mixed) $objectSpecification
-     * @param boolean $escape True if the value must be escaped.
      * @return string
      */
-    public static function buildLiteralFromSpec(array $objectSpecification, $escape = true)
+    public static function buildLiteralFromSpec(array $objectSpecification)
     {
         if ($objectSpecification['type'] === 'uri') {
             return '<' . $objectSpecification['value'] . '>';
@@ -213,9 +212,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
             return $objectSpecification['value'];
         }
         $value = $objectSpecification['value'];
-        if ($escape) {
-            $value = static::encodeLiteralValue($value);
-        }
+        $value = static::encodeLiteralValue($value);
         return static::buildLiteral(
             $value,
             (isset($objectSpecification['datatype']) ? $objectSpecification['datatype'] : null),
