@@ -179,13 +179,30 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     public function testRewriterPreservesTypeInformation()
     {
-        $query = 'SELECT ?p ?o '
+        $query = 'SELECT ?s ?p '
                . 'FROM <http://example.org/graph> '
                . 'WHERE { ?s ?p "abc"^^<http://www.w3.org/2001/XMLSchema#string> . }';
 
         $rewritten = $this->rewriter->rewrite($query);
 
         $this->assertContains('"abc"^^<http://www.w3.org/2001/XMLSchema#string>', $rewritten);
+    }
+
+    /**
+     * Ensures that the rewriter doe snot break regular expressions.
+     */
+    public function testRewriterDoesNotBreakRegularExpressions()
+    {
+        $query = 'SELECT ?s ?p '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { '
+               . '    ?s ?p "abc"^^<http://www.w3.org/2001/XMLSchema#string> . '
+               . '    FILTER (!REGEX(STR(?s), "^http://www.w3.org/2002/07/owl#"))'
+               . '}';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        $this->assertContains('"^http://www.w3.org/2002/07/owl#"', $rewritten);
     }
 
     /**
