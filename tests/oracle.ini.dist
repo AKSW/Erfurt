@@ -5,3 +5,4 @@ user     = "USERNAME"
 password = "PASSWORD"
 host     = "IP_OR_HOSTNAME"
 port     = 1521
+charset  = "UTF8"
