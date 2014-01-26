@@ -1405,6 +1405,30 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
+     * Checks if the adapter handles literals with umlauts correctly.
+     */
+    public function testAdapterHandlesUmlautsCorrectly()
+    {
+        $literalValue = 'hühü';
+        $this->insertTriple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'     => 'literal',
+                'value'    => $literalValue
+            )
+        );
+
+        $query  = 'SELECT ?object FROM <http://example.org/graph> WHERE { ?subject ?predicate ?object . }';
+        $result = $this->adapter->sparqlQuery($query);
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
+        $value = current(current($result));
+        $this->assertEquals($literalValue, $value);
+    }
+
+    /**
      * Counts all triples in the database.
      *
      * @return integer The number of triples.
