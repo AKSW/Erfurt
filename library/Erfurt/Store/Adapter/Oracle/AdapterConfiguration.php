@@ -75,6 +75,11 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                             ->end()
                             ->defaultFalse()
                         ->end()
+                        // The name of the connection pool. Only shared connections from
+                        // this pool are used by the application.
+                        ->scalarNode('pool')
+                            ->defaultValue('erfurt')
+                        ->end()
                     ->end()
                 ->end()
                 ->booleanNode('auto_setup')

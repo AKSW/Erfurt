@@ -47,6 +47,10 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
                 'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
             );
         }
+        if (isset($params['pool'])) {
+            // Set the name of the connection pool.
+            ini_set('oci8.connection_class', $params['pool']);
+        }
         $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
         $connectionParams = $params + $additionalParams;
         return DriverManager::getConnection($connectionParams);
