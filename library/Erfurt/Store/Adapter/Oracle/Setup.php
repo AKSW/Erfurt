@@ -139,7 +139,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
         );
         $statement = $this->connection->prepare($query);
         $statement->execute($params);
-        $rows = $statement->fetchAll();
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
         return count($rows) > 0;
     }
 
