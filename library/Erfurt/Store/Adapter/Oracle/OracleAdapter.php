@@ -501,7 +501,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
     protected function rewriteSparql($query)
     {
         $rewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
-        return $rewriter->rewrite($query);
+        return $rewriter->rewrite(Erfurt_Sparql_Parser::uncomment($query));
     }
 
     /**

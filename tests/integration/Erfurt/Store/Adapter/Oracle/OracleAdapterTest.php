@@ -246,17 +246,15 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     }
 
     /**
-     * Ensures that the adapter rejects queries that contain the internal escape
+     * Ensures that the adapter does not fail if a query contains the internal escape
      * sequence.
-     *
-     * This is not optimal, but at least it should prevent SQL injection attacks.
      */
-    public function testSparqlQueryRejectsQueriesThatContainsEscapeSequence()
+    public function testSparqlQueryDoesNotFailIfQueryContainsEscapeSequence()
     {
         $query  = 'SELECT ?subject FROM <http://example.org/graph> '
-                . 'WHERE { ?subject ?predicate "This is the escape sequence: ~\'"@en . }';
+                . 'WHERE { ?subject ?predicate "This is the escape sequence: ~\'"@en . } # In a comment: ~\'!';
 
-        $this->setExpectedException('Erfurt_Exception');
+        $this->setExpectedException(null);
         $this->adapter->sparqlQuery($query);
     }
 
