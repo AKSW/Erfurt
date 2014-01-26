@@ -211,16 +211,16 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
     protected static function getEscapeSequences()
     {
         return array(
-            '\\'   => '\\\\',
-            "\t"   => '\t',
-            "\n"   => '\n',
-            "\r"   => '\r',
-            chr(8) => '\b', // Backspace
-            '"'    => '\\"',
-            '\''   => '\\\'',
-            // Escape "^" characters as Oracle seems to treat the part after the first occurrence of "^^"
+            '\\'    => '\\\\',
+            "\t"    => '\t',
+            "\n"    => '\n',
+            "\r"    => '\r',
+            chr(8)  => '\b', // Backspace
+            '"'     => '\\"',
+            '\''    => '\\\'',
+            // Escape "^^" character sequence as Oracle seems to treat the part after the first occurrence of "^^"
             // as type definition when occurring in large literals (more than 4000 bytes).
-            '^'    => '\\^'
+            '^^'    => '\\^\\^'
         );
     }
 
