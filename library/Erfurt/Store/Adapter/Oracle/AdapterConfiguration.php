@@ -64,6 +64,17 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                             ->end()
                             ->defaultFalse()
                         ->end()
+                        // Allows the usage of pooled connections as described at
+                        // {@link http://de2.php.net/manual/de/oci8.connection.php}.
+                        ->booleanNode('pooled')
+                            ->beforeNormalization()
+                                ->ifInArray(array('0', '1', ''))
+                                ->then(function($value) {
+                                    return (bool)$value;
+                                })
+                            ->end()
+                            ->defaultFalse()
+                        ->end()
                     ->end()
                 ->end()
                 ->booleanNode('auto_setup')
