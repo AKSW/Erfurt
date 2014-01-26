@@ -55,6 +55,15 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                         ->scalarNode('charset')
                             ->defaultValue('UTF8')
                         ->end()
+                        ->booleanNode('persistent')
+                            ->beforeNormalization()
+                                ->ifInArray(array('0', '1', ''))
+                                ->then(function($value) {
+                                    return (bool)$value;
+                                })
+                            ->end()
+                            ->defaultFalse()
+                        ->end()
                     ->end()
                 ->end()
                 ->booleanNode('auto_setup')
