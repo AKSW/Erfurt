@@ -161,7 +161,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             }
             $statement = $this->connection->prepare($converted->query);
             $statement->execute($converted->params);
-            $rows = $statement->fetchAll();
+            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
             return array_map(function (array $row) {
                 return array_change_key_case($row, CASE_LOWER);
             }, $rows);
