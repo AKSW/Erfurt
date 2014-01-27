@@ -195,9 +195,9 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
            $dataType = null;
         }
         $value = '"' . $value . '"';
-        if ($dataType !== null) {
+        if (!empty($dataType)) {
             $value .= '^^<' . $dataType . '>';
-        } else if ($lang !== null) {
+        } else if (!empty($lang)) {
             $value .= '@' .$lang;
         }
         return $value;
