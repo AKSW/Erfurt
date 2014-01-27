@@ -183,9 +183,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      * * params - A map from parameter names to parameter values.
      *
      * @param string $query
+     * @param string $prefix A prefix for parameter names.
      * @return \stdClass
      */
-    protected function rewriteQuery($query)
+    protected function rewriteQuery($query, $prefix = '')
     {
         if ($this->isDropQuery($query) || $this->isQueryOfType($query, 'CREATE')) {
             // Do not rewrite DROP and DROP queries as these are not supported
@@ -220,7 +221,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         if (isset($parsed['VALUES'])) {
             foreach ($parsed['VALUES'] as $recordIndex => $record) {
                 /* @var $record array(string=>mixed) */
-                $conversion = $this->convertLiteralsToParams($record['data'], 'VALUES' . $recordIndex);
+                $conversion = $this->convertLiteralsToParams($record['data'], $prefix . 'VALUES' . $recordIndex);
                 $parsed['VALUES'][$recordIndex]['data'] = $conversion->parts;
                 $params = $params + $conversion->params;
             }
@@ -228,19 +229,21 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         if (isset($parsed['SELECT'])) {
             $parsed['SELECT'] = $this->removeBracketExpressions($parsed['SELECT']);
         }
-        foreach (array('SELECT', 'FROM', 'WHERE', 'GROUP', 'ORDER', 'LIMIT') as $partName) {
+        foreach (array('SELECT', 'FROM', 'UPDATE', 'SET', 'WHERE', 'GROUP', 'ORDER', 'LIMIT') as $partName) {
             /* @var $partName string */
             if (!isset($parsed[$partName])) {
                 continue;
             }
             $parsed[$partName] = $this->quoteIdentifiers($parsed[$partName]);
-            $conversion = $this->convertLiteralsToParams($parsed[$partName], $partName);
+            $conversion = $this->convertLiteralsToParams($parsed[$partName], $prefix . $partName);
             $parsed[$partName] = $conversion->parts;
             $params = $params + $conversion->params;
         }
         if (isset($parsed['WHERE'])) {
             $parsed['WHERE'] = $this->splitLargeInLists($parsed['WHERE']);
-            $parsed['WHERE'] = $this->resolveSubQueries($parsed['WHERE']);
+            $conversion = $this->resolveSubQueries($parsed['WHERE'], $prefix . 'SUB');
+            $parsed['WHERE'] = $conversion->parts;
+            $params = $params + $conversion->params;
         }
         $creator = new Creator();
         $result  = new \stdClass();
@@ -258,30 +261,45 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
      *
      * This is a workaround as the creator does not handle sub queries in
      * bracket WHERE parts correctly.
-     * Generating the sub queries solves only a part of the problem as
-     * sub queries are currently not rewritten properly, which means that
-     * identifiers and literals are not replaced. However, it should at
-     * least work for simple cases.
+     *
+     * This method returns an object that has the following attributes:
+     *
+     * # parts  - array(array(string=>mixed)) - The modified parts.
+     * # params - array(string=>mixed) - Additional query parameters.
      *
      * @param array(array(string=>mixed)) $parts
-     * @return array(array(string=>mixed))
+     * @param string $prefix A prefix for parameter names.
+     * @return stdClass
      */
-    protected function resolveSubQueries(array $parts)
+    protected function resolveSubQueries(array $parts, $prefix)
     {
+        $result = new stdClass();
+        $result->params = array();
         foreach (array_keys($parts) as $index) {
             /* @var $index integer */
             if ($parts[$index]['expr_type'] === 'subquery') {
-                $creator = new Creator();
+                $query = $parts[$index]['base_expr'];
+                if (strpos($query, '(') === 0) {
+                    // Query is enclosed by brackets, which must be removed.
+                    $query = trim($query);
+                    $query = substr($query, 1, -1);
+                }
+                $query = trim($query);
+                $subQuery = $this->rewriteQuery($query, $prefix);
+                $result->params = $result->params + $subQuery->params;
                 $parts[$index] = array(
                     'expr_type' => 'const',
-                    'base_expr' => '(' . $creator->create($parts[$index]['sub_tree']) . ')',
+                    'base_expr' => '(' . $subQuery->query . ')',
                     'sub_tree'  => false
                 );
             } else if (is_array($parts[$index]['sub_tree'])) {
-                $parts[$index]['sub_tree'] = $this->resolveSubQueries($parts[$index]['sub_tree']);
+                $conversion = $this->resolveSubQueries($parts[$index]['sub_tree'], $prefix . '_');
+                $result->params = $result->params + $conversion->params;
+                $parts[$index]['sub_tree'] = $conversion->parts;
             }
         }
-        return $parts;
+        $result->parts = $parts;
+        return $result;
     }
 
     /**
@@ -461,7 +479,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
             } else if ($parts[$index]['expr_type'] === 'table') {
                 $parts[$index]['table'] = $this->quoteIdentifier($parts[$index]['table']);
-            } else if (is_array($parts[$index]['sub_tree']) === 'bracket_expression') {
+                if (isset($parts[$index]['ref_clause']) && is_array($parts[$index]['ref_clause'])) {
+                    // Join detected.
+                    $parts[$index]['ref_clause'] = $this->quoteIdentifiers($parts[$index]['ref_clause']);
+                }
+            } else if (in_array($parts[$index]['expr_type'], array('bracket_expression', 'expression'))) {
                 // Sub tree must be processed.
                 $parts[$index]['sub_tree'] = $this->quoteIdentifiers($parts[$index]['sub_tree']);
             }

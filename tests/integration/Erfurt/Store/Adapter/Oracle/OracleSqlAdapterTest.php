@@ -406,6 +406,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     public function testAdapterSupportsComplexSubQueries()
     {
         $this->adapter->createTable('ef_cache_query_result', array(
+            'qid'    => 'INTEGER',
             'result' => 'VARCHAR'
         ));
         $this->adapter->createTable('ef_cache_query_rt', array(
