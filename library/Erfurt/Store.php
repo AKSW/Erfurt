@@ -1721,7 +1721,17 @@ EOF;
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
             return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
         } else {
-            throw new Erfurt_Store_Exception('Count is not supported by backend.');
+            // Counting is not supported natively. Reduce the request to a SPARQL query.
+            $query = new Erfurt_Sparql_SimpleQuery();
+            $prologue = sprintf('SELECT COUNT %s ((%s) AS ?number)', (($distinct) ? 'DISTINCT' : ''), $countSpec);
+            $query->setProloguePart($prologue);
+            $query->setWherePart($whereSpec);
+            foreach ($graphIris as $graphIri) {
+                /* @var $graphIri string */
+                $query->addFrom($graphIri);
+            }
+            $result = $this->_backendAdapter->sparqlQuery((string)$query);
+            return (int)current(current($result));
         }
     }
 
