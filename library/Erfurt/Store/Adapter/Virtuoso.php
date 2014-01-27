@@ -514,7 +514,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"\''))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
                         )
                     )
                 )

@@ -795,6 +795,15 @@ EOF;
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
+        if (strpbrk($stringSpec, '\'') === false) {
+            $parts = explode(' ', $stringSpec);
+            $stringSpec = '';
+            foreach ($parts as $word) {
+                $stringSpec.= '\'' . $word . '\' AND ';
+            }
+            // Remove the last AND (including whitespace)
+            $stringSpec = substr($stringSpec, 0, strlen($stringSpec)-5);
+        }
 
         $options = array_merge(
             array(
