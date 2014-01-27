@@ -185,19 +185,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $this->markTestNeedsDatabase();
         
         $store = Erfurt_App::getInstance()->getStore();
-        
-        try {
-            $result = $store->countWhereMatches(
-                'http://localhost/SomeModelThatDoesNotExist123456789', 
-                '{ ?s ?p ?o }',
-                '*'
-            );
-            
-            // Should fail...
-            $this->fail();
-        } catch (Erfurt_Store_Exception $e) {
-            // Nothing to do here...
-        }
+
+        $this->setExpectedException('Erfurt_Store_Exception');
+        $store->countWhereMatches(
+            'http://localhost/SomeModelThatDoesNotExist123456789',
+            '{ ?s ?p ?o }',
+            '*'
+        );
     }
     
     public function testSparqlQueryWithSpecialCharUriIssue579()
