@@ -386,6 +386,21 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can handle SQL queries that contain sub queries.
+     */
+    public function testAdapterSupportsSubQueries()
+    {
+        $columns = array(
+            'id' => 'INT'
+        );
+        $this->adapter->createTable('test_data', $columns);
+
+        $this->setExpectedException(null);
+        $query = 'SELECT id FROM test_data WHERE (id < 5 OR id IN (SELECT id FROM test_data WHERE id > 10))';
+        $this->adapter->sqlQuery($query);
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name

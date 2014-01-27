@@ -240,6 +240,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
         }
         if (isset($parsed['WHERE'])) {
             $parsed['WHERE'] = $this->splitLargeInLists($parsed['WHERE']);
+            $parsed['WHERE'] = $this->resolveSubQueries($parsed['WHERE']);
         }
         $creator = new Creator();
         $result  = new \stdClass();
@@ -250,6 +251,37 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
             $result->query = 'DELETE ' . substr($result->query, strlen('SELECT * '));
         }
         return $result;
+    }
+
+    /**
+     * Generates SQL for all sub queries in the provided WHERE parts.
+     *
+     * This is a workaround as the creator does not handle sub queries in
+     * bracket WHERE parts correctly.
+     * Generating the sub queries solves only a part of the problem as
+     * sub queries are currently not rewritten properly, which means that
+     * identifiers and literals are not replaced. However, it should at
+     * least work for simple cases.
+     *
+     * @param array(array(string=>mixed)) $parts
+     * @return array(array(string=>mixed))
+     */
+    protected function resolveSubQueries(array $parts)
+    {
+        foreach (array_keys($parts) as $index) {
+            /* @var $index integer */
+            if ($parts[$index]['expr_type'] === 'subquery') {
+                $creator = new Creator();
+                $parts[$index] = array(
+                    'expr_type' => 'const',
+                    'base_expr' => '(' . $creator->create($parts[$index]['sub_tree']) . ')',
+                    'sub_tree'  => false
+                );
+            } else if (is_array($parts[$index]['sub_tree'])) {
+                $parts[$index]['sub_tree'] = $this->resolveSubQueries($parts[$index]['sub_tree']);
+            }
+        }
+        return $parts;
     }
 
     /**
@@ -429,7 +461,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parts[$index]['base_expr'] = $this->quoteIdentifier($parts[$index]['base_expr']);
             } else if ($parts[$index]['expr_type'] === 'table') {
                 $parts[$index]['table'] = $this->quoteIdentifier($parts[$index]['table']);
-            } else if ($parts[$index]['expr_type'] === 'bracket_expression') {
+            } else if (is_array($parts[$index]['sub_tree']) === 'bracket_expression') {
                 // Sub tree must be processed.
                 $parts[$index]['sub_tree'] = $this->quoteIdentifiers($parts[$index]['sub_tree']);
             }
