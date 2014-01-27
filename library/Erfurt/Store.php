@@ -1702,7 +1702,7 @@ EOF;
     public function countWhereMatches($graphIri, $whereSpec, $countSpec, $distinct = false, $followImports = true)
     {
         // unify parameters
-        if (trim($countSpec[0]) !== '?') {
+        if (trim($countSpec[0]) !== '?' && trim($countSpec) !== '*') {
             // TODO: support $
             $countSpec = '?' . $countSpec;
         }
