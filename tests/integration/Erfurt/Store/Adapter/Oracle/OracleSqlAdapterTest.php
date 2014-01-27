@@ -401,6 +401,55 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can handle queries with complex sub queries.
+     */
+    public function testAdapterSupportsComplexSubQueries()
+    {
+        $this->adapter->createTable('ef_cache_query_result', array(
+            'result' => 'VARCHAR'
+        ));
+        $this->adapter->createTable('ef_cache_query_rt', array(
+            'tid' => 'INTEGER'
+        ));
+        $this->adapter->createTable('ef_cache_query_triple', array(
+            'tid'       => 'INTEGER',
+            'subject'   => 'VARCHAR',
+            'predicate' => 'VARCHAR',
+            'object'    => 'VARCHAR'
+        ));
+        $this->adapter->createTable('ef_cache_query_rm', array(
+            'mid' => 'INTEGER'
+        ));
+        $this->adapter->createTable('ef_cache_query_model', array(
+            'mid'      => 'INTEGER',
+            'modelIri' => 'VARCHAR'
+        ));
+
+        $query =  "UPDATE ef_cache_query_result SET result = NULL
+                   WHERE
+                    (
+                        qid IN
+                        (
+                            SELECT DISTINCT (qid)
+                            FROM    ef_cache_query_rt JOIN
+                                    ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
+                            WHERE (((subject = 'http://localhost/OntoWiki/aksw' OR subject IS NULL) AND (predicate = 'http://ns.ontowiki.net/SysOnt/prefix' OR predicate IS NULL) AND (object = 'foaf=http://xmlns.com/foaf/0.1/' OR object IS NULL)))
+                        )
+                        AND qid IN
+                        (
+                            SELECT DISTINCT (qid)
+                            FROM    ef_cache_query_rm JOIN
+                                    ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
+                            WHERE ( ef_cache_query_model.modelIri = 'http://localhost/OntoWiki/Config/' OR
+                                    ef_cache_query_model.modelIri IS NULL)
+                       )
+                   )";
+
+        $this->setExpectedException(null);
+        $this->adapter->sqlQuery($query);
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
