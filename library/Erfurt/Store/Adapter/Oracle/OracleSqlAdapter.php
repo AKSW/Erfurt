@@ -443,7 +443,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapter implements Erfurt_Store_Sql_I
                 $parts[$index]['base_expr'] = ':' . $paramName;
                 // ... and add the parameter to the map.
                 $params[$paramName] = $literal;
-            } else if ($parts[$index]['expr_type'] === 'bracket_expression') {
+            } else if (in_array($parts[$index]['expr_type'], array('bracket_expression', 'expression'))) {
                 // Sub tree must be processed.
                 $subTree = $parts[$index]['sub_tree'];
                 $subTreeConversion = $this->convertLiteralsToParams($subTree, $prefix . '_' . $index);
