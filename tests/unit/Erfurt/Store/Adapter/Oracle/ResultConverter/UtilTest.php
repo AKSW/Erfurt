@@ -207,6 +207,32 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_UtilTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that buildLiteral() creates a valid string representation
+     * if an empty string is passed as language.
+     *
+     * This occurs when adding data in the OntoWiki.
+     */
+    public function testBuildLiteralWorksIfLangIsEmpty()
+    {
+        $literal = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral('hello', null, '');
+
+        $this->assertInternalType('string', $literal);
+        $this->assertStringEndsNotWith('@', $literal);
+    }
+
+    /**
+     * Ensures that buildLiteral() creates a valid string representation
+     * if an empty string is passed as data type.
+     */
+    public function testBuildLiteralWorksIfDataTypeIsEmpty()
+    {
+        $literal = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral('hello', '');
+
+        $this->assertInternalType('string', $literal);
+        $this->assertNotContains('^^', $literal);
+    }
+
+    /**
      * Returns an example result set.
      *
      * @return array(array(string=>string|null))
