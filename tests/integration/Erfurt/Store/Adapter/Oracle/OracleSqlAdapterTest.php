@@ -451,6 +451,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     }
 
     /**
+     * Checks if the adapter can be used to update columns with large strings (more than 4000 bytes).
+     */
+    public function testAdapterCanUpdateLargeStrings()
+    {
+        $this->adapter->createTable('data', array(
+            'text' => 'LONG VARCHAR'
+        ));
+        $this->adapter->sqlQuery('INSERT INTO data (text) VALUES ("hello")');
+
+        $this->setExpectedException(null);
+        $this->adapter->sqlQuery('UPDATE data SET text="' . str_repeat('x', 4100) .'"');
+    }
+
+    /**
      * Asserts that a table with the provided name exists.
      *
      * @param string $name
