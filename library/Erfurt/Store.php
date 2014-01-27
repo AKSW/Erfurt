@@ -1723,7 +1723,9 @@ EOF;
         } else {
             // Counting is not supported natively. Reduce the request to a SPARQL query.
             $query = new Erfurt_Sparql_SimpleQuery();
-            $prologue = sprintf('SELECT COUNT %s ((%s) AS ?number)', (($distinct) ? 'DISTINCT' : ''), $countSpec);
+            $countSpec    = trim($countSpec);
+            $distinctSpec = ($distinct && $countSpec !== '*') ? 'DISTINCT' : '';
+            $prologue     = sprintf('SELECT (COUNT (%s %s) AS ?number)', $distinctSpec , $countSpec);
             $query->setProloguePart($prologue);
             $query->setWherePart($whereSpec);
             foreach ($graphIris as $graphIri) {
