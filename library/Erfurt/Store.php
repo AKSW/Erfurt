@@ -1711,13 +1711,14 @@ EOF;
             throw new Erfurt_Store_Exception('Model "' . $graphIri . '" is not available.');
         }
 
+        // use the imports closure per default (use 5th parameter to disable this)
+        if ($followImports === true) {
+            $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
+        } else {
+            $graphIris = array($graphIri);
+        }
+
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
-            // use the imports closure per default (use 5th parameter to disable this)
-            if ($followImports === true) {
-                $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
-            } else {
-                $graphIris = array($graphIri);
-            }
             return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
         } else {
             throw new Erfurt_Store_Exception('Count is not supported by backend.');
