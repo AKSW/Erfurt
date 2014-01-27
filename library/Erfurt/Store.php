@@ -1707,18 +1707,18 @@ EOF;
             $countSpec = '?' . $countSpec;
         }
 
+        if (!$this->isModelAvailable($graphIri)) {
+            throw new Erfurt_Store_Exception('Model "' . $graphIri . '" is not available.');
+        }
+
         if (method_exists($this->_backendAdapter, 'countWhereMatches')) {
-            if ($this->isModelAvailable($graphIri)) {
-                // use the imports closure per default (use 5th parameter to disable this)
-                if ($followImports === true) {
-                    $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
-                } else {
-                    $graphIris = array($graphIri);
-                }
-                return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
+            // use the imports closure per default (use 5th parameter to disable this)
+            if ($followImports === true) {
+                $graphIris = array_merge($this->getImportsClosure($graphIri), array($graphIri));
             } else {
-                throw new Erfurt_Store_Exception('Model "' . $graphIri . '" is not available.');
+                $graphIris = array($graphIri);
             }
+            return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
         } else {
             throw new Erfurt_Store_Exception('Count is not supported by backend.');
         }
