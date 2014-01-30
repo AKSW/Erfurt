@@ -139,48 +139,36 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
-        $numBlocks = 1;
-        $blockQueries = array();
-        while (true) {
-            $statementBlocks = $this->array_split($statementsArray, $numBlocks);
-            $blockQueries = array();
-            foreach ($statementBlocks as $statementBlock) {
-                $blockQuery = sprintf(
-                    'INSERT INTO GRAPH <%s> {%s}',
-                    $graphUri,
-                    $this->buildTripleString($statementBlock)
-                );
+        $triples = $this->buildTripleArray($statementsArray);
+        $count = count($triples);
 
-               //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
-               if (substr_count($blockQuery, "\n") > 1000) {
-                    $numBlocks *= 2;
-                    continue 2;
-               }
-               $blockQueries[] = $blockQuery;
-            }
-            break;  //this only reached if the continue call is not reached
-        }
+        $chunk = '';
+        $newlines = 0;
 
         $odbcRes = true;
-        foreach ($blockQueries as $query) {
-            if (defined('_EFDEBUG')) {
-                $logger = Erfurt_App::getInstance()->getLog();
-                $logger->debug('Add multiple statements query: ' . PHP_EOL . $query);
+        for ($i = 0; $i < $count; $i++) {
+            $chunk .= $triples[$i];
+            $newlines += substr_count($triples[$i], "\n");
+
+            //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
+            if ($i+1 === $count or $newlines + substr_count($triples[$i+1], "\n") > 1000) {
+                $query = sprintf(
+                    'INSERT INTO GRAPH <%s> {%s}',
+                    $graphUri,
+                    $chunk
+                );;
+
+                if (defined('_EFDEBUG')) {
+                    $logger = Erfurt_App::getInstance()->getLog();
+                    $logger->debug('Add multiple statements query: ' . PHP_EOL . $query);
+                }
+
+                $odbcRes = $this->_execSparqlUpdate($query);
+
+                $chunk = '';
+                $newlines = 0;
             }
-
-            $odbcRes = $this->_execSparqlUpdate($query);
         }
-    }
-
-    // split the given array into n number of pieces
-    private function array_split($array, $pieces=2)
-    {
-        if ($pieces < 2)
-            return array($array);
-        $newCount = ceil(count($array)/$pieces);
-        $a = array_slice($array, 0, $newCount);
-        $b = $this->array_split(array_slice($array, $newCount), $pieces-1);
-        return array_merge(array($a), $b);
     }
 
         /**
@@ -379,18 +367,36 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
-        $deleteSparql = sprintf(
-            'DELETE FROM GRAPH <%s> {%s}',
-            $graphUri,
-            $this->buildTripleString($statementsArray)
-        );
+        $triples = $this->buildTripleArray($statementsArray);
+        $count = count($triples);
 
-        if (defined('_EFDEBUG')) {
-            $logger = Erfurt_App::getInstance()->getLog();
-            $logger->debug('Delete multiple statements query:' . PHP_EOL . $deleteSparql);
+        $chunk = '';
+        $newlines = 0;
+
+        $odbcRes = true;
+        for ($i = 0; $i < $count; $i++) {
+            $chunk .= $triples[$i];
+            $newlines += substr_count($triples[$i], "\n");
+
+            //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
+            if ($i+1 === $count or $newlines + substr_count($triples[$i+1], "\n") > 1000) {
+                $query = sprintf(
+                    'DELETE FROM GRAPH <%s> {%s}',
+                    $graphUri,
+                    $chunk
+                );;
+
+                if (defined('_EFDEBUG')) {
+                    $logger = Erfurt_App::getInstance()->getLog();
+                    $logger->debug('Delete multiple statements query: ' . PHP_EOL . $query);
+                }
+
+                $odbcRes = $this->_execSparqlUpdate($query);
+
+                $chunk = '';
+                $newlines = 0;
+            }
         }
-
-        return $this->_execSparqlUpdate($deleteSparql);
     }
 
     /**
@@ -808,15 +814,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
 
     /**
-     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
+     * Calls specified function for every triple in N-Triples syntax out of an RDF/PHP array.
      *
      * @param $rdfPhpStatements A nested statement array
-     * @return string
+     * @param $callback A function which will be called for each triple
      */
-    public function buildTripleString(array $rdfPhpStatements)
+    public function buildTriple(array $rdfPhpStatements, $callback)
     {
-        $triples = '';
-
         foreach ($rdfPhpStatements as $currentSubject => $predicates) {
             foreach ($predicates as $currentPredicate => $objects) {
                 foreach ($objects as $currentObject) {
@@ -835,10 +839,42 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
 
                     // add triple
-                    $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
+                    $callback(sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL));
                 }
             }
         }
+    }
+
+    /**
+     * Builds an array of triples in N-Triples syntax out of an RDF/PHP array.
+     *
+     * @param $rdfPhpStatements A nested statement array
+     * @return array
+     */
+    public function buildTripleArray(array $rdfPhpStatements)
+    {
+        $triples = array();
+
+        $this->buildTriple($rdfPhpStatements, function($triple) use(&$triples) {
+            $triples[] = $triple;
+        });
+
+        return $triples;
+    }
+
+    /**
+     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
+     *
+     * @param $rdfPhpStatements A nested statement array
+     * @return string
+     */
+    public function buildTripleString(array $rdfPhpStatements)
+    {
+        $triples = '';
+
+        $this->buildTriple($rdfPhpStatements, function($triple) use(&$triples) {
+            $triples .= $triple;
+        });
 
         return $triples;
     }
