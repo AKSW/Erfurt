@@ -337,30 +337,83 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $this->assertTrue($log instanceof Zend_Log);
     }
 
-    public function testGetLogDir()
+    /**
+     * Ensures that relative log directory paths are interpreted relative to the Erfurt root directory.
+     */
+    public function testGetLogDirUsesPathRelativeToErfurtRootDirectoryIfRelativePathIsProvided()
     {
-         $app    = Erfurt_App::getInstance();
-         $config = $app->getConfig();
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
 
-         $config->log->path = 'logs';
-         $expectedPath = realpath(EF_BASE . '../../logs') . '/';
-         $resolvedPath = $app->getLogDir();
-         $this->assertEquals($expectedPath, $resolvedPath);
+        $config->log->path = 'tests/unit/Erfurt/_files/logs';
+        $resolvedPath = $app->getLogDir();
 
-         $config->log->path = '/tmp';
-         $expectedPath = '/tmp/';
-         $resolvedPath = $app->getLogDir();
-         $this->assertEquals($expectedPath, $resolvedPath);
+        // Ensure that the expected directory exists.
+        $expectedPath = EF_BASE . '../../tests/unit/Erfurt/_files/logs';
+        $this->assertFileExists($expectedPath);
+        // Normalize the path.
+        $expectedPath = realpath($expectedPath) . '/';
+        $this->assertEquals($expectedPath, $resolvedPath);
+    }
 
-         $config->log->path = '/tmp/';
-         $expectedPath = '/tmp/';
-         $resolvedPath = $app->getLogDir();
-         $this->assertEquals($expectedPath, $resolvedPath);
+    /**
+     * Ensures that getLogDir() does not change a log directory that is
+     * configured as absolute path.
+     */
+    public function testGetLogDirDoesNotChangeAbsolutePath()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
 
-         unset($config->log->path);
-         $expectedPath = false;
-         $resolvedPath = $app->getLogDir();
-         $this->assertEquals($expectedPath, $resolvedPath);
+        $path = dirname(__FILE__) . '/_files/logs';
+        $config->log->path = $path;
+        $resolvedPath = $app->getLogDir();
+        $this->assertEquals(realpath($path), realpath($resolvedPath));
+    }
+
+    /**
+     * Ensures that getLogDir() adds a trailing slash to the configured
+     * log directory if necessary.
+     */
+    public function testGetLogDirAppendsSlashToPathIfNotAvailable()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
+
+        $path = dirname(__FILE__) . '/_files/logs';
+        $config->log->path = $path;
+        $expectedPath = $path . '/';
+        $resolvedPath = $app->getLogDir();
+        $this->assertEquals($expectedPath, $resolvedPath);
+    }
+
+    /**
+     * Ensures that getLogDir() does not add another trailing slash if the configured
+     * log path already contains one.
+     */
+    public function testGetLogDirDoesNotAddAnotherSlashIfItIsAlreadyConfigured()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
+
+        $path = dirname(__FILE__) . '/_files/logs/';
+        $config->log->path = $path;
+        $resolvedPath = $app->getLogDir();
+        $this->assertEquals($path, $resolvedPath);
+    }
+
+    /**
+     * Ensures that getLogDir() returns false if no log directory is configured.
+     */
+    public function testGetLogDirReturnsFalseIfNoLogDirectoryIsConfigured()
+    {
+        $app    = Erfurt_App::getInstance();
+        $config = $app->getConfig();
+
+        unset($config->log->path);
+        $expectedPath = false;
+        $resolvedPath = $app->getLogDir();
+        $this->assertEquals($expectedPath, $resolvedPath);
     }
 
     public function testGetPluginManager()

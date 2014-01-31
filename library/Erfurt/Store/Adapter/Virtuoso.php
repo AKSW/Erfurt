@@ -297,8 +297,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
             // success?
             if (false === $this->_connection) {
-                throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
-                exit;
+                $error   = error_get_last();
+                $message = 'Unable to connect to Virtuoso Universal Server via ODBC: ' . PHP_EOL
+                         . $error['message'];
+                throw new Erfurt_Store_Adapter_Exception($message);
             }
         }
 
@@ -512,7 +514,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"\''))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
                         )
                     )
                 )
@@ -588,7 +590,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             default:
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
-                break;
         }
 
         try {
@@ -1172,7 +1173,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $importSql = sprintf(
                 "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')",
                 $importFunc,
-                $data,
+                // Escape backslashes ("\"), as these otherwise lead to errors on Windows systems.
+                addslashes($data),
                 $baseUri,
                 $graphUri
             );

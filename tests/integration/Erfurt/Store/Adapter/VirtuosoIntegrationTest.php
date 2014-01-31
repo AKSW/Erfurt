@@ -200,7 +200,12 @@ EOT;
 <http://example.com/1> <http://example.com/2> """literal\n4""" .
 
 EOT;
-        $this->assertEquals($expected, $this->fixture->buildTripleString($statements));
+
+        $result = $this->fixture->buildTripleString($statements);
+        // The Triple string uses platform dependent line endings. Therefore, the line endings must be normalized
+        // before they are compared (the line endings in this file are always in Unix format).
+        $result = str_replace(PHP_EOL, "\n", $result);
+        $this->assertEquals($expected, $result);
         
         $value    = <<<EOT
 Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
@@ -233,7 +238,9 @@ We will integrate and syndicate linked data with large-scale, existing applicati
 
 EOT;
 
-        $this->assertEquals($expected2, $this->fixture->buildTripleString($statements2));
+        $result2 = $this->fixture->buildTripleString($statements2);
+        $result2 = str_replace(PHP_EOL, "\n", $result2);
+        $this->assertEquals($expected2, $result2);
     }
 
     public function testImportRdfWithUrlAndRdfXml302After303GithubOntoWikiIssue101()

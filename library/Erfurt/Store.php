@@ -795,6 +795,15 @@ EOF;
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
+        if (strpbrk($stringSpec, '\'') === false) {
+            $parts = explode(' ', $stringSpec);
+            $stringSpec = '';
+            foreach ($parts as $word) {
+                $stringSpec.= '\'' . $word . '\' AND ';
+            }
+            // Remove the last AND (including whitespace)
+            $stringSpec = substr($stringSpec, 0, strlen($stringSpec)-5);
+        }
 
         $options = array_merge(
             array(
@@ -1087,15 +1096,14 @@ EOF;
      */
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
-        try {
-            // Get it if it already exists
-            $model = $this->getModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
+        // Check if Model is availabe without AC to see if it exists
+        if ($this->isModelAvailable($modelIri, false)) {
+            // Try to get it if it already exists
+            return $this->getModel($modelIri, $useAc);
+        } else {
+            // Try to create it if it doesn't exist
+            return $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
-
-        return $model;
     }
 
     /**
