@@ -111,7 +111,8 @@ class Erfurt_Versioning_StoreStub
     {
         return array(
             'ef_versioning_actions',
-            'ef_versioning_payloads'
+            'ef_versioning_payloads',
+            'ef_versioning_metadata'
         );
     }
 }

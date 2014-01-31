@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -297,8 +297,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
             // success?
             if (false === $this->_connection) {
-                throw new Erfurt_Store_Adapter_Exception('Unable to connect to Virtuoso Universal Server via ODBC.');
-                exit;
+                $error   = error_get_last();
+                $message = 'Unable to connect to Virtuoso Universal Server via ODBC: ' . PHP_EOL
+                         . $error['message'];
+                throw new Erfurt_Store_Adapter_Exception($message);
             }
         }
 
@@ -512,7 +514,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"\''))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
                         )
                     )
                 )
@@ -588,7 +590,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 break;
             default:
                 throw new Erfurt_Store_Adapter_Exception("Locator '$locator' not supported by Virtuoso.");
-                break;
         }
 
         try {
@@ -1007,8 +1008,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
         $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
-        $resultId = odbc_exec($this->connection(), $virtuosoPl);
-#var_dump($resultId);exit;
+#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
+#        $resultId   = odbc_exec($resultId, $virtuosoPl);
+        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
+
         if (false === $resultId) {
             $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
@@ -1033,7 +1036,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-        $resultId = @odbc_exec($this->connection(), $virtuosoPl);
+#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
+#        $resultId   = odbc_exec($resultId, $virtuosoPl);
+        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
             $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
@@ -1052,8 +1057,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     protected function _execSql($sqlQuery)
     {
-        $resultId = @odbc_exec($this->connection(), $sqlQuery);
-
+#        $resultId   = odbc_prepare($this->connection(), $sqlQuery);
+#        $resultId   = odbc_exec($resultId, $sqlQuery);
+        $resultId   = @odbc_exec($this->connection(), $sqlQuery);
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
@@ -1167,7 +1173,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $importSql = sprintf(
                 "CALL DB.DBA.%s(FILE_TO_STRING_OUTPUT('%s'), '%s', '%s')",
                 $importFunc,
-                $data,
+                // Escape backslashes ("\"), as these otherwise lead to errors on Windows systems.
+                addslashes($data),
                 $baseUri,
                 $graphUri
             );
@@ -1212,8 +1219,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 if (substr($fieldType, 0, 4) == 'LONG') {
                     // LONG VARCHAR or LONG VARBINARY
                     // get the field value in parts
-                    while ($segment = odbc_result($odbcResult, $i)) {
-                        $value .= (string)$segment;
+                    while (true) {
+                        $segment = odbc_result($odbcResult, $i);
+                        if ($segment !== false && $segment !== null) {
+                            $value .= (string)$segment;
+                        } else {
+                            break;
+                        }
                     }
                 } else {
                     // get the field value normally

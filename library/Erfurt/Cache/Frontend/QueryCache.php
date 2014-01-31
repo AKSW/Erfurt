@@ -182,7 +182,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * invalidating CacheResults according to a given modelIRI
      * @access     public
      * @param      string   $modelIri  modelIri
-     * @return     string   $status    status of the process
+     * @return     array    $qids      set of qids that were invalidated
     */
     public function invalidateWithModelIri($modelIri)
     {
@@ -344,8 +344,8 @@ class Erfurt_Cache_Frontend_QueryCache
 
         //delete objects in ObjectCache
         //TODO: _clean im Objectcache umschreiben.
-#        if ($removeByTags == true)
-#            $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
+        //if ($removeByTags == true)
+        //    $eCache->clean (CLEANING_MODE_MATCHING_TAG, $oKeys) ;
         if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null)) {
             foreach ($oKeys as $oKey) {
                 $objectCache->remove($oKey);
@@ -370,31 +370,26 @@ class Erfurt_Cache_Frontend_QueryCache
         // Creation of SPARQL Parser and parsing the query string
         $parser = new Erfurt_Sparql_Parser();
 
-        #hack to get Construct queries running.
+        //hack to get Construct queries running.
         $queryString = preg_replace("/CONSTRUCT\s*\{[^\}]*\}/mix", "SELECT *", $queryString);
 
         $parsedQuery = $parser->parse($queryString);
 
-        #extract graphUris from FromPart and from FromNamedPart
+        //extract graphUris from FromPart and from FromNamedPart
         $graphs = $parsedQuery->getFromPart();
         $fromNamedParts = $parsedQuery->getFromNamedPart();
         foreach ($fromNamedParts as $fromNamedPart) {
             array_push($graphs, $fromNamedPart);
         }
-        #extract triplePattern from parsed query and put them in an array.
+        //extract triplePattern from parsed query and put them in an array.
         $triples = array();
-        #triples[0,1,2...] = array('subject' => <subject>, 'predicate' => <predicate>, 'object' => <object>,)
+        //triples[0,1,2...] = array('subject' => <subject>, 'predicate' => <predicate>, 'object' => <object>,)
         $graphPatterns = $parsedQuery->getResultPart();
         foreach ($graphPatterns as $gid => $graphPattern) {
             $triplePatterns = $graphPattern->getTriplePatterns();
             foreach ($triplePatterns as $tid => $triplePattern) {
                 $subject   = (string) $triplePattern->getSubject();
                 $predicate = (string) $triplePattern->getPredicate();
-                #Erfurt_RDF_Literal needs an __toString methode :: is given now , the following was an workaround
-                #if (get_class($triplePattern->getObject())  == 'Erfurt_Rdf_Literal') {
-                #    var_dump($triplePattern->getObject());
-                #    die;
-                #}
                 $object    = (string) $triplePattern->getObject();
 
                 $triple = array();

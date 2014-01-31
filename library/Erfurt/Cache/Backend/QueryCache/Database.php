@@ -310,7 +310,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  invalidating a cached Query Result 
      *  @access     public
      *  @param      array   $statements     $statements[$subject][$predicate] = $object
-     *  @return     int     $count          count of the affected cached queries         
+     *  @return     array   $qids           array of identifiers of the affected cached queries         
      */
     public function invalidate ($modelIri, $statements = array())
     {
@@ -404,7 +404,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *  invalidating all cached Query Results according to a given ModelIri 
      *  @access     public
      *  @param      string  $modelIri       A ModelIri
-     *  @return     int     $count          count of the affected cached queries         
+     *  @return     array   $qids           array of identifiers of affected cached queries         
      */
     public function invalidateWithModelIri($modelIri)
     {
@@ -415,8 +415,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                   WHERE (ef_cache_query_model.modelIri = \''.$modelIri.'\' OR ef_cache_query_model.modelIri IS NULL)';
         $qids = $this->_query($query);
 
+        $ret = array();
         foreach ($qids as $qidEntry) {
             $qid = $qidEntry['qid'];
+            $ret[] = $qid;
             //delete entries in query_triple
             $query = ' 
                 SELECT ef_cache_query_rt.tid tid
@@ -441,14 +443,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             //delete entries in query_model
             $this->_query('DELETE FROM ef_cache_query_model WHERE modelIri = \''.$modelIri.'\'');
         }
-
-        if (isset($tids)) {
-            foreach ($tids as $entry) {
-                $qids[] = $entry['tid'];
-            }
-        }
-
-        return $qids;
+        return $ret;
     }
 
     /**
@@ -737,7 +732,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
        );
 
         foreach ($triplePatterns as $triplePattern) {
-            #initialize query, encapsulate Values with singlequotes and merge tripleValues with defaultValues
+            //initialize query, encapsulate Values with singlequotes and merge tripleValues with defaultValues
             $query = '';
             foreach ($triplePattern as $key => $value) {
                 $escapedValue = addslashes($value);

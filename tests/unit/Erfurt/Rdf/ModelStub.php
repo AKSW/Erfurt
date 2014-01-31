@@ -33,6 +33,11 @@ class Erfurt_Rdf_ModelStub
     {
         return $this->graphUri;
     }
+
+    public function getBaseIri()
+    {
+        return $this->graphUri;
+    }
     
     public function getStore()
     {

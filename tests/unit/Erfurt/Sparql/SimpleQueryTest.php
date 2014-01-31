@@ -35,6 +35,59 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
 
+    public function testInitWithStringOrderNotBracketted()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource ?author ?comment ?content ?date #?alabel
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource;
+                         a <http://rdfs.org/sioc/types#Comment>;
+                         <http://rdfs.org/sioc/ns#has_creator> ?author;
+                         <http://rdfs.org/sioc/ns#content> ?content;
+                         <http://purl.org/dc/terms/created> ?date.
+            }
+            ORDER BY ?date';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringOrderNotBrackettedLimit()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource ?author ?comment ?content ?date #?alabel
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource;
+                         a <http://rdfs.org/sioc/types#Comment>;
+                         <http://rdfs.org/sioc/ns#has_creator> ?author;
+                         <http://rdfs.org/sioc/ns#content> ?content;
+                         <http://purl.org/dc/terms/created> ?date.
+            }
+            ORDER BY ?date
+            LIMIT 6';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringOrderNotBrackettedOffset()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource ?author ?comment ?content ?date #?alabel
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource;
+                         a <http://rdfs.org/sioc/types#Comment>;
+                         <http://rdfs.org/sioc/ns#has_creator> ?author;
+                         <http://rdfs.org/sioc/ns#content> ?content;
+                         <http://purl.org/dc/terms/created> ?date.
+            }
+            ORDER BY ?date
+            OFFSET 6';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
     public function testInitWithStringComplex()
     {
         $queryString = '
@@ -104,7 +157,7 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
             <http://sebastian.dietzold.de/terms/me>
             <http://xmlns.com/foaf/0.1/pastProject> ?resourceUri FILTER
             (isURI(?resourceUri) && !isBLANK(?resourceUri)) } ORDER BY
-            ASC(?resourceUri) LIMIT 10';
+            ASC( ?resourceUri) LIMIT 10';
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);

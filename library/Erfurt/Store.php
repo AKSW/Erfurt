@@ -106,7 +106,8 @@ class Erfurt_Store
     protected $_options = array();
 
     /**
-     * An Array holding the Namespace prefixes (An array of namespace IRIs (keys) and prefixes) for some models
+     * An Array holding the Namespace prefixes (An array of namespace IRIs (keys)
+     * and prefixes) for some models
      * @var array
      */
     protected $_prefixes = null;
@@ -170,14 +171,19 @@ class Erfurt_Store
     /**
      * Constructor method.
      *
-     * @param string $backend virtuoso, mysqli, adodb, redland
-     * @param array $backendOptions
-     * @param string/null $schema rap
+     * @param array       $storeOptions   options array
+     * @param string      $backend        virtuoso, mysqli, adodb, redland
+     * @param array       $backendOptions options array
+     * @param string/null $schema         rap
      *
-     * @throws Erfurt_Store_Exception if store is not supported or store does not implement the store
-     * adapter interface.
+     * @throws Erfurt_Store_Exception if store is not supported or store does not
+     * implement the store adapter interface.
+     *
+     * @return void
      */
-    public function __construct($storeOptions, $backend, array $backendOptions = array(), $schema = null)
+    public function __construct(
+        $storeOptions, $backend, array $backendOptions = array(), $schema = null
+    )
     {
         while (list($optionName, $optionValue) = each($storeOptions)) {
             $this->setOption($optionName, $optionValue);
@@ -247,11 +253,20 @@ class Erfurt_Store
         // but do not check the comparer adapter since we use __call there
         if ($backend != 'comparer') {
             if (!($this->_backendAdapter instanceof Erfurt_Store_Adapter_Interface)) {
-                throw new Erfurt_Store_Exception('Adapter class must implement Erfurt_Store_Adapter_Interface.');
+                throw new Erfurt_Store_Exception(
+                    'Adapter class must implement Erfurt_Store_Adapter_Interface.'
+                );
             }
         }
     }
 
+    /**
+     * sets the backend adapter
+     *
+     * @param Erfurt_Store_Adapter_Interface $adapter the adapter object
+     *
+     * @return void
+     */
     public function setBackendAdapter(Erfurt_Store_Adapter_Interface $adapter)
     {
         $this->_backendAdapter = $adapter;
@@ -265,21 +280,31 @@ class Erfurt_Store
     /**
      * Adds statements in an array to the graph specified by $graphIri.
      *
-     * @param string $graphIri
-     * @param array  $statementsArray
+     * @param string $graphUri        the model IRI
+     * @param array  $statementsArray The PHP/RDF statements array
+     * @param bool   $useAc           use Access Control or not
      *
      * @throws Erfurt_Exception
+     *
+     * @return void
      */
-    public function addMultipleStatements($graphUri, array $statementsArray, $useAc = true)
+    public function addMultipleStatements(
+        $graphUri, array $statementsArray, $useAc = true
+    )
     {
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
-            $logger->info('Store: adding multiple statements: ' . var_export($statementsArray, true));
+            $logger->info(
+                'Store: adding multiple statements: ' .
+                var_export($statementsArray, true)
+            );
         }
 
         // check whether model is available
         if (!$this->isModelAvailable($graphUri, $useAc)) {
-            throw new Erfurt_Store_Exception('Model '.$graphUri.' is not available.');
+            throw new Erfurt_Store_Exception(
+                'Model "' . $graphUri . '" is not available.'
+            );
         }
 
         // check whether model is editable
@@ -303,27 +328,34 @@ class Erfurt_Store
 
     /**
      * Adds a statement to the graph specified by $modelIri.
-     * @param string $graphUri
-     * @param string $subject (IRI or blank node)
+     *
+     * @param string $graphUri  the model URI
+     * @param string $subject   (IRI or blank node)
      * @param string $predicate (IRI, no blank node!)
-     * @param array $object conaining keys "value", "type", "datatype", "lang"
-     * @param bool $useAcl
+     * @param array  $object    conaining keys "value", "type", "datatype", "lang"
+     * @param bool   $useAc     use Access Control or not
      *
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
+     *
+     * @return void
      */
-    public function addStatement($graphUri, $subject, $predicate, $object, $useAcl = true)
+    public function addStatement(
+        $graphUri, $subject, $predicate, $object, $useAc = true
+    )
     {
         // check whether model is available
-        if ($useAcl && !$this->isModelAvailable($graphUri)) {
-            throw new Erfurt_Store_Exception('Model is not available.');
+        if ($useAc && !$this->isModelAvailable($graphUri)) {
+            throw new Erfurt_Store_Exception('Model "' . $graphUri . '" is not available.');
         }
 
         // check whether model is editable
-        if ($useAcl && !$this->_checkAc($graphUri, 'edit')) {
-            throw new Erfurt_Store_Exception('No permissions to edit model.');
+        if ($useAc && !$this->_checkAc($graphUri, 'edit')) {
+            throw new Erfurt_Store_Exception('No permissions to edit model "' . $graphUri . '".');
         }
 
-        $this->_backendAdapter->addStatement($graphUri, $subject, $predicate, $object);
+        $this->_backendAdapter->addStatement(
+            $graphUri, $subject, $predicate, $object
+        );
 
         //invalidate deprecateded Cache Objects
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
@@ -344,16 +376,26 @@ class Erfurt_Store
     /**
      * Checks whether the store has been set up yet and imports system
      * ontologies if necessary.
+     *
+     * @return bool
      */
     public function checkSetup()
     {
         $logger         = Erfurt_App::getInstance()->getLog();
         $sysOntSchema   = $this->getOption('schemaUri');
         $schemaLocation = $this->getOption('schemaLocation');
-        $schemaPath     = preg_replace('/[\/\\\\]/', '/', EF_BASE . $this->getOption('schemaPath'));
+        $schemaPath     = preg_replace(
+            '/[\/\\\\]/',
+            '/',
+            EF_BASE . $this->getOption('schemaPath')
+        );
         $sysOntModel    = $this->getOption('modelUri');
         $modelLocation  = $this->getOption('modelLocation');
-        $modelPath      = preg_replace('/[\/\\\\]/', '/', EF_BASE . $this->getOption('modelPath'));
+        $modelPath      = preg_replace(
+            '/[\/\\\\]/',
+            '/',
+            EF_BASE . $this->getOption('modelPath')
+        );
 
         $returnValue = true;
 
@@ -364,8 +406,8 @@ class Erfurt_Store
         }
 
         // check for system configuration model
-        // We need to import this first, for the schema model has namespaces definitions, which will be stored in the
-        // local config!
+        // We need to import this first, for the schema model has namespaces
+        // definitions, which will be stored in the local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
             $versioning->enableVersioning(false);
@@ -375,12 +417,20 @@ class Erfurt_Store
                 if (is_readable($modelPath)) {
                     // load SysOnt Model from file
                     $this->importRdf(
-                        $sysOntModel, $modelPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false
+                        $sysOntModel,
+                        $modelPath,
+                        'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_FILE,
+                        false
                     );
                 } else {
                     // load SysOnt Model from Web
                     $this->importRdf(
-                        $sysOntModel, $modelLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false
+                        $sysOntModel,
+                        $modelLocation,
+                        'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_URL,
+                        false
                     );
                 }
             } catch (Erfurt_Exception $e) {
@@ -389,11 +439,15 @@ class Erfurt_Store
                 $queryCache->cleanUpCache(array('mode' => 'uninstall'));
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntModel);
-                throw new Erfurt_Store_Exception("Import of '$sysOntModel' failed -> " . $e->getMessage());
+                throw new Erfurt_Store_Exception(
+                    "Import of '$sysOntModel' failed -> " . $e->getMessage()
+                );
             }
 
             if (!$this->isModelAvailable($sysOntModel, false)) {
-                throw new Erfurt_Store_Exception('Unable to load System Ontology model.');
+                throw new Erfurt_Store_Exception(
+                    'Unable to load System Ontology model.'
+                );
             }
 
             $versioning->enableVersioning($isVersioningEnabled);
@@ -411,12 +465,20 @@ class Erfurt_Store
                 if (is_readable($schemaPath)) {
                     // load SysOnt from file
                     $this->importRdf(
-                        $sysOntSchema, $schemaPath, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_FILE, false
+                        $sysOntSchema,
+                        $schemaPath,
+                        'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_FILE,
+                        false
                     );
                 } else {
                     // load SysOnt from Web
                     $this->importRdf(
-                        $sysOntSchema, $schemaLocation, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL, false
+                        $sysOntSchema,
+                        $schemaLocation,
+                        'rdfxml',
+                        Erfurt_Syntax_RdfParser::LOCATOR_URL,
+                        false
                     );
                 }
             } catch (Erfurt_Exception $e) {
@@ -425,11 +487,15 @@ class Erfurt_Store
                 $queryCache->cleanUpCache(array('mode' => 'uninstall'));
                 // Delete the model, for the import failed.
                 $this->_backendAdapter->deleteModel($sysOntSchema);
-                throw new Erfurt_Store_Exception("Import of '$sysOntSchema' failed -> " . $e->getMessage());
+                throw new Erfurt_Store_Exception(
+                    "Import of '$sysOntSchema' failed -> " . $e->getMessage()
+                );
             }
 
             if (!$this->isModelAvailable($sysOntSchema, false)) {
-                throw new Erfurt_Store_Exception('Unable to load System Ontology schema.');
+                throw new Erfurt_Store_Exception(
+                    'Unable to load System Ontology schema.'
+                );
             }
 
             $versioning->enableVersioning($isVersioningEnabled);
@@ -438,7 +504,10 @@ class Erfurt_Store
         }
 
         if ($returnValue === false) {
-            throw new Erfurt_Store_Exception('One or more system models imported.', 20);
+            throw new Erfurt_Store_Exception(
+                'One or more system models imported.',
+                20
+            );
         }
 
         return true;
@@ -450,7 +519,10 @@ class Erfurt_Store
      * Creates the table specified by $tableSpec according to backend-specific
      * create table statement.
      *
-     * @param array $tableSpec An associative array of SQL column names and columnd specs.
+     * @param string $tableName Table name
+     * @param array  $columns   An associative array of SQL column names and specs.
+     *
+     * return result of backend adapters createTable method
      */
     public function createTable($tableName, array $columns)
     {
@@ -464,17 +536,23 @@ class Erfurt_Store
     /**
      * Deletes all statements that match the triple pattern specified.
      *
-     * @param string $graphUri
-     * @param mixed triple pattern $subject (string or null)
-     * @param mixed triple pattern $predicate (string or null)
-     * @param mixed triple pattern $object (string or null)
-     * @param array $options An array containing two keys 'subject_type' and 'object_type'. The value of each is
-     * one of the defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and TYPE_LITERAL. In addtion to this
-     * two keys the options array can contain two keys 'literal_language' and 'literal_datatype'.
+     * @param string $graphUri  URI of the model
+     * @param mixed  $subject   mixed triple pattern (string or null)
+     * @param mixed  $predicate mixed triple pattern (string or null)
+     * @param mixed  $object    mixed triple pattern (string or null)
+     * @param array  $options   An array containing two keys
+     *     'subject_type' and 'object_type'. The value of each is one of the
+     *     defined constants of Erfurt_Store: TYPE_IRI, TYPE_BLANKNODE and
+     *     TYPE_LITERAL. In addtion to this two keys the options array can contain
+     *     two keys 'literal_language' and 'literal_datatype'.
      *
      * @throws Erfurt_Exception
+     *
+     * @return number of affected statements
      */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options = array())
+    public function deleteMatchingStatements(
+        $graphUri, $subject, $predicate, $object, $options = array()
+    )
     {
         if (!isset($options['use_ac'])) {
             $options['use_ac'] = true;
@@ -482,7 +560,73 @@ class Erfurt_Store
 
         if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
             try {
-                $ret = $this->_backendAdapter->deleteMatchingStatements(
+                $filter = '';
+                if (null !== $subject) {
+                    $filter = "FILTER (?s = <$subject>) .\n";
+                }
+                if (null !== $predicate) {
+                    $filter = "FILTER (?p = <$predicate>) .\n";
+                }
+                if (null !== $object) {
+                    if ($object['type'] == 'uri') {
+                        $o = $object['value'];
+                        $filter = "FILTER (?o = <$o>) .\n";
+                    } else {
+                        $o = $object['value'];
+                        if (isset($object['datatype'])) {
+                            $dt = $object['datatype'];
+                            $filter = "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                        } else if (isset($object['lang'])) {
+                            $lang = $object['lang'];
+                            $filter = "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                        } else {
+                            $filter = "FILTER (?o = \"$o\") .\n";
+                        }
+                    }
+                }
+
+                $sparql = <<<EOF
+SELECT ?s ?p ?o
+FROM <$graphUri>
+WHERE {
+    ?s ?p ?o .
+    $filter
+}
+EOF;
+                $result = $this->sparqlQuery(
+                    $sparql,
+                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED)
+                );
+                $ret = count($result);
+                $stmts = array();
+                foreach ($result['results']['bindings'] as $row) {
+                    $s = $row['s']['value'];
+                    $p = $row['p']['value'];
+                    $o = $row['o']['value'];
+
+                    if (!isset($stmts[$s])) {
+                        $stmts[$s] = array();
+                    }
+                    if (!isset($stmts[$s][$p])) {
+                        $stmts[$s][$p] = array();
+                    }
+
+                    $oSpec = array(
+                        'type'  => $row['o']['type'],
+                        'value' => $o,
+                    );
+
+                    if (isset($row['o']['xml:lang'])) {
+                        $oSpec['lang'] = $row['o']['xml:lang'];
+                    }
+                    if (isset($row['o']['datatype'])) {
+                        $oSpec['datatype'] = $row['o']['datatype'];
+                    }
+
+                    $stmts[$s][$p][] = $oSpec;
+                }
+
+                $this->_backendAdapter->deleteMatchingStatements(
                     $graphUri, $subject, $predicate, $object, $options
                 );
 
@@ -492,6 +636,8 @@ class Erfurt_Store
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
+                $event->statements         = $stmts;
+                $event->affectedStatements = $ret;
 
                 // just trigger if really data operations were performed
                 if ((int) $ret > 0) {
@@ -502,7 +648,8 @@ class Erfurt_Store
 
             } catch (Erfurt_Store_Adapter_Exception $e) {
                 // TODO: Create a exception for too many matching values
-                // In this case we log without storing the payload. No rollback supported for such actions.
+                // In this case we log without storing the payload.
+                // No rollback supported for such actions.
                 $event = new Erfurt_Event('onDeleteMatchingStatements');
                 $event->graphUri = $graphUri;
                 $event->resource = $subject;
@@ -514,16 +661,21 @@ class Erfurt_Store
     /**
      * Deletes statements in an array from the graph specified by $graphIri.
      *
-     * @param string $graphIri
-     * @param array  $statementsArray
+     * @param string $graphUri        URI the the model
+     * @param array  $statementsArray RDF/PHP statements array
+     * @param bool   $useAc           use Access Control or not
      *
      * @throws Erfurt_Exception
+     *
+     * @return void
      */
-    public function deleteMultipleStatements($graphUri, array $statementsArray, $useAc = true)
+    public function deleteMultipleStatements(
+        $graphUri, array $statementsArray, $useAc = true
+    )
     {
         // check whether model is available
         if (!$this->isModelAvailable($graphUri)) {
-            throw new Erfurt_Store_Exception('Model is not available.');
+            throw new Erfurt_Store_Exception('Model "' . $graphUri . '" is not available.');
         }
 
         // check whether model is editable
@@ -531,7 +683,9 @@ class Erfurt_Store
             throw new Erfurt_Store_Exception('No permissions to edit model.');
         }
 
-        $this->_backendAdapter->deleteMultipleStatements($graphUri, $statementsArray);
+        $this->_backendAdapter->deleteMultipleStatements(
+            $graphUri, $statementsArray
+        );
 
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithStatements($graphUri, $statementsArray);
@@ -543,16 +697,23 @@ class Erfurt_Store
     }
 
     /**
-     * @param string $modelIri The Iri, which identifies the model.
-     * @param boolean $useAc Whether to use access control or not.
+     * deletes a model from the strore
      *
-     * @throws Erfurt_Exception Throws an exception if no permission, model not existing or deletion fails.
+     * @param string  $modelIri The Iri, which identifies the model.
+     * @param boolean $useAc    Whether to use access control or not.
+     *
+     * @throws Erfurt_Exception Throws an exception if no permission,
+     *     model not existing or deletion fails.
+     *
+     * @return void
      */
     public function deleteModel($modelIri, $useAc = true)
     {
         // check whether model is available
         if (!$this->isModelAvailable($modelIri, $useAc)) {
-            throw new Erfurt_Store_Exception("Model <$modelIri> is not available and therefore not removable.");
+            throw new Erfurt_Store_Exception(
+                'Model "' . $modelIri . '" is not available and therefore not removable.'
+            );
         }
 
         // check whether model editing is allowed
@@ -610,7 +771,7 @@ class Erfurt_Store
 
         // check whether model is available
         if (!$this->isModelAvailable($modelIri)) {
-            throw new Erfurt_Store_Exception("Model <$modelIri> cannot be exported. Model is not available.");
+            throw new Erfurt_Store_Exception('Model "' . $modelIri . '" cannot be exported. Model is not available.');
         }
 
         if (in_array($serializationType, $this->_backendAdapter->getSupportedExportFormats())) {
@@ -634,6 +795,15 @@ class Erfurt_Store
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
+        if (strpbrk($stringSpec, '\'') === false) {
+            $parts = explode(' ', $stringSpec);
+            $stringSpec = '';
+            foreach ($parts as $word) {
+                $stringSpec.= '\'' . $word . '\' AND ';
+            }
+            // Remove the last AND (including whitespace)
+            $stringSpec = substr($stringSpec, 0, strlen($stringSpec)-5);
+        }
 
         $options = array_merge(
             array(
@@ -825,10 +995,10 @@ class Erfurt_Store
 
                 // still not available?
                 if (!$this->isModelAvailable($modelIri, $useAc)) {
-                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+                    throw new Erfurt_Store_Exception('Model "' . $modelIri . '" is not available.');
                 }
             } else {
-                throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+                throw new Erfurt_Store_Exception('Model "' . $modelIri . '" is not available.');
             }
         }
 
@@ -902,6 +1072,11 @@ class Erfurt_Store
             }
         }
 
+        // Add a statement <$modelIri> a SysOnt:Model
+        $sysOntModelUri = $this->getOption('modelUri');
+        $objectArray = array('value' => 'http://ns.ontowiki.net/SysOnt/Model', 'type'  => 'uri');
+        $this->addStatement($sysOntModelUri, $modelIri, EF_RDF_TYPE, $objectArray, false);
+
         // everything ok, create new model
         // no access control since we have already checked
         return $this->getModel($modelIri, $useAc);
@@ -921,15 +1096,14 @@ class Erfurt_Store
      */
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
-        try {
-            // Get it if it already exists
-            $model = $this->getModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
+        // Check if Model is availabe without AC to see if it exists
+        if ($this->isModelAvailable($modelIri, false)) {
+            // Try to get it if it already exists
+            return $this->getModel($modelIri, $useAc);
+        } else {
+            // Try to create it if it doesn't exist
+            return $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
-
-        return $model;
     }
 
     /**
@@ -1195,7 +1369,14 @@ class Erfurt_Store
         }
     }
 
-    function toStr ($a)
+    /**
+     * returns a logging string from a statments (?) array
+     *
+     * @param array $a the array
+     *
+     * @return string
+     */
+    public function toStr ($a)
     {
         $s='';
         foreach ($a as $aa) {
@@ -1366,6 +1547,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             } else if ($queryObject instanceof Erfurt_Sparql_Query2) {
                 $ggp = new Erfurt_Sparql_Query2_GroupGraphPattern();
                 $ggp->addFilter(false); //unsatisfiable
+                $queryObject->removeAllProjectionVars();
                 $queryObject->setWhere($ggp);
             }
         }
@@ -1411,7 +1593,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     {
         $logger = $this->_getQueryLogger();
 
-        $logger->debug('query in: '.(string)$queryObject);
+        $type = gettype($queryObject);
+        $typeStr = 'type: ' . $type . ($type == 'object' ? ', class: ' . get_class($queryObject) : '');
+        $logger->debug('query in (' . $typeStr . '): '.(string)$queryObject);
+
         $queryString = $this->_prepareQuery($queryObject, $options);
         //dont use the query object afterwards anymore - only the string
 
@@ -1610,7 +1795,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 }
                 return $this->_backendAdapter->countWhereMatches($graphIris, $whereSpec, $countSpec, $distinct);
             } else {
-                throw new Erfurt_Store_Exception('Model <' . $graphIri . '> is not available.');
+                throw new Erfurt_Store_Exception('Model "' . $graphIri . '" is not available.');
             }
         } else {
             throw new Erfurt_Store_Exception('Count is not supported by backend.');
@@ -1645,9 +1830,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * one statement where the given resource URI is used as a subject.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getGraphsUsingResource($resourceUri, $useAc = true)
+    public function getGraphsUsingResource($resourceUri, $useAc = true, $order = false)
     {
         if (method_exists($this->_backendAdapter, 'getGraphsUsingResource')) {
             $backendResult = $this->_backendAdapter->getGraphsUsingResource($resourceUri);
@@ -1661,26 +1847,32 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     }
                 }
 
-                return $realResult;
+                $graphs = $realResult;
             } else {
-                return $backendResult;
+                $graphs = $backendResult;
             }
+        } else {
+            $query = new Erfurt_Sparql_SimpleQuery();
+            $query->setProloguePart('SELECT DISTINCT ?graph')
+                ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
+
+            $graphResult = array();
+            $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
+
+            if ($result) {
+                foreach ($result as $row) {
+                    $graphResult[] = $row['graph'];
+                }
+            }
+
+            $graphs = $graphResult;
         }
 
-        $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT DISTINCT ?graph')
-              ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
-
-        $graphResult = array();
-        $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
-
-        if ($result) {
-            foreach ($result as $row) {
-                $graphResult[] = $row['graph'];
-            }
+        if ($order) {
+            $graphs = $this->_compareResourceUriToModelUri($graphs, $resourceUri);
         }
 
-        return $graphResult;
+        return $graphs;
     }
 
     /**
@@ -1688,11 +1880,12 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * readable.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getReadableGraphsUsingResource($resourceUri)
+    public function getReadableGraphsUsingResource($resourceUri, $order = false)
     {
-        $result = $this->getGraphsUsingResource($resourceUri, false);
+        $result = $this->getGraphsUsingResource($resourceUri, false, $order);
 
         if ($result) {
             // get source graph
@@ -1760,6 +1953,14 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         return $closure;
     }
 
+    /**
+     * returns the the first readable model where a given resource is described
+     * in (means: used as subject)
+     *
+     * @param string $uri URI of the resource to search for
+     *
+     * @return Erfurt_Rdf_Model
+     */
     public function getFirstReadableGraphForUri($uri)
     {
         try {
@@ -1838,7 +2039,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         return array_intersect($modelIris, $allowedModels);
     }
 
-
     /**
      * This function is nearly like _filterModels, but you specify the mask and
      * the list parameter is an 2D-Array of the format:
@@ -1879,7 +2079,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         return $list;
     }
 
-
     /**
      * Calculates the transitive closure for a given property and a set of starting nodes.
      *
@@ -1887,9 +2086,10 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      */
     private function _getTransitiveClosure($modelIri, $property, $startResources, $inverse, $maxDepth)
     {
-        $closure = array();
-        $classes = $startResources;
-        $i       = 0;
+        $closure        = array();
+        $classes        = $startResources;
+        $usedClasses    = array();
+        $i              = 0;
 
         $from = '';
         foreach ($this->getImportsClosure($modelIri) as $import) {
@@ -1904,7 +2104,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 WHERE {
                     ' . $where . ' OPTIONAL {?child <http://ns.ontowiki.net/SysOnt/order> ?order}
                     FILTER (
-                        sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
+                        ?parent IN (<' . implode('>, <', $classes) . '>)
                     )
                 }
                 ORDER BY ASC(?order)';
@@ -1933,16 +2133,33 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                 );
                 $classes[] = $row['child'];
             }
+            $usedClasses = array_merge($usedClasses, $classes);
         }
 
         // prepare start resources inclusion
         $merger = array();
+
+        $startResources = array_merge($startResources, $merger);
+
         foreach ($startResources as $startUri) {
             $merger[(string) $startUri] = array(
                 'node'   => $startUri,
                 'parent' => null,
                 'depth'  => 0
             );
+        }
+
+        // add all parent classes
+        if (false === $inverse) {
+            foreach ($usedClasses as $c ) {
+                if (false === isset($merger[$c])) {
+                    $merger[$c] = array(
+                        'node'   => $c,
+                        'parent' => null,
+                        'depth'  => 0
+                    );
+                }
+            }
         }
 
         // merge in start resources
@@ -1969,5 +2186,32 @@ if ($options[Erfurt_Store::USE_AC] == false) {
     protected function _getErfurtLogger()
     {
         return $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
+    }
+
+    /**
+     * This method compares a list of graphs to a resourceUri and orders the graphs according to
+     * their accordance of the namespace.
+     *
+     * @param array $graphs list of graph URIs
+     * @param string $resourceUri the URI of the resource
+     * @return array containing the ordered graph URIs
+     */
+    protected function _compareResourceUriToModelUri($graphs, $resourceUri)
+    {
+        $namespaceMatch = array();
+        $rest = array();
+        foreach ($graphs as $graphUri) {
+            if (strpos($resourceUri, $graphUri) === 0) {
+                $namespaceMatch[] = $graphUri;
+            } else {
+                $rest[] = $graphUri;
+            }
+        }
+
+        usort($namespaceMatch, function($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
+        return array_merge($namespaceMatch, $rest);
     }
 }

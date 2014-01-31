@@ -2,18 +2,19 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
  * Represents a basic RDF graph and some functionality that goes beyond RDF.
  *
- * @category   Erfurt
- * @package    Erfurt_Rdf
- * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
- * @author     Norman Heino <norman.heino@gmail.com>
- * @author     Natanael Arndt <arndtn@gmail.com>
+ * @category Erfurt
+ * @package  Erfurt_Rdf
+ * @author   Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author   Norman Heino <norman.heino@gmail.com>
+ * @author   Natanael Arndt <arndtn@gmail.com>
+ * @author   Sebastian Tramp <mail@sebastian.tramp.name>
  */
 class Erfurt_Rdf_Model
 {
@@ -63,7 +64,11 @@ class Erfurt_Rdf_Model
         'http://www.w3.org/2000/01/rdf-schema#label',
         'http://purl.org/dc/elements/1.1/title'
     );
-    
+
+    /**
+     * Erfurt Store Object
+     * @var Erfurt_Store
+     */
     protected $_store = null;
 
     // ------------------------------------------------------------------------
@@ -73,8 +78,9 @@ class Erfurt_Rdf_Model
     /**
      * Constructor.
      *
-     * @param string $modelIri
-     * @param string $baseIri
+     * @param string       $modelIri The IRI identifier of the Model
+     * @param string       $baseIri  The IRI base for creating resources etc.
+     * @param Erfurt_Store $store    The used store object
      */
     public function __construct($modelIri, $baseIri = null, $store = null)
     {
@@ -85,11 +91,11 @@ class Erfurt_Rdf_Model
         if (isset($config->properties->title)) {
             $this->_titleProperties = $config->properties->title->toArray();
         }
-        
+
         if ($store != null) {
             $this->_store = $store;
         }
-        
+
         // namespace module
         $this->_namespaces = Erfurt_App::getInstance()->getNamespaces();
     }
@@ -112,13 +118,17 @@ class Erfurt_Rdf_Model
     /**
      * Adds a statement to this model
      *
-     * @param string $subject
-     * @param string $predicate
-     * @param array $object
+     * @param string $subject   The subject resource URI
+     * @param string $predicate The predicate resource URI
+     * @param array  $object    The object array
+     *
+     * @return Erfurt_Rdf_Model
      */
     public function addStatement($subject, $predicate, array $object)
     {
-        $this->getStore()->addStatement($this->_graphUri, $subject, $predicate, $object);
+        $this->getStore()->addStatement(
+            $this->_graphUri, $subject, $predicate, $object
+        );
 
         return $this;
     }
@@ -130,11 +140,16 @@ class Erfurt_Rdf_Model
      * array must conform to Talis' RDF/PHP specification
      * ({@link http://n2.talis.com/wiki/RDF_PHP_Specification}).
      *
-     * @param stdClass $statements
+     * @param stdClass $statements Statements array (?)
+     * @param bool     $useAc      use Access Control or not
+     *
+     * @return Erfurt_Rdf_Model
      */
     public function addMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->addMultipleStatements($this->_graphUri, $statements, $useAc);
+        $this->getStore()->addMultipleStatements(
+            $this->_graphUri, $statements, $useAc
+        );
 
         return $this;
     }
@@ -143,7 +158,8 @@ class Erfurt_Rdf_Model
      * Creates a unique resource URI with the model's base URI as namespace and
      * a unique ID starting with $spec.
      *
-     * @param string $spec
+     * @param string $spec IRI part between base URI and local resource name
+     *
      * @return string
      */
     public function createResourceUri($spec = '')
@@ -160,25 +176,32 @@ class Erfurt_Rdf_Model
     /**
      * Deletes the statement denoted by subject, predicate, object.
      *
-     * @param string $subject
-     * @param string $predicate
-     * @param string $object
+     * @param mixed $subject   Subject spec (string or null)
+     * @param mixed $predicate Predicate spec (string or null)
+     * @param mixed $object    Object spec (string or null)
+     *
+     * @return void
      */
     public function deleteStatement($subject, $predicate, $object)
     {
-        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subject, $predicate, $object);
+        $this->getStore()->deleteMatchingStatements(
+            $this->_graphUri, $subject, $predicate, $object
+        );
     }
 
     /**
      * Deletes all statements contained in the associative array from this model.
      *
-     * @param string $subject
-     * @param string $predicate
-     * @param string $object
+     * @param array $statements Statements Array
+     * @param bool  $useAc      use Access Control or not
+     *
+     * @return void
      */
     public function deleteMultipleStatements(array $statements, $useAc = true)
     {
-        $this->getStore()->deleteMultipleStatements($this->_graphUri, $statements, $useAc);
+        $this->getStore()->deleteMultipleStatements(
+            $this->_graphUri, $statements, $useAc
+        );
     }
 
     /**
@@ -187,14 +210,20 @@ class Erfurt_Rdf_Model
      * The triple patterns is denoted by subject, predicate, object
      * where one or two can be <code>null</code>.
      *
-     * @param string|null $subjectSpec
-     * @param string|null $predicateSpec
-     * @param string|null $objectSpec
+     * @param string|null $subjectSpec   Subject spec
+     * @param string|null $predicateSpec Predicate spec
+     * @param string|null $objectSpec    Object spec
+     * @param array       $options       Options Array
+     *
+     * @return void
      */
-    public function deleteMatchingStatements($subjectSpec, $predicateSpec, $objectSpec, array $options = array())
+    public function deleteMatchingStatements(
+        $subjectSpec, $predicateSpec, $objectSpec, array $options = array()
+    )
     {
-        $this->getStore()->deleteMatchingStatements($this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec,
-            $options);
+        $this->getStore()->deleteMatchingStatements(
+            $this->_graphUri, $subjectSpec, $predicateSpec, $objectSpec, $options
+        );
     }
 
     /**
@@ -211,6 +240,11 @@ class Erfurt_Rdf_Model
         return $this->_baseIri;
     }
 
+    /**
+     * Returns the Base IRI
+     *
+     * @return string
+     */
     public function getBaseUri()
     {
         return $this->getBaseIri();
@@ -226,6 +260,11 @@ class Erfurt_Rdf_Model
         return $this->_graphUri;
     }
 
+    /**
+     * Returns the model URI
+     *
+     * @return string
+     */
     public function getModelUri()
     {
         return $this->getModelIri();
@@ -236,6 +275,7 @@ class Erfurt_Rdf_Model
      * if no such options exists. An option is identified through an URI.
      *
      * @param string $optionUri The URI that identifies the option.
+     *
      * @return array|null An array containing the value(s) for the given option.
      */
     public function getOption($optionUri)
@@ -252,11 +292,12 @@ class Erfurt_Rdf_Model
     /**
      * Resource factory method
      *
+     * @param string $resourceIri Resource IRI
+     *
      * @return Erfurt_Rdf_Resource
      */
     public function getResource($resourceIri)
     {
-        require_once 'Erfurt/Rdf/Resource.php';
         return new Erfurt_Rdf_Resource($resourceIri, $this);
     }
 
@@ -279,26 +320,22 @@ class Erfurt_Rdf_Model
                     $where[] = '{?s <' . $uri . '> ' . '?' . $key . '.}';
                 }
 
-                require_once 'Erfurt/Sparql/SimpleQuery.php';
                 $query = Erfurt_Sparql_SimpleQuery::initWithString(
-                    'SELECT ' . $select . '
-                    WHERE {
-                        ' . implode(' UNION ', $where) . '
-                            FILTER (sameTerm(?s, <' . $this->getModelIri() . '>))
-            }'
-        );
+                    'SELECT ' . $select . ' WHERE { ' .
+                    implode(' UNION ', $where) .
+                    ' FILTER (sameTerm(?s, <' . $this->getModelIri() . '>)) }'
+                );
 
-            if ($result = $this->getStore()->sparqlQuery($query)) {
-                if (is_array($result) && is_array($result[0])) {
-                    foreach ($titleProperties as $key => $uri) {
-                        if (!empty($result[0][$key])) {
-                            $this->_title = $result[0][$key];
+                if ($result = $this->getStore()->sparqlQuery($query)) {
+                    if (is_array($result) && is_array($result[0])) {
+                        foreach ($titleProperties as $key => $uri) {
+                            if (!empty($result[0][$key])) {
+                                $this->_title = $result[0][$key];
+                            }
+                            continue;
                         }
-
-                        continue;
                     }
                 }
-            }
             }
         }
 
@@ -330,12 +367,13 @@ class Erfurt_Rdf_Model
     /**
      * Sets this model's editable flag.
      *
-     * @param boolean $editableFlag
+     * @param boolean $editableFlag editable (true) or not editable (false)
+     *
+     * @return Erfurt_Rdf_Model
      */
     public function setEditable($editableFlag)
     {
         $this->_isEditable = (boolean) $editableFlag;
-
         return $this;
     }
 
@@ -345,6 +383,8 @@ class Erfurt_Rdf_Model
      *
      * @param string $oldUri The URI that identifies the resource.
      * @param string $newUri The URI to move resource to.
+     *
+     * @return void
      */
     public function renameResource($oldUri, $newUri)
     {
@@ -384,7 +424,9 @@ class Erfurt_Rdf_Model
 
             foreach ($vars as $var) {
                 $varName = $var->getName();
-                if ($s[$varName]['type'] === 'uri' && $s[$varName]['value'] === $oldUri) {
+                if ( $s[$varName]['type'] === 'uri'
+                    && $s[$varName]['value'] === $oldUri
+                ) {
                     $s[$varName]['value'] = $newUri;
                 }
             }
@@ -400,8 +442,11 @@ class Erfurt_Rdf_Model
      * Sets an option for the model in the SysOnt.
      * If no value is given, the option will be unset.
      *
-     * @param string $optionUri The URI that identifies the option.
-     * @param array|null An array (RDF/PHP object part) of values or null.
+     * @param string     $optionUri The URI that identifies the option.
+     * @param array|null $value     An array (RDF/PHP object part) of values or null.
+     * @param bool       $replace   Replace (true) or do not replace (false) value
+     *
+     * @return void
      */
     public function setOption($optionUri, $value = null, $replace = true)
     {
@@ -417,10 +462,13 @@ class Erfurt_Rdf_Model
         if ($replace && isset($options[$optionUri])) {
             // In this case we need to remove the old values from sysont
             $options = array(
-                'use_ac'       => false, // We disable AC, for we need to write the system ontology.
+                // We disable AC, for we need to write the system ontology.
+                'use_ac' => false
             );
 
-            $this->getStore()->deleteMatchingStatements($sysOntUri, $this->_graphUri, $optionUri, null, $options);
+            $this->getStore()->deleteMatchingStatements(
+                $sysOntUri, $this->_graphUri, $optionUri, null, $options
+            );
         }
 
         if (null !== $value) {
@@ -430,16 +478,6 @@ class Erfurt_Rdf_Model
 
             $this->getStore()->addMultipleStatements($sysOntUri, $addArray, false);
         }
-
-        // TODO add this statement on model add?!
-        // Add a statement graphUri a SysOnt:Model
-        $addArray[$this->_graphUri] = array();
-        $addArray[$this->_graphUri][EF_RDF_TYPE] = array();
-        $addArray[$this->_graphUri][EF_RDF_TYPE][] = array(
-            'value' => 'http://ns.ontowiki.net/SysOnt/Model',
-            'type'  => 'uri'
-        );
-        $this->getStore()->addMultipleStatements($sysOntUri, $addArray, false);
 
         // Reset the options
         $this->_graphOptions = null;
@@ -451,16 +489,20 @@ class Erfurt_Rdf_Model
      * Added statements are those that are found in $changed but not in $original,
      * removed statements are found in $original but not in $changed.
      *
-     * @param array $original
-     * @param array $changed
+     * @param array $original original PHP RDF Statements array
+     * @param array $changed  new PHP RDF Statements array
+     * @param bool  $useAc    use Access Control or not
+     *
+     * @return Erfurt_Rdf_Model
      */
-    public function updateWithMutualDifference(array $original, array $changed, $useAc = true)
+    public function updateWithMutualDifference(
+        array $original, array $changed, $useAc = true
+    )
     {
         $addedStatements   = self::getStatementsDiff($changed, $original);
         $removedStatements = self::getStatementsDiff($original, $changed);
 
         if (defined('_EFDEBUG')) {
-            require_once 'Erfurt/App.php';
             $logger = Erfurt_App::getInstance()->getLog();
 
             $logger->debug('added: ', count($addedStatements));
@@ -487,7 +529,8 @@ class Erfurt_Rdf_Model
     protected function _getOptions()
     {
         if (null === $this->_graphOptions) {
-            $this->_graphOptions = $this->getStore()->getGraphConfiguration($this->_graphUri);
+            $this->_graphOptions = $this->getStore()
+                ->getGraphConfiguration($this->_graphUri);
         }
 
         return $this->_graphOptions;
@@ -499,56 +542,60 @@ class Erfurt_Rdf_Model
      * The difference will contain any statement in the first object that
      * is not contained in the second object.
      *
-     * @param array statementsObject1
-     * @param array statementsObject2
+     * @param array $first  RDF/PHP statements array
+     * @param array $second RDF/PHP statements array
      *
      * @return array a RDF/PHP array the complement of the intersection
      */
-    public static function getStatementsDiff(array $statementsObject1, array $statementsObject2)
+    public static function getStatementsDiff(array $first, array $second)
     {
         $difference = array();
 
         // check for each subject if it is found in object 2
         // if it is not, continue immediately
-        foreach ($statementsObject1 as $subject => $predicatesArray) {
-            if (!array_key_exists($subject, $statementsObject2)) {
-                $difference[$subject] = $statementsObject1[$subject];
+        foreach ($first as $subject => $predicatesArray) {
+            if (!array_key_exists($subject, $second)) {
+                $difference[$subject] = $first[$subject];
                 continue;
             }
 
             // check for each predicate if it is found in the current
             // subject's predicates of object 2, if it is not, continue immediately
             foreach ($predicatesArray as $predicate => $objectsArray) {
-                if (!array_key_exists($predicate, $statementsObject2[$subject])) {
-                    $difference[$subject][$predicate] = $statementsObject1[$subject][$predicate];
+                if (!array_key_exists($predicate, $second[$subject])) {
+                    $difference[$subject][$predicate] = $first[$subject][$predicate];
                     continue;
                 }
 
-                // for each object we have to check if it exists in object 2
+                // for each object we have to check if it exists in objectTwo
                 // (subject and predicate are identical up here)
                 foreach ($objectsArray as $key => $object) {
                     $found = false;
-                    foreach ($statementsObject2[$subject][$predicate] as $object2) {
-                        if ($object['type'] == $object2['type'] && $object['value'] == $object2['value']) {
+                    foreach ($second[$subject][$predicate] as $objectTwo) {
+                        if ($object['type'] == $objectTwo['type']
+                            && $object['value'] == $objectTwo['value']
+                        ) {
                             if (isset($object['datatype'])) {
-                                if (isset($object2['datatype']) && $object['datatype'] === $object2['datatype']) {
+                                if (isset($objectTwo['datatype'])
+                                    && $object['datatype'] === $objectTwo['datatype']
+                                ) {
                                     $found = true;
                                 }
                             } else {
-                                if (!isset($object2['datatype'])) {
+                                if (!isset($objectTwo['datatype'])) {
                                     if (isset($object['lang'])) {
-                                        if (isset($object2['lang']) && $object['lang'] === $object2['lang']) {
+                                        if (isset($objectTwo['lang'])
+                                            && $object['lang'] === $objectTwo['lang']
+                                        ) {
                                             $found = true;
                                         }
                                     } else {
-                                        if (!isset($object2['lang'])) {
+                                        if (!isset($objectTwo['lang'])) {
                                             $found = true;
                                         }
                                     }
                                 }
                             }
-
-
                         }
                     }
 
@@ -564,7 +611,7 @@ class Erfurt_Rdf_Model
 
                         array_push(
                             $difference[$subject][$predicate],
-                            $statementsObject1[$subject][$predicate][$key]
+                            $first[$subject][$predicate][$key]
                         );
                     }
                 }
@@ -574,8 +621,16 @@ class Erfurt_Rdf_Model
         return $difference;
     }
 
-    // ------------------------------------------------------------------------
-
+    /**
+     * Performs an sparql query on the model using the stores sparqlQuery
+     * method and returning the resultset
+     * Returns a result depending on the query, e.g. an array or a boolean value.
+     *
+     * @param mixed $query   The query, as string or object (SimpleQuery or Query2)
+     * @param array $options options array
+     *
+     * @return mixed
+     **/
     public function sparqlQuery($query, $options = array())
     {
         $defaultOptions = array(
@@ -588,14 +643,13 @@ class Erfurt_Rdf_Model
         $options[Erfurt_Store::USE_AC] = true;
 
         if (is_string($query)) {
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = Erfurt_Sparql_SimpleQuery::initWithString($query);
         }
 
         // restrict to this model
-        if($query instanceof Erfurt_Sparql_SimpleQuery){
+        if ($query instanceof Erfurt_Sparql_SimpleQuery) {
             $query->setFrom(array($this->_graphUri));
-        } else if($query instanceof Erfurt_Sparql_Query2){
+        } elseif ($query instanceof Erfurt_Sparql_Query2) {
             $query->setFroms(array($this->_graphUri));
         }
 
@@ -604,26 +658,36 @@ class Erfurt_Rdf_Model
 
     /*public function sparqlQueryWithPlainResult($query)
     {
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $queryObject->addFrom($this->_graphUri);
 
         return $this->getStore()->sparqlQuery($queryObject);
     }*/
-    
+
+    /**
+     * set the model store
+     *
+     * @param Erfurt_Store $store The store object
+     *
+     * @return void
+     */
     public function setStore(Erfurt_Store $store)
     {
         $this->_store = $store;
     }
 
-    
+    /**
+     * get the model store
+     *
+     * @return Erfurt_Store
+     */
     public function getStore()
     {
         if (null === $this->_store) {
             // backwards compatibility
             $this->_store = Erfurt_App::getInstance()->getStore();
         }
-        
+
         return $this->_store;
     }
 
@@ -641,9 +705,13 @@ class Erfurt_Rdf_Model
 
     /**
      * Add a namespace -> prefix mapping
-     * @param $prefix a prefix to identify the namespace
-     * @param $namespace the namespace uri
+     *
+     * @param string $prefix    a prefix to identify the namespace
+     * @param string $namespace the namespace uri
+     *
      * @deprecated
+     *
+     * @return void
      */
     public function addPrefix($prefix, $namespace)
     {
@@ -652,6 +720,7 @@ class Erfurt_Rdf_Model
 
     /**
      * Get all namespaces with there prefix
+     *
      * @return array with namespace as key and prefix as value
      */
     public function getNamespacePrefixes()
@@ -664,54 +733,74 @@ class Erfurt_Rdf_Model
     /**
      * Get the prefix for one namespaces, will be created if no prefix exists
      *
+     * @param string $namespace the namespace uri
+     *
      * @return array with namespace as key and prefix as value
      */
     public function getNamespacePrefix($namespace)
     {
-        // return $this->getStore()->getNamespacePrefix($this->_graphUri, $namespace);
-
-        return $this->_namespaces->getNamespacePrefix($this->getModelUri(), $namespace);
+        return $this->_namespaces->getNamespacePrefix(
+            $this->getModelUri(), $namespace
+        );
     }
 
     /**
      * Add a namespace -> prefix mapping
-     * @param $prefix a prefix to identify the namespace
-     * @param $namespace the namespace uri
+     *
+     * @param string $prefix    a prefix to identify the namespace
+     * @param string $namespace the namespace uri
+     *
+     * @return result of addNamespacePrefix method of Erfurt_Namespace
      */
     public function addNamespacePrefix($prefix, $namespace)
     {
-        // $this->getStore()->addNamespacePrefix($this->_graphUri, $prefix, $namespace);
-
-        return $this->_namespaces->addNamespacePrefix($this->getModelUri(), $namespace, $prefix);
+        return $this->_namespaces->addNamespacePrefix(
+            $this->getModelUri(), $namespace, $prefix
+        );
     }
 
     /**
      * Delete a namespace -> prefix mapping
-     * @param $prefix the prefix you want to remove
+     *
+     * @param string $prefix the prefix you want to remove
+     *
+     * @return result of deleteNamespacePrefix method of Erfurt_Namespace
      */
     public function deleteNamespacePrefix($prefix)
     {
-        // $this->getStore()->deleteNamespacePrefix($this->_graphUri, $prefix);
-
-        return $this->_namespaces->deleteNamespacePrefix($this->getModelUri(), $prefix);
+        return $this->_namespaces->deleteNamespacePrefix(
+            $this->getModelUri(), $prefix
+        );
     }
 
     /**
      * check if a namespace prefix is registered and return the namespace uri
-     * @param $prefix
+     *
+     * @param string $prefix the prefix you want to query
+     *
      * @throws Erfurt_Namespace_Exception if the namespace is not registered
+     *
+     * @return string
      */
     public function getNamespaceByPrefix($prefix)
     {
-        return $this->_namespaces->getNamespaceByPrefix($this->getModelUri(), $prefix);
+        return $this->_namespaces->getNamespaceByPrefix(
+            $this->getModelUri(), $prefix
+        );
     }
 
     /**
      * check if a namespace prefix is registered and returns true or false
-     * @param $prefix
+     *
+     * @param string $prefix prefix you want to query
+     *
+     * @return bool
      */
     public function hasNamespaceByPrefix($prefix)
     {
-        return $this->_namespaces->hasNamespaceByPrefix($this->getModelUri(), $prefix);
+        return $this->_namespaces->hasNamespaceByPrefix(
+            $this->getModelUri(), $prefix
+        );
     }
+
 }

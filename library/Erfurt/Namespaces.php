@@ -188,6 +188,15 @@ class Erfurt_Namespaces
      */
     public function getNamespacePrefix($graph, $namespace)
     {
+        $model = $this->getModel($graph);
+
+        // avoid prefixes for http://, https://, …
+        if (substr($namespace, -3, 3) == '://') {
+            return null;
+        } else if ($namespace == $model->getBaseIri()) {
+            return null;
+        }
+
         $graphPrefixes = $this->getNamespacesForGraph($graph);
 
         // sort reverse alphabetical
@@ -251,13 +260,11 @@ class Erfurt_Namespaces
 
             foreach ($prefixOptions as $entry) {
                 // split raw config string
-                $parts     = isset($entry['value']) ? explode('=', $entry['value']) : array();
-                $prefix    = isset($parts[0]) ? $parts[0] : '';
-                $namespace = isset($parts[1]) ? $parts[1] : null;
-
-                // store only if namespace is valid
-                if (null !== $namespace) {
-                    $graphNamespaces[$prefix] = $namespace;
+                $parts = array();
+                $success = preg_match('/^([a-z_]{1}[-\w.]*)=(.*)$/i', $entry['value'], $parts);
+                if ($success > 0) {
+                    // set prefix as key and namespace as value
+                    $graphNamespaces[$parts[1]] = $parts[2];
                 }
             }
 
