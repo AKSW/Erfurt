@@ -6,6 +6,9 @@
  * In contrast to a TriplePattern, a triple must have concrete values
  * for all of its parts.
  *
+ * Design consideration: Triple extends TriplePattern as it *is* a pattern
+ * that specifies all triple parts.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
  */
