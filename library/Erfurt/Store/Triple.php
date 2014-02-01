@@ -12,4 +12,26 @@
 class Erfurt_Store_Triple extends Erfurt_Store_TriplePattern
 {
 
+    /**
+     * Creates a triple that contains the given components.
+     *
+     * Null can be passed to indicate that every value is allowed
+     * at that position.
+     *
+     * @param string $subject
+     * @param string $predicate
+     * @param array(string=>string) $object
+     * @throws \InvalidArgumentException If a placeholder is provided.
+     */
+    public function __construct($subject, $predicate, array $object)
+    {
+        if ($subject === null) {
+            throw new InvalidArgumentException('Concrete value must be provided as subject.');
+        }
+        if ($predicate === null) {
+            throw new InvalidArgumentException('Concrete value must be provided as predicate.');
+        }
+        parent::__construct($subject, $predicate, $object);
+    }
+
 }

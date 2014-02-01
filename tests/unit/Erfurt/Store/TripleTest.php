@@ -40,7 +40,8 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
      */
     public function testTripleRejectsNullAsObject()
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        // Expect an Error as a type hint is used.
+        $this->setExpectedException('\PHPUnit_Framework_Error');
         new Erfurt_Store_Triple(
             'http://example.org/subject',
             'http://example.org/predicate',
