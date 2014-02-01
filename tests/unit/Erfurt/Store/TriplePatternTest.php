@@ -81,7 +81,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsTripleWithLiteralObjectCorrectly()
     {
-        $triple = new Erfurt_Store_Triple(
+        $triple = new Erfurt_Store_TriplePattern(
             'http://example.org/subject',
             'http://example.org/predicate',
             array('type' => 'literal', 'value' => 'Hello world!')
@@ -99,7 +99,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsBlankNodesCorrectly()
     {
-        $triple = new Erfurt_Store_Triple(
+        $triple = new Erfurt_Store_TriplePattern(
             '_:subjectNode',
             'http://example.org/predicate',
             array('type' => 'bnode', 'value' => '_:objectNode')
@@ -118,7 +118,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringReplacesNullValuesByVariables()
     {
-        $triple = new Erfurt_Store_Triple(
+        $triple = new Erfurt_Store_TriplePattern(
             null,
             null,
             null

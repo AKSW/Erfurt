@@ -50,7 +50,7 @@ class Erfurt_Store_TriplePattern
      * @param string|null $predicate
      * @param array(string=>string)|null $object
      */
-    public function __construct($subject, $predicate, array $object)
+    public function __construct($subject = null, $predicate = null, array $object = null)
     {
         $this->subject   = $subject;
         $this->predicate = $predicate;
