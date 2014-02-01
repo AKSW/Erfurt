@@ -35,13 +35,13 @@ class Erfurt_Store
     const TYPE_IRI = 2;
 
     /**
-     * Balanknode type.
+     * Blank node type.
      * @var int
      */
     const TYPE_BLANKNODE = 3;
 
     /**
-     * A proeprty for hiding resources.
+     * A property for hiding resources.
      * @var string
      */
     const HIDDEN_PROPERTY = 'http://ns.ontowiki.net/SysOnt/hidden';
