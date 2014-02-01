@@ -12,14 +12,14 @@ class Erfurt_Store_Triple
     /**
      * The subject URI.
      *
-     * @var null
+     * @var string
      */
     protected $subject = null;
 
     /**
      * The predicate URI.
      *
-     * @var null
+     * @var string
      */
     protected $predicate = null;
 
