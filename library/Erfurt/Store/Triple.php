@@ -10,7 +10,7 @@ class Erfurt_Store_Triple
 {
 
     /**
-     * The subject URI.
+     * The subject URI or blank node identifier.
      *
      * @var string
      */
@@ -24,7 +24,7 @@ class Erfurt_Store_Triple
     protected $predicate = null;
 
     /**
-     * The object definition.
+     * The object definition (URI, blank node or literal).
      *
      * @var array(string=>string)
      */
