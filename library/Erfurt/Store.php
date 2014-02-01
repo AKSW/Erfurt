@@ -121,7 +121,7 @@ class Erfurt_Store
     protected $_queryLogger = null;
 
     /**
-     * Special zend logger, which protocolls erfurt messages
+     * Special zend logger, which records erfurt messages
      * Call with function to initialize
      *
      * @var Zend_Log
