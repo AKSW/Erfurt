@@ -7,6 +7,8 @@
  */
 
 /**
+ * Interface that must be implemented by SPARQL adapters.
+ *
  * @category Erfurt
  * @package Erfurt_Store_Adapter
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
