@@ -6,7 +6,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
  */
-class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Sparql_TripleTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
     public function testTripleRejectsNullAsSubjectValue()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        new Erfurt_Store_Triple(
+        new Erfurt_Store_Adapter_Sparql_Triple(
             null,
             'http://example.org/predicate',
             array('type' => 'uri', 'value' => 'http://example.org/object')
@@ -28,7 +28,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
     public function testTripleRejectsNullAsPredicate()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        new Erfurt_Store_Triple(
+        new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/subject',
             null,
             array('type' => 'uri', 'value' => 'http://example.org/object')
@@ -42,7 +42,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
     {
         // Expect an Error as a type hint is used.
         $this->setExpectedException('\PHPUnit_Framework_Error');
-        new Erfurt_Store_Triple(
+        new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/subject',
             'http://example.org/predicate',
             null
@@ -55,7 +55,7 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
     public function testTripleAcceptsConcreteValues()
     {
         $this->setExpectedException(null);
-        new Erfurt_Store_Triple(
+        new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/subject',
             'http://example.org/predicate',
             array('type' => 'uri', 'value' => 'http://example.org/object')

@@ -66,10 +66,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         // Insert all statements in a transaction to ensure, that only the full batch
         // must be written to disk instead of each triple.
         $adapter = $this;
-        $triples = new Erfurt_Store_TripleIterator($statementsArray);
+        $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
         $this->connection->transactional(function () use($adapter, $graphIri, $triples, $options) {
             foreach ($triples as $triple) {
-                /* @var $triple \Erfurt_Store_Triple */
+                /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
                 $adapter->addStatement(
                     $graphIri,
                     $triple->getSubject(),
@@ -160,10 +160,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapter implements \Erfurt_Store_Adapter
         // Delete all statements in a transaction to ensure, that only the full modification set
         // must be written to disk instead of each triple.
         $adapter = $this;
-        $triples = new Erfurt_Store_TripleIterator($statementsArray);
+        $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
         $this->connection->transactional(function () use($adapter, $graphIri, $triples) {
             foreach ($triples as $triple) {
-                /* @var $triple \Erfurt_Store_Triple */
+                /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
                 $adapter->deleteMatchingStatements(
                     $graphIri,
                     $triple->getSubject(),

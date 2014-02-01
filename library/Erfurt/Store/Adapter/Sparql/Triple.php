@@ -12,7 +12,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
  */
-class Erfurt_Store_Triple extends Erfurt_Store_TriplePattern
+class Erfurt_Store_Adapter_Sparql_Triple extends Erfurt_Store_Adapter_Sparql_TriplePattern
 {
 
     /**

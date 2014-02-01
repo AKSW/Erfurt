@@ -21,15 +21,15 @@
  *             )
  *         )
  *     );
- *     $iterator = new Erfurt_Store_TripleIterator($statements);
+ *     $iterator = new Erfurt_Store_Adapter_Sparql_TripleIterator($statements);
  *     foreach ($iterator as $triple) {
- *         /*@var $triple Erfurt_Store_Triple *\/
+ *         /*@var $triple Erfurt_Store_Adapter_Sparql_Triple *\/
  *     }
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
  */
-class Erfurt_Store_TripleIterator implements \Iterator
+class Erfurt_Store_Adapter_Sparql_TripleIterator implements \Iterator
 {
 
     /**
@@ -97,12 +97,12 @@ class Erfurt_Store_TripleIterator implements \Iterator
      * Return the current element.
      *
      * @link http://php.net/manual/en/iterator.current.php
-     * @return Erfurt_Store_Triple
+     * @return Erfurt_Store_Adapter_Sparql_Triple
      */
     public function current()
     {
         $object = $this->statements[$this->subject][$this->predicate][$this->objectPosition];
-        return new Erfurt_Store_Triple($this->subject, $this->predicate, $object);
+        return new Erfurt_Store_Adapter_Sparql_Triple($this->subject, $this->predicate, $object);
     }
 
     /**

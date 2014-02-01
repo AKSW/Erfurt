@@ -10,7 +10,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.02.14
  */
-class Erfurt_Store_TriplePattern
+class Erfurt_Store_Adapter_Sparql_TriplePattern
 {
 
     /**
@@ -92,7 +92,7 @@ class Erfurt_Store_TriplePattern
      *
      * Example:
      *
-     *     $triple = new Erfurt_Store_Triple(
+     *     $triple = new Erfurt_Store_Adapter_Sparql_TriplePattern(
      *         'http://example.org/subject',
      *         'http://example.org/predicate',
      *         array('type' => 'uri', 'value' => 'http://example.org/object')

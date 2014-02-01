@@ -16,9 +16,9 @@ interface Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
      * Adds the provided triple to the data store.
      *
      * @param string $graphIri
-     * @param Erfurt_Store_Triple $triple
+     * @param Erfurt_Store_Adapter_Sparql_Triple $triple
      */
-    public function addTriple($graphIri, \Erfurt_Store_Triple $triple);
+    public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple);
 
     /**
      * Executes the provided SPARQL query and returns its results.
@@ -32,9 +32,9 @@ interface Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
      * Deletes all triples in the given graph that match the provided pattern.
      *
      * @param string $graphIri
-     * @param Erfurt_Store_TriplePattern $pattern
+     * @param Erfurt_Store_Adapter_Sparql_TriplePattern $pattern
      * @return integer The number of deleted triples.
      */
-    public function deleteMatchingTriples($graphIri, Erfurt_Store_TriplePattern $pattern);
+    public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern);
 
 }

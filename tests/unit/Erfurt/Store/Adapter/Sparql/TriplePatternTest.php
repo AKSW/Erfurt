@@ -6,13 +6,13 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.01.14
  */
-class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Sparql_TriplePatternTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var Erfurt_Store_TriplePattern
+     * @var Erfurt_Store_Adapter_Sparql_TriplePattern
      */
     protected $triplePattern = null;
 
@@ -22,7 +22,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->triplePattern = new Erfurt_Store_TriplePattern(
+        $this->triplePattern = new Erfurt_Store_Adapter_Sparql_TriplePattern(
             'http://example.org/subject',
             'http://example.org/predicate',
             array('type' => 'uri', 'value' => 'http://example.org/object')
@@ -69,7 +69,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testGettersReturnsCorrectValuesIfNullValuesArePassed()
     {
-        $pattern = new Erfurt_Store_TriplePattern(null, null, null);
+        $pattern = new Erfurt_Store_Adapter_Sparql_TriplePattern(null, null, null);
         $this->assertNull($pattern->getSubject(), 'Unexpected subject.');
         $this->assertNull($pattern->getPredicate(), 'Unexpected predicate.');
         $this->assertNull($pattern->getObject(), 'Unexpected object.');
@@ -93,7 +93,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsTripleWithLiteralObjectCorrectly()
     {
-        $triple = new Erfurt_Store_TriplePattern(
+        $triple = new Erfurt_Store_Adapter_Sparql_TriplePattern(
             'http://example.org/subject',
             'http://example.org/predicate',
             array('type' => 'literal', 'value' => 'Hello world!')
@@ -111,7 +111,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringFormatsBlankNodesCorrectly()
     {
-        $triple = new Erfurt_Store_TriplePattern(
+        $triple = new Erfurt_Store_Adapter_Sparql_TriplePattern(
             '_:subjectNode',
             'http://example.org/predicate',
             array('type' => 'bnode', 'value' => '_:objectNode')
@@ -130,7 +130,7 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringReplacesNullValuesByVariables()
     {
-        $triple = new Erfurt_Store_TriplePattern(
+        $triple = new Erfurt_Store_Adapter_Sparql_TriplePattern(
             null,
             null,
             null

@@ -261,11 +261,11 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
      */
     public static function assertStatementsEqual($expected, $got, $message = '')
     {
-        $expectedTriples = iterator_to_array(new Erfurt_Store_TripleIterator($expected));
+        $expectedTriples = iterator_to_array(new Erfurt_Store_Adapter_Sparql_TripleIterator($expected));
         $expectedTriples = array_map('strval', $expectedTriples);
         sort($expectedTriples);
 
-        $gotTriples = iterator_to_array(new Erfurt_Store_TripleIterator($got));
+        $gotTriples = iterator_to_array(new Erfurt_Store_Adapter_Sparql_TripleIterator($got));
         $gotTriples = array_map('strval', $gotTriples);
         sort($gotTriples);
 
