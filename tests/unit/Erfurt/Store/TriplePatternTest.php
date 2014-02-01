@@ -64,6 +64,18 @@ class Erfurt_Store_TriplePatternTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that the getters returns the expected values if null is passed
+     * as subject, predicate and object.
+     */
+    public function testGettersReturnsCorrectValuesIfNullValuesArePassed()
+    {
+        $pattern = new Erfurt_Store_TriplePattern(null, null, null);
+        $this->assertNull($pattern->getSubject(), 'Unexpected subject.');
+        $this->assertNull($pattern->getPredicate(), 'Unexpected predicate.');
+        $this->assertNull($pattern->getObject(), 'Unexpected object.');
+    }
+
+    /**
      * Checks if __toString() formats a triple that contains only URIs correctly.
      */
     public function testToStringFormatsTripleWithUriObjectCorrectly()
