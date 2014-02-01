@@ -94,4 +94,22 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $turtle);
     }
 
+    /**
+     * Checks if __toString() formats blank nodes in the triple correctly.
+     */
+    public function testToStringFormatsBlankNodesCorrectly()
+    {
+        $triple = new Erfurt_Store_Triple(
+            '_:subjectNode',
+            'http://example.org/predicate',
+            array('type' => 'bnode', 'value' => '_:objectNode')
+        );
+        $turtle = (string)$triple;
+
+        $expected = '_:subjectNode '
+                  . '<http://example.org/predicate> '
+                  . '_:objectNode .';
+        $this->assertEquals($expected, $turtle);
+    }
+
 }
