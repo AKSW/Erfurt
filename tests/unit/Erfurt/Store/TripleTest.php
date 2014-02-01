@@ -10,106 +10,55 @@ class Erfurt_Store_TripleTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * System under test.
-     *
-     * @var Erfurt_Store_Triple
+     * Checks if the triple constructor rejects null as subject value.
      */
-    protected $triple = null;
-
-    /**
-     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
-     */
-    protected function setUp()
+    public function testTripleRejectsNullAsSubjectValue()
     {
-        parent::setUp();
-        $this->triple = new Erfurt_Store_Triple(
-            'http://example.org/subject',
+        $this->setExpectedException('\InvalidArgumentException');
+        new Erfurt_Store_Triple(
+            null,
             'http://example.org/predicate',
             array('type' => 'uri', 'value' => 'http://example.org/object')
         );
     }
 
     /**
-     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     * Checks if the triple constructor rejects null as predicate value.
      */
-    protected function tearDown()
+    public function testTripleRejectsNullAsPredicate()
     {
-        $this->triple = null;
-        parent::tearDown();
+        $this->setExpectedException('\InvalidArgumentException');
+        new Erfurt_Store_Triple(
+            'http://example.org/subject',
+            null,
+            array('type' => 'uri', 'value' => 'http://example.org/object')
+        );
     }
 
     /**
-     * Checks if getSubject() returns the correct value.
+     * Checks if the triple constructor rejects null as object value.
      */
-    public function testGetSubjectReturnsCorrectValue()
+    public function testTripleRejectsNullAsObject()
     {
-        $this->assertEquals('http://example.org/subject', $this->triple->getSubject());
-    }
-
-    /**
-     * Checks if getPredicate() returns the correct value.
-     */
-    public function testGetPredicateReturnsCorrectValue()
-    {
-        $this->assertEquals('http://example.org/predicate', $this->triple->getPredicate());
-    }
-
-    /**
-     * Checks if getObject() returns the correct value.
-     */
-    public function testGetObjectReturnsCorrectValue()
-    {
-        $expectedObject = array('type' => 'uri', 'value' => 'http://example.org/object');
-        $this->assertEquals($expectedObject, $this->triple->getObject());
-    }
-
-    /**
-     * Checks if __toString() formats a triple that contains only URIs correctly.
-     */
-    public function testToStringFormatsTripleWithUriObjectCorrectly()
-    {
-        $turtle = (string)$this->triple;
-
-        $expected = '<http://example.org/subject> '
-                  . '<http://example.org/predicate> '
-                  . '<http://example.org/object> .';
-        $this->assertEquals($expected, $turtle);
-    }
-
-    /**
-     * Checks if __toString() formats a triple with literal object correctly.
-     */
-    public function testToStringFormatsTripleWithLiteralObjectCorrectly()
-    {
-        $triple = new Erfurt_Store_Triple(
+        $this->setExpectedException('\InvalidArgumentException');
+        new Erfurt_Store_Triple(
             'http://example.org/subject',
             'http://example.org/predicate',
-            array('type' => 'literal', 'value' => 'Hello world!')
+            null
         );
-        $turtle = (string)$triple;
-
-        $expected = '<http://example.org/subject> '
-                  . '<http://example.org/predicate> '
-                  . '"Hello world!" .';
-        $this->assertEquals($expected, $turtle);
     }
 
     /**
-     * Checks if __toString() formats blank nodes in the triple correctly.
+     * Ensures that the triple constructor accepts a set of concrete values.
      */
-    public function testToStringFormatsBlankNodesCorrectly()
+    public function testTripleAcceptsConcreteValues()
     {
-        $triple = new Erfurt_Store_Triple(
-            '_:subjectNode',
+        $this->setExpectedException(null);
+        new Erfurt_Store_Triple(
+            'http://example.org/subject',
             'http://example.org/predicate',
-            array('type' => 'bnode', 'value' => '_:objectNode')
+            array('type' => 'uri', 'value' => 'http://example.org/object')
         );
-        $turtle = (string)$triple;
-
-        $expected = '_:subjectNode '
-                  . '<http://example.org/predicate> '
-                  . '_:objectNode .';
-        $this->assertEquals($expected, $turtle);
     }
 
 }
