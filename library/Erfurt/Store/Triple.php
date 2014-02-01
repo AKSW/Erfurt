@@ -94,6 +94,8 @@ class Erfurt_Store_Triple
     {
         if ($this->object['type'] === 'uri') {
             $object = '<' . $this->object['value'] . '>';
+        } else if ($this->object['type'] === 'bnode') {
+            $object = $this->object['value'];
         } else {
             $object = Erfurt_Utils::buildLiteralString(
                 $this->object['value'],
@@ -101,8 +103,14 @@ class Erfurt_Store_Triple
                 isset($this->object['lang']) ? $this->object['lang'] : null
             );
         }
-        $template = '<%s> <%s> %s .';
-        return sprintf($template, $this->subject, $this->predicate, $object);
+        if (strpos($this->subject, '_:') === 0) {
+            // Subject is a blank node.
+            $subject = $this->subject;
+        } else {
+            $subject = '<' . $this->subject . '>';
+        }
+        $template = '%s <%s> %s .';
+        return sprintf($template, $subject, $this->predicate, $object);
     }
 
 }
