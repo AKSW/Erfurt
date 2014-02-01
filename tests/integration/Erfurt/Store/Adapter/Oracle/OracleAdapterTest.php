@@ -50,6 +50,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that an exception is thrown if a syntactically invalid
      * SPARQL query is passed to sparqlQuery().
+     *
+     * @todo Connector
      */
     public function testSparqlQueryThrowsExceptionIfInvalidQueryIsPassed()
     {
@@ -59,6 +61,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Ensures that sparqlQuery() returns an array if a select query is passed.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryReturnsArrayIfSelectQueryIsPassed()
     {
@@ -73,6 +77,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the result set that is returned by sparqlQuery() contains
      * the requested variables.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryResultContainsRequestedVariables()
     {
@@ -94,6 +100,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the result set that is returned by sparqlQuery() contains
      * the defined aliased variables.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryResultContainsAliasedVariables()
     {
@@ -113,6 +121,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlQuery() returns an empty set if no data
      * matches the query.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryResultIsEmptyIfNoDataMatches()
     {
@@ -129,6 +139,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if sparqlQuery() returns the correct number of rows
      * for a query that selects a subset of the data.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryResultReturnsCorrectNumberOfRows()
     {
@@ -147,6 +159,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that the result set that is returned by sparqlQuery()
      * is ordered correctly.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryResultIsOrderedCorrectly()
     {
@@ -177,6 +191,7 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      * Checks if sparqlQuery() accepts a query that uses numbers as variable identifiers.
      *
      * @see http://www.w3.org/TR/2013/REC-sparql11-query-20130321/#rVARNAME
+     * @todo Connector
      */
     public function testSparqlQueryAcceptsQueryThatUsesNumbersAsVariables()
     {
@@ -194,6 +209,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlQuery() returns only the variables that were
      * requested in the SPARQL query.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryReturnsOnlyRequestedVariables()
     {
@@ -220,6 +237,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if sparqlQuery() works with Unix new line values ("\n")
      * in the query.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryHandlesUnixNewLines()
     {
@@ -234,6 +253,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if sparqlQuery() works with Windows new line values ("\r\n")
      * in the query.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryHandlesWindowsNewLines()
     {
@@ -248,6 +269,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that the adapter does not fail if a query contains the internal escape
      * sequence in a literal or comment.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryDoesNotFailIfQueryContainsEscapeSequenceInLiteralOrComment()
     {
@@ -263,6 +286,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      * sequence at a position where it cannot be handled properly.
      *
      * This is not optimal, but at least it should prevent SQL injection attacks.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryThrowsExceptionIfQueryContainsInternalEscapeSequence()
     {
@@ -365,6 +390,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlQuery() returns a boolean value if an ASK
      * query is passed.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryReturnsBooleanIfAskQueryIsPassed()
     {
@@ -379,6 +406,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlQuery() can handle queries, which contain variable
      * identifiers that are reserved words in Oracle SQL.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryWorksEvenIfReservedWordIsUsedAsVariable()
     {
@@ -391,6 +420,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if sparqlQuery() supports queries that contain IRIs with special characters.
+     *
+     * @todo Connector
      */
     public function testSparqlQuerySupportsIriWithSpecialCharacters()
     {
@@ -405,6 +436,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlAsk() returns false if no triple matches
      * the provided query.
+     *
+     * @todo Connector
      */
     public function testSparqlAskReturnsFalseIfNoTripleMatches()
     {
@@ -419,6 +452,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that sparqlAsk() returns true if at least one triple matches
      * the provided SPARQL query.
+     *
+     * @todo Connector
      */
     public function testSparqlAskReturnsTrueIfAtLeastOneTripleMatchesPattern()
     {
@@ -434,6 +469,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the adapter stores (and returns) a literal that contains
      * a single quote ("'") correctly.
+     *
+     * @todo Connector
      */
     public function testAdapterStoresLiteralWithQuoteCorrectly()
     {
@@ -456,6 +493,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the adapter can work with SPARQL queries that contain
      * a full SPARQL query as literal.
+     *
+     * @todo Connector
      */
     public function testAdapterCanWorkWithSparqlQueryInStringLiteral()
     {
@@ -479,6 +518,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the adapter can work with SPARQL query that is passed as string literal
      * and that contains another literal itself.
+     *
+     * @todo Connector
      */
     public function testAdapterCanWorkWithSparqlQueryThatContainsLiteralInStringLiteral()
     {
@@ -501,6 +542,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if it is possible to use literals with quotes in SPARQL graph patterns.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryAllowsSearchingForLiteralsWithQuote()
     {
@@ -523,6 +566,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if sparqlQuery() handles camel cased variables (for example ?resourceUri)
      * correctly.
+     *
+     * @todo Connector
      */
     public function testSparqlQuerySupportsCamelCasedVariables()
     {
@@ -571,6 +616,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that deleteModel() does nothing if no triples belong to
      * the given graph.
+     *
+     * @todo Connector Delete without matching triples.
      */
     public function testDeleteModelDoesNothingIfNoCorrespondingTriplesExist()
     {
@@ -581,6 +628,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if deleteModel() removes all triples that belong to the
      * provided graph.
+     *
+     * @todo Connector
      */
     public function testDeleteModelRemovesAllTriplesThatBelongToTheGivenGraph()
     {
@@ -604,6 +653,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Ensures that deleteModel() does not remove triples from other graphs.
+     *
+     * @todo Connector
      */
     public function testDeleteModelDoesNotRemoveTriplesFromOtherGraphs()
     {
@@ -788,6 +839,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if deleteMatchingStatements() removes a complete graph if only the
      * model IRI is passed.
+     *
+     * @todo Connector
      */
     public function testDeleteMatchingStatementsDeleteGraphIfOnlyModelIriIsPassed()
     {
@@ -818,6 +871,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that deleteMatchingStatements() removes all triples that match the
      * provided model/subject combination.
+     *
+     * @todo Connector
      */
     public function testDeleteMatchingStatementsRemovesAllTriplesWithProvidedSubject()
     {
@@ -844,6 +899,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if deleteMatchingStatements() removes a specific triple if all details (subject,
      * predicate, object) are passed.
+     *
+     * @todo Connector
      */
     public function testDeleteMatchingStatementsDeletesSpecificTripleIfAllInformationIsPassed()
     {
@@ -871,6 +928,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if deleteMatchingStatements() is able to remove a triple with literal as
      * object.
+     *
+     * @todo Connector
      */
     public function testDeleteMatchingStatementsDeletesTripleWithObjectLiteral()
     {
@@ -900,8 +959,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Ensures that deleteMatchingStatements() returns 0 if no statement was deleted.
+     *
+     * @todo Connector
      */
-    public function testDeleteMatchingStatementReturnsZeroIfNoTripleWasDeleted()
+    public function testDeleteMatchingStatementsReturnsZeroIfNoTripleWasDeleted()
     {
         $this->insertTriple();
 
@@ -918,6 +979,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if deleteMatchingStatements() returns the number of removed triples.
+     *
+     * @todo Connector
      */
     public function testDeleteMatchingStatementsReturnsNumberOfDeletedTriples()
     {
@@ -950,8 +1013,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if triples with objects that are typed as string are removed correctly.
+     *
+     * @todo Connector
      */
-    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsStringCorrectly()
+    public function testDeleteMatchingStatementsRemovesObjectLiteralsThatAreTypedAsStringCorrectly()
     {
         $object = array(
             'value'    => 'Hello',
@@ -976,8 +1041,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if triples that contain a literal object of type integer are removed correctly.
+     *
+     * @todo Connector
      */
-    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsThatAreTypedAsIntegerCorrectly()
+    public function testDeleteMatchingStatementsRemovesObjectLiteralsThatAreTypedAsIntegerCorrectly()
     {
         $object = array(
             'value'    => 42,
@@ -1002,8 +1069,10 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if triples with object literal that has a language are removed correctly.
+     *
+     * @todo Connector
      */
-    public function testDeleteMatchingStatementsCanRemovesObjectLiteralsWithLanguageCorrectly()
+    public function testDeleteMatchingStatementsRemovesObjectLiteralsWithLanguageCorrectly()
     {
         $this->insertTriple(
             'http://example.org/subject',
@@ -1040,6 +1109,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      * to delete the specified triples via deleteMatchingStatements().
      *
      * This test checks if the desired behavior works for triple with a typed object.
+     *
+     * @todo Connector Check if correct format is returned?
      */
     public function testTripleDefinitionFromExtendedSelectResultCanBePassedToDeleteMatchingStatements()
     {
@@ -1206,6 +1277,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
      *
      * Blank nodes should not be treated as URIs and it should be possible
      * to use the SPARQL function isBLANK() to detect blank nodes.
+     *
+     * @todo Connector
      */
     public function testAdapterSupportsBlankNodes()
     {
@@ -1228,6 +1301,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that the adapter is able to insert values that contain double quotes
      * and which use a custom data type.
+     *
+     * @todo Connector
      */
     public function testAdapterCanInsertValuesWithCustomTypeAndDoubleQuoteAsContent()
     {
@@ -1246,6 +1321,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the adapter is able to insert a triple that contains a literal that is longer
      * than 4000 bytes.
+     *
+     * @todo Connector
      */
     public function testAdapterCanInsertTripleWithVeryLongLiteral()
     {
@@ -1263,6 +1340,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if the adapter can insert a large text literal that contains a
      * type definition (as text).
+     *
+     * @todo Connector
      */
     public function testAdapterCanInsertLargeLiteralThatContainsTypeDefinitionAsText()
     {
@@ -1283,6 +1362,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if sparqlQuery() returns the content of a large literal correctly.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryReturnsContentOfLargeLiteral()
     {
@@ -1312,6 +1393,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if sparqlQuery() returns a large literal, which contains special characters,
      * correctly.
+     *
+     * @todo Connector
      */
     public function testSparqlQueryReturnsContentOfLargeLiteralWithSpecialCharactersCorrectly()
     {
@@ -1343,6 +1426,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Checks if a literal that will be converted into a long literal ("""test""")
      * is returned correctly by the adapter.
+     *
+     * @todo Connector
      */
     public function testAdapterReturnsValueOfLongLiteralCorrectly()
     {
@@ -1374,6 +1459,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
     /**
      * Ensures that the adapter stores literal type and value correctly if the the literal
      * value contains a type definition (which must be considered as text).
+     *
+     * @todo Connector
      */
     public function testAdapterRecognizesTypeOfLiteralThatContainsTypeDefinitionAsTextCorrectly()
     {
@@ -1406,6 +1493,8 @@ class Erfurt_Store_Adapter_Oracle_OracleAdapterTest extends \Erfurt_OracleTestCa
 
     /**
      * Checks if the adapter handles literals with umlauts correctly.
+     *
+     * @todo Connector
      */
     public function testAdapterHandlesUmlautsCorrectly()
     {
