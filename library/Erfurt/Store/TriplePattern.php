@@ -107,24 +107,50 @@ class Erfurt_Store_TriplePattern
      */
     public function __toString()
     {
-        if ($this->object['type'] === 'uri') {
-            $object = '<' . $this->object['value'] . '>';
-        } else if ($this->object['type'] === 'bnode') {
-            $object = $this->object['value'];
-        } else {
-            $object = Erfurt_Utils::buildLiteralString(
-                $this->object['value'],
-                isset($this->object['datatype']) ? $this->object['datatype'] : null,
-                isset($this->object['lang']) ? $this->object['lang'] : null
-            );
-        }
-        if (strpos($this->subject, '_:') === 0) {
+        if ($this->subject === null) {
+            $subject = $this->format(array('type' => 'variable', 'value' => '?subject'));
+        } else if (strpos($this->subject, '_:') === 0) {
             // Subject is a blank node.
-            $subject = $this->subject;
+            $subject = $this->format(array('type' => 'bnode', 'value' => $this->subject));
         } else {
-            $subject = '<' . $this->subject . '>';
+            $subject = $this->format(array('type' => 'uri', 'value' => $this->subject));
         }
-        $template = '%s <%s> %s .';
-        return sprintf($template, $subject, $this->predicate, $object);
+        if ($this->predicate === null) {
+            $predicate = $this->format(array('type' => 'variable', 'value' => '?predicate'));
+        } else {
+            $predicate = $this->format(array('type' => 'uri', 'value' => $this->predicate));
+        }
+        if ($this->object === null) {
+            $object = $this->format(array('type' => 'variable', 'value' => '?object'));
+        } else {
+            $object = $this->format($this->object);
+        }
+        return sprintf( '%s %s %s .', $subject, $predicate, $object);
+    }
+
+    /**
+     * Uses the provided value specification to create a string representation.
+     *
+     * The specification must provide a type as well as a value entry.
+     *
+     * @param array(string=>string) $valueSpecification
+     * @return string
+     */
+    protected function format(array $valueSpecification)
+    {
+        switch ($valueSpecification['type']) {
+            case 'bnode':
+            case 'variable':
+                return $valueSpecification['value'];
+            case 'uri':
+                return '<' . $valueSpecification['value'] . '>';
+            case 'literal':
+            default:
+                return Erfurt_Utils::buildLiteralString(
+                    $valueSpecification['value'],
+                    isset($valueSpecification['datatype']) ? $valueSpecification['datatype'] : null,
+                    isset($valueSpecification['lang']) ? $valueSpecification['lang'] : null
+                );
+        }
     }
 }
