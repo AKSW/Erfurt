@@ -123,7 +123,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
-        $this->connector->deleteMatchingTriples(
+        return $this->connector->deleteMatchingTriples(
             $modelIri,
             new Erfurt_Store_Adapter_Sparql_TriplePattern($subject, $predicate, $object)
         );
@@ -177,7 +177,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function sparqlAsk($query)
     {
-        return $this->sparqlQuery($query, array(Erfurt_Store::RESULTFORMAT => 'scalar'));
+        return $this->sparqlQuery($query, array(Erfurt_Store::RESULTFORMAT => 'raw'));
     }
 
     /**
@@ -322,7 +322,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     protected function determineResultFormat($requestedFormat, $query)
     {
         if ($requestedFormat === null) {
-            return $this->isAskQuery($query) ? 'scalar' : Erfurt_Store::RESULTFORMAT_PLAIN;
+            return $this->isAskQuery($query) ? 'raw' : Erfurt_Store::RESULTFORMAT_PLAIN;
         }
         return $requestedFormat;
     }
@@ -356,6 +356,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     {
         switch ($format) {
             case Erfurt_Store::RESULTFORMAT_EXTENDED:
+            case 'raw':
                 // Extended is the default format.
                 return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
             case Erfurt_Store::RESULTFORMAT_XML:
@@ -363,14 +364,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
             case 'json':
                 return new Erfurt_Store_Adapter_ResultConverter_ToJsonConverter();
             case Erfurt_Store::RESULTFORMAT_PLAIN:
-                // TODO Extended to plain
-                return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
-            case 'scalar':
-                // TODO: scalar
-                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
-                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                    new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
-                ));
+                return new Erfurt_Store_Adapter_ResultConverter_ExtendedToPlainConverter();
         }
         $message = 'The result format "%s" is not supported by adapter %s.';
         $message = sprintf($message, $format, get_class($this));
@@ -389,6 +383,24 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     {
         $converter = $this->getConverterFor($format);
         return $converter->convert($results);
+    }
+
+    /**
+     * Converts the provided graph list into a model result.
+     *
+     * The model result contains the IRIs as key and true as value
+     * for all entries.
+     *
+     * @param array(string) $graphs List of model IRIs.
+     * @return array(string=>boolean)
+     */
+    protected function toModelResult(array $graphs)
+    {
+        if (count($graphs) === 0) {
+            return array();
+        }
+        $graphs = array_unique($graphs);
+        return array_combine($graphs, array_fill(0, count($graphs), true));
     }
 
 }
