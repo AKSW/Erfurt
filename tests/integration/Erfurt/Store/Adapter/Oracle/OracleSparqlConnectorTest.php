@@ -4,6 +4,7 @@
  * Tests the Oracle SPARQL connector.
  *
  * @since 02.02.14
+ * @group Oracle
  */
 class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_OracleTestCase
 {
