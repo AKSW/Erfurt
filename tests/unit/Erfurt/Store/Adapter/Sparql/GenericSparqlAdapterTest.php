@@ -175,6 +175,22 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that sparqlQuery() normalizes exceptions that are thrown by the
+     * connector.
+     */
+    public function testSparqlQueryNormalizesExceptionFromConnector()
+    {
+        $this->connector->expects($this->once())
+                        ->method('query')
+                        ->will($this->throwException(new RuntimeException('Cannot connect to store.')));
+
+        $this->setExpectedException('Erfurt_Exception');
+        $query = 'SELECT ?subject FROM <http://example.org/graph> '
+               . 'WHERE { ?subject ?predicate ?object . }';
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Checks if createModel() returns always true, as the connector should
      * handle the creation of a new named graph when a triple is inserted.
      */
