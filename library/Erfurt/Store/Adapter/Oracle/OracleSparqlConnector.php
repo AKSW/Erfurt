@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\Connection;
+
 /**
  * Connector for the Oracle Triple Store (named Semantic and Graph option).
  *
@@ -11,6 +13,31 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
 {
 
     /**
+     * The database connection that is used.
+     *
+     * @var \Doctrine\DBAL\Connection
+     */
+    protected $connection = null;
+
+    /**
+     * A prepared insert statement or null if it was not created yet.
+     *
+     * @var \Doctrine\DBAL\Driver\Statement|null
+     */
+    protected $insertStatement = null;
+
+    /**
+     * Creates a connector that uses the provided database connection to interact
+     * with the Oracle Triple Store.
+     *
+     * @param Connection $connection
+     */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
      * Adds the provided triple to the data store.
      *
      * @param string $graphIri
@@ -18,7 +45,24 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        // TODO: Implement addTriple() method.
+        $subject = $triple->getSubject();
+        $subject = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
+        $params = array(
+            'modelAndGraph' => $this->getModelName() . ':<' . $graphIri . '>',
+            'subject'       => $subject,
+            'predicate'     => '<' . $triple->getPredicate() . '>',
+            'object'        => Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
+                $triple->getObject()
+            )
+        );
+        $statement = $this->getInsertStatement();
+        if (strlen($params['object']) > 4000) {
+            // Literal is too long, therefore, bind it as a CLOB.
+            $largeLiteral = $params['object'];
+            unset($params['object']);
+            $statement->bindValue('object', $largeLiteral, PDO::PARAM_LOB);
+        }
+        $statement->execute($params);
     }
 
     /**
@@ -63,7 +107,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function query($sparqlQuery)
     {
-        // TODO: Implement query() method.
+        $statement = $this->createSparqlStatement($sparqlQuery);
+        $statement->execute();
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $this->formatResultSet($results, $this->determineResultFormat($sparqlQuery));
     }
 
     /**
@@ -75,7 +122,30 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-        // TODO: Implement deleteMatchingTriples() method.
+        $params = array(
+            'modelAndGraph' => strtoupper($this->getModelName()) . ':<' . $graphIri . '>'
+        );
+        $builder = $this->connection->createQueryBuilder()
+                        ->delete('erfurt_semantic_data', 'd')
+                        ->where('d.triple.GET_MODEL() = :modelAndGraph');
+        if ($pattern->getSubject() !== null) {
+            $builder->andWhere('d.triple.GET_SUBJECT() = :subject');
+            $params['subject'] = '<' . $pattern->getSubject() . '>';
+        }
+        if ($pattern->getPredicate() !== null) {
+            $builder->andWhere('d.triple.GET_PROPERTY() = :predicate');
+            $params['predicate'] = '<' . $pattern->getPredicate() . '>';
+        }
+        if ($pattern->getObject() !== null) {
+            $builder->andWhere('d.triple.GET_TRIPLE().object = :object');
+            $params['object'] = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
+                $pattern->getObject()
+            );
+        }
+        $query     = $builder->getSQL();
+        $statement = $this->connection->prepare($query);
+        $statement->execute($params);
+        return $statement->rowCount();
     }
 
     /**
@@ -125,5 +195,167 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         // TODO: Implement batch() method.
     }
 
+    /**
+     * Determines the result format, depending on query type.
+     *
+     * @param string $query The SPARQL query.
+     * @return string The result format.
+     */
+    protected function determineResultFormat($query)
+    {
+        return $this->isAskQuery($query) ? 'scalar' : Erfurt_Store::RESULTFORMAT_EXTENDED;
+    }
+
+    /**
+     * Checks if the provided SPARQL query is an ASK query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isAskQuery($query)
+    {
+        if (strpos($query, 'ASK') === false) {
+            // Query does not even contain the ASK keyword, no further
+            // detection required.
+            return false;
+        }
+        $parser = new Erfurt_Sparql_Parser();
+        $info   = $parser->parse($query);
+        return $info->getResultForm() === 'ask';
+    }
+
+    /**
+     * Prepares a statement that is used to insert a triple.
+     *
+     * The statement requires the following parameters:
+     *
+     * # modelAndGraph - Model name and graph IRI, separated by colon (":").
+     * # subject       - Subject IRI.
+     * # predicate     - Predicate IRI.
+     * # object        - Encoded object.
+     *
+     * IRI must be enclosed by angle braces ("<", ">").
+     * Objects must be IRIs or encoded literals, for example:
+     *
+     * # "literal"
+     * # "literal"@de
+     * # "literal"^^xsd:string
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    protected function getInsertStatement()
+    {
+        if ($this->insertStatement === null) {
+            $query = 'INSERT INTO erfurt_semantic_data (triple) '
+                   . 'VALUES ('
+                   . '  SDO_RDF_TRIPLE_S('
+                   . '    :modelAndGraph,'
+                   . '    :subject,'
+                   . '    :predicate,'
+                   . '    :object'
+                   . '  )'
+                   . ')';
+            $this->insertStatement = $this->connection->prepare($query);
+        }
+        return $this->insertStatement;
+    }
+
+    /**
+     * Creates a statement that is used to perform a SPARQL query.
+     *
+     * @param string $sparqlQuery The SPARQL query.
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    protected function createSparqlStatement($sparqlQuery)
+    {
+        $query = 'SELECT * '
+               . 'FROM TABLE('
+               . '  SEM_MATCH('
+               . '    ' . $this->escapeSparql($this->rewriteSparql($sparqlQuery)) . ','
+               . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    NULL,'
+               . '    ' . $this->connection->quote('STRICT_DEFAULT=T') . ','
+               . '    NULL,'
+               . '    NULL'
+               . '  )'
+               . ') '
+               . 'ORDER BY SEM$ROWNUM';
+        return $this->connection->prepare($query);
+    }
+
+    /**
+     * Rewrites the given SPARQL query to prepare it for execution
+     * by the Oracle database.
+     *
+     * Prefixes variables to avoid problems with reserved SQL keywords like "group"
+     * and encodes variable names to be able to restore upper case characters in
+     * the result set.
+     *
+     * @param string $query
+     * @return string
+     */
+    protected function rewriteSparql($query)
+    {
+        $rewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
+        return $rewriter->rewrite(Erfurt_Sparql_Parser::uncomment($query));
+    }
+
+    /**
+     * Uses the Oracle q operator to escape a SPARQL query string.
+     *
+     * Usually it is much better to use prepared statements, but
+     * parameters like the SPARQL query must be available at
+     * compile time for optimization reasons.
+     *
+     * @param string $query
+     * @return string
+     * @throws \InvalidArgumentException If the string contains the escape sequence.
+     */
+    protected function escapeSparql($query)
+    {
+        if (strpos($query, "~'") !== false) {
+            $message = 'SPARQL query must not contain the sequence "~\'", which is used internally for escaping."';
+            throw new \InvalidArgumentException($message);
+        }
+        return "q'~$query~'";
+    }
+
+    /**
+     * Returns the name of the semantic model that is used.
+     *
+     * @return string
+     */
+    protected function getModelName()
+    {
+        return $this->connection->getUsername() . '_erfurt';
+    }
+
+    /**
+     * Normalizes the provided result set, which means that keys
+     * are normalized and that unnecessary elements are removed.
+     *
+     * @param array(string=>string) $results
+     * @param string $format One of the Erfurt_Store::RESULTFORMAT_* constants or an adapter specific format string.
+     * @return array(string=>string)
+     */
+    protected function formatResultSet($results, $format)
+    {
+        if ($format === Erfurt_Store::RESULTFORMAT_EXTENDED) {
+            $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
+            ));
+        } else {
+            $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
+            ));
+        }
+        return $converter->convert($results);
+    }
 
 }
