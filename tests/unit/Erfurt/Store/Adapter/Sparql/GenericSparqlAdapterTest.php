@@ -537,9 +537,12 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     protected function assertNoTripleAddedTo($graphIri)
     {
-        $this->connector->expects($this->never())
+        $notProvidedGraph = function ($graph) use($graphIri) {
+            PHPUnit_Framework_Assert::assertNotEquals($graphIri, $graph);
+        };
+        $this->connector->expects($this->any())
                         ->method('addTriple')
-                        ->with($graphIri);
+                        ->will($this->returnCallback($notProvidedGraph));
     }
 
     /**
