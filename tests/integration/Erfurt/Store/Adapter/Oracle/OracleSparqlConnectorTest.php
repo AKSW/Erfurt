@@ -44,6 +44,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     }
 
     /**
+     * Asserts that the connector implements the required interface.
+     */
+    public function testImplementsInterface()
+    {
+        $this->assertInstanceOf('\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface', $this->connector);
+    }
+
+    /**
      * Ensures that an exception is thrown if a syntactically invalid
      * SPARQL query is passed to query().
      */
