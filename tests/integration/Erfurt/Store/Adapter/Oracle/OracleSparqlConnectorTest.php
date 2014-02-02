@@ -362,7 +362,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $value = current(current($result['results']['bindings']));
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
         $this->assertEquals($object['value'], $value['value']);
     }
 
@@ -446,7 +447,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
 
         $this->assertNumberOfRows(1, $result);
         $this->assertContains('camelCasedObject', $result['head']['vars']);
-        $this->assertContains('camelCasedObject', array_keys(current(current($result['results']['bindings']))));
+        $row = array_shift($result['results']['bindings']);
+        $this->assertContains('camelCasedObject', array_keys($row));
     }
 
     /**
@@ -775,7 +777,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertExtendedResultStructure($result);
-        $triple = current($result['results']['bindings']);
+        $triple = array_shift($result['results']['bindings']);
         // ... and pass its definition to the delete method.
         $this->connector->deleteMatchingTriples(
             'http://example.org/graph',
@@ -891,8 +893,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $row   = current($result['results']['bindings']);
-        $value = current($row);
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
         $this->assertEquals($literal, $value['value']);
     }
 
@@ -922,8 +924,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $row   = current($result['results']['bindings']);
-        $value = current($row);
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
         $this->assertEquals($literal, $value['value']);
     }
 
@@ -953,8 +955,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $row   = current($result['results']['bindings']);
-        $value = current($row);
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
         $this->assertEquals($literal, $value['value']);
     }
 
@@ -984,7 +986,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $row = current($result['results']['bindings']);
+        $row = array_shift($result['results']['bindings']);
         $this->assertArrayHasKey('object', $row);
         $this->assertArrayHasKey('dataType', $row);
         $this->assertEquals($literal, $row['object']['value']);
@@ -1010,7 +1012,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $result = $this->connector->query($query);
 
         $this->assertNumberOfRows(1, $result);
-        $value = current(current($result['results']['bindings']));
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
         $this->assertEquals($literalValue, $value['value']);
     }
 
