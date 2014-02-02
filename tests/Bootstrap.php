@@ -25,6 +25,7 @@ unset($phpUnitVersion);
 $efRoot                = realpath(dirname(__DIR__));
 $efUnitTestsDir        = "$efRoot/tests/unit";
 $efIntegrationTestsDir = "$efRoot/tests/integration";
+$efBenchmarksDir       = "$efRoot/tests/benchmark";
 
 /*
  * Prepend the Erfurt class base directory, libraries/ and tests/ directories to the
@@ -35,6 +36,7 @@ $efIntegrationTestsDir = "$efRoot/tests/integration";
 $path = array(
     $efUnitTestsDir,
     $efIntegrationTestsDir,
+    $efBenchmarksDir,
     get_include_path(),
 );
 set_include_path(implode(PATH_SEPARATOR, $path));
