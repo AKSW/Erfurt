@@ -110,7 +110,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         $statement = $this->createSparqlStatement($sparqlQuery);
         $statement->execute();
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $this->formatResultSet($results, $this->determineResultFormat($sparqlQuery));
+        return $this->formatResultSet($results,$sparqlQuery);
     }
 
     /**
@@ -201,17 +201,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
             $result = call_user_func($callback, $connector);
         });
         return $result;
-    }
-
-    /**
-     * Determines the result format, depending on query type.
-     *
-     * @param string $query The SPARQL query.
-     * @return string The result format.
-     */
-    protected function determineResultFormat($query)
-    {
-        return $this->isAskQuery($query) ? 'scalar' : Erfurt_Store::RESULTFORMAT_EXTENDED;
     }
 
     /**
@@ -342,25 +331,25 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     }
 
     /**
-     * Normalizes the provided result set, which means that keys
+     * Formats the provided result set, which means that keys
      * are normalized and that unnecessary elements are removed.
      *
      * @param array(string=>string) $results
-     * @param string $format One of the Erfurt_Store::RESULTFORMAT_* constants or an adapter specific format string.
+     * @param string $query The SPARQL query.
      * @return array(string=>string)
      */
-    protected function formatResultSet($results, $format)
+    protected function formatResultSet($results, $query)
     {
-        if ($format === Erfurt_Store::RESULTFORMAT_EXTENDED) {
+        if ($this->isAskQuery($query)) {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
-                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
+                new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
             ));
         } else {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
+                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
             ));
         }
         return $converter->convert($results);
