@@ -30,7 +30,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         parent::setUp();
         $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->connection);
         $this->installTripleStore($this->setup);
-        $this->connector = new Erfurt_Store_Adapter_Oracle_OracleAdapter($this->connection);
+        $this->connector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->connection);
     }
 
     /**
