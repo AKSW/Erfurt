@@ -71,4 +71,48 @@ interface Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern);
 
+    /**
+     * Accepts a callback function and processes it in batch mode.
+     *
+     * In batch mode the connector can decide to optimize the execution
+     * for example by delaying inserts or wrapping the whole task
+     * into a transaction.
+     *
+     * However, using the batch mode does *not* guarantee transactional
+     * behavior.
+     *
+     * The callback receives the connector itself as argument, which
+     * can be used to issue commands:
+     *
+     *     $connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $batchConnector) {
+     *         $batchConnector->addTriple(
+     *             'http://example.org',
+     *             new \Erfurt_Store_Adapter_Sparql_Triple(
+     *                 'http://example.org/subject1',
+     *                 'http://example.org/predicate1',
+     *                 'http://example.org/object1'
+     *             );
+     *         );
+     *         $batchConnector->addTriple(
+     *             'http://example.org',
+     *             new \Erfurt_Store_Adapter_Sparql_Triple(
+     *                 'http://example.org/subject2',
+     *                 'http://example.org/predicate2',
+     *                 'http://example.org/object2'
+     *             );
+     *         );
+     *     });
+     *
+     * Finally, the batch() method returns the result of the provided callback:
+     *
+     *     // Result contains 42.
+     *     $result = $connector->batch(function () {
+     *         return 42;
+     *     });
+     *
+     * @param mixed $callback A callback function.
+     * @return mixed
+     */
+    public function batch($callback);
+
 }
