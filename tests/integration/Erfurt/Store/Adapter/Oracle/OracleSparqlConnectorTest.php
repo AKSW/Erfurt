@@ -1018,6 +1018,86 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     }
 
     /**
+     * Checks if the callback that is passed to batch() is executed.
+     */
+    public function testBatchExecutesProvidedCallback()
+    {
+        $callback = $this->getMock('\stdClass', array('__invoke'));
+        $callback->expects($this->once())
+                 ->method('__invoke');
+
+        $this->connector->batch($callback);
+    }
+
+    /**
+     * Ensures that a connector is passed as parameter to the batch
+     * callback.
+     */
+    public function testBatchPassesConnectorAsParameter()
+    {
+        $callback = $this->getMock('\stdClass', array('__invoke'));
+        $callback->expects($this->once())
+                 ->method('__invoke')
+                 ->with($this->isInstanceOf('\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface'));
+
+        $this->connector->batch($callback);
+    }
+
+    /**
+     * Checks if batch() returns the result from the callback.
+     */
+    public function testBatchReturnsReturnsFromCallback()
+    {
+        $callback = function () {
+            return 42;
+        };
+
+        $result = $this->connector->batch($callback);
+
+        $this->assertEquals(42, $result);
+    }
+
+    /**
+     * Checks if triples are successfully added in batch mode.
+     */
+    public function testBatchCanBeUsedToInsertTriples()
+    {
+        $addTriples = function ($connector) {
+            PHPUnit_Framework_Assert::assertInstanceOf(
+                '\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface',
+                $connector
+            );
+            /* @var $connector \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
+            $connector->addTriple(
+                'http://example.org/graph',
+                new Erfurt_Store_Adapter_Sparql_Triple(
+                    'http://example.org/subject1',
+                    'http://example.org/predicate1',
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object1'
+                    )
+                )
+            );
+            $connector->addTriple(
+                'http://example.org/graph',
+                new Erfurt_Store_Adapter_Sparql_Triple(
+                    'http://example.org/subject2',
+                    'http://example.org/predicate2',
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object2'
+                    )
+                )
+            );
+        };
+
+        $this->connector->batch($addTriples);
+
+        $this->assertEquals(2, $this->countTriples());
+    }
+
+    /**
      * Asserts that the provided (extended) result set contains
      * the expected number of result rows.
      *
