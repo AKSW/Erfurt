@@ -28,8 +28,10 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
         if ($adapterOptions['auto_setup']) {
             static::installTripleStoreIfNecessary($connection);
         }
-        $sparqlAdapter = new Erfurt_Store_Adapter_Oracle_OracleAdapter($connection);
-        $sqlAdapter    = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($connection);
+        $sparqlAdapter = new Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter(
+            new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($connection)
+        );
+        $sqlAdapter = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($connection);
         return new Erfurt_Store_Adapter_SparqlSqlCombination($sparqlAdapter, $sqlAdapter);
     }
 
