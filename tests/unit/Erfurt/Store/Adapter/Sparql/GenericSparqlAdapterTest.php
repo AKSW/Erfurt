@@ -56,19 +56,52 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
         $this->assertInternalType('array', $result);
     }
 
+    /**
+     * Checks if sparqlQuery() returns the result in extended format if
+     * that is requested.
+     */
     public function testSparqlQueryKeepsExtendedFormatIfExpected()
     {
+        $connectorResult = $this->getSimpleResult();
+        $this->simulateSparqlResult($connectorResult);
 
+        $query   = 'SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object . }';
+        $options = array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED);
+        $result  = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertEquals($connectorResult, $result);
     }
 
-    public function testSparqlQueryConvertsToSimpleResultSetIfNoFormatIsPassed()
+    /**
+     * Ensures that sparqlQuery() converts the result set into the plain format
+     * if no specific format is requested.
+     */
+    public function testSparqlQueryConvertsToPlainResultSetIfNoFormatIsPassed()
     {
+        $connectorResult = $this->getSimpleResult();
+        $this->simulateSparqlResult($connectorResult);
 
+        $query   = 'SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object . }';
+        $options = array();
+        $result  = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertEquals($this->toPlainResult($connectorResult), $result);
     }
 
-    public function testSparqlQueryConvertsToSimpleResultSetIfPlainFormatIsRequested()
+    /**
+     * Ensures that sparqlQuery() converts the result set into the plain format
+     * if that format is requested.
+     */
+    public function testSparqlQueryConvertsToPlainResultSetIfPlainFormatIsRequested()
     {
+        $connectorResult = $this->getSimpleResult();
+        $this->simulateSparqlResult($connectorResult);
 
+        $query   = 'SELECT ?subject ?predicate ?object WHERE { ?subject ?predicate ?object . }';
+        $options = array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_PLAIN);
+        $result  = $this->adapter->sparqlQuery($query, $options);
+
+        $this->assertEquals($this->toPlainResult($connectorResult), $result);
     }
 
     /**
@@ -94,7 +127,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testSparqlQuerySupportsXmlFormat()
     {
-        // TODO simulate result set
+        $this->simulateSparqlResult($this->getSimpleResult());
         $query  = 'SELECT ?subject FROM <http://example.org/graph> '
                 . 'WHERE { ?subject ?predicate ?object . }';
         $options = array(
@@ -111,7 +144,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testSparqlQuerySupportsJsonFormat()
     {
-        // TODO simulate result set
+        $this->simulateSparqlResult($this->getSimpleResult());
         $query  = 'SELECT ?subject FROM <http://example.org/graph> '
                 . 'WHERE { ?subject ?predicate ?object . }';
         $options = array(
@@ -132,13 +165,13 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testSparqlQueryReturnsAskResultFromConnector()
     {
-        // TODO simulate ASK result
+        $this->simulateSparqlResult(true);
         $query  = 'ASK FROM <http://example.org/graph> '
                 . 'WHERE { ?subject ?predicate ?object . }';
 
         $result = $this->adapter->sparqlQuery($query);
 
-        $this->assertInternalType('boolean', $result);
+        $this->assertTrue($result);
     }
 
     /**
@@ -203,8 +236,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testGetAvailableModelsReturnsExistingGraphsAsKey()
     {
-        // TODO simulate result with graphs <http://example.org/graph>
-        // and <http://example.org/another-graph>
+        $availableGraphs = array('http://example.org/graph', 'http://example.org/another-graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
+
         $models = $this->adapter->getAvailableModels();
 
         $this->assertInternalType('array', $models);
@@ -219,8 +254,11 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testGetAvailableModelsReturnsModelsThatHaveBeenCreatedInCurrentRequestButNotYetFilled()
     {
-        // TODO simulate result
-        $this->adapter->createModel('http://example.org/new-graph');
+        $availableGraphs = array('http://example.org/graph', 'http://example.org/another-graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
+
+        $this->adapter->createModel('http://example.org/new-graph' , Erfurt_Store::MODEL_TYPE_RDFS);
 
         $models = $this->adapter->getAvailableModels();
 
@@ -234,7 +272,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testGetAvailableModelsDoesNotReturnModelsThatHaveBeenCreatedAndDeletedInCurrentRequest()
     {
-        // TODO simulate result
+        $availableGraphs = array('http://example.org/graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
+
         $this->adapter->createModel('http://example.org/new-graph');
         $this->adapter->deleteModel('http://example.org/new-graph');
 
@@ -250,8 +291,9 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testGetAvailableModelsContainsOnlyTrueAsValue()
     {
-        // TODO simulate result with graphs <http://example.org/graph>
-        // and <http://example.org/another-graph>
+        $availableGraphs = array('http://example.org/graph', 'http://example.org/another-graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
 
         $models = $this->adapter->getAvailableModels();
 
@@ -268,7 +310,9 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testIsModelAvailableReturnsFalseIfGraphDoesNotExist()
     {
-        // TODO simulate result with graph <http://example.org/graph>
+        $availableGraphs = array('http://example.org/graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
 
         $available = $this->adapter->isModelAvailable('http://example.org/missing-graph');
         $this->assertFalse($available);
@@ -280,7 +324,9 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testIsModelAvailableReturnsTrueIfGraphExists()
     {
-        // TODO simulate result with graph <http://example.org/graph>
+        $availableGraphs = array('http://example.org/graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->simulateSparqlResult($connectorResult);
 
         $available = $this->adapter->isModelAvailable('http://example.org/graph');
         $this->assertTrue($available);
@@ -292,7 +338,25 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testDeleteMatchingStatementsCreatesDeleteRequest()
     {
+        $object = array(
+            'type'  => 'literal',
+            'value' => 'hello'
+        );
+        $this->assertDeletion(
+            'http://example.org/graph',
+            new Erfurt_Store_Adapter_Sparql_TriplePattern(
+                'http://example.org/subject',
+                'http://example.org/predicate',
+                $object
+            )
+        );
 
+        $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            $object
+        );
     }
 
     /**
@@ -301,7 +365,24 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     public function testDeleteMatchingStatementsReturnsNumberOfAffectedTriplesFromConnector()
     {
+        $this->assertDeletion(
+            'http://example.org/graph',
+            new Erfurt_Store_Adapter_Sparql_TriplePattern(
+                null,
+                null,
+                null
+            )
+        );
 
+        $affected = $this->adapter->deleteMatchingStatements(
+            'http://example.org/graph',
+            null,
+            null,
+            null
+        );
+
+        $this->assertInternalType('integer', $affected);
+        $this->assertEquals(42, $affected);
     }
 
     /**
@@ -462,9 +543,119 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      */
     protected function simulateEmptyConnectorResult()
     {
+        $this->simulateSparqlResult($this->getEmptyResultSet());
+    }
+
+    /**
+     * Ensures that the SPARQL connector returns the provided query result.
+     *
+     * @param mixed $result
+     */
+    protected function simulateSparqlResult($result)
+    {
         $this->connector->expects($this->any())
                         ->method('query')
-                        ->will($this->returnValue($this->getEmptyResultSet()));
+                        ->will($this->returnValue($result));
+    }
+
+    /**
+     * Converts the provided result set in extended format into the
+     * plain format.
+     *
+     * @param array(mixed) $extendedResult
+     * @return array(array(string=>mixed))
+     */
+    protected function toPlainResult($extendedResult)
+    {
+        $plain = array();
+        foreach ($extendedResult['results']['bindings'] as $binding) {
+            /* @var $binding array(string=>array(string=>string)) */
+            $row = count($plain);
+            foreach ($binding as $name => $definition) {
+                /* @var $name string */
+                /* @var $definition array(string=>mixed) */
+                $plain[$row][$name] = $definition['value'];
+            }
+        }
+        return $plain;
+    }
+
+    /**
+     * Simulates a connector result for the query that is used to
+     * determine the existing graphs.
+     *
+     * @param array(string) $graphs
+     */
+    protected function getGraphResult(array $graphs)
+    {
+        $result = array(
+            'head' => array(
+                'vars' => array(
+                    'graph'
+                )
+            ),
+            'results' => array(
+                'bindings' => array()
+            )
+        );
+        foreach ($graphs as $graph) {
+            /* @var $graph string */
+            $result['results']['bindings'][] = array(
+                'type'  => 'uri',
+                'value' => $graph
+            );
+        }
+        return $result;
+    }
+
+    /**
+     * Creates a simple SPARQL result in extended format.
+     *
+     * @return array(mixed)
+     */
+    protected function getSimpleResult()
+    {
+        return array(
+            'head' => array(
+                'vars' => array(
+                    'subject',
+                    'predicate',
+                    'object'
+                )
+            ),
+            'results' => array(
+                'bindings' => array(
+                    array(
+                        'subject' => array(
+                            'type'  => 'uri',
+                            'value' => 'http://example.org/subject1'
+                        ),
+                        'predicate' => array(
+                            'type'  => 'uri',
+                            'value' => 'http://example.org/predicate1'
+                        ),
+                        'object' => array(
+                            'type'  => 'literal',
+                            'value' => 'Hello world!'
+                        )
+                    ),
+                    array(
+                        'subject' => array(
+                            'type'  => 'uri',
+                            'value' => 'http://example.org/subject2'
+                        ),
+                        'predicate' => array(
+                            'type'  => 'uri',
+                            'value' => 'http://example.org/predicate2'
+                        ),
+                        'object' => array(
+                            'type'  => 'uri',
+                            'value' => 'http://example.org/object'
+                        )
+                    )
+                )
+            )
+        );
     }
 
     /**
