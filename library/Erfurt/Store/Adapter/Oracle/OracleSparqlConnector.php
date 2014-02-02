@@ -192,7 +192,15 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function batch($callback)
     {
-        // TODO: Implement batch() method.
+        // Perform changes in a transaction to ensure, that the full set
+        // of changes is written to disk at once instead of one commit per
+        // insert or delete.
+        $result    = null;
+        $connector = $this;
+        $this->connection->transactional(function () use ($callback, $connector, &$result) {
+            $result = call_user_func($callback, $connector);
+        });
+        return $result;
     }
 
     /**
