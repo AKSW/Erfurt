@@ -19,7 +19,8 @@
         "soundintheory/php-sql-parser": "~1.0.0"
     },
     "require-dev": {
-        "athletic/athletic": "0.1.7"
+        "athletic/athletic": "0.1.7",
+        "fzaninotto/faker": "~1.3.0"
     },
     "suggest": {
         "ext-oci8": "To use the Oracle Triple Store."
