@@ -100,13 +100,12 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
         $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
-        foreach ($triples as $triple) {
-            /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
-            $this->connector->addTriple(
-                $graphIri,
-                $triple
-            );
-        }
+        $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($graphIri, $triples) {
+            foreach ($triples as $triple) {
+                /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
+                $connector->addTriple($graphIri, $triple);
+            }
+        });
     }
 
     /**
@@ -138,10 +137,12 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
         $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
-        foreach ($triples as $triple) {
-            /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
-            $this->connector->deleteMatchingTriples($graphIri, $triple);
-        }
+        $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($graphIri, $triples) {
+            foreach ($triples as $triple) {
+                /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
+                $connector->deleteMatchingTriples($graphIri, $triple);
+            }
+        });
     }
 
     /**
