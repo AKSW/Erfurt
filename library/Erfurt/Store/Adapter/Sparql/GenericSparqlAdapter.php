@@ -14,13 +14,31 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
 {
 
     /**
+     * The SPARQL connector that is used internally.
+     *
+     * @var \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
+     */
+    protected $connector = null;
+
+    /**
+     * Contains IRIs of graphs that have been created in this request,
+     * but which might not contain triples yet.
+     *
+     * The in-memory graph management is necessary, as models that are
+     * created via createModel() would not be detected instantly otherwise.
+     *
+     * @var array(string) List of graph IRIs.
+     */
+    protected $currentlyCreatedGraphs = array();
+
+    /**
      * Creates a SPARQL adapter that uses the provided connector.
      *
      * @param Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
      */
     public function __construct(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector)
     {
-
+        $this->connector = $connector;
     }
 
     /**
@@ -28,7 +46,6 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function init()
     {
-        // TODO: Implement init() method.
     }
 
     /**
@@ -43,7 +60,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
-        // TODO: Implement addStatement() method.
+        $this->connector->addTriple(
+            $graphUri,
+            new Erfurt_Store_Adapter_Sparql_Triple($subject, $predicate, $object)
+        );
     }
 
     /**
@@ -79,7 +99,14 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array())
     {
-        // TODO: Implement addMultipleStatements() method.
+        $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
+        foreach ($triples as $triple) {
+            /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
+            $this->connector->addTriple(
+                $graphIri,
+                $triple
+            );
+        }
     }
 
     /**
@@ -96,7 +123,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function deleteMatchingStatements($modelIri, $subject, $predicate, $object, array $options = array())
     {
-        // TODO: Implement deleteMatchingStatements() method.
+        $this->connector->deleteMatchingTriples(
+            $modelIri,
+            new Erfurt_Store_Adapter_Sparql_TriplePattern($subject, $predicate, $object)
+        );
     }
 
     /**
@@ -107,7 +137,11 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function deleteMultipleStatements($graphIri, array $statementsArray)
     {
-        // TODO: Implement deleteMultipleStatements() method.
+        $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($statementsArray);
+        foreach ($triples as $triple) {
+            /* @var $triple \Erfurt_Store_Adapter_Sparql_Triple */
+            $this->connector->deleteMatchingTriples($graphIri, $triple);
+        }
     }
 
     /**
@@ -122,7 +156,17 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function sparqlQuery($query, $options = array())
     {
-        // TODO: Implement sparqlQuery() method.
+        try {
+            $extendedResult = $this->connector->query($query);
+            $format         = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
+            return $this->formatResultSet($extendedResult, $this->determineResultFormat($format, $query));
+        } catch (Exception $e) {
+            if (!($e instanceof Erfurt_Exception)) {
+                // Normalize the exception.
+                throw new Erfurt_Exception($e->getMessage(), 0, $e);
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -133,7 +177,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function sparqlAsk($query)
     {
-        // TODO: Implement sparqlAsk() method.
+        return $this->sparqlQuery($query, array(Erfurt_Store::RESULTFORMAT => 'scalar'));
     }
 
     /**
@@ -145,7 +189,13 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
-        // TODO: Implement createModel() method.
+        if (!in_array($graphUri, $this->currentlyCreatedGraphs)) {
+            $this->currentlyCreatedGraphs[] = $graphUri;
+        }
+        if ($type === Erfurt_Store::MODEL_TYPE_OWL) {
+            $this->addStatement($graphUri, $graphUri, EF_RDF_TYPE, array('type' => 'uri', 'value' => EF_OWL_ONTOLOGY));
+        }
+        return true;
     }
 
     /**
@@ -155,7 +205,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function deleteModel($modelIri)
     {
-        // TODO: Implement deleteModel() method.
+        if (($index = array_search($modelIri, $this->currentlyCreatedGraphs)) !== false) {
+            unset($this->currentlyCreatedGraphs[$index]);
+        }
+        $this->deleteMatchingStatements($modelIri, null, null, null);
     }
 
     /**
@@ -164,7 +217,21 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function getAvailableModels()
     {
-        // TODO: Implement getAvailableModels() method.
+        $sparqlQuery = 'SELECT DISTINCT ?graph '
+                     . 'WHERE {'
+                     . '    GRAPH ?graph {'
+                     . '        ?subject ?predicate ?object .'
+                     . '    }'
+                     . '}';
+        $result = $this->sparqlQuery($sparqlQuery);
+        if (count($result) === 0) {
+            return $this->toModelResult($this->currentlyCreatedGraphs);
+        }
+        $graphs = array_reduce($result, function (array $graphs, array $row) {
+            $graphs[] = $row['graph'];
+            return $graphs;
+        }, $this->currentlyCreatedGraphs);
+        return $this->toModelResult($graphs);
     }
 
     /**
@@ -173,7 +240,8 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function isModelAvailable($modelIri)
     {
-        // TODO: Implement isModelAvailable() method.
+        $models = $this->getAvailableModels();
+        return isset($models[$modelIri]);
     }
 
     /**
@@ -183,7 +251,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function getSupportedExportFormats()
     {
-        // TODO: Implement getSupportedExportFormats() method.
+        return array();
     }
 
     /**
@@ -199,7 +267,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = null)
     {
-        // TODO: Implement exportRdf() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -209,7 +277,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function getSupportedImportFormats()
     {
-        // TODO: Implement getSupportedImportFormats() method.
+        return array();
     }
 
     /**
@@ -231,7 +299,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function importRdf($modelIri, $data, $type, $locator)
     {
-        // TODO: Implement importRdf() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
     }
 
     /**
@@ -241,7 +309,86 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function getBlankNodePrefix()
     {
-        // TODO: Implement getBlankNodePrefix() method.
+        throw new BadMethodCallException(__FUNCTION__ . ' is not implemented yet.');
+    }
+
+    /**
+     * Determines the result format, depending on requested format and query type.
+     *
+     * @param string|null $requestedFormat
+     * @param string $query The SPARQL query.
+     * @return string The result format.
+     */
+    protected function determineResultFormat($requestedFormat, $query)
+    {
+        if ($requestedFormat === null) {
+            return $this->isAskQuery($query) ? 'scalar' : Erfurt_Store::RESULTFORMAT_PLAIN;
+        }
+        return $requestedFormat;
+    }
+
+    /**
+     * Checks if the provided SPARQL query is an ASK query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isAskQuery($query)
+    {
+        if (strpos($query, 'ASK') === false) {
+            // Query does not even contain the ASK keyword, no further
+            // detection required.
+            return false;
+        }
+        $parser = new Erfurt_Sparql_Parser();
+        $info   = $parser->parse($query);
+        return $info->getResultForm() === 'ask';
+    }
+
+    /**
+     * Returns the converter that must be used to create the given result format.
+     *
+     * @param string $format
+     * @return \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     * @throws Erfurt_Exception If the result format is not supported.
+     */
+    protected function getConverterFor($format)
+    {
+        switch ($format) {
+            case Erfurt_Store::RESULTFORMAT_EXTENDED:
+                // Extended is the default format.
+                return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
+            case Erfurt_Store::RESULTFORMAT_XML:
+                return new Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml();
+            case 'json':
+                return new Erfurt_Store_Adapter_ResultConverter_ToJsonConverter();
+            case Erfurt_Store::RESULTFORMAT_PLAIN:
+                // TODO Extended to plain
+                return new Erfurt_Store_Adapter_ResultConverter_NullConverter();
+            case 'scalar':
+                // TODO: scalar
+                return new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+                    new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                    new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
+                ));
+        }
+        $message = 'The result format "%s" is not supported by adapter %s.';
+        $message = sprintf($message, $format, get_class($this));
+        throw new Erfurt_Exception($message);
+    }
+
+    /**
+     * Normalizes the provided result set, which means that keys
+     * are normalized and that unnecessary elements are removed.
+     *
+     * @param array(string=>string) $results
+     * @param string $format One of the Erfurt_Store::RESULTFORMAT_* constants or an adapter specific format string.
+     * @return array(string=>string)
+     */
+    protected function formatResultSet($results, $format)
+    {
+        $converter = $this->getConverterFor($format);
+        return $converter->convert($results);
     }
 
 }
