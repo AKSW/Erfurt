@@ -7,7 +7,7 @@
  * @since 11.01.14
  * @group Oracle
  */
-class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTestCase
+class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -18,12 +18,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     protected $adapter = null;
 
     /**
+     * Test helper that is used to set up the environment.
+     *
+     * @var \Erfurt_OracleTestHelper
+     */
+    protected $helper = null;
+
+    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($this->connection);
+        $this->helper  = new Erfurt_OracleTestHelper();
+        $this->adapter = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($this->helper->getConnection());
     }
 
     /**
@@ -32,6 +40,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
     protected function tearDown()
     {
         $this->adapter = null;
+        $this->helper->cleanUp();
         parent::tearDown();
     }
 
@@ -146,7 +155,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
         $id = $this->adapter->lastInsertId();
 
         $this->assertInternalType('integer', $id);
-        $statement = $this->connection->prepare('SELECT * FROM test_id WHERE id=:id');
+        $statement = $this->helper->getConnection()->prepare('SELECT * FROM test_id WHERE id=:id');
         $statement->execute(array('id' => $id));
         $rows = $statement->fetchAll();
         $this->assertCount(1, $rows);
@@ -471,7 +480,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSqlAdapterTest extends \Erfurt_OracleTes
      */
     protected function assertTableExists($name)
     {
-        $names = $this->connection->getSchemaManager()->listTableNames();
+        $names = $this->helper->getConnection()->getSchemaManager()->listTableNames();
         $this->assertContains(strtoupper($name), $names);
     }
 

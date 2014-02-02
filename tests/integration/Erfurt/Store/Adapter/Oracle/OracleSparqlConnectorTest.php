@@ -6,7 +6,7 @@
  * @since 02.02.14
  * @group Oracle
  */
-class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_OracleTestCase
+class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -17,11 +17,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     protected $connector = null;
 
     /**
-     * Helper object that is used to set up and clean the database.
+     * Test helper that is used to set up the environment.
      *
-     * @var \Erfurt_Store_Adapter_Oracle_Setup::__construct
+     * @var \Erfurt_OracleTestHelper
      */
-    protected $setup = null;
+    protected $helper = null;
 
     /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
@@ -29,9 +29,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     protected function setUp()
     {
         parent::setUp();
-        $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->connection);
-        $this->installTripleStore($this->setup);
-        $this->connector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->connection);
+        $this->helper = new \Erfurt_OracleTestHelper();
+        $this->helper->installTripleStore();
+        $this->connector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->helper->getConnection());
     }
 
     /**
@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     protected function tearDown()
     {
         $this->connector = null;
-        $this->uninstallTripleStore($this->setup);
+        $this->helper->cleanUp();
         parent::tearDown();
     }
 
@@ -1173,7 +1173,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
     protected function countTriples()
     {
         $query = 'SELECT COUNT(*) AS NUMBER_OF_TRIPLES FROM erfurt_semantic_data';
-        $result = $this->connection->query($query);
+        $result = $this->helper->getConnection()->query($query);
         $rows = $result->fetchAll();
         return (int)$rows[0]['NUMBER_OF_TRIPLES'];
     }
