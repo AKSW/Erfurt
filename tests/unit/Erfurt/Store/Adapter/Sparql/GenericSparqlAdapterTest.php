@@ -405,7 +405,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      * Checks if deleteMultipleStatements() creates a delete request for each triple and
      * delegates them to the connector.
      */
-    public function testDeleteMultipleStatementsRemovesCreatesDeleteRequestForEachTriple()
+    public function testDeleteMultipleStatementsCreatesDeleteRequestForEachTriple()
     {
         $tripleDefinition = array(
             'http://example.org/subject1' => array(
@@ -438,7 +438,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
 
         $triples = new Erfurt_Store_Adapter_Sparql_TripleIterator($tripleDefinition);
         $this->connector->expects($this->exactly(iterator_count($triples)))
-                        ->method('deleteMatchingStatements')
+                        ->method('deleteMatchingTriples')
                         ->with('http://example.org/graph/will-be-deleted');
 
         $this->adapter->deleteMultipleStatements('http://example.org/graph/will-be-deleted', $tripleDefinition);
