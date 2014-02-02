@@ -617,8 +617,10 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
         foreach ($graphs as $graph) {
             /* @var $graph string */
             $result['results']['bindings'][] = array(
-                'type'  => 'uri',
-                'value' => $graph
+                'graph' => array(
+                    'type'  => 'uri',
+                    'value' => $graph
+                )
             );
         }
         return $result;
