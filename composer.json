@@ -18,6 +18,9 @@
         "symfony/config": "~2.3.0",
         "soundintheory/php-sql-parser": "~1.0.0"
     },
+    "require-dev": {
+        "athletic/athletic": "0.1.7"
+    },
     "suggest": {
         "ext-oci8": "To use the Oracle Triple Store."
     },
