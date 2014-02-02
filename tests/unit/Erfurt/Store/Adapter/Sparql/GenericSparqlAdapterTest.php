@@ -29,7 +29,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
     protected function setUp()
     {
         parent::setUp();
-        $this->connector = $this->getMock('\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface');
+        $this->connector = $this->createConnector();
         $this->adapter   = new Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter($this->connector);
     }
 
@@ -692,6 +692,23 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
                 'bindings' => array()
             )
         );
+    }
+
+    /**
+     * Creates a mocked connector that is used for testing.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function createConnector()
+    {
+        $connector = $this->getMock('\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface');
+        $batch = function ($callback) use  ($connector) {
+            return call_user_func($callback, $connector);
+        };
+        $connector->expects($this->any())
+                  ->method('batch')
+                  ->will($this->returnCallback($batch));
+        return $connector;
     }
 
 }
