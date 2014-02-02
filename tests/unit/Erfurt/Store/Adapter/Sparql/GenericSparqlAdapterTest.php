@@ -525,7 +525,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
     protected function assertDeletion($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
         $this->connector->expects($this->atLeastOnce())
-                        ->method('deleteMatchingStatements')
+                        ->method('deleteMatchingTriples')
                         ->with($graphIri, $pattern)
                         ->will($this->returnValue(42));
     }
