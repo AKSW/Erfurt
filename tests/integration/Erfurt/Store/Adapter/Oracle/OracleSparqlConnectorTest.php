@@ -271,7 +271,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
         $query  = 'SELECT ?subject FROM <http://example.org/~\'test> '
                 . 'WHERE { ?subject ?predicate "test"@en . }';
 
-        $this->setExpectedException('Erfurt_Exception');
+        $this->setExpectedException('InvalidArgumentException');
         $this->connector->query($query);
     }
 
@@ -361,7 +361,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
                 . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
         $result = $this->connector->query($query);
 
-        $this->assertExtendedResultStructure($result);
+        $this->assertNumberOfRows(1, $result);
         $value = current(current($result['results']['bindings']));
         $this->assertEquals($object['value'], $value['value']);
     }
@@ -446,7 +446,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
 
         $this->assertNumberOfRows(1, $result);
         $this->assertContains('camelCasedObject', $result['head']['vars']);
-        $this->assertContains('camelCasedObject', array_keys(current($result['results']['bindings'])));
+        $this->assertContains('camelCasedObject', array_keys(current(current($result['results']['bindings']))));
     }
 
     /**
@@ -890,7 +890,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
                . '}';
         $result = $this->connector->query($query);
 
-        $this->assertExtendedResultStructure($result);
+        $this->assertNumberOfRows(1, $result);
         $row   = current($result['results']['bindings']);
         $value = current($row);
         $this->assertEquals($literal, $value['value']);
@@ -921,7 +921,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
                . '}';
         $result = $this->connector->query($query);
 
-        $this->assertExtendedResultStructure($result);
+        $this->assertNumberOfRows(1, $result);
         $row   = current($result['results']['bindings']);
         $value = current($row);
         $this->assertEquals($literal, $value['value']);
@@ -952,7 +952,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
                . '}';
         $result = $this->connector->query($query);
 
-        $this->assertExtendedResultStructure($result);
+        $this->assertNumberOfRows(1, $result);
         $row   = current($result['results']['bindings']);
         $value = current($row);
         $this->assertEquals($literal, $value['value']);
@@ -983,7 +983,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \Erfurt_Orac
                . '}';
         $result = $this->connector->query($query);
 
-        $this->assertExtendedResultStructure($result);
+        $this->assertNumberOfRows(1, $result);
         $row = current($result['results']['bindings']);
         $this->assertArrayHasKey('object', $row);
         $this->assertArrayHasKey('dataType', $row);
