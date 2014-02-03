@@ -38,7 +38,7 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
     }
 
     /**
-     * Executes a query that loads the whole store data.
+     * Executes a query that loads 100 rows from the store.
      *
      * @Iterations 200
      */
@@ -48,7 +48,7 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
     }
 
     /**
-     * Executes a query that loads the whole store data.
+     * Executes a query that loads 500 rows from the store.
      *
      * @Iterations 200
      */
@@ -58,7 +58,7 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
     }
 
     /**
-     * Executes a query that loads the whole store data.
+     * Executes a query that loads 1000 rows from the store.
      *
      * @Iterations 200
      */
@@ -77,8 +77,8 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
         $query = 'SELECT ?person ?name '
                . 'FROM <http://example.org/performance> '
                . 'WHERE { '
-               . '    ?person <http://xmlns.com/foaf/0.1/name> ?name'
-               . '}'
+               . '    ?person <http://xmlns.com/foaf/0.1/name> ?name . '
+               . '} '
                . 'LIMIT ' . $limit;
         $this->connector->query($query);
     }
