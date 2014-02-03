@@ -1,6 +1,6 @@
 <?php
 
-use Athletic\AthleticEvent;
+use Faker\Generator;
 
 /**
  * Checks the performance when loading many (small) rows via SPARQL connector.
@@ -8,7 +8,7 @@ use Athletic\AthleticEvent;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 02.02.14
  */
-class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends AthleticEvent
+class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent
 {
 
     /**
@@ -17,46 +17,12 @@ class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends AthleticEvent
     const NUMBER_OF_TRIPLES = 1000;
 
     /**
-     * System under test.
-     *
-     * @var \Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
-     */
-    protected $connector = null;
-
-    /**
-     * Test helper that is used to set up the environment.
-     *
-     * @var \Erfurt_OracleTestHelper
-     */
-    protected $helper = null;
-
-    /**
-     * Sets up the environment.
-     */
-    protected function classSetUp()
-    {
-        $this->helper = new \Erfurt_OracleTestHelper();
-        $this->helper->installTripleStore();
-        $this->connector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->helper->getConnection());
-        $this->populateStore();
-    }
-
-    /**
-     * Cleans up the environment.
-     */
-    protected function classTearDown()
-    {
-        $this->connector = null;
-        $this->helper->cleanUp();
-    }
-
-    /**
      * Populates the store with triples.
+     *
+     * @param \Faker\Generator $faker
      */
-    protected function populateStore()
+    protected function populateStore(Generator $faker)
     {
-        $faker = \Faker\Factory::create('en');
-        $faker->seed(static::NUMBER_OF_TRIPLES);
         $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($faker) {
             for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent::NUMBER_OF_TRIPLES; $i++) {
                 $triple = new Erfurt_Store_Adapter_Sparql_Triple(
