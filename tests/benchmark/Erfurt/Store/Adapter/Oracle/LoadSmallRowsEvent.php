@@ -24,7 +24,7 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
      */
     public function populateStore(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector, Generator $faker)
     {
-        for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent::NUMBER_OF_TRIPLES; $i++) {
+        for ($i = 0; $i < static::NUMBER_OF_TRIPLES; $i++) {
             $triple = new Erfurt_Store_Adapter_Sparql_Triple(
                 'http://example.org/person/' . $faker->uuid,
                 'http://xmlns.com/foaf/0.1/name',
@@ -75,11 +75,11 @@ class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapte
     protected function load($limit)
     {
         $query = 'SELECT ?person ?name '
-            . 'FROM <http://example.org/performance> '
-            . 'WHERE { '
-            . '    ?person <http://xmlns.com/foaf/0.1/name> ?name'
-            . '}'
-            . 'LIMIT ' . $limit;
+               . 'FROM <http://example.org/performance> '
+               . 'WHERE { '
+               . '    ?person <http://xmlns.com/foaf/0.1/name> ?name'
+               . '}'
+               . 'LIMIT ' . $limit;
         $this->connector->query($query);
     }
 
