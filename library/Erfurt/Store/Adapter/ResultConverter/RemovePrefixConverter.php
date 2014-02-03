@@ -40,17 +40,26 @@ class  Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter
             $message = 'Expected array for conversion.';
             throw new Erfurt_Store_Adapter_ResultConverter_Exception($message);
         }
-        foreach ($resultSet as $index => $row) {
-            /* @var $row array(string=>string) */
-            foreach ($row as $name => $value) {
-                if ($this->startsWithPrefix($name)) {
-                    $withoutPrefix = substr($name, strlen($this->prefix));
-                    $resultSet[$index][$withoutPrefix] = $value;
-                    unset($resultSet[$index][$name]);
-                }
+        return array_map(array($this, 'removePrefixFromKeys'), $resultSet);
+    }
+
+    /**
+     * Removes the prefix from the keys in the given array.
+     *
+     * @param array(string=>mixed) $row
+     * @return array(string=>mixed)
+     */
+    protected function removePrefixFromKeys(array $row)
+    {
+        foreach (array_keys($row) as $key) {
+            /* @var $key string */
+            if ($this->startsWithPrefix($key)) {
+                $withoutPrefix = substr($key, strlen($this->prefix));
+                $row[$withoutPrefix] = $row[$key];
+                unset($row[$key]);
             }
         }
-        return $resultSet;
+        return $row;
     }
 
     /**
