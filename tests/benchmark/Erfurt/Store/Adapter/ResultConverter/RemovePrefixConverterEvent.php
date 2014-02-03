@@ -12,9 +12,14 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterEvent  extends A
 {
 
     /**
-     * Number of rows in the data sets that are used for testing.
+     * Number of rows in the small data sets that are used for testing.
      */
-    const DATA_SET_SIZE = 200;
+    const SMALL_DATA_SET_SIZE = 100;
+
+    /**
+     * Number of rows in the large data sets that are used for testing.
+     */
+    const LARGE_DATA_SET_SIZE = 500;
 
     /**
      * System under test.
@@ -49,33 +54,73 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterEvent  extends A
     }
 
     /**
-     * Converts a data set that does not contain prefixed variables.
+     * Converts a small data set that does not contain prefixed variables.
      *
-     * @Iterations 500
+     * @Iterations 200
      */
-    public function convertDataSetWithoutPrefixes()
+    public function convertSmallDataSetWithoutPrefixes()
     {
-        $this->converter->convert($this->dataSets['noPrefixes']);
+        $this->convertDataSet('smallWithoutPrefixes');
     }
 
     /**
-     * Converts a data set that contains some (50%) prefixed variables.
+     * Converts a large data set that does not contain prefixed variables.
      *
-     * @Iterations 500
+     * @Iterations 200
      */
-    public function convertDataSetWithSomePrefixes()
+    public function convertLargeDataSetWithoutPrefixes()
     {
-        $this->converter->convert($this->dataSets['somePrefixes']);
+        $this->convertDataSet('largeWithoutPrefixes');
     }
 
     /**
-     * Converts a data set that contains only prefixed variables.
+     * Converts a small data set that contains some (50%) prefixed variables.
      *
-     * @Iterations 500
+     * @Iterations 200
      */
-    public function convertDataSetWithOnlyPrefixes()
+    public function convertSmallDataSetWithSomePrefixes()
     {
-        $this->converter->convert($this->dataSets['onlyPrefixes']);
+        $this->convertDataSet('smallWithSomePrefixes');
+    }
+
+    /**
+     * Converts a large data set that contains some (50%) prefixed variables.
+     *
+     * @Iterations 200
+     */
+    public function convertLargeDataSetWithSomePrefixes()
+    {
+        $this->convertDataSet('largeWithSomePrefixes');
+    }
+
+    /**
+     * Converts a small data set that contains only prefixed variables.
+     *
+     * @Iterations 200
+     */
+    public function convertSmallDataSetWithOnlyPrefixes()
+    {
+        $this->convertDataSet('smallWithPrefixes');
+    }
+
+    /**
+     * Converts a large data set that contains only prefixed variables.
+     *
+     * @Iterations 200
+     */
+    public function convertLargeDataSetWithOnlyPrefixes()
+    {
+        $this->convertDataSet('largeWithPrefixes');
+    }
+
+    /**
+     * Converts the data set with the provided name.
+     *
+     * @param string $name
+     */
+    protected function convertDataSet($name)
+    {
+        $this->converter->convert($this->dataSets[$name]);
     }
 
     /**
@@ -88,31 +133,35 @@ class Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverterEvent  extends A
 
         // Generate some variable names.
         $variables = array($faker->uuid, $faker->uuid, $faker->uuid, $faker->uuid, $faker->uuid, $faker->uuid);
-        $this->dataSets['noPrefixes'] = $this->createDataSet($variables);
+        $this->dataSets['smallWithoutPrefixes'] = $this->createDataSet($variables, static::SMALL_DATA_SET_SIZE);
+        $this->dataSets['largeWithoutPrefixes'] = $this->createDataSet($variables, static::LARGE_DATA_SET_SIZE);
 
         $somePrefixedVariables = array_map(function ($variable, $index) {
             return (($index % 2) === 0) ? 'prefix_' . $variable : $variable;
         },$variables, array_keys($variables));
-        $this->dataSets['somePrefixes'] = $this->createDataSet($somePrefixedVariables);
+        $this->dataSets['smallWithSomePrefixes'] = $this->createDataSet($somePrefixedVariables, static::SMALL_DATA_SET_SIZE);
+        $this->dataSets['largeWithSomePrefixes'] = $this->createDataSet($somePrefixedVariables, static::LARGE_DATA_SET_SIZE);
 
         $prefixedVariables = array_map(function ($variable) {
             return 'prefix_' . $variable;
         }, $variables);
-        $this->dataSets['onlyPrefixes'] = $this->createDataSet($prefixedVariables);
+        $this->dataSets['smallWithPrefixes'] = $this->createDataSet($prefixedVariables, static::SMALL_DATA_SET_SIZE);
+        $this->dataSets['largeWithPrefixes'] = $this->createDataSet($prefixedVariables, static::LARGE_DATA_SET_SIZE);
     }
 
     /**
      * Creates a data set that uses the provided row variable names.
      *
      * @param array(string) $variables
+     * @param integer $numberOfItems Number of records in the data set.
      * @return array(array(string=>string))
      */
-    protected function createDataSet(array $variables)
+    protected function createDataSet(array $variables, $numberOfItems)
     {
         $faker = \Faker\Factory::create('en');
         $faker->seed(0);
         $dataSet = array();
-        for ($i = 0; $i < static::DATA_SET_SIZE; $i++) {
+        for ($i = 0; $i < $numberOfItems; $i++) {
             $dataSet[$i] = array();
             foreach ($variables as $variable) {
                 /* @var $variable string */
