@@ -58,6 +58,16 @@ abstract class Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent extend
     }
 
     /**
+     * Re-initializes the faker to ensure that the same values
+     * are generated in each iteration.
+     */
+    protected function setUp()
+    {
+        $this->faker->seed(0);
+    }
+
+
+    /**
      * Method that can be overridden to populate the store with triples.
      *
      * The triples will be automatically added in batch mode.
