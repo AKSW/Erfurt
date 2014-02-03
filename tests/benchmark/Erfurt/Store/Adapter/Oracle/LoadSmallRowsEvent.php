@@ -8,7 +8,7 @@ use Faker\Generator;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 02.02.14
  */
-class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent
+class Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent extends Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent
 {
 
     /**
@@ -24,7 +24,7 @@ class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends Erfurt_Store_A
      */
     public function populateStore(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector, Generator $faker)
     {
-        for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent::NUMBER_OF_TRIPLES; $i++) {
+        for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadSmallRowsEvent::NUMBER_OF_TRIPLES; $i++) {
             $triple = new Erfurt_Store_Adapter_Sparql_Triple(
                 'http://example.org/person/' . $faker->uuid,
                 'http://xmlns.com/foaf/0.1/name',
@@ -42,14 +42,44 @@ class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends Erfurt_Store_A
      *
      * @Iterations 200
      */
-    public function queryManySmallRows()
+    public function load100Rows()
+    {
+        $this->load(100);
+    }
+
+    /**
+     * Executes a query that loads the whole store data.
+     *
+     * @Iterations 200
+     */
+    public function load500Rows()
+    {
+        $this->load(500);
+    }
+
+    /**
+     * Executes a query that loads the whole store data.
+     *
+     * @Iterations 200
+     */
+    public function load1000Rows()
+    {
+        $this->load(1000);
+    }
+
+    /**
+     * Queries $limit rows from the store.
+     *
+     * @param integer $limit
+     */
+    protected function load($limit)
     {
         $query = 'SELECT ?person ?name '
-               . 'FROM <http://example.org/performance> '
-               . 'WHERE { '
-               . '    ?person <http://xmlns.com/foaf/0.1/name> ?name'
-               . '}'
-               . 'LIMIT ' . static::NUMBER_OF_TRIPLES;
+            . 'FROM <http://example.org/performance> '
+            . 'WHERE { '
+            . '    ?person <http://xmlns.com/foaf/0.1/name> ?name'
+            . '}'
+            . 'LIMIT ' . $limit;
         $this->connector->query($query);
     }
 
