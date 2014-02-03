@@ -25,7 +25,7 @@ class Erfurt_Store_Adapter_Oracle_AddTriplesEvent extends Erfurt_Store_Adapter_O
     /**
      * Inserts 1000 triples via independent addTriple() calls.
      *
-     * @Iterations 10
+     * @Iterations 20
      */
     public function testInsert1000TriplesViaSingleInsert()
     {
@@ -45,7 +45,7 @@ class Erfurt_Store_Adapter_Oracle_AddTriplesEvent extends Erfurt_Store_Adapter_O
     /**
      * Inserts 1000 triples in a batch.
      *
-     * @Iterations 10
+     * @Iterations 20
      */
     public function testInsert1000TriplesAsBatch()
     {
@@ -68,7 +68,7 @@ class Erfurt_Store_Adapter_Oracle_AddTriplesEvent extends Erfurt_Store_Adapter_O
     /**
      * Inserts 1000 triples in 10 batches, 100 triples each.
      *
-     * @Iterations 10
+     * @Iterations 20
      */
     public function testInsert1000TriplesInChunksOf100()
     {
