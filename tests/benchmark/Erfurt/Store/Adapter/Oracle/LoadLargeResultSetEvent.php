@@ -19,23 +19,22 @@ class Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent extends Erfurt_Store_A
     /**
      * Populates the store with triples.
      *
+     * @param \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
      * @param \Faker\Generator $faker
      */
-    protected function populateStore(Generator $faker)
+    public function populateStore(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector, Generator $faker)
     {
-        $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($faker) {
-            for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent::NUMBER_OF_TRIPLES; $i++) {
-                $triple = new Erfurt_Store_Adapter_Sparql_Triple(
-                    'http://example.org/person/' . $faker->uuid,
-                    'http://xmlns.com/foaf/0.1/name',
-                    array(
-                        'type'  => 'literal',
-                        'value' => $faker->name
-                    )
-                );
-                $connector->addTriple('http://example.org/performance', $triple);
-            }
-        });
+        for ($i = 0; $i < Erfurt_Store_Adapter_Oracle_LoadLargeResultSetEvent::NUMBER_OF_TRIPLES; $i++) {
+            $triple = new Erfurt_Store_Adapter_Sparql_Triple(
+                'http://example.org/person/' . $faker->uuid,
+                'http://xmlns.com/foaf/0.1/name',
+                array(
+                    'type'  => 'literal',
+                    'value' => $faker->name
+                )
+            );
+            $connector->addTriple('http://example.org/performance', $triple);
+        }
     }
 
     /**

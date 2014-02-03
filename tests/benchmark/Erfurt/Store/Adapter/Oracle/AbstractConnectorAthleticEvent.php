@@ -45,6 +45,7 @@ abstract class Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent extend
         $this->helper = new \Erfurt_OracleTestHelper();
         $this->helper->installTripleStore();
         $this->connector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->helper->getConnection());
+        $this->populateStoreAsBatch();
     }
 
     /**
@@ -59,10 +60,26 @@ abstract class Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent extend
     /**
      * Method that can be overridden to populate the store with triples.
      *
+     * The triples will be automatically added in batch mode.
+     *
+     * @param \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
      * @param \Faker\Generator $faker
      */
-    protected function populateStore(Generator $faker)
+    public function populateStore(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector, Generator $faker)
     {
+    }
+
+    /**
+     * Populates the store in batch mode.
+     */
+    protected function populateStoreAsBatch()
+    {
+        $faker = $this->faker;
+        $event = $this;
+        $import = function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($faker, $event) {
+            $event->populateStore($connector, $faker);
+        };
+        $this->connector->batch($import);
     }
 
 }
