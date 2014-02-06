@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Oracle_RegexFilterEvent extends Erfurt_Store_Adapter_
     /**
      * Executes a SPARQL query with 1 REGEX filter.
      *
-     * @Iterations 20
+     * @Iterations 50
      */
     public function queryWith1RegexFilter()
     {
@@ -50,7 +50,7 @@ class Erfurt_Store_Adapter_Oracle_RegexFilterEvent extends Erfurt_Store_Adapter_
     /**
      * Executes a SPARQL query with 2 REGEX filters.
      *
-     * @Iterations 20
+     * @Iterations 50
      */
     public function queryWith2RegexFilters()
     {
@@ -60,7 +60,7 @@ class Erfurt_Store_Adapter_Oracle_RegexFilterEvent extends Erfurt_Store_Adapter_
     /**
      * Executes a SPARQL query with 4 REGEX filters.
      *
-     * @Iterations 20
+     * @Iterations 50
      */
     public function queryWith4RegexFilters()
     {
@@ -70,7 +70,7 @@ class Erfurt_Store_Adapter_Oracle_RegexFilterEvent extends Erfurt_Store_Adapter_
     /**
      * Executes a SPARQL query with 6 REGEX filters.
      *
-     * @Iterations 20
+     * @Iterations 50
      */
     public function queryWith6RegexFilters()
     {
