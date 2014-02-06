@@ -78,6 +78,16 @@ class Erfurt_Store_Adapter_Oracle_RegexFilterEvent extends Erfurt_Store_Adapter_
     }
 
     /**
+     * Executes a SPARQL query with 10 REGEX filters.
+     *
+     * @Iterations 50
+     */
+    public function queryWith10RegexFilters()
+    {
+        $this->query(10);
+    }
+
+    /**
      * Executes a SPARQL query that uses the provided number of REGEX filters.
      *
      * @param integer $numberOfFilters
