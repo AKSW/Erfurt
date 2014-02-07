@@ -795,14 +795,13 @@ EOF;
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
-        if (strpbrk($stringSpec, '\'') === false) {
-            $parts = explode(' ', $stringSpec);
+        if ((strpbrk($stringSpec, 'AND') === false) &&
+            (strpbrk($stringSpec, 'OR') === false) &&
+            (strpbrk($stringSpec, 'NEAR') === false)) {
+            preg_match_all("/(?:[^\s']+|'[^']*')+/", $stringSpec, $matches);
+            $parts = array_map(function($match) { return trim($match, "'"); }, $matches[0]);
             $stringSpec = '';
-            foreach ($parts as $word) {
-                $stringSpec.= '\'' . $word . '\' AND ';
-            }
-            // Remove the last AND (including whitespace)
-            $stringSpec = substr($stringSpec, 0, strlen($stringSpec)-5);
+            $stringSpec = '\'' . implode($parts, '\' AND \'') . '\'';
         }
 
         $options = array_merge(
