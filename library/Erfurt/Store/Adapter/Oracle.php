@@ -39,7 +39,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      * Creates a database connection that can be used by the adapter.
      *
      * @param array(string=>string) $params
-     * @return @return \Doctrine\DBAL\Connection
+     * @return \Doctrine\DBAL\Connection
      */
     public static function createConnection(array $params)
     {
