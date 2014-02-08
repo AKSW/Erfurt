@@ -1,6 +1,8 @@
 <?php
 
+use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Event\Listeners\OracleSessionInit;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -55,7 +57,12 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
         }
         $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
         $connectionParams = $params + $additionalParams;
-        return DriverManager::getConnection($connectionParams);
+        $eventManager = new EventManager();
+        if (isset($params['session'])) {
+            $eventManager->addEventSubscriber(new OracleSessionInit($params['session']));
+            unset($params['session']);
+        }
+        return DriverManager::getConnection($connectionParams, null, $eventManager);
 
     }
 

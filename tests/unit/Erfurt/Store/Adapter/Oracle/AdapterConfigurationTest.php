@@ -216,13 +216,63 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
                 'dbname'   => 'orcl',
                 'user'     => 'unknown',
                 'password' => 'secret',
-                'host'     => 'not-important-in-this-test.local',
+                'host'     => 'not-important-in-this-test.local'
             ),
             'username' => 'super',
             'password' => 'admin'
         );
 
         $this->assertConfigurationAccepted($options);
+    }
+
+    /**
+     * Checks if the configuration accepts session parameters.
+     */
+    public function testConfigurationAcceptsSessionParameters()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'session'  => array(
+                    'test' => 'hello'
+                )
+            ),
+            'username' => 'super',
+            'password' => 'admin'
+        );
+
+        $this->assertConfigurationAccepted($options);
+    }
+
+    /**
+     * Ensures that a processed configuration contains session parameters
+     * that have been passed.
+     */
+    public function testConfigurationReturnsSessionParameters()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'session'  => array(
+                    'test' => 'hello'
+                )
+            ),
+            'username' => 'super',
+            'password' => 'admin'
+        );
+
+        $processed = $this->processOptions($options);
+
+        $this->assertInternalType('array', $processed['connection']['session']);
+        $this->assertArrayHasKey('test', $processed['connection']['session']);
+        $this->assertEquals('hello', $processed['connection']['session']['test']);
+
     }
 
     /**
