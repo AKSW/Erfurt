@@ -23,8 +23,8 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
     public function populateStore(\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector, Generator $faker)
     {
         $path = __DIR__ . '/_files/aksw.rdf';
-        $parser     = Erfurt_Syntax_RdfParser::rdfParserWithFormat('rdf');
-        $statements = $parser->parse($path, Erfurt_Syntax_RdfParser::LOCATOR_FILE);
+        $parser     = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
+        $statements = $parser->parseFromFilename($path);
         $triples    = new Erfurt_Store_Adapter_Sparql_TripleIterator($statements);
         foreach ($triples as $triple) {
             /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
