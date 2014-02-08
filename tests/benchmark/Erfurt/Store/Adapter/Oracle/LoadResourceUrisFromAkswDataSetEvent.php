@@ -3,7 +3,9 @@
 use Faker\Generator;
 
 /**
- * Checks the performance of the query  {@link https://github.com/Matthimatiker/Erfurt/issues/31}
+ * Checks the performance of the query that selects the resource URIs from the AKSW data set.
+ *
+ * The problems with this query are documented at {@link https://github.com/Matthimatiker/Erfurt/issues/31}.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 08.02.14
