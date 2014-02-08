@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Oracle_OrderByEvent extends Erfurt_Store_Adapter_Orac
     /**
      * Retrieves the result set in any order.
      *
-     * @Iterations 200
+     * @Iterations 100
      */
     public function notSorted()
     {
@@ -50,7 +50,7 @@ class Erfurt_Store_Adapter_Oracle_OrderByEvent extends Erfurt_Store_Adapter_Orac
     /**
      * Retrieves the result set that is sorted in ascending order by object.
      *
-     * @Iterations 200
+     * @Iterations 100
      */
     public function orderedAscendingByObject()
     {
@@ -60,7 +60,7 @@ class Erfurt_Store_Adapter_Oracle_OrderByEvent extends Erfurt_Store_Adapter_Orac
     /**
      * Retrieves the result set that is sorted in descending order by object.
      *
-     * @Iterations 200
+     * @Iterations 100
      */
     public function orderedDescendingByObject()
     {
@@ -70,7 +70,7 @@ class Erfurt_Store_Adapter_Oracle_OrderByEvent extends Erfurt_Store_Adapter_Orac
     /**
      * Retrieves the result set that is sorted in ascending order by subject.
      *
-     * @Iterations 200
+     * @Iterations 100
      */
     public function orderedAscendingBySubject()
     {
@@ -80,7 +80,7 @@ class Erfurt_Store_Adapter_Oracle_OrderByEvent extends Erfurt_Store_Adapter_Orac
     /**
      * Retrieves the result set that is sorted in descending order by subject.
      *
-     * @Iterations 200
+     * @Iterations 100
      */
     public function orderedDescendingBySubject()
     {
