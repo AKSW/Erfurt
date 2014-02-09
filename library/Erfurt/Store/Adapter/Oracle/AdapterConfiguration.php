@@ -13,6 +13,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationInterface
 {
+
     /**
      * Generates the configuration tree builder.
      *
@@ -20,82 +21,12 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
      */
     public function getConfigTreeBuilder()
     {
+        $connectionConfig = new Erfurt_Store_Adapter_Oracle_ConnectionConfiguration();
         $builder = new TreeBuilder();
         $root = $builder->root('oracle');
         $root
             ->children()
-                ->arrayNode('connection')
-                    ->isRequired()
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('dbname')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode('user')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode('password')
-                            ->isRequired()
-                        ->end()
-                        ->scalarNode('host')
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->integerNode('port')
-                            ->beforeNormalization()
-                                ->ifString()
-                                ->then(function($value) {
-                                    return is_numeric($value) ? (int) $value : $value;
-                                })
-                            ->end()
-                            ->defaultValue(1521)
-                        ->end()
-                        ->scalarNode('charset')
-                            ->defaultValue('UTF8')
-                        ->end()
-                        ->booleanNode('persistent')
-                            ->beforeNormalization()
-                                ->ifInArray(array('0', '1', ''))
-                                ->then(function($value) {
-                                    return (bool)$value;
-                                })
-                            ->end()
-                            ->defaultFalse()
-                        ->end()
-                        // Allows the usage of pooled connections as described at
-                        // {@link http://de2.php.net/manual/de/oci8.connection.php}.
-                        ->booleanNode('pooled')
-                            ->beforeNormalization()
-                                ->ifInArray(array('0', '1', ''))
-                                ->then(function($value) {
-                                    return (bool)$value;
-                                })
-                            ->end()
-                            ->defaultFalse()
-                        ->end()
-                        // The name of the connection pool. Only shared connections from
-                        // this pool are used by the application.
-                        ->scalarNode('pool')
-                            ->defaultValue('erfurt')
-                        ->end()
-                        ->arrayNode('session')
-                            ->useAttributeAsKey('name')
-                            ->prototype('scalar')
-                                ->beforeNormalization()
-                                    ->ifString()
-                                    ->then(function($value) {
-                                        if (!is_numeric($value)) {
-                                            return $value;
-                                        }
-                                        return (ctype_digit($value)) ? (int)$value : (double)$value;
-                                    })
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($connectionConfig->getRoot()->isRequired())
                 ->booleanNode('auto_setup')
                     ->beforeNormalization()
                         ->ifInArray(array('0', '1', ''))
