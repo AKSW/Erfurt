@@ -57,11 +57,13 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
         }
         $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
         $connectionParams = $params + $additionalParams;
+
         $eventManager = new EventManager();
-        if (isset($params['session'])) {
-            $eventManager->addEventSubscriber(new OracleSessionInit($params['session']));
-            unset($params['session']);
-        }
+        $additionalSessionParams = isset($params['session']) ? $params['session'] : array();
+        unset($params['session']);
+        $initializer = new Erfurt_Store_Adapter_Oracle_Doctrine_OracleSessionInit($additionalSessionParams);
+        $eventManager->addEventSubscriber($initializer);
+
         return DriverManager::getConnection($connectionParams, null, $eventManager);
 
     }
