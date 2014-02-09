@@ -6822,7 +6822,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63 extends DFA {
         $this->transition = $DFA['transition'];
     }
     public function getDescription() {
-        return "360:1: primaryExpression returns [$value] : (v= brackettedExpression | v= builtInCall | v= iriRefOrFunction | v= rdfLiteral | v= numericLiteral | v= booleanLiteral | v= variable );";
+        return "360:1: primaryExpression returns [\$value] : (v= brackettedExpression | v= builtInCall | v= iriRefOrFunction | v= rdfLiteral | v= numericLiteral | v= booleanLiteral | v= variable );";
     }
 }
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64_static {
