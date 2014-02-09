@@ -82,7 +82,17 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                         ->end()
                         ->arrayNode('session')
                             ->useAttributeAsKey('name')
-                            ->prototype('scalar')->end()
+                            ->prototype('scalar')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function($value) {
+                                        if (!is_numeric($value)) {
+                                            return $value;
+                                        }
+                                        return (ctype_digit($value)) ? (int)$value : (double)$value;
+                                    })
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
