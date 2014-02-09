@@ -67,7 +67,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
     public function wrap($query)
     {
         $parameters = array(
-            '{{SPARQL}}' => $this->escapeSparql($query)
+            '{{SPARQL}}' => $query
         );
 
         $queryInfo = $this->parser->parse($query);
@@ -128,6 +128,9 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
                   . ') '
                   . '{{ORDER}}';
         $parameters = $parameters + $this->getDefaultParameters();
+        $parameters['{{SPARQL}}']  = $this->escapeSparql($parameters['{{SPARQL}}']);
+        $parameters['{{MODELS}}']  = $this->quote($parameters['{{MODELS}}']);
+        $parameters['{{OPTIONS}}'] = $this->quote($parameters['{{OPTIONS}}']);
         return strtr($template, $parameters);
     }
 
@@ -141,7 +144,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
         return array(
             '{{HINTS}}'      => '',
             '{{PROJECTION}}' => '*',
-            '{{MODELS}}'     => $this->quote($this->modelName),
+            '{{MODELS}}'     => $this->modelName,
             '{{OPTIONS}}'    => 'STRICT_DEFAULT=T',
             '{{ORDER}}'      => ''
         );
