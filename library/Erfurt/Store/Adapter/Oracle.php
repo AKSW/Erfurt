@@ -45,6 +45,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createConnection(array $params)
     {
+        // TODO: use configuration to normalize
         if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
             Type::addType(
                 \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
