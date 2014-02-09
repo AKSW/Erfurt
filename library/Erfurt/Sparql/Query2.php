@@ -956,7 +956,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
 
     /**
      * invoke parser
-     * @param type $queryString
+     * @param string $queryString
      * @param type $parsePartial
      * @return \Erfurt_Sparql_Query2
      * @throws Exception
