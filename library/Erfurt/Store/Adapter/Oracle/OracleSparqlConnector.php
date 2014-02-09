@@ -265,10 +265,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     protected function createSparqlStatement($sparqlQuery)
     {
-        $query = 'SELECT * '
+        $query = 'SELECT %s * '
                . 'FROM TABLE('
                . '  SEM_MATCH('
-               . '    ' . $this->escapeSparql($this->rewriteSparql($sparqlQuery)) . ','
+               . '    %s,'
                . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
                . '    NULL,'
                . '    NULL,'
@@ -280,6 +280,19 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
                . '  )'
                . ') '
                . 'ORDER BY SEM$ROWNUM';
+        $rewrittenSparqlQuery = $this->rewriteSparql($sparqlQuery);
+        $escapedSparqlQuery   = $this->escapeSparql($rewrittenSparqlQuery);
+        $hints = '';
+        if (substr_count($rewrittenSparqlQuery, 'FILTER') > 4) {
+            // Use the existence of the FILTER keyword as indicator for the
+            // number of FILTER expressions in the SPARQL query.
+            // If the query contains many filter expressions, then provide the hint
+            // to parallelize the execution. This greatly improves the performance
+            // of queries that have to check many rows, but other queries will
+            // slightly suffer, which is the reason why this hint is not used in general.
+            $hints = '/*+ PARALLEL */';
+        }
+        $query = sprintf($query, $hints, $escapedSparqlQuery);
         return $this->connection->prepare($query);
     }
 
