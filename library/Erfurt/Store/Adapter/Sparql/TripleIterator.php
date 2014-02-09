@@ -113,6 +113,9 @@ class Erfurt_Store_Adapter_Sparql_TripleIterator implements \Iterator
      */
     public function key()
     {
+        if (!$this->valid()) {
+            return null;
+        }
         return $this->subject . ':' . $this->predicate . ':' . $this->objectPosition;
     }
 
