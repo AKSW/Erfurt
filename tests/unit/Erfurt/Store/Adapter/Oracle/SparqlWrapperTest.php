@@ -160,7 +160,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
 
         $sql = $this->wrapper->wrap($query);
 
-        $this->assertNotContains('STRICT_DEFAULT=T', $sql);
+        $this->assertContains('STRICT_DEFAULT=T', $sql);
     }
 
     /**
