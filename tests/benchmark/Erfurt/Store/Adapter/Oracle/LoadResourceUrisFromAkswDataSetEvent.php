@@ -35,7 +35,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
     /**
      * Executes the query without modifications.
      *
-     * @Iterations 1
+     * @Iterations 10
      */
     public function executeQuery()
     {
@@ -65,7 +65,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
     /**
      * Executes the query with multiple REGEX filters combined into one.
      *
-     * @Iterations 1
+     * @Iterations 10
      */
     public function testExecuteQueryWithCombinedRegularExpressions()
     {
@@ -93,7 +93,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
     /**
      * Executes the query with REGEX filters moved to each part of the UNION statement.
      *
-     * @Iterations 1
+     * @Iterations 10
      */
     public function testExecuteQueryWithFiltersInUnionParts()
     {
