@@ -187,6 +187,21 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
         $this->assertContains('STRICT_DEFAULT=T', $sql);
     }
 
+    public function testWrapRequestsCorrectColumnsIfStarIsUsedAsSelector()
+    {
+
+    }
+
+    public function testWrapRequestsCorrectColumnsIfProjectionVarsAreProvided()
+    {
+
+    }
+
+    public function testWrapDoesNotRequestColumnsThatAreNotPartOfProjectionVars()
+    {
+        
+    }
+
     /**
      * Asserts that the provided SQL query contains the hint $name.
      *
