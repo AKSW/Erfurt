@@ -113,6 +113,30 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that wrap() can handle SPARQL queries with nested patterns.
+     */
+    public function testWrapCanHandleQueriesWithNestedPatterns()
+    {
+        $query = 'SELECT * WHERE { '
+               . '    { '
+               . '        ?subject ?predicate ?object . '
+               . '        FILTER (!REGEXP(?subject, "^a")) '
+               . '        FILTER (!REGEXP(?subject, "^b")) '
+               . '        FILTER (!REGEXP(?subject, "^c")) '
+               . '    } UNION { '
+               . '       ?subject ?predicate ?object . '
+               . '        FILTER (!REGEXP(?subject, "^d")) '
+               . '        FILTER (!REGEXP(?subject, "^e")) '
+               . '        FILTER (!REGEXP(?subject, "^f")) '
+               . '    } '
+               . '}';
+
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertContainsHint('PARALLEL', $sql);
+    }
+
+    /**
      * Ensures that wrap() does not add the parallelization query hint if the SPARQL query
      * does not use many FILTER expressions.
      */
