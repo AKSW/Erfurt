@@ -2,7 +2,6 @@
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Event\Listeners\OracleSessionInit;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Config\Definition\Processor;
 
