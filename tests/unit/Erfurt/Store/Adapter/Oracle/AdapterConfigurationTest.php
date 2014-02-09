@@ -272,7 +272,37 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
         $this->assertInternalType('array', $processed['connection']['session']);
         $this->assertArrayHasKey('test', $processed['connection']['session']);
         $this->assertEquals('hello', $processed['connection']['session']['test']);
+    }
 
+    /**
+     * Ensures that the configuration converts session parameters to integer if
+     * possible.
+     *
+     * This is important when *.ini files are used as these return numbers
+     * as string.
+     */
+    public function testConfigurationConvertsSessionParameterToIntegerIfPossible()
+    {
+        $options = array(
+            'connection'   => array(
+                'dbname'   => 'orcl',
+                'user'     => 'unknown',
+                'password' => 'secret',
+                'host'     => 'not-important-in-this-test.local',
+                'session'  => array(
+                    'test' => '42'
+                )
+            ),
+            'username' => 'super',
+            'password' => 'admin'
+        );
+
+        $processed = $this->processOptions($options);
+
+        $this->assertInternalType('array', $processed['connection']['session']);
+        $this->assertArrayHasKey('test', $processed['connection']['session']);
+        $this->assertInternalType('integer', $processed['connection']['session']['test']);
+        $this->assertEquals(42, $processed['connection']['session']['test']);
     }
 
     /**
