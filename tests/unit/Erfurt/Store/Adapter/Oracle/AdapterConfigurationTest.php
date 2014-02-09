@@ -272,7 +272,6 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
         $this->assertInternalType('array', $processed['connection']['session']);
         $this->assertArrayHasKey('test', $processed['connection']['session']);
         $this->assertEquals('hello', $processed['connection']['session']['test']);
-
     }
 
     /**
