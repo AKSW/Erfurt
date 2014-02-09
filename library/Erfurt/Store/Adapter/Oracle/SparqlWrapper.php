@@ -17,6 +17,13 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
     const MIN_NUMBER_OF_CONSTRAINTS_FOR_PARALLELIZATION = 5;
 
     /**
+     * The parser that is used for SPARQL query analysis.
+     *
+     * @var \Erfurt_Sparql_Parser;
+     */
+    protected $parser = null;
+
+    /**
      * The callback that is used to quote values.
      *
      * @var callable
@@ -45,6 +52,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
             $message = '$valueQuoter must be a valid callback.';
             throw new \InvalidArgumentException($message);
         }
+        $this->parser      = new Erfurt_Sparql_Parser();
         $this->modelName   = $modelName;
         $this->valueQuoter = $valueQuoter;
     }
@@ -62,9 +70,8 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
             '{{SPARQL}}' => $this->escapeSparql($query)
         );
 
-        $parser = new Erfurt_Sparql_Parser();
-        $queryInfo = $parser->parse($query);
-
+        $queryInfo = $this->parser->parse($query);
+        
         $modifiers = $queryInfo->getSolutionModifier();
         if (isset($modifiers['order by'])) {
             $parameters['{{ORDER}}'] = 'ORDER BY SEM$ROWNUM';
