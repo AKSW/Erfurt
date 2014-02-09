@@ -9,7 +9,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 25.01.14
  */
-class Erfurt_Store_Adapter_Oracle_QueryRewriter
+class Erfurt_Store_Adapter_Oracle_SparqlRewriter
 {
 
     /**

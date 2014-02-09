@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Tests the query rewriter.
+ * Tests the SPARQL query rewriter.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 25.01.14
  */
-class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Oracle_SparqlRewriterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var Erfurt_Store_Adapter_Oracle_QueryRewriter
+     * @var Erfurt_Store_Adapter_Oracle_SparqlRewriter
      */
     protected $rewriter = null;
 
@@ -22,7 +22,7 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
     protected function setUp()
     {
         parent::setUp();
-        $this->rewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
+        $this->rewriter = new Erfurt_Store_Adapter_Oracle_SparqlRewriter();
     }
 
     /**
@@ -213,7 +213,7 @@ class Erfurt_Store_Adapter_Oracle_QueryRewriterTest extends \PHPUnit_Framework_T
      */
     protected function prefix($variable)
     {
-        return Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX . $variable;
+        return Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX . $variable;
     }
 
 }

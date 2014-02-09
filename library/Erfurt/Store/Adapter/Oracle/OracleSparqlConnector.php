@@ -23,7 +23,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      * Rewrites SPARQL queries in such a way that the Oracle database
      * can handle them.
      *
-     * @var Erfurt_Store_Adapter_Oracle_QueryRewriter
+     * @var Erfurt_Store_Adapter_Oracle_SparqlRewriter
      */
     protected $sparqlRewriter = null;
 
@@ -43,7 +43,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     public function __construct(Connection $connection)
     {
         $this->connection     = $connection;
-        $this->sparqlRewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
+        $this->sparqlRewriter = new Erfurt_Store_Adapter_Oracle_SparqlRewriter();
     }
 
     /**
@@ -369,7 +369,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         } else {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_QueryRewriter::VARIABLE_PREFIX)),
+                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX)),
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
             ));
         }
