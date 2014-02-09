@@ -20,6 +20,14 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     protected $connection = null;
 
     /**
+     * Rewrites SPARQL queries in such a way that the Oracle database
+     * can handle them.
+     *
+     * @var Erfurt_Store_Adapter_Oracle_QueryRewriter
+     */
+    protected $sparqlRewriter = null;
+
+    /**
      * A prepared insert statement or null if it was not created yet.
      *
      * @var \Doctrine\DBAL\Driver\Statement|null
@@ -34,7 +42,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function __construct(Connection $connection)
     {
-        $this->connection = $connection;
+        $this->connection     = $connection;
+        $this->sparqlRewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
     }
 
     /**
@@ -309,8 +318,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     protected function rewriteSparql($query)
     {
-        $rewriter = new Erfurt_Store_Adapter_Oracle_QueryRewriter();
-        return $rewriter->rewrite(Erfurt_Sparql_Parser::uncomment($query));
+        return $this->sparqlRewriter->rewrite(Erfurt_Sparql_Parser::uncomment($query));
     }
 
     /**
