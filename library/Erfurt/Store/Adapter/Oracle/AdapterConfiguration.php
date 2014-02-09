@@ -4,7 +4,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Represents an Oracle adapter configuration.
+ * Defines an Oracle adapter configuration.
  *
  * This specification is used for validation and normalization.
  *
