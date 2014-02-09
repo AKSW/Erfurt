@@ -29,7 +29,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
             new Erfurt_Store_Adapter_Oracle_AdapterConfiguration()
         );
         $connectionParams = $adapterOptions['connection'];
-        $connection       = static::createConnection($connectionParams);
+        $connection       = static::createConnectionWithoutValidation($connectionParams);
         if ($adapterOptions['auto_setup']) {
             static::installTripleStoreIfNecessary($connection);
         }
@@ -52,27 +52,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
             $params,
             new Erfurt_Store_Adapter_Oracle_ConnectionConfiguration()
         );
-        if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
-            Type::addType(
-                \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
-                'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
-            );
-        }
-        if (isset($params['pool'])) {
-            // Set the name of the connection pool.
-            ini_set('oci8.connection_class', $params['pool']);
-        }
-        $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
-        $connectionParams = $params + $additionalParams;
-
-        $eventManager = new EventManager();
-        $additionalSessionParams = isset($params['session']) ? $params['session'] : array();
-        unset($params['session']);
-        $initializer = new Erfurt_Store_Adapter_Oracle_Doctrine_OracleSessionInit($additionalSessionParams);
-        $eventManager->addEventSubscriber($initializer);
-
-        return DriverManager::getConnection($connectionParams, null, $eventManager);
-
+        return static::createConnectionWithoutValidation($params);
     }
 
     /**
@@ -105,6 +85,36 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
             $configuration,
             array($options)
         );
+    }
+
+    /**
+     * Creates the connection without validating the provided parameters.
+     *
+     * @param array(string=>mixed) $params
+     * @return \Doctrine\DBAL\Connection
+     */
+    protected static function createConnectionWithoutValidation(array $params)
+    {
+        if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
+            Type::addType(
+                \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
+                'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
+            );
+        }
+        if (isset($params['pool'])) {
+            // Set the name of the connection pool.
+            ini_set('oci8.connection_class', $params['pool']);
+        }
+        $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
+        $connectionParams = $params + $additionalParams;
+
+        $eventManager = new EventManager();
+        $additionalSessionParams = isset($params['session']) ? $params['session'] : array();
+        unset($params['session']);
+        $initializer = new Erfurt_Store_Adapter_Oracle_Doctrine_OracleSessionInit($additionalSessionParams);
+        $eventManager->addEventSubscriber($initializer);
+
+        return DriverManager::getConnection($connectionParams, null, $eventManager);
     }
 
 }
