@@ -2,8 +2,8 @@
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Event\Listeners\OracleSessionInit;
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
@@ -24,9 +24,12 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createFromOptions(array $adapterOptions)
     {
-        $adapterOptions   = static::normalizeOptions($adapterOptions);
+        $adapterOptions = static::normalizeOptions(
+            $adapterOptions,
+            new Erfurt_Store_Adapter_Oracle_AdapterConfiguration()
+        );
         $connectionParams = $adapterOptions['connection'];
-        $connection       = static::createConnection($connectionParams);
+        $connection       = static::createConnectionWithoutValidation($connectionParams);
         if ($adapterOptions['auto_setup']) {
             static::installTripleStoreIfNecessary($connection);
         }
@@ -45,25 +48,11 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createConnection(array $params)
     {
-        if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
-            Type::addType(
-                \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
-                'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
-            );
-        }
-        if (isset($params['pool'])) {
-            // Set the name of the connection pool.
-            ini_set('oci8.connection_class', $params['pool']);
-        }
-        $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
-        $connectionParams = $params + $additionalParams;
-        $eventManager = new EventManager();
-        if (isset($params['session'])) {
-            $eventManager->addEventSubscriber(new OracleSessionInit($params['session']));
-            unset($params['session']);
-        }
-        return DriverManager::getConnection($connectionParams, null, $eventManager);
-
+        $params = static::normalizeOptions(
+            $params,
+            new Erfurt_Store_Adapter_Oracle_ConnectionConfiguration()
+        );
+        return static::createConnectionWithoutValidation($params);
     }
 
     /**
@@ -83,19 +72,49 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
     }
 
     /**
-     * Validates and normalizes the provided adapter options.
+     * Validates and normalizes the provided options.
      *
      * @param array(string=>mixed) $options
+     * @param \Symfony\Component\Config\Definition\ConfigurationInterface $configuration
      * @return array(string=>mixed)
      */
-    protected static function normalizeOptions(array $options)
+    protected static function normalizeOptions(array $options, ConfigurationInterface $configuration)
     {
         $processor = new Processor();
-        $configuration = new Erfurt_Store_Adapter_Oracle_AdapterConfiguration();
         return $processor->processConfiguration(
             $configuration,
             array($options)
         );
+    }
+
+    /**
+     * Creates the connection without validating the provided parameters.
+     *
+     * @param array(string=>mixed) $params
+     * @return \Doctrine\DBAL\Connection
+     */
+    protected static function createConnectionWithoutValidation(array $params)
+    {
+        if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
+            Type::addType(
+                \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
+                'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
+            );
+        }
+        if (isset($params['pool'])) {
+            // Set the name of the connection pool.
+            ini_set('oci8.connection_class', $params['pool']);
+        }
+        $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
+        $connectionParams = $params + $additionalParams;
+
+        $eventManager = new EventManager();
+        $additionalSessionParams = isset($params['session']) ? $params['session'] : array();
+        unset($params['session']);
+        $initializer = new Erfurt_Store_Adapter_Oracle_Doctrine_OracleSessionInit($additionalSessionParams);
+        $eventManager->addEventSubscriber($initializer);
+
+        return DriverManager::getConnection($connectionParams, null, $eventManager);
     }
 
 }

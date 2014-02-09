@@ -150,6 +150,18 @@ class Erfurt_Store_Adapter_Sparql_TripleIteratorTest extends \PHPUnit_Framework_
     }
 
     /**
+     * Ensures that key() returns null if the current position is
+     * not valid.
+     *
+     * Seems as iterator_count() relies on this on Linux and Mac.
+     */
+    public function testKeyReturnsNullIfPositionIsNotValid()
+    {
+        $iterator = new Erfurt_Store_Adapter_Sparql_TripleIterator(array());
+        $this->assertNull($iterator->key());
+    }
+
+    /**
      * Ensures that the iterator can be used with an empty statements list.
      */
     public function testIteratorWorksWithEmptyStatementsArray()

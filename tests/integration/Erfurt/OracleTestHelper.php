@@ -111,6 +111,7 @@ class Erfurt_OracleTestHelper
      * Loads the configuration for the adapter.
      *
      * @return array(mixed)
+     * @throws \PHPUnit_Framework_SkippedTestError If the config does not exist.
      */
     protected function getConfig()
     {
@@ -118,7 +119,7 @@ class Erfurt_OracleTestHelper
         if (!is_file($path)) {
             $message = 'This test requires an Oracle connection configuration in the file '
                      . 'oracle.ini in the test root. Use oracle.ini.dist as a template.';
-            $this->markTestSkipped($message);
+            throw new PHPUnit_Framework_SkippedTestError($message);
         }
         $config = new Zend_Config_Ini($path);
         return $config->toArray();
