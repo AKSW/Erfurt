@@ -71,13 +71,17 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
         );
 
         $queryInfo = $this->parser->parse($query);
-        
+
         $modifiers = $queryInfo->getSolutionModifier();
         if (isset($modifiers['order by'])) {
             $parameters['{{ORDER}}'] = 'ORDER BY SEM$ROWNUM';
         }
         $numberOfConstraints = $this->countConstraints($queryInfo->getResultPart());
         if ($numberOfConstraints > static::MIN_NUMBER_OF_CONSTRAINTS_FOR_PARALLELIZATION) {
+            // If the query contains many constraints (filter expressions etc.), then provide
+            // the hint to parallelize the execution. This greatly improves the performance
+            // of queries that have to check many rows, but other queries will
+            // slightly suffer, which is the reason why this hint is not used in general.
             $parameters['{{HINTS}}'] = '/*+ PARALLEL */';
         }
         return $this->buildSql($parameters);
