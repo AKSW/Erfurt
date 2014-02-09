@@ -1,5 +1,4 @@
 <?php
-use PHPSQL\Parser\Utils;
 
 /**
  * Helper class that rewrites SPARQL queries to prepare them for execution by Oracle.
