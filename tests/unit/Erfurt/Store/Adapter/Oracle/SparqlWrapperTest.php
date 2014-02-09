@@ -3,6 +3,12 @@
 /**
  * Tests the SPARQL wrapper.
  *
+ * These tests do not check if the generated SQL query is valid as
+ * this would be a very complex task.
+ * Instead, the tests verify that some statement parts are present or absent.
+ *
+ * The correctness of the SQL query itself is ensured by the integration tests.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 09.02.14
  */
@@ -55,7 +61,10 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapThrowsExceptionIfSparqlQueryContainsInternalEscapeSequence()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate "This is the escape sequence: ~\'"@en .}';
 
+        $this->setExpectedException('InvalidArgumentException');
+        $this->wrapper->wrap($query);
     }
 
     /**
@@ -63,7 +72,11 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapAddsModelName()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertContains('model_erfurt', $sql);
     }
 
     /**
@@ -71,7 +84,11 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapAddSparqlQuery()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertContains($query, $sql);
     }
 
     /**
@@ -80,7 +97,19 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapAddsParallelizationHintIfSparqlQueryContainsManyFilters()
     {
+        $query = 'SELECT * WHERE { '
+               . '    ?subject ?predicate ?object . '
+               . '    FILTER (!REGEXP(?subject, "^a")) '
+               . '    FILTER (!REGEXP(?subject, "^b")) '
+               . '    FILTER (!REGEXP(?subject, "^c")) '
+               . '    FILTER (!REGEXP(?subject, "^d")) '
+               . '    FILTER (!REGEXP(?subject, "^e")) '
+               . '    FILTER (!REGEXP(?subject, "^f")) '
+               . '}';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertContainsHint('PARALLEL', $sql);
     }
 
     /**
@@ -89,7 +118,11 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapDoesNotAddParallelizationHintIfQueryDoesNotContainManyFilters()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertNotContains('PARALLEL', $sql);
     }
 
     /**
@@ -97,7 +130,11 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapAddsOrderByIfSparqlQueryRequiresSorting()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . } ORDER BY ASC(?subject)';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertContains('ORDER BY SEM$ROWNUM', $sql);
     }
 
     /**
@@ -106,7 +143,11 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapDoesNotAddOrderByIfSparqlQueryDoesNotRequireSorting()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertNotContains('ORDER BY SEM$ROWNUM', $sql);
     }
 
     /**
@@ -115,7 +156,23 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
      */
     public function testWrapActivatesStrictDefaultGraphOption()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertNotContains('STRICT_DEFAULT=T', $sql);
+    }
+
+    /**
+     * Asserts that the provided SQL query contains the hint $name.
+     *
+     * @param string $name
+     * @param string $sql
+     */
+    protected function assertContainsHint($name, $sql)
+    {
+        $this->assertContains('/*+', $sql, 'Query does not contain sequence "/*+", which starts a query hint.');
+        $this->assertContains($name, $sql);
     }
 
 }
