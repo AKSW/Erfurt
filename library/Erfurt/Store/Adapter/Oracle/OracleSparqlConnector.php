@@ -23,9 +23,16 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      * Rewrites SPARQL queries in such a way that the Oracle database
      * can handle them.
      *
-     * @var Erfurt_Store_Adapter_Oracle_SparqlRewriter
+     * @var \Erfurt_Store_Adapter_Oracle_SparqlRewriter
      */
     protected $sparqlRewriter = null;
+
+    /**
+     * Wraps a SPARQL query into SQL.
+     *
+     * @var \Erfurt_Store_Adapter_Oracle_SparqlWrapper
+     */
+    protected $sparqlWrapper = null;
 
     /**
      * A prepared insert statement or null if it was not created yet.
@@ -43,7 +50,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     public function __construct(Connection $connection)
     {
         $this->connection     = $connection;
-        $this->sparqlRewriter = new Erfurt_Store_Adapter_Oracle_SparqlRewriter();
+        $this->sparqlRewriter = new \Erfurt_Store_Adapter_Oracle_SparqlRewriter();
+        $this->sparqlWrapper  = new \Erfurt_Store_Adapter_Oracle_SparqlWrapper(
+            $this->getModelName(),
+            array($this->connection, 'quote')
+        );
     }
 
     /**
@@ -274,35 +285,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     protected function createSparqlStatement($sparqlQuery)
     {
-        $query = 'SELECT %s * '
-               . 'FROM TABLE('
-               . '  SEM_MATCH('
-               . '    %s,'
-               . '    SEM_MODELS(' . $this->connection->quote($this->getModelName()). '),'
-               . '    NULL,'
-               . '    NULL,'
-               . '    NULL,'
-               . '    NULL,'
-               . '    ' . $this->connection->quote('STRICT_DEFAULT=T') . ','
-               . '    NULL,'
-               . '    NULL'
-               . '  )'
-               . ') '
-               . 'ORDER BY SEM$ROWNUM';
         $rewrittenSparqlQuery = $this->rewriteSparql($sparqlQuery);
-        $escapedSparqlQuery   = $this->escapeSparql($rewrittenSparqlQuery);
-        $hints = '';
-        if (substr_count($rewrittenSparqlQuery, 'FILTER') > 4) {
-            // Use the existence of the FILTER keyword as indicator for the
-            // number of FILTER expressions in the SPARQL query.
-            // If the query contains many filter expressions, then provide the hint
-            // to parallelize the execution. This greatly improves the performance
-            // of queries that have to check many rows, but other queries will
-            // slightly suffer, which is the reason why this hint is not used in general.
-            $hints = '/*+ PARALLEL */';
-        }
-        $query = sprintf($query, $hints, $escapedSparqlQuery);
-        return $this->connection->prepare($query);
+        $sql = $this->sparqlWrapper->wrap($rewrittenSparqlQuery);
+        return $this->connection->prepare($sql);
     }
 
     /**
@@ -319,26 +304,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     protected function rewriteSparql($query)
     {
         return $this->sparqlRewriter->rewrite(Erfurt_Sparql_Parser::uncomment($query));
-    }
-
-    /**
-     * Uses the Oracle q operator to escape a SPARQL query string.
-     *
-     * Usually it is much better to use prepared statements, but
-     * parameters like the SPARQL query must be available at
-     * compile time for optimization reasons.
-     *
-     * @param string $query
-     * @return string
-     * @throws \InvalidArgumentException If the string contains the escape sequence.
-     */
-    protected function escapeSparql($query)
-    {
-        if (strpos($query, "~'") !== false) {
-            $message = 'SPARQL query must not contain the sequence "~\'", which is used internally for escaping."';
-            throw new \InvalidArgumentException($message);
-        }
-        return "q'~$query~'";
     }
 
     /**
