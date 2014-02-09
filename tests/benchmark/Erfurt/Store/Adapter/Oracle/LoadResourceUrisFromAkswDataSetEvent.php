@@ -67,7 +67,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
      *
      * @Iterations 10
      */
-    public function testExecuteQueryWithCombinedRegularExpressions()
+    public function executeQueryWithCombinedRegularExpressions()
     {
         $query = 'SELECT DISTINCT ?resourceUri '
                . 'FROM <http://localhost/OntoWiki/aksw> '
@@ -95,7 +95,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
      *
      * @Iterations 10
      */
-    public function testExecuteQueryWithFiltersInUnionParts()
+    public function executeQueryWithFiltersInUnionParts()
     {
         $query = 'SELECT DISTINCT ?resourceUri '
                . 'FROM <http://localhost/OntoWiki/aksw> '
