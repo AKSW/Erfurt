@@ -6,3 +6,4 @@ password = "PASSWORD"
 host     = "IP_OR_HOSTNAME"
 port     = 1521
 charset  = "UTF8"
+session.optimizer_dynamic_sampling = 3
