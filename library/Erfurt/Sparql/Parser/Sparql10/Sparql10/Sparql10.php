@@ -6766,7 +6766,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62 extends DFA {
         $this->transition = $DFA['transition'];
     }
     public function getDescription() {
-        return "352:1: unaryExpression returns [$value] : ( NOT_SIGN e= primaryExpression | PLUS e= primaryExpression | MINUS e= primaryExpression | e= primaryExpression );";
+        return "352:1: unaryExpression returns [\$value] : ( NOT_SIGN e= primaryExpression | PLUS e= primaryExpression | MINUS e= primaryExpression | e= primaryExpression );";
     }
 }
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63_static {
