@@ -3,6 +3,7 @@
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 
 /**
@@ -23,7 +24,10 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createFromOptions(array $adapterOptions)
     {
-        $adapterOptions   = static::normalizeOptions($adapterOptions);
+        $adapterOptions = static::normalizeOptions(
+            $adapterOptions,
+            new Erfurt_Store_Adapter_Oracle_AdapterConfiguration()
+        );
         $connectionParams = $adapterOptions['connection'];
         $connection       = static::createConnection($connectionParams);
         if ($adapterOptions['auto_setup']) {
@@ -44,7 +48,10 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     public static function createConnection(array $params)
     {
-        // TODO: use configuration to normalize
+        $params = static::normalizeOptions(
+            $params,
+            new Erfurt_Store_Adapter_Oracle_ConnectionConfiguration()
+        );
         if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
             Type::addType(
                 \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
@@ -85,15 +92,15 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
     }
 
     /**
-     * Validates and normalizes the provided adapter options.
+     * Validates and normalizes the provided options.
      *
      * @param array(string=>mixed) $options
+     * @param \Symfony\Component\Config\Definition\ConfigurationInterface $configuration
      * @return array(string=>mixed)
      */
-    protected static function normalizeOptions(array $options)
+    protected static function normalizeOptions(array $options, ConfigurationInterface $configuration)
     {
         $processor = new Processor();
-        $configuration = new Erfurt_Store_Adapter_Oracle_AdapterConfiguration();
         return $processor->processConfiguration(
             $configuration,
             array($options)
