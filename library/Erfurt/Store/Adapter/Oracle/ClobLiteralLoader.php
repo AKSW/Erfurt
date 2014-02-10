@@ -49,6 +49,10 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoader
         $statement = $this->getLoadStatement();
         $statement->execute(array('valueId' => $valueId));
         $value = $statement->fetchColumn();
+        // Return null if no value was found.
+        // Return the text without double quotes ('"') otherwise,
+        // but do not decode the data (Tabs etc.) as this is the
+        // responsibility of a converter.
         return ($value === false) ? null : substr($value, 1, -1);
     }
 
