@@ -35,6 +35,13 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     protected $sparqlWrapper = null;
 
     /**
+     * The loader that is used to retrieve CLOB values.
+     *
+     * @var \Erfurt_Store_Adapter_Oracle_ClobLiteralLoader
+     */
+    protected $clobLoader = null;
+
+    /**
      * A prepared insert statement or null if it was not created yet.
      *
      * @var \Doctrine\DBAL\Driver\Statement|null
@@ -56,6 +63,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
             array($this->connection, 'quote'),
             array($this->connection, 'quoteIdentifier')
         );
+        $this->clobLoader = new Erfurt_Store_Adapter_Oracle_ClobLiteralLoader($connection);
     }
 
     /**
@@ -329,12 +337,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     {
         if ($this->isAskQuery($query)) {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
-                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter($this->clobLoader),
                 new Erfurt_Store_Adapter_ResultConverter_ScalarConverter()
             ));
         } else {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
-                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
+                new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter($this->clobLoader),
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
             ));
         }
