@@ -10,6 +10,24 @@
 class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter
     implements Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
+
+    /**
+     * The CLOB loader.
+     *
+     * @var Erfurt_Store_Adapter_Oracle_ClobLiteralLoader
+     */
+    protected $loader = null;
+
+    /**
+     * Creates a converter that uses the provided loader to retrieve large literals.
+     *
+     * @param Erfurt_Store_Adapter_Oracle_ClobLiteralLoader $loader
+     */
+    public function __construct(Erfurt_Store_Adapter_Oracle_ClobLiteralLoader $loader)
+    {
+        $this->loader = $loader;
+    }
+
     /**
      * Converts the values in the given result set into native PHP types.
      *
@@ -28,10 +46,14 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter
             /* @var $row array(string=>string) */
             foreach ($variables as $variable) {
                 /* @var $variable string */
-                if ($row[$variable . '$RDFCLOB'] !== null) {
+                if (isset($row[$variable . '$RDFCLOB'])) {
+                    // Response contains CLOB value.
                     $value = $row[$variable . '$RDFCLOB'];
+                } else if (isset($row[$variable . '$HAS_CLOB']) && $row[$variable . '$HAS_CLOB']) {
+                    // CLOB is only referenced and must be loaded separately.
+                    $value = $this->loader->load($row[$variable . '$RDFVID']);
                 } else {
-                    $value =  $row[$variable];
+                    $value = $row[$variable];
                 }
                 $resultSet[$index][$variable] = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::convertToType(
                     $value,
