@@ -28,10 +28,17 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
     protected function setUp()
     {
         parent::setUp();
-        $quoter = function ($value) {
+        $valueQuoter = function ($value) {
             return "'$value'";
         };
-        $this->wrapper = new \Erfurt_Store_Adapter_Oracle_SparqlWrapper('model_erfurt', $quoter);
+        $identifierQuoter = function ($identifier) {
+            return '"' . $identifier . '"';
+        };
+        $this->wrapper = new \Erfurt_Store_Adapter_Oracle_SparqlWrapper(
+            'model_erfurt',
+            $valueQuoter,
+            $identifierQuoter
+        );
     }
 
     /**
@@ -45,12 +52,22 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
 
     /**
      * Ensures that the constructor of the wrapper throws an exception if the provided
-     * quoter is not callable.
+     * value quoter is not callable.
      */
-    public function testWrapperThrowsExceptionIfProvidedQuoterIsNotCallable()
+    public function testWrapperThrowsExceptionIfProvidedValueQuoterIsNotCallable()
     {
         $this->setExpectedException('InvalidArgumentException');
-        new Erfurt_Store_Adapter_Oracle_SparqlWrapper('test_model', array($this, 'missing'));
+        new Erfurt_Store_Adapter_Oracle_SparqlWrapper('test_model', array($this, 'missing'), function () {});
+    }
+
+    /**
+     * Ensures that the constructor of the wrapper throws an exception if the provided
+     * identifier quoter is not callable.
+     */
+    public function testWrapperThrowsExceptionIfProvidedIdentifierQuoterIsNotCallable()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        new Erfurt_Store_Adapter_Oracle_SparqlWrapper('test_model', function () {}, array($this, 'missing'));
     }
 
     /**

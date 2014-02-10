@@ -40,13 +40,15 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
     /**
      * Creates a wrapper that selects data from the provided model.
      *
-     * Uses $valueQuoter to escape values in the generated SQL queries.
+     * Uses $valueQuoter to escape values and $identifierQuoter to quote
+     * variable names in the generated SQL queries.
      *
      * @param string $modelName
      * @param callable $valueQuoter
+     * @param callable $identifierQuoter
      * @throws \InvalidArgumentException If no valid callback is passed.
      */
-    public function __construct($modelName, $valueQuoter)
+    public function __construct($modelName, $valueQuoter, $identifierQuoter)
     {
         if (!is_callable($valueQuoter)) {
             $message = '$valueQuoter must be a valid callback.';
