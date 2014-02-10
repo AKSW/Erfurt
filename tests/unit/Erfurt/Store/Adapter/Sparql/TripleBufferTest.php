@@ -150,7 +150,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testFlushPassesTriplesToCallback()
     {
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
 
+        $this->assertCallbackReceivesTriples($this->buffer->count());
+
+        $this->buffer->flush();
     }
 
     /**
@@ -159,7 +164,9 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testFlushDoesNotInvokeCallbackIfBufferIsEmpty()
     {
+        $this->assertCallbackNotCalled();
 
+        $this->buffer->flush();
     }
 
     /**
@@ -168,7 +175,10 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testAddDoesNotFlushIfBufferSizeIsNotExceeded()
     {
+        $this->assertCallbackNotCalled();
 
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
     }
 
     /**
@@ -196,6 +206,32 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     public function testSetSizeDoesNotFlushBufferIfSizeIsNotExceeded()
     {
 
+    }
+
+    /**
+     * Asserts that the callback receives the provided number of triples.
+     *
+     * @param integer $numberOfTriples
+     */
+    protected function assertCallbackReceivesTriples($numberOfTriples)
+    {
+        $checkTriples = function ($triples) use ($numberOfTriples) {
+            PHPUnit_Framework_Assert::assertInternalType('array', $triples);
+            PHPUnit_Framework_Assert::assertContainsOnly('\Erfurt_Store_Adapter_Sparql_Triple', $triples);
+            PHPUnit_Framework_Assert::assertCount($numberOfTriples, $triples);
+        };
+        $this->flushCallback->expects($this->once())
+                            ->method('__invoke')
+                            ->will($this->returnCallback($checkTriples));
+    }
+
+    /**
+     * Asserts that the flush callback is *not* called.
+     */
+    protected function assertCallbackNotCalled()
+    {
+        $this->flushCallback->expects($this->never())
+                            ->method('__invoke');
     }
 
     /**
