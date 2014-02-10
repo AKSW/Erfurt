@@ -20,6 +20,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      *
      * @param callable $tripleHandler Callback that handles the triples on flush.
      * @param integer $size The size of the buffer.
+     * @throws \InvalidArgumentException If an invalid callback is passed.
      */
     public function __construct($tripleHandler, $size = 1)
     {
@@ -64,6 +65,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      * buffer will be flushed.
      *
      * @param integer $newSize
+     * @throws \InvalidArgumentException If the size is not valid.
      */
     public function setSize($newSize)
     {
