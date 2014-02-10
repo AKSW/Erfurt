@@ -312,7 +312,7 @@ class Erfurt_Sparql_Query
     /**
      * Returns a list with all used variables.
      *
-     * @return array
+     * @return array(string)
      */
     public function getAllVars()
     {
