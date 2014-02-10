@@ -20,6 +20,13 @@ class Erfurt_OracleTestHelper
     protected $connection = null;
 
     /**
+     * The Oracle SPARQL connector that is used for testing.
+     *
+     * @var \Erfurt_Store_Adapter_Oracle_OracleSparqlConnector|null
+     */
+    protected $sparqlConnector = null;
+
+    /**
      * The database schema before the test was executed.
      *
      * @var \Doctrine\DBAL\Schema\Schema|null
@@ -66,6 +73,20 @@ class Erfurt_OracleTestHelper
     }
 
     /**
+     * Returns the SPARQL connector.
+     *
+     * @return Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
+     */
+    public function getSparqlConnector()
+    {
+        if ($this->sparqlConnector === null) {
+            $this->sparqlConnector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->getConnection());
+            $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
+        }
+        return $this->sparqlConnector;
+    }
+
+    /**
      * Creates a clean installation of the Triple Store.
      */
     public function installTripleStore()
@@ -105,6 +126,14 @@ class Erfurt_OracleTestHelper
     {
         $this->connection->close();
         $this->connection = null;
+    }
+
+    /**
+     * Destroys the used SPARQL connector.
+     */
+    protected function unsetSparqlConnector()
+    {
+        $this->sparqlConnector = null;
     }
 
     /**
