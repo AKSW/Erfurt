@@ -64,7 +64,8 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framewo
 
         $value = $this->loader->load($id);
 
-        $this->assertEquals(str_repeat('x', 4200), $value);
+        $this->assertInternalType('string', $value);
+        $this->assertContains(str_repeat('x', 4200), $value);
     }
 
     /**
