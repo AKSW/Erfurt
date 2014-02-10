@@ -349,17 +349,17 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
                 'OBJECT$RDFVID'     => 6944352155936009571,
                 'OBJECT$RDFVTYP'    => 'LIT',
                 'OBJECT$RDFLTYP'    => null,
-                'OBJECT$HAS_CLOB'   => false,
+                'OBJECT$HAS_CLOB'   => 0,
                 'OBJECT$RDFLANG'    => null,
                 'SEM$ROWNUM'        => 9
             ),
             // CLOB value that must be lazy loaded.
             array(
-                'OBJECT'            => null,
+                'OBJECT'            => 'ORALL1',
                 'OBJECT$RDFVID'     => 6944352155936009572,
                 'OBJECT$RDFVTYP'    => 'LIT',
                 'OBJECT$RDFLTYP'    => null,
-                'OBJECT$HAS_CLOB'   => true,
+                'OBJECT$HAS_CLOB'   => 1,
                 'OBJECT$RDFLANG'    => null,
                 'SEM$ROWNUM'        => 10
             )
