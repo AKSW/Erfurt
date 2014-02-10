@@ -583,7 +583,7 @@ class Erfurt_Sparql_Query
     }
 
     /**
-     * Sets the orignal query string
+     * Sets the original query string
      *
      * @param string $queryString SPARQL query string
      */
