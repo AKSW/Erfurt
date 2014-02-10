@@ -183,6 +183,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
         // Add value and meta data that must be selected.
         $suffixes = array(
             '',
+            '$RDFVID',
             '$RDFLANG',
             '$RDFVTYP',
             '$RDFLTYP'
