@@ -282,6 +282,18 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Ensures that the variable handling of the wrapper works if an ASK query is used.
+     */
+    public function testWrapSelectsCorrectVariableIfAskQueryIsUsed()
+    {
+        $query = 'ASK WHERE { ?subject ?predicate ?object . }';
+
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertSelectsVariable('ASK', $sql);
+    }
+
+    /**
      * Asserts that the provided variable is selected in the given SQL.
      *
      * @param string $name

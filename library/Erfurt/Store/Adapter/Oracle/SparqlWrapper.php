@@ -150,6 +150,9 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
      */
     protected function getRequestedVariables(Erfurt_Sparql_Query $query)
     {
+        if ($query->getResultForm() === 'ask') {
+            return array ('?ASK');
+        }
         $vars = $query->getResultVars();
         if (count($vars) > 1) {
             return array_map('strval', $vars);
