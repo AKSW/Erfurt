@@ -28,7 +28,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
         $loader->expects($this->any())
                ->method('load')
                ->will($this->returnCallback(function () {
-                   return Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral(str_repeat('x', 4200));
+                   return str_repeat('x', 4200);
                }));
         $this->converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter($loader);
     }
