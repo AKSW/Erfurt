@@ -50,10 +50,10 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoader
         $statement->execute(array('valueId' => $valueId));
         $value = $statement->fetchColumn();
         // Return null if no value was found.
-        // Return the text without double quotes ('"') otherwise,
-        // but do not decode the data (Tabs etc.) as this is the
-        // responsibility of a converter.
-        return ($value === false) ? null : substr($value, 1, -1);
+        // Return the text without double quotes ('"') and type or language
+        // information otherwise, but do not decode the data (Tabs etc.) as
+        // this is the responsibility of a converter.
+        return ($value === false) ? null : substr($value, 1, strrpos($value, '"') - 1);
     }
 
     /**
