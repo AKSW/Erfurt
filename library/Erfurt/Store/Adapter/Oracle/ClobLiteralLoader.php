@@ -49,7 +49,7 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoader
         $statement = $this->getLoadStatement();
         $statement->execute(array('valueId' => $valueId));
         $value = $statement->fetchColumn();
-        return ($value === false) ? null : $value;
+        return ($value === false) ? null : substr($value, 1, -1);
     }
 
     /**
