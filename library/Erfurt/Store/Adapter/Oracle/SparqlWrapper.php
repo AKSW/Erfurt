@@ -31,6 +31,13 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
     protected $valueQuoter = null;
 
     /**
+     * Callback that is used to quote identifiers.
+     *
+     * @var callable
+     */
+    protected $identifierQuoter = null;
+
+    /**
      * The name of the model that is queried.
      *
      * @var string
@@ -54,9 +61,14 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
             $message = '$valueQuoter must be a valid callback.';
             throw new \InvalidArgumentException($message);
         }
-        $this->parser      = new Erfurt_Sparql_Parser();
-        $this->modelName   = $modelName;
-        $this->valueQuoter = $valueQuoter;
+        if (!is_callable($identifierQuoter)) {
+            $message = '$identifierQuoter must be a valid callback.';
+            throw new \InvalidArgumentException($message);
+        }
+        $this->parser           = new Erfurt_Sparql_Parser();
+        $this->modelName        = $modelName;
+        $this->valueQuoter      = $valueQuoter;
+        $this->identifierQuoter = $identifierQuoter;
     }
 
     /**
@@ -174,7 +186,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
         $oracleVar = strtoupper($var);
         foreach ($suffixes as $suffix) {
             /* @var $suffix string */
-            $selected[] = $oracleVar . $suffix . ' AS "' . $normalized . $suffix . '"';
+            $selected[] = $oracleVar . $suffix . ' AS ' . $this->quoteIdentifier($normalized . $suffix);
         }
         return $selected;
     }
@@ -288,6 +300,16 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
             throw new \InvalidArgumentException($message);
         }
         return "q'~$query~'";
+    }
+
+    /**
+     * Quotes the provided identifier to ensure that even reserved keywords can be used.
+     *
+     * @param string $identifier
+     */
+    protected function quoteIdentifier($identifier)
+    {
+        return call_user_func($this->identifierQuoter, $identifier);
     }
 
     /**
