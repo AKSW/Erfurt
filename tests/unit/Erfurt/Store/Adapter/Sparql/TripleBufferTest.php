@@ -10,12 +10,47 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
 {
 
     /**
+     * System under test.
+     *
+     * @var \Erfurt_Store_Adapter_Sparql_TripleBuffer
+     */
+    protected $buffer = null;
+
+    /**
+     * The mocked callback that is called on flush.
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $flushCallback = null;
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->flushCallback = $this->getMock('stdClass', array('__invoke'));
+        $this->buffer        = new Erfurt_Store_Adapter_Sparql_TripleBuffer($this->flushCallback, 3);
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->buffer        = null;
+        $this->flushCallback = null;
+        parent::tearDown();
+    }
+
+    /**
      * Ensures that the constructor throws an exception if no valid callback
      * passed.
      */
     public function testConstructorThrowsExceptionIfNoValidCallbackIsProvided()
     {
-
+        $this->setExpectedException('InvalidArgumentException');
+        new Erfurt_Store_Adapter_Sparql_TripleBuffer(array($this, 'missing'), 2);
     }
 
     /**
@@ -24,7 +59,8 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testConstructorThrowsExceptionIfInvalidSizeIsPassed()
     {
-
+        $this->setExpectedException('InvalidArgumentException');
+        new Erfurt_Store_Adapter_Sparql_TripleBuffer($this->flushCallback, -1);
     }
 
     /**
@@ -32,7 +68,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testBufferIsCountable()
     {
-
+        $this->assertInstanceOf('Countable', $this->buffer);
     }
 
     /**
@@ -40,7 +76,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testBufferIsInitiallyEmpty()
     {
-
+        $this->assertEquals(0, $this->buffer->count());
     }
 
     /**
@@ -49,7 +85,9 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testCountReturnsNumberOfTriplesInBuffer()
     {
+        $this->buffer->add($this->createTriple());
 
+        $this->assertEquals(1, $this->buffer->count());
     }
 
     /**
@@ -58,7 +96,20 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testSetSizeThrowsExceptionIfInvalidBufferSizeIsPassed()
     {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->buffer->setSize(new stdClass());
+    }
 
+    /**
+     * Ensures that setSize() does not accept 0 as buffer size.
+     *
+     * The size of the buffer must be at least 1. It is flushed
+     * when this size is reached.
+     */
+    public function testSetSizeDoesNotAcceptZero()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->buffer->setSize(0);
     }
 
     /**
@@ -67,7 +118,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testGetSizeReturnsInitiallyConfiguredSize()
     {
-
+        $this->assertEquals(3, $this->buffer->getSize());
     }
 
     /**
@@ -76,7 +127,8 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testGetSizeReturnsUpdatedBufferSize()
     {
-
+        $this->buffer->setSize(42);
+        $this->assertEquals(42, $this->buffer->getSize());
     }
 
     /**
@@ -84,7 +136,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testFlushClearsBuffer()
     {
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
 
+        $this->buffer->flush();
+
+        $this->assertEquals(0, $this->buffer->count());
     }
 
     /**
@@ -106,19 +163,19 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     }
 
     /**
-     * Ensures that addTriple() does not flush the buffer if the buffer
+     * Ensures that add() does not flush the buffer if the buffer
      * size is not reached.
      */
-    public function testAddTripleDoesNotFlushIfBufferSizeIsNotExceeded()
+    public function testAddDoesNotFlushIfBufferSizeIsNotExceeded()
     {
 
     }
 
     /**
-     * Ensures that addTriple() flushes the buffer if the buffer
+     * Ensures that add() flushes the buffer if the buffer
      * size is reached.
      */
-    public function testAddTripleFlushesBufferIfBufferSizeIsReached()
+    public function testAddFlushesBufferIfBufferSizeIsReached()
     {
 
     }
@@ -139,6 +196,23 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     public function testSetSizeDoesNotFlushBufferIfSizeIsNotExceeded()
     {
 
+    }
+
+    /**
+     * Creates a triple with random content.
+     *
+     * @return Erfurt_Store_Adapter_Sparql_Triple
+     */
+    protected function createTriple()
+    {
+        return new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/' . uniqid('sub'),
+            'http://example.org/' . uniqid('pred'),
+            array(
+                'type'  => 'uri',
+                'value' => 'http://example.org/' . uniqid('obj')
+            )
+        );
     }
 
 }

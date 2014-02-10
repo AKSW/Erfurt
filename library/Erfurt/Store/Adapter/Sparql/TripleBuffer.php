@@ -35,7 +35,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      *
      * @param Erfurt_Store_Adapter_Sparql_Triple $triple
      */
-    public function addTriple(Erfurt_Store_Adapter_Sparql_Triple $triple)
+    public function add(Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
 
     }
