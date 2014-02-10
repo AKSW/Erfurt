@@ -53,7 +53,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         $this->sparqlRewriter = new \Erfurt_Store_Adapter_Oracle_SparqlRewriter();
         $this->sparqlWrapper  = new \Erfurt_Store_Adapter_Oracle_SparqlWrapper(
             $this->getModelName(),
-            array($this->connection, 'quote')
+            array($this->connection, 'quote'),
+            array($this->connection, 'quoteIdentifier')
         );
     }
 
