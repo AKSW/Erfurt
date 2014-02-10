@@ -192,7 +192,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
             $selected[] = $oracleVar . $suffix . ' AS ' . $this->quoteIdentifier($normalized . $suffix);
         }
         // Provide a flag that shows if the data is stored as CLOB.
-        $clobIndicator = 'DECODE(%1$s$RDFCLOB , NULL , 0, 1) AS %2$s';
+        $clobIndicator = 'NVL2(%1$s$RDFCLOB, 1, 0) AS %2$s';
         $selected[]    = sprintf($clobIndicator, $oracleVar, $this->quoteIdentifier($normalized . '$HAS_CLOB'));
         return $selected;
     }
