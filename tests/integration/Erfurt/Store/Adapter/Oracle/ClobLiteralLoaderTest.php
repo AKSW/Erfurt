@@ -33,7 +33,6 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framewo
         $this->helper = new \Erfurt_OracleTestHelper();
         $this->helper->installTripleStore();
         $this->loader = new Erfurt_Store_Adapter_Oracle_ClobLiteralLoader($this->helper->getConnection());
-        $this->insertLargeTriple();
     }
 
     /**
@@ -51,6 +50,7 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framewo
      */
     public function testLoadReturnsNullIfDataDoesNotExist()
     {
+        $this->insertLargeTriple();
         $id = $this->getTripleLiteralId();
 
         $this->assertNull($this->loader->load($id + 42));
@@ -61,6 +61,21 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framewo
      */
     public function testLoadReturnsCorrectValue()
     {
+        $this->insertLargeTriple();
+        $id = $this->getTripleLiteralId();
+
+        $value = $this->loader->load($id);
+
+        $this->assertInternalType('string', $value);
+        $this->assertEquals(str_repeat('x', 4200), $value);
+    }
+
+    /**
+     * Ensures that the loader returns the correct value if the stored triple is typed.
+     */
+    public function testLoadReturnsCorrectValueIfLiteralIsTyped()
+    {
+        $this->insertLargeTriple('http://example.org/markdown');
         $id = $this->getTripleLiteralId();
 
         $value = $this->loader->load($id);
@@ -87,15 +102,18 @@ class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framewo
 
     /**
      * Inserts a triple with large literal value.
+     *
+     * @param string|null $dataType
      */
-    protected function insertLargeTriple()
+    protected function insertLargeTriple($dataType = null)
     {
         $triple = new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/test',
             'http://example.org/is-large',
             array(
-                'type'  => 'literal',
-                'value' => str_repeat('x', 4200)
+                'type'     => 'literal',
+                'value'    => str_repeat('x', 4200),
+                'datatype' => $dataType
             )
         );
         $this->helper->getSparqlConnector()->addTriple('http://example.org', $triple);
