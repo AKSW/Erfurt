@@ -178,15 +178,20 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
         $var        = ltrim($var, '?$');
         $normalized = $this->removePrefix($var);
         $normalized = \Erfurt_Store_Adapter_Oracle_ResultConverter_Util::decodeVariableName($normalized);
-        $suffixes  = array(
-            '',
-            '$RDFLANG',
-            '$RDFVTYP',
-            '$RDFLTYP',
-            '$RDFCLOB'
-        );
         $selected  = array();
         $oracleVar = strtoupper($var);
+        // Select the value or null if a CLOB is returned.
+        $valueSelector = 'DECODE(%1$s$RDFCLOB , NULL , %1$s) AS %2$s';
+        $selected[]    = sprintf($valueSelector, $oracleVar, $this->quoteIdentifier($normalized));
+        // Provide a flag that shows if the data is stored as CLOB.
+        $clobIndicator = 'DECODE(%1$s$RDFCLOB , NULL , 0, 1) AS %2$s';
+        $selected[]    = sprintf($clobIndicator, $oracleVar, $this->quoteIdentifier($normalized . '$HAS_CLOB'));
+        // Add meta data that must be selected.
+        $suffixes  = array(
+            '$RDFLANG',
+            '$RDFVTYP',
+            '$RDFLTYP'
+        );
         foreach ($suffixes as $suffix) {
             /* @var $suffix string */
             $selected[] = $oracleVar . $suffix . ' AS ' . $this->quoteIdentifier($normalized . $suffix);
