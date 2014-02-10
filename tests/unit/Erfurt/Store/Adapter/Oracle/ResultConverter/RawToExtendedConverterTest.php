@@ -66,9 +66,9 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
         $this->assertArrayHasKey('vars', $head);
         $vars = $head['vars'];
         $this->assertInternalType('array', $vars);
-        $this->assertContains('subject', $vars);
-        $this->assertContains('predicate', $vars);
-        $this->assertContains('object', $vars);
+        $this->assertContains('SUBJECT', $vars);
+        $this->assertContains('PREDICATE', $vars);
+        $this->assertContains('OBJECT', $vars);
     }
 
     /**
@@ -92,8 +92,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
         $converted = $this->converter->convert($this->getRawResultSet());
 
         $bindings = $this->getBindings($converted);
-        $this->assertEquals('uri', $bindings[1]['subject']['type']);
-        $this->assertEquals('literal', $bindings[1]['object']['type']);
+        $this->assertEquals('uri', $bindings[1]['SUBJECT']['type']);
+        $this->assertEquals('literal', $bindings[1]['OBJECT']['type']);
     }
 
     /**
@@ -105,8 +105,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
         $converted = $this->converter->convert($this->getRawResultSet());
 
         $bindings = $this->getBindings($converted);
-        $this->assertEquals('http://www.example.org/subject', $bindings[1]['subject']['value']);
-        $this->assertEquals('Object literal.', $bindings[1]['object']['value']);
+        $this->assertEquals('http://www.example.org/subject', $bindings[1]['SUBJECT']['value']);
+        $this->assertEquals('Object literal.', $bindings[1]['OBJECT']['value']);
     }
 
     /**
@@ -118,8 +118,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
 
         $bindings = $this->getBindings($converted);
         $this->assertArrayHasKey(2, $bindings);
-        $this->assertArrayHasKey('lang', $bindings[2]['object']);
-        $this->assertEquals('de', $bindings[2]['object']['lang']);
+        $this->assertArrayHasKey('lang', $bindings[2]['OBJECT']);
+        $this->assertEquals('de', $bindings[2]['OBJECT']['lang']);
     }
 
     /**
@@ -132,7 +132,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
 
         $bindings = $this->getBindings($converted);
         $this->assertArrayHasKey(1, $bindings);
-        $this->assertArrayNotHasKey('lang', $bindings[1]['object']);
+        $this->assertArrayNotHasKey('lang', $bindings[1]['OBJECT']);
     }
 
     /**
@@ -145,8 +145,8 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
 
         $bindings = $this->getBindings($converted);
         $this->assertArrayHasKey(3, $bindings);
-        $this->assertArrayHasKey('datatype', $bindings[3]['object']);
-        $this->assertEquals(EF_XSD_NS . 'string', $bindings[3]['object']['datatype']);
+        $this->assertArrayHasKey('datatype', $bindings[3]['OBJECT']);
+        $this->assertEquals(EF_XSD_NS . 'string', $bindings[3]['OBJECT']['datatype']);
     }
 
     /**
@@ -159,7 +159,7 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverterTest ext
 
         $bindings = $this->getBindings($converted);
         $this->assertArrayHasKey(1, $bindings);
-        $this->assertArrayNotHasKey('datatype', $bindings[1]['object']);
+        $this->assertArrayNotHasKey('datatype', $bindings[1]['OBJECT']);
     }
 
     /**
