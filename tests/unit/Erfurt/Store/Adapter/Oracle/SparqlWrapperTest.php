@@ -187,19 +187,108 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapperTest extends \PHPUnit_Framework_T
         $this->assertContains('STRICT_DEFAULT=T', $sql);
     }
 
+    /**
+     * Ensures that the correct columns are selected if the SPARQL query
+     * uses a star ("*") selector.
+     */
     public function testWrapRequestsCorrectColumnsIfStarIsUsedAsSelector()
     {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertSelectsVariable('subject', $sql);
+        $this->assertSelectsVariable('predicate', $sql);
+        $this->assertSelectsVariable('object', $sql);
     }
 
+    /**
+     * Ensures that the correct columns are selected if the SPARQL query
+     * explicitly defines some projection variables.
+     */
     public function testWrapRequestsCorrectColumnsIfProjectionVarsAreProvided()
     {
+        $query = 'SELECT ?subject ?object WHERE { ?subject ?predicate ?object . }';
 
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertSelectsVariable('subject', $sql);
+        $this->assertSelectsVariable('object', $sql);
     }
 
+    /**
+     * Ensures that variables, which are not part of the SPARQL projection vars,
+     * are not selected.
+     */
     public function testWrapDoesNotRequestColumnsThatAreNotPartOfProjectionVars()
     {
-        
+        $query = 'SELECT ?subject ?object WHERE { ?subject ?predicate ?object . }';
+
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertNotSelectsVariable('predicate', $sql);
+    }
+
+    /**
+     * Ensures that the variable prefix, which is added by the SPARQL rewriter,
+     * is directly removed in the SQL.
+     */
+    public function testWrapRemovesPrefixFromVariable()
+    {
+
+        $query = 'SELECT * WHERE { ?%s ?%s ?%s . }';
+        $query = sprintf(
+            $query,
+            Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX . 'subject',
+            Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX . 'predicate',
+            Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX . 'object'
+        );
+
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertSelectsVariable('subject', $sql);
+        $this->assertSelectsVariable('predicate', $sql);
+        $this->assertSelectsVariable('object', $sql);
+    }
+
+    /**
+     * Ensures that wrap() selects the correct variable if the SPARQL
+     * query uses an alias.
+     */
+    public function testWrapSelectsCorrectVariableIfAliasIsUsed()
+    {
+        $query = 'SELECT (COUNT(*) AS ?number) WHERE { ?subject ?predicate ?object . }';
+
+        $sql = $this->wrapper->wrap($query);
+
+        $this->assertSelectsVariable('number', $sql);
+    }
+
+    /**
+     * Asserts that the provided variable is selected in the given SQL.
+     *
+     * @param string $name
+     * @param string $sql
+     */
+    protected function assertSelectsVariable($name, $sql)
+    {
+        $this->assertContains($name, $sql);
+        $this->assertContains($name . '$RDFLANG', $sql);
+        $this->assertContains($name . '$RDFVTYP', $sql);
+        $this->assertContains($name . '$RDFLTYP', $sql);
+    }
+
+    /**
+     * Asserts that the provided variable is *not* selected in the given SQL.
+     *
+     * @param string $name
+     * @param string $sql
+     */
+    protected function assertNotSelectsVariable($name, $sql)
+    {
+        $this->assertNotContains($name . '$RDFLANG', $sql);
+        $this->assertNotContains($name . '$RDFVTYP', $sql);
+        $this->assertNotContains($name . '$RDFLTYP', $sql);
     }
 
     /**
