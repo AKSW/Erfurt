@@ -130,15 +130,16 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
      */
     protected function getHints(Erfurt_Sparql_Query $query)
     {
+        $hints = array('RESULT_CACHE');
         $numberOfConstraints = $this->countConstraints($query->getResultPart());
         if ($numberOfConstraints > static::MIN_NUMBER_OF_CONSTRAINTS_FOR_PARALLELIZATION) {
             // If the query contains many constraints (filter expressions etc.), then provide
             // the hint to parallelize the execution. This greatly improves the performance
             // of queries that have to check many rows, but other queries will
             // slightly suffer, which is the reason why this hint is not used in general.
-            return '/*+ PARALLEL */';
+            $hints[] = 'PARALLEL';
         }
-        return '';
+        return '/*+ ' . implode(' ', $hints) . ' */';
     }
 
     /**
