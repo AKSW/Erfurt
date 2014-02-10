@@ -5,6 +5,7 @@
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 10.02.14
+ * @group Oracle
  */
 class Erfurt_Store_Adapter_Oracle_ClobLiteralLoaderTest extends \PHPUnit_Framework_TestCase
 {
