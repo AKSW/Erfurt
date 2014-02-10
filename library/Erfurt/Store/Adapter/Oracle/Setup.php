@@ -75,6 +75,9 @@ class Erfurt_Store_Adapter_Oracle_Setup
                . '  triple SDO_RDF_TRIPLE_S'
                . ')';
         $this->connection->executeQuery($query);
+        // Create a function based index on the object ID, which is used to retrieve CLOB literals.
+        $query = 'CREATE INDEX object_id ON erfurt_semantic_data (triple.RDF_O_ID)';
+        $this->connection->executeQuery($query);
     }
 
     /**
