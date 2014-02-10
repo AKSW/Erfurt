@@ -31,7 +31,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      * Adds a triple to the buffer.
      *
      * If the buffer size is reached after inserting the triple, then
-     *it will be flushed.
+     * it will be flushed.
      *
      * @param Erfurt_Store_Adapter_Sparql_Triple $triple
      */
