@@ -22,7 +22,15 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
     protected function setUp()
     {
         parent::setUp();
-        $this->converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter();
+        $loader = $this->getMockBuilder('Erfurt_Store_Adapter_Oracle_ClobLiteralLoader')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+        $loader->expects($this->any())
+               ->method('load')
+               ->will($this->returnCallback(function () {
+                   return Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteral(str_repeat('x', 4200));
+               }));
+        $this->converter = new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter($loader);
     }
 
     /**
@@ -67,18 +75,17 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
     /**
      * Ensures that convert() does not change the number of columns in the result set.
      */
-    public function testConvertDoesChangeNumberOfColumns()
+    public function testConvertDoesNotChangeNumberOfColumns()
     {
         $exampleData = $this->getRawResultSet();
 
         $converted = $this->converter->convert($exampleData);
 
         $this->assertInternalType('array', $converted);
-        $expectedColumns = count(current($exampleData));
-        foreach ($converted as $row) {
+        foreach ($converted as $index => $row) {
             /* @var $row array(string=>mixed) */
             $this->assertInternalType('array', $row);
-            $this->assertCount($expectedColumns, $row);
+            $this->assertCount(count($exampleData[$index]), $row);
         }
     }
 
@@ -173,6 +180,37 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
         $converted = $this->converter->convert($this->getRawResultSet());
 
         $value = $this->getValueFromRow($converted, 7);
+
+        $this->assertInternalType('string', $value);
+        $this->assertEquals(str_repeat('x', 4200), $value);
+    }
+
+    /**
+     * Checks if convert() can work with a  minimal result set.
+     *
+     * This is a result set that is assembled by the SPARQL wrapper.
+     */
+    public function testConvertWorksWithMinimalDataSet()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $value = $this->getValueFromRow($converted, 8);
+
+        $this->assertInternalType('string', $value);
+        $this->assertEquals('Test', $value);
+    }
+
+    /**
+     * Ensures that convert() loads missing CLOBs if necessary.
+     *
+     * For performance reason, the SPARQL wrapper excludes CLOBs from the
+     * result set. These must be loaded manually afterwards.
+     */
+    public function testConvertLoadsClobIfNecessary()
+    {
+        $converted = $this->converter->convert($this->getRawResultSet());
+
+        $value = $this->getValueFromRow($converted, 9);
 
         $this->assertInternalType('string', $value);
         $this->assertEquals(str_repeat('x', 4200), $value);
@@ -304,6 +342,26 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverterTest extend
                 'OBJECT$RDFLTYP'    => null,
                 'OBJECT$RDFLANG'    => null,
                 'SEM$ROWNUM'        => 8
+            ),
+            // Minimal data set.
+            array(
+                'OBJECT'            => 'Test',
+                'OBJECT$RDFVID'     => 6944352155936009571,
+                'OBJECT$RDFVTYP'    => 'LIT',
+                'OBJECT$RDFLTYP'    => null,
+                'OBJECT$HAS_CLOB'   => false,
+                'OBJECT$RDFLANG'    => null,
+                'SEM$ROWNUM'        => 9
+            ),
+            // CLOB value that must be lazy loaded.
+            array(
+                'OBJECT'            => null,
+                'OBJECT$RDFVID'     => 6944352155936009572,
+                'OBJECT$RDFVTYP'    => 'LIT',
+                'OBJECT$RDFLTYP'    => null,
+                'OBJECT$HAS_CLOB'   => true,
+                'OBJECT$RDFLANG'    => null,
+                'SEM$ROWNUM'        => 10
             )
         );
     }
