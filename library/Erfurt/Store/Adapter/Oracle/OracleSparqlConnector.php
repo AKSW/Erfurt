@@ -335,7 +335,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         } else {
             $converter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToTypedConverter(),
-                new Erfurt_Store_Adapter_ResultConverter_RemovePrefixConverter(strtoupper(Erfurt_Store_Adapter_Oracle_SparqlRewriter::VARIABLE_PREFIX)),
                 new Erfurt_Store_Adapter_Oracle_ResultConverter_RawToExtendedConverter()
             ));
         }
