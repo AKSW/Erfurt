@@ -187,7 +187,11 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testAddFlushesBufferIfBufferSizeIsReached()
     {
+        $this->assertCallbackReceivesTriples(3);
 
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
     }
 
     /**
@@ -196,7 +200,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testSetSizeFlushesBufferIfSizeIsExceeded()
     {
+        $this->assertCallbackReceivesTriples(2);
 
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
+
+        $this->buffer->setSize(1);
     }
 
     /**
@@ -205,7 +214,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testSetSizeDoesNotFlushBufferIfSizeIsNotExceeded()
     {
+        $this->assertCallbackNotCalled();
 
+        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createTriple());
+
+        $this->buffer->setSize(42);
     }
 
     /**
