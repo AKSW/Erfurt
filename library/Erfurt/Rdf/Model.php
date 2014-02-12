@@ -422,8 +422,7 @@ class Erfurt_Rdf_Model
 
             $removed[$s['s']['value']][$s['p']['value']][] = $s['o'];
 
-            foreach ($vars as $var) {
-                $varName = $var->getName();
+            foreach (array('s', 'p', 'o') as $varName) {
                 if ( $s[$varName]['type'] === 'uri'
                     && $s[$varName]['value'] === $oldUri
                 ) {
