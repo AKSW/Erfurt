@@ -10,8 +10,32 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 10.02.14
  */
-class Erfurt_Store_Adapter_Sparql_TripleBuffer
+class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
 {
+
+    /**
+     * Contains the buffered triples.
+     *
+     * @var array(\Erfurt_Store_Adapter_Sparql_Triple)
+     */
+    protected $triples = array();
+
+    /**
+     * The buffer size.
+     *
+     * As soon as this size is reached the buffer will be flushed.
+     *
+     * @var integer
+     */
+    protected $size = null;
+
+    /**
+     * The callback that processes the buffered triples once the buffer
+     * is full.
+     *
+     * @var callable
+     */
+    protected $tripleHandler = null;
 
     /**
      * Creates a triple buffer.
@@ -24,7 +48,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function __construct($tripleHandler, $size = 1)
     {
-
+        if (!is_callable($tripleHandler)) {
+            $message = 'Triple handler must be a valid callback.';
+            throw new InvalidArgumentException($message);
+        }
+        $this->tripleHandler = $tripleHandler;
+        $this->setSize($size);
     }
 
     /**
@@ -37,7 +66,8 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function add(Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-
+        $this->triples[] = $triple;
+        $this->flushIfFull();
     }
 
     /**
@@ -45,7 +75,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function flush()
     {
-
+        if ($this->isEmpty()) {
+            //Nothing to flush.
+            return;
+        }
+        call_user_func($this->tripleHandler, $this->triples);
+        $this->clear();
     }
 
     /**
@@ -55,7 +90,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function getSize()
     {
-
+        return $this->size;
     }
 
     /**
@@ -69,7 +104,16 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function setSize($newSize)
     {
-
+        if (!is_int($newSize)) {
+            $message = 'Buffer size must be an integer, but received ' . gettype($newSize) . '.';
+            throw new InvalidArgumentException($message);
+        }
+        if ($newSize < 1) {
+            $message = 'Buffer size must be at least 1.';
+            throw new InvalidArgumentException($message);
+        }
+        $this->size = $newSize;
+        $this->flushIfFull();
     }
 
     /**
@@ -79,7 +123,42 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer
      */
     public function count()
     {
+        return count($this->triples);
+    }
 
+    /**
+     * Flushes the buffer if it is full.
+     *
+     * Does nothing if the number of triples is within the allowed size.
+     */
+    protected function flushIfFull()
+    {
+        if ($this->count() < $this->size) {
+            // Number of triples does not exceed buffer size.
+            return;
+        }
+        $this->flush();
+    }
+
+    /**
+     * Clears the buffer.
+     *
+     * All triples will be removed, but the triple handler will *not*
+     * be notified.
+     */
+    protected function clear()
+    {
+        $this->triples = array();
+    }
+
+    /**
+     * Checks if the buffer is empty.
+     *
+     * @return boolean
+     */
+    protected function isEmpty()
+    {
+        return $this->count() === 0;
     }
 
 }
