@@ -1207,27 +1207,4 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \PHPUnit_Fra
         $this->connector->addTriple($graphIri, $triple);
     }
 
-    /**
-     * Creates a clean installation of the Triple Store.
-     *
-     * @param \Erfurt_Store_Adapter_Oracle_Setup $setup
-     */
-    protected function installTripleStore(Erfurt_Store_Adapter_Oracle_Setup $setup)
-    {
-        $this->uninstallTripleStore($setup);
-        $setup->install();
-    }
-
-    /**
-     * Removes the Triple Store that was used for testing.
-     *
-     * @param Erfurt_Store_Adapter_Oracle_Setup $setup
-     */
-    protected function uninstallTripleStore(Erfurt_Store_Adapter_Oracle_Setup $setup)
-    {
-        if ($setup->isInstalled()) {
-            $setup->uninstall();
-        }
-    }
-
 }
