@@ -56,11 +56,11 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     }
 
     /**
-     * Ensures that the batch processor is able to store a single triple.
+     * Ensures that the batch processor is able to store a single quad.
      */
-    public function testProcessorStoresSingleTriple()
+    public function testProcessorStoresSingleQuad()
     {
-        $triple = $this->createTriple();
+        $triple = $this->createQuad();
 
         $this->processor->persist(array($triple));
 
@@ -68,20 +68,20 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     }
 
     /**
-     * Checks if the processor can store a list of triples.
+     * Checks if the processor can store a list of quads.
      */
-    public function testProcessorStoresListOfTriples()
+    public function testProcessorStoresListOfQuads()
     {
 
     }
 
     /**
      * Ensures that the batch processor is able to store a single
-     * with large literal object.
+     * quad with large literal object.
      */
-    public function testProcessorStoresSingleTripleWithLargeLiteral()
+    public function testProcessorStoresSingleQuadWithLargeLiteral()
     {
-        $triple = $this->createTriple(4200);
+        $triple = $this->createQuad(4200);
 
         $this->processor->persist(array($triple));
 
@@ -89,10 +89,10 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     }
 
     /**
-     * Checks if the processor can store a list of triples with large
+     * Checks if the processor can store a list of quads with large
      * literal objects.
      */
-    public function testProcessorStoresListOfTriplesWithLargeLiteral()
+    public function testProcessorStoresListOfQuadsWithLargeLiteral()
     {
 
     }
@@ -108,20 +108,21 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     }
 
     /**
-     * Creates a triple with literal object.
+     * Creates a quad with literal object.
      *
      * @param integer $objectLiteralSite The size of the object literal in bytes.
-     * @return Erfurt_Store_Adapter_Sparql_Triple
+     * @return Erfurt_Store_Adapter_Sparql_Quad
      */
-    protected function createTriple($objectLiteralSite = 100)
+    protected function createQuad($objectLiteralSite = 100)
     {
-        return new Erfurt_Store_Adapter_Sparql_Triple(
+        return new Erfurt_Store_Adapter_Sparql_Quad(
             'http://example.org/subject/' . uniqid('s', true),
             'http://example.org/predicate/' . uniqid('p', true),
             array(
                 'type'  => 'literal',
                 'value' => str_repeat('x', $objectLiteralSite)
-            )
+            ),
+            'http://example.org/graph'
         );
     }
 

@@ -3,10 +3,10 @@
 use Doctrine\DBAL\Connection;
 
 /**
- * Helper class that processes triple inserts and updates as batch.
+ * Helper class that processes quad inserts and updates as batch.
  *
  * It is up to the batch processor to choose the method that is most
- * suitable to store a given number of triples.
+ * suitable to store a given number of quads.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.02.14
@@ -27,9 +27,9 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
     /**
      * Stores the provided triples.
      *
-     * @param array(\Erfurt_Store_Adapter_Sparql_Triple) $triples
+     * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
      */
-    public function persist(array $triples)
+    public function persist(array $quads)
     {
 
     }
