@@ -18,9 +18,6 @@ class Erfurt_Store_Adapter_Sparql_Triple extends Erfurt_Store_Adapter_Sparql_Tri
     /**
      * Creates a triple that contains the given components.
      *
-     * Null can be passed to indicate that every value is allowed
-     * at that position.
-     *
      * @param string $subject
      * @param string $predicate
      * @param array(string=>string) $object
