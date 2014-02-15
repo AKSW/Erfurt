@@ -8,6 +8,19 @@
  */
 class Erfurt_Store_Adapter_Sparql_Quad
 {
+
+    /**
+     * Creates quad from triple and graph information.
+     *
+     * @param string $graph
+     * @param Erfurt_Store_Adapter_Sparql_Triple $triple
+     * @return Erfurt_Store_Adapter_Sparql_Quad
+     */
+    public static function create($graph, Erfurt_Store_Adapter_Sparql_Triple $triple)
+    {
+
+    }
+
     /**
      * Creates a quad that contains the given components.
      *
