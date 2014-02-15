@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Buffer that can be used to insert triples in a batch.
+ * Buffer that can be used to insert quads in a batch.
  *
  * The buffer has a runtime configurable size. If the buffer is full,
- * the contained triples will be passed to a provided callback and
+ * the contained quads will be passed to a provided callback and
  * the buffer is cleared.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 10.02.14
  */
-class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
+class Erfurt_Store_Adapter_Sparql_QuadBuffer implements Countable
 {
 
     /**
      * Contains the buffered triples.
      *
-     * @var array(\Erfurt_Store_Adapter_Sparql_Triple)
+     * @var array(\Erfurt_Store_Adapter_Sparql_Quad)
      */
-    protected $triples = array();
+    protected $quads = array();
 
     /**
      * The buffer size.
@@ -30,48 +30,48 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
     protected $size = null;
 
     /**
-     * The callback that processes the buffered triples once the buffer
+     * The callback that processes the buffered quads once the buffer
      * is full.
      *
      * @var callable
      */
-    protected $tripleHandler = null;
+    protected $quadHandler = null;
 
     /**
-     * Creates a triple buffer.
+     * Creates a quad buffer.
      *
-     * The callback retrieves an array of triples whenever the buffer is flushed.
+     * The callback retrieves an array of quads whenever the buffer is flushed.
      *
-     * @param callable $tripleHandler Callback that handles the triples on flush.
+     * @param callable $quadHandler Callback that handles the triples on flush.
      * @param integer $size The size of the buffer.
      * @throws \InvalidArgumentException If an invalid callback is passed.
      */
-    public function __construct($tripleHandler, $size = 1)
+    public function __construct($quadHandler, $size = 1)
     {
-        if (!is_callable($tripleHandler)) {
-            $message = 'Triple handler must be a valid callback.';
+        if (!is_callable($quadHandler)) {
+            $message = 'Quad handler must be a valid callback.';
             throw new InvalidArgumentException($message);
         }
-        $this->tripleHandler = $tripleHandler;
+        $this->quadHandler = $quadHandler;
         $this->setSize($size);
     }
 
     /**
-     * Adds a triple to the buffer.
+     * Adds a quad to the buffer.
      *
-     * If the buffer size is reached after inserting the triple, then
+     * If the buffer size is reached after inserting the quad, then
      * it will be flushed.
      *
-     * @param Erfurt_Store_Adapter_Sparql_Triple $triple
+     * @param Erfurt_Store_Adapter_Sparql_Quad $quad
      */
-    public function add(Erfurt_Store_Adapter_Sparql_Triple $triple)
+    public function add(Erfurt_Store_Adapter_Sparql_Quad $quad)
     {
-        $this->triples[] = $triple;
+        $this->quads[] = $quad;
         $this->flushIfFull();
     }
 
     /**
-     * Passes all triples in the buffer to the handler and clears it.
+     * Passes all quads in the buffer to the handler and clears it.
      */
     public function flush()
     {
@@ -79,7 +79,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
             //Nothing to flush.
             return;
         }
-        call_user_func($this->tripleHandler, $this->triples);
+        call_user_func($this->quadHandler, $this->quads);
         $this->clear();
     }
 
@@ -96,7 +96,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
     /**
      * Sets the new buffer size.
      *
-     * If the current number of triples exceeds the new size, then the
+     * If the current number of quads exceeds the new size, then the
      * buffer will be flushed.
      *
      * @param integer $newSize
@@ -117,24 +117,24 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
     }
 
     /**
-     * Returns the number of triples in the buffer.
+     * Returns the number of quads in the buffer.
      *
      * @return integer
      */
     public function count()
     {
-        return count($this->triples);
+        return count($this->quads);
     }
 
     /**
      * Flushes the buffer if it is full.
      *
-     * Does nothing if the number of triples is within the allowed size.
+     * Does nothing if the number of quads is within the allowed size.
      */
     protected function flushIfFull()
     {
         if ($this->count() < $this->size) {
-            // Number of triples does not exceed buffer size.
+            // Number of quads does not exceed buffer size.
             return;
         }
         $this->flush();
@@ -143,12 +143,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBuffer implements Countable
     /**
      * Clears the buffer.
      *
-     * All triples will be removed, but the triple handler will *not*
+     * All triples will be removed, but the quad handler will *not*
      * be notified.
      */
     protected function clear()
     {
-        $this->triples = array();
+        $this->quads = array();
     }
 
     /**

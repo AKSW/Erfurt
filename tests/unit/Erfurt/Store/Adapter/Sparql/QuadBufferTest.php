@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Tests the triple buffer.
+ * Tests the quad buffer.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 10.02.14
  */
-class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Sparql_QuadBufferTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var \Erfurt_Store_Adapter_Sparql_TripleBuffer
+     * @var \Erfurt_Store_Adapter_Sparql_QuadBuffer
      */
     protected $buffer = null;
 
@@ -30,7 +30,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     {
         parent::setUp();
         $this->flushCallback = $this->getMock('stdClass', array('__invoke'));
-        $this->buffer        = new Erfurt_Store_Adapter_Sparql_TripleBuffer($this->flushCallback, 3);
+        $this->buffer        = new Erfurt_Store_Adapter_Sparql_QuadBuffer($this->flushCallback, 3);
     }
 
     /**
@@ -50,7 +50,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     public function testConstructorThrowsExceptionIfNoValidCallbackIsProvided()
     {
         $this->setExpectedException('InvalidArgumentException');
-        new Erfurt_Store_Adapter_Sparql_TripleBuffer(array($this, 'missing'), 2);
+        new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($this, 'missing'), 2);
     }
 
     /**
@@ -60,7 +60,7 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     public function testConstructorThrowsExceptionIfInvalidSizeIsPassed()
     {
         $this->setExpectedException('InvalidArgumentException');
-        new Erfurt_Store_Adapter_Sparql_TripleBuffer($this->flushCallback, -1);
+        new Erfurt_Store_Adapter_Sparql_QuadBuffer($this->flushCallback, -1);
     }
 
     /**
@@ -80,12 +80,12 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     }
 
     /**
-     * Checks if count() returns the correct number of triples
+     * Checks if count() returns the correct number of quads
      * when the buffer is not empty.
      */
-    public function testCountReturnsNumberOfTriplesInBuffer()
+    public function testCountReturnsNumberOfQuadsInBuffer()
     {
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
 
         $this->assertEquals(1, $this->buffer->count());
     }
@@ -136,8 +136,8 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testFlushClearsBuffer()
     {
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
 
         $this->buffer->flush();
 
@@ -145,15 +145,15 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     }
 
     /**
-     * Ensures that flush() passes the triples in the buffer to the
+     * Ensures that flush() passes the quads in the buffer to the
      * callback.
      */
-    public function testFlushPassesTriplesToCallback()
+    public function testFlushPassesQuadsToCallback()
     {
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
 
-        $this->assertCallbackReceivesTriples($this->buffer->count());
+        $this->assertCallbackReceivesQuads($this->buffer->count());
 
         $this->buffer->flush();
     }
@@ -177,8 +177,8 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     {
         $this->assertCallbackNotCalled();
 
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
     }
 
     /**
@@ -187,37 +187,37 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
      */
     public function testAddFlushesBufferIfBufferSizeIsReached()
     {
-        $this->assertCallbackReceivesTriples(3);
+        $this->assertCallbackReceivesQuads(3);
 
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
     }
 
     /**
      * Ensures that setSize() flushes the buffer if the number of
-     * triples exceeds the new buffer size.
+     * quads exceeds the new buffer size.
      */
     public function testSetSizeFlushesBufferIfSizeIsExceeded()
     {
-        $this->assertCallbackReceivesTriples(2);
+        $this->assertCallbackReceivesQuads(2);
 
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
 
         $this->buffer->setSize(1);
     }
 
     /**
      * Ensures that setSize() does not flush the buffer if the number
-     * of triples does *not* exceed the new buffer size.
+     * of quads does *not* exceed the new buffer size.
      */
     public function testSetSizeDoesNotFlushBufferIfSizeIsNotExceeded()
     {
         $this->assertCallbackNotCalled();
 
-        $this->buffer->add($this->createTriple());
-        $this->buffer->add($this->createTriple());
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
 
         $this->buffer->setSize(42);
     }
@@ -225,18 +225,18 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     /**
      * Asserts that the callback receives the provided number of triples.
      *
-     * @param integer $numberOfTriples
+     * @param integer $numberOfQuads
      */
-    protected function assertCallbackReceivesTriples($numberOfTriples)
+    protected function assertCallbackReceivesQuads($numberOfQuads)
     {
-        $checkTriples = function ($triples) use ($numberOfTriples) {
+        $checkQuads = function ($triples) use ($numberOfQuads) {
             PHPUnit_Framework_Assert::assertInternalType('array', $triples);
-            PHPUnit_Framework_Assert::assertContainsOnly('\Erfurt_Store_Adapter_Sparql_Triple', $triples);
-            PHPUnit_Framework_Assert::assertCount($numberOfTriples, $triples);
+            PHPUnit_Framework_Assert::assertContainsOnly('\Erfurt_Store_Adapter_Sparql_Quad', $triples);
+            PHPUnit_Framework_Assert::assertCount($numberOfQuads, $triples);
         };
         $this->flushCallback->expects($this->once())
                             ->method('__invoke')
-                            ->will($this->returnCallback($checkTriples));
+                            ->will($this->returnCallback($checkQuads));
     }
 
     /**
@@ -249,19 +249,20 @@ class Erfurt_Store_Adapter_Sparql_TripleBufferTest extends \PHPUnit_Framework_Te
     }
 
     /**
-     * Creates a triple with random content.
+     * Creates a quad with random content.
      *
-     * @return Erfurt_Store_Adapter_Sparql_Triple
+     * @return Erfurt_Store_Adapter_Sparql_Quad
      */
-    protected function createTriple()
+    protected function createQuad()
     {
-        return new Erfurt_Store_Adapter_Sparql_Triple(
+        return new Erfurt_Store_Adapter_Sparql_Quad(
             'http://example.org/' . uniqid('sub'),
             'http://example.org/' . uniqid('pred'),
             array(
                 'type'  => 'uri',
                 'value' => 'http://example.org/' . uniqid('obj')
-            )
+            ),
+            'http://example.org/graph'
         );
     }
 
