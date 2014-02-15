@@ -10,6 +10,13 @@ class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Tripl
 {
 
     /**
+     * The graph URI.
+     *
+     * @var string
+     */
+    protected $graph = null;
+
+    /**
      * Creates quad from triple and graph information.
      *
      * @param string $graph
@@ -18,7 +25,12 @@ class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Tripl
      */
     public static function create($graph, Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-
+        return new Erfurt_Store_Adapter_Sparql_Quad(
+            $triple->getSubject(),
+            $triple->getPredicate(),
+            $triple->getObject(),
+            $graph
+        );
     }
 
     /**
@@ -32,7 +44,8 @@ class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Tripl
      */
     public function __construct($subject, $predicate, array $object, $graph)
     {
-
+        parent::__construct($subject, $predicate, $object, $graph);
+        $this->graph = $graph;
     }
 
     /**
@@ -42,7 +55,7 @@ class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Tripl
      */
     public function getGraph()
     {
-
+        return $this->graph;
     }
 
 }
