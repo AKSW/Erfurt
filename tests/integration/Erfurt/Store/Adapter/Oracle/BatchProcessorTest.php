@@ -50,7 +50,9 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorCanHandleEmptyTripleList()
     {
+        $this->processor->persist(array());
 
+        $this->assertNumberOfTriples(0);
     }
 
     /**
@@ -58,7 +60,11 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresSingleTriple()
     {
+        $triple = $this->createTriple();
 
+        $this->processor->persist(array($triple));
+
+        $this->assertNumberOfTriples(1);
     }
 
     /**
@@ -75,7 +81,11 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresSingleTripleWithLargeLiteral()
     {
+        $triple = $this->createTriple(4200);
 
+        $this->processor->persist(array($triple));
+
+        $this->assertNumberOfTriples(1);
     }
 
     /**
@@ -85,6 +95,34 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     public function testProcessorStoresListOfTriplesWithLargeLiteral()
     {
 
+    }
+
+    /**
+     * Asserts that $expectedNumber triples are stored.
+     *
+     * @param integer $expectedNumber
+     */
+    protected function assertNumberOfTriples($expectedNumber)
+    {
+
+    }
+
+    /**
+     * Creates a triple with literal object.
+     *
+     * @param integer $objectLiteralSite The size of the object literal in bytes.
+     * @return Erfurt_Store_Adapter_Sparql_Triple
+     */
+    protected function createTriple($objectLiteralSite = 100)
+    {
+        return new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/subject/' . uniqid('s', true),
+            'http://example.org/predicate/' . uniqid('p', true),
+            array(
+                'type'  => 'literal',
+                'value' => str_repeat('x', $objectLiteralSite)
+            )
+        );
     }
 
 }
