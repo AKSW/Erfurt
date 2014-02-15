@@ -55,7 +55,7 @@ class Erfurt_Store_Adapter_Sparql_QuadTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetGraphReturnsCorrectValue()
     {
-        $this->assertEquals('http:/example.org/graph', $this->quad->getGraph());
+        $this->assertEquals('http://example.org/graph', $this->quad->getGraph());
     }
 
     /**
