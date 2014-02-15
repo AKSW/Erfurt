@@ -11,7 +11,7 @@ use Doctrine\DBAL\Connection;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.02.14
  */
-class BatchProcessor
+class Erfurt_Store_Adapter_Oracle_BatchProcessor
 {
 
     /**
