@@ -45,26 +45,43 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
         parent::tearDown();
     }
 
+    /**
+     * Checks if the batch processor can handle an empty triple list.
+     */
     public function testProcessorCanHandleEmptyTripleList()
     {
 
     }
 
+    /**
+     * Ensures that the batch processor is able to store a single triple.
+     */
     public function testProcessorStoresSingleTriple()
     {
 
     }
 
+    /**
+     * Checks if the processor can store a list of triples.
+     */
     public function testProcessorStoresListOfTriples()
     {
 
     }
 
+    /**
+     * Ensures that the batch processor is able to store a single
+     * with large literal object.
+     */
     public function testProcessorStoresSingleTripleWithLargeLiteral()
     {
 
     }
 
+    /**
+     * Checks if the processor can store a list of triples with large
+     * literal objects.
+     */
     public function testProcessorStoresListOfTriplesWithLargeLiteral()
     {
 
