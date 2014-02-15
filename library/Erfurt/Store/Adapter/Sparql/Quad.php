@@ -6,7 +6,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.02.14
  */
-class Erfurt_Store_Adapter_Sparql_Quad
+class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Triple
 {
 
     /**
