@@ -62,7 +62,7 @@ class Erfurt_Store_Adapter_Sparql_QuadTest extends \PHPUnit_Framework_TestCase
      * Checks if create() can be used to create a quad from triple information
      * plus graph URI.
      */
-    public function createReturnsQuadWithProvidedInformation()
+    public function testCreateReturnsQuadWithProvidedInformation()
     {
         $triple = new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/subject',
