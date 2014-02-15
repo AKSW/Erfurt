@@ -1172,10 +1172,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \PHPUnit_Fra
      */
     protected function countTriples()
     {
-        $query = 'SELECT COUNT(*) AS NUMBER_OF_TRIPLES FROM erfurt_semantic_data';
-        $result = $this->helper->getConnection()->query($query);
-        $rows = $result->fetchAll();
-        return (int)$rows[0]['NUMBER_OF_TRIPLES'];
+        return $this->helper->countTriples();
     }
 
     /**

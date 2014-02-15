@@ -87,6 +87,20 @@ class Erfurt_OracleTestHelper
     }
 
     /**
+     * Counts the number of triples in the store.
+     *
+     * @return integer
+     */
+    public function countTriples()
+    {
+        $this->installTripleStore();
+        $query = 'SELECT COUNT(*) AS NUMBER_OF_TRIPLES FROM erfurt_semantic_data';
+        $result = $this->getConnection()->query($query);
+        $rows = $result->fetchAll();
+        return (int)$rows[0]['NUMBER_OF_TRIPLES'];
+    }
+
+    /**
      * Creates a clean installation of the Triple Store.
      */
     public function installTripleStore()
