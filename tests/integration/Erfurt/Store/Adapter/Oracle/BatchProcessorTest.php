@@ -45,4 +45,29 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
         parent::tearDown();
     }
 
+    public function testProcessorCanHandleEmptyTripleList()
+    {
+
+    }
+
+    public function testProcessorStoresSingleTriple()
+    {
+
+    }
+
+    public function testProcessorStoresListOfTriples()
+    {
+
+    }
+
+    public function testProcessorStoresSingleTripleWithLargeLiteral()
+    {
+
+    }
+
+    public function testProcessorStoresListOfTriplesWithLargeLiteral()
+    {
+
+    }
+
 }
