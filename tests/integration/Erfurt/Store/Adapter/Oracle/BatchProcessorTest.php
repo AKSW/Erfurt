@@ -60,9 +60,9 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresSingleQuad()
     {
-        $triple = $this->createQuad();
+        $quad = $this->createQuad();
 
-        $this->processor->persist(array($triple));
+        $this->processor->persist(array($quad));
 
         $this->assertNumberOfTriples(1);
     }
@@ -72,7 +72,11 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresListOfQuads()
     {
+        $quads = $this->createQuads(20);
 
+        $this->processor->persist($quads);
+
+        $this->assertNumberOfTriples(count($quads));
     }
 
     /**
@@ -81,9 +85,9 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresSingleQuadWithLargeLiteral()
     {
-        $triple = $this->createQuad(4200);
+        $quad = $this->createQuad(4200);
 
-        $this->processor->persist(array($triple));
+        $this->processor->persist(array($quad));
 
         $this->assertNumberOfTriples(1);
     }
@@ -94,7 +98,11 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     public function testProcessorStoresListOfQuadsWithLargeLiteral()
     {
+        $quads = $this->createQuads(20, 4200);
 
+        $this->processor->persist($quads);
+
+        $this->assertNumberOfTriples(count($quads));
     }
 
     /**
@@ -104,7 +112,23 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
      */
     protected function assertNumberOfTriples($expectedNumber)
     {
+        $this->assertEquals($expectedNumber, $this->helper->countTriples());
+    }
 
+    /**
+     * Creates a list of $number quads.
+     *
+     * @param integer $number
+     * @param integer $objectLiteralSize
+     * @return array(Erfurt_Store_Adapter_Sparql_Quad)
+     */
+    protected function createQuads($number, $objectLiteralSize = 100)
+    {
+        $quads = array();
+        for ($i = 0; $i < $number; $i++) {
+            $quads[] = $this->createQuad($objectLiteralSize);
+        }
+        return $quads;
     }
 
     /**
