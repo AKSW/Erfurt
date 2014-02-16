@@ -1099,6 +1099,38 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest extends \PHPUnit_Fra
     }
 
     /**
+     * Checks if single inserts still work after using the batch mode.
+     */
+    public function testSingleInsertWorksAfterBatchMode()
+    {
+        $addTriple = function ($connector) {
+            PHPUnit_Framework_Assert::assertInstanceOf(
+                '\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface',
+                $connector
+            );
+            /* @var $connector \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
+            $connector->addTriple(
+                'http://example.org/graph',
+                new Erfurt_Store_Adapter_Sparql_Triple(
+                    'http://example.org/subject/' . uniqid('s', true),
+                    'http://example.org/predicate',
+                    array(
+                        'type'  => 'uri',
+                        'value' => 'http://example.org/object'
+                    )
+                )
+            );
+        };
+
+        // Insert 1 triple in batch mode...
+        $this->connector->batch($addTriple);
+        // ... and another one afterwards.
+        $addTriple($this->connector);
+
+        $this->assertEquals(2, $this->countTriples());
+    }
+
+    /**
      * Asserts that the provided (extended) result set contains
      * the expected number of result rows.
      *
