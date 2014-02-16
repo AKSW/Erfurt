@@ -15,7 +15,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     /**
      * Number of triples that will be inserted in a batch.
      */
-    const BATCH_SIZE = 50;
+    const BATCH_SIZE = 100;
 
     /**
      * The database connection that is used.
