@@ -80,6 +80,30 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessorTest extends \PHPUnit_Framework_
     }
 
     /**
+     * Checks if persist() can be used multiple times.
+     */
+    public function testProcessorCanStoreMultipleListsOfQuads()
+    {
+        $this->processor->persist($this->createQuads(20));
+        $this->processor->persist($this->createQuads(20));
+
+        $this->assertNumberOfTriples(40);
+    }
+
+    /**
+     * Checks if persist() can handle quad lists of different sizes.
+     */
+    public function testProcessorCanBeUsedWithQuadListsOfDifferentSizes()
+    {
+        $this->processor->persist($this->createQuads(5));
+        $this->processor->persist($this->createQuads(20));
+        $this->processor->persist($this->createQuads(10));
+        $this->processor->persist($this->createQuads(5));
+
+        $this->assertNumberOfTriples(40);
+    }
+
+    /**
      * Ensures that the batch processor is able to store a single
      * quad with large literal object.
      */
