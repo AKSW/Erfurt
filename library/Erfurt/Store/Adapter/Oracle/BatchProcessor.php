@@ -103,21 +103,19 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
             $insertParts = array();
             for ($i = 0; $i < $numberOfQuads; $i++) {
                 $lines = array(
-                    "  INSERT INTO erfurt_semantic_data (triple) ",
-                    "  VALUES (",
+                    "  SELECT ",
                     "    SDO_RDF_TRIPLE_S(",
                     "      :modelAndGraph_$i,",
                     "      :subject_$i,",
                     "      :predicate_$i,",
                     "      :object_$i",
                     "     )",
-                    "  );"
+                    "  FROM DUAL"
                 );
                 $insertParts[] = implode(PHP_EOL, $lines);
             }
-            $query = 'BEGIN ' . PHP_EOL
-                   . implode(PHP_EOL, $insertParts) . PHP_EOL
-                   . 'END;';
+            $query = 'INSERT INTO erfurt_semantic_data (triple) ' . PHP_EOL
+                   . implode(PHP_EOL . ' UNION ALL ', $insertParts);
             $this->insertStatements[$numberOfQuads] = $this->connection->prepare($query);
         }
         return $this->insertStatements[$numberOfQuads];
