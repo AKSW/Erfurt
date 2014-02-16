@@ -13,6 +13,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
 {
 
     /**
+     * Number of triples that will be inserted in a batch.
+     */
+    const BATCH_SIZE = 50;
+
+    /**
      * The database connection that is used.
      *
      * @var \Doctrine\DBAL\Connection
@@ -212,8 +217,12 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         // insert or delete.
         $result    = null;
         $connector = $this;
-        $this->connection->transactional(function () use ($callback, $connector, &$result) {
+        $buffer    = $this->buffer;
+        $this->connection->transactional(function () use ($callback, $connector, $buffer, &$result) {
+            $buffer->setSize(static::BATCH_SIZE);
             $result = call_user_func($callback, $connector);
+            $buffer->flush();
+            $buffer->setSize(1);
         });
         return $result;
     }
