@@ -42,11 +42,11 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     protected $clobLoader = null;
 
     /**
-     * A prepared insert statement or null if it was not created yet.
+     * Buffer for triples that will be inserted.
      *
-     * @var \Doctrine\DBAL\Driver\Statement|null
+     * @var \Erfurt_Store_Adapter_Sparql_QuadBuffer
      */
-    protected $insertStatement = null;
+    protected $buffer = null;
 
     /**
      * Creates a connector that uses the provided database connection to interact
@@ -64,6 +64,9 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
             array($this->connection, 'quoteIdentifier')
         );
         $this->clobLoader = new Erfurt_Store_Adapter_Oracle_ClobLiteralLoader($connection);
+        // Triples are buffered and the batch processor is used to store them.
+        $batchProcessor = new Erfurt_Store_Adapter_Oracle_BatchProcessor($connection);
+        $this->buffer   = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
     }
 
     /**
@@ -74,24 +77,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $subject = $triple->getSubject();
-        $subject = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
-        $params = array(
-            'modelAndGraph' => $this->getModelName() . ':<' . $graphIri . '>',
-            'subject'       => $subject,
-            'predicate'     => '<' . $triple->getPredicate() . '>',
-            'object'        => Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
-                $triple->getObject()
-            )
-        );
-        $statement = $this->getInsertStatement();
-        if (strlen($params['object']) > 4000) {
-            // Literal is too long, therefore, bind it as a CLOB.
-            $largeLiteral = $params['object'];
-            unset($params['object']);
-            $statement->bindValue('object', $largeLiteral, PDO::PARAM_LOB);
-        }
-        $statement->execute($params);
+        $this->buffer->add(Erfurt_Store_Adapter_Sparql_Quad::create($graphIri, $triple));
     }
 
     /**
@@ -248,42 +234,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         $parser = new Erfurt_Sparql_Parser();
         $info   = $parser->parse($query);
         return $info->getResultForm() === 'ask';
-    }
-
-    /**
-     * Prepares a statement that is used to insert a triple.
-     *
-     * The statement requires the following parameters:
-     *
-     * # modelAndGraph - Model name and graph IRI, separated by colon (":").
-     * # subject       - Subject IRI.
-     * # predicate     - Predicate IRI.
-     * # object        - Encoded object.
-     *
-     * IRI must be enclosed by angle braces ("<", ">").
-     * Objects must be IRIs or encoded literals, for example:
-     *
-     * # "literal"
-     * # "literal"@de
-     * # "literal"^^xsd:string
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
-     */
-    protected function getInsertStatement()
-    {
-        if ($this->insertStatement === null) {
-            $query = 'INSERT INTO erfurt_semantic_data (triple) '
-                   . 'VALUES ('
-                   . '  SDO_RDF_TRIPLE_S('
-                   . '    :modelAndGraph,'
-                   . '    :subject,'
-                   . '    :predicate,'
-                   . '    :object'
-                   . '  )'
-                   . ')';
-            $this->insertStatement = $this->connection->prepare($query);
-        }
-        return $this->insertStatement;
     }
 
     /**
