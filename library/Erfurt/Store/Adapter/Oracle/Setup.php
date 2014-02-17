@@ -114,13 +114,13 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     protected function createInsertProcedure()
     {
-        $createTypeLines = array(
+        $packageHeaderLines = array(
             'CREATE OR REPLACE PACKAGE ERFURT AS',
             '    TYPE STRING_LIST IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
             '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST);',
             'END ERFURT;'
         );
-        $createProcedureLines = array(
+        $packageBodyLines = array(
             'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
             '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST) IS',
             '    BEGIN',
@@ -136,8 +136,8 @@ class Erfurt_Store_Adapter_Oracle_Setup
             '    END ADD_TRIPLES;',
             'END ERFURT;'
         );
-        $this->connection->executeQuery(implode(PHP_EOL, $createTypeLines));
-        $this->connection->executeQuery(implode(PHP_EOL, $createProcedureLines));
+        $this->connection->executeQuery(implode(PHP_EOL, $packageHeaderLines));
+        $this->connection->executeQuery(implode(PHP_EOL, $packageBodyLines));
     }
 
     /**
