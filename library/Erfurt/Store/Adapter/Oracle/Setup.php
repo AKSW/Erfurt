@@ -116,13 +116,14 @@ class Erfurt_Store_Adapter_Oracle_Setup
     {
         $packageHeaderLines = array(
             'CREATE OR REPLACE PACKAGE ERFURT AS',
-            '    TYPE STRING_LIST IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
-            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST);',
+            '    TYPE uri_list IS TABLE OF VARCHAR(1000) INDEX BY BINARY_INTEGER;',
+            '    TYPE object_list IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
+            '    PROCEDURE ADD_TRIPLES(graphs IN uri_list, subjects IN uri_list, predicates IN uri_list, objects IN object_list);',
             'END ERFURT;'
         );
         $packageBodyLines = array(
             'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
-            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST) IS',
+            '    PROCEDURE ADD_TRIPLES(graphs IN uri_list, subjects IN uri_list, predicates IN uri_list, objects IN object_list) AS',
             '    BEGIN',
             '        FOR i IN 1 .. graphs.count LOOP',
             '            INSERT INTO erfurt_semantic_data (triple)',
