@@ -120,7 +120,9 @@ class Erfurt_Store_Adapter_Oracle_Setup
             '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST);',
             'END ERFURT;'
         );
-        $procedureBodyLines = array(
+        $packageBodyLines = array(
+            'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
+            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST) IS',
             '    BEGIN',
             '        FOR i IN 1 .. graphs.count LOOP',
             '            INSERT INTO erfurt_semantic_data (triple)',
@@ -131,12 +133,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
             '                objects(i)',
             '            ));',
             '        END LOOP;',
-            '    END;'
-        );
-        $packageBodyLines = array(
-            'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
-            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST) IS',
-            implode(PHP_EOL, $procedureBodyLines),
+            '    END;',
             'END ERFURT;'
         );
         $this->connection->executeQuery(implode(PHP_EOL, $packageHeaderLines));
