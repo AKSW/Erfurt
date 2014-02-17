@@ -91,7 +91,7 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
      */
     protected function persistLargeQuads(array $quads)
     {
-        $statement = $this->createInsertStatement(count($quads));
+        $statement = $this->createLargeTripleInsertStatement(count($quads));
         foreach ($quads as $index => $quad) {
             /* @var $quad array(string=>string) */
             $statement->bindValue("modelAndGraph_$index", $quad['graph']);
@@ -126,7 +126,7 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
      * @param integer $numberOfQuads The number of quads that will be inserted.
      * @return \Doctrine\DBAL\Driver\Statement
      */
-    protected function createInsertStatement($numberOfQuads)
+    protected function createLargeTripleInsertStatement($numberOfQuads)
     {
         $insertParts = array();
         for ($i = 0; $i < $numberOfQuads; $i++) {
