@@ -114,22 +114,29 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     protected function createInsertProcedure()
     {
-        $createType = 'CREATE OR REPLACE TYPE erfurt_string_list AS TABLE OF VARCHAR2(4000);';
-        $createProcedureLines = array(
-            'CREATE OR REPLACE PROCEDURE add_triples(graphs IN erfurt_string_list, subjects IN erfurt_string_list, predicates IN erfurt_string_list, objects IN erfurt_string_list) IS',
-            'BEGIN',
-            '    FOR i IN 1 .. graphs.count LOOP',
-            '        INSERT INTO erfurt_semantic_data (triple)',
-            '        VALUES (SDO_RDF_TRIPLE_S(',
-            '            graphs(i),',
-            '            subjects(i),',
-            '            predicates(i),',
-            '            objects(i)',
-            '        ));',
-            '    END LOOP;',
-            'END;'
+        $createTypeLines = array(
+            'CREATE OR REPLACE PACKAGE ERFURT AS',
+            '    TYPE STRING_LIST IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
+            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST);',
+            'END ERFURT;'
         );
-        $this->connection->executeQuery($createType);
+        $createProcedureLines = array(
+            'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
+            '    PROCEDURE ADD_TRIPLES(graphs IN STRING_LIST, subjects IN STRING_LIST, predicates IN STRING_LIST, objects IN STRING_LIST) IS',
+            '    BEGIN',
+            '        FOR i IN 1 .. graphs.count LOOP',
+            '            INSERT INTO erfurt_semantic_data (triple)',
+            '            VALUES (SDO_RDF_TRIPLE_S(',
+            '                graphs(i),',
+            '                subjects(i),',
+            '                predicates(i),',
+            '                objects(i)',
+            '            ));',
+            '        END LOOP;',
+            '    END ADD_TRIPLES;',
+            'END ERFURT;'
+        );
+        $this->connection->executeQuery(implode(PHP_EOL, $createTypeLines));
         $this->connection->executeQuery(implode(PHP_EOL, $createProcedureLines));
     }
 
