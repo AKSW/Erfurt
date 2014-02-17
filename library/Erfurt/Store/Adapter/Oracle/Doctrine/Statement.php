@@ -41,6 +41,9 @@ class Erfurt_Store_Adapter_Oracle_Doctrine_Statement extends OCI8Statement
             return oci_bind_by_name($this->_sth, $name, $lob, -1, OCI_B_CLOB);
         }
         if (is_array($variable)) {
+            if ($type === null) {
+                $type = SQLT_CHR;
+            }
             return oci_bind_array_by_name($this->_sth, $column, $variable, count($variable), -1, $type);
         }
         return parent::bindParam($column, $variable, $type, $length);
