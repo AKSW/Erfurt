@@ -51,25 +51,28 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
             return;
         }
         $model     = $this->getModelName();
-        $statement = $this->getInsertStatement(count($quads));
+        $graphs     = array();
+        $subjects   = array();
+        $predicates = array();
+        $objects    = array();
         foreach ($quads as $index => $quad) {
             /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
-            //
-            $statement->bindValue("modelAndGraph_$index", $model . ':<' . $quad->getGraph() . '>');
-
+            $graphs[] = $model . ':<' . $quad->getGraph() . '>';
             $subject = $quad->getSubject();
             $subject = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
-            $statement->bindValue("subject_$index", $subject);
-
-            $statement->bindValue("predicate_$index", '<' . $quad->getPredicate() . '>');
-
+            $subjects[] = $subject;
+            $predicates[] = '<' . $quad->getPredicate() . '>';
             $object = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
                 $quad->getObject()
             );
-            // Bind literal as a CLOB if it is too long.
-            $type = (strlen($object) > 4000) ? PDO::PARAM_LOB : PDO::PARAM_STR;
-            $statement->bindValue("object_$index", $object, $type);
+            $objects[] = $object;
         }
+        $query = 'BEGIN ADD_TRIPLES(:graphs, :subjects, :predicates, :objects); END;';
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('graphs', $graphs, SQLT_CHR);
+        $statement->bindValue('subjects', $subjects, SQLT_CHR);
+        $statement->bindValue('predicates', $predicates, SQLT_CHR);
+        $statement->bindValue('objects', $objects, SQLT_CHR);
         $statement->execute();
     }
 
