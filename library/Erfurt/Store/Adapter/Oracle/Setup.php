@@ -52,6 +52,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
         // ... and create new ones.
         $this->createTable();
         $this->createModel();
+        $this->createInsertProcedure();
     }
 
     /**
@@ -106,6 +107,30 @@ class Erfurt_Store_Adapter_Oracle_Setup
             $params = array('model' => $model);
             $this->connection->prepare($query)->execute($params);
         }
+    }
+
+    /**
+     * Creates a stored procedure that is used to insert triples.
+     */
+    protected function createInsertProcedure()
+    {
+        $createType = 'CREATE OR REPLACE TYPE erfurt_string_list AS VARRAY(1000) OF VARCHAR2(4000);';
+        $createProcedureLines = array(
+            'CREATE OR REPLACE PROCEDURE add_triples(graphs IN erfurt_string_list, subjects IN erfurt_string_list, predicates IN erfurt_string_list, objects IN erfurt_string_list) IS',
+            'BEGIN',
+            '    FOR i IN 1 .. graphs.count LOOP',
+            '        INSERT INTO erfurt_semantic_data (triple)',
+            '        VALUES (SDO_RDF_TRIPLE_S(',
+            '            graphs(i),',
+            '            subjects(i),',
+            '            predicates(i),',
+            '            objects(i)',
+            '        ));',
+            '    END LOOP;',
+            'END;'
+        );
+        $this->connection->executeQuery($createType);
+        $this->connection->executeQuery(implode(PHP_EOL, $createProcedureLines));
     }
 
     /**
