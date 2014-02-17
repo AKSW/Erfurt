@@ -33,12 +33,15 @@ class Erfurt_Store_Adapter_Oracle_Doctrine_Statement extends OCI8Statement
      */
     public function bindParam($column, &$variable, $type = null, $length = null)
     {
+        $name = isset($this->_paramMap[$column]) ? $this->_paramMap[$column] : $column;
         if ($type === \PDO::PARAM_LOB) {
             // Intercept assignment of large objects and ensure that CLOB is used instead of BLOB.
-            $column = isset($this->_paramMap[$column]) ? $this->_paramMap[$column] : $column;
             $lob = oci_new_descriptor($this->_dbh, OCI_D_LOB);
             $lob->writeTemporary($variable, OCI_TEMP_CLOB);
-            return oci_bind_by_name($this->_sth, $column, $lob, -1, OCI_B_CLOB);
+            return oci_bind_by_name($this->_sth, $name, $lob, -1, OCI_B_CLOB);
+        }
+        if (is_array($variable)) {
+            return oci_bind_array_by_name($this->_sth, $column, $variable, count($variable), -1, SQLT_CHR);
         }
         return parent::bindParam($column, $variable, $type, $length);
     }
