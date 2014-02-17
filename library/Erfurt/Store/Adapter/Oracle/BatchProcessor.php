@@ -22,15 +22,6 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
     protected $connection = null;
 
     /**
-     * List of insert statements that have already been prepared.
-     *
-     * The key is the number of quads that the statement is meant for.
-     *
-     * @var (integer=>\Doctrine\DBAL\Driver\Statement)
-     */
-    protected $insertStatements = array();
-
-    /**
      * Creates a batch processor that uses the provided database connection.
      *
      * @param Connection $connection
@@ -41,7 +32,7 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
     }
 
     /**
-     * Stores the provided triples.
+     * Stores the provided quads.
      *
      * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
      */
@@ -50,29 +41,64 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
         if (count($quads) === 0) {
             return;
         }
-        $model     = $this->getModelName();
-        $graphs     = array();
-        $subjects   = array();
-        $predicates = array();
-        $objects    = array();
-        foreach ($quads as $index => $quad) {
+        $common = array(
+            'graphs'     => array(),
+            'subjects'   => array(),
+            'predicates' => array(),
+            'objects'    => array()
+        );
+        $large = array();
+        foreach ($quads as $quad) {
             /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
-            $graphs[] = $model . ':<' . $quad->getGraph() . '>';
-            $subject = $quad->getSubject();
-            $subject = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
-            $subjects[] = $subject;
-            $predicates[] = '<' . $quad->getPredicate() . '>';
-            $object = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
-                $quad->getObject()
-            );
-            $objects[] = $object;
+            $data = $this->toData($quad);
+            if (strlen($data['object']) > 4000) {
+                $large[] = $data;
+            } else {
+                $common['graphs'][]     = $data['graph'];
+                $common['subjects'][]   = $data['subject'];
+                $common['predicates'][] = $data['predicate'];
+                $common['objects'][]    = $data['object'];
+            }
         }
+        if (count($common['graphs']) > 0) {
+            $this->persistCommonQuads($common);
+        }
+        if (count($large) > 0) {
+            $this->persistLargeQuads($large);
+        }
+    }
+
+    /**
+     * Persists common triples (literal objects with at most 4000 bytes).
+     *
+     * @param array(string=>array(string)) $quadParts
+     */
+    public function persistCommonQuads(array $quadParts)
+    {
         $query = 'BEGIN ERFURT.ADD_TRIPLES(:graphs, :subjects, :predicates, :objects); END;';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('graphs', $graphs, SQLT_CHR);
-        $statement->bindValue('subjects', $subjects, SQLT_CHR);
-        $statement->bindValue('predicates', $predicates, SQLT_CHR);
-        $statement->bindValue('objects', $objects, SQLT_CHR);
+        $statement->bindValue('graphs', $quadParts['graphs'], SQLT_CHR);
+        $statement->bindValue('subjects', $quadParts['subjects'], SQLT_CHR);
+        $statement->bindValue('predicates', $quadParts['predicates'], SQLT_CHR);
+        $statement->bindValue('objects', $quadParts['objects'], SQLT_CHR);
+        $statement->execute();
+    }
+
+    /**
+     * Inserts triples with large literal objects (> 4000 bytes) into the database.
+     *
+     * @param array(array(string=>string)) $quads
+     */
+    protected function persistLargeQuads(array $quads)
+    {
+        $statement = $this->createInsertStatement(count($quads));
+        foreach ($quads as $index => $quad) {
+            /* @var $quad array(string=>string) */
+            $statement->bindValue("modelAndGraph_$index", $quad['graph']);
+            $statement->bindValue("subject_$index", $quad['subject']);
+            $statement->bindValue("predicate_$index", $quad['predicate']);
+            $statement->bindValue("object_$index", $quad['object'], PDO::PARAM_LOB);
+        }
         $statement->execute();
     }
 
@@ -100,28 +126,55 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
      * @param integer $numberOfQuads The number of quads that will be inserted.
      * @return \Doctrine\DBAL\Driver\Statement
      */
-    protected function getInsertStatement($numberOfQuads)
+    protected function createInsertStatement($numberOfQuads)
     {
-        if (!isset($this->insertStatements[$numberOfQuads])) {
-            $insertParts = array();
-            for ($i = 0; $i < $numberOfQuads; $i++) {
-                $lines = array(
-                    "  SELECT ",
-                    "    SDO_RDF_TRIPLE_S(",
-                    "      :modelAndGraph_$i,",
-                    "      :subject_$i,",
-                    "      :predicate_$i,",
-                    "      :object_$i",
-                    "     )",
-                    "  FROM DUAL"
-                );
-                $insertParts[] = implode(PHP_EOL, $lines);
-            }
-            $query = 'INSERT INTO erfurt_semantic_data (triple) ' . PHP_EOL
-                   . implode(PHP_EOL . ' UNION ALL ', $insertParts);
-            $this->insertStatements[$numberOfQuads] = $this->connection->prepare($query);
+        $insertParts = array();
+        for ($i = 0; $i < $numberOfQuads; $i++) {
+            $lines = array(
+                "  SELECT ",
+                "    SDO_RDF_TRIPLE_S(",
+                "      :modelAndGraph_$i,",
+                "      :subject_$i,",
+                "      :predicate_$i,",
+                "      :object_$i",
+                "     )",
+                "  FROM DUAL"
+            );
+            $insertParts[] = implode(PHP_EOL, $lines);
         }
-        return $this->insertStatements[$numberOfQuads];
+        $query = 'INSERT INTO erfurt_semantic_data (triple) ' . PHP_EOL
+               . implode(PHP_EOL . ' UNION ALL ', $insertParts);
+        return $this->connection->prepare($query);
+    }
+
+    /**
+     * Converts the provided quad into encoded triple parts.
+     *
+     * The returned array has the following keys:
+     *
+     * - graph
+     * - subject
+     * - predicate
+     * - object
+     *
+     * @param \Erfurt_Store_Adapter_Sparql_Quad $quad
+     * @return array(string=>string)
+     */
+    protected function toData($quad)
+    {
+        $graph     = $this->getModelName() . ':<' . $quad->getGraph() . '>';
+        $subject   = $quad->getSubject();
+        $subject   = (strpos($subject, '_:') === 0) ? $subject : '<' . $subject . '>';
+        $predicate = '<' . $quad->getPredicate() . '>';
+        $object    = Erfurt_Store_Adapter_Oracle_ResultConverter_Util::buildLiteralFromSpec(
+            $quad->getObject()
+        );
+        return array(
+            'graph'     => $graph,
+            'subject'   => $subject,
+            'predicate' => $predicate,
+            'object'    => $object
+        );
     }
 
     /**
