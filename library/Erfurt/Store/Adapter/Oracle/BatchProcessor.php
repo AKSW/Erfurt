@@ -69,10 +69,10 @@ class Erfurt_Store_Adapter_Oracle_BatchProcessor
         }
         $query = 'BEGIN ADD_TRIPLES(:graphs, :subjects, :predicates, :objects); END;';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('graphs', $graphs, SQLT_CHR);
-        $statement->bindValue('subjects', $subjects, SQLT_CHR);
-        $statement->bindValue('predicates', $predicates, SQLT_CHR);
-        $statement->bindValue('objects', $objects, SQLT_CHR);
+        $statement->bindValue('graphs', $graphs, 'erfurt_string_list');
+        $statement->bindValue('subjects', $subjects, 'erfurt_string_list');
+        $statement->bindValue('predicates', $predicates, 'erfurt_string_list');
+        $statement->bindValue('objects', $objects, 'erfurt_string_list');
         $statement->execute();
     }
 
