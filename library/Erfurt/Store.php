@@ -860,16 +860,28 @@ EOF;
         // backend adapter returns all models
         $models = $this->_backendAdapter->getAvailableModels();
 
-        // filter for access control and hidden models
+        // make models uris array
+        $modelsUris = array();
         foreach ($models as $graphUri => $true) {
+            $modelsUris[] = $graphUri;
+        }
 
-            if (!$this->_checkAc($graphUri)) {
+        // get permissions
+        $modelsAc = $this->_checkAcBatch($modelsUris);
+        // filter for access control
+        foreach ($modelsAc as $graphUri => $modelAllowed) {
+            if (!$modelAllowed) {
                 unset($models[$graphUri]);
             }
+        }
 
+        // get hidden property
+        $hiddenProperty = $this->getOption('propertiesHidden');
+
+        // filter hidden models
+        foreach ($models as $graphUri => $true) {
             if ($withHidden === false) {
                 $graphConfig    = $this->getGraphConfiguration($graphUri);
-                $hiddenProperty = $this->getOption('propertiesHidden');
 
                 if (isset($graphConfig[$hiddenProperty])) {
                     $hidden = current($graphConfig[$hiddenProperty]);
@@ -2021,6 +2033,33 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
 
             return $this->_ac->isModelAllowed($accessType, $modelIri);
+        }
+    }
+
+    /**
+     * Checks whether 'view' or 'edit' are allowed on a certain models array. The additional $useAc param
+     * makes it easy to disable access control for internal usage.
+     *
+     * @param array $modelIris The array of Iris, which identifies the models.
+     * @param string $accessType Supported access types are 'view' and 'edit'.
+     * @param boolean $useAc Whether to use access control or not.
+     *
+     * @return boolean Returns whether view as the case may be edit is allowed for the model or not.
+     */
+    private function _checkAcBatch($modelIris, $accessType = 'view', $useAc = true)
+    {
+        // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
+        if ($useAc === false) {
+            $logger = $this->_getErfurtLogger();
+            $logger->debug("Store.php->_checkAc: Doing something without Access Controll!!!");
+            $logger->debug("Store.php->_checkAc: ModelIris: " . $modelIris . " accessType: " . $accessType);
+            return true;
+        } else {
+            if ($this->_ac === null) {
+                $this->_ac = Erfurt_App::getInstance()->getAc();
+            }
+
+            return $this->_ac->areModelsAllowed($accessType, $modelIris);
         }
     }
 
