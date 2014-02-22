@@ -8,7 +8,7 @@ use Doctrine\DBAL\Connection;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.02.14
  */
-class Erfurt_Store_Adapter_Oracle_BatchProcessor implements Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
+class Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor implements Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
 {
 
     /**
