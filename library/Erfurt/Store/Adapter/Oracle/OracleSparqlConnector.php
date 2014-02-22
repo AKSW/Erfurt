@@ -70,7 +70,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         );
         $this->clobLoader = new Erfurt_Store_Adapter_Oracle_ClobLiteralLoader($connection);
         // Triples are buffered and the batch processor is used to store them.
-        $batchProcessor = new Erfurt_Store_Adapter_Oracle_BatchProcessor($connection);
+        $batchProcessor = new Erfurt_Store_Adapter_Oracle_StoredProcedureBatchProcessor($connection);
         $this->buffer   = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
     }
 

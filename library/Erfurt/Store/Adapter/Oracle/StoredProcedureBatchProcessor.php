@@ -3,15 +3,15 @@
 use Doctrine\DBAL\Connection;
 
 /**
- * Helper class that processes quad inserts and updates as batch.
+ * Batch processor that uses a stored procedure to store quads.
  *
- * It is up to the batch processor to choose the method that is most
- * suitable to store a given number of quads.
+ * If an object literal is larger than 4000 bytes, then the stored procedure
+ * cannot be used. Instead, an insert statement is used as fallback.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.02.14
  */
-class Erfurt_Store_Adapter_Oracle_BatchProcessor
+class Erfurt_Store_Adapter_Oracle_StoredProcedureBatchProcessor
 {
 
     /**
