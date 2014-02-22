@@ -73,20 +73,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
         $this->_connect();
     }
 
-    public function __destruct()
-    {
-        #$log = Erfurt_App::getInstance()->getLog();
-
-        #$profiles = $this->_dbConn->getProfiler()->getQueryProfiles();
-
-        #foreach ($profiles as $profile) {
-        #    $debugStr = 'Query: ' . $profile->getQuery() . PHP_EOL;
-        #    $debugStr .= 'Time: ' . $profile->getElapsedSecs() . PHP_EOL;
-        #
-        #    $log->debug($debugStr);
-        #}
-    }
-
     // ------------------------------------------------------------------------
     // --- Public methods (derived from Erfurt_Store_Adapter_Abstract) --------
     // ------------------------------------------------------------------------
