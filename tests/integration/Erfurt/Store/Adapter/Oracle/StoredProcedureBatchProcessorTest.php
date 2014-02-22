@@ -46,6 +46,14 @@ class Erfurt_Store_Adapter_Oracle_StoredProcedureBatchProcessorTest extends \PHP
     }
 
     /**
+     * Checks if the batch processor implements the corresponding interface.
+     */
+    public function testImplementsInterface()
+    {
+        $this->assertInstanceOf('\Erfurt_Store_Adapter_Sparql_BatchProcessorInterface', $this->processor);
+    }
+
+    /**
      * Checks if the batch processor can handle an empty triple list.
      */
     public function testProcessorCanHandleEmptyTripleList()

@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
  * @since 15.02.14
  */
 class Erfurt_Store_Adapter_Oracle_StoredProcedureBatchProcessor
+    implements \Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
 {
 
     /**
