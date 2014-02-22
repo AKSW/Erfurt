@@ -80,10 +80,7 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
             $queryType === 'delete'
         ) {
             // Handle without ZendDb
-
-            $this->_config = Erfurt_App::getInstance()->getConfig();
-
-            if ($this->_config->store->zenddb->dbtype == 'sqlsrv') {
+            if ($this->_adapterOptions['dbtype'] == 'sqlsrv') {
                 $result = $this->_dbConn->query($sqlQuery);
             } else {
                 $result = $this->_dbConn->getConnection()->query($sqlQuery);
