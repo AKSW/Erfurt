@@ -52,7 +52,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
         // ... and create new ones.
         $this->createTable();
         $this->createModel();
-        $this->createInsertProcedure();
+        $this->createPackage();
     }
 
     /**
@@ -62,6 +62,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function uninstall()
     {
+        $this->dropPackage();
         $this->dropModel();
         $this->dropTable();
     }
@@ -112,7 +113,7 @@ class Erfurt_Store_Adapter_Oracle_Setup
     /**
      * Creates a stored procedure that is used to insert triples.
      */
-    protected function createInsertProcedure()
+    protected function createPackage()
     {
         $packageHeaderLines = array(
             'CREATE OR REPLACE PACKAGE ERFURT AS',
@@ -139,6 +140,30 @@ class Erfurt_Store_Adapter_Oracle_Setup
         );
         $this->connection->executeQuery(implode(PHP_EOL, $packageHeaderLines));
         $this->connection->executeQuery(implode(PHP_EOL, $packageBodyLines));
+    }
+
+    /**
+     * Drops the adapter package and its stored procedures.
+     */
+    protected function dropPackage()
+    {
+        if ($this->packageExists()) {
+            $query = 'DROP PACKAGE ERFURT';
+            $this->connection->executeQuery($query);
+        }
+    }
+
+    /**
+     * Checks if the Erfurt procedure package exists.
+     *
+     * @return boolean
+     */
+    protected function packageExists()
+    {
+        $query     = "SELECT * FROM USER_OBJECTS WHERE OBJECT_TYPE='PACKAGE' AND OBJECT_NAME='ERFURT'";
+        $statement = $this->connection->query($query);
+        $rows      = $statement->fetchAll();
+        return count($rows) > 0;
     }
 
     /**
