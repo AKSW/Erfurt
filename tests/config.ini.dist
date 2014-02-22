@@ -22,4 +22,5 @@ store.oracle.connection.password = "PASSWORD"
 store.oracle.connection.host     = "IP_OR_HOSTNAME"
 store.oracle.connection.port     = 1521
 store.oracle.connection.session.optimizer_dynamic_sampling = 3
+store.oracle.batch_size          = 100
 store.oracle.auto_setup          = On
