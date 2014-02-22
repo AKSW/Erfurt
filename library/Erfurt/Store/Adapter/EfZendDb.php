@@ -55,20 +55,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
         }
     }
 
-    /**
-     * save all but except the db connection
-     * @return array keys to save
-     */
-    function __sleep(){
-        $vars = get_object_vars($this);
-        unset($vars['_dbConn']);
-        return array_keys($vars);
-    }
-
-    function __wakeUp(){
-        $this->_connect();
-    }
-
     // ------------------------------------------------------------------------
     // --- Public methods (derived from Erfurt_Store_Adapter_Abstract) --------
     // ------------------------------------------------------------------------
