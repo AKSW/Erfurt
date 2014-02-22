@@ -15,7 +15,8 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testConstructorThrowsExceptionIfCacheDirectoryDoesNotExist()
     {
-
+        $this->setExpectedException('InvalidArgumentException');
+        new Erfurt_Store_Adapter_Container_ContainerFactory(array(), array(), $this->path('missing'));
     }
 
     /**
@@ -24,7 +25,12 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testConstructorThrowsExceptionIfOneOfTheDefinitionFilesDoesNotExist()
     {
+        $configs = array(
+            $this->path('config/container.yml')
+        );
 
+        $this->setExpectedException('InvalidArgumentException');
+        new Erfurt_Store_Adapter_Container_ContainerFactory($configs, array(), $this->path('cache'));
     }
 
     /**
@@ -67,6 +73,19 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
     public function testFactoryUpdatesContainerWhenParametersChange()
     {
 
+    }
+
+    /**
+     * Returns the absolute path to the provided test data file.
+     *
+     * Test data files are located in _files/ContainerFactory.
+     *
+     * @param string $file
+     * @return string
+     */
+    protected function path($file)
+    {
+        return dirname(__FILE__) . '/files/ContainerFactory/' . $file;
     }
 
 }
