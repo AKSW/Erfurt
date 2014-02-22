@@ -119,7 +119,6 @@ class Erfurt_Store_Adapter_Oracle_Setup
             'CREATE OR REPLACE PACKAGE ERFURT AS',
             '    TYPE uri_list IS TABLE OF VARCHAR(1000) INDEX BY BINARY_INTEGER;',
             '    TYPE object_list IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
-            '    TYPE triple_list IS TABLE OF SDO_RDF_TRIPLE_S;',
             '    PROCEDURE ADD_TRIPLES(graphs IN uri_list, subjects IN uri_list, predicates IN uri_list, objects IN object_list);',
             'END ERFURT;'
         );
