@@ -13,11 +13,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
 {
 
     /**
-     * Number of triples that will be inserted in a batch.
-     */
-    const BATCH_SIZE = 100;
-
-    /**
      * The database connection that is used.
      *
      * @var \Doctrine\DBAL\Connection
@@ -54,12 +49,20 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
     protected $buffer = null;
 
     /**
+     * The number of combined insert operations in batch mode.
+     *
+     * @var integer
+     */
+    protected $batchSize = null;
+
+    /**
      * Creates a connector that uses the provided database connection to interact
      * with the Oracle Triple Store.
      *
      * @param Connection $connection
+     * @param integer $batchSize Number of combined inserts in batch mode.
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, $batchSize = 100)
     {
         $this->connection     = $connection;
         $this->sparqlRewriter = new \Erfurt_Store_Adapter_Oracle_SparqlRewriter();
@@ -70,8 +73,10 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         );
         $this->clobLoader = new Erfurt_Store_Adapter_Oracle_ClobLiteralLoader($connection);
         // Triples are buffered and the batch processor is used to store them.
-        $batchProcessor = new Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor($connection);
-        $this->buffer   = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
+        $this->batchSize = $batchSize;
+        $batchProcessor  = new Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor($connection);
+        $this->buffer    = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
+
     }
 
     /**
@@ -218,8 +223,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         $result    = null;
         $connector = $this;
         $buffer    = $this->buffer;
+        $buffer->setSize($this->batchSize);
         $this->connection->transactional(function () use ($callback, $connector, $buffer, &$result) {
-            $buffer->setSize(static::BATCH_SIZE);
             $result = call_user_func($callback, $connector);
             $buffer->flush();
             $buffer->setSize(1);

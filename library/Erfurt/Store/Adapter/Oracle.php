@@ -36,7 +36,7 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
         $sparqlAdapter = new Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter(
             new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($connection)
         );
-        $sqlAdapter = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($connection);
+        $sqlAdapter = new Erfurt_Store_Adapter_Oracle_OracleSqlAdapter($connection, $adapterOptions['batch_size']);
         return new Erfurt_Store_Adapter_SparqlSqlCombination($sparqlAdapter, $sqlAdapter);
     }
 

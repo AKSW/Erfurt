@@ -30,11 +30,20 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfiguration implements ConfigurationI
                 ->booleanNode('auto_setup')
                     ->beforeNormalization()
                         ->ifInArray(array('0', '1', ''))
-                        ->then(function($value) {
+                        ->then(function ($value) {
                             return (bool)$value;
                         })
                     ->end()
                     ->defaultFalse()
+                ->end()
+                ->integerNode('batch_size')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function ($value) {
+                            return (ctype_digit($value)) ? (int)$value : $value;
+                        })
+                    ->end()
+                    ->defaultValue(100)
                 ->end()
                 ->scalarNode('username')
                     ->cannotBeEmpty()
