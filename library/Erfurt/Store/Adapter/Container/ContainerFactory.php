@@ -18,9 +18,10 @@ class Erfurt_Store_Adapter_Container_ContainerFactory
      * Once created the container is cached in the provided directory.
      *
      * @param array(string) $definitionFiles
+     * @param array(string=>mixed) $parameters Additional container parameters.
      * @param $cacheDirectory
      */
-    public function __construct(array $definitionFiles, $cacheDirectory)
+    public function __construct(array $definitionFiles, array $parameters, $cacheDirectory)
     {
 
     }
