@@ -88,7 +88,6 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
 
 
             if ($result !== true) {
-                require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception(
                     'SQL query failed: ' .
                     $this->_dbConn->getConnection()->error
@@ -98,7 +97,6 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
             try {
                 $result = @$this->_dbConn->fetchAll($sqlQuery);
             } catch (Zend_Db_Exception $e) { #return false;
-                require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception(
                     $e->getMessage()
                 );
@@ -146,27 +144,21 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
         switch (strtolower($this->_adapterOptions['dbtype'])) {
             case 'mysql':
                 if (extension_loaded('mysqli')) {
-                    require_once 'Zend/Db/Adapter/Mysqli.php';
                     $this->_dbConn = new Zend_Db_Adapter_Mysqli($this->_adapterOptions);
                 } else if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
-                    require_once 'Zend/Db/Adapter/Pdo/Mysql.php';
                     $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($this->_adapterOptions);
                 } else {
-                    require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
                 }
                 break;
             case 'sqlsrv':
                 if (extension_loaded('sqlsrv')) {
-                    require_once 'Zend/Db/Adapter/Sqlsrv.php';
                     $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($this->_adapterOptions);
                 } else {
-                    require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
                 }
                 break;
             default:
-                require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Given database adapter is not supported.', -1);
         }
 
@@ -175,7 +167,6 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
             $this->_dbConn->getConnection();
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
-            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception(
                 'Could not connect to database with name: "' . $this->_adapterOptions['dbname'] .
                 '". Please check your credentials and whether the database exists and the server is running.', -1
@@ -183,7 +174,6 @@ class Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Sql_Interface
 
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
-            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
         }
 
