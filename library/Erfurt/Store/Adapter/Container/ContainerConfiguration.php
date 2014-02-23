@@ -38,6 +38,12 @@ class Erfurt_Store_Adapter_Container_ContainerConfiguration implements Configura
                 ->arrayNode('parameters')
                     ->prototype('variable')->end()
                 ->end()
+                ->scalarNode('username')
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('password')
+                    ->cannotBeEmpty()
+                ->end()
             ->end();
         return $builder;
     }
