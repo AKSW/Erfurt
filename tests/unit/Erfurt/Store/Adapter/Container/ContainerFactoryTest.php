@@ -69,7 +69,13 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testFactoryCreatesCacheFiles()
     {
+        $pattern = $this->path('cache') . '/*';
 
+        $filesBefore = count(glob($pattern));
+        $this->createFactory()->create();
+        $filesAfter = count(glob($pattern));
+
+        $this->assertGreaterThan($filesBefore, $filesAfter);
     }
 
     /**
@@ -78,7 +84,12 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testSecondCallToCreateReturnsContainer()
     {
+        $factory = $this->createFactory();
 
+        $factory->create();
+        $container = $factory->create();
+
+        $this->assertInstanceOf('\Symfony\Component\DependencyInjection\ContainerInterface', $container);
     }
 
     /**
@@ -87,7 +98,15 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testFactoryUpdatesContainerWhenConfigFileChanges()
     {
+        $factory = $this->createFactory();
 
+        $factory->create();
+        $this->createTemporaryConfig('another_value');
+
+        $container = $factory->create();
+
+        $this->assertInstanceOf('\Symfony\Component\DependencyInjection\ContainerInterface', $container);
+        $this->assertEquals('another_value', $container->getParameter('temp.parameter'));
     }
 
     /**
@@ -95,7 +114,12 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testFactoryUpdatesContainerWhenParametersChange()
     {
+        $this->createFactory()->create();
 
+        $container = $this->createFactory(array('another_parameter' => 'some_value'))->create();
+
+        $this->assertInstanceOf('\Symfony\Component\DependencyInjection\ContainerInterface', $container);
+        $this->assertEquals('some_value', $container->getParameter('another_parameter'));
     }
 
     /**
