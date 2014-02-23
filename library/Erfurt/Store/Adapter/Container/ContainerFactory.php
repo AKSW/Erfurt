@@ -106,12 +106,16 @@ class Erfurt_Store_Adapter_Container_ContainerFactory
      */
     protected function createContainer()
     {
-        $builder = new ContainerBuilder(new ParameterBag($this->parameters));
+        $builder = new ContainerBuilder(new ParameterBag());
         $loader  = $this->createConfigLoader($builder);
         foreach ($this->configFiles as $config) {
             /* @var $config string */
             $loader->load($config);
         }
+        // The parameters that are explicitly provided have the highest priority.
+        // Therefore, they are added last and overwrite the ones in the configuration
+        // files.
+        $builder->getParameterBag()->add($this->parameters);
         return $builder;
     }
 
