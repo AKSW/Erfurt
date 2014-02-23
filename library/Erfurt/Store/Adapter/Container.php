@@ -26,6 +26,38 @@ class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInt
             $adapterOptions,
             new Erfurt_Store_Adapter_Container_ContainerConfiguration()
         );
+        $factory = new Erfurt_Store_Adapter_Container_ContainerFactory(
+            $adapterOptions['configs'],
+            static::flattenParameters($adapterOptions['parameters']),
+            $adapterOptions['cache_directory']
+        );
+        $container = $factory->create();
+        return $container->get($adapterOptions['service']);
+    }
+
+    /**
+     * Flattens the provided parameter structure.
+     *
+     * @param array(string=>mixed) $parameters
+     * @param array(string) $prefixes
+     * @return array(string=>scalar)
+     */
+    protected static function flattenParameters(array $parameters, $prefixes = array())
+    {
+        $flattened = array();
+        foreach ($parameters as $name => $value) {
+            /* @var $name string */
+            /* @var $value mixed */
+            $nameParts = $prefixes;
+            $nameParts[] = $name;
+            if (is_array($value)) {
+                $params = static::flattenParameters($value, $nameParts);
+                $flattened = array_merge($flattened, $params);
+            } else {
+                $flattened[implode('.', $nameParts)] = $value;
+            }
+        }
+        return $flattened;
     }
 
     /**

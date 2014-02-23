@@ -57,7 +57,7 @@ class Erfurt_Store_Adapter_ContainerTest extends \PHPUnit_Framework_TestCase
         $adapter = $this->createAdapter();
 
         $this->assertInstanceOf('ArrayObject', $adapter);
-        $this->assertEquals('complex_value', $adapter->offsetGet('complex.param'));
+        $this->assertEquals('nested_value', $adapter->offsetGet('nested_param'));
     }
 
     /**
@@ -75,8 +75,8 @@ class Erfurt_Store_Adapter_ContainerTest extends \PHPUnit_Framework_TestCase
             'cache_directory' => $this->getCachePath(),
             'parameters'      => array(
                 'simple_param' => 'simple_value',
-                'complex'      => array(
-                    'param' => 'complex_value'
+                'nested'       => array(
+                    'param' => 'nested_value'
                 )
             )
         ));
