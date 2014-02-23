@@ -123,6 +123,20 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
     }
 
     /**
+     * Ensures that the parameters in the configuration files are overwritten by the
+     * ones that are explicitly provided.
+     */
+    public function testPassedParametersOverwriteTheOnesInConfigurationFiles()
+    {
+        $factory = $this->createFactory(array('default.parameter' => 'demo'));
+
+        $container = $factory->create();
+
+        $this->assertInstanceOf('\Symfony\Component\DependencyInjection\ContainerInterface', $container);
+        $this->assertEquals('demo', $container->getParameter('default.parameter'));
+    }
+
+    /**
      * Creates a container factory for testing.
      *
      * @param array(string=>mixed) $parameters
