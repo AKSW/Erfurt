@@ -1,7 +1,14 @@
+parameters:
+    oracle.batch_size:            100
+    oracle.connection.pooled:     true
+    oracle.connection.persistent: true
+    oracle.connection.pool:       "erfurt"
+    oracle.connection.charset:    "UTF8"
+
 services:
     oracle_connector_with_mysql_cache:
         class: Erfurt_Store_Adapter_SparqlSqlCombination
-        arguments: ["@oracle.sparql_connector", "@mysql.sql_adapter"]
+        arguments: ["@oracle.sparql_adapter", "@mysql.sql_adapter"]
 
     oracle.sparql_adapter:
         class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
@@ -22,10 +29,10 @@ services:
                 password:   "%oracle.connection.password%"
                 host:       "%oracle.connection.host%"
                 port:       "%oracle.connection.port%"
-                charset:    "UTF8"
-                persistent: false
-                pooled:     false
-                pool:       "erfurt"
+                charset:    "%oracle.connection.charset%"
+                persistent: "%oracle.connection.persistent%"
+                pooled:     "%oracle.connection.pooled%"
+                pool:       "%oracle.connection.pool%"
                 session:
                     optimizer_dynamic_sampling: 3
 
