@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Config\Definition\Processor;
+
 /**
  * Tests the configuration schema for the container adapter factory.
  *
@@ -56,7 +58,13 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationRejectsOptionsWithoutConfigFiles()
     {
+        $options = array(
+            'configs' => array(),
+            'service' => 'my_service',
+            'cache'   => $this->getDataDirectory()
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -64,7 +72,14 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationRejectsOptionsWithoutServiceReference()
     {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'cache'   => $this->getDataDirectory()
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -72,7 +87,14 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationRejectsOptionsWithoutCacheDirectory()
     {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'service' => 'my_service'
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -81,7 +103,15 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationAcceptsMinimalOptions()
     {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'service' => 'my_service',
+            'cache'   => $this->getDataDirectory()
+        );
 
+        $this->assertConfigurationRejected($options);
     }
 
     /**
@@ -90,7 +120,19 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationAcceptsOptionsWithSimpleParameters()
     {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'service'    => 'my_service',
+            'cache'      => $this->getDataDirectory(),
+            'parameters' => array(
+                'a' => 'b',
+                'c' => 'd'
+            )
+        );
 
+        $this->assertConfigurationAccepted($options);
     }
 
     /**
@@ -99,7 +141,21 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
      */
     public function testConfigurationAcceptsOptionsWithNestedParameters()
     {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'service'    => 'my_service',
+            'cache'      => $this->getDataDirectory(),
+            'parameters' => array(
+                'a' => array(
+                    'b',
+                    'c'
+                )
+            )
+        );
 
+        $this->assertConfigurationAccepted($options);
     }
 
     /**
@@ -134,6 +190,16 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
     {
         $processor = new Processor();
         return $processor->processConfiguration($this->configuration, array($options));
+    }
+
+    /**
+     * Returns the path to the test data directory.
+     *
+     * @return string
+     */
+    protected function getDataDirectory()
+    {
+        return dirname(__FILE__) . '/_files/ContainerConfiguration';
     }
 
 }
