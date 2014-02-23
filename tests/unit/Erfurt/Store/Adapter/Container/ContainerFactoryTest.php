@@ -195,7 +195,7 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     protected function path($file)
     {
-        return dirname(__FILE__) . '/files/ContainerFactory/' . $file;
+        return dirname(__FILE__) . '/_files/ContainerFactory/' . $file;
     }
 
 }
