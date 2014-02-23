@@ -4,6 +4,13 @@ parameters:
     oracle.connection.persistent: true
     oracle.connection.pool:       "erfurt"
     oracle.connection.charset:    "UTF8"
+    # Provide some MySQL defaults to ensure that the container can be compiled
+    # without these parameters. These is useful if the raw Oracle adapter
+    # (without MySQL cache/versioning) is used.
+    mysql.host:     "localhost"
+    mysql.username: "root"
+    mysql.password: ""
+    mysql.dbname:   "no_database_configured"
 
 services:
     oracle_adapter:
