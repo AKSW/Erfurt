@@ -7,9 +7,42 @@ use Symfony\Component\Config\Definition\Processor;
  * Factory that uses a Dependency Injection container to retrieve
  * an adapter.
  *
+ * This adapter factory relies on the Dependency Injection container
+ * of Symfony to create adapter instances.
+ *
+ * # Basic Configuration #
+ *
+ * The minimal configuration includes at least one service configuration
+ * file and the ID of the service that is used as adapter. Additionally,
+ * the adapter class must be explicitly provided if a name other than
+ * ``container`` is used to reference the configured store:
+ *
+ *     store.container_adapter.adapterClass = "Erfurt_Store_Adapter_Container"
+ *     store.container_adapter.configs[]    = "%erfurt.root%/container-configs/MyConfig.yml"
+ *     store.container_adapter.service      = "my_service"
+ *
+ * The placeholder %erfurt.root% can be used in the configuration path to refer to the project
+ * root of Erfurt.
+ *
+ * # Container Parameters #
+ *
+ * In addition to this minimal configuration, container parameters can be provided:
+ *
+ *     ;[...]
+ *     store.container_adapter.parameters.mysql.host = "localhost"
+ *
+ * Container parameters are available in the container configuration files
+ * and can be used to parametrize the constructed objects.
+ * The parameter in the example above is available as "mysql.host".
+ *
+ * # Container Configuration #
+ *
+ * This factory supports YAML, XML and PHP files to define services.
+ * Refer to {@link http://symfony.com/doc/current/components/dependency_injection/introduction.html}
+ * to learn about the various configuration styles.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 22.02.14
- * @see http://symfony.com/doc/current/components/dependency_injection/introduction.html
  */
 class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInterface
 {
