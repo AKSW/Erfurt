@@ -1,5 +1,8 @@
 <?php
 
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+
 /**
  * Factory that uses a Dependency Injection container to retrieve
  * an adapter.
@@ -19,7 +22,26 @@ class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInt
      */
     public static function createFromOptions(array $adapterOptions)
     {
-        // TODO: Implement createFromOptions() method.
+        $adapterOptions = static::normalizeOptions(
+            $adapterOptions,
+            new Erfurt_Store_Adapter_Container_ContainerConfiguration()
+        );
+    }
+
+    /**
+     * Validates and normalizes the provided options.
+     *
+     * @param array(string=>mixed) $options
+     * @param \Symfony\Component\Config\Definition\ConfigurationInterface $configuration
+     * @return array(string=>mixed)
+     */
+    protected static function normalizeOptions(array $options, ConfigurationInterface $configuration)
+    {
+        $processor = new Processor();
+        return $processor->processConfiguration(
+            $configuration,
+            array($options)
+        );
     }
 
 }
