@@ -102,8 +102,8 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
     }
 
     /**
-     * Ensures that the configuration accepts a minimal set of options (configuration,
-     * service id and cache directory).
+     * Ensures that the configuration accepts a minimal set of options (configuration and
+     * service id).
      */
     public function testConfigurationAcceptsMinimalOptions()
     {
@@ -111,8 +111,7 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'configs' => array(
                 $this->getDataDirectory() . '/default.yml'
             ),
-            'service'         => 'my_service',
-            'cache_directory' => $this->getDataDirectory()
+            'service' => 'my_service'
         );
 
         $this->assertConfigurationAccepted($options);
@@ -157,6 +156,28 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
                     'c'
                 )
             )
+        );
+
+        $this->assertConfigurationAccepted($options);
+    }
+
+    /**
+     * Checks if the configuration accepts the credentials of the Super Admin.
+     *
+     * These credentials are used by OntoWiki for login. They are not related to
+     * the container adapter, but many of the existing adapters rely on this dual
+     * use, so there does not seem to be a clean way to remove this unnecessary
+     * dependency.
+     */
+    public function testConfigurationAcceptsUsernameAndPasswordOfSuperAdmin()
+    {
+        $options = array(
+            'configs' => array(
+                $this->getDataDirectory() . '/default.yml'
+            ),
+            'service'  => 'my_service',
+            'username' => 'super',
+            'password' => 'admin'
         );
 
         $this->assertConfigurationAccepted($options);
