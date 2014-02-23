@@ -306,7 +306,7 @@ class Erfurt_Store_Adapter_Oracle_AdapterConfigurationTest extends \PHPUnit_Fram
     }
 
     /**
-     * asserts that the provided options are accepted.
+     * Asserts that the provided options are accepted.
      *
      * @param array(string=>mixed) $options
      */
