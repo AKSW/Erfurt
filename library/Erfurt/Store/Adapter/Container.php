@@ -27,12 +27,30 @@ class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInt
             new Erfurt_Store_Adapter_Container_ContainerConfiguration()
         );
         $factory = new Erfurt_Store_Adapter_Container_ContainerFactory(
-            $adapterOptions['configs'],
+            static::substituteRootPlaceholder($adapterOptions['configs']),
             static::flattenParameters($adapterOptions['parameters']),
             $adapterOptions['cache_directory']
         );
         $container = $factory->create();
         return $container->get($adapterOptions['service']);
+    }
+
+    /**
+     * Replaces occurrences of "%erfurt.root%" with the absolute path
+     * to the project root directory of Erfurt.
+     *
+     * @param array(string) $configs
+     * @return array(string)
+     */
+    protected static function substituteRootPlaceholder(array $configs)
+    {
+        $root = dirname(__FILE__) . '/../../../..';
+        $root = realpath($root);
+        foreach (array_keys($configs) as $index) {
+            /* @var $index string|integer */
+            $configs[$index] = str_replace('%erfurt.root%', $root, $configs[$index]);
+        }
+        return $configs;
     }
 
     /**
