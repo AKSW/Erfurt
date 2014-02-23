@@ -128,10 +128,10 @@ class Erfurt_Store_Adapter_Container_ContainerFactory
     /**
      * Returns a loader for the config files.
      *
-     * @param ContainerInterface $container The service container
+     * @param ContainerBuilder $container The service container
      * @return \Symfony\Component\Config\Loader\LoaderInterface
      */
-    protected function createConfigLoader(ContainerInterface $container)
+    protected function createConfigLoader(ContainerBuilder $container)
     {
         $locator  = new FileLocator(array());
         $resolver = new LoaderResolver(array(
