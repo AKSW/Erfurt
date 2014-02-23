@@ -6,7 +6,11 @@ parameters:
     oracle.connection.charset:    "UTF8"
 
 services:
-    oracle_connector_with_mysql_cache:
+    oracle_adapter:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@oracle.sparql_adapter", "@oracle.sql_adapter"]
+
+    oracle_adapter_with_mysql_cache:
         class: Erfurt_Store_Adapter_SparqlSqlCombination
         arguments: ["@oracle.sparql_adapter", "@mysql.sql_adapter"]
 
@@ -17,6 +21,10 @@ services:
     oracle.sparql_connector:
         class: Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         arguments: ["@doctrine.connection", "%oracle.batch_size%"]
+
+    oracle.sql_adapter:
+        class: Erfurt_Store_Adapter_Oracle_OracleSqlAdapter
+        arguments: ["@doctrine.connection"]
 
     doctrine.connection:
         class: Doctrine\DBAL\Connection
