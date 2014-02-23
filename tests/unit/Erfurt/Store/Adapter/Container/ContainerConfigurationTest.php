@@ -59,9 +59,9 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
     public function testConfigurationRejectsOptionsWithoutConfigFiles()
     {
         $options = array(
-            'configs' => array(),
-            'service' => 'my_service',
-            'cache'   => $this->getDataDirectory()
+            'configs'         => array(),
+            'service'         => 'my_service',
+            'cache_directory' => $this->getDataDirectory()
         );
 
         $this->assertConfigurationRejected($options);
@@ -76,7 +76,7 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'configs' => array(
                 $this->getDataDirectory() . '/default.yml'
             ),
-            'cache'   => $this->getDataDirectory()
+            'cache_directory' => $this->getDataDirectory()
         );
 
         $this->assertConfigurationRejected($options);
@@ -107,11 +107,11 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'configs' => array(
                 $this->getDataDirectory() . '/default.yml'
             ),
-            'service' => 'my_service',
-            'cache'   => $this->getDataDirectory()
+            'service'         => 'my_service',
+            'cache_directory' => $this->getDataDirectory()
         );
 
-        $this->assertConfigurationRejected($options);
+        $this->assertConfigurationAccepted($options);
     }
 
     /**
@@ -124,9 +124,9 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'configs' => array(
                 $this->getDataDirectory() . '/default.yml'
             ),
-            'service'    => 'my_service',
-            'cache'      => $this->getDataDirectory(),
-            'parameters' => array(
+            'service'         => 'my_service',
+            'cache_directory' => $this->getDataDirectory(),
+            'parameters'      => array(
                 'a' => 'b',
                 'c' => 'd'
             )
@@ -145,9 +145,9 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'configs' => array(
                 $this->getDataDirectory() . '/default.yml'
             ),
-            'service'    => 'my_service',
-            'cache'      => $this->getDataDirectory(),
-            'parameters' => array(
+            'service'         => 'my_service',
+            'cache_directory' => $this->getDataDirectory(),
+            'parameters'      => array(
                 'a' => array(
                     'b',
                     'c'

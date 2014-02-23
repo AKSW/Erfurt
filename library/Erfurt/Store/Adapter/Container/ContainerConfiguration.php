@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
@@ -19,7 +20,26 @@ class Erfurt_Store_Adapter_Container_ContainerConfiguration implements Configura
      */
     public function getConfigTreeBuilder()
     {
-        // TODO: Implement getConfigTreeBuilder() method.
+        $builder = new TreeBuilder();
+        $root = $builder->root('container');
+        $root
+            ->children()
+                ->arrayNode('configs')
+                    ->isRequired()
+                    ->requiresAtLeastOneElement()
+                    ->prototype('scalar')->end()
+                ->end()
+                ->scalarNode('service')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('cache_directory')
+                    ->isRequired()
+                ->end()
+                ->arrayNode('parameters')
+                    ->prototype('variable')->end()
+                ->end()
+            ->end();
+        return $builder;
     }
 
 }
