@@ -1,0 +1,40 @@
+services:
+    oracle_connector_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@oracle.sparql_connector", "@mysql.sql_adapter"]
+
+    oracle.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@oracle.sparql_connector"]
+
+    oracle.sparql_connector:
+        class: Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
+        arguments: ["@doctrine.connection", "%oracle.batch_size%"]
+
+    doctrine.connection:
+        class: Doctrine\DBAL\Connection
+        factory_class: Erfurt_Store_Adapter_Oracle
+        factory_method: createConnection
+        arguments:
+            -
+                dbname:     "%oracle.connection.dbname%"
+                user:       "%oracle.connection.user%"
+                password:   "%oracle.connection.password%"
+                host:       "%oracle.connection.host%"
+                port:       "%oracle.connection.port%"
+                charset:    "UTF8"
+                persistent: false
+                pooled:     false
+                pool:       "erfurt"
+                session:
+                    optimizer_dynamic_sampling: 3
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"
