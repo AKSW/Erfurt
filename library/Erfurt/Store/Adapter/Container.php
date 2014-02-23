@@ -9,6 +9,7 @@ use Symfony\Component\Config\Definition\Processor;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 22.02.14
+ * @see http://symfony.com/doc/current/components/dependency_injection/introduction.html
  */
 class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInterface
 {
