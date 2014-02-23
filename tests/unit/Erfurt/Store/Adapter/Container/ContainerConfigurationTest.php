@@ -83,9 +83,10 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
     }
 
     /**
-     * Ensures that the configuration rejects options without cache directory.
+     * Ensures that the configuration adds a default cache directory if non
+     * is provided.
      */
-    public function testConfigurationRejectsOptionsWithoutCacheDirectory()
+    public function testConfigurationAddsCacheDirectoryIfNonIsProvided()
     {
         $options = array(
             'configs' => array(
@@ -94,7 +95,10 @@ class Erfurt_Store_Adapter_Container_ContainerConfigurationTest extends \PHPUnit
             'service' => 'my_service'
         );
 
-        $this->assertConfigurationRejected($options);
+        $processed = $this->processOptions($options);
+
+        $this->assertFileExists($processed['cache_directory']);
+        $this->assertTrue(is_dir($processed['cache_directory']));
     }
 
     /**

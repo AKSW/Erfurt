@@ -33,7 +33,7 @@ class Erfurt_Store_Adapter_Container_ContainerConfiguration implements Configura
                     ->isRequired()
                 ->end()
                 ->scalarNode('cache_directory')
-                    ->isRequired()
+                    ->defaultValue(sys_get_temp_dir())
                 ->end()
                 ->arrayNode('parameters')
                     ->prototype('variable')->end()
