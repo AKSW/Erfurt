@@ -220,9 +220,14 @@ class Erfurt_Store
         }
 
         // backend class
-        $className  = 'Erfurt_Store_Adapter_'
-                    . $schemaName
-                    . $this->_backendName;
+        if (isset($backendOptions['adapterClass'])) {
+            $className = $backendOptions['adapterClass'];
+            unset($backendOptions['adapterClass']);
+        } else {
+            $className  = 'Erfurt_Store_Adapter_'
+                        . $schemaName
+                        . $this->_backendName;
+        }
 
         // check class existence
         if (!class_exists($className)) {
