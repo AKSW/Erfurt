@@ -19,7 +19,7 @@ class Erfurt_Store_Adapter_Container_ContainerFactory
      *
      * @param array(string) $definitionFiles
      * @param array(string=>mixed) $parameters Additional container parameters.
-     * @param $cacheDirectory
+     * @param string $cacheDirectory
      */
     public function __construct(array $definitionFiles, array $parameters, $cacheDirectory)
     {

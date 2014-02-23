@@ -10,6 +10,26 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
 {
 
     /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->cleanUpCache();
+        $this->createTemporaryConfig();
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->removeTemporaryConfig();
+        $this->cleanUpCache();
+        parent::tearDown();
+    }
+
+    /**
      * Ensures that the constructor throws an exception if the provided cache directory
      * does not exist.
      */
@@ -38,7 +58,10 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
      */
     public function testCreateReturnsContainer()
     {
+        $factory   = $this->createFactory();
+        $container = $factory->create();
 
+        $this->assertInstanceOf('\Symfony\Component\DependencyInjection\ContainerInterface', $container);
     }
 
     /**
@@ -73,6 +96,69 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
     public function testFactoryUpdatesContainerWhenParametersChange()
     {
 
+    }
+
+    /**
+     * Creates a container factory for testing.
+     *
+     * @param array(string=>mixed) $parameters
+     * @return Erfurt_Store_Adapter_Container_ContainerFactory
+     */
+    protected function createFactory(array $parameters = array())
+    {
+        $configs = array(
+            $this->path('configs/default.yml'),
+            $this->getTemporaryConfigPath()
+        );
+        return new Erfurt_Store_Adapter_Container_ContainerFactory($configs, $parameters, $this->path('cache'));
+    }
+
+    /**
+     * Removes cache files that have been created.
+     */
+    protected function cleanUpCache()
+    {
+        foreach (glob($this->path('cache') . '/*') as $file) {
+            if (basename($file) === 'README.md') {
+                continue;
+            }
+            unlink($file);
+        }
+    }
+
+    /**
+     * Writes a temporary config file that contains the parameter
+     * "temp.parameter" with the provided value.
+     *
+     * @param string $parameterValue
+     */
+    protected function createTemporaryConfig($parameterValue = 'temp')
+    {
+        $content = array(
+            'parameters:',
+            '    temp.parameter: "' . $parameterValue . '"'
+        );
+        file_put_contents($this->getTemporaryConfigPath(), implode(PHP_EOL, $content));
+    }
+
+    /**
+     * Removes the temporary config file.
+     */
+    protected function removeTemporaryConfig()
+    {
+        if (is_file($this->getTemporaryConfigPath())) {
+            unlink($this->getTemporaryConfigPath());
+        }
+    }
+
+    /**
+     * Returns the path to the config file that is created temporarily.
+     *
+     * @return string
+     */
+    protected function getTemporaryConfigPath()
+    {
+        return $this->path('configs/temp.yml');
     }
 
     /**
