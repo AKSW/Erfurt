@@ -11,6 +11,7 @@ use Symfony\Component\Config\Definition\Processor;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 12.12.13
+ * @deprecated Creation via container factory is preferred as it is more flexible.
  */
 class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterface
 {
