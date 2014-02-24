@@ -37,7 +37,7 @@ class Erfurt_Store_Adapter_Oracle_Setup_PackageSetup implements \Erfurt_Store_Ad
      */
     public function isInstalled()
     {
-        // TODO: Implement isInstalled() method.
+        return $this->packageExists();
     }
 
     /**
@@ -45,7 +45,7 @@ class Erfurt_Store_Adapter_Oracle_Setup_PackageSetup implements \Erfurt_Store_Ad
      */
     public function install()
     {
-        // TODO: Implement install() method.
+        $this->createPackage();
     }
 
     /**
@@ -55,7 +55,7 @@ class Erfurt_Store_Adapter_Oracle_Setup_PackageSetup implements \Erfurt_Store_Ad
      */
     public function uninstall()
     {
-        // TODO: Implement uninstall() method.
+        $this->dropPackage();
     }
 
     /**
