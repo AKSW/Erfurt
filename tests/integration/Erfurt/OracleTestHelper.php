@@ -107,19 +107,9 @@ class Erfurt_OracleTestHelper
     {
         if ($this->setup === null) {
             $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->getConnection());
-            $this->uninstallTripleStore();
-            $this->setup->install();
-            $this->addCleanUpTask(array($this, 'uninstallTripleStore'));
-        }
-    }
-
-    /**
-     * Removes the Triple Store that was used for testing.
-     */
-    protected function uninstallTripleStore()
-    {
-        if ($this->setup->isInstalled()) {
             $this->setup->uninstall();
+            $this->setup->install();
+            $this->addCleanUpTask(array($this->setup, 'uninstall'));
         }
     }
 
