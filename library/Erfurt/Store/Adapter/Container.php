@@ -41,6 +41,32 @@ use Symfony\Component\Config\Definition\Processor;
  * Refer to {@link http://symfony.com/doc/current/components/dependency_injection/introduction.html}
  * to learn about the various configuration styles.
  *
+ * # Adapter Setup #
+ *
+ * The container factory provides an optional feature to automate the setup of
+ * an adapter.
+ *
+ * To automate the setup, one or more services that implement \Erfurt_Store_Adapter_Container_SetupInterface
+ * must be configured in the container. Additionally, these setup services must be tagged with
+ * "erfurt.container.setup".
+ *
+ * The following example shows the configuration of the Oracle Package setup:
+ *
+ *     oracle.setup.package:
+ *         class: Erfurt_Store_Adapter_Oracle_Setup_PackageSetup
+ *         arguments: ["@doctrine.connection"]
+ *         tags:
+ *             -  { name: erfurt.container.setup }
+ *
+ * To ensure that the setup is called, the "erfurt.auto_setup" parameter must evaluate to true.
+ * This can be configured in the *.ini file:
+ *
+ *      store.container_adapter.parameters.erfurt.auto_setup = On
+ *
+ * Now the setup routines are checked each time when the container is compiled (which is
+ * usually the case on the first run or after a configuration change).
+ * An installation is only started if the component is not already installed.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 22.02.14
  */
