@@ -9,16 +9,17 @@ use Doctrine\DBAL\Types\Type;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 14.12.13
+ * @deprecated Use more specific setups (ModelSetup, PackageSetup).
  */
 class Erfurt_Store_Adapter_Oracle_Setup
 {
 
     /**
-     * The database connection that is used.
+     * Inner setups.
      *
-     * @var \Doctrine\DBAL\Connection
+     * @var \Erfurt_Store_Adapter_Container_SetupInterface[]
      */
-    protected $connection = null;
+    protected $setups = array();
 
     /**
      * Creates a setup object that uses the provided connection to
@@ -28,7 +29,11 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function __construct(Connection $connection)
     {
-        $this->connection = $connection;
+        $this->setups = array(
+            new Erfurt_Store_Adapter_Oracle_Setup_TableSetup($connection),
+            new Erfurt_Store_Adapter_Oracle_Setup_ModelSetup($connection),
+            new Erfurt_Store_Adapter_Oracle_Setup_PackageSetup($connection)
+        );
     }
 
     /**
@@ -38,7 +43,12 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function isInstalled()
     {
-        return $this->tableExists('erfurt_semantic_data') && $this->modelExists($this->getModelName());
+        foreach ($this->setups as $setup) {
+            if (!$setup->isInstalled()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -46,13 +56,11 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function install()
     {
-        // Drop model and table if these already exist...
-        $this->dropModel();
-        $this->dropTable();
-        // ... and create new ones.
-        $this->createTable();
-        $this->createModel();
-        $this->createPackage();
+        foreach ($this->setups as $setup) {
+            if (!$setup->isInstalled()) {
+                $setup->install();
+            }
+        }
     }
 
     /**
@@ -62,171 +70,11 @@ class Erfurt_Store_Adapter_Oracle_Setup
      */
     public function uninstall()
     {
-        $this->dropPackage();
-        $this->dropModel();
-        $this->dropTable();
-    }
-
-    /**
-     * Creates the tables that holds the semantic data.
-     */
-    protected function createTable()
-    {
-        $query = 'CREATE TABLE erfurt_semantic_data ('
-               . '  triple SDO_RDF_TRIPLE_S'
-               . ')';
-        $this->connection->executeQuery($query);
-        // Create a function based index on the object ID, which is used to retrieve CLOB literals.
-        $query = 'CREATE INDEX object_id ON erfurt_semantic_data (triple.RDF_O_ID)';
-        $this->connection->executeQuery($query);
-    }
-
-    /**
-     * Creates the semantic model.
-     */
-    protected function createModel()
-    {
-        $query = 'BEGIN SEM_APIS.CREATE_SEM_MODEL(:model, :dataTable, :tripleColumn); END;';
-        $params = array(
-            'model'        => $this->getModelName(),
-            'dataTable'    => 'erfurt_semantic_data',
-            'tripleColumn' => 'triple'
-        );
-        $this->connection->prepare($query)->execute($params);
-    }
-
-    /**
-     * Removes the semantic model.
-     *
-     * @throws Doctrine\DBAL\DBALException|Exception
-     */
-    protected function dropModel()
-    {
-        $model = $this->getModelName();
-        if ($this->modelExists($model)) {
-            $query = 'BEGIN SEM_APIS.DROP_SEM_MODEL(:model); END;';
-            $params = array('model' => $model);
-            $this->connection->prepare($query)->execute($params);
+        foreach (array_reverse($this->setups) as $setup) {
+            if ($setup->isInstalled()) {
+                $setup->uninstall();
+            }
         }
-    }
-
-    /**
-     * Creates a stored procedure that is used to insert triples.
-     */
-    protected function createPackage()
-    {
-        $packageHeaderLines = array(
-            'CREATE OR REPLACE PACKAGE ERFURT AS',
-            '    TYPE uri_list IS TABLE OF VARCHAR(1000) INDEX BY BINARY_INTEGER;',
-            '    TYPE object_list IS TABLE OF VARCHAR(4000) INDEX BY BINARY_INTEGER;',
-            '    PROCEDURE ADD_TRIPLES(graphs IN uri_list, subjects IN uri_list, predicates IN uri_list, objects IN object_list);',
-            'END ERFURT;'
-        );
-        $packageBodyLines = array(
-            'CREATE OR REPLACE PACKAGE BODY ERFURT AS',
-            '    PROCEDURE ADD_TRIPLES(graphs IN uri_list, subjects IN uri_list, predicates IN uri_list, objects IN object_list) AS',
-            '    BEGIN',
-            '        FORALL i IN 1 .. graphs.count',
-            '            INSERT INTO erfurt_semantic_data (triple)',
-            '            VALUES (SDO_RDF_TRIPLE_S(',
-            '                graphs(i),',
-            '                subjects(i),',
-            '                predicates(i),',
-            '                objects(i)',
-            '            ));',
-            '    END;',
-            'END ERFURT;'
-        );
-        $this->connection->executeQuery(implode(PHP_EOL, $packageHeaderLines));
-        $this->connection->executeQuery(implode(PHP_EOL, $packageBodyLines));
-    }
-
-    /**
-     * Drops the adapter package and its stored procedures.
-     */
-    protected function dropPackage()
-    {
-        if ($this->packageExists()) {
-            $query = 'DROP PACKAGE ERFURT';
-            $this->connection->executeQuery($query);
-        }
-    }
-
-    /**
-     * Checks if the Erfurt procedure package exists.
-     *
-     * @return boolean
-     */
-    protected function packageExists()
-    {
-        $query     = "SELECT * FROM USER_OBJECTS WHERE OBJECT_TYPE='PACKAGE' AND OBJECT_NAME='ERFURT'";
-        $statement = $this->connection->query($query);
-        $rows      = $statement->fetchAll();
-        return count($rows) > 0;
-    }
-
-    /**
-     * Removes the table that contains the semantic data.
-     */
-    protected function dropTable()
-    {
-        if ($this->getSchemaManager()->tablesExist(array('erfurt_semantic_data'))) {
-            $query = 'DROP TABLE erfurt_semantic_data';
-            $this->connection->executeQuery($query);
-        }
-    }
-
-    /**
-     * Checks if the provided semantic model exists.
-     *
-     * @param string $model
-     * @return boolean
-     */
-    protected function modelExists($model)
-    {
-        $query = 'SELECT m.MODEL_NAME FROM MDSYS.SEM_MODEL$ m '
-               . 'WHERE OWNER=SYS_CONTEXT(:namespace, :parameter) AND '
-               . 'MODEL_NAME=:modelName';
-        $params = array(
-            'namespace' => 'USERENV',
-            'parameter' => 'CURRENT_USER',
-            'modelName' => strtoupper($model)
-        );
-        $statement = $this->connection->prepare($query);
-        $statement->execute($params);
-        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return count($rows) > 0;
-    }
-
-    /**
-     * Checks if the given table exists.
-     *
-     * @param string $table
-     * @return boolean
-     */
-    protected function tableExists($table)
-    {
-        return $this->getSchemaManager()->tablesExist(array($table));
-    }
-
-    /**
-     * Returns the name of the semantic model that is used.
-     *
-     * @return string
-     */
-    protected function getModelName()
-    {
-        return $this->connection->getUsername() . '_erfurt';
-    }
-
-    /**
-     * Returns the schema manager for the connection.
-     *
-     * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
-     */
-    protected function getSchemaManager()
-    {
-        return $this->connection->getSchemaManager();
     }
 
 }
