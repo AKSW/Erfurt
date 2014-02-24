@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Type;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 14.12.13
- * @deprecated Use more specific setups (ModelSetup, PackageSetup).
+ * @deprecated Use more specific setups (TableSetup, ModelSetup, PackageSetup).
  */
 class Erfurt_Store_Adapter_Oracle_Setup
 {
