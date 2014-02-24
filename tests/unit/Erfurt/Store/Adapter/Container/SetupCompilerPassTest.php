@@ -92,6 +92,20 @@ class Erfurt_Store_Adapter_Container_SetupCompilerPassTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that the setup instances are not called if the "erfurt.container.auto_setup"
+     * parameter is not available.
+     */
+    public function testSetupsAreNotCalledIfAutoSetupParameterIsNotAvailable()
+    {
+        $this->setup->expects($this->never())
+                    ->method('isInstalled');
+        $this->setup->expects($this->never())
+                    ->method('install');
+
+        $this->compilerPass->process($this->container);
+    }
+
+    /**
      * Ensures that the setups are called if the "erfurt.container.auto_setup" evaluates
      * to true.
      */
