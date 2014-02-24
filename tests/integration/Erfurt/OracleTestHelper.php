@@ -34,11 +34,11 @@ class Erfurt_OracleTestHelper
     protected $originalSchema = null;
 
     /**
-     * Setup helper that is used to install the triple store.
+     * Setup instances that are used to install the triple store.
      *
-     * @var \Erfurt_Store_Adapter_Oracle_Setup
+     * @var \Erfurt_Store_Adapter_Container_SetupInterface[]
      */
-    protected $setup = null;
+    protected $setups = null;
 
     /**
      * Contains task callbacks that must be executed on tear down.
@@ -105,11 +105,26 @@ class Erfurt_OracleTestHelper
      */
     public function installTripleStore()
     {
-        if ($this->setup === null) {
-            $this->setup = new Erfurt_Store_Adapter_Oracle_Setup($this->getConnection());
-            $this->setup->uninstall();
-            $this->setup->install();
-            $this->addCleanUpTask(array($this->setup, 'uninstall'));
+        if ($this->setups === null) {
+            $connection = $this->getConnection();
+            $this->setups = array(
+                new Erfurt_Store_Adapter_Oracle_Setup_TableSetup($connection),
+                new Erfurt_Store_Adapter_Oracle_Setup_ModelSetup($connection),
+                new Erfurt_Store_Adapter_Oracle_Setup_PackageSetup($connection)
+            );
+            // Remove components if there are leftovers from a previous run.
+            foreach (array_reverse($this->setups) as $setup) {
+                /* @var $setup \Erfurt_Store_Adapter_Container_SetupInterface */
+                if ($setup->isInstalled()) {
+                    $setup->uninstall();
+                }
+            }
+            // Afterwards, create a clean install of each component.
+            foreach ($this->setups as $setup) {
+                // Create a fresh install for each component.
+                $setup->install();
+                $this->addCleanUpTask(array($setup, 'uninstall'));
+            }
         }
     }
 
