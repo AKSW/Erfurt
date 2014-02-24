@@ -116,6 +116,7 @@ class Erfurt_Store_Adapter_Container_ContainerFactory
         // Therefore, they are added last and overwrite the ones in the configuration
         // files.
         $builder->getParameterBag()->add($this->parameters);
+        $builder->addCompilerPass(new Erfurt_Store_Adapter_Container_SetupCompilerPass());
         return $builder;
     }
 
