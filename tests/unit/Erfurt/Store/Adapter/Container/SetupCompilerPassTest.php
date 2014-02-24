@@ -1,4 +1,5 @@
 <?php
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -113,7 +114,7 @@ class Erfurt_Store_Adapter_Container_SetupCompilerPassTest extends \PHPUnit_Fram
     {
         $this->setup->expects($this->once())
                     ->method('isInstalled')
-                    ->will($this->returnValue(true));
+                    ->will($this->returnValue(false));
         $this->setup->expects($this->once())
                     ->method('install');
 
@@ -128,7 +129,7 @@ class Erfurt_Store_Adapter_Container_SetupCompilerPassTest extends \PHPUnit_Fram
     {
         $this->setup->expects($this->once())
                     ->method('isInstalled')
-                    ->will($this->returnValue(false));
+                    ->will($this->returnValue(true));
         $this->setup->expects($this->never())
                     ->method('install');
 
@@ -137,12 +138,25 @@ class Erfurt_Store_Adapter_Container_SetupCompilerPassTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that the compiler pass throws an exception if one of the tagged Setup
+     * instances does not implement the SetupInterface.
+     */
+    public function testPassThrowsExceptionIfSetupDoesNotImplementInterface()
+    {
+        $container = $this->createContainer(new stdClass());
+        $container->setParameter('erfurt.container.auto_setup', true);
+
+        $this->setExpectedException('RuntimeException');
+        $this->compilerPass->process($container);
+    }
+
+    /**
      * Creates a container that contains the provided Setup instance.
      *
-     * @param Erfurt_Store_Adapter_Container_SetupInterface $setup
+     * @param Erfurt_Store_Adapter_Container_SetupInterface|mixed $setup
      * @return \Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    protected function createContainer(Erfurt_Store_Adapter_Container_SetupInterface $setup)
+    protected function createContainer($setup)
     {
         $container = new ContainerBuilder();
         $container->set('setup.instance', $setup);
