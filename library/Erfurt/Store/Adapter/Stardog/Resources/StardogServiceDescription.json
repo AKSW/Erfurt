@@ -13,6 +13,17 @@
                 }
             }
         },
+        "transactionalOperation": {
+            "extends": "databaseOperation",
+            "parameters": {
+                "transaction-id": {
+                    "description": "The transaction ID.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": true
+                }
+            }
+        },
         "size": {
             "extends": "databaseOperation",
             "httpMethod": "GET",
@@ -20,11 +31,14 @@
             "summary": "Returns the number of triples in the whole database."
         },
         "query": {
-            "extends": "databaseOperation",
+            "extends": "transactionalOperation",
             "httpMethod": "POST",
-            "uri": "{database}/query",
+            "uri": "{database}{/transaction-id}/query",
             "summary": "Runs a reading SPARQL query against the database.",
             "parameters": {
+                "transaction-id": {
+                    "required": false
+                },
                 "query": {
                     "description": "The SPARQL query.",
                     "type": "string",
@@ -54,18 +68,27 @@
                 }
             }
         },
-        "clear": {
+        "beginTransaction": {
             "extends": "databaseOperation",
+            "uri": "/{database}/transaction/begin",
+            "summary": "Starts a transaction."
+        },
+        "commitTransaction": {
+            "extends": "transactionalOperation",
+            "uri": "/{database}/transaction/commit/{transaction-id}",
+            "summary": "Commits the specified transaction."
+        },
+        "rollbackTransaction": {
+            "extends": "transactionalOperation",
+            "uri": "/{database}/transaction/rollback/{transaction-id}",
+            "summary": "Reverts the changes performed by the specified transaction."
+        },
+        "clear": {
+            "extends": "transactionalOperation",
             "httpMethod": "POST",
             "uri": "{database}/{transaction-id}/clear{?graph-uri}",
             "summary": "Clears the database or graph.",
             "parameters": {
-                "transaction-id": {
-                    "description": "The transaction ID.",
-                    "type": "string",
-                    "location": "uri",
-                    "required": true
-                },
                 "graph-uri": {
                     "description": "IRI of the graph that is cleared.",
                     "type": "string",
