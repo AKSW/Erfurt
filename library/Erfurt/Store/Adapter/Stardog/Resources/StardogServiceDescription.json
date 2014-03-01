@@ -11,12 +11,7 @@
                     "location": "uri",
                     "required": true
                 }
-            },
-            "errorResponses": [
-                {
-                    "class": "Erfurt_Store_Adapter_Stardog_ApiClientException"
-                }
-            ]
+            }
         },
         "size": {
             "extends": "databaseOperation",

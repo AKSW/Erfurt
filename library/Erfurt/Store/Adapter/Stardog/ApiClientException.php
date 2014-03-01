@@ -1,17 +1,17 @@
 <?php
 
+use Guzzle\Common\Exception\RuntimeException;
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Message\Response;
-use Guzzle\Plugin\ErrorResponse\ErrorResponseExceptionInterface;
-use Guzzle\Service\Command\CommandInterface;
 
 /**
- * ApiClientException
+ * Stardog specific exception that extracts further information from the response if possible.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
  */
-class Erfurt_Store_Adapter_Stardog_ApiClientException extends BadResponseException implements ErrorResponseExceptionInterface
+class Erfurt_Store_Adapter_Stardog_ApiClientException extends RuntimeException
 {
 
     /**
@@ -36,17 +36,17 @@ class Erfurt_Store_Adapter_Stardog_ApiClientException extends BadResponseExcepti
     );
 
     /**
-     * Create an exception for a command based on a command and an error response definition.
+     * Creates a new exception based on the Stardog error code.
      *
-     * @param CommandInterface $command  Command that was sent
-     * @param Response $response The error response
-     * @return self
+     * @param RequestInterface $request  Request
+     * @param Response         $response Response received
+     * @return Erfurt_Store_Adapter_Stardog_ApiClientException
      */
-    public static function fromCommand(CommandInterface $command, Response $response)
+    public static function factory(RequestInterface $request, Response $response)
     {
-        $inner   = BadResponseException::factory($command->getRequest(), $response);
+        $inner   = BadResponseException::factory($request, $response);
         $code    = $response->getHeader('SD-Error-Code');
-        $message = static::toMessage($code) . ':' . PHP_EOL . $response->getBody(true);
+        $message = static::toMessage($code) . PHP_EOL . PHP_EOL . $response->getBody(true);
         return new static($message, $code, $inner);
     }
 

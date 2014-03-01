@@ -28,7 +28,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         if (isset($config['username']) && isset($config['password'])) {
             $client->setDefaultOption('auth', array($config['username'], $config['password'], 'Any'));
         }
-        $client->addSubscriber(new ErrorResponsePlugin());
+        $client->addSubscriber(new Erfurt_Store_Adapter_Stardog_ExceptionListener());
         return $client;
     }
 
