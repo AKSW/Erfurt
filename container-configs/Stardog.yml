@@ -1,0 +1,10 @@
+services:
+    stardog.api_client:
+        class: Erfurt_Store_Adapter_Stardog_ApiClient
+        factoryClass: Erfurt_Store_Adapter_Stardog_ApiClient
+        factoryMethod: factory
+        arguments:
+            -
+                baseUrl:  "%stardog.client.base_url%"
+                username: "%stardog.client.username%"
+                password: "%stardog.client.password%"
