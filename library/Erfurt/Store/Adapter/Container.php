@@ -67,6 +67,17 @@ use Symfony\Component\Config\Definition\Processor;
  * usually the case on the first run or after a configuration change).
  * An installation is only started if the component is not already installed.
  *
+ * # Retrieve the Container #
+ *
+ * In some cases (for example for testing) it might be useful to retrieve the service
+ * container directly to get access to the sub-components.
+ *
+ * Simply pass the identifier "service_container" as service parameter to get the whole
+ * container instead of a specific adapter service:
+ *
+ *     ; [...]
+ *     store.container_adapter.service = "service_container"
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 22.02.14
  */
