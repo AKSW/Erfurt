@@ -1,0 +1,22 @@
+{
+    "name": "Stardog",
+    "apiVersion": "3.0",
+    "description": "Stardog HTTP protocol client.",
+    "operations": {
+        "size": {
+            "httpMethod": "GET",
+            "uri": "{database}/size",
+            "summary": "Returns the number of triples in the whole database.",
+            "responseType": "primitive",
+            "responseClass": "integer",
+            "parameters": {
+                "database": {
+                    "description": "The name of the database.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": true
+                }
+            }
+        }
+    }
+}
