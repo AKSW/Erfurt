@@ -28,7 +28,7 @@
                 "query": {
                     "description": "The SPARQL query.",
                     "type": "string",
-                    "location": "body",
+                    "location": "postField",
                     "required": true
                 },
                 "format": {
@@ -47,7 +47,7 @@
                 "query": {
                     "description": "The SPARQL query.",
                     "type": "string",
-                    "location": "body",
+                    "location": "postField",
                     "required": true
                 }
             }
