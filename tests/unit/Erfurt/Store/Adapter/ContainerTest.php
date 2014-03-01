@@ -67,7 +67,17 @@ class Erfurt_Store_Adapter_ContainerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createAdapter()
     {
-        return Erfurt_Store_Adapter_Container::createFromOptions(array(
+        return Erfurt_Store_Adapter_Container::createFromOptions($this->getOptions());
+    }
+
+    /**
+     * Returns the options that are used for testing.
+     *
+     * @return array(string=>mixed)
+     */
+    protected function getOptions()
+    {
+        return array(
             'configs' => array(
                 dirname(__FILE__) . '/_files/Container/config.yml'
             ),
@@ -79,7 +89,7 @@ class Erfurt_Store_Adapter_ContainerTest extends \PHPUnit_Framework_TestCase
                     'param' => 'nested_value'
                 )
             )
-        ));
+        );
     }
 
     /**
