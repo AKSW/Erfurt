@@ -7,8 +7,6 @@
             "httpMethod": "GET",
             "uri": "{database}/size",
             "summary": "Returns the number of triples in the whole database.",
-            "responseType": "primitive",
-            "responseClass": "integer",
             "parameters": {
                 "database": {
                     "description": "The name of the database.",

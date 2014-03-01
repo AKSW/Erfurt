@@ -9,7 +9,6 @@ use Guzzle\Service\Description\ServiceDescription;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
- * @method integer size()
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
@@ -28,6 +27,18 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
             $client->setDefaultOption('auth', array($config['username'], $config['password'], 'Any'));
         }
         return $client;
+    }
+
+    /**
+     * Returns the number of triples in the database.
+     *
+     * @return integer
+     */
+    public function size()
+    {
+        /* @var $response \Guzzle\Http\Message\Response */
+        $response = parent::size();
+        return (int)$response->getBody(true);
     }
 
 }
