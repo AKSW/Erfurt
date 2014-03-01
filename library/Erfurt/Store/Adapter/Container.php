@@ -78,6 +78,8 @@ use Symfony\Component\Config\Definition\Processor;
  *     ; [...]
  *     store.container_adapter.service = "service_container"
  *
+ * The container is an instance of \Symfony\Component\DependencyInjection\ContainerInterface.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 22.02.14
  */
