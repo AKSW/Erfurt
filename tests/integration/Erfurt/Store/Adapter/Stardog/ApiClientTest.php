@@ -18,12 +18,20 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
     protected $client = null;
 
     /**
+     * Helper object that is used to create the Stardog related objects.
+     *
+     * @var \Erfurt_StardogTestHelper
+     */
+    protected $helper = null;
+
+    /**
      * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->client = null;
+        $this->helper = new Erfurt_StardogTestHelper();
+        $this->client = $this->helper->getApiClient();
     }
 
     /**
@@ -31,7 +39,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
      */
     protected function tearDown()
     {
+        $this->helper->cleanUp();
         $this->client = null;
+        $this->helper = null;
         parent::tearDown();
     }
 

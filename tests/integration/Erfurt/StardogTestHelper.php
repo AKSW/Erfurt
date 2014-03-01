@@ -27,7 +27,9 @@ class Erfurt_StardogTestHelper
     public function getApiClient()
     {
         $container = $this->getContainer();
-        return $container->get('stardog.api_client');
+        $client    = $container->get('stardog.api_client');
+        PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Stardog_ApiClient', $client);
+        return $client;
     }
 
     /**
