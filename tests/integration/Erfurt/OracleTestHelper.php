@@ -7,7 +7,6 @@ use Doctrine\DBAL\Schema\Schema;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.01.14
- * @group Oracle
  */
 class Erfurt_OracleTestHelper
 {
