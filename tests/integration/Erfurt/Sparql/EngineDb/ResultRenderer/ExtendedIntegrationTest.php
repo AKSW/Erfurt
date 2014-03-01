@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Sparql_EngineDb_ResultRenderer_ExtendedIntegrationTest extends Erfurt_TestCase
 {
     public function testResultHeadVarsHaveCorrectName()

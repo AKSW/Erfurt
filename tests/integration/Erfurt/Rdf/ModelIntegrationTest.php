@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group Integration
+ */
 class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 {
     protected $_storeStub = null;

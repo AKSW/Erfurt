@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 {
     private $_fileBase = null;
