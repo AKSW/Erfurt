@@ -8,4 +8,5 @@ services:
                 baseUrl:  "%stardog.client.base_url%"
                 username: "%stardog.client.username%"
                 password: "%stardog.client.password%"
-                database: "%stardog.client.database%"
+                "command.params":
+                    database: "%stardog.client.database%"
