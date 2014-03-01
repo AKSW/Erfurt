@@ -56,6 +56,14 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
     }
 
     /**
+     * Checks if the client from the container has a service description.
+     */
+    public function testClientHasServiceDescription()
+    {
+        $this->assertNotNull($this->client->getDescription());
+    }
+
+    /**
      * Checks if the size() method returns an integer.
      */
     public function testSizeReturnsInteger()
