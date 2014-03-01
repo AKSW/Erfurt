@@ -1,6 +1,7 @@
 <?php
 
 use Guzzle\Common\Collection;
+use Guzzle\Plugin\ErrorResponse\ErrorResponsePlugin;
 use Guzzle\Service\Client;
 use Guzzle\Service\Description\ServiceDescription;
 
@@ -9,6 +10,7 @@ use Guzzle\Service\Description\ServiceDescription;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
+ * @method array query(array)
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
@@ -26,6 +28,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         if (isset($config['username']) && isset($config['password'])) {
             $client->setDefaultOption('auth', array($config['username'], $config['password'], 'Any'));
         }
+        $client->addSubscriber(new ErrorResponsePlugin());
         return $client;
     }
 
@@ -39,6 +42,23 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         /* @var $response \Guzzle\Http\Message\Response */
         $response = parent::size();
         return (int)$response->getBody(true);
+    }
+
+    /**
+     * Returns an execution plan for a SPARQL query.
+     *
+     * The following argument keys are supported:
+     *
+     * - query (string): The SPARQL query.
+     *
+     * @param array(string=>mixed) $arguments
+     * @return string
+     */
+    public function explain(array $arguments)
+    {
+        /* @var $response \Guzzle\Http\Message\Response */
+        $response = parent::explain($arguments);
+        return $response->getBody(true);
     }
 
 }

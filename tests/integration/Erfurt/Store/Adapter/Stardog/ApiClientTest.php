@@ -73,4 +73,30 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
         $this->assertInternalType('integer', $size);
     }
 
+    /**
+     * Checks if the query operation returns an array that contains the results.
+     *
+     * The concrete result values are not checked here.
+     */
+    public function testQueryReturnsResults()
+    {
+        $query   = 'SELECT * WHERE { ?subject ?predicate ?object }';
+        $results = $this->client->query(array('query' => $query));
+
+        $this->assertInternalType('array', $results);
+    }
+
+    /**
+     * Checks if the explain operation returns some kind
+     * of execution plan.
+     */
+    public function testExplainReturnsExecutionPlan()
+    {
+        $query = 'SELECT * WHERE { ?subject ?predicate ?object }';
+        $plan  = $this->client->explain(array('query' => $query));
+
+        $this->assertInternalType('string', $plan);
+        $this->assertNotEmpty($plan);
+    }
+
 }

@@ -3,15 +3,56 @@
     "apiVersion": "3.0",
     "description": "Stardog HTTP protocol client.",
     "operations": {
-        "size": {
-            "httpMethod": "GET",
-            "uri": "{database}/size",
-            "summary": "Returns the number of triples in the whole database.",
+        "databaseOperation": {
             "parameters": {
                 "database": {
                     "description": "The name of the database.",
                     "type": "string",
                     "location": "uri",
+                    "required": true
+                }
+            },
+            "errorResponses": [
+                {
+                    "class": "Erfurt_Store_Adapter_Stardog_ApiClientException"
+                }
+            ]
+        },
+        "size": {
+            "extends": "databaseOperation",
+            "httpMethod": "GET",
+            "uri": "{database}/size",
+            "summary": "Returns the number of triples in the whole database."
+        },
+        "query": {
+            "extends": "databaseOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/query",
+            "summary": "Runs a reading SPARQL query against the database.",
+            "parameters": {
+                "query": {
+                    "description": "The SPARQL query.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
+                },
+                "format": {
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/sparql-results+json",
+                    "sentAs": "accept"
+                }
+            }
+        },
+        "explain": {
+            "extends": "databaseOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/explain",
+            "parameters": {
+                "query": {
+                    "description": "The SPARQL query.",
+                    "type": "string",
+                    "location": "body",
                     "required": true
                 }
             }
