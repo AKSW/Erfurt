@@ -13,6 +13,7 @@ use Guzzle\Service\Description\ServiceDescription;
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
+
     /**
      * Creates a new API client instance.
      *
@@ -23,6 +24,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     {
         $client = parent::factory($config);
         $client->setDescription(ServiceDescription::factory(__DIR__ . '/Resources/StardogServiceDescription.json'));
+        if (isset($config['username']) && isset($config['password'])) {
+            $client->setDefaultOption('auth', array($config['username'], $config['password'], 'Any'));
+        }
         return $client;
     }
 
