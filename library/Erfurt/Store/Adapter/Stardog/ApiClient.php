@@ -11,7 +11,7 @@ use Guzzle\Service\Description\ServiceDescription;
  * @since 01.03.14
  * @method integer size()
  */
-class  Erfurt_Store_Adapter_Stardog_ApiClient extends Client
+class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
     /**
      * Creates a new API client instance.
@@ -21,7 +21,7 @@ class  Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public static function factory($config = array())
     {
-        $client =  parent::factory($config);
+        $client = parent::factory($config);
         $client->setDescription(ServiceDescription::factory(__DIR__ . '/Resources/StardogServiceDescription.json'));
         return $client;
     }
