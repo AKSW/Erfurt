@@ -139,21 +139,21 @@
                     "type": "string",
                     "location": "uri",
                     "required": false
+                },
+                "inputFormat": {
+                    "description": "The input format of the triples.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/x-turtle",
+                    "sentAs": "Content-Type",
+                    "required": false
+                },
+                "triples": {
+                    "description": "The triples in the given format.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
                 }
-            },
-            "inputFormat": {
-                "description": "The input format of the triples.",
-                "type": "string",
-                "location": "header",
-                "default": "application/x-turtle",
-                "sentAs": "Content-Type",
-                "required": false
-            },
-            "triples": {
-                "description": "The triples in the given format.",
-                "type": "string",
-                "location": "body",
-                "required": true
             }
         }
     }
