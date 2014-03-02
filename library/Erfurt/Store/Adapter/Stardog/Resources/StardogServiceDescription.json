@@ -70,16 +70,19 @@
         },
         "beginTransaction": {
             "extends": "databaseOperation",
+            "httpMethod": "POST",
             "uri": "/{database}/transaction/begin",
             "summary": "Starts a transaction."
         },
         "commitTransaction": {
             "extends": "transactionalOperation",
+            "httpMethod": "POST",
             "uri": "/{database}/transaction/commit/{transaction-id}",
             "summary": "Commits the specified transaction."
         },
         "rollbackTransaction": {
             "extends": "transactionalOperation",
+            "httpMethod": "POST",
             "uri": "/{database}/transaction/rollback/{transaction-id}",
             "summary": "Reverts the changes performed by the specified transaction."
         },
