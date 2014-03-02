@@ -87,6 +87,22 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
     }
 
     /**
+     * Checks if query() can be called with a valid SPARQL update query.
+     */
+    public function testQueryAcceptsSparqlUpdate()
+    {
+        $query = 'DELETE DATA '
+               . '{'
+               . '    GRAPH <http://example.org/sparql-update> { '
+               . '        <http://example.org/subject>  <http://example.org/predicate> <http://example.org/object> . '
+               . '    }'
+               . '}';
+
+        $this->setExpectedException(null);
+        $this->client->query(array('query' => $query));
+    }
+
+    /**
      * Checks if the explain operation returns some kind
      * of execution plan.
      */
