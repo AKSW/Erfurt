@@ -164,4 +164,36 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
         $this->client->clear(array('transaction-id' => $id, 'graph-uri' => 'http://example.org/my-graph'));
     }
 
+    /**
+     * Checks if add() can be called with valid parameters.
+     */
+    public function testAddAcceptsValidParameters()
+    {
+        $triples = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $id = $this->client->beginTransaction();
+
+        $this->setExpectedException(null);
+        $this->client->add(array(
+            'transaction-id' => $id,
+            'graph-uri'      => 'http://example.org/my-graph',
+            'triples'        => $triples
+        ));
+    }
+
+    /**
+     * Checks if remove() can be called with valid parameters.
+     */
+    public function testRemoveAcceptsValidParameters()
+    {
+        $triples = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $id = $this->client->beginTransaction();
+
+        $this->setExpectedException(null);
+        $this->client->remove(array(
+            'transaction-id' => $id,
+            'graph-uri'      => 'http://example.org/my-graph',
+            'triples'        => $triples
+        ));
+    }
+
 }
