@@ -99,34 +99,65 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
         $this->assertNotEmpty($plan);
     }
 
+    /**
+     * Checks if beginTransaction() returns a transaction ID.
+     */
     public function testBeginTransactionReturnsTransactionId()
     {
+        $id = $this->client->beginTransaction();
 
+        $this->assertInternalType('string', $id);
+        $this->assertNotEmpty($id);
     }
 
+    /**
+     * Ensures that commitTransaction() throws an exception if an invalid
+     * transaction ID is passed.
+     */
     public function testCommitTransactionThrowsExceptionIfInvalidIdIsPassed()
     {
-
+        $this->setExpectedException('\Erfurt_Store_Adapter_Stardog_ApiClientException');
+        $this->client->commitTransaction(array('transaction-id' => 'invalid'));
     }
 
+    /**
+     * Checks if commitTransaction() accepts a valid transaction ID.
+     */
     public function testCommitTransactionAcceptsValidId()
     {
+        $id = $this->client->beginTranaction();
 
+        $this->setExpectedException(null);
+        $this->client->commitTransaction(array('transaction-id' => $id));
     }
 
+    /**
+     * Checks if rollbackTransaction() accepts a valid transaction ID.
+     */
     public function testRollbackTransactionAcceptsValidId()
     {
+        $id = $this->client->beginTranaction();
 
+        $this->setExpectedException(null);
+        $this->client->rollbackTransaction(array('transaction-id' => $id));
     }
 
+    /**
+     * Ensures that clear() is callable without parameters.
+     */
     public function testClearCanBeCalledWithoutGraphUri()
     {
-
+        $this->setExpectedException(null);
+        $this->client->clear();
     }
 
+    /**
+     * Checks if clear() accepts a graph URI as parameter.
+     */
     public function testClearAcceptsGraphUri()
     {
-
+        $this->setExpectedException(null);
+        $this->client->clear(array('graph-uri' => 'http://example.org/my-graph'));
     }
 
 }
