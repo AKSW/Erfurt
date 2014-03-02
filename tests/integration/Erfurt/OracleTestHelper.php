@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.01.14
  */
-class Erfurt_OracleTestHelper
+class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
 {
 
     /**
@@ -38,23 +38,6 @@ class Erfurt_OracleTestHelper
      * @var \Erfurt_Store_Adapter_Container_SetupInterface[]
      */
     protected $setups = null;
-
-    /**
-     * Contains task callbacks that must be executed on tear down.
-     *
-     * @var array(mixed)
-     */
-    protected $cleanUpTasks = array();
-
-    /**
-     * Cleans up the environment.
-     */
-    public function cleanUp()
-    {
-        foreach (array_reverse($this->cleanUpTasks) as $task) {
-            call_user_func($task);
-        }
-    }
 
     /**
      * Returns the database connection that is used for testing.
@@ -128,16 +111,6 @@ class Erfurt_OracleTestHelper
     }
 
     /**
-     * Registers a task that must be executed on cleanup.
-     *
-     * @param mixed $callback
-     */
-    protected function addCleanUpTask($callback)
-    {
-        $this->cleanUpTasks[] = $callback;
-    }
-
-    /**
      * Closes the connection that has been created.
      */
     protected function closeConnection()
@@ -155,31 +128,12 @@ class Erfurt_OracleTestHelper
     }
 
     /**
-     * Loads the configuration for the adapter.
-     *
-     * @return array(mixed)
-     * @throws \PHPUnit_Framework_SkippedTestError If the config does not exist.
-     */
-    protected function getConfig()
-    {
-        $path = __DIR__ . '/../../oracle.ini';
-        if (!is_file($path)) {
-            $message = 'This test requires an Oracle connection configuration in the file '
-                     . 'oracle.ini in the test root. Use oracle.ini.dist as a template.';
-            throw new PHPUnit_Framework_SkippedTestError($message);
-        }
-        $config = new Zend_Config_Ini($path);
-        return $config->toArray();
-    }
-
-    /**
      * Creates a backup of the current database schema.
      */
     protected function backupSchema()
     {
         $this->originalSchema = clone $this->connection->getSchemaManager()->createSchema();
         $this->addCleanUpTask(array($this, 'restoreSchema'));
-
     }
 
     /**
