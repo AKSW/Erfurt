@@ -40,6 +40,7 @@ class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
     public function getSparqlConnector()
     {
         if ($this->sparqlConnector === null) {
+            $this->clearDatabase();
             $connector = $this->getContainer()->get('stardog.sparql_connector');
             $expectedType = 'Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface';
             PHPUnit_Framework_Assert::assertInstanceOf($expectedType, $connector);
@@ -81,6 +82,17 @@ class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
             $this->addCleanUpTask(array($this, 'unsetContainer'));
         }
         return $this->container;
+    }
+
+    /**
+     * Removes all triples from the database.
+     */
+    protected function clearDatabase()
+    {
+        $client = $this->getApiClient();
+        $id = $client->beginTransaction();
+        $this->getApiClient()->clear(array('transaction-id' => $id));
+        $client->commitTransaction(array('transaction-id' => $id));
     }
 
     /**
