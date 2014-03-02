@@ -99,6 +99,62 @@
                     "required": false
                 }
             }
+        },
+        "add": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/{transaction-id}/add{?graph-uri}",
+            "summary": "Adds triples to the provided graph.",
+            "parameters": {
+                "graph-uri": {
+                    "description": "IRI of the graph.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": false
+                },
+                "inputFormat": {
+                    "description": "The input format of the triples.",
+                    "type": "string",
+                    "location": "header",
+                    "default": " application/x-turtle",
+                    "sentAs": "Content-Type",
+                    "required": false
+                },
+                "triples": {
+                    "description": "The triples in the given format.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
+                }
+            }
+        },
+        "remove": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/{transaction-id}/remove{?graph-uri}",
+            "summary": "Removes triples from the provided graph.",
+            "parameters": {
+                "graph-uri": {
+                    "description": "IRI of the graph.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": false
+                }
+            },
+            "inputFormat": {
+                "description": "The input format of the triples.",
+                "type": "string",
+                "location": "header",
+                "default": " application/x-turtle",
+                "sentAs": "Content-Type",
+                "required": false
+            },
+            "triples": {
+                "description": "The triples in the given format.",
+                "type": "string",
+                "location": "body",
+                "required": true
+            }
         }
     }
 }
