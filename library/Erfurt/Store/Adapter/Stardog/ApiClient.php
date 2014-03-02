@@ -1,7 +1,6 @@
 <?php
 
 use Guzzle\Common\Collection;
-use Guzzle\Plugin\ErrorResponse\ErrorResponsePlugin;
 use Guzzle\Service\Client;
 use Guzzle\Service\Description\ServiceDescription;
 
@@ -11,6 +10,9 @@ use Guzzle\Service\Description\ServiceDescription;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
  * @method array query(array)
+ * @method void commitTransaction(array)
+ * @method void rollbackTransaction(array)
+ * @method void clear(array)
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
@@ -58,6 +60,21 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     {
         /* @var $response \Guzzle\Http\Message\Response */
         $response = parent::explain($arguments);
+        return $response->getBody(true);
+    }
+
+    /**
+     * Starts a transaction.
+     *
+     * The returned transaction ID must be passed to operations that
+     * shall be executed in the transaction.
+     *
+     * @return string The transaction ID.
+     */
+    public function beginTransaction()
+    {
+        /* @var $response \Guzzle\Http\Message\Response */
+        $response = parent::beginTransaction();
         return $response->getBody(true);
     }
 
