@@ -87,7 +87,13 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function query($sparqlQuery)
     {
-        return $this->client->query(array('query' => $sparqlQuery));
+        $result = $this->client->query(array('query' => $sparqlQuery));
+        if ($result instanceof SimpleXMLElement) {
+            $result->registerXPathNamespace('sparql', 'http://www.w3.org/2005/sparql-results#');
+            $trueNodes = $result->xpath("sparql:boolean[text() = 'true']");
+            return count($trueNodes) > 0;
+        }
+        return $result;
     }
 
     /**
