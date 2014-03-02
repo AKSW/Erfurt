@@ -125,7 +125,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
      */
     public function testCommitTransactionAcceptsValidId()
     {
-        $id = $this->client->beginTranaction();
+        $id = $this->client->beginTransaction();
 
         $this->setExpectedException(null);
         $this->client->commitTransaction(array('transaction-id' => $id));
@@ -136,7 +136,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
      */
     public function testRollbackTransactionAcceptsValidId()
     {
-        $id = $this->client->beginTranaction();
+        $id = $this->client->beginTransaction();
 
         $this->setExpectedException(null);
         $this->client->rollbackTransaction(array('transaction-id' => $id));
@@ -147,8 +147,10 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
      */
     public function testClearCanBeCalledWithoutGraphUri()
     {
+        $id = $this->client->beginTransaction();
+
         $this->setExpectedException(null);
-        $this->client->clear();
+        $this->client->clear(array('transaction-id' => $id));
     }
 
     /**
@@ -156,8 +158,10 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
      */
     public function testClearAcceptsGraphUri()
     {
+        $id = $this->client->beginTransaction();
+
         $this->setExpectedException(null);
-        $this->client->clear(array('graph-uri' => 'http://example.org/my-graph'));
+        $this->client->clear(array('transaction-id' => $id, 'graph-uri' => 'http://example.org/my-graph'));
     }
 
 }
