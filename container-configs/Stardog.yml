@@ -1,3 +1,6 @@
+parameters:
+    stardog.client.log: ~
+
 services:
     stardog.api_client:
         class: Erfurt_Store_Adapter_Stardog_ApiClient
@@ -8,6 +11,7 @@ services:
                 base_url: "%stardog.client.base_url%"
                 username: "%stardog.client.username%"
                 password: "%stardog.client.password%"
+                "log":    "%stardog.client.log%"
                 "curl.options":
                     body_as_string: true
                 "command.params":
