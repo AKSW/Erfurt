@@ -116,7 +116,7 @@
                     "description": "The input format of the triples.",
                     "type": "string",
                     "location": "header",
-                    "default": " application/x-turtle",
+                    "default": "application/x-turtle",
                     "sentAs": "Content-Type",
                     "required": false
                 },
@@ -145,7 +145,7 @@
                 "description": "The input format of the triples.",
                 "type": "string",
                 "location": "header",
-                "default": " application/x-turtle",
+                "default": "application/x-turtle",
                 "sentAs": "Content-Type",
                 "required": false
             },
