@@ -11,6 +11,24 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
 {
 
     /**
+     * The API client that is used to interact with the triple store.
+     *
+     * @var Erfurt_Store_Adapter_Stardog_ApiClient
+     */
+    protected $client = null;
+
+    /**
+     * Creates a SPARQL connector that uses the provided API client
+     * to interact with the store.
+     *
+     * @param Erfurt_Store_Adapter_Stardog_ApiClient $client
+     */
+    public function __construct(Erfurt_Store_Adapter_Stardog_ApiClient $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
      * Adds the provided triple to the data store.
      *
      * @param string $graphIri
@@ -18,7 +36,13 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        // TODO: Implement addTriple() method.
+        $id = $this->client->beginTransaction();
+        $this->client->add(array(
+            'graph-uri'      => $graphIri,
+            'transaction-id' => $id,
+            'triples'        => (string)$triple
+        ));
+        $this->client->commitTransaction(array('transaction-id' => $id));
     }
 
     /**
@@ -63,7 +87,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function query($sparqlQuery)
     {
-        // TODO: Implement query() method.
+        return $this->client->query(array('query' => $sparqlQuery));
     }
 
     /**
@@ -75,7 +99,19 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-        // TODO: Implement deleteMatchingTriples() method.
+        $condition = 'WHERE { '
+                   . '    GRAPH <%s> { '
+                   . '        %s '
+                   . '    } '
+                   . '}';
+        $condition  = sprintf($condition, $graphIri, (string)$pattern);
+        // Determine how many triples will be affected by the delete operation.
+        $countQuery = 'SELECT (COUNT(*) AS ?affected) ' . $condition;
+        $results    = $this->query($countQuery);
+        // Remove the matching queries.
+        $deleteQuery = 'DELETE ' . $condition;
+        $this->query($deleteQuery);
+        return (int)$results['results']['bindings'][0]['affected']['value'];
     }
 
     /**
@@ -122,7 +158,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function batch($callback)
     {
-        // TODO: Implement batch() method.
+        return call_user_func($callback, $this);
     }
 
 }
