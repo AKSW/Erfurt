@@ -99,4 +99,34 @@ class Erfurt_Store_Adapter_Stardog_ApiClientTest extends \PHPUnit_Framework_Test
         $this->assertNotEmpty($plan);
     }
 
+    public function testBeginTransactionReturnsTransactionId()
+    {
+
+    }
+
+    public function testCommitTransactionThrowsExceptionIfInvalidIdIsPassed()
+    {
+
+    }
+
+    public function testCommitTransactionAcceptsValidId()
+    {
+
+    }
+
+    public function testRollbackTransactionAcceptsValidId()
+    {
+
+    }
+
+    public function testClearCanBeCalledWithoutGraphUri()
+    {
+
+    }
+
+    public function testClearAcceptsGraphUri()
+    {
+
+    }
+
 }
