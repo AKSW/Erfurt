@@ -99,6 +99,7 @@ class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInt
             $adapterOptions,
             new Erfurt_Store_Adapter_Container_ContainerConfiguration()
         );
+        $adapterOptions['parameters']['erfurt.root'] = static::getErfurtRoot();
         $factory = new Erfurt_Store_Adapter_Container_ContainerFactory(
             static::substituteRootPlaceholder($adapterOptions['configs']),
             static::flattenParameters($adapterOptions['parameters']),
@@ -117,13 +118,24 @@ class Erfurt_Store_Adapter_Container implements \Erfurt_Store_Adapter_FactoryInt
      */
     protected static function substituteRootPlaceholder(array $configs)
     {
-        $root = dirname(__FILE__) . '/../../../..';
-        $root = realpath($root);
+        $root = static::getErfurtRoot();
         foreach (array_keys($configs) as $index) {
             /* @var $index string|integer */
             $configs[$index] = str_replace('%erfurt.root%', $root, $configs[$index]);
         }
         return $configs;
+    }
+
+    /**
+     * Returns the path to the project root of Erfurt.
+     *
+     * @return string
+     */
+    protected static function getErfurtRoot()
+    {
+        $root = dirname(__FILE__) . '/../../../..';
+        $root = realpath($root);
+        return $root;
     }
 
     /**
