@@ -4,9 +4,10 @@
     "description": "Stardog HTTP protocol client.",
     "operations": {
         "databaseOperation": {
+            "summary": "Abstract definition for operations against a database.",
             "parameters": {
                 "database": {
-                    "description": "The name of the database.",
+                    "description": "The short name of the database.",
                     "type": "string",
                     "location": "uri",
                     "required": true
@@ -15,11 +16,39 @@
         },
         "transactionalOperation": {
             "extends": "databaseOperation",
+            "summary": "Abstract definition for operations that require a transaction.",
             "parameters": {
                 "transaction-id": {
                     "description": "The transaction ID.",
                     "type": "string",
                     "location": "uri",
+                    "required": true
+                }
+            }
+        },
+        "mutativeOperation": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "summary": "Abstract definition for operations that use a set of triples to change database contents.",
+            "parameters": {
+                "graph-uri": {
+                    "description": "IRI of the affected graph.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": false
+                },
+                "inputFormat": {
+                    "description": "The input format of the triples.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/x-turtle",
+                    "sentAs": "Content-Type",
+                    "required": false
+                },
+                "triples": {
+                    "description": "The triples in the given format.",
+                    "type": "string",
+                    "location": "body",
                     "required": true
                 }
             }
@@ -101,60 +130,14 @@
             }
         },
         "add": {
-            "extends": "transactionalOperation",
-            "httpMethod": "POST",
+            "extends": "mutativeOperation",
             "uri": "{database}/{transaction-id}/add{?graph-uri}",
-            "summary": "Adds triples to the provided graph.",
-            "parameters": {
-                "graph-uri": {
-                    "description": "IRI of the graph.",
-                    "type": "string",
-                    "location": "uri",
-                    "required": false
-                },
-                "inputFormat": {
-                    "description": "The input format of the triples.",
-                    "type": "string",
-                    "location": "header",
-                    "default": "application/x-turtle",
-                    "sentAs": "Content-Type",
-                    "required": false
-                },
-                "triples": {
-                    "description": "The triples in the given format.",
-                    "type": "string",
-                    "location": "body",
-                    "required": true
-                }
-            }
+            "summary": "Adds triples to the provided graph."
         },
         "remove": {
-            "extends": "transactionalOperation",
-            "httpMethod": "POST",
+            "extends": "mutativeOperation",
             "uri": "{database}/{transaction-id}/remove{?graph-uri}",
-            "summary": "Removes triples from the provided graph.",
-            "parameters": {
-                "graph-uri": {
-                    "description": "IRI of the graph.",
-                    "type": "string",
-                    "location": "uri",
-                    "required": false
-                },
-                "inputFormat": {
-                    "description": "The input format of the triples.",
-                    "type": "string",
-                    "location": "header",
-                    "default": "application/x-turtle",
-                    "sentAs": "Content-Type",
-                    "required": false
-                },
-                "triples": {
-                    "description": "The triples in the given format.",
-                    "type": "string",
-                    "location": "body",
-                    "required": true
-                }
-            }
+            "summary": "Removes triples from the provided graph."
         }
     }
 }
