@@ -2,6 +2,10 @@ parameters:
     stardog.client.log: ~
 
 services:
+    stardog.sparql_connector:
+        class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
+        arguments: ["@stardog.api_client"]
+
     stardog.api_client:
         class: Erfurt_Store_Adapter_Stardog_ApiClient
         factory_class: Erfurt_Store_Adapter_Stardog_ApiClient
