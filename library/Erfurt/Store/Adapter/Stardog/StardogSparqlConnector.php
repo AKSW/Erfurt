@@ -18,6 +18,20 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     protected $client = null;
 
     /**
+     * Converter that is applied to SPARQL query result sets.
+     *
+     * @var \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     */
+    protected $resultConverter = null;
+
+    /**
+     * Converter that is used to handle results of ASK and data manipulation queries.
+     *
+     * @var \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     */
+    protected $xmlConverter = null;
+
+    /**
      * Creates a SPARQL connector that uses the provided API client
      * to interact with the store.
      *
@@ -26,6 +40,10 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     public function __construct(Erfurt_Store_Adapter_Stardog_ApiClient $client)
     {
         $this->client = $client;
+        $this->resultConverter = new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
+            new Erfurt_Store_Adapter_ResultConverter_LiteralToTypedConverter()
+        );
+        $this->xmlConverter = new Erfurt_Store_Adapter_Stardog_ResultConverter_XmlToBooleanConverter();
     }
 
     /**
@@ -89,11 +107,9 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     {
         $result = $this->client->query(array('query' => $sparqlQuery));
         if ($result instanceof SimpleXMLElement) {
-            $result->registerXPathNamespace('sparql', 'http://www.w3.org/2005/sparql-results#');
-            $trueNodes = $result->xpath("sparql:boolean[text() = 'true']");
-            return count($trueNodes) > 0;
+            return $this->xmlConverter->convert($result);
         }
-        return $result;
+        return $this->resultConverter->convert($result);
     }
 
     /**
