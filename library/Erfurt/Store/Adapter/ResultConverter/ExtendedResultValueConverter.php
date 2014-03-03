@@ -14,13 +14,20 @@ class Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter
 {
 
     /**
+     * The converter that is applied to each value specification.
+     *
+     * @var \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     */
+    protected $valueConverter = null;
+
+    /**
      * Creates the converter.
      *
      * @param Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface $valueConverter
      */
     public function __construct(Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface $valueConverter)
     {
-
+        $this->valueConverter = $valueConverter;
     }
 
     /**
@@ -32,7 +39,16 @@ class Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter
      */
     public function convert($resultSet)
     {
-        // TODO: Implement convert() method.
+        foreach (array_keys($resultSet['results']['bindings']) as $rowIndex) {
+            /* @var $rowIndex integer */
+            foreach (array_keys($resultSet['results']['bindings'][$rowIndex]) as $varName) {
+                /* @var $varName string */
+                $resultSet['results']['bindings'][$rowIndex][$varName] = $this->valueConverter->convert(
+                    $resultSet['results']['bindings'][$rowIndex][$varName]
+                );
+            }
+        }
+        return $resultSet;
     }
 
 }
