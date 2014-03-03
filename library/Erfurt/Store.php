@@ -804,6 +804,14 @@ EOF;
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
+        if ((strpbrk($stringSpec, 'AND') === false) &&
+            (strpbrk($stringSpec, 'OR') === false) &&
+            (strpbrk($stringSpec, 'NEAR') === false)) {
+            preg_match_all("/(?:[^\s']+|'[^']*')+/", $stringSpec, $matches);
+            $parts = array_map(function($match) { return trim($match, "'"); }, $matches[0]);
+            $stringSpec = '';
+            $stringSpec = '\'' . implode($parts, '\' AND \'') . '\'';
+        }
 
         $options = array_merge(
             array(
