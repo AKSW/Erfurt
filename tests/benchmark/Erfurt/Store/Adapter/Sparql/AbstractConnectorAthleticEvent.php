@@ -97,10 +97,25 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractConnectorAthleticEvent extend
      * Creates the helper object that is used to set up the benchmark environment.
      *
      * @return Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface
+     * @throws RuntimeException If the helper cannot be created automatically.
      */
     protected function createHelper()
     {
-        throw new RuntimeException('Create helper.');
+        $reflection = new ReflectionClass($this);
+        $location = dirname($reflection->getFileName());
+        $helperFile = $location . '/create_connector_helper.php';
+        if (!is_file($helperFile)) {
+            $message = 'Expected file "' . $helperFile . '", which should create and return an instance of '
+                     . 'Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface.';
+            throw new RuntimeException($message);
+        }
+        $helper = require($helperFile);
+        if (!($helper instanceof Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface)) {
+            $message = 'File "' . $helperFile . '" does not return an instance of '
+                     . 'Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface, which is expected.';
+            throw new RuntimeException($message);
+        }
+        return $helper;
     }
 
 }
