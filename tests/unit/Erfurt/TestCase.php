@@ -29,8 +29,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
 
             // Delete system models after all other models are deleted.
             // TODO add a way to specify that a test modified the sysonts
-            //$store->deleteModel($config->sysont->modelUri);
-            //$store->deleteModel($config->sysont->schemaUri);
+            $store->deleteModel($config->sysont->modelUri);
+            $store->deleteModel($config->sysont->schemaUri);
 
             $this->_dbWasUsed = false;
         }

@@ -604,7 +604,7 @@ WHERE {
 EOF;
                 $result = $this->sparqlQuery(
                     $sparql,
-                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED)
+                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
                 );
                 $ret = count($result);
                 $stmts = array();
@@ -1009,7 +1009,13 @@ EOF;
         } else {
             //add here the userid to the identifier
             $modelType = null;
-            $identity = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+
+            $identity = null;
+            $identityObject = Erfurt_App::getInstance()->getAuth()->getIdentity();
+            if (null !== $identityObject) {
+                $identity = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+            }
+
             if (isset($this->_allowedModels[$identity][$modelIri])) {
                 $modelType = $this->_allowedModels[$identity][$modelIri];
             } else {
@@ -1299,17 +1305,22 @@ EOF;
             }
         }
 
+        $result = false;
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
             $this->_backendAdapter->init();
-            return $result;
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
             $this->_backendAdapter->init();
-            return $retVal;
+            $result = $retVal;
         }
+
+        // namespaces may have changed, thus reset allowed models cache for this model
+        unset($this->_allowedModels[$modelIri]);
+
+        return $result;
     }
 
     /**
