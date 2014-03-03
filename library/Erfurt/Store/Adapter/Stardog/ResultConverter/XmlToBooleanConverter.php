@@ -24,12 +24,17 @@ class Erfurt_Store_Adapter_Stardog_ResultConverter_XmlToBooleanConverter
     /**
      * Converts the provided XML (as SimpleXml object) to boolean.
      *
-     * @param SimpleXMLElement|mixed $resultSet
+     * @param SimpleXMLElement|mixed $data
      * @return boolean
      */
-    public function convert($resultSet)
+    public function convert($data)
     {
-        // TODO: Implement convert() method.
+        if (!($data instanceof SimpleXMLElement)) {
+            return false;
+        }
+        $data->registerXPathNamespace('sparql', 'http://www.w3.org/2005/sparql-results#');
+        $trueNodes = $data->xpath("sparql:boolean[text() = 'true']");
+        return count($trueNodes) > 0;
     }
 
 }
