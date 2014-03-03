@@ -9,6 +9,7 @@ use Doctrine\DBAL\Schema\Schema;
  * @since 11.01.14
  */
 class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
+    implements \Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface
 {
 
     /**
@@ -62,6 +63,7 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
     public function getSparqlConnector()
     {
         if ($this->sparqlConnector === null) {
+            $this->installTripleStore();
             $this->sparqlConnector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->getConnection());
             $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
         }

@@ -23,7 +23,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest
     protected function setUp()
     {
         $this->helper = new \Erfurt_OracleTestHelper();
-        $this->helper->installTripleStore();
         parent::setUp();
     }
 
