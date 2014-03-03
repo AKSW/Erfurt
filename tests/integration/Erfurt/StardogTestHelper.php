@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @since 01.03.14
  */
 class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
+    implements \Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface
 {
 
     /**
