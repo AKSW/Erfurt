@@ -63,6 +63,12 @@ class Erfurt_Store_Adapter_Oracle_ResultConverter_Util
             case 'http://www.w3.org/2001/XMLSchema#int':
                 return (int)$value;
             case 'http://www.w3.org/2001/XMLSchema#decimal':
+                if (ctype_digit($value)) {
+                    // Oracle converts values with data type integer to decimals.
+                    // Therefore, cast a decimal that looks like an integer value
+                    // to int.
+                    return (int)$value;
+                }
             case 'http://www.w3.org/2001/XMLSchema#float':
             case 'http://www.w3.org/2001/XMLSchema#double':
                 return (double)$value;
