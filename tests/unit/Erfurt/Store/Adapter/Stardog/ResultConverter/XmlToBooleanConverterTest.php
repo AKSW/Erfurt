@@ -42,19 +42,40 @@ class Erfurt_Store_Adapter_Stardog_ResultConverter_XmlToBooleanConverterTest ext
         $this->assertInstanceOf('\Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface', $this->converter);
     }
 
+    /**
+     * Ensures that the converter returns false if the expected SimpleXMLElement is not passed.
+     */
     public function testConverterReturnsFalseIfNoXmlIsPassed()
     {
-
+        $this->assertFalse($this->converter->convert(new \stdClass()));
     }
 
+    /**
+     * Ensures that the converter returns true if the XML contains the value "true".
+     */
     public function testConverterReturnsTrueIfXmlContainsBooleanValueTrue()
     {
+        $xml = "<?xml version='1.0' encoding='UTF-8'?>"
+             . "<sparql xmlns='http://www.w3.org/2005/sparql-results#'>"
+             . "    <head></head>"
+             . "    <boolean>true</boolean>"
+             . "</sparql>";
 
+        $this->assertTrue($this->converter->convert(new SimpleXMLElement($xml)));
     }
 
+    /**
+     * Ensures that the converter returns false if the XML contains the value "false".
+     */
     public function testConverterReturnsFalseIfXmlContainsBooleanValueFalse()
     {
+        $xml = "<?xml version='1.0' encoding='UTF-8'?>"
+             . "<sparql xmlns='http://www.w3.org/2005/sparql-results#'>"
+             . "    <head></head>"
+             . "    <boolean>false</boolean>"
+             . "</sparql>";
 
+        $this->assertFalse($this->converter->convert(new SimpleXMLElement($xml)));
     }
 
 }
