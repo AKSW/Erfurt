@@ -265,7 +265,22 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorTestCase exten
      */
     public function testQueryConvertsIntegerLiteralsCorrectly()
     {
+        $object = array(
+            'type'     => 'literal',
+            'datatype' => 'http://www.w3.org/2001/XMLSchema#integer',
+            'value'    => '42'
+        );
+        $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
 
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
+        $result = $this->connector->query($query);
+
+        $this->assertNumberOfRows(1, $result);
+        $literalValue = $result['results']['bindings'][0]['object']['value'];
+        $this->assertInternalType('integer', $literalValue);
+        $this->assertEquals(42, $literalValue);
     }
 
     /**
@@ -273,7 +288,22 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorTestCase exten
      */
     public function testQueryConvertsBooleanLiteralsCorrectly()
     {
+        $object = array(
+            'type'     => 'literal',
+            'datatype' => 'http://www.w3.org/2001/XMLSchema#boolean',
+            'value'    => 'false'
+        );
+        $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
 
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
+        $result = $this->connector->query($query);
+
+        $this->assertNumberOfRows(1, $result);
+        $literalValue = $result['results']['bindings'][0]['object']['value'];
+        $this->assertInternalType('boolean', $literalValue);
+        $this->assertFalse($literalValue);
     }
 
     /**
@@ -281,7 +311,22 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorTestCase exten
      */
     public function testQueryConvertsDoubleLiteralsCorrectly()
     {
+        $object = array(
+            'type'     => 'literal',
+            'datatype' => 'http://www.w3.org/2001/XMLSchema#double',
+            'value'    => '42.42'
+        );
+        $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
 
+        $query = 'SELECT ?object '
+               . 'FROM <http://example.org/graph> '
+               . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
+        $result = $this->connector->query($query);
+
+        $this->assertNumberOfRows(1, $result);
+        $literalValue = $result['results']['bindings'][0]['object']['value'];
+        $this->assertInternalType('float', $literalValue);
+        $this->assertEquals(42.42, $literalValue);
     }
 
     /**
