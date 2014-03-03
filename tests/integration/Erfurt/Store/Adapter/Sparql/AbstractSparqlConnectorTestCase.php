@@ -261,6 +261,30 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorTestCase exten
     }
 
     /**
+     * Checks if integer literals in the result set are converted into their native PHP type.
+     */
+    public function testQueryConvertsIntegerLiteralsCorrectly()
+    {
+
+    }
+
+    /**
+     * Checks if boolean literals in the result set are converted into their native PHP type.
+     */
+    public function testQueryConvertsBooleanLiteralsCorrectly()
+    {
+
+    }
+
+    /**
+     * Checks if double literals in the result set are converted into their native PHP type.
+     */
+    public function testQueryConvertsDoubleLiteralsCorrectly()
+    {
+
+    }
+
+    /**
      * Ensures that query() returns a boolean value if an ASK
      * query is passed.
      */
