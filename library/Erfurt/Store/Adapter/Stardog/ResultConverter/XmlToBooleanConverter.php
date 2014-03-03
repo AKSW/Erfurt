@@ -18,6 +18,18 @@
  * @since 03.03.14
  */
 class Erfurt_Store_Adapter_Stardog_ResultConverter_XmlToBooleanConverter
+    implements \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
+
+    /**
+     * Converts the provided XML (as SimpleXml object) to boolean.
+     *
+     * @param SimpleXMLElement|mixed $resultSet
+     * @return boolean
+     */
+    public function convert($resultSet)
+    {
+        // TODO: Implement convert() method.
+    }
 
 }
