@@ -54,13 +54,14 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $id = $this->client->beginTransaction();
-        $this->client->add(array(
-            'graph-uri'      => $graphIri,
-            'transaction-id' => $id,
-            'triples'        => (string)$triple
+        $query = 'INSERT DATA { '
+               . '    GRAPH <' . $graphIri . '> { '
+               . '        ' . $triple
+               . '    }'
+               . '}';
+        $this->client->query(array(
+            'query' => $query
         ));
-        $this->client->commitTransaction(array('transaction-id' => $id));
     }
 
     /**
