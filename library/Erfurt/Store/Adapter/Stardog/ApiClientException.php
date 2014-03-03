@@ -45,9 +45,11 @@ class Erfurt_Store_Adapter_Stardog_ApiClientException extends RuntimeException
     public static function factory(RequestInterface $request, Response $response)
     {
         $inner   = BadResponseException::factory($request, $response);
-        $code    = $response->getHeader('SD-Error-Code');
+        /* @var $header \Guzzle\Http\Message\Header */
+        $header  = $response->getHeader('SD-Error-Code');
+        $code    = (string)$header;
         $message = static::toMessage($code) . PHP_EOL . PHP_EOL . $response->getBody(true);
-        return new static($message, $code, $inner);
+        return new static($message, (ctype_digit($code) ? (int)$code : 0), $inner);
     }
 
     /**
@@ -59,7 +61,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClientException extends RuntimeException
     protected static function toMessage($code)
     {
         if (!isset(static::$codesToMessages[$code])) {
-            return 'Unknown error';
+            return $code;
         }
         return static::$codesToMessages[$code];
     }
