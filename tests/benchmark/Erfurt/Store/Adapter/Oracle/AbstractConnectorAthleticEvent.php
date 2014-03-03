@@ -10,6 +10,7 @@ use Faker\Generator;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 03.02.14
+ * @deprecated
  */
 abstract class Erfurt_Store_Adapter_Oracle_AbstractConnectorAthleticEvent extends AthleticEvent
 {
