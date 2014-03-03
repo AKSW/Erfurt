@@ -162,7 +162,18 @@ class Erfurt_Store
      */
     private static $_queryCount = 0;
 
+    /**
+     * importsClosure local cache
+     * @var array
+     */
     private $_importsClosure = array();
+
+    /**
+     * allowedModels local cache
+     * used by getModel()
+     * @var array
+     */
+    private $_allowedModels = array();
 
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
@@ -513,8 +524,6 @@ class Erfurt_Store
         return true;
     }
 
-
-
     /**
      * Creates the table specified by $tableSpec according to backend-specific
      * create table statement.
@@ -595,7 +604,7 @@ WHERE {
 EOF;
                 $result = $this->sparqlQuery(
                     $sparql,
-                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED)
+                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
                 );
                 $ret = count($result);
                 $stmts = array();
@@ -1006,19 +1015,45 @@ EOF;
             // … use it
             $modelInstance = $this->_backendAdapter->getModel($modelIri);
         } else {
-            // use generic implementation
-            $owlQuery = new Erfurt_Sparql_SimpleQuery();
-            $owlQuery->setProloguePart('ASK')
-                     ->addFrom($modelIri)
-                     ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+            //add here the userid to the identifier
+            $modelType = null;
 
-            // TODO: cache this
-            if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
-                // instantiate OWL model
-                $modelInstance = new Erfurt_Owl_Model($modelIri);
+            $identity = null;
+            $identityObject = Erfurt_App::getInstance()->getAuth()->getIdentity();
+            if (null !== $identityObject) {
+                $identity = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+            }
+
+            if (isset($this->_allowedModels[$identity][$modelIri])) {
+                $modelType = $this->_allowedModels[$identity][$modelIri];
             } else {
-                // instantiate RDF-S model
-                $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+                // use generic implementation
+                $owlQuery = new Erfurt_Sparql_SimpleQuery();
+                $owlQuery->setProloguePart('ASK')
+                         ->addFrom($modelIri)
+                         ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+
+                if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
+                    // instantiate OWL model
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_OWL;
+                    $modelType = self::MODEL_TYPE_OWL;
+                } else {
+                    // instantiate RDF-S model
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_RDFS;
+                    $modelType = self::MODEL_TYPE_RDFS;
+                }
+            }
+
+            switch ($modelType) {
+                case self::MODEL_TYPE_OWL :
+                    $modelInstance = new Erfurt_Owl_Model($modelIri);
+                    break;
+                case self::MODEL_TYPE_RDFS :
+                    $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+                    break;
+                default :
+                    //should never happen
+                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
             }
         }
 
@@ -1028,7 +1063,6 @@ EOF;
         } else {
             $modelInstance->setEditable(false);
         }
-
         return $modelInstance;
     }
 
@@ -1279,17 +1313,22 @@ EOF;
             }
         }
 
+        $result = false;
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
             $this->_backendAdapter->init();
-            return $result;
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
             $this->_backendAdapter->init();
-            return $retVal;
+            $result = $retVal;
         }
+
+        // namespaces may have changed, thus reset allowed models cache for this model
+        unset($this->_allowedModels[$modelIri]);
+
+        return $result;
     }
 
     /**
@@ -1568,7 +1607,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         //query from query cache
         $queryCache   = Erfurt_App::getInstance()->getQueryCache();
         $sparqlResult = $queryCache->load($queryString, 'plain');
-        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+        if ($sparqlResult === Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk($queryString);
@@ -1992,9 +2031,180 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         }
     }
 
+    /**
+     * returns a PHP/RDF statments array
+     *
+     * @param string $resourceIri The Iri, which identifies the resource.
+     * @param string $modelIri    The Iri, which identifies the model
+     * @param array  $options     Array of different options:
+     *     Erfurt_Store::USE_AC = true|false - use access control
+     *     maxDepth = int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return PHP/RDF statements array of the resource
+     */
+    public function getResourceDescription(
+        $resourceIri, $modelIri, $options = array()
+    )
+    {
+        // merge given options into default options
+        $options = array_merge(
+            array(
+                Erfurt_Store::USE_AC => true,
+                'fetchInverse'       => false,
+                'maxDepth'           => 3
+            ), $options
+        );
+
+        // sort the keys in order to provide a better cacheId source
+        ksort($options);
+
+        // Here we start the object cache id
+        $identity   = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+        $cacheIdSrc = $resourceIri . $modelIri . $identity . serialize($options);
+        $cacheId    = 'ResourceDescription_' . md5($cacheIdSrc);
+
+        // try to load the cached value
+        $objectCache  = Erfurt_app::getInstance()->getCache();
+        $queryCache   = Erfurt_app::getInstance()->getQueryCache();
+        $cachedValue  = $objectCache->load($cacheId);
+
+        // bingo: cache hit, everything is fine
+        if ($cachedValue !== false) {
+            return $cachedValue;
+        }
+
+        // no cache hit, we need to query
+        $queryCache->startTransaction($cacheId);
+
+        // use backend specific method if exists
+        if (method_exists($this->_backendAdapter, 'getResourceDescription')) {
+            $fetchedDesc = $this->_backendAdapter->getResourceDescription(
+                $resourceIri, $modelIri, $options
+            );
+        } else {
+            // use generic method
+            $fetchedDesc = $this->_fetchResourceDescription(
+                $resourceIri, $modelIri, $options
+            );
+        }
+
+        // save the fetched array
+        $objectCache->save($fetchedDesc, $cacheId);
+        // close the object cache transaction
+        $queryCache->endTransaction($cacheId);
+
+        return $fetchedDesc;
+    }
+
+
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
+
+    /**
+     * fetches the PHP/RDF statments array description array
+     *
+     * @param string       $resourceIri The Iri, which identifies the resource.
+     * @param string|false $modelIri    The Iri, which identifies the model or 
+     *     false for store wide descriptions
+     * @param array        $options     Array of different options:
+     *     Erfurt_Store::USE_AC = true|false - use access control
+     *     maxDepth = int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return PHP/RDF statements array of the resource
+     */
+    private function _fetchResourceDescription(
+        $resourceIri, $modelIri, $options = array()
+    )
+    {
+        // overwrite result format
+        $options[Erfurt_Store::RESULTFORMAT] = Erfurt_Store::RESULTFORMAT_EXTENDED;
+
+        $memoryModel = new Erfurt_Rdf_MemoryModel();
+
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?p ?o')
+            ->setWherePart("{<$resourceIri> ?p ?o . }");
+
+        // prepare an additional query for inverse properties
+        if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
+            $inverseQuery = new Erfurt_Sparql_SimpleQuery();
+            $inverseQuery->setProloguePart('SELECT ?s ?p')
+                ->setWherePart("{?s ?p <$resourceIri> . }");
+        } else {
+            $inverseQuery = false;
+        }
+
+        if ($modelIri === false) {
+            // use complete store if modelIri not given
+            $result = $this->sparqlQuery($query, $options);
+            if ($inverseQuery) {
+                $inverseResult = $this->sparqlQuery($inverseQuery, $options);
+            }
+        } else {
+            // if model is given, try to get it
+            $ac = Erfurt_App::getInstance()->getAc();
+            if ($ac->isModelAllowed('view', $modelIri)) {
+                $model = $this->getModel($modelIri, $options[Erfurt_Store::USE_AC]);
+            } else {
+                $model = false;
+            }
+
+            if (!$model) {
+                // return an empty description if model not available or allowed
+                $result = false;
+            } else {
+                // use model query method if model valid and readable
+                $result = $model->sparqlQuery($query, $options);
+                if ($inverseQuery) {
+                    $inverseResult = $model->sparqlQuery($inverseQuery, $options);
+                }
+            }
+        }
+
+        if ($result) {
+            foreach ($result['results']['bindings'] as $row) {
+                // fake the subject array
+                $s = array (
+                    'type'  => 'uri',
+                    'value' => $resourceIri
+                );
+                $memoryModel->addStatementFromExtendedFormatArray(
+                    $s,
+                    $row['p'],
+                    $row['o']
+                );
+
+                // todo: implement blank node fetching here
+                //if ($row['o']['type'] === 'bnode') {
+                    //$nodeId  = $row['o']['value'];
+                    //$bNode   = self::initWithBlankNode($nodeId, $this->_model);
+                    //$nodeKey = sprintf('_:%s', $nodeId);
+
+                    //$description[$nodeKey] = $bNode->getDescription($maxDepth-1);
+                //}
+            }
+        }
+
+        if (isset($inverseResult) && $inverseResult !== false) {
+            foreach ($inverseResult['results']['bindings'] as $row) {
+                // fake the object array
+                $o = array (
+                    'type'  => 'uri',
+                    'value' => $resourceIri
+                );
+                $memoryModel->addStatementFromExtendedFormatArray(
+                    $row['s'],
+                    $row['p'],
+                    $o
+                );
+            }
+        }
+
+        return $memoryModel->getStatements();
+    }
 
     /**
      * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param

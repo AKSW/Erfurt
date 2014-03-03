@@ -18,7 +18,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * backend Object
      * @var object
     */
-    var $_backend;
+    private $_backend;
 
     /**
      * Transactions for Object issignment to QueryCache
@@ -62,7 +62,7 @@ class Erfurt_Cache_Frontend_QueryCache
      * @param      float   $duration       duration in seconds.microseconds
      * @return     boolean $result         state of the saving process true/false
     */
-    public function save($queryString, $resultFormat = "plain", $queryResult, $duration = 0)
+    public function save($queryString, $resultFormat = "plain", $queryResult = null, $duration = 0)
     {
         if (!($this->_backend instanceof Erfurt_Cache_Backend_QueryCache_Null)) {
             // create QueryId
@@ -160,20 +160,21 @@ class Erfurt_Cache_Frontend_QueryCache
      * @access     public
      * @param      string   $subject   subject of the triple
      * @param      string   $predicate predicate of the triple
-     * @param      string   $object    object of the triple
+     * @param      array    $object    object of the triple
      * @return     int      $count     number of queries which was affected of the invalidation process
     */
-    public function invalidate($modelIri, $subject, $predicate, $object)
+    public function invalidate($modelIri, $subject = "", $predicate = "", $object)
     {
         // cast subject and predicate to string
         $subject = (string) $subject;
         $predicate = (string) $predicate;
-
         // initialize statements array
+        if (empty($object)) {
+            $object = array ($object);
+        }
         $statements = array();
         $statements[$subject] = array();
-        $statements[$subject][$predicate] = array ($object);
-
+        $statements[$subject][$predicate] = $object;
         $qids = $this->invalidateWithStatements($modelIri, $statements);
         return $qids;
     }
@@ -401,7 +402,6 @@ class Erfurt_Cache_Frontend_QueryCache
         }
         $queryParts['triples'] = $triples;
         $queryParts['graphs'] = $graphs;
-
         return $queryParts;
     }
 
