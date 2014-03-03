@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Checks the performance when loading many (small) rows via Oracle SPARQL connector.
+ * See {@link \Erfurt_Store_Adapter_Sparql_AbstractLoadSmallRowsAthleticEvent} for details.
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 03.03.14
