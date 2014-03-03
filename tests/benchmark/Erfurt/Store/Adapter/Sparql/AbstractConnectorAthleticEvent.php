@@ -8,6 +8,13 @@ use Faker\Generator;
  *
  * Contains the code that is necessary to set up and clean up a triple store.
  *
+ * To set up the concrete SPARQL connector, a ``create_connector_helper.php``
+ * file is expected in the same directory as the concrete benchmark.
+ * This file should return a helper instance that implements
+ * \Erfurt_Store_Adapter_Sparql_ConnectorBenchmarkHelperInterface and
+ * which is used to create the connector and clean up the environment
+ * once the benchmark has finished.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 03.02.14
  */
