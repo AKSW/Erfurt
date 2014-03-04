@@ -47,11 +47,14 @@ class Erfurt_Utils
     /**
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
-     * @see {http://www.w3.org/TeamSubmission/turtle/}
-     * @param array literal object
-     * @return string
+     * @see {http://www.w3.org/TR/turtle/ RDF 1.1 Turtle}
+     * @param string $value the literal values
+     * @param string|null $datatype optionally the datatype of the literal
+     * @param string|null $lang optionally the language tag of the literal
+     * @param boolean $longStringEnabled decides if the output can be a long string (""" """) or not
+     * @return string the turtle literal representation
      */
-    public static function buildLiteralString($value, $datatype = null, $lang = null)
+    public static function buildLiteralString($value, $datatype = null, $lang = null, $longStringEnabled = true)
     {
         $longString = false;
         $quoteChar  = (strpos($value, '"') !== false) ? "'" : '"';
@@ -82,18 +85,23 @@ class Erfurt_Utils
             case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':   /* fallthrough */
             case 'http://www.w3.org/2001/XMLSchema#string':
             default:
-                $value = addcslashes($value, $quoteChar);
+                $replaceCharlist = $quoteChar;
 
                 /**
                  * Check for characters not allowed in a short literal
                  * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
                  */
-                if ($pos = preg_match('/[\x5c\r\n"]/', $value)) {
+                if ($longStringEnabled && $pos = preg_match('/[\r\n]/', $value)) {
                     $longString = true;
                     $value = self::decodeTurtleString($value);
-                    // $value = trim($value, "\n\r");
-                    // $value = str_replace("\x0A", '\n', $value);
+                } else {
+                    /*
+                     * Replaces the characters traditionally escaped in string literals by the
+                     * corresponding escape sequences
+                     */
+                    $replaceCharlist .= "\n\t\r\f\\";
                 }
+                $value = addcslashes($value, $replaceCharlist);
                 break;
         }
 
@@ -119,7 +127,7 @@ class Erfurt_Utils
      * @param string $cpString
      * @return string
      */
-    public static function decodeTurtleString($cpString)
+    private static function decodeTurtleString($cpString)
     {
         // TODO: implement Unicode codepoint decoding
         //$entityString = preg_replace('/\\\[uU]\+([0-9A-F]{3,5})/', '&#\\1;', $cpString);

@@ -170,7 +170,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
     }
 
-        /**
+    /**
      * @see Erfurt_Store_Adapter_Interface
      */
     public function addStatement($graphUri, $subject, $predicate, array $objectSpec, array $options = array())
@@ -183,7 +183,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $object = $this->buildLiteralString(
                 $value,
                 isset($datatype) ? $datatype : null,
-                isset($lang) ? $lang : null
+                isset($lang) ? $lang : null,
+                false
             );
         }
 
@@ -314,7 +315,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $objectSpec = $this->buildLiteralString(
                     $object['value'],
                     true == isset ($object['datatype']) ? $object['datatype'] : null,
-                    true == isset ($object['lang']) ? $object['lang'] : null
+                    true == isset ($object['lang']) ? $object['lang'] : null,
+                    false
                 );
             }
         } else {
@@ -797,9 +799,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $value
      * @param string|null $datatype
      * @param string|null $lang
+     * @param boolean $longStringEnabled decides if the output can be a long string (""" """) or not
      * @return string
      */
-    public function buildLiteralString($value, $datatype = null, $lang = null)
+    public function buildLiteralString($value, $datatype = null, $lang = null, $longStringEnabled = true)
     {
         // This is a Virtuoso commercial edition feature... If we are running on open-source version, we remove the
         // datatype, since otherwise loading will fail.
@@ -809,7 +812,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
         }
 
-        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
+        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
     }
 
     /**
@@ -833,7 +836,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         $value = $this->buildLiteralString(
                             $currentObject['value'],
                             array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null,
-                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
+                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null,
+                            false
                         );
                     }
 
