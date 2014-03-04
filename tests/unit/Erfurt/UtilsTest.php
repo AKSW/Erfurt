@@ -11,6 +11,14 @@ class Erfurt_UtilsTest extends Erfurt_TestCase
     public function testBuildLiteralString()
     {
         $literals = array(
+            array('"false"^^<http://www.w3.org/2001/XMLSchema#boolean>', 'false', 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"false"^^<http://www.w3.org/2001/XMLSchema#boolean>', '0', 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"false"^^<http://www.w3.org/2001/XMLSchema#boolean>', false, 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"true"^^<http://www.w3.org/2001/XMLSchema#boolean>', 'true', 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"true"^^<http://www.w3.org/2001/XMLSchema#boolean>', '1', 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"true"^^<http://www.w3.org/2001/XMLSchema#boolean>', true, 'http://www.w3.org/2001/XMLSchema#boolean', null, true),
+            array('"123456789"^^<http://www.w3.org/2001/XMLSchema#int>', '123456789', 'http://www.w3.org/2001/XMLSchema#int', null, true),
+            array('"1234.56789"^^<http://www.w3.org/2001/XMLSchema#float>', '1234.56789', 'http://www.w3.org/2001/XMLSchema#float', null, true),
             array('"Hallo"@de', 'Hallo', null, 'de', true),
             array('"Hello"@en-US', 'Hello', null, 'en-US', true),
             array(

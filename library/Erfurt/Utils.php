@@ -48,7 +48,7 @@ class Erfurt_Utils
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
      * @see {http://www.w3.org/TR/turtle/ RDF 1.1 Turtle}
-     * @param string $value the literal values
+     * @param mixed $value the literal values
      * @param string|null $datatype optionally the datatype of the literal
      * @param string|null $lang optionally the language tag of the literal
      * @param boolean $longStringEnabled decides if the output can be a long string (""" """) or not
@@ -63,9 +63,13 @@ class Erfurt_Utils
         // datatype-specific treatment
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
-                $search  = array('0', '1');
-                $replace = array('false', 'true');
-                $value   = str_replace($search, $replace, $value);
+                if ($value == 'true' || $value == 'false') {
+                    break;
+                } else if (is_string($value) && strpos($value, '0') !== false) {
+                    // replace all 0 by nothing, because empty string will evaluate to false
+                    $value = strtr($value, '0', '');
+                }
+                $value = ($value ? 'true' : 'false');
                 break;
             case 'http://www.w3.org/2001/XMLSchema#decimal':
             case 'http://www.w3.org/2001/XMLSchema#integer':
@@ -75,7 +79,11 @@ class Erfurt_Utils
             case 'http://www.w3.org/2001/XMLSchema#duration':
             case 'http://www.w3.org/2001/XMLSchema#dateTime':
             case 'http://www.w3.org/2001/XMLSchema#date':
+            case 'http://www.w3.org/2001/XMLSchema#gYearMonth':
+            case 'http://www.w3.org/2001/XMLSchema#gYear':
             case 'http://www.w3.org/2001/XMLSchema#gMonthDay':
+            case 'http://www.w3.org/2001/XMLSchema#gDay':
+            case 'http://www.w3.org/2001/XMLSchema#gMonth':
             case 'http://www.w3.org/2001/XMLSchema#anyURI':
             case 'http://www.w3.org/2001/XMLSchema#time':
                 /* no normalization needed for these types */
@@ -102,7 +110,6 @@ class Erfurt_Utils
                     $replaceCharlist .= "\n\t\r\f\\";
                 }
                 $value = addcslashes($value, $replaceCharlist);
-                break;
         }
 
         // add short, long literal quotes respectively
