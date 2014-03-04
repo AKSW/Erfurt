@@ -2462,4 +2462,9 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
         return array_merge($namespaceMatch, $rest);
     }
+
+    public function setAc($ac)
+    {
+        $this->_ac = $ac;
+    }
 }
