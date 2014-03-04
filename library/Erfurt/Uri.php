@@ -44,6 +44,34 @@ class Erfurt_Uri
         return (preg_match(self::$_regExp, (string)$uri) === 1);
     }
 
+	public static function getPathTo($uriSource, $uriTarget){
+		$partsSource	= explode('/', self::normalize($uriSource));
+		$domainSource	= join('/', array_slice($partsSource, 0, 3));
+		$partsSource	= array_slice($partsSource, 3);
+		$fileSource		= array_pop($partsSource);
+
+		$partsTarget	= explode('/', self::normalize($uriTarget));
+		$domainTarget	= join('/', array_slice($partsTarget, 0, 3));
+		$partsTarget	= array_slice($partsTarget, 3);
+		$fileTarget		= array_pop($partsTarget);
+
+		if ($domainSource !== $domainTarget)
+			return $uriTarget;
+
+		while ($partsSource && $partsTarget && $partsSource[0] === $partsTarget[0]) {
+			array_shift($partsSource);
+			array_shift($partsTarget);
+		}
+		$path	= "./";
+		if ($partsSource) {
+			$path	.= str_repeat('../', count($partsSource));
+		}
+		foreach ($partsTarget as $part) {
+			$path	.= $part . '/';
+		}
+		return $path . $fileTarget;
+	}
+
     /**
      * Normalizes the given URI according to {@link http://www.ietf.org/rfc/rfc2396.txt}.
      * In particular, protocol and -- for HTTP URIs -- the server part are

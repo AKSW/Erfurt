@@ -643,7 +643,12 @@ class Erfurt_Versioning
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
         if ($this->_user === null) {
-            $this->_user = $this->_getAuth()->getIdentity()->getUri();
+            $identity = $this->_getAuth()->getIdentity();
+            if (null !== $identity) {
+                $this->_user = $identity->getUri();
+            } else {
+                return null;
+            }
         }
         $userUri = $this->_user;
 
