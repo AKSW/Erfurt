@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -103,14 +103,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         // check for odbc extension
         if (!extension_loaded('odbc')) {
             throw new Erfurt_Store_Adapter_Exception('Virtuoso adapter requires the ODBC extension to be loaded.');
-            exit;
         }
 
         $this->_adapterOptions = $adapterOptions;
         if (isset($adapterOptions['is_open_source_version'])) {
             $this->_isOpenSourceVersion = (bool)$adapterOptions['is_open_source_version'];
         }
-        
+
         // Access the connection in order to check whether it works.
         $this->connection();
     }
@@ -855,9 +854,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $triples = array();
 
-        $this->buildTriple($rdfPhpStatements, function($triple) use(&$triples) {
-            $triples[] = $triple;
-        });
+        $this->buildTriple(
+            $rdfPhpStatements,
+            function($triple) use(&$triples) {
+                $triples[] = $triple;
+            }
+        );
 
         return $triples;
     }
@@ -872,9 +874,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     {
         $triples = '';
 
-        $this->buildTriple($rdfPhpStatements, function($triple) use(&$triples) {
-            $triples .= $triple;
-        });
+        $this->buildTriple(
+            $rdfPhpStatements,
+            function($triple) use(&$triples) {
+                $triples .= $triple;
+            }
+        );
 
         return $triples;
     }

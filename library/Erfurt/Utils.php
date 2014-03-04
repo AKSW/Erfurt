@@ -1,25 +1,26 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
  * OntoWiki utility class.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @packaget
+ * @package
  * @author Natanael Arndt <arndtn@gmail.com>
  * @author Norman Heino <norman.heino@gmail.com>
  */
 class Erfurt_Utils
 {
-    public static function isXmlPrefix ($string) {
+    public static function isXmlPrefix ($string)
+    {
         /*
-         * The folowing regularexpression would match all allowed prefixes, 
+         * The folowing regularexpression would match all allowed prefixes,
          * but couses trouble with PCRE.
          * /[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF\x370-\x37D\x37F-\x1FFF
          * \x200C-\x200D\x2070-\x218F\x2C00-\x2FEF\x3001-\xD7FF\xF900-\xFDCF
@@ -34,15 +35,15 @@ class Erfurt_Utils
         $matches = array();
         $regExp = '/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]{1}'
                 . '[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\xFF.0-9\xB7]*/u';
-        
+
         $matchCount = preg_match($regExp, $string, $matches);
         if ($matchCount > 0 && $matches[0] === $string) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
@@ -55,7 +56,7 @@ class Erfurt_Utils
         $longString = false;
         $quoteChar  = (strpos($value, '"') !== false) ? "'" : '"';
         $value      = (string)$value;
-        
+
         // datatype-specific treatment
         switch ($datatype) {
             case 'http://www.w3.org/2001/XMLSchema#boolean':
@@ -82,8 +83,8 @@ class Erfurt_Utils
             case 'http://www.w3.org/2001/XMLSchema#string':
             default:
                 $value = addcslashes($value, $quoteChar);
-                
-                /** 
+
+                /**
                  * Check for characters not allowed in a short literal
                  * {@link http://www.w3.org/TR/rdf-sparql-query/#rECHAR}
                  */
@@ -95,19 +96,19 @@ class Erfurt_Utils
                 }
                 break;
         }
-        
+
         // add short, long literal quotes respectively
         $value = $quoteChar . ($longString ? ($quoteChar . $quoteChar) : '')
-               . $value 
+               . $value
                . $quoteChar . ($longString ? ($quoteChar . $quoteChar) : '');
-        
+
         // add datatype URI/lang tag
         if (!empty($datatype)) {
             $value .= '^^<' . (string)$datatype . '>';
         } else if (!empty($lang)) {
             $value .= '@' . (string)$lang;
         }
-        
+
         return $value;
     }
 
@@ -123,7 +124,7 @@ class Erfurt_Utils
         // TODO: implement Unicode codepoint decoding
         //$entityString = preg_replace('/\\\[uU]\+([0-9A-F]{3,5})/', '&#\\1;', $cpString);
         //$utf8String   = html_entity_decode($entityString);
-        
+
         return $cpString;
     }
 }
