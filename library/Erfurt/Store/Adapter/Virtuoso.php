@@ -836,8 +836,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                         $value = $this->buildLiteralString(
                             $currentObject['value'],
                             array_key_exists('datatype', $currentObject) ? $currentObject['datatype'] : null,
-                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null,
-                            false
+                            array_key_exists('lang', $currentObject) ? $currentObject['lang'] : null
                         );
                     }
 
