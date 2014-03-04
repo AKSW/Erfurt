@@ -8,6 +8,18 @@
 
 class Erfurt_UtilsTest extends Erfurt_TestCase
 {
+    public function testIsXmlPrefix()
+    {
+        $prefixes = array('a', 'ns1', 'dssn', 'OWL', 'ns.3', 'Ab', 'a-b', 'X·Y', '_', '_5c', 'ÄÖÜäöüß');
+        $nonPrefixes = array('1a', 'abc:', '-hallo', '.ns', 'raute#', '#a', 'a/b', '/a', 'a×', ' ', 'o ha');
+        foreach ($prefixes as $p) {
+            $this->assertTrue(Erfurt_Utils::isXmlPrefix($p));
+        }
+        foreach ($nonPrefixes as $p) {
+            $this->assertFalse(Erfurt_Utils::isXmlPrefix($p));
+        }
+    }
+
     public function testBuildLiteralString()
     {
         $literals = array(
