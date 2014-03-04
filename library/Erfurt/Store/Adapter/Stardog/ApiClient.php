@@ -14,12 +14,13 @@ use Guzzle\Service\Description\ServiceDescription;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
- * @method array query(array)
+ * @method array query(array) Executes a SPARQL query.
  * @method void commitTransaction(array) Commits the transaction with the provided ID.
  * @method void rollbackTransaction(array) Reverts changes of the transaction with the provided ID.
  * @method void clear(array) Clear a specific graph or the whole database. Requires a transaction ID.
  * @method void add(array) Adds a set of triples. Requires a transaction ID.
  * @method void remove(array) Removes a set of triples. Requires a transaction ID.
+ * @method void optimizeDatabase() Optimizes the database.
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {

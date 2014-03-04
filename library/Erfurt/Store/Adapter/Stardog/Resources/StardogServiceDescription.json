@@ -138,6 +138,12 @@
             "extends": "mutativeOperation",
             "uri": "{database}/{transaction-id}/remove{?graph-uri}",
             "summary": "Removes triples from the provided graph."
+        },
+        "optimizeDatabase": {
+            "extends": "databaseOperation",
+            "httpMethod": "PUT",
+            "uri": "admin/databases/{database}/optimize",
+            "summary": "Optimizes the database."
         }
     }
 }
