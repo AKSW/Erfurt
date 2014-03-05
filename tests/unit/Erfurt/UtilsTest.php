@@ -42,6 +42,10 @@ class Erfurt_UtilsTest extends Erfurt_TestCase
                 "This\nis\na\nmulti\nline\ntext", 'http://www.w3.org/2001/XMLSchema#string', null, true
             ),
             array(
+                "\"\"\"This\nis\na\nmulti\nline\ntext with\\\\backslash\"\"\"^^<http://www.w3.org/2001/XMLSchema#string>",
+                "This\nis\na\nmulti\nline\ntext with\\backslash", 'http://www.w3.org/2001/XMLSchema#string', null, true
+            ),
+            array(
                 "'''This\nis\na\n\"\"\"multi\nline\"\"\"\ntext'''^^<http://www.w3.org/2001/XMLSchema#string>",
                 "This\nis\na\n\"\"\"multi\nline\"\"\"\ntext", 'http://www.w3.org/2001/XMLSchema#string', null, true
             ),

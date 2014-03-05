@@ -93,7 +93,7 @@ class Erfurt_Utils
             case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':   /* fallthrough */
             case 'http://www.w3.org/2001/XMLSchema#string':
             default:
-                $replaceCharlist = $quoteChar;
+                $replaceCharlist = $quoteChar . "\\";
 
                 /**
                  * Check for characters not allowed in a short literal
@@ -107,7 +107,7 @@ class Erfurt_Utils
                      * Replaces the characters traditionally escaped in string literals by the
                      * corresponding escape sequences
                      */
-                    $replaceCharlist .= "\n\t\r\f\\";
+                    $replaceCharlist .= "\n\t\r\f";
                 }
                 $value = addcslashes($value, $replaceCharlist);
         }
