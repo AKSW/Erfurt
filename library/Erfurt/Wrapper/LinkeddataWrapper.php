@@ -93,7 +93,6 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
             $client = $this->_getHttpClient(
                 $url,
                 array(
-                    'maxredirects'  => 0,
                     'timeout'       => 30
                 )
             );
