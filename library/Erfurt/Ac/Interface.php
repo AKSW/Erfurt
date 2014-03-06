@@ -2,19 +2,20 @@
 /**
  * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
- * A class providing support for disabled access control.
+ * Interface defining methods to support basic model, action (and statement) based access control.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package Erfurt_Ac
- * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
+ * @author Marvin Frommhold <frommhold@informatik.uni-leipzig.de>
+ * @author Sebastian Nuck <nuck@infai.org>
  */
-class Erfurt_Ac_None implements Erfurt_Ac_Interface
+interface Erfurt_Ac_Interface
 {
     // ------------------------------------------------------------------------
     // --- Public methods -----------------------------------------------------
@@ -26,10 +27,7 @@ class Erfurt_Ac_None implements Erfurt_Ac_Interface
      * @param string $actionSpec The URI of the action.
      * @return array Returns an array with the action spec.
      */
-    public function getActionConfig($actionSpec)
-    {
-        return array();
-    }
+    public function getActionConfig($actionSpec);
 
     /**
      * Checks whether the given action is allowed for the current user on the
@@ -39,15 +37,7 @@ class Erfurt_Ac_None implements Erfurt_Ac_Interface
      * @param string $modelUri The uri of the graph to check.
      * @return boolean Returns whether allowed or denied.
      */
-    public function isModelAllowed($type, $modelUri)
-    {
-        $type = strtolower($type);
-        if (($type !== 'view') && ($type !== 'edit')) {
-            return false;
-        }
-
-        return true;
-    }
+    public function isModelAllowed($type, $modelUri);
 
     /**
      * Checks whether the given action is allowed for the current user on the
@@ -57,15 +47,7 @@ class Erfurt_Ac_None implements Erfurt_Ac_Interface
      * @param array $modelUris The array of uris of the graphs to check.
      * @return array Returns array with boolean values of whether allowed or denied.
      */
-    public function areModelsAllowed($type, $modelUris) {
-
-        $allowed = array();
-        foreach ($modelUris as $modelUri) {
-            $allowed[] = $this->isModelAllowed($type, $modelUri);
-        }
-
-        return $allowed;
-    }
+    public function areModelsAllowed($type, $modelUris);
 
     /**
      * Checks whether the given action is allowed for the current user.
@@ -73,10 +55,7 @@ class Erfurt_Ac_None implements Erfurt_Ac_Interface
      * @param string $action The name of the action.
      * @return boolean Returns whether action is allowed or not.
      */
-    public function isActionAllowed($action)
-    {
-        return true;
-    }
+    public function isActionAllowed($action);
 
     /**
      * Adds a right to a model for the current user.
@@ -87,8 +66,5 @@ class Erfurt_Ac_None implements Erfurt_Ac_Interface
      * @throws Erfurt_Exception Throws an exception if wrong type was submitted or
      * wrong perm type was submitted.
      */
-    public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant')
-    {
-        // Nothing to do here...
-    }
+    public function setUserModelRight($modelUri, $type = 'view', $perm = 'grant');
 }
