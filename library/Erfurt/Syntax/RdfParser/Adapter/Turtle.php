@@ -193,6 +193,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     protected function _parseNamespacesOnly($data)
     {
         $this->_data = $data;
+        $this->_dataLength = strlen($data);
         $this->_pos  = 0;
 
         $c = $this->_skipWS();
