@@ -1,5 +1,6 @@
 <?php
 
+use Guzzle\Batch\BatchBuilder;
 use Guzzle\Common\Collection;
 use Guzzle\Log\MessageFormatter;
 use Guzzle\Log\Zf1LogAdapter;
@@ -15,8 +16,6 @@ use Guzzle\Service\Description\ServiceDescription;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
  * @method array query(array) Executes a SPARQL query.
- * @method void commitTransaction(array) Commits the transaction with the provided ID.
- * @method void rollbackTransaction(array) Reverts changes of the transaction with the provided ID.
  * @method void clear(array) Clear a specific graph or the whole database. Requires a transaction ID.
  * @method void add(array) Adds a set of triples. Requires a transaction ID.
  * @method void remove(array) Removes a set of triples. Requires a transaction ID.
@@ -24,6 +23,14 @@ use Guzzle\Service\Description\ServiceDescription;
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
+
+    /**
+     * IDs of transactions that have been opened, but not committed or
+     * rolled back yet.
+     *
+     * @var array(string)
+     */
+    protected $pendingTransactions = array();
 
     /**
      * Creates a new API client instance.
@@ -90,7 +97,60 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     {
         /* @var $response \Guzzle\Http\Message\Response */
         $response = parent::beginTransaction();
-        return $response->getBody(true);
+        $id = $response->getBody(true);
+        $this->pendingTransactions[] = $id;
+        return $id;
+    }
+
+    /**
+     * Commits the transaction with the provided ID.
+     *
+     * @param array(string=>string) $arguments
+     */
+    public function commitTransaction(array $arguments)
+    {
+        parent::commitTransaction($arguments);
+        $this->removePendingTransaction($arguments['transaction-id']);
+    }
+
+    /**
+     *  Reverts changes of the transaction with the provided ID.
+     *
+     * @param array(string=>string) $arguments
+     */
+    public function rollbackTransaction(array $arguments)
+    {
+        parent::rollbackTransaction($arguments);
+        $this->removePendingTransaction($arguments['transaction-id']);
+    }
+
+    /**
+     * Removes the provided ID from the list of pending transactions.
+     *
+     * @param string $id
+     */
+    protected function removePendingTransaction($id)
+    {
+        if (in_array($id, $this->pendingTransactions)) {
+            unset($this->pendingTransactions[array_search($id, $this->pendingTransactions)]);
+        }
+    }
+
+    /**
+     * Rolls back any transaction that is still pending.
+     */
+    public function __destruct()
+    {
+        if (count($this->pendingTransactions) === 0) {
+            return;
+        }
+        $batch = BatchBuilder::factory()->transferCommands(10)->autoFlushAt(10)->build();
+        foreach ($this->pendingTransactions as $id) {
+            /* @var $id string */
+            $batch->add($this->getCommand('rollbackTransaction', array('transaction-id' => $id)));
+        }
+        $batch->flush();
+        $this->pendingTransactions = array();
     }
 
 }
