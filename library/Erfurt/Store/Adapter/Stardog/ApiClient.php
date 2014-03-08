@@ -63,8 +63,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function size()
     {
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = parent::size();
+        $command = $this->getCommand('size');
+        $command->execute();
+        $response = $command->getResult();
         return (int)$response->getBody(true);
     }
 
@@ -80,8 +81,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function explain(array $arguments)
     {
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = parent::explain($arguments);
+        $command = $this->getCommand('explain', $arguments);
+        $command->execute();
+        $response = $command->getResult();
         return $response->getBody(true);
     }
 
@@ -95,8 +97,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function beginTransaction()
     {
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = parent::beginTransaction();
+        $command = $this->getCommand('beginTransaction');
+        $command->execute();
+        $response = $command->getResult();
         $id = $response->getBody(true);
         $this->pendingTransactions[] = $id;
         return $id;
@@ -109,7 +112,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function commitTransaction(array $arguments)
     {
-        parent::commitTransaction($arguments);
+        $this->getCommand('commitTransaction', $arguments)->execute();
         $this->removePendingTransaction($arguments['transaction-id']);
     }
 
@@ -120,7 +123,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function rollbackTransaction(array $arguments)
     {
-        parent::rollbackTransaction($arguments);
+        $this->getCommand('rollbackTransaction', $arguments)->execute();
         $this->removePendingTransaction($arguments['transaction-id']);
     }
 
