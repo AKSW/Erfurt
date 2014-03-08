@@ -14,6 +14,11 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
 
     }
 
+    public function testQueryReturnsResultFromApiClient()
+    {
+        
+    }
+
     public function testTransactionalThrowsExceptionIfNoValidCallbackIsPassed()
     {
 
