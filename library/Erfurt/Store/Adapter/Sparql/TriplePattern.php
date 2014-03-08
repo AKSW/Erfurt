@@ -103,7 +103,7 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      */
     public function format($pattern)
     {
-        '';
+        return strtr($pattern, $this->getPlaceholderValues());
     }
 
     /**
@@ -126,25 +126,7 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      */
     public function __toString()
     {
-        if ($this->subject === null) {
-            $subject = $this->formatValue(array('type' => 'variable', 'value' => '?subject'));
-        } else if (strpos($this->subject, '_:') === 0) {
-            // Subject is a blank node.
-            $subject = $this->formatValue(array('type' => 'bnode', 'value' => $this->subject));
-        } else {
-            $subject = $this->formatValue(array('type' => 'uri', 'value' => $this->subject));
-        }
-        if ($this->predicate === null) {
-            $predicate = $this->formatValue(array('type' => 'variable', 'value' => '?predicate'));
-        } else {
-            $predicate = $this->formatValue(array('type' => 'uri', 'value' => $this->predicate));
-        }
-        if ($this->object === null) {
-            $object = $this->formatValue(array('type' => 'variable', 'value' => '?object'));
-        } else {
-            $object = $this->formatValue($this->object);
-        }
-        return sprintf('%s %s %s .', $subject, $predicate, $object);
+        return $this->format('?subject ?predicate ?object .');
     }
 
     /**
@@ -156,7 +138,18 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      */
     protected function getPlaceholderValues()
     {
-
+        $placeholders = array();
+        if ($this->subject !== null) {
+            $type = (strpos($this->subject, '_:') === 0) ? 'bnode' : 'uri';
+            $placeholders['?subject'] = $this->formatValue(array('type' => $type, 'value' => $this->subject));
+        }
+        if ($this->predicate !== null) {
+            $placeholders['?predicate'] = $this->formatValue(array('type' => 'uri', 'value' => $this->predicate));
+        }
+        if ($this->object !== null) {
+            $placeholders['?object'] = $this->formatValue($this->object);
+        }
+        return $placeholders;
     }
 
     /**
@@ -171,7 +164,6 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
     {
         switch ($valueSpecification['type']) {
             case 'bnode':
-            case 'variable':
                 return $valueSpecification['value'];
             case 'uri':
                 return '<' . $valueSpecification['value'] . '>';
