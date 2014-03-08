@@ -74,7 +74,7 @@ class Erfurt_Store_Adapter_Oracle_StoredProcedureBatchProcessor
      *
      * @param array(string=>array(string)) $quadParts
      */
-    public function persistCommonQuads(array $quadParts)
+    protected function persistCommonQuads(array $quadParts)
     {
         $query = 'BEGIN ERFURT.ADD_TRIPLES(:graphs, :subjects, :predicates, :objects); END;';
         $statement = $this->connection->prepare($query);
