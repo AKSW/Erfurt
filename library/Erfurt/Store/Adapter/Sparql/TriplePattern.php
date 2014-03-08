@@ -175,11 +175,35 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
                 return '<' . $valueSpecification['value'] . '>';
             case 'literal':
             default:
-                return Erfurt_Utils::buildLiteralString(
+                return $this->buildLiteralString(
                     $valueSpecification['value'],
                     isset($valueSpecification['datatype']) ? $valueSpecification['datatype'] : null,
                     isset($valueSpecification['lang']) ? $valueSpecification['lang'] : null
                 );
         }
     }
+
+    /**
+     * Builds literal strings that fulfill the requirements in the NTriples format.
+     *
+     * As NTriples is a subset of Turtle, which is a subset of Notation3, the generated
+     * literal representation can also be used these contexts.
+     *
+     * @param string $value
+     * @param string|null $dataType
+     * @param string|null $language
+     * @return string
+     * @see http://www.w3.org/2001/sw/RDFCore/ntriples/#string
+     */
+    protected function buildLiteralString($value, $dataType, $language)
+    {
+        $literal = '"' . addcslashes($value, "\\\"\n\r\t") . '"';
+        if (!empty($dataType)) {
+            $literal .= '^^<' . $dataType . '>';
+        } elseif (!empty($language)) {
+            $literal .= '@' . $language;
+        }
+        return $literal;
+    }
+
 }
