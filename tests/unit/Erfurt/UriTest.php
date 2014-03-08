@@ -19,7 +19,8 @@ class Erfurt_UriTest extends Erfurt_TestCase
             'mailto:mduerst@ifi.unizh.ch',
             'news:comp.infosystems.www.servers.unix',
             'telnet://melvyl.ucop.edu/',
-            'http://User:pass@example.com/test/cat?foo=ba%7C'
+            'http://User:pass@example.com/test/cat?foo=ba%7C',
+            'http://bio2rdf.org/bio2rdf_dataset:bio2rdf-sgd-20121015'
         );
 
         foreach ($validUris as $uri) {
@@ -170,6 +171,65 @@ class Erfurt_UriTest extends Erfurt_TestCase
             $path = Erfurt_Uri::getPathTo($set[0], $set[1]);
             $this->assertEquals($set[2], $path);
         }
+    }
+
+    public function testGetFromQnameOrUri()
+    {
+        $testValues = array(
+            'foaf:Person' => 'http://xmlns.com/foaf/0.1/Person',
+            'owl:sameAs' => 'http://www.w3.org/2002/07/owl#sameAs',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+            'ex:hallo' => 'http://example.org/hallo',
+            'exs:secure' => 'https://example.org/secure',
+            'http://aksw.org/About' => 'http://aksw.org/About',
+            'http:you' => 'http://example.http.server.eu/hello/you',
+            'b2rds:bio2rdf-sgd-20121015' => 'http://bio2rdf.org/bio2rdf_dataset:bio2rdf-sgd-20121015',
+            'http://example.com/Test'                                              => 'http://example.com/Test',
+            'urn:isbn:978-3-86680-192-9'                                           => 'urn:isbn:978-3-86680-192-9',
+            'ftp://ftp.is.co.za/rfc/rfc1808.txt'                                   => 'ftp://ftp.is.co.za/rfc/rfc1808.txt',
+            'gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles' => 'gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles',
+            'http://www.math.uio.no/faq/compression-faq/part1.html'                => 'http://www.math.uio.no/faq/compression-faq/part1.html',
+            'mailto:mduerst@ifi.unizh.ch'                                          => 'mailto:mduerst@ifi.unizh.ch',
+            'telnet://melvyl.ucop.edu/'                                            => 'telnet://melvyl.ucop.edu/',
+            'http://User:pass@example.com/test/cat?foo=ba%7C'                      => 'http://User:pass@example.com/test/cat?foo=ba%7C',
+            'http://bio2rdf.org/bio2rdf_dataset:bio2rdf-sgd-20121015'              => 'http://bio2rdf.org/bio2rdf_dataset:bio2rdf-sgd-20121015',
+        );
+        /**
+         * TODO find out, what to do with 'news:comp.infosystems.www.servers.unix', it could be a
+         * qname and a URI. Should we first check if it is a URI and just not follow the Qname
+         * theory in this case?
+         */
+
+        $model = $this->_getMockedModel();
+
+        foreach ($testValues as $input => $output) {
+            $this->assertEquals($output, Erfurt_Uri::getFromQnameOrUri($input, $model));
+        }
+    }
+
+    protected function _getMockedModel()
+    {
+        $model = $this->getMock('Erfurt_Rdf_Model', // original class name
+            array('getNamespaceByPrefix'),          // method to mock
+            array('http://base.de/')                // constructor params
+        );
+
+        $namespaces = array(
+            array('ex', 'http://example.org/'),
+            array('exs', 'https://example.org/'),
+            array('foaf', 'http://xmlns.com/foaf/0.1/'),
+            array('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
+            array('rdfs', 'http://www.w3.org/2000/01/rdf-schema#'),
+            array('owl', 'http://www.w3.org/2002/07/owl#'),
+            array('b2rds', 'http://bio2rdf.org/bio2rdf_dataset:'),
+            array('http', 'http://example.http.server.eu/hello/'),
+        );
+
+        $model->expects($this->any())
+              ->method('getNamespaceByPrefix')
+              ->will($this->returnValueMap($namespaces));
+
+        return $model;
     }
 }
 

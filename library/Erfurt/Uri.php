@@ -27,10 +27,19 @@ class Erfurt_Uri
      */
     protected static $_regExp = '/^([a-zA-Z][a-zA-Z0-9+.-]+):([^\x00-\x0f\x20\x7f<>{}|\[\]`"^\\\\])+$/';
 
-    /*
-     * this preg pattern is used to check if a string is a valid qname
+    /**
+     * This preg pattern is used to check if a string is a valid qname.
+     *
+     * The regex follows following construction, which just covers a part of the allowed chars
+     *
+     * $nameStartCharNoColon = 'a-zA-Z_\xc0-\xd6\xd8-\xf6\xf8-\xff';
+     * $nameCharNoColon = '-.0-9\xb7' . $nameStartCharNoColon;
+     * $matchNCName = '[' . $nameStartCharNoColon . '][' . $nameCharNoColon . ']*';
+     * $regExpQname = '/^(' . $matchNCName . ':)?' . $matchNCName . '$/';
+     *
      */
-    private static $_regExpQname = '/[a-zA-Z]+:[a-zA-Z]+/';
+    protected static $_regExpQname =
+        '/^([a-zA-Z_\xc0-\xd6\xd8-\xf6\xf8-\xff][-.0-9\xb7a-zA-Z_\xc0-\xd6\xd8-\xf6\xf8-\xff]*:)?[a-zA-Z_\xc0-\xd6\xd8-\xf6\xf8-\xff][-.0-9\xb7a-zA-Z_\xc0-\xd6\xd8-\xf6\xf8-\xff]*$/';
 
     /**
      * Checks the general syntax of a given URI. Protocol-specific syntaxes are not checked.
@@ -129,7 +138,7 @@ class Erfurt_Uri
     public static function getFromQnameOrUri($qnameOrUri, Erfurt_Rdf_Model $model)
     {
         // test for qname
-        if (preg_match(self::$_regExpQname, (string)$qnameOrUri) != 1) {
+        if (preg_match(self::$_regExpQname, (string)$qnameOrUri) == 0) {
             // input is not a qname so test for Uri-ness and return uri
             if (!self::check($qnameOrUri)) {
                 throw new Erfurt_Uri_Exception('The supplied string is neither a valid Qname nor Uri by syntax.');
@@ -140,12 +149,18 @@ class Erfurt_Uri
         } else {
             // input is qname so split it and build Uri from namespace if possible
             $parts     = explode(':', $qnameOrUri);
-            $prefix    = $parts[0];
-            $localName = $parts[1];
-            $namespace = $model->getNamespaceByPrefix($prefix);
+            if (count($parts) > 1) {
+                $prefix    = $parts[0];
+                $localName = $parts[1];
+                $namespace = $model->getNamespaceByPrefix($prefix);
+            } else {
+                // it is a local name only
+                $localName = $qnameOrUri;
+                $namespace = $model->getBaseIri();
+            }
             $uri = $namespace . $localName;
             if (!self::check($uri)) {
-                throw new Erfurt_Uri_Exception('The given qname results in an invalid Uri.');
+                throw new Erfurt_Uri_Exception('The given qname "' . $qnameOrUri . '" results in an invalid Uri "' . $uri . '".');
             } else {
                 // return constructed and checked Uri
                 return $uri;
