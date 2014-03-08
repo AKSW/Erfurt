@@ -15,7 +15,6 @@ use Guzzle\Service\Description\ServiceDescription;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
- * @method array query(array) Executes a SPARQL query.
  * @method void clear(array) Clear a specific graph or the whole database. Requires a transaction ID.
  * @method void add(array) Adds a set of triples. Requires a transaction ID.
  * @method void remove(array) Removes a set of triples. Requires a transaction ID.
@@ -66,6 +65,23 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         $command->execute();
         $response = $command->getResult();
         return (int)$response->getBody(true);
+    }
+
+    /**
+     * Executes a SPARQL query of any type.
+     *
+     * Returns the result, which depends on the query type (i.e. ASK or INSERT queries
+     * return XML with a boolean flag, SELECT queries return an extended result set
+     * as array).
+     *
+     * @param array(string=>string) $arguments
+     * @return array|SimpleXMLElement
+     */
+    public function query(array $arguments)
+    {
+        $command = $this->getCommand('query', $arguments);
+        $command->execute();
+        return $command->getResult();
     }
 
     /**
