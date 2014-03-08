@@ -38,7 +38,7 @@ class Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor implements Erfurt
     }
 
     /**
-     * Stores the provided triples.
+     * Stores the provided quads.
      *
      * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
      */

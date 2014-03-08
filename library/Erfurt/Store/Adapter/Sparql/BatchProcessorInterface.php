@@ -16,4 +16,11 @@
 interface Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
 {
 
+    /**
+     * Stores the provided quads.
+     *
+     * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
+     */
+    public function persist(array $quads);
+
 }
