@@ -34,6 +34,13 @@ class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
     protected $container = null;
 
     /**
+     * Flag that indicates if the database was already cleared.
+     *
+     * @var boolean
+     */
+    protected $databaseCleared = false;
+
+    /**
      * Returns the SPARQL connector.
      *
      * @return \Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
@@ -49,6 +56,19 @@ class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
             $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
         }
         return $this->sparqlConnector;
+    }
+
+    /**
+     * Returns the data access client.
+     *
+     * @return \Erfurt_Store_Adapter_Stardog_DataAccessClient
+     */
+    public function getDataAccessClient()
+    {
+        $client = $this->getContainer()->get('stardog.data_access_client');
+        PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Stardog_DataAccessClient', $client);
+        $this->clearDatabase();
+        return $client;
     }
 
     /**
@@ -90,10 +110,15 @@ class Erfurt_StardogTestHelper extends Erfurt_AbstractTestHelper
      */
     protected function clearDatabase()
     {
+        if ($this->databaseCleared) {
+            // Database was already cleared.
+            return;
+        }
         $client = $this->getApiClient();
         $id = $client->beginTransaction();
         $this->getApiClient()->clear(array('transaction-id' => $id));
         $client->commitTransaction(array('transaction-id' => $id));
+        $this->databaseCleared = true;
     }
 
     /**

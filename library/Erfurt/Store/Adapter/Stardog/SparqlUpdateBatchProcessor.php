@@ -11,6 +11,18 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
 {
 
     /**
+     * The data access client that is used to interact with the store.
+     *
+     * @var Erfurt_Store_Adapter_Stardog_DataAccessClient
+     */
+    protected $client = null;
+
+    public function __construct(Erfurt_Store_Adapter_Stardog_DataAccessClient $client)
+    {
+
+    }
+
+    /**
      * Stores the provided quads.
      *
      * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads

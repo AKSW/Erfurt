@@ -11,6 +11,13 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
 {
 
     /**
+     * System under test.
+     *
+     * @var Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
+     */
+    protected $processor = null;
+
+    /**
      * Test helper that is used to initialize the environment.
      *
      * @var \Erfurt_StardogTestHelper
@@ -23,7 +30,9 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
     protected function setUp()
     {
         parent::setUp();
-        $this->helper = new Erfurt_StardogTestHelper();
+        $this->helper    = new Erfurt_StardogTestHelper();
+        $client          = $this->helper->getDataAccessClient();
+        $this->processor = new Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor($client);
     }
 
     /**
@@ -31,6 +40,7 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     protected function tearDown()
     {
+        $this->processor = null;
         $this->helper->cleanUp();
         $this->helper = null;
         parent::tearDown();
@@ -41,7 +51,7 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     public function testImplementsInterface()
     {
-
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Sparql_BatchProcessorInterface', $this->processor);
     }
 
     /**
@@ -49,7 +59,8 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     public function testPersistCanHandleEmptyQuadList()
     {
-
+        $this->setExpectedException(null);
+        $this->processor->persist(array());
     }
 
     /**
@@ -57,7 +68,19 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     public function testPersistAddsSingleQuad()
     {
+        $quad = new Erfurt_Store_Adapter_Sparql_Quad(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'uri',
+                'value' => 'http://example.org/object'
+            ),
+            'http://example.org/graph'
+        );
 
+        $this->processor->persist(array($quad));
+
+        $this->assertNumberOfTriples(1);
     }
 
     /**
@@ -65,7 +88,30 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     public function testPersistAddsMultipleQuads()
     {
+        $quads = array(
+            new Erfurt_Store_Adapter_Sparql_Quad(
+                'http://example.org/subject1',
+                'http://example.org/predicate1',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object1'
+                ),
+                'http://example.org/graph'
+            ),
+            new Erfurt_Store_Adapter_Sparql_Quad(
+                'http://example.org/subject2',
+                'http://example.org/predicate2',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object2'
+                ),
+                'http://example.org/graph'
+            ),
+        );
 
+        $this->processor->persist($quads);
+
+        $this->assertNumberOfTriples(2);
     }
 
     /**
@@ -73,7 +119,57 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
      */
     public function testPersistAssignsQuadsToCorrectGraphs()
     {
+        // Use quads that are assigned to multiple graphs.
+        $quads = array(
+            new Erfurt_Store_Adapter_Sparql_Quad(
+                'http://example.org/subject1',
+                'http://example.org/predicate1',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object1'
+                ),
+                'http://example.org/graph1'
+            ),
+            new Erfurt_Store_Adapter_Sparql_Quad(
+                'http://example.org/subject2',
+                'http://example.org/predicate2',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object2'
+                ),
+                'http://example.org/graph2'
+            ),
+        );
 
+        $this->processor->persist($quads);
+
+        $this->assertNumberOfTriplesInGraph('http://example.org/graph1', 1);
+        $this->assertNumberOfTriplesInGraph('http://example.org/graph2', 1);
+    }
+
+    /**
+     * Asserts that the given graph contains the expected number of triples.
+     *
+     * @param string $graph
+     * @param integer $expected
+     */
+    public function assertNumberOfTriplesInGraph($graph, $expected)
+    {
+        $query  = 'SELECT * FROM <' . $graph . '> WHERE { ?s ?p ?o . }';
+        $result = $this->helper->getApiClient()->query(array('query' => $query));
+        $this->assertTrue(isset($result['results']['bindings']), 'Unexpected result structure.');
+        $numberOfTriples = count($result['results']['bindings']);
+        $this->assertEquals($expected, $numberOfTriples);
+    }
+
+    /**
+     * Asserts that the whole database contains the expected number of triples.
+     *
+     * @param integer $expected
+     */
+    protected function assertNumberOfTriples($expected)
+    {
+        $this->assertEquals($expected, $this->helper->getApiClient()->size());
     }
 
 }
