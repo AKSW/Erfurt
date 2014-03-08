@@ -59,7 +59,7 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
             if (!isset($triplesByGraph[$quad->getGraph()])) {
                 $triplesByGraph[$quad->getGraph()] = array();
             }
-            $triplesByGraph[$quad->getGraph()][] = (string)$quad;
+            $triplesByGraph[$quad->getGraph()][] = $quad->format('?subject ?predicate ?object .');
         }
         return $triplesByGraph;
     }

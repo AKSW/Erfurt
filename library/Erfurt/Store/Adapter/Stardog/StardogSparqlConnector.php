@@ -141,7 +141,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
                    . '        %s '
                    . '    } '
                    . '}';
-        $condition  = sprintf($condition, $graphIri, (string)$pattern);
+        $condition  = sprintf($condition, $graphIri, $pattern->format('?subject ?predicate ?object .'));
         // Determine how many triples will be affected by the delete operation.
         $countQuery = 'SELECT (COUNT(*) AS ?affected) ' . $condition;
         $results    = $this->query($countQuery);
