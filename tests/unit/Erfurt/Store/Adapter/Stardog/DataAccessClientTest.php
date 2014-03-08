@@ -111,6 +111,7 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
                         ->method('rollbackTransaction')
                         ->with(array('transaction-id' => 't42'));
 
+        $this->setExpectedException('RuntimeException');
         $this->client->transactional(function() {
             throw new RuntimeException('Error within transaction.');
         });
