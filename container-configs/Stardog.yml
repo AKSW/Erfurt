@@ -4,6 +4,10 @@ parameters:
 services:
     stardog.sparql_connector:
         class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
+        arguments: ["@stardog.data_access_client"]
+
+    stardog.data_access_client:
+        class: Erfurt_Store_Adapter_Stardog_DataAccessClient
         arguments: ["@stardog.api_client"]
 
     stardog.api_client:

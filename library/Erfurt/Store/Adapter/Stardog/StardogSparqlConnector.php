@@ -13,7 +13,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     /**
      * The API client that is used to interact with the triple store.
      *
-     * @var Erfurt_Store_Adapter_Stardog_ApiClient
+     * @var \Erfurt_Store_Adapter_Stardog_DataAccessClient
      */
     protected $client = null;
 
@@ -32,12 +32,12 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     protected $xmlConverter = null;
 
     /**
-     * Creates a SPARQL connector that uses the provided API client
+     * Creates a SPARQL connector that uses the provided client
      * to interact with the store.
      *
-     * @param Erfurt_Store_Adapter_Stardog_ApiClient $client
+     * @param \Erfurt_Store_Adapter_Stardog_DataAccessClient $client
      */
-    public function __construct(Erfurt_Store_Adapter_Stardog_ApiClient $client)
+    public function __construct(\Erfurt_Store_Adapter_Stardog_DataAccessClient $client)
     {
         $this->client = $client;
         $this->resultConverter = new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
@@ -59,9 +59,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
                . '        ' . $triple
                . '    }'
                . '}';
-        $this->client->query(array(
-            'query' => $query
-        ));
+        $this->client->query($query);
     }
 
     /**
@@ -106,7 +104,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function query($sparqlQuery)
     {
-        $result = $this->client->query(array('query' => $sparqlQuery));
+        $result = $this->client->query($sparqlQuery);
         if ($result instanceof SimpleXMLElement) {
             return $this->xmlConverter->convert($result);
         }
