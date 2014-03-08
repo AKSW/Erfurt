@@ -134,6 +134,12 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      *
      * This list is used by the format() method.
      *
+     * If available, the following placeholders can be used:
+     *
+     * - ?subject
+     * - ?predicate
+     * - ?object
+     *
      * @return array(string=>string)
      */
     protected function getPlaceholderValues()

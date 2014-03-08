@@ -58,4 +58,18 @@ class Erfurt_Store_Adapter_Sparql_Quad extends Erfurt_Store_Adapter_Sparql_Tripl
         return $this->graph;
     }
 
+    /**
+     * Returns a list of placeholders (keys) and their corresponding values.
+     *
+     * In addition to normal triples, the ?graph placeholder is provided.
+     *
+     * @return array(string=>string)
+     */
+    protected function getPlaceholderValues()
+    {
+        $placeholders = parent::getPlaceholderValues();
+        $placeholders['?graph'] = $this->formatValue(array('type' => 'uri', 'value' => $this->getGraph()));
+        return $placeholders;
+    }
+
 }
