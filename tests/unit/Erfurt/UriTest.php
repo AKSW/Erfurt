@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_UriTest extends Erfurt_TestCase
 {
     public function testCheck()
@@ -47,121 +54,122 @@ class Erfurt_UriTest extends Erfurt_TestCase
         Erfurt_Uri::normalize($nonUri);
     }
 
-	public function testGetPathTo(){
-		$uris	= array(
-            //  stepping in 1 step
-			array(
-				'http://d.tld/a.html',
-				'http://d.tld/x/b.html',
-				'./x/b.html'
-			),
-            //  stepping in 2 steps
-			array(
-				'http://d.tld/a.html',
-				'http://d.tld/x/y/b.html',
-				'./x/y/b.html'
-			),
-            //  stepping in 3 steps
-			array(
-				'http://d.tld/a.html',
-				'http://d.tld/x/y/z/b.html',
-				'./x/y/z/b.html'
-			),
-            //  in same folder, stepping in 2 steps
-			array(
-				'http://d.tld/x/a.html',
-				'http://d.tld/x/y/z/b.html',
-				'./y/z/b.html'
-			),
-            //  in same folder, stepping in 1 step
-			array(
-				'http://d.tld/x/y/a.html',
-				'http://d.tld/x/y/z/b.html',
-				'./z/b.html'
-			),
-            //  in same folder => return only target file name
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/x/y/z/b.html',
-				'./b.html'
-			),
-            //  stepping out 3 steps
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/b.html',
-				'./../../../b.html'
-			),
-            //  stepping out 2 steps
-			array(
-				'http://d.tld/x/y/a.html',
-				'http://d.tld/b.html',
-				'./../../b.html'
-			),
-            //  stepping out 1 step
-			array(
-				'http://d.tld/x/a.html',
-				'http://d.tld/b.html',
-				'./../b.html'
-			),
-            //  different folders, 1 out, 3 in
-			array(
-				'http://d.tld/x/a.html',
-				'http://d.tld/m/n/o/b.html',
-				'./../m/n/o/b.html'
-			),
-            //  different folders, 2 out, 3 in
-			array(
-				'http://d.tld/x/y/a.html',
-				'http://d.tld/m/n/o/b.html',
-				'./../../m/n/o/b.html'
-			),
-            //  different folders, 3 out, 3 in
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/m/n/o/b.html',
-				'./../../../m/n/o/b.html'
-			),
-            //  different folders, 3 out, 3 in
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/m/n/o/b.html',
-				'./../../../m/n/o/b.html'
-			),
-            //  different folders, 3 out, 2 in
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/m/n/b.html',
-				'./../../../m/n/b.html'
-			),
-            //  different folders, 3 out, 1 in
-			array(
-				'http://d.tld/x/y/z/a.html',
-				'http://d.tld/m/b.html',
-				'./../../../m/b.html'
-			),
-            //  domains are not matching => return unmodified target
-			array(
-				'http://d1.tld/a.html',
-				'http://d2.tld/b.html',
-				'http://d2.tld/b.html'
-			),
-            //  top level domains are not matching => return unmodified target
-			array(
-				'http://d.tld1/a.html',
-				'http://d.tld2/b.html',
-				'http://d.tld2/b.html'
-			),
-            //  protocols are not matching => return unmodified target
-			array(
-				'http://d.tld/a.html',
-				'https://d.tld/b.html',
-				'https://d.tld/b.html'
-			),
-		);
-		foreach ($uris as $set){
-			$path	= Erfurt_Uri::getPathTo($set[0], $set[1]);
-			$this->assertEquals($set[2], $path);
-		}
-	}
+    public function testGetPathTo()
+    {
+        $uris = array(
+            // stepping in 1 step
+            array(
+                'http://d.tld/a.html',
+                'http://d.tld/x/b.html',
+                './x/b.html'
+            ),
+            // stepping in 2 steps
+            array(
+                'http://d.tld/a.html',
+                'http://d.tld/x/y/b.html',
+                './x/y/b.html'
+            ),
+            // stepping in 3 steps
+            array(
+                'http://d.tld/a.html',
+                'http://d.tld/x/y/z/b.html',
+                './x/y/z/b.html'
+            ),
+            // in same folder, stepping in 2 steps
+            array(
+                'http://d.tld/x/a.html',
+                'http://d.tld/x/y/z/b.html',
+                './y/z/b.html'
+            ),
+            // in same folder, stepping in 1 step
+            array(
+                'http://d.tld/x/y/a.html',
+                'http://d.tld/x/y/z/b.html',
+                './z/b.html'
+            ),
+            // in same folder => return only target file name
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/x/y/z/b.html',
+                './b.html'
+            ),
+            // stepping out 3 steps
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/b.html',
+                './../../../b.html'
+            ),
+            // stepping out 2 steps
+            array(
+                'http://d.tld/x/y/a.html',
+                'http://d.tld/b.html',
+                './../../b.html'
+            ),
+            // stepping out 1 step
+            array(
+                'http://d.tld/x/a.html',
+                'http://d.tld/b.html',
+                './../b.html'
+            ),
+            // different folders, 1 out, 3 in
+            array(
+                'http://d.tld/x/a.html',
+                'http://d.tld/m/n/o/b.html',
+                './../m/n/o/b.html'
+            ),
+            // different folders, 2 out, 3 in
+            array(
+                'http://d.tld/x/y/a.html',
+                'http://d.tld/m/n/o/b.html',
+                './../../m/n/o/b.html'
+            ),
+            // different folders, 3 out, 3 in
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/m/n/o/b.html',
+                './../../../m/n/o/b.html'
+            ),
+            // different folders, 3 out, 3 in
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/m/n/o/b.html',
+                './../../../m/n/o/b.html'
+            ),
+            // different folders, 3 out, 2 in
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/m/n/b.html',
+                './../../../m/n/b.html'
+            ),
+            // different folders, 3 out, 1 in
+            array(
+                'http://d.tld/x/y/z/a.html',
+                'http://d.tld/m/b.html',
+                './../../../m/b.html'
+            ),
+            // domains are not matching => return unmodified target
+            array(
+                'http://d1.tld/a.html',
+                'http://d2.tld/b.html',
+                'http://d2.tld/b.html'
+            ),
+            // top level domains are not matching => return unmodified target
+            array(
+                'http://d.tld1/a.html',
+                'http://d.tld2/b.html',
+                'http://d.tld2/b.html'
+            ),
+            // protocols are not matching => return unmodified target
+            array(
+                'http://d.tld/a.html',
+                'https://d.tld/b.html',
+                'https://d.tld/b.html'
+            ),
+        );
+        foreach ($uris as $set) {
+            $path = Erfurt_Uri::getPathTo($set[0], $set[1]);
+            $this->assertEquals($set[2], $path);
+        }
+    }
 }
 
