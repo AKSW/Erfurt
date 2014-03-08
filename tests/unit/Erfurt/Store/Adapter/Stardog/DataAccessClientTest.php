@@ -178,4 +178,21 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
         });
     }
 
+    /**
+     * Ensures that transactional() executes multiple transaction if it is invoked in
+     * sequence (not nested).
+     */
+    public function testTransactionalStartsMultipleTransactionIfInvokedInSequence()
+    {
+        $this->apiClient->expects($this->exactly(2))
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $this->apiClient->expects($this->exactly(2))
+                        ->method('commitTransaction')
+                        ->with(array('transaction-id' => 't42'));
+
+        $this->client->transactional(function () {});
+        $this->client->transactional(function () {});
+    }
+
 }
