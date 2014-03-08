@@ -37,6 +37,22 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
         if (count($quads) === 0) {
             return;
         }
+        $triplesByGraph = $this->divideByGraph($quads);
+        $query          = $this->buildQuery($triplesByGraph);
+        $this->client->query($query);
+    }
+
+    /**
+     * Divides the provided quads into triple lists for each graph.
+     *
+     * The graph is used as key in the resulting array, the triples (each in N-Triple format)
+     * are assigned as array.
+     *
+     * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
+     * @return array(string=>array(string))
+     */
+    protected function divideByGraph(array $quads)
+    {
         $triplesByGraph = array();
         foreach ($quads as $quad) {
             /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
@@ -45,17 +61,27 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
             }
             $triplesByGraph[$quad->getGraph()][] = (string)$quad;
         }
+        return $triplesByGraph;
+    }
 
+    /**
+     * Builds an INSERT query that includes all the provided triples.
+     *
+     * @param array(string=>array(string)) $triplesByGraph
+     * @return string
+     */
+    public function buildQuery($triplesByGraph)
+    {
         $graphGroups = array();
         foreach ($triplesByGraph as $graph => $triples) {
             /* @var $graph string */
             /* @var $triples array(string) */
             $graphGroups[] = 'GRAPH <' . $graph . '> {'
-                           . implode(PHP_EOL, $triples)
-                           . '}';
+                . implode(PHP_EOL, $triples)
+                . '}';
         }
         $query = 'INSERT DATA { ' . implode(PHP_EOL, $graphGroups) . '}';
-        $this->client->query($query);
+        return $query;
     }
 
 }
