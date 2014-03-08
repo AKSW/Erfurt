@@ -59,6 +59,16 @@ class Erfurt_Store_Adapter_Sparql_QuadTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Checks if the format() method of the quad allows the usage of the ?graph placeholder.
+     */
+    public function testFormatAllowsGraphPlaceholder()
+    {
+        $representation = $this->quad->format('?graph');
+
+        $this->assertEquals('<' . $this->quad->getGraph() . '>', $representation);
+    }
+
+    /**
      * Checks if create() can be used to create a quad from triple information
      * plus graph URI.
      */
