@@ -4,6 +4,7 @@ use Guzzle\Batch\BatchBuilder;
 use Guzzle\Common\Collection;
 use Guzzle\Log\MessageFormatter;
 use Guzzle\Log\Zf1LogAdapter;
+use Guzzle\Plugin\Async\AsyncPlugin;
 use Guzzle\Plugin\Log\LogPlugin;
 use Guzzle\Service\Client;
 use Guzzle\Service\Description\ServiceDescription;
@@ -162,7 +163,8 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         if (count($this->pendingTransactions) === 0) {
             return;
         }
-        $batch = BatchBuilder::factory()->transferCommands(10)->autoFlushAt(10)->build();
+        $this->addSubscriber(new AsyncPlugin());
+        $batch = BatchBuilder::factory()->transferCommands(10)->autoFlushAt(10)->bufferExceptions()->build();
         foreach ($this->pendingTransactions as $id) {
             /* @var $id string */
             $batch->add($this->getCommand('rollbackTransaction', array('transaction-id' => $id)));
