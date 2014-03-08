@@ -91,19 +91,19 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      * Returns a string representation of the triple.
      *
      * The provided pattern defines how this representation looks like
-     * and may contain placeholders like "{subject}" or "{object}".
+     * and may contain placeholders like "?subject" or "?object".
      *
      * Example:
      *
      *     // Creates a representation that can be used as pattern in a SPARQL query.
-     *     $representation = $pattern->format('{subject} {predicate} {object} .');
+     *     $representation = $pattern->format('?subject ?predicate ?object .');
      *
      * @param string $pattern
-     * @return string
+     * @return string The string representation of the triple.
      */
     public function format($pattern)
     {
-
+        '';
     }
 
     /**

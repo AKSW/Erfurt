@@ -76,6 +76,47 @@ class Erfurt_Store_Adapter_Sparql_TriplePatternTest extends \PHPUnit_Framework_T
     }
 
     /**
+     * Checks if format() returns a string representation that follows the provided pattern.
+     */
+    public function testFormatReturnsStringDependingOnPattern()
+    {
+        $turtle = $this->triplePattern->format('?subject ?predicate ?object .');
+
+        $expected = '<http://example.org/subject> '
+                  . '<http://example.org/predicate> '
+                  . '<http://example.org/object> .';
+        $this->assertEquals($expected, $turtle);
+    }
+
+    /**
+     * Ensures that format() does not replace placeholders that are not defined
+     * (wild cards in the triple pattern).
+     */
+    public function testFormatDoesNotReplacePlaceholdersThatAreNotDefined()
+    {
+        $pattern = new Erfurt_Store_Adapter_Sparql_TriplePattern('http://example.org/subject', null, null);
+
+        $representation = $pattern->format('?subject ?predicate ?object .');
+
+        $expected = '<http://example.org/subject> '
+                  . '?predicate '
+                  . '?object .';
+        $this->assertEquals($expected, $representation);
+    }
+
+    /**
+     * Ensures that format() does not add parts of the triple that were not referenced
+     * by a placeholder.
+     */
+    public function testFormatDoesNotIncludePartsThatAreNotReferencedByPlaceholder()
+    {
+        $representation = $this->triplePattern->format('Hello ?subject');
+
+        $this->assertInternalType('string', $representation);
+        $this->assertNotContains($this->triplePattern->getPredicate(), $representation);
+    }
+
+    /**
      * Checks if __toString() formats a triple that contains only URIs correctly.
      */
     public function testToStringFormatsTripleWithUriObjectCorrectly()
