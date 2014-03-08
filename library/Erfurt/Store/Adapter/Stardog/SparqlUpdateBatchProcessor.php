@@ -17,9 +17,14 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
      */
     protected $client = null;
 
+    /**
+     * Creates a batch processor that uses the provided data access client.
+     *
+     * @param Erfurt_Store_Adapter_Stardog_DataAccessClient $client
+     */
     public function __construct(Erfurt_Store_Adapter_Stardog_DataAccessClient $client)
     {
-
+        $this->client = $client;
     }
 
     /**
@@ -29,7 +34,28 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
      */
     public function persist(array $quads)
     {
-        // TODO: Implement persist() method.
+        if (count($quads) === 0) {
+            return;
+        }
+        $triplesByGraph = array();
+        foreach ($quads as $quad) {
+            /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
+            if (!isset($triplesByGraph[$quad->getGraph()])) {
+                $triplesByGraph[$quad->getGraph()] = array();
+            }
+            $triplesByGraph[$quad->getGraph()][] = (string)$quad;
+        }
+
+        $graphGroups = array();
+        foreach ($triplesByGraph as $graph => $triples) {
+            /* @var $graph string */
+            /* @var $triples array(string) */
+            $graphGroups[] = 'GRAPH <' . $graph . '> {'
+                           . implode(PHP_EOL, $triples)
+                           . '}';
+        }
+        $query = 'INSERT DATA { ' . implode(PHP_EOL, $graphGroups) . '}';
+        $this->client->query($query);
     }
 
 }
