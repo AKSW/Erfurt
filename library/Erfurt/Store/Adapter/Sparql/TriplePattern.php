@@ -108,24 +108,24 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
     public function __toString()
     {
         if ($this->subject === null) {
-            $subject = $this->format(array('type' => 'variable', 'value' => '?subject'));
+            $subject = $this->formatValue(array('type' => 'variable', 'value' => '?subject'));
         } else if (strpos($this->subject, '_:') === 0) {
             // Subject is a blank node.
-            $subject = $this->format(array('type' => 'bnode', 'value' => $this->subject));
+            $subject = $this->formatValue(array('type' => 'bnode', 'value' => $this->subject));
         } else {
-            $subject = $this->format(array('type' => 'uri', 'value' => $this->subject));
+            $subject = $this->formatValue(array('type' => 'uri', 'value' => $this->subject));
         }
         if ($this->predicate === null) {
-            $predicate = $this->format(array('type' => 'variable', 'value' => '?predicate'));
+            $predicate = $this->formatValue(array('type' => 'variable', 'value' => '?predicate'));
         } else {
-            $predicate = $this->format(array('type' => 'uri', 'value' => $this->predicate));
+            $predicate = $this->formatValue(array('type' => 'uri', 'value' => $this->predicate));
         }
         if ($this->object === null) {
-            $object = $this->format(array('type' => 'variable', 'value' => '?object'));
+            $object = $this->formatValue(array('type' => 'variable', 'value' => '?object'));
         } else {
-            $object = $this->format($this->object);
+            $object = $this->formatValue($this->object);
         }
-        return sprintf( '%s %s %s .', $subject, $predicate, $object);
+        return sprintf('%s %s %s .', $subject, $predicate, $object);
     }
 
     /**
@@ -136,7 +136,7 @@ class Erfurt_Store_Adapter_Sparql_TriplePattern
      * @param array(string=>string) $valueSpecification
      * @return string
      */
-    protected function format(array $valueSpecification)
+    protected function formatValue(array $valueSpecification)
     {
         switch ($valueSpecification['type']) {
             case 'bnode':
