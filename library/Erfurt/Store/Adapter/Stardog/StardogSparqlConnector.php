@@ -179,7 +179,12 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function batch($callback)
     {
-        return call_user_func($callback, $this);
+        $connector = $this;
+        $result    = null;
+        $this->client->transactional(function () use ($connector, $callback, &$result) {
+            $result = call_user_func($callback, $connector);
+        });
+        return $result;
     }
 
 }
