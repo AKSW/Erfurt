@@ -18,6 +18,20 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     protected $client = null;
 
     /**
+     * Buffer for triples that will be inserted.
+     *
+     * @var \Erfurt_Store_Adapter_Sparql_QuadBuffer
+     */
+    protected $buffer = null;
+
+    /**
+     * The number of combined insert operations in batch mode.
+     *
+     * @var integer
+     */
+    protected $batchSize = null;
+
+    /**
      * Converter that is applied to SPARQL query result sets.
      *
      * @var \Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
@@ -36,10 +50,17 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      * to interact with the store.
      *
      * @param \Erfurt_Store_Adapter_Stardog_DataAccessClient $client
+     * @param \Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $batchProcessor
+     * @param integer $batchSize
      */
-    public function __construct(\Erfurt_Store_Adapter_Stardog_DataAccessClient $client)
-    {
-        $this->client = $client;
+    public function __construct(
+        \Erfurt_Store_Adapter_Stardog_DataAccessClient $client,
+        \Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $batchProcessor,
+        $batchSize
+    ) {
+        $this->client    = $client;
+        $this->buffer    = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
+        $this->batchSize = $batchSize;
         $this->resultConverter = new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
             new Erfurt_Store_Adapter_ResultConverter_LiteralToTypedConverter()
         );
@@ -54,12 +75,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $query = 'INSERT DATA { '
-               . '    GRAPH <' . $graphIri . '> { '
-               . '        ' . $triple
-               . '    }'
-               . '}';
-        $this->client->query($query);
+        $this->buffer->add(Erfurt_Store_Adapter_Sparql_Quad::create($graphIri, $triple));
     }
 
     /**
@@ -181,8 +197,12 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
     {
         $connector = $this;
         $result    = null;
-        $this->client->transactional(function () use ($connector, $callback, &$result) {
+        $buffer    = $this->buffer;
+        $buffer->setSize($this->batchSize);
+        $this->client->transactional(function () use ($connector, $callback, $buffer, &$result) {
             $result = call_user_func($callback, $connector);
+            $buffer->flush();
+            $buffer->setSize(1);
         });
         return $result;
     }
