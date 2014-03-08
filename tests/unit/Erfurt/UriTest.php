@@ -176,6 +176,7 @@ class Erfurt_UriTest extends Erfurt_TestCase
     public function testGetFromQnameOrUri()
     {
         $testValues = array(
+            'hallo' => 'http://base.de/hallo',
             'foaf:Person' => 'http://xmlns.com/foaf/0.1/Person',
             'owl:sameAs' => 'http://www.w3.org/2002/07/owl#sameAs',
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
@@ -207,6 +208,28 @@ class Erfurt_UriTest extends Erfurt_TestCase
         }
     }
 
+    /**
+     * @expectedException Erfurt_Uri_Exception
+     */
+    public function testGetFromQnameOrUriNoQnameNoUri()
+    {
+        $model = $this->_getMockedModel();
+
+        $input = 'http://example.[com]/{test}/cat?foo=ba%7C';
+        Erfurt_Uri::getFromQnameOrUri($input, $model);
+    }
+
+    /**
+     * @expectedException Erfurt_Uri_Exception
+     */
+    public function testGetFromQnameInvalidUri()
+    {
+        $model = $this->_getMockedModel();
+
+        $input = 'nothing:good';
+        Erfurt_Uri::getFromQnameOrUri($input, $model);
+    }
+
     protected function _getMockedModel()
     {
         $model = $this->getMock('Erfurt_Rdf_Model', // original class name
@@ -223,6 +246,7 @@ class Erfurt_UriTest extends Erfurt_TestCase
             array('owl', 'http://www.w3.org/2002/07/owl#'),
             array('b2rds', 'http://bio2rdf.org/bio2rdf_dataset:'),
             array('http', 'http://example.http.server.eu/hello/'),
+            array('nothing', '://example[no]~~~uri*Ithink…'),
         );
 
         $model->expects($this->any())
