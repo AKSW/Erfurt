@@ -148,14 +148,45 @@ class Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessorTest extends \PHPUnit_Fra
     }
 
     /**
+     * Checks if the batch processor encodes umlauts correctly.
+     */
+    public function testPersistEncodeUmlautsCorrectly()
+    {
+        $quad = new Erfurt_Store_Adapter_Sparql_Quad(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'literal',
+                'value' => 'hello wörld'
+            ),
+            'http://example.org/graph'
+        );
+
+        $this->processor->persist(array($quad));
+
+        $this->assertNumberOfRowsSelected(1, 'SELECT * WHERE { ?s ?p "hello wörld" . }');
+    }
+
+    /**
      * Asserts that the given graph contains the expected number of triples.
      *
      * @param string $graph
      * @param integer $expected
      */
-    public function assertNumberOfTriplesInGraph($graph, $expected)
+    protected function assertNumberOfTriplesInGraph($graph, $expected)
     {
         $query  = 'SELECT * FROM <' . $graph . '> WHERE { ?s ?p ?o . }';
+        $this->assertNumberOfRowsSelected($expected, $query);
+    }
+
+    /**
+     * Asserts that the provided SPARQL query selects the expected number of rows.
+     *
+     * @param integer $expected
+     * @param string $query
+     */
+    protected function assertNumberOfRowsSelected($expected, $query)
+    {
         $result = $this->helper->getApiClient()->query(array('query' => $query));
         $this->assertTrue(isset($result['results']['bindings']), 'Unexpected result structure.');
         $numberOfTriples = count($result['results']['bindings']);
