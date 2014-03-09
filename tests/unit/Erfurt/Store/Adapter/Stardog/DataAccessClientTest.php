@@ -196,4 +196,73 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
         $this->client->transactional(function () {});
     }
 
+    /**
+     * Ensures that import() opens a transaction if none is active.
+     */
+    public function testImportOpenTransactionIfNecessary()
+    {
+        $this->apiClient->expects($this->once())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $this->apiClient->expects($this->once())
+                        ->method('commitTransaction')
+                        ->with(array('transaction-id' => 't42'));
+
+        $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $this->client->import($data, Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES);
+    }
+
+    /**
+     * Ensures that import() does not open another transaction if one is already running.
+     */
+    public function testImportDoesNotCreateNewTransactions()
+    {
+        $this->apiClient->expects($this->once())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $this->apiClient->expects($this->once())
+                        ->method('commitTransaction')
+                        ->with(array('transaction-id' => 't42'));
+
+        $this->client->transactional(function ($client) {
+            /* @var $client Erfurt_Store_Adapter_Stardog_DataAccessClient */
+            PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Stardog_DataAccessClient', $client);
+            $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+            $client->import($data, Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES);
+        });
+    }
+
+    /**
+     * Checks if import() passes the correct data to the API client.
+     */
+    public function testImportPassesData()
+    {
+        $this->apiClient->expects($this->any())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $expected = array(
+            'triples'        => $data,
+            'inputFormat'    => Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+            'graph-uri'      => 'http://example.org/target-graph',
+            'transaction-id' => 't42'
+        );
+        $constraint = $this->callback(function ($argument) use ($expected) {
+            PHPUnit_Framework_Assert::assertInternalType('array', $argument);
+            ksort($argument);
+            ksort($expected);
+            PHPUnit_Framework_Assert::assertEquals($expected, $argument);
+        });
+        $this->apiClient->expects($this->once())
+            ->method('add')
+            ->with($constraint);
+
+
+        $this->client->import(
+            $data,
+            Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+            'http://example.org/target-graph'
+        );
+    }
+
 }
