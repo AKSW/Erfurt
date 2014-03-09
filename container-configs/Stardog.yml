@@ -3,6 +3,14 @@ parameters:
     stardog.batch_size: 5000
 
 services:
+    stardog_adapter_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@stardog.sparql_adapter", "@mysql.sql_adapter"]
+
+    stardog.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@stardog.sparql_connector"]
+
     stardog.sparql_connector:
         class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
         arguments:
@@ -40,3 +48,13 @@ services:
                     body_as_string: true
                 "command.params":
                     database: "%stardog.client.database%"
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"
