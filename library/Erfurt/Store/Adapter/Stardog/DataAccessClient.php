@@ -87,6 +87,19 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
      */
     public function import($data, $format, $graph = null)
     {
+        $arguments = array(
+            'triples'     => $data,
+            'inputFormat' => $format
+        );
+        if ($graph !== null) {
+            $arguments['graph-uri'] = $graph;
+        }
+        $apiClient   = $this->apiClient;
+        $transaction = &$this->runningTransaction;
+        $this->transactional(function () use ($apiClient, &$transaction, $arguments) {
+            $arguments['transaction-id'] = $transaction;
+            $apiClient->add($arguments);
+        });
     }
 
     /**
