@@ -64,4 +64,29 @@ class Erfurt_Store_Adapter_Sparql_SizeDependentBatchProcessorTest extends \PHPUn
 
     }
 
+    public function testProcessorDoesNotPassEmptySets()
+    {
+
+    }
+
+    public function testProcessorPassesSetsSmallerThanSizeToSmallProcessor()
+    {
+
+    }
+
+    public function testProcessorPassesSetsGreaterThanSizeToSmallProcessor()
+    {
+
+    }
+
+    public function testProcessorPassesSetsWithExactSizeToSmallProcessor()
+    {
+
+    }
+
+    protected function createQuadSet($size)
+    {
+
+    }
+
 }
