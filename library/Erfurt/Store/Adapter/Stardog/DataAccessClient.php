@@ -94,6 +94,10 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
         if ($graph !== null) {
             $arguments['graph-uri'] = $graph;
         }
+        // The add operation must be wrapped into a transaction.
+        // transactional() is used to start a transaction if that did not already happen.
+        // The transaction ID is passed by reference as it will only be available when
+        // the execution of transactional() starts.
         $apiClient   = $this->apiClient;
         $transaction = &$this->runningTransaction;
         $this->transactional(function () use ($apiClient, &$transaction, $arguments) {
