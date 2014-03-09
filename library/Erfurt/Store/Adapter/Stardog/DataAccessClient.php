@@ -11,6 +11,17 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
 {
 
     /**
+     * Identifiers for the different import formats.
+     */
+    const FORMAT_RDF_XML  = 'application/rdf+xml';
+    const FORMAT_TURTLE   = 'text/turtle';
+    const FORMAT_NTRIPLES = 'text/plain';
+    const FORMAT_TRIG     = 'application/x-trig';
+    const FORMAT_TRIX     = 'application/trix';
+    const FORMAT_NQUADS   = 'text/x-nquads';
+    const FORMAT_JSON_LD  = 'application/ld+json';
+
+    /**
      * The low-level client that is used to interact with the triple store.
      *
      * @var Erfurt_Store_Adapter_Stardog_ApiClient
@@ -50,6 +61,32 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
             'query' => $sparqlQuery
         );
         return $this->apiClient->query($this->withTransaction($arguments));
+    }
+
+    /**
+     * Imports the provided data.
+     *
+     * The provided triple data must be a string that fulfills the requirements
+     * of the given format.
+     * Optionally an import graph can be provided. If no graph is given, then the
+     * data will be imported into the default graph.
+     * Please note that formats that rely on quads should not provide a graph.
+     *
+     * Example:
+     *
+     *     $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object>';
+     *     $client->import(
+     *         $data,
+     *         Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+     *         'http://example.org/target-graph'
+     *     );
+     *
+     * @param string $data
+     * @param string $format
+     * @param string|null $graph
+     */
+    public function import($data, $format, $graph = null)
+    {
     }
 
     /**
