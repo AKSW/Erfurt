@@ -7,12 +7,16 @@ services:
         class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
         arguments:
             - "@stardog.data_access_client"
-            - "@stardog.batch_processor.sparql_update"
+            - "@stardog.batch_processor.nquads"
             - "%stardog.batch_size%"
 
     stardog.batch_processor.sparql_update:
         class: Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
         arguments: ["@stardog.data_access_client"]
+
+    stardog.batch_processor.nquads:
+            class: Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessor
+            arguments: ["@stardog.data_access_client"]
 
     stardog.data_access_client:
         class: Erfurt_Store_Adapter_Stardog_DataAccessClient
