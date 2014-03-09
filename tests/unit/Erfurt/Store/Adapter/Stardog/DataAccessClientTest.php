@@ -252,11 +252,11 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
             ksort($argument);
             ksort($expected);
             PHPUnit_Framework_Assert::assertEquals($expected, $argument);
+            return true;
         });
         $this->apiClient->expects($this->once())
             ->method('add')
             ->with($constraint);
-
 
         $this->client->import(
             $data,
