@@ -68,7 +68,7 @@ class Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessor implements Erfurt_Store_
      */
     protected function encodeNonAsciiCharacters($data)
     {
-        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}]/u';
+        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}\x{10000}-\x{10FFFF}]/u';
         return preg_replace_callback ($pattern, function (array $matches) {
             $character = $matches[0];
             return trim(json_encode($character), '"');
