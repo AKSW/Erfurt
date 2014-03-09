@@ -164,7 +164,8 @@ class Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessorTest extends \PHPUnit_Fra
 
         $this->processor->persist(array($quad));
 
-        $this->assertNumberOfRowsSelected(1, 'SELECT * WHERE { ?s ?p "hello wörld" . }');
+        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p "hello wörld" . }';
+        $this->assertNumberOfRowsSelected(1, $query);
     }
 
     /**
