@@ -105,7 +105,15 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     /**
      * Adds a set of triples. Requires a transaction ID.
      *
+     * The following keys are accepted:
+     *
+     * # inputFormat    - Indicates the provided data format.
+     * # triples        - Triple data in correct format.
+     * # transaction-id - The ID of the corresponding transaction.
+     * # graph-uri      - Optional target graph URI.
+     *
      * @param array(string=>string) $arguments
+     * @see http://docs.stardog.com/http/#sd-Stardog-HTTP-Protocol
      */
     public function add(array $arguments)
     {
