@@ -74,7 +74,7 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
      *
      * Example:
      *
-     *     $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object>';
+     *     $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
      *     $client->import(
      *         $data,
      *         Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
