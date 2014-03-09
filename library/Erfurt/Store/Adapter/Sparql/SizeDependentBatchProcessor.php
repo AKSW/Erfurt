@@ -12,6 +12,27 @@ class Erfurt_Store_Adapter_Sparql_SizeDependentBatchProcessor
 {
 
     /**
+     * The processor that handles quad sets <= $size.
+     *
+     * @var Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
+     */
+    protected $smallProcessor = null;
+
+    /**
+     * The processor that handles quad sets > $size.
+     *
+     * @var Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
+     */
+    protected $hugeProcessor = null;
+
+    /**
+     * The size that is used to determine the responsible batch processor.
+     *
+     * @var integer
+     */
+    protected $size = null;
+
+    /**
      * Creates a processor that passes quad sets to the given processors depending on the
      * given size value.
      *
@@ -24,7 +45,9 @@ class Erfurt_Store_Adapter_Sparql_SizeDependentBatchProcessor
         \Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $smallProcessor,
         \Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $hugeProcessor
     ) {
-
+        $this->size = (int)$size;
+        $this->smallProcessor = $smallProcessor;
+        $this->hugeProcessor  = $hugeProcessor;
     }
 
     /**
@@ -34,7 +57,15 @@ class Erfurt_Store_Adapter_Sparql_SizeDependentBatchProcessor
      */
     public function persist(array $quads)
     {
-        // TODO: Implement persist() method.
+        $setSize = count($quads);
+        if ($setSize === 0) {
+            return;
+        }
+        if ($setSize <= $this->size) {
+            $this->smallProcessor->persist($quads);
+        } else {
+            $this->hugeProcessor->persist($quads);
+        }
     }
 
 }
