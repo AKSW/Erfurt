@@ -68,8 +68,11 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetupTest extends \PHPUnit_Fram
      */
     public function testInstallCreatesDatabase()
     {
-        $database = uniqid('db', true);
+        $database = 'db' . md5(uniqid('', true));
         $setup = $this->createSetup($database);
+
+        $setup->install();
+
         $this->assertTrue($setup->isInstalled());
         return $database;
     }
@@ -83,7 +86,9 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetupTest extends \PHPUnit_Fram
     public function testUninstallDropsDatabase($database)
     {
         $setup = $this->createSetup($database);
+
         $setup->uninstall();
+
         $this->assertFalse($setup->isInstalled());
     }
 
