@@ -38,6 +38,31 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnectorTest
     }
 
     /**
+     *
+     */
+    public function testDeleteMatchingTriplesRemovesTripleWithObjectLiteralThatLooksLikeUri()
+    {
+        $triple = new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/renameTest/old',
+            'http://example.org/renameTest/p2',
+            array(
+                'type' => 'literal',
+                'value' => 'http://example.org/renameTest/old'
+            )
+        );
+        $this->insertTriple(
+            $triple->getSubject(),
+            $triple->getPredicate(),
+            $triple->getObject(),
+            'http://example.org/renameTest/'
+        );
+
+        $this->connector->deleteMatchingTriples('http://example.org/renameTest/', $triple);
+
+        $this->assertEquals(0, $this->countTriples());
+    }
+
+    /**
      * Creates the SPARQL connector that will be tested.
      *
      * @return \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
