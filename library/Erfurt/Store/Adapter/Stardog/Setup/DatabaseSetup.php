@@ -10,6 +10,17 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
 {
 
     /**
+     * Creates a setup instance for the provided database.
+     *
+     * @param Erfurt_Store_Adapter_Stardog_ApiClient $client
+     * @param string $database The name of the database.
+     */
+    public function __construct(Erfurt_Store_Adapter_Stardog_ApiClient $client, $database)
+    {
+
+    }
+
+    /**
      * Checks if the feature is already installed.
      *
      * @return boolean
