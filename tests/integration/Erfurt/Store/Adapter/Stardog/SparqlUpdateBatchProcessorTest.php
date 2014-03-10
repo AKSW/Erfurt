@@ -18,21 +18,6 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest
     public function testPersistStoresQuadWithLiteralsThatEqualsSubjectUriCorrectly()
     {
         $this->markTestSkipped('There is currently no workaround for this issue. Should be fixed in Stardog.');
-
-        $quad = new Erfurt_Store_Adapter_Sparql_Quad(
-            'http://example.org/subject',
-            'http://example.org/predicate',
-            array(
-                'type'  => 'literal',
-                'value' => 'http://example.org/subject'
-            ),
-            'http://example.org/graph'
-        );
-
-        $this->processor->persist(array($quad));
-
-        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p "http://example.org/subject" }';
-        $this->assertNumberOfRowsSelected(1, $query);
     }
 
     /**
