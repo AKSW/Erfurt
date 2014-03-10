@@ -136,6 +136,11 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
+        if ($this->cannotBeDeletedViaSparql($pattern)) {
+            $data = $pattern->format('?subject ?predicate ?object') . "<$graphIri> .";
+            $this->client->delete($data, Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NQUADS);
+            return 1;
+        }
         $condition = 'WHERE { '
                    . '    GRAPH <%s> { '
                    . '        %s '
@@ -205,6 +210,30 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
             $buffer->setSize(1);
         });
         return $result;
+    }
+
+    /**
+     * Checks if this triple cannot be deleted via SPARQL DELETE query.
+     *
+     * This is the case if the value of an object literal is equal to the subject or
+     * predicate URI.
+     *
+     * @param Erfurt_Store_Adapter_Sparql_TriplePattern $pattern
+     * @return boolean
+     */
+    protected function cannotBeDeletedViaSparql(Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
+    {
+        if ($pattern->getSubject() === null || $pattern->getPredicate() === null || $pattern->getObject() === null) {
+            return false;
+        }
+        $object = $pattern->getObject();
+        if ($object['type'] !== 'literal' || isset($object['datatype']) || isset($object['lang'])) {
+            return false;
+        }
+        if ($object['value'] !== $pattern->getSubject() && $object['value'] !== $pattern->getPredicate()) {
+            return false;
+        }
+        return true;
     }
 
 }
