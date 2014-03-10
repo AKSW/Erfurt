@@ -12,4 +12,4 @@ parameters.mysql.host     = "localhost"
 parameters.mysql.username = "root"
 parameters.mysql.password = ""
 parameters.mysql.dbname   = "erfurt_test"
-parameters.erfurt.auto_setup = On
+parameters.erfurt.container.auto_setup = On

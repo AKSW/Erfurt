@@ -28,4 +28,4 @@ store.oracle.parameters.mysql.host     = "localhost"
 store.oracle.parameters.mysql.username = "root"
 store.oracle.parameters.mysql.password = ""
 store.oracle.parameters.mysql.dbname   = "erfurt_test"
-store.oracle.parameters.erfurt.auto_setup = On
+store.oracle.parameters.erfurt.container.auto_setup = On
