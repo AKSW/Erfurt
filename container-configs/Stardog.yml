@@ -34,6 +34,12 @@ services:
         class: Erfurt_Store_Adapter_Stardog_DataAccessClient
         arguments: ["@stardog.api_client"]
 
+    stardog.setup.database:
+        class: Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup
+        arguments: ["@stardog.api_client", "%stardog.client.database%"]
+        tags:
+            -  { name: erfurt.container.setup }
+
     stardog.api_client:
         class: Erfurt_Store_Adapter_Stardog_ApiClient
         factory_class: Erfurt_Store_Adapter_Stardog_ApiClient
