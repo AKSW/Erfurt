@@ -40,7 +40,7 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetupTest extends \PHPUnit_Fram
      */
     public function testImplementsInterface()
     {
-
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Container_SetupInterface', $this->createSetup('test'));
     }
 
     /**
@@ -48,7 +48,8 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetupTest extends \PHPUnit_Fram
      */
     public function testIsInstalledReturnsTrueIfDatabaseExists()
     {
-
+        $setup = $this->createSetup('test');
+        $this->assertTrue($setup->isInstalled());
     }
 
     /**
@@ -56,23 +57,45 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetupTest extends \PHPUnit_Fram
      */
     public function testIsInstalledReturnsFalseIfDatabaseDoesNotExist()
     {
-
+        $setup = $this->createSetup('missing');
+        $this->assertFalse($setup->isInstalled());
     }
 
     /**
      * Checks if install() creates the database.
+     *
+     * @return string Name of the database that was created.
      */
     public function testInstallCreatesDatabase()
     {
-
+        $database = uniqid('db', true);
+        $setup = $this->createSetup($database);
+        $this->assertTrue($setup->isInstalled());
+        return $database;
     }
 
     /**
      * Checks if uninstall() drops the database.
+     *
+     * @param string $database
+     * @depends testInstallCreatesDatabase
      */
-    public function testUninstallDropsDatabase()
+    public function testUninstallDropsDatabase($database)
     {
+        $setup = $this->createSetup($database);
+        $setup->uninstall();
+        $this->assertFalse($setup->isInstalled());
+    }
 
+    /**
+     * Creates a setup instance for the provided database.
+     *
+     * @param string $database
+     * @return Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup
+     */
+    protected function createSetup($database)
+    {
+        return new Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup($this->helper->getApiClient(), $database);
     }
 
 }
