@@ -38,15 +38,18 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnectorTest
     }
 
     /**
-     * Checks if deleteMatchingTriples() is able to delete a triple whose literal looks like an URI.
+     * Checks if deleteMatchingTriples() is able to delete a triple whose literal looks like the subject URI.
+     *
+     * Tests have shown that deletion failed if a (literal) object value equals the subject or predicate URI
+     * of the triple.
      */
-    public function testDeleteMatchingTriplesRemovesTripleWithObjectLiteralThatLooksLikeUri()
+    public function testDeleteMatchingTriplesRemovesTripleWithObjectLiteralThatLooksLikeSubjectUri()
     {
         $triple = new Erfurt_Store_Adapter_Sparql_Triple(
             'http://example.org/renameTest/old',
             'http://example.org/renameTest/p2',
             array(
-                'type' => 'literal',
+                'type'  => 'literal',
                 'value' => 'http://example.org/renameTest/old'
             )
         );
