@@ -2,7 +2,7 @@
 
 use Guzzle\Batch\BatchBuilder;
 use Guzzle\Common\Collection;
-use Guzzle\Http\Message\RequestFactory;
+use Guzzle\Http\EntityBody;
 use Guzzle\Http\RedirectPlugin;
 use Guzzle\Log\MessageFormatter;
 use Guzzle\Log\Zf1LogAdapter;
@@ -20,6 +20,7 @@ use Guzzle\Service\Description\ServiceDescription;
  * @since 01.03.14
  * @method void clear(array) Clear a specific graph or the whole database. Requires a transaction ID.
  * @method void remove(array) Removes a set of triples. Requires a transaction ID.
+ * @method void dropDatabase(array)
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
 {
@@ -137,6 +138,49 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         $command->execute();
         $response = $command->getResult();
         return $response->getBody(true);
+    }
+
+    /**
+     * Returns a list of existing databases.
+     *
+     * @return array(string)
+     */
+    public function listDatabases()
+    {
+        $command = $this->getCommand('listDatabases');
+        $command->execute();
+        $result = $command->getResult();
+        return $result['databases'];
+    }
+
+    /**
+     * Creates an empty database with the provided name.
+     *
+     * @param string $database
+     */
+    public function createDatabase($database)
+    {
+        $boundary = 'b' . md5(uniqid('', true));
+        $definition = array(
+            'dbname'  => $database,
+            'options' => new stdClass(),
+            'files'   => array()
+        );
+        $definitionAsJson = json_encode($definition);
+
+        $body = "--$boundary\r\n"
+              . "Content-Disposition: form-data; name=\"definition\"\"\r\n"
+              . "Content-Type: application/json\r\n"
+              . "\r\n"
+              . "$definitionAsJson\r\n"
+              . "--$boundary--\r\n";
+
+        $arguments = array(
+            'body'      => $body,
+            'inputType' => 'multipart/form-data; boundary=' . $boundary
+        );
+        $command = $this->getCommand('createDatabase', $arguments);
+        $command->execute();
     }
 
     /**
