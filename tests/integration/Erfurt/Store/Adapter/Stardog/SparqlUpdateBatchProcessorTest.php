@@ -148,14 +148,47 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
     }
 
     /**
+     * Checks if the processor stores a quad whose object literal is equal to the
+     * subject URI correctly (with object as literal).
+     */
+    public function testPersistStoresQuadWithLiteralsThatEqualsSubjectUriCorrectly()
+    {
+        $quad = new Erfurt_Store_Adapter_Sparql_Quad(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'literal',
+                'value' => 'http://example.org/subject'
+            ),
+            'http://example.org/graph'
+        );
+
+        $this->processor->persist(array($quad));
+
+        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p ?o . FILTER(isLITERAL(?o)) }';
+        $this->assertNumberOfRowsSelected(1, $query);
+    }
+
+    /**
      * Asserts that the given graph contains the expected number of triples.
      *
      * @param string $graph
      * @param integer $expected
      */
-    public function assertNumberOfTriplesInGraph($graph, $expected)
+    protected function assertNumberOfTriplesInGraph($graph, $expected)
     {
         $query  = 'SELECT * FROM <' . $graph . '> WHERE { ?s ?p ?o . }';
+        $this->assertNumberOfRowsSelected($expected, $query);
+    }
+
+    /**
+     * Asserts that the provided SPARQL query selects the expected number of rows.
+     *
+     * @param integer $expected
+     * @param string $query
+     */
+    protected function assertNumberOfRowsSelected($expected, $query)
+    {
         $result = $this->helper->getApiClient()->query(array('query' => $query));
         $this->assertTrue(isset($result['results']['bindings']), 'Unexpected result structure.');
         $numberOfTriples = count($result['results']['bindings']);
