@@ -107,6 +107,29 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
     }
 
     /**
+     * Removes the given set of triples.
+     *
+     * This method works in the same way as import().
+     *
+     * Example:
+     *
+     *     $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+     *     $client->delete(
+     *         $data,
+     *         Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+     *         'http://example.org/affected-graph'
+     *     );
+     *
+     * @param string $data
+     * @param string $format
+     * @param string|null $graph
+     */
+    public function delete($data, $format, $graph = null)
+    {
+
+    }
+
+    /**
      * Executes the provided callback within a transaction.
      *
      * The callback receives the DataAccessClient as argument.
