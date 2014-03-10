@@ -165,7 +165,7 @@ class Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessorTest extends \PHPUn
 
         $this->processor->persist(array($quad));
 
-        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p ?o . FILTER(isLITERAL(?o)) }';
+        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p "http://example.org/subject" }';
         $this->assertNumberOfRowsSelected(1, $query);
     }
 
