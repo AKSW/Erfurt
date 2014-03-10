@@ -12,7 +12,7 @@ abstract class Erfurt_Store_Adapter_Stardog_AbstractBatchProcessorTestCase exten
     /**
      * System under test.
      *
-     * @var Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessor
+     * @var Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
      */
     protected $processor = null;
 
@@ -62,7 +62,7 @@ abstract class Erfurt_Store_Adapter_Stardog_AbstractBatchProcessorTestCase exten
     }
 
     /**
-     * Checks if persist() adds a singe quad.
+     * Checks if persist() adds a single quad.
      */
     public function testPersistAddsSingleQuad()
     {
