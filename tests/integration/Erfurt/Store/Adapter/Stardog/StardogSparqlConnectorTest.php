@@ -38,7 +38,7 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnectorTest
     }
 
     /**
-     *
+     * Checks if deleteMatchingTriples() is able to delete a triple whose literal looks like an URI.
      */
     public function testDeleteMatchingTriplesRemovesTripleWithObjectLiteralThatLooksLikeUri()
     {
