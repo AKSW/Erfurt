@@ -9,6 +9,7 @@ default:
 	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
 	@echo "  test-integration-oracle ...... Run Erfurt integration tests with Oracle"
+	@echo "  test-integration-stardog ..... Run Erfurt integration tests with Stardog"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
 	@echo "  cs-install ................... install CodeSniffer"
@@ -140,6 +141,9 @@ test-integration-mysql-cc: test-directories
 
 test-integration-oracle: test-directories
 	@cd tests && EF_STORE_ADAPTER=oracle phpunit --bootstrap Bootstrap.php --group Integration integration/
+
+test-integration-stardog: test-directories
+	@cd tests && EF_STORE_ADAPTER=stardog phpunit --bootstrap Bootstrap.php --group Integration integration/
 
 test-adapter-oracle:
 	@cd tests && phpunit --bootstrap Bootstrap.php --group Oracle integration/
