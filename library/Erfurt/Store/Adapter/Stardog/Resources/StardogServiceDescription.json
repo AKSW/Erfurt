@@ -138,6 +138,51 @@
             "extends": "mutativeOperation",
             "uri": "{database}/{transaction-id}/remove{?graph-uri}",
             "summary": "Removes triples from the provided graph."
+        },
+        "listDatabases": {
+            "httpMethod": "GET",
+            "uri": "admin/databases",
+            "parameters": {
+                "accept": {
+                    "description": "Accepted return type.",
+                    "type": "string",
+                    "default": "application/json",
+                    "location": "header",
+                    "required": false
+                }
+            }
+        },
+        "createDatabase": {
+            "httpMethod": "POST",
+            "uri": "admin/databases",
+            "parameters": {
+                "body": {
+                    "description": "The request body. Multipart request that contains database definition in JSON and (optional) additional data files.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
+                },
+                "inputType": {
+                    "description": "The input format.",
+                    "type": "string",
+                    "location": "header",
+                    "sentAs": "Content-Type",
+                    "required": true
+                }
+            }
+        },
+        "dropDatabase": {
+            "extends": "databaseOperation",
+            "httpMethod": "DELETE",
+            "uri": "admin/databases/{database}",
+            "parameters": {
+                "accept": {
+                    "description": "The expected response format.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/json"
+                }
+            }
         }
     }
 }
