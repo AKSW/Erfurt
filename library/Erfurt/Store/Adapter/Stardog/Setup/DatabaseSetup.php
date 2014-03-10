@@ -10,6 +10,20 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
 {
 
     /**
+     * The client that is used to interact with the store.
+     *
+     * @var Erfurt_Store_Adapter_Stardog_ApiClient
+     */
+    protected $client = null;
+
+    /**
+     * The name of the database that is managed by this setup.
+     *
+     * @var string
+     */
+    protected $database = null;
+
+    /**
      * Creates a setup instance for the provided database.
      *
      * @param Erfurt_Store_Adapter_Stardog_ApiClient $client
@@ -17,7 +31,8 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
      */
     public function __construct(Erfurt_Store_Adapter_Stardog_ApiClient $client, $database)
     {
-
+        $this->client   = $client;
+        $this->database = $database;
     }
 
     /**
@@ -27,7 +42,8 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
      */
     public function isInstalled()
     {
-        // TODO: Implement isInstalled() method.
+        $databases = $this->client->listDatabases();
+        return in_array($this->database, $databases);
     }
 
     /**
@@ -35,7 +51,7 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
      */
     public function install()
     {
-        // TODO: Implement install() method.
+        $this->client->createDatabase($this->database);
     }
 
     /**
@@ -45,7 +61,7 @@ class Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup implements Erfurt_Store_A
      */
     public function uninstall()
     {
-        // TODO: Implement uninstall() method.
+        $this->client->dropDatabase(array('database' => $this->database));
     }
 
 }
