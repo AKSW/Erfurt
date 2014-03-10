@@ -19,7 +19,6 @@ use Guzzle\Service\Description\ServiceDescription;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 01.03.14
  * @method void clear(array) Clear a specific graph or the whole database. Requires a transaction ID.
- * @method void remove(array) Removes a set of triples. Requires a transaction ID.
  * @method void dropDatabase(array)
  */
 class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
@@ -119,6 +118,24 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     public function add(array $arguments)
     {
         $command = $this->getCommand('add', $arguments);
+        $command->execute();
+    }
+
+    /**
+     * Removes a set of triples. Requires a transaction ID.
+     *
+     * The following keys are accepted:
+     *
+     * # inputFormat    - Indicates the provided data format.
+     * # triples        - Triple data in correct format.
+     * # transaction-id - The ID of the corresponding transaction.
+     * # graph-uri      - Optional target graph URI.
+     *
+     * @param array(string=>string) $arguments
+     */
+    public function remove(array $arguments)
+    {
+        $command = $this->getCommand('remove', $arguments);
         $command->execute();
     }
 
