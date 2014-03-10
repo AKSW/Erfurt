@@ -199,7 +199,7 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
     /**
      * Ensures that import() opens a transaction if none is active.
      */
-    public function testImportOpenTransactionIfNecessary()
+    public function testImportOpensTransactionIfNecessary()
     {
         $this->apiClient->expects($this->once())
                         ->method('beginTransaction')
@@ -255,10 +255,79 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClientTest extends \PHPUnit_Framewo
             return true;
         });
         $this->apiClient->expects($this->once())
-            ->method('add')
-            ->with($constraint);
+                        ->method('add')
+                        ->with($constraint);
 
         $this->client->import(
+            $data,
+            Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+            'http://example.org/target-graph'
+        );
+    }
+
+    /**
+     * Ensures that delete() opens a transaction if none is active.
+     */
+    public function testDeleteOpensTransactionIfNecessary()
+    {
+        $this->apiClient->expects($this->once())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $this->apiClient->expects($this->once())
+                        ->method('commitTransaction')
+                        ->with(array('transaction-id' => 't42'));
+
+        $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $this->client->delete($data, Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES);
+    }
+
+    /**
+     * Ensures that delete() does not open another transaction if one is already running.
+     */
+    public function testDeleteDoesNotCreateNewTransactions()
+    {
+        $this->apiClient->expects($this->once())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $this->apiClient->expects($this->once())
+                        ->method('commitTransaction')
+                        ->with(array('transaction-id' => 't42'));
+
+        $this->client->transactional(function ($client) {
+            /* @var $client Erfurt_Store_Adapter_Stardog_DataAccessClient */
+            PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Stardog_DataAccessClient', $client);
+            $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+            $client->delete($data, Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES);
+        });
+    }
+
+    /**
+     * Checks if delete() passes the correct data to the API client.
+     */
+    public function testDeletePassesData()
+    {
+        $this->apiClient->expects($this->any())
+                        ->method('beginTransaction')
+                        ->will($this->returnValue('t42'));
+        $data = '<http://example.org/subject> <http://example.org/predicate> <http://example.org/object> .';
+        $expected = array(
+            'triples'        => $data,
+            'inputFormat'    => Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
+            'graph-uri'      => 'http://example.org/target-graph',
+            'transaction-id' => 't42'
+        );
+        $constraint = $this->callback(function ($argument) use ($expected) {
+            PHPUnit_Framework_Assert::assertInternalType('array', $argument);
+            ksort($argument);
+            ksort($expected);
+            PHPUnit_Framework_Assert::assertEquals($expected, $argument);
+            return true;
+        });
+        $this->apiClient->expects($this->once())
+                        ->method('remove')
+                        ->with($constraint);
+
+        $this->client->delete(
             $data,
             Erfurt_Store_Adapter_Stardog_DataAccessClient::FORMAT_NTRIPLES,
             'http://example.org/target-graph'
