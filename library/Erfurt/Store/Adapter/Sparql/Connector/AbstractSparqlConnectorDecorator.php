@@ -6,7 +6,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.03.14
  */
-abstract class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator
+abstract class Erfurt_Store_Adapter_Sparql_Connector_AbstractSparqlConnectorDecorator
     implements Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface
 {
 

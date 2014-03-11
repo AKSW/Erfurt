@@ -6,13 +6,13 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 11.03.14
  */
-class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Sparql_Connector_AbstractSparqlConnectorDecoratorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator
+     * @var Erfurt_Store_Adapter_Sparql_Connector_AbstractSparqlConnectorDecorator
      */
     protected $decorator = null;
 
@@ -31,7 +31,7 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
         parent::setUp();
         $this->innerConnector = $this->getMock('Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface');
         $this->decorator      = $this->getMockForAbstractClass(
-            'Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator',
+            'Erfurt_Store_Adapter_Sparql_Connector_AbstractSparqlConnectorDecorator',
             array($this->innerConnector)
         );
     }
@@ -93,7 +93,7 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
         $callback = $this->getMock('stdClass', array('__invoke'));
         $callback->expects($this->once())
                  ->method('__invoke')
-                 ->with($this->isInstanceOf('Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator'));
+                 ->with($this->isInstanceOf('Erfurt_Store_Adapter_Sparql_Connector_AbstractSparqlConnectorDecorator'));
         $this->decorator->batch($callback);
     }
 
