@@ -321,6 +321,21 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
     }
 
     /**
+     * Checks if getAvailableResults() caches the information from the connector.
+     */
+    public function testGetAvailableModelsCachesResultFromConnector()
+    {
+        $availableGraphs = array('http://example.org/graph', 'http://example.org/another-graph');
+        $connectorResult = $this->getGraphResult($availableGraphs);
+        $this->connector->expects($this->once())
+                        ->method('query')
+                        ->will($this->returnValue($connectorResult));
+
+        $this->adapter->getAvailableModels();
+        $this->adapter->getAvailableModels();
+    }
+
+    /**
      * Ensures that isModelAvailable() returns false if the provided
      * graph does not exist.
      */
