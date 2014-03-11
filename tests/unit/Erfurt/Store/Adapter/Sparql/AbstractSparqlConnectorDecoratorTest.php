@@ -77,6 +77,28 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
     }
 
     /**
+     * Checks if batch() passes the decorated connector to the provided callback.
+     */
+    public function testBatchPassesDecoratorToCallback()
+    {
+        $innerConnector = $this->innerConnector;
+        $innerBatch = function ($callback) use ($innerConnector) {
+            $message = 'Callback expected.';
+            PHPUnit_Framework_Assert::assertTrue(is_callable($callback), $message);
+            call_user_func($callback, $innerConnector);
+        };
+        $this->innerConnector->expects($this->once())
+                             ->method('batch')
+                             ->will($this->returnCallback($innerBatch));
+
+        $callback = $this->getMock('stdClass', '__invoke');
+        $callback->expects($this->once())
+                 ->method('__invoke')
+                 ->with($this->isInstanceOf('Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator'));
+        $this->decorator->batch($callback);
+    }
+
+    /**
      * Provides test data for each method call that must be delegated.
      *
      * Each record contains:
