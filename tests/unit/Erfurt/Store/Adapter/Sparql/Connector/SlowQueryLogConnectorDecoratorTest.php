@@ -92,6 +92,20 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecoratorTest e
     }
 
     /**
+     * Checks if the log entry contains the SPARQL query.
+     */
+    public function testLogMessageContainsQuery()
+    {
+        $query = 'SELECT * WHERE { ?s ?p ?o . }';
+        $this->logAllDecorator->query($query);
+
+        $this->assertCount(1, $this->logWriter->events);
+        $event = $this->logWriter->events[0];
+        $this->assertArrayHasKey('message', $event);
+        $this->assertContains($query, $event['message']);
+    }
+
+    /**
      * Checks if query() returns the result from the inner connector.
      */
     public function testQueryReturnsResultFromInnerConnector()
