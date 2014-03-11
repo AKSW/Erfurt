@@ -67,10 +67,9 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
         $message = 'Decorator does not provide method "' . $method . '".';
         $this->assertTrue(method_exists($this->decorator, $method), $message);
 
-        $this->innerConnector->expects($this->once())
-                             ->method($method)
-                             ->with($arguments)
-                             ->will($this->returnValue($returnValue));
+        $methodExpectation = $this->innerConnector->expects($this->once())->method($method);
+        $methodExpectation = call_user_func_array(array($methodExpectation, 'with'), $arguments);
+        $methodExpectation->will($this->returnValue($returnValue));
 
         $result = call_user_func_array(array($this->decorator, $method), $arguments);
         $this->assertEquals($returnValue, $result);
