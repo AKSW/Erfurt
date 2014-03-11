@@ -1,6 +1,8 @@
 parameters:
     stardog.client.log: ~
     stardog.batch_size: 5000
+    stardog.slow_query.threshold_in_ms: 1000
+    log.slow_query.log_file: "%erfurt.root%/logs/slow_query.log"
 
 services:
     stardog_adapter_with_mysql_cache:
@@ -12,6 +14,16 @@ services:
         arguments: ["@stardog.sparql_connector"]
 
     stardog.sparql_connector:
+        alias: stardog.sparql_connector.default
+
+    stardog.sparql_connector.logging:
+        class: Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
+        arguments:
+            - "@stardog.sparql_connector.default"
+            - "@log.slow_query"
+            - "%stardog.slow_query.threshold_in_ms%"
+
+    stardog.sparql_connector.default:
         class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
         arguments:
             - "@stardog.data_access_client"
@@ -64,3 +76,14 @@ services:
                 password: "%mysql.password%"
                 dbname:   "%mysql.dbname%"
                 dbtype:   "mysql"
+
+    log.slow_query:
+        class: Zend_Log
+        factory_class: Zend_Log
+        factory_method: factory
+        arguments:
+            -
+                -
+                    writerName: "Stream"
+                    writerParams:
+                        stream: "%log.slow_query.log_file%"
