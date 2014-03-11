@@ -99,6 +99,15 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
     }
 
     /**
+     * Ensures that batch() throws an exception if no valid callback is provided.
+     */
+    public function testBatchThrowsExceptionIfNoValidCallbackIsPassed()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $this->decorator->batch(new \stdClass());
+    }
+
+    /**
      * Provides test data for each method call that must be delegated.
      *
      * Each record contains:
