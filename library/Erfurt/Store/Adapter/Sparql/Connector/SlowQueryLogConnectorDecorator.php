@@ -26,6 +26,14 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
     protected $thresholdInS = null;
 
     /**
+     * Unique identifier that can be used to determine which messages have
+     * been logged by this instance.
+     *
+     * @var string
+     */
+    protected $identifier = null;
+
+    /**
      * Logs all queries that are executes slowly by the provided connector.
      *
      * @param Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
@@ -38,8 +46,9 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
         $thresholdInMs
     ) {
         parent::__construct($connector);
-        $this->log = $log;
+        $this->log          = $log;
         $this->thresholdInS = $thresholdInMs / 1000.0;
+        $this->identifier   = uniqid('ID', true);
     }
 
     /**
@@ -69,13 +78,14 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
      */
     protected function logQuery($query, $durationInS)
     {
-        $message = 'The following query took %1.2F seconds and exceeded the threshold of %01.2F seconds: '
+        $message = '[Request %s] The following query took %1.2F seconds and exceeded the threshold of %01.2F seconds: '
                  . PHP_EOL . '%s';
-        $message = sprintf($message, $durationInS, $this->thresholdInS, $query);
+        $message = sprintf($message, $this->identifier, $durationInS, $this->thresholdInS, $query);
         $this->log->log($message, Zend_Log::INFO, array(
             'query'              => $query,
             'durationInSeconds'  => $durationInS,
-            'thresholdInSeconds' => $this->thresholdInS
+            'thresholdInSeconds' => $this->thresholdInS,
+            'logIdentifier'      => $this->identifier
         ));
     }
 
