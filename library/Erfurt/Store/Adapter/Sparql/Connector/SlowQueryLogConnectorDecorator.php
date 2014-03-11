@@ -11,6 +11,21 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
 {
 
     /**
+     * The log instance that is used.
+     *
+     * @var Zend_Log
+     */
+    protected $log = null;
+
+    /**
+     * The threshold in seconds, which must be reached before a query
+     * is considered "slow".
+     *
+     * @var double
+     */
+    protected $thresholdInS = null;
+
+    /**
      * Logs all queries that are executes slowly by the provided connector.
      *
      * @param Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
@@ -23,6 +38,8 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
         $thresholdInMs
     ) {
         parent::__construct($connector);
+        $this->log = $log;
+        $this->thresholdInS = $thresholdInMs / 1000.0;
     }
 
     /**
@@ -35,8 +52,31 @@ class Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
      */
     public function query($sparqlQuery)
     {
-        $result = parent::query($sparqlQuery);
+        $start       = microtime(true);
+        $result      = parent::query($sparqlQuery);
+        $durationInS = microtime(true) - $start;
+        if ($durationInS >= $this->thresholdInS) {
+            $this->logQuery($sparqlQuery, $durationInS);
+        }
         return $result;
+    }
+
+    /**
+     * Logs the provided query.
+     *
+     * @param string $query
+     * @param double $durationInS
+     */
+    protected function logQuery($query, $durationInS)
+    {
+        $message = 'The following query took %1.2F seconds and exceeded the threshold of %01.2F seconds: '
+                 . PHP_EOL . '%s';
+        $message = sprintf($message, $durationInS, $this->thresholdInS, $query);
+        $this->log->log($message, Zend_Log::INFO, array(
+            'query'              => $query,
+            'durationInSeconds'  => $durationInS,
+            'thresholdInSeconds' => $this->thresholdInS
+        ));
     }
 
 }
