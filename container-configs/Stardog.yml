@@ -2,7 +2,7 @@ parameters:
     stardog.client.log: ~
     stardog.batch_size: 5000
     stardog.slow_query.threshold_in_ms: 1000
-    log.slow_query.log_file: "%erfurt.root%/logs/slow_query.log"
+    stardog.log.slow_query.log_file: "%erfurt.root%/logs/slow_query.log"
 
 services:
     stardog_adapter_with_mysql_cache:
@@ -86,4 +86,4 @@ services:
                 -
                     writerName: "Stream"
                     writerParams:
-                        stream: "%log.slow_query.log_file%"
+                        stream: "%stardog.log.slow_query.log_file%"
