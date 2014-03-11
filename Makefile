@@ -54,7 +54,7 @@ install:
 # Download the latest Composer version.
 	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
 # Install dependencies.
-	php composer.phar install
+	php composer.phar install --no-interaction
 
 zend: install
 	rm -rf libraries/Zend
