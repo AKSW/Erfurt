@@ -90,7 +90,7 @@ class Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecoratorTest extends \
                              ->method('batch')
                              ->will($this->returnCallback($innerBatch));
 
-        $callback = $this->getMock('stdClass', '__invoke');
+        $callback = $this->getMock('stdClass', array('__invoke'));
         $callback->expects($this->once())
                  ->method('__invoke')
                  ->with($this->isInstanceOf('Erfurt_Store_Adapter_Sparql_AbstractSparqlConnectorDecorator'));
