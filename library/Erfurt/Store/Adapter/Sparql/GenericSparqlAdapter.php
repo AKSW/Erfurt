@@ -32,6 +32,16 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     protected $currentlyCreatedGraphs = array();
 
     /**
+     * Cached result of the query that determines the available graphs.
+     *
+     * These results will most likely not change during a request, therefore, it
+     * makes sense to cache them.
+     *
+     * @var array(array(string=>string))|null
+     */
+    protected $cachedAvailableGraphs = null;
+
+    /**
      * Creates a SPARQL adapter that uses the provided connector.
      *
      * @param Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector
@@ -210,6 +220,8 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
             unset($this->currentlyCreatedGraphs[$index]);
         }
         $this->deleteMatchingStatements($modelIri, null, null, null);
+        // Clear the graph cache, otherwise it might return the deleted graph.
+        $this->cachedAvailableGraphs = null;
     }
 
     /**
@@ -218,17 +230,19 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
      */
     public function getAvailableModels()
     {
-        $sparqlQuery = 'SELECT DISTINCT ?graph '
-                     . 'WHERE {'
-                     . '    GRAPH ?graph {'
-                     . '        ?subject ?predicate ?object .'
-                     . '    }'
-                     . '}';
-        $result = $this->sparqlQuery($sparqlQuery);
-        if (count($result) === 0) {
+        if ($this->cachedAvailableGraphs === null) {
+            $sparqlQuery = 'SELECT DISTINCT ?graph '
+                         . 'WHERE {'
+                         . '    GRAPH ?graph {'
+                         . '        ?subject ?predicate ?object .'
+                         . '    }'
+                         . '}';
+            $this->cachedAvailableGraphs = $this->sparqlQuery($sparqlQuery);
+        }
+        if (count($this->cachedAvailableGraphs) === 0) {
             return $this->toModelResult($this->currentlyCreatedGraphs);
         }
-        $graphs = array_reduce($result, function (array $graphs, array $row) {
+        $graphs = array_reduce($this->cachedAvailableGraphs, function (array $graphs, array $row) {
             $graphs[] = $row['graph'];
             return $graphs;
         }, $this->currentlyCreatedGraphs);
