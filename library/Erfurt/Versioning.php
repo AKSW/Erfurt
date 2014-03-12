@@ -744,14 +744,15 @@ class Erfurt_Versioning
 
         if (!in_array('ef_versioning_actions', $existingTableNames)) {
             $columnSpec = array(
-                'id'          => 'INT PRIMARY KEY AUTO_INCREMENT',
-                'model'       => 'VARCHAR(255) NOT NULL',
-                'useruri'     => 'VARCHAR(255) NOT NULL',
-                'resource'    => 'VARCHAR(255)',
-                'tstamp'      => 'INT NOT NULL',
-                'action_type' => 'INT NOT NULL',
-                'parent'      => 'INT DEFAULT NULL',
-                'payload_id'  => 'INT DEFAULT NULL'
+                'id'            => 'INT PRIMARY KEY AUTO_INCREMENT',
+                'model'         => 'VARCHAR(255) NOT NULL',
+                'useruri'       => 'VARCHAR(255) NOT NULL',
+                'resource'      => 'VARCHAR(255)',
+                'tstamp'        => 'INT NOT NULL',
+                'action_type'   => 'INT NOT NULL',
+                'parent'        => 'INT DEFAULT NULL',
+                'payload_id'    => 'INT DEFAULT NULL',
+                'change_reason' => 'VARCHAR(255)'
             );
 
             $this->_getStore()->createTable('ef_versioning_actions', $columnSpec);
