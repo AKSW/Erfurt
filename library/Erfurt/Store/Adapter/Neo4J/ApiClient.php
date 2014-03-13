@@ -28,6 +28,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     {
         $client = parent::factory($config);
         $client->setDescription(ServiceDescription::factory(__DIR__ . '/Resources/SparqlPluginServiceDescription.json'));
+        $client->addSubscriber(new Erfurt_Store_Adapter_Neo4J_ExceptionListener());
         if (isset($config['log']) && $config['log'] !== null) {
             $adapter = new Zf1LogAdapter(
                 new \Zend_Log(new \Zend_Log_Writer_Stream($config['log']))
