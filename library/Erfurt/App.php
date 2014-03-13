@@ -253,18 +253,13 @@ class Erfurt_App
         }
 
         // Starting Versioning
-        try {
-            $versioning = $this->getVersioning();
-            if ($versioning instanceof Erfurt_Versioning) {
-                if ((bool)$config->versioning === true) {
-                    $versioning->enableVersioning(true);
-                } else {
-                    $versioning->enableVersioning(false);
-                }
+        $versioning = $this->getVersioning();
+        if ($versioning instanceof Erfurt_Versioning) {
+            if ((bool)$config->versioning === true) {
+                $versioning->enableVersioning(true);
+            } else {
+                $versioning->enableVersioning(false);
             }
-        } catch (Erfurt_Exception $e) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception($e->getMessage());
         }
 
         // Write time to the log, if enabled.

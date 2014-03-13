@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
 {
     /** @var Erfurt_Store_Adapter_Virtuoso */

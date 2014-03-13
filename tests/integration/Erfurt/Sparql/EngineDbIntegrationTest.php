@@ -1,4 +1,7 @@
 <?php
+/**
+ * @group Integration
+ */
 class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
 {
     private $_resourceDir = null;

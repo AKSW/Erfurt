@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
 {
     public function setUp()

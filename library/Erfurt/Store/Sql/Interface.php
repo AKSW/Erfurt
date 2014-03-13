@@ -24,7 +24,7 @@ interface Erfurt_Store_Sql_Interface
      * create table statement.
      *
      * @param string $tableName
-     * @param array $tableSpec An associative array of SQL column names and columnd specs.
+     * @param array $columns An associative array of SQL column names and column specs.
      */
     public function createTable($tableName, array $columns);
     

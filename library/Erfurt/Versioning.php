@@ -783,7 +783,7 @@ class Erfurt_Versioning
             try {
                 $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Exception $f) {
-                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $f->getMessage() . $sql);
+                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $f->getMessage() . $sql, 0, $f);
             }
         }
 

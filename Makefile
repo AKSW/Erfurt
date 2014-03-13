@@ -8,6 +8,8 @@ default:
 	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
 	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
+	@echo "  test-integration-oracle ...... Run Erfurt integration tests with Oracle"
+	@echo "  test-integration-stardog ..... Run Erfurt integration tests with Stardog"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
 	@echo "  cs-install ................... install CodeSniffer"
@@ -52,7 +54,7 @@ install:
 # Download the latest Composer version.
 	php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
 # Install dependencies.
-	php composer.phar install
+	php composer.phar install --no-interaction
 
 zend: install
 	rm -rf libraries/Zend
@@ -126,16 +128,25 @@ test-unit-cc: test-directories
 	@cd tests/unit && phpunit
 
 test-integration-virtuoso: test-directories
-	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
+	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php --group Integration integration/
 
-test-integation-virtuoso-cc: test-directories
-	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
+test-integration-virtuoso-cc: test-directories
+	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit --group Integration
 
 test-integration-mysql: test-directories
-	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
+	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php --group Integration integration/
 
-test-integation-mysql-cc: test-directories
-	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
+test-integration-mysql-cc: test-directories
+	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit --group Integration
+
+test-integration-oracle: test-directories
+	@cd tests && EF_STORE_ADAPTER=oracle phpunit --bootstrap Bootstrap.php --group Integration integration/
+
+test-integration-stardog: test-directories
+	@cd tests && EF_STORE_ADAPTER=stardog phpunit --bootstrap Bootstrap.php --group Integration integration/
+
+test-adapter-oracle:
+	@cd tests && phpunit --bootstrap Bootstrap.php --group Oracle integration/
 
 test:
 	make test-unit

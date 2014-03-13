@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_TestCase
 {
     /**

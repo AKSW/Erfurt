@@ -1,0 +1,9 @@
+; Make sure to use a separate user for testing, as the
+; Triple Store is removed and re-installed during tests.
+dbname   = "SID"
+user     = "USERNAME"
+password = "PASSWORD"
+host     = "IP_OR_HOSTNAME"
+port     = 1521
+charset  = "UTF8"
+session.optimizer_dynamic_sampling = 3

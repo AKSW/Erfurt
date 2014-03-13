@@ -70,10 +70,14 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             if (isset($this->_testConfig->store->zenddb->dbname)) {
                 $dbName = $this->_testConfig->store->zenddb->dbname;
             }
+        } else {
+            // Skip the naming test, as it is not that easy to rename/create
+            // a new database for adapters like Oracle.
+            $dbName = '_TEST';
         }
 
         if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
-            $this->markTestSkipped(); // make sure a test db was selected!
+            $this->markTestSkipped('Name of the test database must end with "_TEST".');
         }
 
         try {
@@ -85,10 +89,8 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 // Setup successful
                 $this->_dbWasUsed = true;
             } else {
-                $this->markTestSkipped();
+                throw $e;
             }
-        } catch (Erfurt_Exception $e2) {
-            $this->markTestSkipped();
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
@@ -124,7 +126,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_loadTestConfig();
 
         if ($this->_testConfig === false) {
-            $this->markTestSkipped();
+            $this->markTestSkipped('Failed to load test config.');
         }
     }
     
@@ -135,21 +137,38 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     
     public function markTestNeedsVirtuoso()
     {
-        $this->markTestNeedsTestConfig();
-        if ($this->_testConfig->store->backend !== 'virtuoso') {
-            $this->markTestSkipped('Skipped since other backend is under test.');
-        }
-
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsBackend('virtuoso');
     }
     
     public function markTestNeedsZendDb()
     {
-        $this->markTestNeedsTestConfig();
-        if ($this->_testConfig->store->backend !== 'zenddb') {
-            $this->markTestSkipped('Skipped since other backend is under test.');
-        }
+        $this->markTestNeedsBackend('zenddb');
+    }
 
+    /**
+     * Indicates that a test needs the Oracle adapter.
+     *
+     * Skips the test if another adapter is in use.
+     */
+    public function markTestNeedsOracle()
+    {
+        $this->markTestNeedsBackend('oracle');
+    }
+
+    /**
+     * Indicates that a test needs the backend adapter $name.
+     *
+     * Skips the test if another adapter is in use.
+     */
+    protected function markTestNeedsBackend($name)
+    {
+        $this->markTestNeedsTestConfig();
+        $currentBackend = $this->_testConfig->store->backend;
+        if ($currentBackend !== $name) {
+            $message = 'This test needs the backend "%s", but "%s" is in use.';
+            $message = sprintf($message, $name, $currentBackend);
+            $this->markTestSkipped($message);
+        }
         $this->markTestNeedsDatabase();
     }
 
@@ -204,13 +223,12 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             // overwrite store adapter to use with environment variable if set
             // this is useful, when we want to test with different stores without manually
             // editing the config
-            if ($this->_customTestConfig !== false) {
-                $storeAdapter = getenv('EF_STORE_ADAPTER');
-                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
-                    $this->_customTestConfig->store->backend = $storeAdapter;
-                } else if ($storeAdapter !== false) {
+            $storeAdapter = getenv('EF_STORE_ADAPTER');
+            if ($this->_customTestConfig !== false && $storeAdapter !== false) {
+                if (!isset($this->_customTestConfig->store->{$storeAdapter})) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
                 }
+                $this->_customTestConfig->store->backend = $storeAdapter;
             }
         }
 
@@ -243,38 +261,26 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
      */
     public static function assertStatementsEqual($expected, $got, $message = '')
     {
-        $expectedS = array_keys($expected);
-        sort($expectedS);
-        $gotS = array_keys($got);
-        sort($gotS);
-        self::assertEquals($expectedS, $gotS, $message);
+        $expectedTriples = iterator_to_array(new Erfurt_Store_Adapter_Sparql_TripleIterator($expected));
+        $expectedTriples = array_map('strval', $expectedTriples);
+        sort($expectedTriples);
 
-        $sortFn = function(array $a, array $b) {
-            // The attributes that are used for sorting, in descending order.
-            $sortAttributes = array('value', 'type', 'xml:lang');
-            foreach ($sortAttributes as $key) {
-                $valueA = isset($a[$key]) ? $a[$key] : '';
-                $valueB = isset($b[$key]) ? $b[$key] : '';
-                $result = strcmp($valueA, $valueB);
-                if ($result !== 0) {
-                    return $result;
-                }
-            }
-            return 0;
-        };
+        $gotTriples = iterator_to_array(new Erfurt_Store_Adapter_Sparql_TripleIterator($got));
+        $gotTriples = array_map('strval', $gotTriples);
+        sort($gotTriples);
 
-        foreach ($expectedS as $s) {
-            $expectedP = array_keys($expected[$s]);
-            sort($expectedP);
-            $gotP = array_keys($got[$s]);
-            sort($gotP);
-            self::assertEquals($expectedP, $gotP, $message);
-
-            foreach ($expectedP as $p) {
-                usort($expected[$s][$p], $sortFn);
-                usort($got[$s][$p], $sortFn);
-                self::assertEquals($expected[$s][$p], $got[$s][$p], $message);
-            }
+        $missingTriples    = array_diff($expectedTriples, $gotTriples);
+        $additionalTriples = array_diff($gotTriples, $expectedTriples);
+        $message = $message . PHP_EOL . PHP_EOL;
+        if (count($missingTriples) > 0) {
+            $message .= 'The following triples are missing in the provided statement set: '. PHP_EOL
+                      . implode(PHP_EOL, $missingTriples) . PHP_EOL . PHP_EOL;
         }
+        if (count($additionalTriples) > 0) {
+            $message .= 'The following triples were not expected, but exist in the provided statement set:' . PHP_EOL
+                      . implode(PHP_EOL, $additionalTriples);
+        }
+
+        self::assertEquals($expectedTriples, $gotTriples, rtrim($message) . PHP_EOL . PHP_EOL);
     }
 }

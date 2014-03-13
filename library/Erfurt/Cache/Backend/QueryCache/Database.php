@@ -23,7 +23,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     final public function checkCacheVersion()
     {
-        $result = false;
         try {
             $query = 'SELECT num FROM ef_cache_query_version';
             $result = $this->store->sqlQuery($query);
@@ -36,7 +35,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         } else if (is_array($result) && count($result) > 0) {
             return true;
         } else {
-        return false;
+            return false;
         }
     }
 
@@ -91,9 +90,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_result', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
+                'CREATE INDEX ef_cqr_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
             );
         }
 
@@ -106,7 +104,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
         }
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
@@ -117,7 +114,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
+                'CREATE INDEX ef_cqm_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
             );
         }
 
@@ -128,8 +125,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-
         }
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
@@ -139,7 +134,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
 
         if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
@@ -151,9 +145,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
-            $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)'
-            );
         }
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
@@ -855,13 +846,17 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     $logger->debug($se->getMessage());
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception(
-                        'Something went wrong while building query cache structure: ' . $se->getMessage()
+                        'Something went wrong while building query cache structure: ' . $se->getMessage(),
+                        0,
+                        $e
                     );
                 }
             } else {
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception(
-                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql
+                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql,
+                    0,
+                    $e
                 );
             }
         }

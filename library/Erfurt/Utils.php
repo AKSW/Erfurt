@@ -19,8 +19,8 @@ class Erfurt_Utils
 {
     public static function isXmlPrefix ($string) {
         /*
-         * The folowing regularexpression would match all allowed prefixes, 
-         * but couses trouble with PCRE.
+         * The following regular expression would match all allowed prefixes,
+         * but causes trouble with PCRE.
          * /[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF\x370-\x37D\x37F-\x1FFF
          * \x200C-\x200D\x2070-\x218F\x2C00-\x2FEF\x3001-\xD7FF\xF900-\xFDCF
          * \xFDF0-\xFFFD\x10000-\xEFFFF]{1}[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF
@@ -46,9 +46,12 @@ class Erfurt_Utils
     /**
      * Build a Turtle-compatible literal string out of an RDF/PHP array object.
      * This string is used as the canonical representation for object values in Erfurt.
-     * @see {http://www.w3.org/TeamSubmission/turtle/}
-     * @param array literal object
+     *
+     * @param string Literal value.
+     * @param string|null $datatype The datatype, for example "http://www.w3.org/2001/XMLSchema#boolean".
+     * @param string|null $lang A language code like "en" or "de".
      * @return string
+     * @see {http://www.w3.org/TeamSubmission/turtle/}
      */
     public static function buildLiteralString($value, $datatype = null, $lang = null)
     {

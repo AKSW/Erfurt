@@ -1,0 +1,6 @@
+services:
+    my_adapter:
+        class: ArrayObject
+        calls:
+            - [offsetSet, ["simple_param", "%simple_param%"]]
+            - [offsetSet, ["nested_param", "%nested.param%"]]

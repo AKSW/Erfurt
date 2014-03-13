@@ -12,6 +12,8 @@ Erfurt/libraries/Zend/
 cache.properties
 library/Zend
 cache.sqlite
+tests/oracle.ini
+tests/stardog.ini
 
 # Composer
 composer.phar

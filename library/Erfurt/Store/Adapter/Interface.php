@@ -7,6 +7,8 @@
  */
 
 /**
+ * Interface that must be implemented by SPARQL adapters.
+ *
  * @category Erfurt
  * @package Erfurt_Store_Adapter
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>
@@ -19,9 +21,33 @@ interface Erfurt_Store_Adapter_Interface
     /**
      * Adds statements in an array to the graph specified by $graphIri.
      *
+     * The statements are provided as multi-dimensional array:
+     *
+     *     array(
+     *         'http://example.org/subject1' => array(
+     *             'http://example.org/predicate1' => array(
+     *                 array(
+     *                     'type' => 'literal',
+     *                     'value' => 'Hello world.'
+     *                 )
+     *             ),
+     *             'http://example.org/predicate2' => array(
+     *                 array(
+     *                     'type' => 'uri',
+     *                     'value' => 'http://example.org/object'
+     *                 )
+     *             )
+     *         )
+     *     );
+     *
+     * The subject URIs are used as keys, the corresponding predicates are used as
+     * keys in the value array. This array contains a list of objects that form
+     * triples with the subject and predicate. Each object (even URIs) is represented
+     * by an array that contains at least type and value.
+     *
      * @param string $graphIri
      * @param array  $statementsArray
-     * @param array  $options ("escapeLiteral" => true/false) to disable automatical escaping characters 
+     * @param array  $options ("escapeLiteral" => true/false) to disable automatic escaping characters
      */
     public function addMultipleStatements($graphIri, array $statementsArray, array $options = array());
     
@@ -31,7 +57,7 @@ interface Erfurt_Store_Adapter_Interface
      * @param string $predicate (IRI, no blank node!)
      * @param array $object
      * @param array $options It is possible to disable automatic escaping special
-     * characters (like \n) whith the option: "escapeLiteral" and the possible values true and false.
+     * characters (like \n) with the option: "escapeLiteral" and the possible values true and false.
      * 
      * @throws Erfurt_Exception Throws an exception if adding of statements fails.
      */
@@ -84,7 +110,7 @@ interface Erfurt_Store_Adapter_Interface
 	 * @param mixed $filename Either a string containing a absolute filename or null. In case null is given,
 	 * this method returns a string containing the serialization.
 	 * 
-	 * @return string/null
+	 * @return string|null
 	 */
 	public function exportRdf($modelIri, $serializationType = 'xml', $filename = null);
 	
@@ -114,24 +140,24 @@ interface Erfurt_Store_Adapter_Interface
 	 * @return  array
 	 */
 	public function getSupportedImportFormats();
-	
-	/**
-	 * 
-	 * @param string $modelIri
-	 * @param string $locator Either a URL or a absolute file name.
-	 * @param string $type One of: 
-	 *        - 'auto' => Tries to detect the type automatically in the following order:
-	 *           1. Detect XML by XML-Header => rdf/xml
-	 *           2. If this fails use the extension of the file
-	 *           3. If this fails throw an exception
-	 *        - 'xml'
-	 *        - 'n3' or 'nt'
-	 * @param boolean $stream Denotes whether $data contains the actual data.
-	 * 
-	 * @throws Erfurt_Exception
-	 *
-	 * @return boolean On success
-	 */
+
+    /**
+     *
+     * @param string $modelIri
+     * @param string $data
+     * @param string $type One of:
+     *        - 'auto' => Tries to detect the type automatically in the following order:
+     *           1. Detect XML by XML-Header => rdf/xml
+     *           2. If this fails use the extension of the file
+     *           3. If this fails throw an exception
+     *        - 'xml'
+     *        - 'n3' or 'nt'
+     * @param string $locator Either a URL or a absolute file name.
+     *
+     * @throws Erfurt_Exception
+     *
+     * @return boolean On success
+     */
 	public function importRdf($modelIri, $data, $type, $locator);
 	
 	/**
@@ -141,8 +167,6 @@ interface Erfurt_Store_Adapter_Interface
 	
 	/**
 	 * @param string $modelIri The Iri, which identifies the model to look for.
-	 * @param boolean $useAc Whether to use access control or not.
-	 * 
 	 * @return boolean Returns true if model exists and is available for the user ($useAc === true). 
 	 */ 
 	public function isModelAvailable($modelIri);
@@ -150,29 +174,20 @@ interface Erfurt_Store_Adapter_Interface
 	/**
      * Executes a SPARQL ASK query and returns a boolean result value.
      *
-     * @param string $modelIri
-     * @param string $askSparql
-     * @param boolean $useAc Whether to check for access control.
+     * @param string $query
+     * @return boolean
      */
 	public function sparqlAsk($query);
 	
 	/**
      * @param string $query A string containing a sparql query
-     * @param array $modelIris An additional array of modelIris to query against. If a non empty array is given, the 
-     * values in this array will overwrite all FROM and FROM NAMED clauses in the query. If the array contains no 
-     * element, the FROM and FROM NAMED is evaluated. If non of them is present, all available models are queried.
-     * @param array Option array to push down parameters to adapters
+     * @param array $options Option array to push down parameters to adapters
      * feel free to add anything you want. put the store name in front for special options, but use macros
      *      'result_format' => ['plain' | 'xml']
      *      'timeout' => 1000 (in msec)
      * I included some define macros at the top of Store.php
-     * 
-     * deprecated: @param string $resultform Currently supported are: 'plain' and 'xml'
-     * @param boolean $useAc Whether to check for access control or not.
-     * 
-     * @throws Erfurt_Exception Throws an exception if query is no string.
-     * 
      * @return mixed Returns a result depending on the query, e.g. an array or a boolean value.
+     * @throws Erfurt_Exception Throws an exception if query is no string.
      */
     public function sparqlQuery($query, $options = array());
 }

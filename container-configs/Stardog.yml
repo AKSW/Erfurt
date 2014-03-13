@@ -1,0 +1,89 @@
+parameters:
+    stardog.client.log: ~
+    stardog.batch_size: 5000
+    stardog.slow_query.threshold_in_ms: 1000
+    stardog.log.slow_query.log_file: "%erfurt.root%/logs/slow_query.log"
+
+services:
+    stardog_adapter_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@stardog.sparql_adapter", "@mysql.sql_adapter"]
+
+    stardog.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@stardog.sparql_connector"]
+
+    stardog.sparql_connector:
+        alias: stardog.sparql_connector.default
+
+    stardog.sparql_connector.logging:
+        class: Erfurt_Store_Adapter_Sparql_Connector_SlowQueryLogConnectorDecorator
+        arguments:
+            - "@stardog.sparql_connector.default"
+            - "@log.slow_query"
+            - "%stardog.slow_query.threshold_in_ms%"
+
+    stardog.sparql_connector.default:
+        class: Erfurt_Store_Adapter_Stardog_StardogSparqlConnector
+        arguments:
+            - "@stardog.data_access_client"
+            - "@stardog.batch_processor.nquads"
+            - "%stardog.batch_size%"
+
+    stardog.batch_processor.size_dependent:
+        class: Erfurt_Store_Adapter_Sparql_SizeDependentBatchProcessor
+        arguments: [5, "@stardog.batch_processor.sparql_update", "@stardog.batch_processor.nquads"]
+
+    stardog.batch_processor.sparql_update:
+        class: Erfurt_Store_Adapter_Stardog_SparqlUpdateBatchProcessor
+        arguments: ["@stardog.data_access_client"]
+
+    stardog.batch_processor.nquads:
+            class: Erfurt_Store_Adapter_Stardog_NQuadsBatchProcessor
+            arguments: ["@stardog.data_access_client"]
+
+    stardog.data_access_client:
+        class: Erfurt_Store_Adapter_Stardog_DataAccessClient
+        arguments: ["@stardog.api_client"]
+
+    stardog.setup.database:
+        class: Erfurt_Store_Adapter_Stardog_Setup_DatabaseSetup
+        arguments: ["@stardog.api_client", "%stardog.client.database%"]
+        tags:
+            -  { name: erfurt.container.setup }
+
+    stardog.api_client:
+        class: Erfurt_Store_Adapter_Stardog_ApiClient
+        factory_class: Erfurt_Store_Adapter_Stardog_ApiClient
+        factory_method: factory
+        arguments:
+            -
+                base_url: "%stardog.client.base_url%"
+                username: "%stardog.client.username%"
+                password: "%stardog.client.password%"
+                "log":    "%stardog.client.log%"
+                "curl.options":
+                    body_as_string: true
+                "command.params":
+                    database: "%stardog.client.database%"
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"
+
+    log.slow_query:
+        class: Zend_Log
+        factory_class: Zend_Log
+        factory_method: factory
+        arguments:
+            -
+                -
+                    writerName: "Stream"
+                    writerParams:
+                        stream: "%stardog.log.slow_query.log_file%"

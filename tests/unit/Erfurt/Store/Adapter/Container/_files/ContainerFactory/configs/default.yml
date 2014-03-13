@@ -1,0 +1,6 @@
+parameters:
+    default.parameter: test
+
+services:
+    my_service:
+        class: stdClass

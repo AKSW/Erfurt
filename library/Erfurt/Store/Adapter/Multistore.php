@@ -477,7 +477,6 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         if (isset($this->_configuredGraphs[$graphUri])) {
            return $this->_backends[$this->_configuredGraphs[$graphUri]];
         } else {
-            var_dump($this->_configuredGraphs, $graphUri);exit;
             require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Graph with URI <' . $graphUri . '> is not configured.');
         }
