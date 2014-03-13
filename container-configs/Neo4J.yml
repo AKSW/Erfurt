@@ -1,0 +1,10 @@
+services:
+    neo4j.api_client:
+        class: Erfurt_Store_Adapter_Neo4J_ApiClient
+        factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
+        factory_method: factory
+        arguments:
+            -
+                base_url: "%neo4j.client.base_url%"
+                "curl.options":
+                    body_as_string: true
