@@ -3,7 +3,8 @@
     "apiVersion": "2014-03-13",
     "description": "REST API of the Neo4J SPARQL plugin.",
     "documentation": "http://neo4j-contrib.github.io/sparql-plugin",
-    "plugin-source": "https://github.com/neo4j-contrib/sparql-plugin",
+    "plugin-source-2.0.x": "https://github.com/neo4j-contrib/sparql-plugin",
+    "plugin-source-1.9.x": "https://github.com/paulrocost/sparqlPlugin-Neo4j",
     "operations": {
         "baseOperation": {
             "parameters": {
