@@ -1,6 +1,7 @@
 <?php
 
 use Guzzle\Common\Collection;
+use Guzzle\Log\MessageFormatter;
 use Guzzle\Log\Zf1LogAdapter;
 use Guzzle\Plugin\Log\LogPlugin;
 use Guzzle\Service\Client;
