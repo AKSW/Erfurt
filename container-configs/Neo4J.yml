@@ -1,3 +1,6 @@
+parameters:
+    neo4j.client.log: ~
+
 services:
     neo4j.api_client:
         class: Erfurt_Store_Adapter_Neo4J_ApiClient
@@ -6,5 +9,6 @@ services:
         arguments:
             -
                 base_url: "%neo4j.client.base_url%"
+                log:      "%neo4j.client.log%"
                 "curl.options":
                     body_as_string: true

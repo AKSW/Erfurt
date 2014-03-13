@@ -1,6 +1,8 @@
 <?php
 
 use Guzzle\Common\Collection;
+use Guzzle\Log\Zf1LogAdapter;
+use Guzzle\Plugin\Log\LogPlugin;
 use Guzzle\Service\Client;
 use Guzzle\Service\Description\ServiceDescription;
 
@@ -25,6 +27,13 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     {
         $client = parent::factory($config);
         $client->setDescription(ServiceDescription::factory(__DIR__ . '/Resources/SparqlPluginServiceDescription.json'));
+        if (isset($config['log']) && $config['log'] !== null) {
+            $adapter = new Zf1LogAdapter(
+                new \Zend_Log(new \Zend_Log_Writer_Stream($config['log']))
+            );
+            $logPlugin = new LogPlugin($adapter, MessageFormatter::DEBUG_FORMAT);
+            $client->addSubscriber($logPlugin);
+        }
         return $client;
     }
 
