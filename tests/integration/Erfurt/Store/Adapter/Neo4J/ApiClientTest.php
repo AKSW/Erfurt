@@ -55,4 +55,41 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
         $this->assertInstanceOf('Erfurt_Store_Adapter_Stardog_ApiClient', $client);
     }
 
+    /**
+     * Checks if query() accepts a valid SPARQL query.
+     */
+    public function testQueryAcceptsValidSparqlQuery()
+    {
+        $this->setExpectedException(null);
+        $this->client->query(array(
+            'query' => 'SELECT * WHERE { ?s ?p ?o . }'
+        ));
+    }
+
+    /**
+     * Ensures that query() returns an array.
+     */
+    public function testQueryReturnsArray()
+    {
+        $result = $this->client->query(array(
+            'query' => 'SELECT * WHERE { ?s ?p ?o . }'
+        ));
+
+        $this->assertInternalType('array', $result);
+    }
+
+    /**
+     * Checks if insert() accepts a valid quad data set.
+     */
+    public function testInsertAcceptsQuadData()
+    {
+        $this->setExpectedException(null);
+        $this->client->insert(array(
+            'subject'   => 'http://example.org/subject',
+            'predicate' => 'http://example.org/predicate',
+            'object'    => 'http://example.org/object',
+            'graph'     => 'http://example.org/graph'
+        ));
+    }
+
 }
