@@ -29,3 +29,17 @@ store.oracle.parameters.mysql.username = "root"
 store.oracle.parameters.mysql.password = ""
 store.oracle.parameters.mysql.dbname   = "erfurt_test"
 store.oracle.parameters.erfurt.container.auto_setup = On
+
+store.stardog.adapterClass = "Erfurt_Store_Adapter_Container"
+store.stardog.configs[]    = "%erfurt.root%/container-configs/Stardog.yml"
+store.stardog.service      = "stardog_adapter_with_mysql_cache"
+store.stardog.parameters.stardog.client.base_url   = "http://localhost:5820"
+store.stardog.parameters.stardog.client.username   = "admin"
+store.stardog.parameters.stardog.client.password   = "admin"
+store.stardog.parameters.stardog.client.database   = "erfurt"
+; Settings for the MySQL cache and versioning system.
+store.stardog.parameters.mysql.host     = "localhost"
+store.stardog.parameters.mysql.username = "root"
+store.stardog.parameters.mysql.password = ""
+store.stardog.parameters.mysql.dbname   = "erfurt"
+store.stardog.parameters.erfurt.container.auto_setup = On
