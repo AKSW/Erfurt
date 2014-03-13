@@ -1,0 +1,76 @@
+{
+    "name": "Neo4J SPARQL Plugin",
+    "apiVersion": "2014-03-13",
+    "description": "REST API of the Neo4J SPARQL plugin.",
+    "documentation": "http://neo4j-contrib.github.io/sparql-plugin",
+    "plugin-source": "https://github.com/neo4j-contrib/sparql-plugin",
+    "operations": {
+        "baseOperation": {
+            "parameters": {
+                "inputFormat": {
+                    "description": "The provided input format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Content-Type",
+                    "default": "application/json"
+                },
+                "outputFormat": {
+                    "description": "The expected output format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Accept",
+                    "default": "application/json"
+                }
+            }
+        },
+        "insert": {
+            "summary": "Inserts a single quad.",
+            "extends": "baseOperation",
+            "uri": "db/data/ext/SPARQLPlugin/graphdb/insert_quad",
+            "httpMethod": "POST",
+            "parameters": {
+                "subject": {
+                    "description": "The subject.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "s",
+                    "required": true
+                },
+                "predicate": {
+                    "description": "The predicate.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "p",
+                    "required": true
+                },
+                "object": {
+                    "description": "The object.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "o",
+                    "required": true
+                },
+                "graph": {
+                    "description": "The graph the the triple belongs to.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "c",
+                    "required": true
+                }
+            }
+        },
+        "query": {
+            "summary": "Executes a SPARQL query and returns the results.",
+            "extends": "baseOperation",
+            "uri": "db/data/ext/SPARQLPlugin/graphdb/execute_sparql",
+            "httpMethod": "POST",
+            "parameters": {
+                "query": {
+                    "description": "The SPARQL query.",
+                    "type": "string",
+                    "location": "json"
+                }
+            }
+        }
+    }
+}
