@@ -122,7 +122,16 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-        // TODO: Implement deleteMatchingTriples() method.
+        $query = 'SELECT (COUNT(*) AS ?affectedTriples) FROM <' . $graphIri . '> '
+               . 'WHERE { ' . $pattern->format('?subject ?predicate ?object') . ' }';
+        $result = $this->query($query);
+        $affectedTriples = (int)$result['results']['bindings'][0]['affectedTriples']['value'];
+        if ($affectedTriples === 0) {
+            // No triples will be affected, there is no need to perform a delete operation.
+            return 0;
+        }
+        // TODO: perform delete
+        return $affectedTriples;
     }
 
     /**
