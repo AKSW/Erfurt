@@ -85,5 +85,4 @@ class Erfurt_Store_Adapter_Stardog_StardogSparqlConnectorTest
         return $this->helper->getApiClient()->size();
     }
 
-
 }
