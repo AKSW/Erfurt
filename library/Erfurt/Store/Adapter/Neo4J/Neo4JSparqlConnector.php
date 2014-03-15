@@ -10,13 +10,20 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
 {
 
     /**
+     * Client that is used to execute SPARQL queries.
+     *
+     * @var Erfurt_Store_Adapter_Neo4J_SparqlApiClient
+     */
+    protected $sparqlApiClient = null;
+
+    /**
      * Creates a connector that uses the provided SPARQL client.
      *
      * @param Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient
      */
     public function __construct(Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient)
     {
-
+        $this->sparqlApiClient = $sparqlApiClient;
     }
 
     /**
@@ -27,7 +34,18 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        // TODO: Implement addTriple() method.
+        $object = $triple->getObject();
+        if ($object['type'] === 'uri') {
+            $objectDefinition = $object['value'];
+        } else {
+            $objectDefinition = $triple->format('?object');
+        }
+        $this->sparqlApiClient->insert(array(
+            'subject'   => $triple->getSubject(),
+            'predicate' => $triple->getPredicate(),
+            'object'    => $objectDefinition,
+            'graph'     => $graphIri
+        ));
     }
 
     /**
@@ -72,7 +90,8 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function query($sparqlQuery)
     {
-        // TODO: Implement query() method.
+        $result = $this->sparqlApiClient->query($sparqlQuery);
+        return $result;
     }
 
     /**
@@ -131,7 +150,7 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function batch($callback)
     {
-        // TODO: Implement batch() method.
+        return call_user_func($callback, $this);
     }
 
 }
