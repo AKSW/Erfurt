@@ -10,11 +10,36 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
 {
 
     /**
+     * System under test.
+     *
+     * @var Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtended
+     */
+    protected $converter = null;
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::setUp()} for details.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->converter = new Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtended();
+    }
+
+    /**
+     * See {@link PHPUnit_Framework_TestCase::tearDown()} for details.
+     */
+    protected function tearDown()
+    {
+        $this->converter = null;
+        parent::tearDown();
+    }
+
+    /**
      * Checks if the converter implements the required interface.
      */
     public function testImplementsInterface()
     {
-
+        $this->assertInstanceOf('Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface', $this->converter);
     }
 
     /**
