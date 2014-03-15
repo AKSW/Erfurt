@@ -56,4 +56,17 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         $this->assertGreaterThanOrEqual(0, $numberOfTriples);
     }
 
+    /**
+     * Checks if clear() removes all existing triples.
+     *
+     * Please note: With an empty database this test shows only that clear()
+     * is callable without errors, as no data is inserted before.
+     */
+    public function testClearRemovesAllTriples()
+    {
+        $this->client->clear();
+
+        $this->assertEquals(0, $this->client->getNumberOfTriples());
+    }
+
 }

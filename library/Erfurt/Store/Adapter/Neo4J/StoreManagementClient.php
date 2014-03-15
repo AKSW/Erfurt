@@ -1,6 +1,7 @@
 <?php
 
 use Everyman\Neo4j\Client;
+use Everyman\Neo4j\Cypher\Query;
 
 /**
  * Used to manage a Neo4J triple store.
@@ -32,6 +33,19 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
     }
 
     /**
+     * Removes all triples in the database.
+     */
+    public function clear()
+    {
+        $deletePredicates = 'START r=relationship(*) DELETE r';
+        $operation = new Query($this->apiClient, $deletePredicates);
+        $operation->getResultSet();
+        $deleteNodes      = 'START n=node(*) DELETE n';
+        $operation = new Query($this->apiClient, $deleteNodes);
+        $operation->getResultSet();
+    }
+
+    /**
      * Returns the number of triples in the store.
      *
      * @return integer
@@ -41,9 +55,9 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         // Determine the number of edges, which is equivalent to the number of triples
         // as each triple has its own predicate (but subject and object might be shared
         // between triples).
-        $query = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
-        $query = new Everyman\Neo4j\Cypher\Query($this->apiClient, $query);
-        $result = $query->getResultSet();
+        $query     = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
+        $operation = new Query($this->apiClient, $query);
+        $result    = $operation->getResultSet();
         return $result[0]['numberOfTriples'];
     }
 
