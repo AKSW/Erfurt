@@ -103,7 +103,13 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function query($sparqlQuery)
     {
-        $result = $this->sparqlApiClient->query($sparqlQuery);
+        $query = $this->rewriteAskToSelect($sparqlQuery);
+        $result = $this->sparqlApiClient->query($query);
+        if ($query !== $sparqlQuery) {
+            // This is an ASK query, which has been rewritten.
+            // It is only important if the result set is empty or not.
+            return count($result) > 0;
+        }
         return $this->resultConverter->convert($result);
     }
 
@@ -164,6 +170,39 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function batch($callback)
     {
         return call_user_func($callback, $this);
+    }
+
+    /**
+     * Rewrites ASK to SELECT queries as the SPARQL plugin does
+     * not support ASK natively.
+     *
+     * If the type of the provided query is not ASK, then it
+     * will be returned unchanged.
+     *
+     * @param string $query
+     * @return string The rewritten query.
+     */
+    protected function rewriteAskToSelect($query)
+    {
+        if (strpos($query, 'ASK') === false) {
+            // Query does not even contain the ASK keyword, no further
+            // detection required.
+            return $query;
+        }
+        $parser = new Erfurt_Sparql_Parser();
+        $info   = $parser->parse($query);
+        if ($info->getResultForm() !== 'ask') {
+            return $query;
+        }
+        $askPosition = stripos($query, 'ASK ');
+        // Replace ASK by a SELECT.
+        $rewritten = substr($query, 0, $askPosition) . 'SELECT * ' . substr($query, $askPosition + 4);
+        $modifiers = $info->getSolutionModifier();
+        if (!isset($modifiers['limit'])) {
+            // It should be safe to append a LIMIT, which reduces the result set (which is not needed).
+            $rewritten .= ' LIMIT 1';
+        }
+        return $rewritten;
     }
 
 }
