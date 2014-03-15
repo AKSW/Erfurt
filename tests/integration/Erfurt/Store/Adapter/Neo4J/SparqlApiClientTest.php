@@ -61,9 +61,7 @@ class Erfurt_Store_Adapter_Neo4J_SparqlApiClientTest extends \PHPUnit_Framework_
     public function testQueryAcceptsValidSparqlQuery()
     {
         $this->setExpectedException(null);
-        $this->client->query(array(
-            'query' => 'SELECT * WHERE { ?s ?p ?o . }'
-        ));
+        $this->client->query('SELECT * WHERE { ?s ?p ?o . }');
     }
 
     /**
@@ -71,11 +69,18 @@ class Erfurt_Store_Adapter_Neo4J_SparqlApiClientTest extends \PHPUnit_Framework_
      */
     public function testQueryReturnsArray()
     {
-        $result = $this->client->query(array(
-            'query' => 'SELECT * WHERE { ?s ?p ?o . }'
-        ));
+        $result = $this->client->query('SELECT * WHERE { ?s ?p ?o . }');
 
         $this->assertInternalType('array', $result);
+    }
+
+    /**
+     * Ensures that query() throws an exception if an invalid query is passed.
+     */
+    public function testQueryThrowsExceptionIfInvalidQueryIsPassed()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\BadResponseException');
+        $this->client->query('Hello world!');
     }
 
     /**
