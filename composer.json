@@ -18,7 +18,8 @@
         "symfony/config": "~2.3.0",
         "symfony/dependency-injection": "~2.3.0",
         "soundintheory/php-sql-parser": "~1.0.0",
-        "guzzle/guzzle": "~3.7.0"
+        "guzzle/guzzle": "~3.7.0",
+        "everyman/neo4jphp": "dev-master"
     },
     "require-dev": {
         "athletic/athletic": "dev-master",
