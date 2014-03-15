@@ -13,6 +13,13 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
 {
 
     /**
+     * The store management client.
+     *
+     * @var Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+     */
+    protected $managementClient = null;
+
+    /**
      * The API client instance that has been created.
      *
      * @var Erfurt_Store_Adapter_Neo4J_SparqlApiClient|null
@@ -39,6 +46,23 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
     }
 
     /**
+     * Returns the store management client.
+     *
+     * @return Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+     */
+    public function getManagementClient()
+    {
+        if ($this->managementClient === null) {
+            $container = $this->getContainer();
+            $client    = $container->get('neo4j.client.store_management');
+            PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Neo4J_StoreManagementClient', $client);
+            $this->managementClient = $client;
+            $this->addCleanUpTask(array($this, 'unsetManagementClient'));
+        }
+        return $this->managementClient;
+    }
+
+    /**
      * Returns the Neo4J API client instance.
      *
      * @return Erfurt_Store_Adapter_Neo4J_SparqlApiClient
@@ -50,7 +74,7 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
             $client    = $container->get('neo4j.client.sparql_api');
             PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Neo4J_SparqlApiClient', $client);
             $this->sparqlApiClient = $client;
-            $this->addCleanUpTask(array($this, 'unsetApiClient'));
+            $this->addCleanUpTask(array($this, 'unsetSparqlApiClient'));
         }
         return $this->sparqlApiClient;
     }
@@ -73,9 +97,17 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
     }
 
     /**
+     * Destroys the created management client.
+     */
+    protected function unsetManagementClient()
+    {
+        $this->managementClient = null;
+    }
+
+    /**
      * Destroys the created API client.
      */
-    protected function unsetApiClient()
+    protected function unsetSparqlApiClient()
     {
         $this->sparqlApiClient = null;
     }
