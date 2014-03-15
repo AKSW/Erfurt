@@ -48,7 +48,8 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testThrowsExceptionIfNoArrayIsProvided()
     {
-
+        $this->setExpectedException('Erfurt_Store_Adapter_ResultConverter_Exception');
+        $this->converter->convert(new stdClass());
     }
 
     /**
@@ -56,7 +57,9 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testConverterCanHandleEmptySet()
     {
+        $converted = $this->converter->convert(array());
 
+        $this->assertEquals($this->createEmptyExtendedResultSet(), $converted);
     }
 
     /**
@@ -64,7 +67,19 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testConverterTransformsUrisCorrectly()
     {
+        $input = array(
+            array(
+                'object' => 'http://example.org/object'
+            )
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $expectedDefinition = array(
+            'type'  => 'uri',
+            'value' => 'http://example.org/object'
+        );
+        $this->assertEquals($this->createExtendedResultSetWith($expectedDefinition), $converted);
     }
 
     /**
@@ -72,7 +87,19 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testConverterTransformsSimpleLiteralsCorrectly()
     {
+        $input = array(
+            array(
+                'object' => '"Hello world!"'
+            )
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $expectedDefinition = array(
+            'type'  => 'literal',
+            'value' => 'Hello world!'
+        );
+        $this->assertEquals($this->createExtendedResultSetWith($expectedDefinition), $converted);
     }
 
     /**
@@ -80,7 +107,20 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testConverterTransformsTypedLiteralsCorrectly()
     {
+        $input = array(
+            array(
+                'object' => '"Hello world!"^^<http://www.w3.org/2001/XMLSchema#string>'
+            )
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $expectedDefinition = array(
+            'type'     => 'literal',
+            'value'    => 'Hello world!',
+            'datatype' => 'http://www.w3.org/2001/XMLSchema#string'
+        );
+        $this->assertEquals($this->createExtendedResultSetWith($expectedDefinition), $converted);
     }
 
     /**
@@ -88,7 +128,56 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
      */
     public function testConverterTransformsLiteralsWithLanguageCorrectly()
     {
+        $input = array(
+            array(
+                'object' => '"Hello world!"@en'
+            )
+        );
 
+        $converted = $this->converter->convert($input);
+
+        $expectedDefinition = array(
+            'type'  => 'literal',
+            'value' => 'Hello world!',
+            'lang'  => 'en'
+        );
+        $this->assertEquals($this->createExtendedResultSetWith($expectedDefinition), $converted);
+    }
+
+    /**
+     * Returns an extended result set that contains the provided value
+     * definition as "object" variable.
+     *
+     * @param array(string=>string) $objectDefinition
+     * @return array(mixed)
+     */
+    protected function createExtendedResultSetWith(array $objectDefinition)
+    {
+        $resultSet = $this->createEmptyExtendedResultSet();
+        $resultSet['head']['vars'] = array('object');
+        $resultSet['results']['bindings'] = array(
+            array(
+                'object' => $objectDefinition
+            )
+        );
+        return $resultSet;
+    }
+
+    /**
+     * Creates an empty extended result set.
+     *
+     * @return array(mixed)
+     */
+    protected function createEmptyExtendedResultSet()
+    {
+        return array(
+            'head' => array(
+                'vars' => array()
+            ),
+            'results' => array(
+                'bindings' => array()
+            )
+        );
     }
 
 }
