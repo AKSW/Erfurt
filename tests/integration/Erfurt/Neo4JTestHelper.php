@@ -15,9 +15,9 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
     /**
      * The API client instance that has been created.
      *
-     * @var Erfurt_Store_Adapter_Neo4J_ApiClient|null
+     * @var Erfurt_Store_Adapter_Neo4J_SparqlApiClient|null
      */
-    protected $apiClient = null;
+    protected $sparqlApiClient = null;
 
     /**
      * The service container or null if it was not initialized yet.
@@ -41,18 +41,18 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
     /**
      * Returns the Neo4J API client instance.
      *
-     * @return Erfurt_Store_Adapter_Neo4J_ApiClient
+     * @return Erfurt_Store_Adapter_Neo4J_SparqlApiClient
      */
-    public function getApiClient()
+    public function getSparqlApiClient()
     {
-        if ($this->apiClient === null) {
+        if ($this->sparqlApiClient === null) {
             $container = $this->getContainer();
             $client    = $container->get('neo4j.client.sparql_api');
-            PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Neo4J_ApiClient', $client);
-            $this->apiClient = $client;
+            PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Neo4J_SparqlApiClient', $client);
+            $this->sparqlApiClient = $client;
             $this->addCleanUpTask(array($this, 'unsetApiClient'));
         }
-        return $this->apiClient;
+        return $this->sparqlApiClient;
     }
 
     /**
@@ -77,7 +77,7 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
      */
     protected function unsetApiClient()
     {
-        $this->apiClient = null;
+        $this->sparqlApiClient = null;
     }
 
     /**

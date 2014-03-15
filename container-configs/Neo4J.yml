@@ -4,8 +4,8 @@ parameters:
 
 services:
     neo4j.client.sparql_api:
-        class: Erfurt_Store_Adapter_Neo4J_ApiClient
-        factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
+        class: Erfurt_Store_Adapter_Neo4J_SparqlApiClient
+        factory_class: Erfurt_Store_Adapter_Neo4J_SparqlApiClient
         factory_method: factory
         arguments:
             -

@@ -15,7 +15,7 @@ use Guzzle\Service\Description\ServiceDescription;
  * @method void insert(array) Inserts a quad.
  * @method array query(array) Executes a SPARQL query.
  */
-class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
+class Erfurt_Store_Adapter_Neo4J_SparqlApiClient extends Client
 {
 
     /**

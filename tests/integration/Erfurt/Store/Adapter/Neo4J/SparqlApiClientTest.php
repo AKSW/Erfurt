@@ -7,13 +7,13 @@
  * @since 13.03.14
  * @group Neo4J
  */
-class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCase
+class Erfurt_Store_Adapter_Neo4J_SparqlApiClientTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * System under test.
      *
-     * @var Erfurt_Store_Adapter_Neo4J_ApiClient
+     * @var Erfurt_Store_Adapter_Neo4J_SparqlApiClient
      */
     protected $client = null;
 
@@ -31,7 +31,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     {
         parent::setUp();
         $this->helper = new Erfurt_Neo4JTestHelper();
-        $this->client = $this->helper->getApiClient();
+        $this->client = $this->helper->getSparqlApiClient();
     }
 
     /**
@@ -50,9 +50,9 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
      */
     public function testFactoryCreatesClient()
     {
-        $client = \Erfurt_Store_Adapter_Stardog_ApiClient::factory(array('baseUrl' => 'http://not-important.here'));
+        $client = \Erfurt_Store_Adapter_Neo4J_SparqlApiClient::factory(array('baseUrl' => 'http://not-important.here'));
 
-        $this->assertInstanceOf('Erfurt_Store_Adapter_Stardog_ApiClient', $client);
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Neo4J_SparqlApiClient', $client);
     }
 
     /**
