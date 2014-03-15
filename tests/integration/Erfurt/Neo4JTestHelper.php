@@ -47,7 +47,7 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
     {
         if ($this->apiClient === null) {
             $container = $this->getContainer();
-            $client    = $container->get('neo4j.api_client');
+            $client    = $container->get('neo4j.client.sparql_api');
             PHPUnit_Framework_Assert::assertInstanceOf('Erfurt_Store_Adapter_Neo4J_ApiClient', $client);
             $this->apiClient = $client;
             $this->addCleanUpTask(array($this, 'unsetApiClient'));

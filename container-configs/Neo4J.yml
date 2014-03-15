@@ -2,9 +2,8 @@ parameters:
     neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
     neo4j.client.log: ~
 
-
 services:
-    neo4j.api_client:
+    neo4j.client.sparql_api:
         class: Erfurt_Store_Adapter_Neo4J_ApiClient
         factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
         factory_method: factory
@@ -14,3 +13,7 @@ services:
                 log:      "%neo4j.client.log%"
                 "curl.options":
                     body_as_string: true
+
+    neo4j.client.rest_api:
+        class: Everyman\Neo4j\Client
+        arguments: ["%neo4j.client.host%", "%neo4j.client.port%"]
