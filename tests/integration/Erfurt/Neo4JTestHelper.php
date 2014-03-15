@@ -13,6 +13,13 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
 {
 
     /**
+     * The created SPARQL connector.
+     *
+     * @var \Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector|null
+     */
+    protected $sparqlConnector = null;
+
+    /**
      * The store management client.
      *
      * @var Erfurt_Store_Adapter_Neo4J_StoreManagementClient
@@ -42,7 +49,18 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
      */
     public function getSparqlConnector()
     {
-        throw new BadMethodCallException('Not implemented yet.');
+        if ($this->sparqlConnector === null) {
+            $container = $this->getContainer();
+            $connector = $container->get('neo4j.sparql_connector');
+            PHPUnit_Framework_Assert::assertInstanceOf(
+                'Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface',
+                $connector
+            );
+            $this->getManagementClient()->clear();
+            $this->sparqlConnector = $connector;
+            $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
+        }
+        return $this->sparqlConnector;
     }
 
     /**
@@ -94,6 +112,14 @@ class Erfurt_Neo4JTestHelper extends Erfurt_AbstractTestHelper
             $this->addCleanUpTask(array($this, 'unsetContainer'));
         }
         return $this->container;
+    }
+
+    /**
+     * Destroys the created SPARQL connector.
+     */
+    protected function unsetSparqlConnector()
+    {
+        $this->sparqlConnector = null;
     }
 
     /**
