@@ -91,7 +91,20 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function query($sparqlQuery)
     {
         $result = $this->sparqlApiClient->query($sparqlQuery);
-        return $result;
+        $template = array(
+            'head' => array(
+                'vars' => array()
+            ),
+            'results' => array(
+                'bindings' => array()
+            )
+        );
+        if (count($result) === 0) {
+            return $template;
+        }
+        $template['head']['vars'] = array_keys($result[0]);
+        $template['results']['bindings'] = $this->toBindings($result);
+        return $template;
     }
 
     /**
@@ -151,6 +164,32 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function batch($callback)
     {
         return call_user_func($callback, $this);
+    }
+
+    /**
+     * Converts the provided result set into a list of bindings
+     * that is compatible with an extended result.
+     *
+     * @param array(array(string=>string)) $resultSet
+     * @return array(array(string=>array(string=>mixed)))
+     */
+    protected function toBindings(array $resultSet)
+    {
+        $bindings = array();
+        foreach ($resultSet as $row) {
+            /* @var $row array(string=>string) */
+            $binding = array();
+            foreach ($row as $name => $value) {
+                /* @var $name string */
+                /* @var $value string */
+                $binding[$name] = array(
+                    'type'  => 'uri',
+                    'value' => $value
+                );
+            }
+            $bindings[] = $binding;
+        }
+        return $bindings;
     }
 
 }
