@@ -1,5 +1,7 @@
 parameters:
+    neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
     neo4j.client.log: ~
+
 
 services:
     neo4j.api_client:
