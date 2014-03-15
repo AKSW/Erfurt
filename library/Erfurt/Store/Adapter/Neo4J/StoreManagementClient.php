@@ -5,11 +5,20 @@ use Everyman\Neo4j\Client;
 /**
  * Used to manage a Neo4J triple store.
  *
+ * This client assumes that the whole Neo4J database is used as triple store only.
+ *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.03.14
  */
 class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
 {
+
+    /**
+     * The REST client that is used to communicate with Neo4J.
+     *
+     * @var \Everyman\Neo4j\Client
+     */
+    protected $apiClient = null;
 
     /**
      * Creates a management client that uses the provided REST API
@@ -19,7 +28,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function __construct(Client $restApiClient)
     {
-
+        $this->apiClient = $restApiClient;
     }
 
     /**
@@ -29,7 +38,10 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function getNumberOfTriples()
     {
-
+        $query = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
+        $query = new Everyman\Neo4j\Cypher\Query($this->apiClient, $query);
+        $result = $query->getResultSet();
+        return $result[0]['numberOfTriples'];
     }
 
 }
