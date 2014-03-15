@@ -17,6 +17,13 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     protected $sparqlApiClient = null;
 
     /**
+     * Converts received SPARQL results.
+     *
+     * @var Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
+     */
+    protected $resultConverter = null;
+
+    /**
      * Creates a connector that uses the provided SPARQL client.
      *
      * @param Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient
@@ -24,6 +31,12 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function __construct(Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient)
     {
         $this->sparqlApiClient = $sparqlApiClient;
+        $this->resultConverter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+            new Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtended(),
+            new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
+                new Erfurt_Store_Adapter_ResultConverter_LiteralToTypedConverter()
+            )
+        ));
     }
 
     /**
@@ -91,20 +104,7 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function query($sparqlQuery)
     {
         $result = $this->sparqlApiClient->query($sparqlQuery);
-        $template = array(
-            'head' => array(
-                'vars' => array()
-            ),
-            'results' => array(
-                'bindings' => array()
-            )
-        );
-        if (count($result) === 0) {
-            return $template;
-        }
-        $template['head']['vars'] = array_keys($result[0]);
-        $template['results']['bindings'] = $this->toBindings($result);
-        return $template;
+        return $this->resultConverter->convert($result);
     }
 
     /**
@@ -164,32 +164,6 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     public function batch($callback)
     {
         return call_user_func($callback, $this);
-    }
-
-    /**
-     * Converts the provided result set into a list of bindings
-     * that is compatible with an extended result.
-     *
-     * @param array(array(string=>string)) $resultSet
-     * @return array(array(string=>array(string=>mixed)))
-     */
-    protected function toBindings(array $resultSet)
-    {
-        $bindings = array();
-        foreach ($resultSet as $row) {
-            /* @var $row array(string=>string) */
-            $binding = array();
-            foreach ($row as $name => $value) {
-                /* @var $name string */
-                /* @var $value string */
-                $binding[$name] = array(
-                    'type'  => 'uri',
-                    'value' => $value
-                );
-            }
-            $bindings[] = $binding;
-        }
-        return $bindings;
     }
 
 }
