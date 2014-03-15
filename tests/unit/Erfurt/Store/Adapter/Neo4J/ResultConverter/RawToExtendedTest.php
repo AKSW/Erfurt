@@ -19,6 +19,11 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
 
     }
 
+    public function testConverterCanHandleEmptySet()
+    {
+
+    }
+
     public function testConverterTransformsUrisCorrectly()
     {
 
@@ -36,7 +41,7 @@ class Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtendedTest extends \PHPU
 
     public function testConverterTransformsLiteralsWithLanguageCorrectly()
     {
-        
+
     }
 
 }
