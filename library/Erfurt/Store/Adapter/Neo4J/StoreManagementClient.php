@@ -38,6 +38,9 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function getNumberOfTriples()
     {
+        // Determine the number of edges, which is equivalent to the number of triples
+        // as each triple has its own predicate (but subject and object might be shared
+        // between triples).
         $query = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
         $query = new Everyman\Neo4j\Cypher\Query($this->apiClient, $query);
         $result = $query->getResultSet();
