@@ -121,4 +121,37 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         $this->assertEquals(1, $this->client->getNumberOfTriples());
     }
 
+    /**
+     * Checks if addTriple() is able to create triples that share the same subject node.
+     */
+    public function testAddTripleIsAbleToCreateTriplesWithSameSubject()
+    {
+        $this->client->clear();
+
+        $this->client->addTriple(
+            'http://example.org/graph',
+            new Erfurt_Store_Adapter_Sparql_Triple(
+                'http://example.org/subject',
+                'http://example.org/predicate',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object'
+                )
+            )
+        );
+        $this->client->addTriple(
+            'http://example.org/graph',
+            new Erfurt_Store_Adapter_Sparql_Triple(
+                'http://example.org/subject',
+                'http://example.org/predicate',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/another-object'
+                )
+            )
+        );
+
+        $this->assertEquals(2, $this->client->getNumberOfTriples());
+    }
+
 }
