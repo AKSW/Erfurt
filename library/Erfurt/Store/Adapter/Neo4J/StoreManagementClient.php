@@ -72,10 +72,10 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         $objectProperties = 'value: {objectValue}, kind: {objectKind}, term: {objectTerm}';
         if (isset($object['lang']) && !empty($object['lang'])) {
             $params['objectLang'] = $object['lang'];
-            $objectProperties .= ', lang={objectLang}';
+            $objectProperties .= ', lang: {objectLang}';
         } else if (isset($object['datatype']) && !empty($object['datatype'])) {
             $params['objectType'] = $object['datatype'];
-            $objectProperties .= ', type={objectType}';
+            $objectProperties .= ', type: {objectType}';
         }
         $objectDefinition    = '(object {' . $objectProperties . '})';
         if ($subjectId === null && $objectId === null) {
