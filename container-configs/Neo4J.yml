@@ -8,7 +8,7 @@ services:
 
     neo4j.sparql_connector.default:
         class: Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector
-        arguments: ["@neo4j.client.sparql_api"]
+        arguments: ["@neo4j.client.sparql_api", "@neo4j.client.store_management"]
 
     neo4j.client.store_management:
         class: Erfurt_Store_Adapter_Neo4J_StoreManagementClient

@@ -17,6 +17,13 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     protected $sparqlApiClient = null;
 
     /**
+     * Client that is used to perform data changes.
+     *
+     * @var Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+     */
+    protected $managementClient = null;
+
+    /**
      * Converts received SPARQL results.
      *
      * @var Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
@@ -24,14 +31,18 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     protected $resultConverter = null;
 
     /**
-     * Creates a connector that uses the provided SPARQL client.
+     * Creates a connector that uses the provided clients.
      *
      * @param Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient
+     * @param Erfurt_Store_Adapter_Neo4J_StoreManagementClient $managementClient
      */
-    public function __construct(Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient)
-    {
-        $this->sparqlApiClient = $sparqlApiClient;
-        $this->resultConverter = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
+    public function __construct(
+        Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient,
+        Erfurt_Store_Adapter_Neo4J_StoreManagementClient $managementClient
+    ) {
+        $this->sparqlApiClient  = $sparqlApiClient;
+        $this->managementClient = $managementClient;
+        $this->resultConverter  = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
             new Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtended(),
             new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
                 new Erfurt_Store_Adapter_ResultConverter_LiteralToTypedConverter()
@@ -130,7 +141,7 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
             // No triples will be affected, there is no need to perform a delete operation.
             return 0;
         }
-        // TODO: perform delete
+        $this->managementClient->deleteMatchingTriples($graphIri, $pattern);
         return $affectedTriples;
     }
 

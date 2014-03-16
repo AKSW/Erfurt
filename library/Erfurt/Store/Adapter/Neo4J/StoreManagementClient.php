@@ -40,7 +40,45 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-
+        $params = array();
+        if ($pattern->getPredicate() !== null) {
+            $params['graphAndPredicate'] = 'U ' . $graphIri . ' U ' . $pattern->getPredicate();
+            $startCondition = 'cp={graphAndPredicate}';
+        } else {
+            $params['graph'] = 'U ' . $graphIri;
+            $startCondition  = 'c={graph}';
+        }
+        $conditions = array();
+        if ($pattern->getSubject() !== null) {
+            $conditions[] = '(subject.value={subjectValue} and subject.kind={subjectType})';
+            $params['subjectValue'] = $pattern->getSubject();
+            $params['subjectType']  = 'uri';
+        }
+        if ($pattern->getObject() !== null) {
+            $conditions[] = '(object.value={objectValue} and object.kind={objectType})';
+            $object = $pattern->getObject();
+            $params['objectValue'] = $object['value'];
+            $params['objectType']  = $object['type'];
+            if (isset($object['datatype']) && !empty($object['datatype'])) {
+                $conditions[] = 'object.datatype! = {objectDataType}';
+                $params['objectDataType'] = $object['datatype'];
+            } else {
+                $conditions[] = 'NOT(HAS(object.datatype))';
+            }
+            if (isset($object['lang']) && !empty($object['lang'])) {
+                $conditions[] = 'object.lang! = {objectLang}';
+                $params['objectLang'] = $object['lang'];
+            } else {
+                $conditions[] = 'NOT(HAS(object.lang))';
+            }
+        }
+        $query = 'START r=relationship:relationship_auto_index(' . $startCondition . ') '
+               . 'MATCH (subject)-[r]->(object) ';
+        if (count($conditions) > 0) {
+            $query .= 'WHERE ' . implode(' and ', $conditions) . ' ';
+        }
+        $query .= 'DELETE r';
+        $this->executeCypherQuery($query, $params);
     }
 
     /**
@@ -49,11 +87,9 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
     public function clear()
     {
         $deletePredicates = 'START r=relationship(*) DELETE r';
-        $operation = new Query($this->apiClient, $deletePredicates);
-        $operation->getResultSet();
+        $this->executeCypherQuery($deletePredicates);
         $deleteNodes      = 'START n=node(*) DELETE n';
-        $operation = new Query($this->apiClient, $deleteNodes);
-        $operation->getResultSet();
+        $this->executeCypherQuery($deleteNodes);
     }
 
     /**
@@ -66,10 +102,22 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         // Determine the number of edges, which is equivalent to the number of triples
         // as each triple has its own predicate (but subject and object might be shared
         // between triples).
-        $query     = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
-        $operation = new Query($this->apiClient, $query);
-        $result    = $operation->getResultSet();
+        $query  = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
+        $result = $this->executeCypherQuery($query);
         return $result[0]['numberOfTriples'];
+    }
+
+    /**
+     * Executes the provided Cypher query and returns the results.
+     *
+     * @param string $query
+     * @param array(string=>mixed) $params
+     * @return \Everyman\Neo4j\Query\ResultSet
+     */
+    protected function executeCypherQuery($query, array $params = array())
+    {
+        $operation = new Query($this->apiClient, $query, $params);
+        return $operation->getResultSet();
     }
 
 }
