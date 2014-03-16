@@ -50,7 +50,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
             'predicateP'    => 'U ' . $triple->getPredicate(),
             'predicateCP'   => 'U ' . $graphUri . ' U ' . $triple->getPredicate(),
             'objectTerm'    => $triple->format('?object'),
-            'objectValue'   => $object['value'],
+            'objectValue'   => (string)$object['value'],
             'objectKind'    => $object['type']
         );
 
