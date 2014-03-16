@@ -58,18 +58,7 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $object = $triple->getObject();
-        $objectDefinition = $object['value'];
-        if ((isset($object['datatype']) && !empty($object['datatype'])) ||
-            (isset($object['lang']) && !empty($object['lang']))) {
-            $objectDefinition = $triple->format('?object');
-        }
-        $this->sparqlApiClient->insert(array(
-            'subject'   => $triple->getSubject(),
-            'predicate' => $triple->getPredicate(),
-            'object'    => $objectDefinition,
-            'graph'     => $graphIri
-        ));
+        $this->managementClient->addTriple($graphIri, $triple);
     }
 
     /**
