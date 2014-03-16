@@ -69,4 +69,16 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         $this->assertEquals(0, $this->client->getNumberOfTriples());
     }
 
+    /**
+     * Checks if deleteMatchingTriples() is callable without errors.
+     */
+    public function testDeleteMatchingTriplesIsCallable()
+    {
+        $this->setExpectedException(null);
+        $this->client->deleteMatchingTriples(
+            'http://example.org/any-graph',
+            new Erfurt_Store_Adapter_Sparql_TriplePattern()
+        );
+    }
+
 }

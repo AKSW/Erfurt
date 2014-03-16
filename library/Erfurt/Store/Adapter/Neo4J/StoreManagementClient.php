@@ -33,6 +33,17 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
     }
 
     /**
+     * Deletes all triples in the given graph that match the provided pattern.
+     *
+     * @param string $graphIri
+     * @param Erfurt_Store_Adapter_Sparql_TriplePattern $pattern
+     */
+    public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
+    {
+
+    }
+
+    /**
      * Removes all triples in the database.
      */
     public function clear()
