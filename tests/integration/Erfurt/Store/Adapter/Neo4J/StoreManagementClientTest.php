@@ -100,4 +100,25 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         );
     }
 
+    /**
+     * Ensures that addTriple() does not create the same triple twice.
+     */
+    public function testAddTripleDoesNotCreateSameTripleTwice()
+    {
+        $this->client->clear();
+
+        $triple = new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/graph',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'uri',
+                'value' => 'http://example.org/object'
+            )
+        );
+        $this->client->addTriple('http://example.org/graph', $triple);
+        $this->client->addTriple('http://example.org/graph', $triple);
+
+        $this->assertEquals(1, $this->client->getNumberOfTriples());
+    }
+
 }
