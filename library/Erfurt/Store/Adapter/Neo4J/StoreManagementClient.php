@@ -40,19 +40,16 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-        $params = array();
-        if ($pattern->getPredicate() !== null) {
-            $params['graphAndPredicate'] = 'U ' . $graphIri . ' U ' . $pattern->getPredicate();
-            $startCondition = 'cp={graphAndPredicate}';
-        } else {
-            $params['graph'] = 'U ' . $graphIri;
-            $startCondition  = 'c={graph}';
-        }
+        $params = array('graph' => 'U ' . $graphIri);
         $conditions = array();
         if ($pattern->getSubject() !== null) {
             $conditions[] = '(subject.value={subjectValue} and subject.kind={subjectType})';
             $params['subjectValue'] = $pattern->getSubject();
             $params['subjectType']  = 'uri';
+        }
+        if ($pattern->getPredicate() !== null) {
+            $conditions[] = '(r.p={predicate})';
+            $params['predicate'] = 'U ' . $pattern->getPredicate();
         }
         if ($pattern->getObject() !== null) {
             $conditions[] = '(object.value={objectValue} and object.kind={objectType})';
@@ -72,7 +69,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
                 $conditions[] = 'NOT(HAS(object.lang))';
             }
         }
-        $query = 'START r=relationship:relationship_auto_index(' . $startCondition . ') '
+        $query = 'START r=relationship:relationship_auto_index(c={graph}) '
                . 'MATCH (subject)-[r]->(object) ';
         if (count($conditions) > 0) {
             $query .= 'WHERE ' . implode(' and ', $conditions) . ' ';
