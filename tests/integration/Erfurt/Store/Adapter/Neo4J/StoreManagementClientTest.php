@@ -90,7 +90,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         $this->client->addTriple(
             'http://example.org/graph',
             new Erfurt_Store_Adapter_Sparql_Triple(
-                'http://example.org/graph',
+                'http://example.org/subject',
                 'http://example.org/predicate',
                 array(
                     'type'  => 'uri',
@@ -108,7 +108,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         $this->client->clear();
 
         $triple = new Erfurt_Store_Adapter_Sparql_Triple(
-            'http://example.org/graph',
+            'http://example.org/subject',
             'http://example.org/predicate',
             array(
                 'type'  => 'uri',
