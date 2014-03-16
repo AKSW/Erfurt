@@ -57,7 +57,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
             $params['objectValue'] = $object['value'];
             $params['objectType']  = $object['type'];
             if (isset($object['datatype']) && !empty($object['datatype'])) {
-                $conditions[] = 'object.datatype! = {objectDataType}';
+                $conditions[] = 'object.type! = {objectDataType}';
                 $params['objectDataType'] = $object['datatype'];
             } else {
                 $conditions[] = 'NOT(HAS(object.datatype))';
