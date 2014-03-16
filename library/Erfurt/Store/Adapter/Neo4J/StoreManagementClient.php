@@ -33,6 +33,33 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
     }
 
     /**
+     * Adds the provided triple to the graph.
+     *
+     * @param string $graphUri
+     * @param Erfurt_Store_Adapter_Sparql_Triple $triple
+     */
+    public function addTriple($graphUri, Erfurt_Store_Adapter_Sparql_Triple $triple)
+    {
+        $object = $triple->getObject();
+        $params = array(
+            'subjectValue'  => $triple->getSubject(),
+            'subjectKind'   => ((strpos($triple->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
+            'predicateType' => $triple->getPredicate(),
+            'predicateC'    => 'U ' . $graphUri,
+            'predicateP'    => 'U ' . $triple->getPredicate(),
+            'predicateCP'   => 'U ' . $graphUri . ' U ' . $triple->getPredicate(),
+            'objectValue'   => (($object['type'] === 'literal') ? $triple->format('?object') : $object['value']),
+            'objectKind'    => $object['type']
+        );
+        $subjectDefinition   = '(subject {value: {subjectValue}, kind: {subjectKind}})';
+        $predicateDefinition = '[r:`' . $triple->getPredicate() . ' {c: {predicateC}, cp: {predicateCP}, p: {predicateP}}`]';
+        $objectDefinition    = '(object {value: {objectValue}, kind: {objectKind}})';
+        $query = 'CREATE %s-%s->%s';
+        $query = sprintf($query, $subjectDefinition, $predicateDefinition, $objectDefinition);
+        $this->executeCypherQuery($query, $params);
+    }
+
+    /**
      * Deletes all triples in the given graph that match the provided pattern.
      *
      * @param string $graphIri

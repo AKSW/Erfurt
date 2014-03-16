@@ -81,4 +81,23 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClientTest extends \PHPUnit_Fram
         );
     }
 
+    /**
+     * Ensures that addTriple() is callable without errors.
+     */
+    public function testAddTripleIsCallable()
+    {
+        $this->setExpectedException(null);
+        $this->client->addTriple(
+            'http://example.org/graph',
+            new Erfurt_Store_Adapter_Sparql_Triple(
+                'http://example.org/graph',
+                'http://example.org/predicate',
+                array(
+                    'type'  => 'uri',
+                    'value' => 'http://example.org/object'
+                )
+            )
+        );
+    }
+
 }
