@@ -53,7 +53,15 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         );
         $subjectDefinition   = '(subject {value: {subjectValue}, kind: {subjectKind}})';
         $predicateDefinition = '[r:`' . $triple->getPredicate() . ' {c: {predicateC}, cp: {predicateCP}, p: {predicateP}}`]';
-        $objectDefinition    = '(object {value: {objectValue}, kind: {objectKind}})';
+        $objectProperties = 'value: {objectValue}, kind: {objectKind}';
+        if (isset($object['lang']) && !empty($object['lang'])) {
+            $params['objectLang'] = $object['lang'];
+            $objectProperties .= ', lang={objectLang}';
+        } else if (isset($object['datatype']) && !empty($object['datatype'])) {
+            $params['objectType'] = $object['datatype'];
+            $objectProperties .= ', type={objectType}';
+        }
+        $objectDefinition    = '(object {' . $objectProperties . '})';
         $query = 'CREATE %s-%s->%s';
         $query = sprintf($query, $subjectDefinition, $predicateDefinition, $objectDefinition);
         $this->executeCypherQuery($query, $params);
