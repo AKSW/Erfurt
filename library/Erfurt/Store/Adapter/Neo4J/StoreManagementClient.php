@@ -125,7 +125,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         if ($pattern->getObject() !== null) {
             $conditions[] = '(object.value={objectValue} and object.kind={objectType})';
             $object = $pattern->getObject();
-            $params['objectValue'] = $object['value'];
+            $params['objectValue'] = (string)$object['value'];
             $params['objectType']  = $object['type'];
             if (isset($object['datatype']) && !empty($object['datatype'])) {
                 $conditions[] = 'object.type! = {objectDataType}';
