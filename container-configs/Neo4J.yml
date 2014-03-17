@@ -7,7 +7,7 @@ services:
         class: Erfurt_Store_Adapter_SparqlSqlCombination
         arguments: ["@neo4j.sparql_adapter", "@mysql.sql_adapter"]
 
-    ne4j.sparql_adapter:
+    neo4j.sparql_adapter:
         class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
         arguments: ["@neo4j.sparql_connector"]
 
