@@ -4,18 +4,27 @@
 ;; Database Connection Settings                                               ;;
 ;;----------------------------------------------------------------------------;;
 
-store.backend = virtuoso ; zenddb, virtuoso, multi
+store.backend = virtuoso
 
+;
+; MySQL backend
+;
 store.zenddb.dbname   = erfurt_TEST ; needs to end with _TEST
 store.zenddb.username = php
 store.zenddb.password = php
 store.zenddb.dbtype   = mysql     ; mysql
 ;store.zenddb.host     = localhost ; default is localhost
 
+;
+; Virtuoso backend
+;
 store.virtuoso.dsn      = VOS_TEST ; needs to end with _TEST
 store.virtuoso.username = dba
 store.virtuoso.password = dba
 
+;
+; Oracle backend
+;
 store.oracle.adapterClass = "Erfurt_Store_Adapter_Container"
 store.oracle.configs[]    = "%erfurt.root%/container-configs/Oracle.yml"
 store.oracle.service      = "oracle_adapter_with_mysql_cache"
@@ -30,6 +39,9 @@ store.oracle.parameters.mysql.password = ""
 store.oracle.parameters.mysql.dbname   = "erfurt_test"
 store.oracle.parameters.erfurt.container.auto_setup = On
 
+;
+; Stardog backend
+;
 store.stardog.adapterClass = "Erfurt_Store_Adapter_Container"
 store.stardog.configs[]    = "%erfurt.root%/container-configs/Stardog.yml"
 store.stardog.service      = "stardog_adapter_with_mysql_cache"
@@ -43,3 +55,19 @@ store.stardog.parameters.mysql.username = "root"
 store.stardog.parameters.mysql.password = ""
 store.stardog.parameters.mysql.dbname   = "erfurt"
 store.stardog.parameters.erfurt.container.auto_setup = On
+
+;
+; Neo4J backend
+;
+store.neo4j.adapterClass = "Erfurt_Store_Adapter_Container"
+store.neo4j.configs[]    = "%erfurt.root%/container-configs/Neo4J.yml"
+store.neo4j.service      = "neo4j_adapter_with_mysql_cache"
+store.neo4j.parameters.neo4j.client.host = "non_production_host"
+store.neo4j.parameters.neo4j.client.port = 7474
+; store.neo4j.parameters.neo4j.client.log  = "%erfurt.root%/logs/neo4j-requests.log"
+; Settings for the MySQL cache and versioning system.
+store.neo4j.parameters.mysql.host     = "localhost"
+store.neo4j.parameters.mysql.username = "root"
+store.neo4j.parameters.mysql.password = ""
+store.neo4j.parameters.mysql.dbname   = "erfurt_test"
+store.neo4j.parameters.erfurt.container.auto_setup = On
