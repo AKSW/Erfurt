@@ -156,7 +156,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     }
 
     /**
-     * @param string $query A string containing a sparql query
+     * @param string|object $query A string containing a sparql query
      * @param array $options Option array to push down parameters to adapters
      * feel free to add anything you want. put the store name in front for special options, but use macros
      *      'result_format' => ['plain' | 'xml']

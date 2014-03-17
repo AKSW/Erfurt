@@ -191,6 +191,26 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
     }
 
     /**
+     * Ensures that the generic adapter converts a SPARQL query to string if it
+     * is passed as object.
+     */
+    public function testSparqlQueryConvertsQueryObjectToStringIfNecessary()
+    {
+        $originalQuery = 'SELECT * WHERE { ?s ?p ?o . }';
+        $query = $this->getMock('stdClass', array('__toString'));
+        $query->expects($this->any())
+              ->method('__toString')
+              ->will($this->returnValue($originalQuery));
+        // The connector must receive the query string, not the object.
+        $this->connector->expects($this->once())
+                        ->method('query')
+                        ->with($this->logicalAnd($this->isType('string'), $this->equalTo($originalQuery)))
+                        ->will($this->returnValue($this->getSimpleResult()));
+
+        $this->adapter->sparqlQuery($query);
+    }
+
+    /**
      * Checks if createModel() returns always true, as the connector should
      * handle the creation of a new named graph when a triple is inserted.
      */
@@ -619,6 +639,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapterTest extends \PHPUnit_Fram
      * determine the existing graphs.
      *
      * @param array(string) $graphs
+     * @return array(mixed)
      */
     protected function getGraphResult(array $graphs)
     {
