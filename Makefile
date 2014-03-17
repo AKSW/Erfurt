@@ -10,6 +10,7 @@ default:
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
 	@echo "  test-integration-oracle ...... Run Erfurt integration tests with Oracle"
 	@echo "  test-integration-stardog ..... Run Erfurt integration tests with Stardog"
+	@echo "  test-integration-neo4j ....... Run Erfurt integration tests with Neo4J"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
 	@echo "  cs-install ................... install CodeSniffer"
@@ -144,6 +145,9 @@ test-integration-oracle: test-directories
 
 test-integration-stardog: test-directories
 	@cd tests && EF_STORE_ADAPTER=stardog phpunit --bootstrap Bootstrap.php --group Integration integration/
+
+test-integration-neo4j: test-directories
+	@cd tests && EF_STORE_ADAPTER=neo4j phpunit --bootstrap Bootstrap.php --group Integration integration/
 
 test-adapter-oracle:
 	@cd tests && phpunit --bootstrap Bootstrap.php --group Oracle integration/
