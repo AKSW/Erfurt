@@ -131,7 +131,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
                 $conditions[] = 'object.type! = {objectDataType}';
                 $params['objectDataType'] = $object['datatype'];
             } else {
-                $conditions[] = 'NOT(HAS(object.datatype))';
+                $conditions[] = 'NOT(HAS(object.type))';
             }
             if (isset($object['lang']) && !empty($object['lang'])) {
                 $conditions[] = 'object.lang! = {objectLang}';
