@@ -3,6 +3,14 @@ parameters:
     neo4j.client.log: ~
 
 services:
+    neo4j_adapter_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@neo4j.sparql_adapter", "@mysql.sql_adapter"]
+
+    ne4j.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@neo4j.sparql_connector"]
+
     neo4j.sparql_connector:
         alias: neo4j.sparql_connector.default
 
@@ -28,3 +36,13 @@ services:
     neo4j.client.rest_api:
         class: Everyman\Neo4j\Client
         arguments: ["%neo4j.client.host%", "%neo4j.client.port%"]
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"

@@ -1,0 +1,12 @@
+; Configuration for a container factory.
+configs[]    = "%erfurt.root%/container-configs/Neo4J.yml"
+service      = "tba"
+parameters.neo4j.client.host = "localhost"
+parameters.neo4j.client.port = 7474
+; parameters.neo4j.client.log  = "%erfurt.root%/logs/neo4j-requests.log"
+; Settings for the MySQL cache and versioning system.
+parameters.mysql.host     = "localhost"
+parameters.mysql.username = "root"
+parameters.mysql.password = ""
+parameters.mysql.dbname   = "erfurt_test"
+parameters.erfurt.container.auto_setup = On
