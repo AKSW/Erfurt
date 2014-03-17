@@ -168,7 +168,7 @@ class Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter implements \Erfurt_Store_
     public function sparqlQuery($query, $options = array())
     {
         try {
-            $extendedResult = $this->connector->query($query);
+            $extendedResult = $this->connector->query((string)$query);
             $format         = isset($options[Erfurt_Store::RESULTFORMAT]) ? $options[Erfurt_Store::RESULTFORMAT] : null;
             return $this->formatResultSet($extendedResult, $this->determineResultFormat($format, $query));
         } catch (Exception $e) {
