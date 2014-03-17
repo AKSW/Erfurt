@@ -108,6 +108,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      *
      * @param string $graphIri
      * @param Erfurt_Store_Adapter_Sparql_TriplePattern $pattern
+     * @return integer The number of deleted triples.
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
@@ -145,8 +146,10 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         if (count($conditions) > 0) {
             $query .= 'WHERE ' . implode(' and ', $conditions) . ' ';
         }
-        $query .= 'DELETE r';
-        $this->executeCypherQuery($query, $params);
+        $query .= 'DELETE r ';
+        $query .= 'RETURN COUNT(r) AS deletedTriples';
+        $result = $this->executeCypherQuery($query, $params);
+        return $result[0]['deletedTriples'];
     }
 
     /**
