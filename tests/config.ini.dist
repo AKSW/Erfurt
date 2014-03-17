@@ -64,7 +64,6 @@ store.neo4j.configs[]    = "%erfurt.root%/container-configs/Neo4J.yml"
 store.neo4j.service      = "neo4j_adapter_with_mysql_cache"
 store.neo4j.parameters.neo4j.client.host = "non_production_host"
 store.neo4j.parameters.neo4j.client.port = 7474
-; store.neo4j.parameters.neo4j.client.log  = "%erfurt.root%/logs/neo4j-requests.log"
 ; Settings for the MySQL cache and versioning system.
 store.neo4j.parameters.mysql.host     = "localhost"
 store.neo4j.parameters.mysql.username = "root"
