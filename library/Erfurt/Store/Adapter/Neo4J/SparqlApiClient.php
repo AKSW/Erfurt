@@ -13,7 +13,6 @@ use Guzzle\Service\Description\ServiceDescription;
  *
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 13.03.14
- * @method void insert(array) Inserts a quad.
  */
 class Erfurt_Store_Adapter_Neo4J_SparqlApiClient extends Client
 {

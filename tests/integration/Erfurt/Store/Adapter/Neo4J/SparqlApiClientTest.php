@@ -83,18 +83,4 @@ class Erfurt_Store_Adapter_Neo4J_SparqlApiClientTest extends \PHPUnit_Framework_
         $this->client->query('Hello world!');
     }
 
-    /**
-     * Checks if insert() accepts a valid quad data set.
-     */
-    public function testInsertAcceptsQuadData()
-    {
-        $this->setExpectedException(null);
-        $this->client->insert(array(
-            'subject'   => 'http://example.org/subject',
-            'predicate' => 'http://example.org/predicate',
-            'object'    => 'http://example.org/object',
-            'graph'     => 'http://example.org/graph'
-        ));
-    }
-
 }

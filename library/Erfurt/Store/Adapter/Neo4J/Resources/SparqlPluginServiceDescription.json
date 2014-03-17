@@ -24,42 +24,6 @@
                 }
             }
         },
-        "insert": {
-            "summary": "Inserts a single quad.",
-            "extends": "baseOperation",
-            "uri": "db/data/ext/SPARQLPlugin/graphdb/insert_quad",
-            "httpMethod": "POST",
-            "parameters": {
-                "subject": {
-                    "description": "The subject.",
-                    "type": "string",
-                    "location": "json",
-                    "sentAs": "s",
-                    "required": true
-                },
-                "predicate": {
-                    "description": "The predicate.",
-                    "type": "string",
-                    "location": "json",
-                    "sentAs": "p",
-                    "required": true
-                },
-                "object": {
-                    "description": "The object.",
-                    "type": "string",
-                    "location": "json",
-                    "sentAs": "o",
-                    "required": true
-                },
-                "graph": {
-                    "description": "The graph the the triple belongs to.",
-                    "type": "string",
-                    "location": "json",
-                    "sentAs": "c",
-                    "required": true
-                }
-            }
-        },
         "query": {
             "summary": "Executes a SPARQL query and returns the results.",
             "extends": "baseOperation",
