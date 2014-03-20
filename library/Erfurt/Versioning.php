@@ -234,7 +234,7 @@ class Erfurt_Versioning
     {
         $this->_checkSetup();
 
-        $sql = 'SELECT id, resource, useruri, tstamp, action_type' . PHP_EOL;
+        $sql = 'SELECT id, resource, useruri, tstamp, action_type, change_reason' . PHP_EOL;
         $sql.= 'FROM ef_versioning_actions' . PHP_EOL;
         $sql.= 'WHERE' . PHP_EOL;
         $sql.= 'model = \'' . $graphUri . '\' AND' . PHP_EOL;
@@ -365,7 +365,7 @@ class Erfurt_Versioning
 
             $payloadId = $this->_execAddPayload($payload);
             $resource = $event->statement['subject'];
-            $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, $payloadId);
+            $this->_execAddAction($event->graphUri, $resource, self::STATEMENT_ADDED, null, $payloadId);
         } else {
             // do nothing
         }
@@ -400,8 +400,9 @@ class Erfurt_Versioning
         if (isset($event->statements)) {
             $this->_execAddPayloadsAndActions($graphUri, self::STATEMENT_REMOVED, $event->statements);
         } else {
-            // In this case, we have no payload. Just add a action without a payload (no rollback possible).
-            $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED);
+            // In this case, we have no payload. Just add a action without a payload (no rollback possible). 
+            // Also no change reason is saved which is why the last parameter is null.
+            $this->_execAddAction($graphUri, $event->resource, self::STATEMENT_REMOVED, null);
         }
     }
 
@@ -496,8 +497,9 @@ class Erfurt_Versioning
             $actionType = $actionSpec['type'];
             $graphUri = $actionSpec['modeluri'];
             $resource = $actionSpec['resourceuri'];
+            $changeReason = $actionSpec['changeReason'];
             $this->_currentAction = $actionSpec;
-            $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType);
+            $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType, $changeReason);
 
             // in order to refer to the action later, we return the id
             return $this->_currentActionParent;
@@ -640,7 +642,7 @@ class Erfurt_Versioning
         $resultAction  = $this->_sqlQuery($sqldeleteAction);
     }
 
-    private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
+    private function _execAddAction($graphUri, $resource, $actionType, $changeReason, $payloadId = null)
     {
         if ($this->_user === null) {
             $identity = $this->_getAuth()->getIdentity();
@@ -652,7 +654,7 @@ class Erfurt_Versioning
         }
         $userUri = $this->_user;
 
-        $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent';
+        $actionsSql = 'INSERT INTO ef_versioning_actions (model, useruri, resource, tstamp, action_type, parent, change_reason';
 
         if (null !== $payloadId) {
             $actionsSql .= ', payload_id)';
@@ -671,14 +673,15 @@ class Erfurt_Versioning
         $actionsSql .= '\'' . addslashes($userUri) . '\',';
         $actionsSql .= '\'' . addslashes($resource) . '\',';
         $actionsSql .= '\'' . time() . '\',';
-        $actionsSql .= addslashes($actionType) . ', ' . $actionParent;
+        $actionsSql .= addslashes($actionType) . ', ' . $actionParent . ', ';
+        $actionsSql .= '\'' . addslashes($changeReason) . '\'';
 
         if (null !== $payloadId) {
            $actionsSql .= ', ' . $payloadId;
         }
         $actionsSql .= ')';
 
-        $this->_sqlQuery($actionsSql);
+        $result = $this->_sqlQuery($actionsSql);
 
         if (null !== $this->_currentAction) {
             $parentActionId = $this->_getStore()->lastInsertId();
@@ -704,7 +707,7 @@ class Erfurt_Versioning
                 foreach ($oArray as $i => $oSpec) {
                     $statement = array($s => array($p => array($oSpec)));
                     $payloadId = $this->_execAddPayload($statement);
-                    $this->_execAddAction($graphUri, $s, $actionType, $payloadId);
+                    $this->_execAddAction($graphUri, $s, $actionType, null, $payloadId);
                 }
             }
         }
