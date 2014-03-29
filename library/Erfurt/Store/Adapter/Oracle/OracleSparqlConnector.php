@@ -135,7 +135,7 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
         $statement = $this->createSparqlStatement($sparqlQuery);
         $statement->execute();
         $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return $this->formatResultSet($results,$sparqlQuery);
+        return $this->formatResultSet($results, $sparqlQuery);
     }
 
     /**
