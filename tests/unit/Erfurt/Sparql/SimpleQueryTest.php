@@ -88,9 +88,71 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
 
+    public function testInitWithStringCount()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource count(?comment)
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+            }
+            ORDER BY ?c';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringCountAs()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource count(?comment) as ?c
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+            }
+            ORDER BY ?c';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringCountAsNewlines()
+    {
+        $queryString = '
+            BASE
+            <http://example.org/>
+            PREFIX
+            rdfs:
+            <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX rev: <http://purl.org/stuff/rev#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            PREFIX bsbm:
+            <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/>
+            PREFIX
+            dc:
+            <http://purl.org/dc/elements/1.1/>
+
+            SELECT
+            DISTINCT
+            ?resource
+            count
+            (?comment)
+            as
+            ?c
+            WHERE {
+                ?comment
+                    <http://rdfs.org/sioc/ns#about>
+                    ?resource.
+            }
+    ORDER
+        BY
+        ?c';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
     public function testInitWithStringComplex()
     {
         $queryString = '
+            BASE <http://example.org/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rev: <http://purl.org/stuff/rev#>
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -145,6 +207,19 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
                 ?s ?p ?o
             }
         ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+    }
+
+    public function testInitWithStringVarAndCountStar()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource count(*)
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+            }
+            ORDER BY ?c';
+
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
     }
