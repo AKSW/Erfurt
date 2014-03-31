@@ -220,9 +220,33 @@ class Erfurt_Sparql_SimpleQuery
         return $this->_offset;
     }
 
+    /**
+     * Returns the 'ORDER BY …' part of the query
+     */
+    public function getOrderClause()
+    {
+        return $this->_orderClause;
+    }
+
+
     public function getProloguePart()
     {
         return $this->_prologuePart;
+    }
+
+    public function isAsk()
+    {
+        return $this->_ask;
+    }
+
+    public function getSelectClause()
+    {
+        return $this->_selectClause;
+    }
+
+    public function getWherePart()
+    {
+        return $this->_wherePart;
     }
 
     public function resetInstance()
@@ -256,7 +280,7 @@ class Erfurt_Sparql_SimpleQuery
 
     public function setLimit($limit)
     {
-        $this->_limit = $limit;
+        $this->_limit = (int)$limit;
 
         return $this;
     }
@@ -267,6 +291,9 @@ class Erfurt_Sparql_SimpleQuery
        return $this;
     }
 
+    /**
+     * Set the 'ORDER BY …' part for the query
+     */
     public function setOrderClause($orderString)
     {
         $this->_orderClause = $orderString;
@@ -281,7 +308,7 @@ class Erfurt_Sparql_SimpleQuery
         return $this;
     }
 
-    public function setAsk($ask)
+    public function setAsk($ask = true)
     {
         if ($ask === true | strtolower($ask) == 'ask') {
             $this->_ask = true;
