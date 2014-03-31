@@ -114,6 +114,7 @@ class Erfurt_Sparql_SimpleQuery
         );
 
         $var = '[?$]{1}[\w\d]+';
+        $expr = '(\w*\(.*\))';
         // /(BASE.*?\s)?(PREFIX.*?\s)*(ASK|((COUNT(\s)*(\(.*?\))))|(SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)+(\(.*?\)(\s)))?(\?\w+\s+|\*)*)/si
         $tokens = array(
             'prefix'        => '/((PREFIX\s+[^:\s]+:\s+<[^\s]*>\s*)+)/si',
@@ -123,7 +124,7 @@ class Erfurt_Sparql_SimpleQuery
             'from'          => '/FROM\s+<(.+?)>/i',
             'from_named'    => '/FROM\s+NAMED\s+<(.+?)>/i',
             'where'         => '/(WHERE\s+)?\{.*\}/si',
-            'order'         => '/ORDER\s+BY((\s+' . $var . '|\s+(ASC|DESC)\s*\(\s*' . $var . '\s*\))+)/i',
+            'order'         => '/ORDER\s+BY((\s+' . $var . '|\s+' . $expr . '|\s+(ASC|DESC)\s*' . $expr . ')+)/i',
             'limit'         => '/LIMIT\s+(\d+)/i',
             'offset'        => '/OFFSET\s+(\d+)/i'
         );

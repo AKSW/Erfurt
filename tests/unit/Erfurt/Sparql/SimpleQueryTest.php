@@ -200,6 +200,46 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $this->assertEquals(6, $queryObject->getOffset());
     }
 
+    public function testInitWithStringOrderExpression()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource count(?comment)
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+            }
+            ORDER BY LANG(?comment) limit 10';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(?comment)', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('LANG(?comment)', $queryObject->getOrderClause());
+        $this->assertEquals(10, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
+    }
+
+    public function testInitWithStringOrderExpression2()
+    {
+        $queryString = '
+            SELECT DISTINCT ?resource count(?comment)
+            WHERE {
+                ?comment <http://rdfs.org/sioc/ns#about> ?resource.
+            }
+            ORDER BY asc(LANG(?comment)) limit 10';
+
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(?comment)', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('ASC(LANG(?comment))', $queryObject->getOrderClause());
+        $this->assertEquals(10, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
+    }
+
     public function testInitWithStringCount()
     {
         $queryString = '
