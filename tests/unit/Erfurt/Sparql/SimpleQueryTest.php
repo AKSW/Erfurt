@@ -52,7 +52,7 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $queryObject->setOrderClause('DESC(?date)');
         $queryObject->setLimit(6);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
+        $this->assertEquals(false, $queryObject->isAsk());
     }
 
     public function testSetWithMethodsAsk()
@@ -81,8 +81,8 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         $queryObject->setOrderClause('DESC(?date)');
         $queryObject->setLimit(6);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), true);
-        $this->assertEquals($queryObject->getSelectClause(), null);
+        $this->assertEquals(true, $queryObject->isAsk());
+        $this->assertEquals(null, $queryObject->getSelectClause());
     }
 
     public function testInitWithStringSimple()
@@ -101,18 +101,19 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource ?author ?comment ?content ?date');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource ?author ?comment ?content ?date', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {
                 ?comment <http://rdfs.org/sioc/ns#about> ?resource.
                 ?comment a <http://rdfs.org/sioc/types#Comment>.
                 ?comment <http://rdfs.org/sioc/ns#has_creator> ?author.
                 ?comment <http://rdfs.org/sioc/ns#content> ?content.
                 ?comment <http://purl.org/dc/terms/created> ?date.
-            }');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), 'DESC(?date)');
-        $this->assertEquals($queryObject->getLimit(), 6);
-        $this->assertEquals($queryObject->getOffset(), null);
+            }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('DESC(?date)', $queryObject->getOrderClause());
+        $this->assertEquals(6, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringOrderNotBracketted()
@@ -130,18 +131,19 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource ?author ?comment ?content ?date');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource ?author ?comment ?content ?date', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {
                 ?comment <http://rdfs.org/sioc/ns#about> ?resource;
                          a <http://rdfs.org/sioc/types#Comment>;
                          <http://rdfs.org/sioc/ns#has_creator> ?author;
                          <http://rdfs.org/sioc/ns#content> ?content;
                          <http://purl.org/dc/terms/created> ?date.
-            }');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?date');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+            }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?date', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringOrderNotBrackettedLimitNoDistinct()
@@ -160,18 +162,19 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT ?resource ?author ?comment ?content ?date');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT ?resource ?author ?comment ?content ?date', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {
                 ?comment <http://rdfs.org/sioc/ns#about> ?resource;
                          a <http://rdfs.org/sioc/types#Comment>;
                          <http://rdfs.org/sioc/ns#has_creator> ?author;
                          <http://rdfs.org/sioc/ns#content> ?content;
                          <http://purl.org/dc/terms/created> ?date.
-            }');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?date');
-        $this->assertEquals($queryObject->getLimit(), 6);
-        $this->assertEquals($queryObject->getOffset(), null);
+            }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?date', $queryObject->getOrderClause());
+        $this->assertEquals(6, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringOrderNotBrackettedOffset()
@@ -190,9 +193,11 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?date');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), 6);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('?date', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(6, $queryObject->getOffset());
     }
 
     public function testInitWithStringCount()
@@ -206,12 +211,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource count(?comment)');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?comment');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(?comment)', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?comment', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringCountAs()
@@ -225,12 +231,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource count(?comment) as ?c');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?c');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(?comment) as ?c', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?c', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringCountAsNewlines()
@@ -266,18 +273,18 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), 'BASE <http://example.org/>
+        $this->assertEqualsNoWs('BASE <http://example.org/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rev: <http://purl.org/stuff/rev#>
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
             PREFIX bsbm: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/>
-            PREFIX dc: <http://purl.org/dc/elements/1.1/>');
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource count(?comment) as ?c');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?c');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+            PREFIX dc: <http://purl.org/dc/elements/1.1/>', $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(?comment) as ?c', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?c', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringComplex()
@@ -316,15 +323,15 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), 'BASE <http://example.org/>
+        $this->assertEqualsNoWs('BASE <http://example.org/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX rev: <http://purl.org/stuff/rev#>
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
             PREFIX bsbm: <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/vocabulary/>
-            PREFIX dc: <http://purl.org/dc/elements/1.1/>');
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT ?productLabel ?offer ?price ?vendor ?vendorTitle ?review ?revTitle ?reviewer ?revName ?rating1 ?rating2');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {
+            PREFIX dc: <http://purl.org/dc/elements/1.1/>', $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT ?productLabel ?offer ?price ?vendor ?vendorTitle ?review ?revTitle ?reviewer ?revName ?rating1 ?rating2', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {
                 <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromProducer1/Product1> rdfs:label ?productLabel .
                 OPTIONAL {
                     ?offer bsbm:product <http://www4.wiwiss.fu-berlin.de/bizer/bsbm/v01/instances/dataFromProducer1/Product1> .
@@ -344,10 +351,10 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
                     OPTIONAL { ?review bsbm:rating1 ?rating1 . }
                     OPTIONAL { ?review bsbm:rating2 ?rating2 . }
                 }
-            }');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), null);
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+            }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringAsk()
@@ -360,13 +367,82 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         ';
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), null);
-        $this->assertEquals($queryObject->isAsk(), true);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), null);
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?s ?p ?o}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), null);
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(true, $queryObject->isAsk());
+        $this->assertEqualsNoWs(null, $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
+    }
+
+    public function testInitWithStringFrom()
+    {
+        $queryString = '
+            SELECT ?s
+            FROM <http://example.org/>
+            FROM <http://example.com/>
+            WHERE {
+                ?s ?p ?o
+            }
+        ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT ?s', $queryObject->getSelectClause());
+        $this->assertEquals(array('http://example.org/', 'http://example.com/'), $queryObject->getFrom());
+        $this->assertEquals(array(), $queryObject->getFromNamed());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
+    }
+
+    public function testInitWithStringFromNamed()
+    {
+        $queryString = '
+            ASK
+            FROM NAMED <http://example.org/>
+            FROM NAMED <http://example.com/>
+            WHERE {
+                ?s ?p ?o
+            }
+        ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(true, $queryObject->isAsk());
+        $this->assertEqualsNoWs(null, $queryObject->getSelectClause());
+        $this->assertEquals(array(), $queryObject->getFrom());
+        $this->assertEquals(array('http://example.org/', 'http://example.com/'), $queryObject->getFromNamed());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
+    }
+
+    public function testInitWithStringFromAndFromNamed()
+    {
+        $queryString = '
+            ASK
+            FROM <http://example.org/>
+            FROM NAMED <http://example.com/>
+            WHERE {
+                ?s ?p ?o
+            }
+        ';
+        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
+        $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(true, $queryObject->isAsk());
+        $this->assertEqualsNoWs(null, $queryObject->getSelectClause());
+        $this->assertEquals(array('http://example.org/'), $queryObject->getFrom());
+        $this->assertEquals(array('http://example.com/'), $queryObject->getFromNamed());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringStar()
@@ -379,13 +455,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         ';
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), null);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT *');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?s ?p ?o}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), null);
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT *', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringCountStar()
@@ -398,13 +474,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
         ';
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), null);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT count(*)');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?s ?p ?o}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), null);
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT count(*)', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?s ?p ?o}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs(null, $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringVarAndCountStar()
@@ -418,13 +494,13 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), null);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resource count(*)');
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), '?comment');
-        $this->assertEquals($queryObject->getLimit(), null);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resource count(*)', $queryObject->getSelectClause());
+        $this->assertEqualsNoWs('WHERE {?comment <http://rdfs.org/sioc/ns#about> ?resource.}', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('?comment', $queryObject->getOrderClause());
+        $this->assertEquals(null, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithStringUnusuallyFormatted()
@@ -439,14 +515,14 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
-        $this->assertEqualsNoWs($queryObject->getProloguePart(), null);
-        $this->assertEquals($queryObject->isAsk(), false);
-        $this->assertEqualsNoWs($queryObject->getSelectClause(), 'SELECT DISTINCT ?resourceUri');
-        $this->assertEquals($queryObject->getFrom(), array('http://sebastian.dietzold.de/rdf/foaf.rdf'));
-        $this->assertEqualsNoWs($queryObject->getWherePart(), 'WHERE { <http://sebastian.dietzold.de/terms/me> <http://xmlns.com/foaf/0.1/pastProject> ?resourceUri FILTER (isURI(?resourceUri) && !isBLANK(?resourceUri)) }');
-        $this->assertEqualsNoWs($queryObject->getOrderClause(), 'asc(?resourceUri)');
-        $this->assertEquals($queryObject->getLimit(), 10);
-        $this->assertEquals($queryObject->getOffset(), null);
+        $this->assertEqualsNoWs(null, $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?resourceUri', $queryObject->getSelectClause());
+        $this->assertEquals(array('http://sebastian.dietzold.de/rdf/foaf.rdf'), $queryObject->getFrom());
+        $this->assertEqualsNoWs('WHERE { <http://sebastian.dietzold.de/terms/me> <http://xmlns.com/foaf/0.1/pastProject> ?resourceUri FILTER (isURI(?resourceUri) && !isBLANK(?resourceUri)) }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('asc(?resourceUri)', $queryObject->getOrderClause());
+        $this->assertEquals(10, $queryObject->getLimit());
+        $this->assertEquals(null, $queryObject->getOffset());
     }
 
     public function testInitWithString2()
@@ -473,6 +549,16 @@ class Erfurt_Sparql_SimpleQueryTest extends Erfurt_TestCase
 
         $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($queryString);
         $this->assertQueryEquals($queryString, (string)$queryObject);
+        $this->assertEqualsNoWs('PREFIX vakp: <http://vakantieland.nl/model/properties/> PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>', $queryObject->getProloguePart());
+        $this->assertEquals(false, $queryObject->isAsk());
+        $this->assertEqualsNoWs('SELECT DISTINCT ?poi', $queryObject->getSelectClause());
+        $this->assertEquals(array('http://vakantieland.nl/model/'), $queryObject->getFrom());
+        $this->assertEqualsNoWs('WHERE { ?poi vakp:isPublicPoi "true"^^xsd:boolean .  ?poi wgs84:long ?long .
+            FILTER (?long >= 5.804).  FILTER (?long <= 6.3478).  ?poi wgs84:lat ?lat .
+            FILTER (?lat >= 52.3393) .  FILTER (?lat <= 52.6704).  ?poi vakp:ranking ?ranking }', $queryObject->getWherePart());
+        $this->assertEqualsNoWs('desc(?ranking) asc(?poi)', $queryObject->getOrderClause());
+        $this->assertEquals(10, $queryObject->getLimit());
+        $this->assertEquals(0, $queryObject->getOffset());
     }
 
     public function testInitWithString3()
