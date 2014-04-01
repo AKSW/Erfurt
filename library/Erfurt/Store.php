@@ -430,7 +430,7 @@ class Erfurt_Store
                     $this->importRdf(
                         $sysOntModel,
                         $modelPath,
-                        'rdfxml',
+                        'ttl',
                         Erfurt_Syntax_RdfParser::LOCATOR_FILE,
                         false
                     );
@@ -439,7 +439,7 @@ class Erfurt_Store
                     $this->importRdf(
                         $sysOntModel,
                         $modelLocation,
-                        'rdfxml',
+                        'ttl',
                         Erfurt_Syntax_RdfParser::LOCATOR_URL,
                         false
                     );
@@ -478,7 +478,7 @@ class Erfurt_Store
                     $this->importRdf(
                         $sysOntSchema,
                         $schemaPath,
-                        'rdfxml',
+                        'ttl',
                         Erfurt_Syntax_RdfParser::LOCATOR_FILE,
                         false
                     );
@@ -487,7 +487,7 @@ class Erfurt_Store
                     $this->importRdf(
                         $sysOntSchema,
                         $schemaLocation,
-                        'rdfxml',
+                        'ttl',
                         Erfurt_Syntax_RdfParser::LOCATOR_URL,
                         false
                     );
