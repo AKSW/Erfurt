@@ -147,7 +147,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlWrapper
      * provided SPARQL query.
      *
      * @param Erfurt_Sparql_Query $query
-     * @return string
+     * @return array(string)
      */
     protected function getRequestedVariables(Erfurt_Sparql_Query $query)
     {
