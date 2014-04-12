@@ -72,7 +72,7 @@ class Erfurt_Store_Adapter_Oracle_LoadResourceUrisFromAkswDataSetEvent
         $query = 'SELECT DISTINCT ?resourceUri '
                . 'FROM <http://localhost/OntoWiki/aksw> '
                . 'WHERE { '
-               . '     { '
+               . '    { '
                . '        ?sub <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?resourceUri '
                . '    } UNION { '
                . '        ?sub <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?resourceUri '
