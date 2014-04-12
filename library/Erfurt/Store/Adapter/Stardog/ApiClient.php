@@ -241,18 +241,6 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     }
 
     /**
-     * Removes the provided ID from the list of pending transactions.
-     *
-     * @param string $id
-     */
-    protected function removePendingTransaction($id)
-    {
-        if (in_array($id, $this->pendingTransactions)) {
-            unset($this->pendingTransactions[array_search($id, $this->pendingTransactions)]);
-        }
-    }
-
-    /**
      * Rolls back any transaction that is still pending.
      */
     public function rollbackPendingTransactions()
@@ -271,6 +259,18 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         }
         $batch->flush();
         $this->pendingTransactions = array();
+    }
+
+    /**
+     * Removes the provided ID from the list of pending transactions.
+     *
+     * @param string $id
+     */
+    protected function removePendingTransaction($id)
+    {
+        if (in_array($id, $this->pendingTransactions)) {
+            unset($this->pendingTransactions[array_search($id, $this->pendingTransactions)]);
+        }
     }
 
 }
