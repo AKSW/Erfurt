@@ -43,4 +43,35 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
         parent::tearDown();
     }
 
+    public function testAddTripleDelegatesToAddStatement()
+    {
+
+    }
+
+    public function testAdditionsAreDelegatedToAddMultipleStatementsInBatchMode()
+    {
+
+    }
+
+    public function testQueryDelegatesToSparqlQuery()
+    {
+
+    }
+
+    public function testQueryDelegatesAskQueryToSparqlAsk()
+    {
+
+    }
+
+    public function testDeleteMatchingTriplesDelegatesToCorrectAdapterMethod()
+    {
+
+    }
+
+    public function testBatchExecutesCallback()
+    {
+
+    }
+
+
 }
