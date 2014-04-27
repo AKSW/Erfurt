@@ -43,31 +43,49 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
         parent::tearDown();
     }
 
+    /**
+     * Checks if addTriple() delegates to the addStatement() method of the Store adapter.
+     */
     public function testAddTripleDelegatesToAddStatement()
     {
 
     }
 
+    /**
+     * Ensures that the addTriple() calls are delegated to addMultipleStatements() in batch mode.
+     */
     public function testAdditionsAreDelegatedToAddMultipleStatementsInBatchMode()
     {
 
     }
 
+    /**
+     * Checks if query() delegates to sparqlQuery().
+     */
     public function testQueryDelegatesToSparqlQuery()
     {
 
     }
 
+    /**
+     * Ensures that query() delegates ASK queries to sparqlAsk().
+     */
     public function testQueryDelegatesAskQueryToSparqlAsk()
     {
 
     }
 
+    /**
+     * Checks if deleteMatchingTriples() delegates to the correct adapter method.
+     */
     public function testDeleteMatchingTriplesDelegatesToCorrectAdapterMethod()
     {
 
     }
 
+    /**
+     * Ensures that batch() executes the provided callback.
+     */
     public function testBatchExecutesCallback()
     {
 
