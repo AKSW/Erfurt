@@ -44,11 +44,34 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
     }
 
     /**
+     * Checks if the adapter implements the Connector interface.
+     */
+    public function testImplementsInterface()
+    {
+        $this->assertInstanceOf('Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface', $this->adapter);
+    }
+
+    /**
      * Checks if addTriple() delegates to the addStatement() method of the Store adapter.
      */
     public function testAddTripleDelegatesToAddStatement()
     {
+        $triple = new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array('type' => 'uri', 'value' => 'http://example.org/object')
+        );
+        $this->storeAdapter->expects($this->once())
+                           ->method('addStatement')
+                           ->with(
+                               'http://example.org/graph',
+                               $triple->getSubject(),
+                               $triple->getPredicate(),
+                               $triple->getObject(),
+                               array()
+                           );
 
+        $this->adapter->addTriple('http://example.org/graph', $triple);
     }
 
     /**
@@ -56,7 +79,41 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testAdditionsAreDelegatedToAddMultipleStatementsInBatchMode()
     {
+        $first = new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/subject1',
+            'http://example.org/predicate1',
+            array('type' => 'uri', 'value' => 'http://example.org/object1')
+        );
+        $second = new Erfurt_Store_Adapter_Sparql_Triple(
+            'http://example.org/subject2',
+            'http://example.org/predicate2',
+            array('type' => 'uri', 'value' => 'http://example.org/object2')
+        );
+        $statements = array(
+            $first->getSubject() => array(
+                $first->getPredicate() => array(
+                    $first->getObject()
+                )
+            ),
+            $second->getSubject() => array(
+                $second->getPredicate() => array(
+                    $second->getObject()
+                )
+            )
+        );
+        $this->storeAdapter->expects($this->once())
+                           ->method('addMultipleStatements')
+                           ->with('http://example.org/graph', $statements, array());
 
+        $this->adapter->batch(function ($connector) use ($first, $second) {
+            PHPUnit_Framework_Assert::assertInstanceOf(
+                'Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface',
+                $connector
+            );
+            /* @var $connector Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
+            $connector->addTriple('http://example.org', $first);
+            $connector->addTriple('http://example.org', $second);
+        });
     }
 
     /**
@@ -64,7 +121,12 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testQueryDelegatesToSparqlQuery()
     {
+        $query = 'SELECT * WHERE { ?s ?p ? o . }';
+        $this->storeAdapter->expects($this->once())
+                           ->method('sparqlQuery')
+                           ->with($query, array());
 
+        $this->adapter->query($query);
     }
 
     /**
@@ -72,7 +134,12 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testQueryDelegatesAskQueryToSparqlAsk()
     {
+        $query = 'ASK WHERE { ?s ?p ? o . }';
+        $this->storeAdapter->expects($this->once())
+                           ->method('sparqlAsk')
+                           ->with($query);
 
+        $this->adapter->query($query);
     }
 
     /**
@@ -80,7 +147,22 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testDeleteMatchingTriplesDelegatesToCorrectAdapterMethod()
     {
+        $pattern = new Erfurt_Store_Adapter_Sparql_TriplePattern(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array('type' => 'uri', 'value' => 'http://example.org/object')
+        );
+        $this->storeAdapter->expects($this->once())
+                           ->method('deleteMatchingStatements')
+                           ->with(
+                               'http://example.org/graph',
+                               $pattern->getSubject(),
+                               $pattern->getPredicate(),
+                               $pattern->getObject(),
+                               array()
+                           );
 
+        $this->adapter->deleteMatchingTriples('http://example.org/graph', $pattern);
     }
 
     /**
@@ -88,8 +170,11 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testBatchExecutesCallback()
     {
+        $callback = $this->getMock('stdClass', array('__invoke'));
+        $callback->expects($this->once())
+                 ->method('__invoke');
 
+        $this->adapter->batch($callback);
     }
-
 
 }
