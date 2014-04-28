@@ -27,14 +27,23 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
     protected $buffer = null;
 
     /**
+     * The number of triples that are grouped for insertion in batch mode.
+     *
+     * @var integer
+     */
+    protected $batchSize = null;
+
+    /**
      * Creates an adapter for the given Store adapter.
      *
      * @param Erfurt_Store_Adapter_Interface $storeAdapter
+     * @param integer $batchSize The number of grouped triples for insertion in batch mode.
      */
-    public function __construct(Erfurt_Store_Adapter_Interface $storeAdapter)
+    public function __construct(Erfurt_Store_Adapter_Interface $storeAdapter, $batchSize = 50)
     {
         $this->storeAdapter = $storeAdapter;
         $this->buffer       = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($this, 'persist'));
+        $this->batchSize    = $batchSize;
     }
 
     /**
@@ -158,7 +167,7 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function batch($callback)
     {
-        $this->buffer->setSize(50);
+        $this->buffer->setSize($this->batchSize);
         $result = call_user_func($callback, $this);
         $this->buffer->flush();
         $this->buffer->setSize(1);
