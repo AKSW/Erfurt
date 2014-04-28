@@ -20,13 +20,21 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
     protected $storeAdapter = null;
 
     /**
+     * The buffer that is used to group insert operations.
+     *
+     * @var Erfurt_Store_Adapter_Sparql_QuadBuffer
+     */
+    protected $buffer = null;
+
+    /**
      * Creates an adapter for the given Store adapter.
      *
      * @param Erfurt_Store_Adapter_Interface $storeAdapter
      */
     public function __construct(Erfurt_Store_Adapter_Interface $storeAdapter)
     {
-
+        $this->storeAdapter = $storeAdapter;
+        $this->buffer       = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($this, 'persist'));
     }
 
     /**
@@ -37,7 +45,7 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        // TODO: Implement addTriple() method.
+        $this->buffer->add(Erfurt_Store_Adapter_Sparql_Quad::create($graphIri, $triple));
     }
 
     /**
@@ -82,7 +90,11 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function query($sparqlQuery)
     {
-        // TODO: Implement query() method.
+        if ($this->isAskQuery($sparqlQuery)) {
+            return $this->storeAdapter->sparqlAsk($sparqlQuery);
+        }
+        $options = array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED);
+        return $this->storeAdapter->sparqlQuery($sparqlQuery, $options);
     }
 
     /**
@@ -94,7 +106,12 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
-        // TODO: Implement deleteMatchingTriples() method.
+        return $this->storeAdapter->deleteMatchingStatements(
+            $graphIri,
+            $pattern->getSubject(),
+            $pattern->getPredicate(),
+            $pattern->getObject()
+        );
     }
 
     /**
@@ -141,7 +158,69 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function batch($callback)
     {
-        // TODO: Implement batch() method.
+        $this->buffer->setSize(50);
+        $result = call_user_func($callback, $this);
+        $this->buffer->flush();
+        $this->buffer->setSize(1);
+        return $result;
+    }
+
+    /**
+     * Persists the provided quads.
+     *
+     * This method is only public to be callable by the buffer.
+     * A cleaner solution could be to move this to a custom class
+     * that deals only with persistence.
+     *
+     * @param array(Erfurt_Store_Adapter_Sparql_Quad) $quads
+     */
+    public function persist(array $quads)
+    {
+        if (count($quads) === 0) {
+            return;
+        }
+        if (count($quads) === 1) {
+            /* @var $quad Erfurt_Store_Adapter_Sparql_Quad */
+            $quad = current($quads);
+            $this->storeAdapter->addStatement(
+                $quad->getGraph(),
+                $quad->getSubject(),
+                $quad->getPredicate(),
+                $quad->getObject()
+            );
+            return;
+        }
+        $statementsByGraph = array();
+        foreach ($quads as $quad) {
+            /* @var $quad Erfurt_Store_Adapter_Sparql_Quad */
+            if (!isset($statementsByGraph[$quad->getGraph()][$quad->getSubject()][$quad->getPredicate()])) {
+                $statementsByGraph[$quad->getGraph()][$quad->getSubject()][$quad->getPredicate()] = array();
+            }
+            $statementsByGraph[$quad->getGraph()][$quad->getSubject()][$quad->getPredicate()][] = $quad->getObject();
+        }
+        foreach ($statementsByGraph as $graph => $statements) {
+            /* @var $graph string */
+            /* @var $statements array() */
+            $this->storeAdapter->addMultipleStatements($graph, $statements);
+        }
+    }
+
+    /**
+     * Checks if the provided SPARQL query is an ASK query.
+     *
+     * @param string $query
+     * @return boolean
+     */
+    protected function isAskQuery($query)
+    {
+        if (strpos($query, 'ASK') === false) {
+            // Query does not even contain the ASK keyword, no further
+            // detection required.
+            return false;
+        }
+        $parser = new Erfurt_Sparql_Parser();
+        $info   = $parser->parse($query);
+        return $info->getResultForm() === 'ask';
     }
 
 }
