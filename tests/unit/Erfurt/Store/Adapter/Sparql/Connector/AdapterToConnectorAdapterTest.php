@@ -111,8 +111,8 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
                 $connector
             );
             /* @var $connector Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
-            $connector->addTriple('http://example.org', $first);
-            $connector->addTriple('http://example.org', $second);
+            $connector->addTriple('http://example.org/graph', $first);
+            $connector->addTriple('http://example.org/graph', $second);
         });
     }
 
@@ -121,7 +121,7 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testQueryDelegatesToSparqlQuery()
     {
-        $query = 'SELECT * WHERE { ?s ?p ? o . }';
+        $query = 'SELECT * WHERE { ?s ?p ?o . }';
         $this->storeAdapter->expects($this->once())
                            ->method('sparqlQuery')
                            ->with($query, array());
@@ -134,7 +134,7 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
      */
     public function testQueryDelegatesAskQueryToSparqlAsk()
     {
-        $query = 'ASK WHERE { ?s ?p ? o . }';
+        $query = 'ASK WHERE { ?s ?p ?o . }';
         $this->storeAdapter->expects($this->once())
                            ->method('sparqlAsk')
                            ->with($query);
