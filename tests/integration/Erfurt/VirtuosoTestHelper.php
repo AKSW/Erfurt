@@ -31,7 +31,7 @@ class Erfurt_VirtuosoTestHelper extends Erfurt_AbstractTestHelper
             foreach (array_keys($adapter->getAvailableModels()) as $graph) {
                 $adapter->deleteModel($graph);
             }
-            $this->sparqlConnector = new Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter($adapter);
+            $this->sparqlConnector = new Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter($adapter, 50);
             $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
         }
         return $this->sparqlConnector;
