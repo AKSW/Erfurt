@@ -26,9 +26,12 @@ class Erfurt_VirtuosoTestHelper extends Erfurt_AbstractTestHelper
     public function getSparqlConnector()
     {
         if ($this->sparqlConnector === null) {
-            $this->sparqlConnector = new Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter(
-                new Erfurt_Store_Adapter_Virtuoso($this->getConfig())
-            );
+            $adapter = new Erfurt_Store_Adapter_Virtuoso($this->getConfig());
+            // Clear the database.
+            foreach ($adapter->getAvailableModels() as $graph) {
+                $adapter->deleteModel($graph);
+            }
+            $this->sparqlConnector = new Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter($adapter);
             $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
         }
         return $this->sparqlConnector;
