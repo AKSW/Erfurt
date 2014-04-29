@@ -54,6 +54,9 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
+        if (!$this->storeAdapter->isModelAvailable($graphIri)) {
+            $this->storeAdapter->createModel($graphIri);
+        }
         $this->buffer->add(Erfurt_Store_Adapter_Sparql_Quad::create($graphIri, $triple));
     }
 
