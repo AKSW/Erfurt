@@ -153,6 +153,10 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
             array('type' => 'uri', 'value' => 'http://example.org/object')
         );
         $this->storeAdapter->expects($this->once())
+                           ->method('isModelAvailable')
+                           ->with('http://example.org/graph')
+                           ->will($this->returnValue(true));
+        $this->storeAdapter->expects($this->once())
                            ->method('deleteMatchingStatements')
                            ->with(
                                'http://example.org/graph',
@@ -161,6 +165,27 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapterTest extend
                                $pattern->getObject(),
                                array()
                            );
+
+        $this->adapter->deleteMatchingTriples('http://example.org/graph', $pattern);
+    }
+
+    /**
+     * Ensures that deleteMatchingTriples() does not call deleteMatchingStatements()
+     * on the adapter if the model does not exist.
+     */
+    public function testDeleteMatchingTriplesDoesNotDelegateCallIfModelDoesNotExist()
+    {
+        $pattern = new Erfurt_Store_Adapter_Sparql_TriplePattern(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array('type' => 'uri', 'value' => 'http://example.org/object')
+        );
+        $this->storeAdapter->expects($this->once())
+                           ->method('isModelAvailable')
+                           ->with('http://example.org/graph')
+                           ->will($this->returnValue(false));
+        $this->storeAdapter->expects($this->never())
+            ->method('deleteMatchingStatements');
 
         $this->adapter->deleteMatchingTriples('http://example.org/graph', $pattern);
     }
