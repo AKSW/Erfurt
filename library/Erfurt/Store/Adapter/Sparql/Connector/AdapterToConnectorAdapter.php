@@ -118,6 +118,9 @@ class Erfurt_Store_Adapter_Sparql_Connector_AdapterToConnectorAdapter
      */
     public function deleteMatchingTriples($graphIri, Erfurt_Store_Adapter_Sparql_TriplePattern $pattern)
     {
+        if (!$this->storeAdapter->isModelAvailable($graphIri)) {
+            return 0;
+        }
         return $this->storeAdapter->deleteMatchingStatements(
             $graphIri,
             $pattern->getSubject(),
