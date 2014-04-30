@@ -84,7 +84,7 @@ class Erfurt_Utils
             case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral':   /* fallthrough */
             case 'http://www.w3.org/2001/XMLSchema#string':
             default:
-                $value = addcslashes($value, $quoteChar);
+                $value = addcslashes($value, $quoteChar . '\\');
                 
                 /** 
                  * Check for characters not allowed in a short literal
