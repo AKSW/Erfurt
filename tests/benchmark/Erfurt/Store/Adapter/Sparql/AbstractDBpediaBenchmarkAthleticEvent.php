@@ -18,7 +18,53 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function loadDataSet()
     {
+        $benchmark = $this;
+        $this->connector->batch(function () use ($benchmark) {
+            $benchmark->loadData(1);
+        });
+    }
 
+    /**
+     * Loads the benchmark data (or a subset of it).
+     *
+     * If $sizeInPercent is lower that 100, then only that percentage of the data is
+     * loaded. Which triples are loaded is decided by random (this is still deterministic,
+     * as the random generator is seeded).
+     *
+     * @param integer $sizeInPercent Value between 1 and 100.
+     */
+    public function loadData($sizeInPercent)
+    {
+
+        $dataFile   = fopen($this->getBenchmarkDataFile(), 'r');
+        $linesToAdd = array();
+        while (($line = fgets($dataFile)) !== false) {
+            if ($this->faker->boolean($sizeInPercent)) {
+                // This triple will be included in the data set that is used in the benchmark.
+                $linesToAdd[] = $line;
+            }
+            if (count($linesToAdd) >= 100) {
+                $this->saveTriples($linesToAdd);
+                $linesToAdd = array();
+            }
+        }
+        $this->saveTriples($linesToAdd);
+    }
+
+    /**
+     * Saves the triples that are encoded in the provided lines (in n-triples syntax).
+     *
+     * @param array(string) $lines
+     */
+    protected function saveTriples(array $lines)
+    {
+        $parser     = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
+        $data       = implode(PHP_EOL, $lines);
+        $statements = $parser->parseFromDataString($data);
+        foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
+            /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
+            $this->connector->addTriple('http://dbpedia.org', $triple);
+        }
     }
 
     /**
