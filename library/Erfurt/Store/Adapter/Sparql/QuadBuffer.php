@@ -79,8 +79,15 @@ class Erfurt_Store_Adapter_Sparql_QuadBuffer implements Countable
             //Nothing to flush.
             return;
         }
-        call_user_func($this->quadHandler, $this->quads);
-        $this->clear();
+        try {
+            call_user_func($this->quadHandler, $this->quads);
+            $this->clear();
+        } catch (Exception $e) {
+            // Clear the buffer even if an error occurred.
+            // The problem must be handled by the calling code.
+            $this->clear();
+            throw $e;
+        }
     }
 
     /**
