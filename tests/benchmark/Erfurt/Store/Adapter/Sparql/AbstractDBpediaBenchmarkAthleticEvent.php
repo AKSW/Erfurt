@@ -12,6 +12,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 {
 
     /**
+     * Clears the DBpedia graph before the benchmark is started.
+     */
+    protected function classSetUp()
+    {
+        parent::classSetUp();
+        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
+    }
+
+
+    /**
      * Loads the data set that is used in the benchmark.
      *
      * @Iterations 1
