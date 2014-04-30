@@ -13,6 +13,7 @@ cache.properties
 library/Zend
 cache.sqlite
 tests/*.ini
+tests/benchmark/Erfurt/Store/Adapter/Sparql/DBpedia/data/benchmark_data.nt
 
 # Composer
 composer.phar
