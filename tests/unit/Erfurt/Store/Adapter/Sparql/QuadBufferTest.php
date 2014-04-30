@@ -170,6 +170,27 @@ class Erfurt_Store_Adapter_Sparql_QuadBufferTest extends \PHPUnit_Framework_Test
     }
 
     /**
+     * Ensures that the buffer is cleared even if the callback throws an exception.
+     */
+    public function testFlushEmptiesBufferEvenIfCallbackThrowsException()
+    {
+        $this->buffer->add($this->createQuad());
+        $this->buffer->add($this->createQuad());
+
+        $this->flushCallback->expects($this->once())
+                            ->method('__invoke')
+                            ->will($this->throwException(new RuntimeException('Error in callback.')));
+
+        $this->setExpectedException('RuntimeException');
+        try {
+            $this->buffer->flush();
+        } catch (RuntimeException $e) {
+            $this->assertEquals(0, $this->buffer->count(), 'Buffer was not cleared.');
+            throw $e;
+        }
+    }
+
+    /**
      * Ensures that add() does not flush the buffer if the buffer
      * size is not reached.
      */
