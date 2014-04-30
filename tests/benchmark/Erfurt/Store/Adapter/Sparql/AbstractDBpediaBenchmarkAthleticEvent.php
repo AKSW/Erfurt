@@ -30,7 +30,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     {
         $benchmark = $this;
         $this->connector->batch(function () use ($benchmark) {
-            $benchmark->loadData(1);
+            $benchmark->loadData(100);
         });
     }
 
@@ -52,10 +52,10 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             if ($this->faker->boolean($sizeInPercent)) {
                 // This triple will be included in the data set that is used in the benchmark.
                 $linesToAdd[] = $line;
-            }
-            if (count($linesToAdd) >= 100) {
-                $this->saveTriples($linesToAdd);
-                $linesToAdd = array();
+                if (count($linesToAdd) >= 100) {
+                    $this->saveTriples($linesToAdd);
+                    $linesToAdd = array();
+                }
             }
         }
         $this->saveTriples($linesToAdd);
