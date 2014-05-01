@@ -73,7 +73,11 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         $statements = $parser->parseFromDataString($data);
         foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
             /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
-            $this->connector->addTriple('http://dbpedia.org', $triple);
+            try {
+                $this->connector->addTriple('http://dbpedia.org', $triple);
+            } catch(Exception $e) {
+                echo $e . PHP_EOL;
+            }
         }
     }
 
