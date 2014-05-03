@@ -56,129 +56,337 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         }
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function distinctQuery()
     {
-        // distinct
+        $this->executeOneQuery('distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - FILTER
+     *
+     * @Iterations 1
+     */
     public function filterQuery()
     {
-        // filter
+        $this->executeOneQuery('filter');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - OPTIONAL
+     *
+     * @Iterations 1
+     */
     public function optionalQuery()
     {
-        // optional
+        $this->executeOneQuery('optional');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     *
+     * @Iterations 1
+     */
     public function unionQuery()
     {
-        // union
+        $this->executeOneQuery('union');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function unionDistinctQuery()
     {
-        // union,distinct
+        $this->executeOneQuery('union,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - FILTER
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function filterDistinctQuery()
     {
-        // filter,distinct
+        $this->executeOneQuery('filter,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - OPTIONAL
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function optionalDistinctQuery()
     {
-        // optional,distinct
+        $this->executeOneQuery('optional,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - FILTER
+     *
+     * @Iterations 1
+     */
     public function unionFilterQuery()
     {
-        // union,filter
+        $this->executeOneQuery('union,filter');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - OPTIONAL
+     *
+     * @Iterations 1
+     */
     public function unionOptionalQuery()
     {
-        // union,optional
+        $this->executeOneQuery('union,optional');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - OPTIONAL
+     * - FILTER
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function optionalFilterDistinctQuery()
     {
-        // optional,filter,distinct
+        $this->executeOneQuery('optional,filter,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - OPTIONAL
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function unionOptionalDistinctQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,optional,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - FILTER
+     * - LANG
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function filterLangDistinctQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('filter,lang,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - FILTER
+     * - LANG
+     *
+     * @Iterations 1
+     */
     public function unionFilterLangQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,filter,lang');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - OPTIONAL
+     * - FILTER
+     * - LANG
+     *
+     * @Iterations 1
+     */
     public function optionalFilterLangQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('optional,filter,lang');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - FILTER
+     * - REGEX
+     * - DISTINCT
+     * - STR
+     *
+     * @Iterations 1
+     */
     public function filterRegexDistinctStrQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('filter,regex,distinct,str');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - OPTIONAL
+     * - FILTER
+     * - LANG
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function optionalFilterLangDistinctQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('optional,filter,lang,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - FILTER
+     * - LANG
+     * - DISTINCT
+     *
+     * @Iterations 1
+     */
     public function unionFilterLangDistinctQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,filter,lang,distinct');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - FILTER
+     * - LANG
+     * - STR
+     *
+     * @Iterations 1
+     */
     public function unionFilterLangStrQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,filter,lang,str');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - FILTER
+     * - REGEX
+     * - STR
+     *
+     * @Iterations 1
+     */
     public function unionFilterRegexStrQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,filter,regex,str');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - UNION
+     * - OPTIONAL
+     * - FILTER
+     * - LANG
+     *
+     * @Iterations 1
+     */
     public function unionOptionalFilterLangQuery()
     {
-        // optional,filter,distinc
+        $this->executeOneQuery('union,optional,filter,lang');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - 1 Triple Pattern
+     *
+     * @Iterations 1
+     */
     public function triplePatterns1Query()
     {
-        // 1-TriplePatterns
+        $this->executeOneQuery('1-TriplePatterns');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - 2 Triple Patterns
+     *
+     * @Iterations 1
+     */
     public function triplePatterns2Query()
     {
-        // 2-TriplePatterns
+        $this->executeOneQuery('2-TriplePatterns');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - 3 Triple Patterns
+     *
+     * @Iterations 1
+     */
     public function triplePatterns3Query()
     {
-        // 3-TriplePatterns
+        $this->executeOneQuery('3-TriplePatterns');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - 4 Triple Patterns
+     *
+     * @Iterations 1
+     */
     public function triplePatterns4Query()
     {
-        // 4-TriplePatterns
+        $this->executeOneQuery('4-TriplePatterns');
     }
 
+    /**
+     * Benchmarks queries that use the following features:
+     *
+     * - 5 Triple Patterns
+     *
+     * @Iterations 1
+     */
     public function triplePatterns5Query()
     {
-        // 5-TriplePatterns
+        $this->executeOneQuery('5-TriplePatterns');
     }
 
     /**
@@ -192,7 +400,6 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function loadData($sizeInPercent)
     {
-
         $dataFile   = fopen($this->getBenchmarkDataFile(), 'r');
         $linesToAdd = array();
         while (($line = fgets($dataFile)) !== false) {
@@ -206,6 +413,36 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             }
         }
         $this->saveTriples($linesToAdd);
+    }
+
+    /**
+     * Executes one SPARQL query of the specified type.
+     *
+     * @param string $label
+     */
+    protected function executeOneQuery($label)
+    {
+        $query = $this->createQuery($label);
+        $this->connector->query($query);
+    }
+
+    /**
+     * Creates a SPARQL query of the provided type.
+     *
+     * Automatically substitutes variable parts.
+     *
+     * @param string $label
+     * @return string
+     */
+    protected function createQuery($label)
+    {
+        $queries = $this->getQueries();
+        $query = $queries[$label]['query'];
+        $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
+        foreach ($assignment as $varName => $value) {
+            $query = str_replace('%%' . $varName . '%%', $value, $query);
+        }
+        return $query;
     }
 
     /**
