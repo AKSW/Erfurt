@@ -433,11 +433,17 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @param string $label
      * @return string
+     * @throws \RuntimeException If no such query exists.
      */
     protected function createQuery($label)
     {
         $queries = $this->getQueries();
+        if (!isset($queries[$label])) {
+            $message = 'Query of type "' . $label . '" is not configured.';
+            throw new \RuntimeException($message);
+        }
         $query = $queries[$label]['query'];
+        /* @var $assignment array */
         $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
         foreach ($assignment as $varName => $value) {
             $query = str_replace('%%' . $varName . '%%', $value, $query);
