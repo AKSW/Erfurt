@@ -19,6 +19,13 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $variableAssignmentsByLabel = array();
 
     /**
+     * The cached query definitions.
+     *
+     * @var array(string=>array(string=>string))|null
+     */
+    protected $queryData = null;
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
@@ -517,7 +524,10 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function getQueries()
     {
-        return require(__DIR__ . '/DBpedia/queries.php');
+        if ($this->queryData === null) {
+            $this->queryData = require(__DIR__ . '/DBpedia/queries.php');
+        }
+        return $this->queryData;
     }
 
     /**
