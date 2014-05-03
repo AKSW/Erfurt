@@ -27,7 +27,6 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 //        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
     }
 
-
     /**
      * Loads the data set that is used in the benchmark.
      *
@@ -55,6 +54,131 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             $result = $this->connector->query($query);
             $this->variableAssignmentsByLabel[$label] = $this->extractAssignments($result);
         }
+    }
+
+    public function distinctQuery()
+    {
+        // distinct
+    }
+
+    public function filterQuery()
+    {
+        // filter
+    }
+
+    public function optionalQuery()
+    {
+        // optional
+    }
+
+    public function unionQuery()
+    {
+        // union
+    }
+
+    public function unionDistinctQuery()
+    {
+        // union,distinct
+    }
+
+    public function filterDistinctQuery()
+    {
+        // filter,distinct
+    }
+
+    public function optionalDistinctQuery()
+    {
+        // optional,distinct
+    }
+
+    public function unionFilterQuery()
+    {
+        // union,filter
+    }
+
+    public function unionOptionalQuery()
+    {
+        // union,optional
+    }
+
+    public function optionalFilterDistinctQuery()
+    {
+        // optional,filter,distinct
+    }
+
+    public function unionOptionalDistinctQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function filterLangDistinctQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function unionFilterLangQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function optionalFilterLangQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function filterRegexDistinctStrQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function optionalFilterLangDistinctQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function unionFilterLangDistinctQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function unionFilterLangStrQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function unionFilterRegexStrQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function unionOptionalFilterLangQuery()
+    {
+        // optional,filter,distinc
+    }
+
+    public function triplePatterns1Query()
+    {
+        // 1-TriplePatterns
+    }
+
+    public function triplePatterns2Query()
+    {
+        // 2-TriplePatterns
+    }
+
+    public function triplePatterns3Query()
+    {
+        // 3-TriplePatterns
+    }
+
+    public function triplePatterns4Query()
+    {
+        // 4-TriplePatterns
+    }
+
+    public function triplePatterns5Query()
+    {
+        // 5-TriplePatterns
     }
 
     /**
