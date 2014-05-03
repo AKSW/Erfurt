@@ -26,7 +26,7 @@ return array(
                               PREFIX dbpedia2: <http://dbpedia.org/property/>
                               PREFIX dbpedia: <http://dbpedia.org/>
                               PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-                              SELECT * WHERE { %%var%% ?var2 ?var1. filter(?var2 = dbpedia2:redirect || ?var2 = dbpprop:redirect) }',
+                              SELECT * WHERE { %%var%% ?var2 ?var1. filter(?var2 = dbpedia2:caption || ?var2 = dbpprop:caption) }',
         'auxiliary_query' => 'PREFIX dbpprop: <http://dbpedia.org/property/>
                               PREFIX owl: <http://www.w3.org/2002/07/owl#>
                               PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -38,7 +38,7 @@ return array(
                               PREFIX dbpedia2: <http://dbpedia.org/property/>
                               PREFIX dbpedia: <http://dbpedia.org/>
                               PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-                              SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var ?var2 ?var1. filter(?var2 = dbpedia2:redirect || ?var2 = dbpprop:redirect) } LIMIT 1000'
+                              SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var ?var2 ?var1. filter(?var2 = dbpedia2:caption || ?var2 = dbpprop:caption) } LIMIT 1000'
     ),
     'optional' => array(
         'query'           => 'PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -396,9 +396,9 @@ return array(
     ),
     '1-TriplePatterns' => array(
         'query'           => 'PREFIX dbpprop: <http://dbpedia.org/property/>
-                              SELECT * WHERE { %%var%%  dbpprop:redirect ?var0 . }',
+                              SELECT * WHERE { %%var%%  dbpprop:caption ?var0 . }',
         'auxiliary_query' => 'PREFIX dbpprop: <http://dbpedia.org/property/>
-                              SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var dbpprop:redirect ?var0 . } LIMIT 1000'
+                              SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var dbpprop:caption ?var0 . } LIMIT 1000'
     ),
     '2-TriplePatterns' => array(
         'query'           => 'SELECT ?var2 WHERE { ?var3 <http://xmlns.com/foaf/0.1/homepage> ?var2 . ?var3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> %%var%% . }',
