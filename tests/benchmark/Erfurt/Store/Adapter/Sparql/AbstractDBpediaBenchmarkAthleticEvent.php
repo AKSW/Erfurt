@@ -31,7 +31,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function classSetUp()
     {
         parent::classSetUp();
-//        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
+        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
     }
 
     /**
@@ -39,13 +39,13 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @Iterations 1
      */
-//    public function loadDataSet()
-//    {
-//        $benchmark = $this;
-//        $this->connector->batch(function () use ($benchmark) {
-//            $benchmark->loadData(100);
-//        });
-//    }
+    public function loadDataSet()
+    {
+        $benchmark = $this;
+        $this->connector->batch(function () use ($benchmark) {
+            $benchmark->loadData(1);
+        });
+    }
 
     /**
      * Uses the auxiliary queries to find variable assignments for the test queries.
