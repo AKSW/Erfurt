@@ -68,7 +68,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function distinctQuery()
     {
@@ -80,7 +80,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - FILTER
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function filterQuery()
     {
@@ -92,7 +92,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - OPTIONAL
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function optionalQuery()
     {
@@ -104,7 +104,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - UNION
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionQuery()
     {
@@ -117,7 +117,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - UNION
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionDistinctQuery()
     {
@@ -130,7 +130,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function filterDistinctQuery()
     {
@@ -143,7 +143,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - OPTIONAL
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function optionalDistinctQuery()
     {
@@ -156,7 +156,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - UNION
      * - FILTER
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionFilterQuery()
     {
@@ -169,7 +169,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - UNION
      * - OPTIONAL
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionOptionalQuery()
     {
@@ -183,7 +183,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function optionalFilterDistinctQuery()
     {
@@ -197,7 +197,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - OPTIONAL
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionOptionalDistinctQuery()
     {
@@ -211,7 +211,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function filterLangDistinctQuery()
     {
@@ -225,7 +225,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      * - LANG
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionFilterLangQuery()
     {
@@ -239,7 +239,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      * - LANG
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function optionalFilterLangQuery()
     {
@@ -254,7 +254,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      * - STR
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function filterRegexDistinctStrQuery()
     {
@@ -269,7 +269,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function optionalFilterLangDistinctQuery()
     {
@@ -284,7 +284,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      * - DISTINCT
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionFilterLangDistinctQuery()
     {
@@ -299,7 +299,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      * - STR
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionFilterLangStrQuery()
     {
@@ -314,7 +314,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - REGEX
      * - STR
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionFilterRegexStrQuery()
     {
@@ -329,7 +329,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      * - LANG
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function unionOptionalFilterLangQuery()
     {
@@ -341,7 +341,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - 1 Triple Pattern
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function triplePatterns1Query()
     {
@@ -353,7 +353,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - 2 Triple Patterns
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function triplePatterns2Query()
     {
@@ -365,7 +365,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - 3 Triple Patterns
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function triplePatterns3Query()
     {
@@ -377,7 +377,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - 4 Triple Patterns
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function triplePatterns4Query()
     {
@@ -389,7 +389,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * - 5 Triple Patterns
      *
-     * @Iterations 1
+     * @Iterations 20
      */
     public function triplePatterns5Query()
     {
