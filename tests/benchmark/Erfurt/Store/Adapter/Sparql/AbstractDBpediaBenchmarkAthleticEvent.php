@@ -12,12 +12,19 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 {
 
     /**
+     * Contains variable assignments for the test queries.
+     *
+     * @var array(string=>array)
+     */
+    protected $variableAssignmentsByLabel = array();
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
     {
         parent::classSetUp();
-        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
+//        $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
     }
 
 
@@ -26,12 +33,28 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @Iterations 1
      */
-    public function loadDataSet()
+//    public function loadDataSet()
+//    {
+//        $benchmark = $this;
+//        $this->connector->batch(function () use ($benchmark) {
+//            $benchmark->loadData(100);
+//        });
+//    }
+
+    /**
+     * Uses the auxiliary queries to find variable assignments for the test queries.
+     *
+     * @Iterations 1
+     */
+    public function prepareQueryVars()
     {
-        $benchmark = $this;
-        $this->connector->batch(function () use ($benchmark) {
-            $benchmark->loadData(100);
-        });
+        foreach ($this->getQueries() as $label => $queryData) {
+            /* @var $label string */
+            /* @var $queryData array(string=>string) */
+            $query = $queryData['auxiliary_query'];
+            $result = $this->connector->query($query);
+            $this->variableAssignmentsByLabel[$label] = $this->extractAssignments($result);
+        }
     }
 
     /**
@@ -62,6 +85,45 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     }
 
     /**
+     * Accepts the result of an auxiliary query in extended format and
+     * generates a list variable assignments.
+     *
+     * @param array(mixed) $result
+     * @return array(array(string=>string))
+     */
+    protected function extractAssignments($result)
+    {
+        $assignments = array();
+        foreach ($result['results']['bindings'] as $binding) {
+            /* @var array(string=>array(string=>mixed)) */
+            $assignment = array();
+            foreach ($binding as $varName => $spec) {
+                /* @var $varName string */
+                /* @var $spec array(string=>mixed) */
+                $assignment[$varName] = $this->toRdfTerm($spec);
+            }
+            $assignments[] = $assignment;
+        }
+        return $assignments;
+    }
+
+    /**
+     * Creates the RDF term for the provided value specification.
+     *
+     * @param array(string=>mixed) $valueSpec
+     * @return string
+     */
+    protected function toRdfTerm(array $valueSpec)
+    {
+        if ($valueSpec['type'] === 'uri') {
+            return '<' . $valueSpec['value'] . '>';
+        }
+        $type = (isset($valueSpec['datatype'])) ? $valueSpec['datatype'] : null;
+        $lang = (isset($valueSpec['lang'])) ? $valueSpec['lang'] : null;
+        return Erfurt_Utils::buildLiteralString($valueSpec['value'], $type, $lang);
+    }
+
+    /**
      * Saves the triples that are encoded in the provided lines (in n-triples syntax).
      *
      * @param array(string) $lines
@@ -79,6 +141,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
                 echo $e . PHP_EOL;
             }
         }
+    }
+
+    /**
+     * Returns the test queries.
+     *
+     * @return array(array(string=>string))
+     */
+    protected function getQueries()
+    {
+        return require(__DIR__ . '/DBpedia/queries.php');
     }
 
     /**
