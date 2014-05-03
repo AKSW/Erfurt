@@ -425,7 +425,7 @@ return array(
                               SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var2 rdf:type dbpedia-owl:Person . ?var2 rdfs:label ?var . ?var2 foaf:page ?var4 . } LIMIT 1000'
     ),
     '4-TriplePatterns' => array(
-        'query'           => 'SELECT * FROM <http://dbpedia.org> WHERE { ?var1 a <http://dbpedia.org/ontology/Organisation> . ?var2 <http://dbpedia.org/ontology/foundationPlace> %%var0%% . ?var4 <http://dbpedia.org/ontology/developer> ?var2 . ?var4 a %%var1%% . }',
+        'query'           => 'SELECT * FROM <http://dbpedia.org> WHERE { ?var1 a <http://dbpedia.org/ontology/Organisation> . ?var2 <http://dbpedia.org/ontology/foundationPlace> %%var0%% . ?var4 <http://dbpedia.org/ontology/developer> ?var2 . ?var4 a %%var1%% . } LIMIT 10000',
         'auxiliary_query' => 'SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org>  where { ?var2 a <http://dbpedia.org/ontology/Organisation> . ?var2 <http://dbpedia.org/ontology/foundationPlace> ?var0 . ?var4 <http://dbpedia.org/ontology/developer> ?var2 . ?var4 a ?var1 . } LIMIT 1000'
     ),
     '5-TriplePatterns' => array(
