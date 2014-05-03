@@ -430,7 +430,12 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function executeOneQuery($label)
     {
         $query = $this->createQuery($label);
-        $this->connector->query($query);
+        try {
+            $this->connector->query($query);
+        } catch (\Exception $e) {
+            echo 'Error while executing query of type "' . $label . '": ' . PHP_EOL . $e;
+        }
+
     }
 
     /**
