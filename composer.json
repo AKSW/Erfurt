@@ -22,7 +22,7 @@
         "everyman/neo4jphp": "dev-master"
     },
     "require-dev": {
-        "athletic/athletic": "dev-master",
+        "athletic/athletic": "dev-restrict_runtime",
         "fzaninotto/faker": "~1.3.0"
     },
     "suggest": {
