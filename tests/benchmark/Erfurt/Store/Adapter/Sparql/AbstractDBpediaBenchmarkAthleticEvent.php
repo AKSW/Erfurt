@@ -455,12 +455,41 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             throw new \RuntimeException($message);
         }
         $query = $queries[$label]['query'];
-        /* @var $assignment array */
-        $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
+        if (count($this->variableAssignmentsByLabel[$label]) === 0) {
+            $assignment = $this->createDefaultAssignmentFor($query);
+        } else {
+            /* @var $assignment array */
+            $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
+        }
         foreach ($assignment as $varName => $value) {
             $query = str_replace('%%' . $varName . '%%', $value, $query);
         }
         return $query;
+    }
+
+    /**
+     * Creates a default variable assignment for the provided query.
+     *
+     * This is useful if it was not possible to extract assignments
+     * from the available data.
+     *
+     * @param string $query
+     * @return array(string=>string)
+     */
+    protected function createDefaultAssignmentFor($query)
+    {
+        // Placeholders look like "%%name%%".
+        $regex   = '/%%([a-zA-Z0-9]+)%%/u';
+        $matches = array();
+        preg_match_all($regex, $query, $matches);
+        $variableNames = $matches[1];
+        $assignment = array();
+        foreach ($variableNames as $name) {
+            /* @var $name string */
+            // Use an URI as value as it can be used at any triple position.
+            $assignment[$name] = '<http://example.org/missing>';
+        }
+        return $assignment;
     }
 
     /**
