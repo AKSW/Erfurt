@@ -69,7 +69,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function distinctQuery()
     {
@@ -82,7 +82,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function filterQuery()
     {
@@ -95,7 +95,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - OPTIONAL
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function optionalQuery()
     {
@@ -108,7 +108,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - UNION
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionQuery()
     {
@@ -122,7 +122,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionDistinctQuery()
     {
@@ -136,7 +136,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function filterDistinctQuery()
     {
@@ -150,7 +150,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function optionalDistinctQuery()
     {
@@ -164,7 +164,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - FILTER
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionFilterQuery()
     {
@@ -178,7 +178,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - OPTIONAL
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionOptionalQuery()
     {
@@ -193,7 +193,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function optionalFilterDistinctQuery()
     {
@@ -208,7 +208,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionOptionalDistinctQuery()
     {
@@ -223,7 +223,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function filterLangDistinctQuery()
     {
@@ -238,7 +238,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionFilterLangQuery()
     {
@@ -253,7 +253,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function optionalFilterLangQuery()
     {
@@ -269,7 +269,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - STR
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function filterRegexDistinctStrQuery()
     {
@@ -285,7 +285,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function optionalFilterLangDistinctQuery()
     {
@@ -301,7 +301,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - DISTINCT
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionFilterLangDistinctQuery()
     {
@@ -317,7 +317,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - STR
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionFilterLangStrQuery()
     {
@@ -333,7 +333,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - STR
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionFilterRegexStrQuery()
     {
@@ -349,7 +349,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - LANG
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function unionOptionalFilterLangQuery()
     {
@@ -362,7 +362,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - 1 Triple Pattern
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function triplePatterns1Query()
     {
@@ -375,7 +375,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - 2 Triple Patterns
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function triplePatterns2Query()
     {
@@ -388,7 +388,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - 3 Triple Patterns
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function triplePatterns3Query()
     {
@@ -401,7 +401,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - 4 Triple Patterns
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function triplePatterns4Query()
     {
@@ -414,11 +414,25 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      * - 5 Triple Patterns
      *
      * @Iterations 2000
-     * @MaxRuntime 600
+     * @MaxRuntime 300
      */
     public function triplePatterns5Query()
     {
         $this->executeOneQuery('5-TriplePatterns');
+    }
+
+    /**
+     * Executes a query mix, which means that one query of each type is executed.
+     *
+     * @Iterations 1000
+     * @MaxRuntime 600
+     */
+    public function queryMix()
+    {
+        foreach ($this->getQueryTypes() as $type) {
+            /* @var $type string */
+            $this->executeOneQuery($type);
+        }
     }
 
     /**
@@ -445,6 +459,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             }
         }
         $this->saveTriples($linesToAdd);
+    }
+
+    /**
+     * Returns a list of query types.
+     *
+     * @return array(string)
+     */
+    protected function getQueryTypes()
+    {
+        return array_keys($this->getQueries());
     }
 
     /**
