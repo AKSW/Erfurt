@@ -33,6 +33,23 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $messages = array();
 
     /**
+     * Size of the used data set in percent [1..100].
+     *
+     * @var integer
+     */
+    protected $sizeInPercent = null;
+
+    /**
+     * Creates a benchmark that uses the provided data set size.
+     *
+     * @param integer $sizeInPercent
+     */
+    public function __construct($sizeInPercent = 100)
+    {
+        $this->sizeInPercent = $sizeInPercent;
+    }
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
@@ -58,8 +75,9 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     public function loadDataSet()
     {
         $benchmark = $this;
-        $this->connector->batch(function () use ($benchmark) {
-            $benchmark->loadData(1);
+        $size = $this->sizeInPercent;
+        $this->connector->batch(function () use ($benchmark, $size) {
+            $benchmark->loadData($size);
         });
     }
 
