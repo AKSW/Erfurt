@@ -17,7 +17,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
 {
     /**
     *   SQL Generator
-    *   @var SparqlEngineDb_SqlGenerator
+    *   @var Erfurt_Sparql_EngineDb_SqlGenerator
     */
     protected $sg = null;
 
