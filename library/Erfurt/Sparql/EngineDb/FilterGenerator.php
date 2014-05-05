@@ -576,11 +576,11 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         switch ($lang) {
             case '*':
                 //anything but nothing
-                $sql = $col . ' ' . $this->sg->arTableColumnNames['lang']['not_empty'];
+                $sql = $col . ' ' . $this->sg->arTableColumnNames['language']['not_empty'];
                 break;
             case '':
                 //nothing
-                $sql = $col . ' ' . $this->sg->arTableColumnNames['lang']['empty'];;
+                $sql = $col . ' ' . $this->sg->arTableColumnNames['language']['empty'];;
                 break;
             default:
                 //language, maybe with different subcode
