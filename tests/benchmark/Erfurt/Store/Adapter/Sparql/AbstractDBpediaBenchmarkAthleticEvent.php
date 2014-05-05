@@ -26,12 +26,28 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $queryData = null;
 
     /**
+     * Error messages that are gathered during the benchmark run.
+     *
+     * @var array(string)
+     */
+    protected $messages = array();
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
     {
         parent::classSetUp();
         $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
+    }
+
+    /**
+     * Shows error information that has been gathered.
+     */
+    protected function classTearDown()
+    {
+        echo implode(PHP_EOL, $this->messages);
+        parent::classTearDown();
     }
 
     /**
@@ -482,7 +498,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         try {
             $this->connector->query($query);
         } catch (\Exception $e) {
-            echo 'Error while executing query of type "' . $label . '": ' . PHP_EOL . $e;
+            $this->messages[] =  'Error while executing query of type "' . $label . '": ' . PHP_EOL . $e;
         }
 
     }
@@ -595,7 +611,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             try {
                 $this->connector->addTriple('http://dbpedia.org', $triple);
             } catch(Exception $e) {
-                echo $e . PHP_EOL;
+                $this->messages[] = (string)$e;
             }
         }
     }
