@@ -642,7 +642,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function getQueries()
     {
         if ($this->queryData === null) {
-            $this->queryData = require(__DIR__ . '/DBpedia/queries.php');
+            $this->queryData = require(__DIR__ . '/_files/DBpedia/queries.php');
         }
         return $this->queryData;
     }
