@@ -496,6 +496,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     }
 
     /**
+     * Adds a message that is shown when the benchmark finishes.
+     *
+     * @param string $message
+     */
+    protected function addMessage($message)
+    {
+        $this->messages[] = $message;
+    }
+
+    /**
      * Returns a list of query types.
      *
      * @return array(string)
@@ -516,7 +526,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         try {
             $this->connector->query($query);
         } catch (\Exception $e) {
-            $this->messages[] =  'Error while executing query of type "' . $label . '": ' . PHP_EOL . $e;
+            $this->addMessage('Error while executing query of type "' . $label . '": ' . PHP_EOL . $e);
         }
 
     }
@@ -629,7 +639,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             try {
                 $this->connector->addTriple('http://dbpedia.org', $triple);
             } catch(Exception $e) {
-                $this->messages[] = (string)$e;
+                $this->addMessage((string)$e);
             }
         }
     }
