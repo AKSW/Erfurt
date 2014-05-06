@@ -497,7 +497,11 @@ class Erfurt_Versioning
             $actionType = $actionSpec['type'];
             $graphUri = $actionSpec['modeluri'];
             $resource = $actionSpec['resourceuri'];
-            $changeReason = $actionSpec['changeReason'];
+            if (isset($actionSpec['changeReason'])) {
+                $changeReason = $actionSpec['changeReason'];
+            } else {
+                $changeReason = '';
+            }
             $this->_currentAction = $actionSpec;
             $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType, $changeReason);
 
