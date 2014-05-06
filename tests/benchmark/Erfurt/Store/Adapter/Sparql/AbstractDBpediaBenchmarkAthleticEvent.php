@@ -655,7 +655,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function getBenchmarkDataFile()
     {
-        $path = __DIR__ . '/DBpedia/data/benchmark_data.nt';
+        $path = __DIR__ . '/_files/DBpedia/data/benchmark_data.nt';
         if (!is_file($path)) {
             $message = 'File "' . $path . '" does not exist. It must contain benchmark data in n-triples format.';
             throw new \RuntimeException($message);
