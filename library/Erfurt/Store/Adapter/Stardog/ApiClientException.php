@@ -49,6 +49,9 @@ class Erfurt_Store_Adapter_Stardog_ApiClientException extends RuntimeException
         $header  = $response->getHeader('SD-Error-Code');
         $code    = (string)$header;
         $message = static::toMessage($code) . PHP_EOL . PHP_EOL . $response->getBody(true);
+        if (trim($message) === '') {
+            $message = $inner->getMessage();
+        }
         return new static($message, (ctype_digit($code) ? (int)$code : 0), $inner);
     }
 
