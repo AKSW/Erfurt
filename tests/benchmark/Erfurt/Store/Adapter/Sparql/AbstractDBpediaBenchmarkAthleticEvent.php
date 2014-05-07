@@ -12,6 +12,13 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 {
 
     /**
+     * Number of triples that are parsed and inserted at once.
+     *
+     * @var integer
+     */
+    const PARSING_SIZE = 100000;
+
+    /**
      * Contains variable assignments for the test queries.
      *
      * @var array(string=>array)
@@ -74,11 +81,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function loadDataSet()
     {
-        $benchmark = $this;
-        $size = $this->sizeInPercent;
-        $this->connector->batch(function () use ($benchmark, $size) {
-            $benchmark->loadData($size);
-        });
+        $this->loadData($this->sizeInPercent);
     }
 
     /**
@@ -478,7 +481,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @param integer $sizeInPercent Value between 1 and 100.
      */
-    public function loadData($sizeInPercent)
+    protected function loadData($sizeInPercent)
     {
         $dataFile   = fopen($this->getBenchmarkDataFile(), 'r');
         $linesToAdd = array();
@@ -486,7 +489,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             if ($this->faker->boolean($sizeInPercent)) {
                 // This triple will be included in the data set that is used in the benchmark.
                 $linesToAdd[] = $line;
-                if (count($linesToAdd) >= 100) {
+                if (count($linesToAdd) >= static::PARSING_SIZE) {
                     $this->saveTriples($linesToAdd);
                     $linesToAdd = array();
                 }
@@ -634,13 +637,21 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         $parser     = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $data       = implode(PHP_EOL, $lines);
         $statements = $parser->parseFromDataString($data);
-        foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
-            /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
-            try {
-                $this->connector->addTriple('http://dbpedia.org', $triple);
-            } catch(Exception $e) {
-                $this->addMessage((string)$e);
+        $messages = $this->connector->batch(function ($connector) use($statements) {
+            /* @var $connector \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
+            $messages = array();
+            foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
+                /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
+                try {
+                    $connector->addTriple('http://dbpedia.org', $triple);
+                } catch(Exception $e) {
+                    $messages[] = (string)$e;
+                }
             }
+            return $messages;
+        });
+        foreach ($messages as $message) {
+            $this->addMessage($message);
         }
     }
 
