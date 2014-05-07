@@ -327,6 +327,29 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         );
     }
 
+    /**
+     * {@link https://github.com/AKSW/Erfurt/issues/83}
+     */
+    public function testParseWithoutLocalpartIssue83()
+    {
+        $turtle = '
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix void: <http://rdfs.org/ns/void#> .
+            @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+            rdf: rdfs:label "" ; void:exampleResource rdf: .
+        ';
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://rdfs.org/ns/void#exampleResource'][0]['value']
+        );
+        $this->assertEquals(
+            '',
+            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
+        );
+    }
+
     public function testParseFromFileNameNoBaseUri()
     {
         $fileName = realpath(dirname(dirname(dirname(__FILE__))))

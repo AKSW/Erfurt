@@ -672,8 +672,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             }
         }
 
-        $c = $this->_read();
-        $localName = $c;
+        $localName = '';
 
         $c = $this->_read();
         while ($c !== -1 && !$this->_isWS($c) && $c !== ',' && $c !== ';' && $c !== ')') {
