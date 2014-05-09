@@ -1,0 +1,23 @@
+# Use the following command to apply all commands to the benchmarks:
+# sed --file=sed-script.txt benchmark_data.orig.nt > benchmark_data.nt
+# Replace whitespace in URL:
+s/<\([^> ]*\)[ ]\([^>]*\)>/<\1_\2>/g
+# Replace invalid dates:
+s/\"1983-11-31\"/\"1983-11-30\"/
+s/\"1966-02-29\"/\"1966-02-28\"/
+s/\"2005-06-31\"/\"2005-06-30\"/
+s/\"2007-02-30\"/\"2007-02-28\"/
+s/\"1208-06-31\"/\"1208-06-30\"/
+s/\"2003-06-31\"/\"2003-06-30\"/
+s/\"1973-02-30\"/\"1973-02-28\"/
+s/\"1960-06-31\"/\"1960-06-30\"/
+s/\"1933-11-31\"/\"1933-11-30\"/
+s/\"2009-06-31\"/\"2009-06-30\"/
+s/\"2008-02-31\"/\"2008-02-29\"/
+s/\"2009-11-31\"/\"2009-11-30\"/
+s/\"2010-02-29\"/\"2010-02-28\"/
+s/\"1931-06-31\"/\"1931-06-30\"/
+# Replace year types as date time notation is used:
+s/<http:\/\/www.w3.org\/2001\/XMLSchema#gYear>/<http:\/\/www.w3.org\/2001\/XMLSchema#dateTime>/
+# Fix years that have been (accidently) converted to dateTime:
+s/\"\([-]\{0,1\}[0-9]\{4,4\}\)\"^^<http:\/\/www.w3.org\/2001\/XMLSchema#dateTime>/\"\1\"^^<http:\/\/www.w3.org\/2001\/XMLSchema#gYear>/
