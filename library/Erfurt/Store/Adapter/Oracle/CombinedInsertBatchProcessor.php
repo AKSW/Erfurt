@@ -51,7 +51,6 @@ class Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor implements Erfurt
         $statement = $this->getInsertStatement(count($quads));
         foreach ($quads as $index => $quad) {
             /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
-            //
             $statement->bindValue("modelAndGraph_$index", $model . ':<' . $quad->getGraph() . '>');
 
             $subject = $quad->getSubject();
