@@ -106,7 +106,8 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest
     {
         $object = array(
             'type'  => 'literal',
-            'value' => 'アルタクセルクセス2世ムネモン（Artaxerxes II (Mnemon), 近世ペルシア語：اردشیر‎（アルダシール）, 古代ペルシア語：アルタフシャサまたはアルタクシャサ, メディア語：アルタクシャスラ、紀元前430年頃‐359/358年）はアケメネス朝ペルシア王（在位：紀元前404年‐358年）である。アルタクセルクセスの表記はギリシア語形によるものであ',
+            // Seems as if the failure is related to the character after the colon:
+            'value' => 'アルタクセルクセス2世ムネモン（Artaxerxes II (Mnemon), 近世ペルシア語：اردشیر‎（アルダシール',
             'lang'  => 'ja'
         );
         $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
