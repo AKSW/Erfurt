@@ -99,6 +99,28 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest
         $this->assertEquals($object['value'], $value['value']);
     }
 
+    /**
+     * Ensures that a literal with asian characters is stored correctly.
+     */
+    public function testConnectorStoresLiteralWithAsianCharactersAndLanguage()
+    {
+        $object = array(
+            'type'  => 'literal',
+            'value' => 'アルタクセルクセス2世ムネモン（Artaxerxes II (Mnemon), 近世ペルシア語：اردشیر‎（アルダシール）, 古代ペルシア語：アルタフシャサまたはアルタクシャサ, メディア語：アルタクシャスラ、紀元前430年頃‐359/358年）はアケメネス朝ペルシア王（在位：紀元前404年‐358年）である。アルタクセルクセスの表記はギリシア語形によるものであ',
+            'lang'  => 'ja'
+        );
+        $this->insertTriple('http://example.org/subject', 'http://example.org/predicate', $object);
+
+        $query  = 'SELECT ?object '
+                . 'FROM <http://example.org/graph> '
+                . 'WHERE { <http://example.org/subject> <http://example.org/predicate> ?object . }';
+        $result = $this->connector->query($query);
+
+        $this->assertNumberOfRows(1, $result);
+        $row   = array_shift($result['results']['bindings']);
+        $value = array_shift($row);
+        $this->assertEquals($object['value'], $value['value']);
+    }
 
     /**
      * Checks if it is possible to use literals with quotes in SPARQL graph patterns.
