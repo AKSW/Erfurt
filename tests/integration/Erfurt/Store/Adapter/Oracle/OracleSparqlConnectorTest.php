@@ -144,7 +144,6 @@ class Erfurt_Store_Adapter_Oracle_OracleSparqlConnectorTest
         $this->assertNumberOfRows(1, $result);
     }
 
-
     /**
      * Checks if the triple definition from the extended SPARQL select result set can be used
      * to delete the specified triples via deleteMatchingStatements().
