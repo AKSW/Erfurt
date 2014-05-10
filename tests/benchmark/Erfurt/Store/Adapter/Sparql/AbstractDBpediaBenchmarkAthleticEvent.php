@@ -37,7 +37,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @var array(string)
      */
-    protected $messages = array();
+    protected $errors = array();
 
     /**
      * Size of the used data set in percent [1..100].
@@ -70,7 +70,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function classTearDown()
     {
-        echo implode(PHP_EOL, $this->messages);
+        echo implode(PHP_EOL, $this->errors);
         parent::classTearDown();
     }
 
@@ -503,9 +503,9 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @param string $message
      */
-    protected function addMessage($message)
+    protected function addError($message)
     {
-        $this->messages[] = $message;
+        $this->errors[] = $message;
     }
 
     /**
@@ -529,9 +529,8 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         try {
             $this->connector->query($query);
         } catch (\Exception $e) {
-            $this->addMessage('Error while executing query of type "' . $label . '": ' . PHP_EOL . $e);
+            $this->addError('Error while executing query of type "' . $label . '": ' . PHP_EOL . $e);
         }
-
     }
 
     /**
@@ -552,7 +551,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         }
         $query = $queries[$label]['query'];
         if (count($this->variableAssignmentsByLabel[$label]) === 0) {
-            $assignment = $this->createDefaultAssignmentFor($query);
+            $assignment = $this->createDefaultAssignmentFor($label);
         } else {
             /* @var $assignment array */
             $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
@@ -564,28 +563,18 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     }
 
     /**
-     * Creates a default variable assignment for the provided query.
+     * Creates a default variable assignment for the a query of the provided type.
      *
      * This is useful if it was not possible to extract assignments
      * from the available data.
      *
-     * @param string $query
+     * @param string $label
      * @return array(string=>string)
      */
-    protected function createDefaultAssignmentFor($query)
+    protected function createDefaultAssignmentFor($label)
     {
-        // Placeholders look like "%%name%%".
-        $regex   = '/%%([a-zA-Z0-9]+)%%/u';
-        $matches = array();
-        preg_match_all($regex, $query, $matches);
-        $variableNames = $matches[1];
-        $assignment = array();
-        foreach ($variableNames as $name) {
-            /* @var $name string */
-            // Use an URI as value as it can be used at any triple position.
-            $assignment[$name] = '<http://example.org/missing>';
-        }
-        return $assignment;
+        $queries = $this->getQueries();
+        return $queries[$label]['default_assignment'];
     }
 
     /**
@@ -651,7 +640,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             return $messages;
         });
         foreach ($messages as $message) {
-            $this->addMessage($message);
+            $this->addError($message);
         }
     }
 
