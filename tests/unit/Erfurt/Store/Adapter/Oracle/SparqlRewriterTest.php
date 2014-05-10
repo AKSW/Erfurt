@@ -206,6 +206,26 @@ class Erfurt_Store_Adapter_Oracle_SparqlRewriterTest extends \PHPUnit_Framework_
     }
 
     /**
+     * Ensures that variables are rewritten correctly if the SPARQL query uses
+     * FILTER conditions with "<" and ">" comparisons.
+     */
+    public function testRewriterWorksIfLessAndGreaterThanAreUsedInFilter()
+    {
+        $query = 'SELECT * '
+               . 'WHERE { '
+               . '  ?s ?p ?o . '
+               . '  Filter (xsd:integer(?o) > 0) . '
+               . '  Filter (xsd:integer(?o) < 42) . '
+               . '  Filter (?s = <http://example.org>) '
+               . '}';
+
+        $rewritten = $this->rewriter->rewrite($query);
+
+        // ?s variable must be prefixed.
+        $this->assertNotContains('?s', $rewritten);
+    }
+
+    /**
      * Prepends the prefix to the given variable name.
      *
      * @param string $variable
