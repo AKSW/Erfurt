@@ -17,4 +17,13 @@ class Erfurt_Store_Adapter_Oracle_DBpedia1PercentBenchmarkEvent
      */
     protected $sizeInPercent = 1;
 
+    /**
+     * Defines the level of error reporting.
+     *
+     * Valid values are the ERROR_REPORTING_* constants.
+     *
+     * @var integer
+     */
+    protected $errorReporting = self::ERROR_REPORTING_OVERVIEW;
+
 }

@@ -12,6 +12,14 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 {
 
     /**
+     * Defines different levels of error reporting.
+     */
+    const ERROR_REPORTING_NONE     = 0;
+    const ERROR_REPORTING_SUM      = 1;
+    const ERROR_REPORTING_OVERVIEW = 2;
+    const ERROR_REPORTING_DETAILS  = 3;
+
+    /**
      * Number of triples that are parsed and inserted at once.
      *
      * @var integer
@@ -48,18 +56,20 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $sizeInPercent = 100;
 
     /**
-     * Determines if errors during the benchmark are displayed.
-     *
-     * @var boolean
-     */
-    protected $displayErrors = true;
-
-    /**
      * The name of the current benchmark.
      *
      * @var string
      */
     protected $currentBenchmark = 'undefined';
+
+    /**
+     * Defines the level of error reporting.
+     *
+     * Valid values are the ERROR_REPORTING_* constants.
+     *
+     * @var integer
+     */
+    protected $errorReporting = self::ERROR_REPORTING_DETAILS;
 
     /**
      * Clears the DBpedia graph before the benchmark is started.
@@ -75,7 +85,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function classTearDown()
     {
-        if ($this->displayErrors) {
+        if ($this->errorReporting > self::ERROR_REPORTING_NONE) {
             echo $this->createErrorReport();
         }
         parent::classTearDown();
@@ -552,11 +562,19 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function createErrorReport()
     {
+        $numberOfErrors = array_sum(array_map('count', $this->errors));
+        if ($numberOfErrors === 0) {
+            return '';
+        }
         $report = $this->createLine()
-                . 'Errors (sum): ' . array_sum(array_map('count', $this->errors)) . PHP_EOL
+                . 'Errors (sum): ' . $numberOfErrors . PHP_EOL
                 . $this->createLine()
-                . $this->createLine()
-                . 'Overview' . PHP_EOL;
+                . $this->createLine();
+        if ($this->errorReporting < self::ERROR_REPORTING_OVERVIEW) {
+            return $report;
+        }
+
+        $report .= 'Overview' . PHP_EOL;
         foreach ($this->errors as $benchmark => $errors) {
             /* @var $benchmark string */
             /* @var $errors array(string) */
@@ -564,6 +582,11 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         }
         $report .= $this->createLine();
         $report .= $this->createLine();
+
+        if ($this->errorReporting < self::ERROR_REPORTING_DETAILS) {
+            return $report;
+        }
+
         $report .= 'Details' . PHP_EOL;
         $report .= $this->createLine();
         foreach ($this->errors as $benchmark => $errors) {
