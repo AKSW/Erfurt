@@ -343,11 +343,11 @@ return array(
         'query'              => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  PREFIX dbo: <http://dbpedia.org/ontology/>
                                  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                                 SELECT DISTINCT ?var2 ?var3 FROM <http://dbpedia.org> WHERE { ?var2 rdf:type %%var%% ; rdfs:label ?var3 . FILTER regex(str(?var3), 'pes', 'i') }",
+                                 SELECT DISTINCT ?var2 ?var3 FROM <http://dbpedia.org> WHERE { ?var2 rdf:type %%var%% ; rdfs:label ?var3 . FILTER(regex(str(?var3), 'pes', 'i')) }",
         'auxiliary_query'    => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  PREFIX dbo: <http://dbpedia.org/ontology/>
                                  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var2 rdf:type ?var ; rdfs:label ?var3 . FILTER regex(str(?var3), 'pes', 'i') } LIMIT 1000",
+                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var2 rdf:type ?var ; rdfs:label ?var3 . FILTER(regex(str(?var3), 'pes', 'i')) } LIMIT 1000",
         'default_assignment' => array(
             'var' => '<http://example.org>'
         )
