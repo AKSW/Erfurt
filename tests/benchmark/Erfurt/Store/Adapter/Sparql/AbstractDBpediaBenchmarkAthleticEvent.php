@@ -570,7 +570,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             /* @var $benchmark string */
             /* @var $errors array(string) */
             $report .= $benchmark . ': ' . PHP_EOL;
-            $report .= implode(PHP_EOL, $this->errors[$benchmark]) . PHP_EOL;
+            $report .= implode(PHP_EOL, $errors) . PHP_EOL;
             $report .= $this->createLine();
         }
         return $report;
