@@ -47,6 +47,13 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $sizeInPercent = 100;
 
     /**
+     * Determines if errors during the benchmark are displayed.
+     *
+     * @var boolean
+     */
+    protected $displayErrors = true;
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
@@ -60,7 +67,9 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function classTearDown()
     {
-        echo implode(PHP_EOL, $this->errors);
+        if ($this->displayErrors) {
+            echo $this->formatErrors();
+        }
         parent::classTearDown();
     }
 
@@ -496,6 +505,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function addError($message)
     {
         $this->errors[] = $message;
+    }
+
+    /**
+     * Creates a formatted representation of the errors.
+     *
+     * @return string
+     */
+    protected function formatErrors()
+    {
+        return implode(PHP_EOL, $this->errors);
     }
 
     /**
