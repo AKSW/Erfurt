@@ -192,7 +192,7 @@ return array(
                                  PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                                  SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org> WHERE { { ?var2 rdf:type ?var1. ?var2 dbpedia2:population ?var0. } UNION { ?var2 rdf:type ?var1. ?var2 dbpedia2:populationUrban ?var0.  } } LIMIT 1000',
         'default_assignment' => array(
-            'var0' => 0,
+            'var0' => '"0"^^xsd:integer',
             'var1' => '<http://example.org>'
         )
     ),
@@ -231,8 +231,8 @@ return array(
                                  PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
                                  SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org> { ?var3 foaf:page ?var7. ?var3 rdf:type <http://dbpedia.org/ontology/SoccerPlayer> . ?var3 dbpedia2:position ?var6 . ?var3 <http://dbpedia.org/property/clubs> ?var8. ?var8 <http://dbpedia.org/ontology/capacity> ?var1 . ?var3 <http://dbpedia.org/ontology/birthPlace> ?var5 . ?var5 ?var4 ?var0. OPTIONAL {?var3 <http://dbpedia.org/ontology/number> ?var35.} Filter (?var4 = <http://dbpedia.org/property/populationEstimate> || ?var4 = <http://dbpedia.org/property/populationCensus> || ?var4 = <http://dbpedia.org/property/statPop> ) . Filter (?var6 = 'Goalkeeper'@en || ?var6 = <http://dbpedia.org/resource/Goalkeeper_%28association_football%29> || ?var6 = <http://dbpedia.org/resource/Goalkeeper_%28football%29>) } LIMIT 1000",
         'default_assignment' => array(
-            'var0' => '0',
-            'var1' => '0'
+            'var0' => '"0"^^xsd:integer',
+            'var1' => '"0"^^xsd:integer'
         )
     ),
     'union,optional,distinct' => array(
