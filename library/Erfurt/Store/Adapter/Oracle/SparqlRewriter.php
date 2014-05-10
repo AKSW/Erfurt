@@ -52,7 +52,7 @@ class Erfurt_Store_Adapter_Oracle_SparqlRewriter
                     break;
                 case '<':
                     $rewritten .= $byte;
-                    if ($state->top() === 'in_query') {
+                    if ($state->top() === 'in_query' && isset($bytes[$i + 1]) && $bytes[$i + 1] !== ' ') {
                         $state->push('in_iri');
                     }
                     break;
