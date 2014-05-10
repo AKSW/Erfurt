@@ -11,11 +11,10 @@ class Erfurt_Store_Adapter_Stardog_DBpedia10PercentBenchmarkEvent
 {
 
     /**
-     * Creates the benchmark event.
+     * Size of the used data set in percent [1..100].
+     *
+     * @var integer
      */
-    public function __construct()
-    {
-        parent::__construct(10);
-    }
+    protected $sizeInPercent = 10;
 
 }

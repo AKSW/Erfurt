@@ -44,17 +44,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @var integer
      */
-    protected $sizeInPercent = null;
-
-    /**
-     * Creates a benchmark that uses the provided data set size.
-     *
-     * @param integer $sizeInPercent
-     */
-    public function __construct($sizeInPercent = 100)
-    {
-        $this->sizeInPercent = $sizeInPercent;
-    }
+    protected $sizeInPercent = 100;
 
     /**
      * Clears the DBpedia graph before the benchmark is started.
