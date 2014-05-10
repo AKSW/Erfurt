@@ -33,9 +33,10 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $queryData = null;
 
     /**
-     * Error messages that are gathered during the benchmark run.
+     * Error messages that are gathered during the benchmark run,
+     * grouped by benchmark.
      *
-     * @var array(string)
+     * @var array(string=>array(string))
      */
     protected $errors = array();
 
@@ -54,6 +55,13 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected $displayErrors = true;
 
     /**
+     * The name of the current benchmark.
+     *
+     * @var string
+     */
+    protected $currentBenchmark = 'undefined';
+
+    /**
      * Clears the DBpedia graph before the benchmark is started.
      */
     protected function classSetUp()
@@ -68,7 +76,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function classTearDown()
     {
         if ($this->displayErrors) {
-            echo $this->formatErrors();
+            echo $this->createErrorReport();
         }
         parent::classTearDown();
     }
@@ -80,6 +88,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function loadDataSet()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->loadData($this->sizeInPercent);
     }
 
@@ -90,6 +99,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function prepareQueryVars()
     {
+        $this->enterBenchmark(__FUNCTION__);
         foreach ($this->getQueries() as $label => $queryData) {
             /* @var $label string */
             /* @var $queryData array(string=>string) */
@@ -109,6 +119,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function distinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('distinct');
     }
 
@@ -122,6 +133,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function filterQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('filter');
     }
 
@@ -135,6 +147,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function optionalQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('optional');
     }
 
@@ -148,6 +161,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union');
     }
 
@@ -162,6 +176,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,distinct');
     }
 
@@ -176,6 +191,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function filterDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('filter,distinct');
     }
 
@@ -190,6 +206,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function optionalDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('optional,distinct');
     }
 
@@ -204,6 +221,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionFilterQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,filter');
     }
 
@@ -218,6 +236,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionOptionalQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,optional');
     }
 
@@ -233,6 +252,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function optionalFilterDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('optional,filter,distinct');
     }
 
@@ -248,6 +268,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionOptionalDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,optional,distinct');
     }
 
@@ -263,6 +284,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function filterLangDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('filter,lang,distinct');
     }
 
@@ -278,6 +300,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionFilterLangQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,filter,lang');
     }
 
@@ -293,6 +316,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function optionalFilterLangQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('optional,filter,lang');
     }
 
@@ -309,6 +333,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function filterRegexDistinctStrQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('filter,regex,distinct,str');
     }
 
@@ -325,6 +350,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function optionalFilterLangDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('optional,filter,lang,distinct');
     }
 
@@ -341,6 +367,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionFilterLangDistinctQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,filter,lang,distinct');
     }
 
@@ -357,6 +384,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionFilterLangStrQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,filter,lang,str');
     }
 
@@ -373,6 +401,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionFilterRegexStrQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,filter,regex,str');
     }
 
@@ -389,6 +418,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function unionOptionalFilterLangQuery()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('union,optional,filter,lang');
     }
 
@@ -402,6 +432,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function triplePatterns1Query()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('1-TriplePatterns');
     }
 
@@ -415,6 +446,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function triplePatterns2Query()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('2-TriplePatterns');
     }
 
@@ -428,6 +460,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function triplePatterns3Query()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('3-TriplePatterns');
     }
 
@@ -441,6 +474,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function triplePatterns4Query()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('4-TriplePatterns');
     }
 
@@ -454,6 +488,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function triplePatterns5Query()
     {
+        $this->enterBenchmark(__FUNCTION__);
         $this->executeOneQuery('5-TriplePatterns');
     }
 
@@ -504,7 +539,10 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     protected function addError($message)
     {
-        $this->errors[] = $message;
+        if (!isset($this->errors[$this->currentBenchmark])) {
+            $this->errors[$this->currentBenchmark] = array();
+        }
+        $this->errors[$this->currentBenchmark][] = $message;
     }
 
     /**
@@ -512,9 +550,40 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      *
      * @return string
      */
-    protected function formatErrors()
+    protected function createErrorReport()
     {
-        return implode(PHP_EOL, $this->errors);
+        $report = $this->createLine()
+                . 'Errors (sum): ' . array_sum(array_map('count', $this->errors)) . PHP_EOL
+                . $this->createLine()
+                . $this->createLine()
+                . 'Overview' . PHP_EOL;
+        foreach ($this->errors as $benchmark => $errors) {
+            /* @var $benchmark string */
+            /* @var $errors array(string) */
+            $report .= $benchmark . ': ' . count($errors) . PHP_EOL;
+        }
+        $report .= $this->createLine();
+        $report .= $this->createLine();
+        $report .= 'Details' . PHP_EOL;
+        $report .= $this->createLine();
+        foreach ($this->errors as $benchmark => $errors) {
+            /* @var $benchmark string */
+            /* @var $errors array(string) */
+            $report .= $benchmark . ': ' . PHP_EOL;
+            $report .= implode(PHP_EOL, $this->errors[$benchmark]) . PHP_EOL;
+            $report .= $this->createLine();
+        }
+        return $report;
+    }
+
+    /**
+     * Creates a dashed line that can be used as console output.
+     *
+     * @return string
+     */
+    protected function createLine()
+    {
+        return str_repeat('-', 80) . PHP_EOL;
     }
 
     /**
@@ -584,6 +653,16 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     {
         $queries = $this->getQueries();
         return $queries[$label]['default_assignment'];
+    }
+
+    /**
+     * Marks the given benchmark as running.
+     *
+     * @param string $name
+     */
+    protected function enterBenchmark($name)
+    {
+        $this->currentBenchmark = $name;
     }
 
     /**
