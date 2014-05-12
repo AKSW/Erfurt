@@ -117,6 +117,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             $result = $this->connector->query($query);
             $this->variableAssignmentsByLabel[$label] = $this->extractAssignments($result);
         }
+        $this->sortAssignments();
     }
 
     /**
@@ -612,6 +613,21 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     }
 
     /**
+     * Define an order on the variable assignments.
+     *
+     * This should guarantee that the query order is equal for all benchmarks
+     * and not influenced by previous runs.
+     */
+    protected function sortAssignments()
+    {
+        foreach (array_keys($this->variableAssignmentsByLabel) as $label) {
+            usort($this->variableAssignmentsByLabel[$label], function ($left, $right) {
+                return strcmp(json_encode($left), json_encode($right));
+            });
+        }
+    }
+
+    /**
      * Returns a list of query types.
      *
      * @return array(string)
@@ -661,8 +677,10 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         if (count($this->variableAssignmentsByLabel[$label]) === 0) {
             $assignment = $this->createDefaultAssignmentFor($label);
         } else {
+            // Cycle through the variable assignments.
             /* @var $assignment array */
-            $assignment = $this->faker->randomElement($this->variableAssignmentsByLabel[$label]);
+            $assignment = array_shift($this->variableAssignmentsByLabel[$label]);
+            array_push($this->variableAssignmentsByLabel[$label], $assignment);
         }
         foreach ($assignment as $varName => $value) {
             $query = str_replace('%%' . $varName . '%%', $value, $query);
