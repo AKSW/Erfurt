@@ -510,6 +510,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
      */
     public function queryMix()
     {
+        $this->enterBenchmark(__FUNCTION__);
         foreach ($this->getQueryTypes() as $type) {
             /* @var $type string */
             $this->executeOneQuery($type);
@@ -593,7 +594,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             /* @var $benchmark string */
             /* @var $errors array(string) */
             $report .= $benchmark . ': ' . PHP_EOL;
-            $report .= implode($this->createLine(), $errors) . PHP_EOL;
+            $report .= implode(PHP_EOL . $this->createLine(), $errors) . PHP_EOL;
             $report .= $this->createLine();
             $report .= $this->createLine();
         }
@@ -631,7 +632,12 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         try {
             $this->connector->query($query);
         } catch (\Exception $e) {
-            $this->addError('Error while executing query of type "' . $label . '": ' . PHP_EOL . $e);
+            $message = 'Query type: ' . $label . PHP_EOL
+                     . 'Query:' . PHP_EOL
+                     . $query . PHP_EOL
+                     . 'Error:' . PHP_EOL
+                     . $e;
+            $this->addError($message);
         }
     }
 
@@ -705,7 +711,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             foreach ($binding as $varName => $spec) {
                 /* @var $varName string */
                 /* @var $spec array(string=>mixed) */
-                $assignment[$varName] = $this->toRdfTerm($spec);
+                $assignment[$varName] = (is_numeric($spec['value'])) ? $spec['value'] : $this->toRdfTerm($spec);
             }
             $assignments[] = $assignment;
         }
