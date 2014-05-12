@@ -89,7 +89,7 @@ return array(
                                  PREFIX dbpedia: <http://dbpedia.org/>
                                  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                  PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { { ?var ?var5 ?var6 . ?var6 foaf:name ?var8 . } UNION { ?var9 ?var5 ?var ; foaf:name ?var4 . } } LIMIT 1000',
+                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { { ?var ?var5 ?var6 . ?var6 foaf:name ?var8 . } UNION { ?var9 ?var5 ?var ; foaf:name ?var4 .  FILTER (isIRI(?var)) } } LIMIT 1000',
         'default_assignment' => array(
             'var' => '<http://example.org>'
         )
@@ -190,7 +190,7 @@ return array(
                                  PREFIX dbpedia2: <http://dbpedia.org/property/>
                                  PREFIX dbpedia: <http://dbpedia.org/>
                                  PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-                                 SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org> WHERE { { ?var2 rdf:type ?var1. ?var2 dbpedia2:population ?var0. } UNION { ?var2 rdf:type ?var1. ?var2 dbpedia2:populationUrban ?var0.  } } LIMIT 1000',
+                                 SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org> WHERE { { ?var2 rdf:type ?var1. ?var2 dbpedia2:population ?var0. FILTER (isNumeric(?var0)) } UNION { ?var2 rdf:type ?var1. ?var2 dbpedia2:populationUrban ?var0. FILTER (isNumeric(?var0)) } } LIMIT 1000',
         'default_assignment' => array(
             'var0' => '0',
             'var1' => '<http://example.org>'
