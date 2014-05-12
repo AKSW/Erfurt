@@ -39,23 +39,21 @@ class Erfurt_Sparql_ParserException extends Erfurt_Exception
 		return $this->_tokenPointer;
 	}
 
-    /**
-     * @param boolean $pre
-     * @return string
-     */
-    public function display($pre = true) {
-        $message = '';
-		if ($pre) $message .= '<pre>';
-        $message .= "Erfurt_Sparql_ParserException: code $this->code ($this->message) " .
-			        "in line $this->line of $this->file\n";
-        $message .= $this->getTraceAsString() . "\n";
-		$message .= "at token: ".$this->_tokenPointer;
-		if ($pre) $message .= '</pre>';
-        return $message;
-	}
-
     public function __toString()
     {
-        return $this->display(false);
+        return $this->createStringRepresentation();
     }
+
+    /**
+     * @return string
+     */
+    public function createStringRepresentation() {
+        $message = '';
+        $message .= "Erfurt_Sparql_ParserException: code $this->code ($this->message) " .
+            "in line $this->line of $this->file\n";
+        $message .= $this->getTraceAsString() . "\n";
+        $message .= "at token: ".$this->_tokenPointer;
+        return $message;
+    }
+    
 }
