@@ -24,6 +24,6 @@ class Erfurt_Store_Adapter_Oracle_DBpedia5PercentBenchmarkEvent
      *
      * @var integer
      */
-    protected $errorReporting = self::ERROR_REPORTING_DETAILS;
+    protected $errorReporting = self::ERROR_REPORTING_OVERVIEW;
 
 }
