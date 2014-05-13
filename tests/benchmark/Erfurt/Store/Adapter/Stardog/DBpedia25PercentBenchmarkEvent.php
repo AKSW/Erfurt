@@ -6,7 +6,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 30.04.14
  */
-class Erfurt_Store_Adapter_Stardog_DBpedia10PercentBenchmarkEvent
+class Erfurt_Store_Adapter_Stardog_DBpedia25PercentBenchmarkEvent
     extends Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
 {
 
@@ -15,6 +15,6 @@ class Erfurt_Store_Adapter_Stardog_DBpedia10PercentBenchmarkEvent
      *
      * @var integer
      */
-    protected $sizeInPercent = 10;
+    protected $sizeInPercent = 25;
 
 }
