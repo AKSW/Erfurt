@@ -169,7 +169,12 @@ class Erfurt_Sparql_Constraint
             $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand1']));
             $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand2']));
         } else {
-            throw new RuntimeException('Cannot parse constraint. Data: ' . PHP_EOL . var_export($tree, true));
+            $message = 'Cannot parse constraint.' . PHP_EOL
+                     . 'Expression:' . PHP_EOL
+                     . $this->_expression . PHP_EOL
+                     . 'Tree: ' . PHP_EOL
+                     . var_export($tree, true);
+            throw new RuntimeException($message);
         }
 
         return $usedVars;
