@@ -165,9 +165,11 @@ class Erfurt_Sparql_Constraint
             if (strlen($tree['value']) && ($tree['value'][0] === '?' || $tree['value'][0] === '$')) {
                 $usedVars[] = $tree['value'];
             }
-        } else {
+        } else if (isset($tree['operand1']) && isset($tree['operand2'])) {
             $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand1']));
             $usedVars = array_merge($usedVars, $this->_resolveUsedVarsRecursive($tree['operand2']));
+        } else {
+            throw new RuntimeException('Cannot parse constraint. Data: ' . PHP_EOL . var_export($tree, true));
         }
 
         return $usedVars;
