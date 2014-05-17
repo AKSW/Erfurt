@@ -173,7 +173,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         // Determine the number of edges, which is equivalent to the number of triples
         // as each triple has its own predicate (but subject and object might be shared
         // between triples).
-        $query  = 'START n=node(*) MATCH (n)-[r]->() RETURN COUNT(r) AS numberOfTriples';
+        $query  = 'START n=node(*) MATCH (n)-[r]->() WHERE HAS(n.term) RETURN COUNT(r) AS numberOfTriples';
         $result = $this->executeCypherQuery($query);
         return $result[0]['numberOfTriples'];
     }
