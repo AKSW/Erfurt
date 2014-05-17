@@ -17,6 +17,7 @@ s/\"2008-02-31\"/\"2008-02-29\"/
 s/\"2009-11-31\"/\"2009-11-30\"/
 s/\"2010-02-29\"/\"2010-02-28\"/
 s/\"1931-06-31\"/\"1931-06-30\"/
+s/\"0004-31-08T00:00:00+02:00\"/\"0004-08-31T00:00:00+02:00\"/
 # Replace year types as date time notation is used:
 s/<http:\/\/www.w3.org\/2001\/XMLSchema#gYear>/<http:\/\/www.w3.org\/2001\/XMLSchema#dateTime>/
 # Fix years that have been (accidently) converted to dateTime:
