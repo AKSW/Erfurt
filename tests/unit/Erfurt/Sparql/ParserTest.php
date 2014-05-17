@@ -86,6 +86,24 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
     }
 
     /**
+     * Checks if UNION queries are parsed correctly.
+     */
+    public function testParserHandlesUnionCorrectly()
+    {
+        $query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                  SELECT ?var1 FROM <http://dbpedia.org>
+                  WHERE {
+                      { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> \"2922 Dikan'ka\" }
+                      UNION
+                      { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> \"2922 Dikan'ka\" }
+                  }";
+
+        $result = $this->_parser->parse($query);
+
+        $this->assertInstanceOf('Erfurt_Sparql_Query', $result);
+    }
+
+    /**
      * @dataProvider providerTestParse
      */
     public function testParse($querySpec)
