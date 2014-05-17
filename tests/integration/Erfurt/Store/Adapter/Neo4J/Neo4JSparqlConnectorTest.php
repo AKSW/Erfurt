@@ -3,6 +3,7 @@
 /**
  * Tests the Neo4J SPARQL connector.
  *
+ * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.03.14
  * @group Neo4J
  */
