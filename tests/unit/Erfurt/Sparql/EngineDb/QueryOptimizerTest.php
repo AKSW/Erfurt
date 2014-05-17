@@ -37,10 +37,10 @@ class Erfurt_Sparql_EngineDb_QueryOptimizerTest extends \PHPUnit_Framework_TestC
     }
 
     /**
-     * Checks if the optimizer an handle a DISTINCT query with a FILTER expression that involves
-     * 2 operands.
+     * Checks if the optimizer an handle a DISTINCT query with a FILTER expression that contains
+     * "0" as an operand.
      */
-    public function testOptimizerCanHandleDistinctQueryWithGreaterThanOrEqualFilter()
+    public function testOptimizerCanHandleDistinctQueryWithZeroAsFilterOperand()
     {
         $query = 'PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
