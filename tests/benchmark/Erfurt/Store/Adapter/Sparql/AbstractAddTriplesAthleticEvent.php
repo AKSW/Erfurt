@@ -27,6 +27,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractAddTriplesAthleticEvent
      * Inserts 1000 triples via independent addTriple() calls.
      *
      * @Iterations 20
+     * @MaxRuntime 600
      */
     public function testInsert1000TriplesViaSingleInsert()
     {
@@ -47,6 +48,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractAddTriplesAthleticEvent
      * Inserts 1000 triples in 10 batches, 100 triples each.
      *
      * @Iterations 20
+     * @MaxRuntime 600
      */
     public function testInsert1000TriplesInChunksOf100()
     {
@@ -73,6 +75,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractAddTriplesAthleticEvent
      * Inserts 1000 triples in a batch.
      *
      * @Iterations 20
+     * @MaxRuntime 600
      */
     public function testInsert1000TriplesAsBatch()
     {
