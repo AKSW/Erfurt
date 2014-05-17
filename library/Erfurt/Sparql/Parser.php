@@ -610,7 +610,7 @@ class Erfurt_Sparql_Parser
     /**
      * Parses a value constraint.
      *
-     * @param GraphPattern $pattern
+     * @param Erfurt_Sparql_GraphPattern $pattern
      * @param boolean $outer If the constraint is an outer one.
      */
     protected function _parseConstraint(&$pattern, $outer)
