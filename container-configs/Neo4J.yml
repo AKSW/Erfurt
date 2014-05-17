@@ -37,6 +37,17 @@ services:
         class: Everyman\Neo4j\Client
         arguments: ["%neo4j.client.host%", "%neo4j.client.port%"]
 
+    neo4j.client.api:
+            class: Erfurt_Store_Adapter_Neo4J_ApiClient
+            factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
+            factory_method: factory
+            arguments:
+                -
+                    base_url: "%neo4j.client.base_url%"
+                    log:      "%neo4j.client.log%"
+                    "curl.options":
+                        body_as_string: true
+
     mysql.sql_adapter:
         class: Erfurt_Store_Adapter_Sql_ZendDb
         arguments:

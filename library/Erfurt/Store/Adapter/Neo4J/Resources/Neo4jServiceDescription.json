@@ -2,5 +2,58 @@
     "name": "Neo4j API",
     "apiVersion": "2014-03-13",
     "description": "REST API of the Neo4j.",
-    "documentation": "http://docs.neo4j.org/chunked/1.9.7/index.html"
+    "documentation": "http://docs.neo4j.org/chunked/1.9.7/index.html",
+    "baseUrl": "db/data",
+    "operations": {
+        "baseOperation": {
+            "parameters": {
+                "inputFormat": {
+                    "description": "The provided input format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Content-Type",
+                    "default": "application/json"
+                },
+                "outputFormat": {
+                    "description": "The expected output format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Accept",
+                    "default": "application/json; charset=UTF-8"
+                }
+            }
+        },
+        "createRdfNode": {
+            "summary": "Creates a unique node or returns it if it does not exist.",
+            "extends": "baseOperation",
+            "uri": "index/node/rdf-node?uniqueness=get_or_create",
+            "httpMethod": "POST",
+            "parameters": {
+                "key": {
+                    "description": "Arbitrary key for the unique property.",
+                    "type": "string",
+                    "location": "json",
+                    "default": "term",
+                    "required": false
+                },
+                "value": {
+                    "description": "The unique value.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "properties": {
+                    "description": "The properties of the node.",
+                    "type": "object",
+                    "location": "json",
+                    "required": true
+                }
+            }
+        },
+        "batch": {
+            "extends": "baseOperation",
+            "uri": "batch",
+            "httpMethod": "POST"
+        }
+    }
 }
