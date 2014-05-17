@@ -1169,7 +1169,8 @@ class Erfurt_Sparql_Parser
         } else {
             $node = current($this->_tokens);
         }
- 
+
+        $node = trim($node);
         if ($node{strlen($node)-1} === '.') {
             $node = substr($node, 0, -1);
         }
