@@ -661,7 +661,7 @@ class Erfurt_Sparql_Parser
         $strQuoted  = '';
         $parens     = false;
 
-        while ($tok = next($this->_tokens)) {
+        while (($tok = next($this->_tokens)) !== false) {
             if ($chQuotes !== null && $tok != $chQuotes) {
                 $strQuoted .= $tok;
                 continue;
