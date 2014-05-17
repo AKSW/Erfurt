@@ -56,7 +56,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizerTest extends \PHPUnit_Framework_TestC
         $parser = new Erfurt_Sparql_Parser();
         $query = $parser->parse($query);
 
-        $result         = $this->optimizer->optimize($query);
+        $result = $this->optimizer->optimize($query);
 
         $this->assertInstanceOf('Erfurt_Sparql_Query', $result);
     }
