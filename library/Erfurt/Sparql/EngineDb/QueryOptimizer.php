@@ -38,7 +38,11 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         
         return $result;
     }
-    
+
+    /**
+     * @param Erfurt_Sparql_Query $query
+     * @return mixed
+     */
     protected function _optimizeDistinct($query)
     {
 // TODO Not supported yet.
