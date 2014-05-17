@@ -6,6 +6,11 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
     const EF_TEST_DIR = 'erfurt/';
     const DAWG_DATA_DIR = 'w3c-dawg2/data-r2/';
 
+    /**
+     * System under test.
+     *
+     * @var Erfurt_Sparql_Parser
+     */
     protected $_parser = null;
 
     public function setUp()
@@ -66,6 +71,18 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                         ### bla bla bla';
 
         $this->assertEquals('', trim(Erfurt_Sparql_Parser::uncomment($queryString)));
+    }
+
+    /**
+     * Checks if the parser is able to handle a literal that contains quotes.
+     */
+    public function testParserCanHandleLiteralsWithQuotes()
+    {
+        $query = 'SELECT * FROM <http://example.org> WHERE { ?subject ?predicate "He\'s working" . }';
+
+        $result = $this->_parser->parse($query);
+
+        $this->assertInstanceOf('Erfurt_Sparql_Query', $result);
     }
 
     /**
