@@ -54,13 +54,13 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
             'objectKind'    => $object['type']
         );
 
-        $query = 'START subject=node(*) WHERE subject.term={subjectTerm} RETURN ID(subject) AS subjectId';
+        $query = 'START subject=node(*) WHERE subject.term! = {subjectTerm} RETURN ID(subject) AS subjectId';
         $result = $this->executeCypherQuery($query, $params);
         $subjectId = null;
         if (count($result) > 0) {
             $subjectId = $result[0]['subjectId'];
         }
-        $query = 'START object=node(*) WHERE object.term={objectTerm} RETURN ID(object) AS objectId';
+        $query = 'START object=node(*) WHERE object.term! = {objectTerm} RETURN ID(object) AS objectId';
         $result = $this->executeCypherQuery($query, $params);
         $objectId = null;
         if (count($result) > 0) {
