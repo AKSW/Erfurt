@@ -44,29 +44,6 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractAddTriplesAthleticEvent
     }
 
     /**
-     * Inserts 1000 triples in a batch.
-     *
-     * @Iterations 20
-     */
-    public function testInsert1000TriplesAsBatch()
-    {
-        $faker = $this->faker;
-        $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($faker) {
-            for ($i = 0; $i < 1000; $i++) {
-                $triple = new Erfurt_Store_Adapter_Sparql_Triple(
-                    $faker->url . '/subject',
-                    $faker->url . '/predicate',
-                    array(
-                        'type'  => 'uri',
-                        'value' => $faker->url . '/object'
-                    )
-                );
-                $connector->addTriple('http://example.org/performance', $triple);
-            }
-        });
-    }
-
-    /**
      * Inserts 1000 triples in 10 batches, 100 triples each.
      *
      * @Iterations 20
@@ -90,6 +67,29 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractAddTriplesAthleticEvent
         for ($i = 0; $i < 10; $i++) {
             $this->connector->batch($insert100Triples);
         }
+    }
+
+    /**
+     * Inserts 1000 triples in a batch.
+     *
+     * @Iterations 20
+     */
+    public function testInsert1000TriplesAsBatch()
+    {
+        $faker = $this->faker;
+        $this->connector->batch(function (\Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface $connector) use ($faker) {
+            for ($i = 0; $i < 1000; $i++) {
+                $triple = new Erfurt_Store_Adapter_Sparql_Triple(
+                    $faker->url . '/subject',
+                    $faker->url . '/predicate',
+                    array(
+                        'type'  => 'uri',
+                        'value' => $faker->url . '/object'
+                    )
+                );
+                $connector->addTriple('http://example.org/performance', $triple);
+            }
+        });
     }
 
 }
