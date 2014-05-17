@@ -1539,7 +1539,8 @@ class Erfurt_Sparql_Parser
         $obj        = '';
         
         do {
-            switch (strtolower(current($this->_tokens))) {
+            $token = strtolower(trim(current($this->_tokens)));
+            switch ($token) {
                 case false:
                     $cont          = false;
                     $pattern->open = false;
