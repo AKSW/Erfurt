@@ -1,0 +1,6 @@
+{
+    "name": "Neo4j API",
+    "apiVersion": "2014-03-13",
+    "description": "REST API of the Neo4j.",
+    "documentation": "http://docs.neo4j.org/chunked/1.9.7/index.html"
+}
