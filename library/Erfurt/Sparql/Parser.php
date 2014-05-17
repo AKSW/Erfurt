@@ -1522,7 +1522,7 @@ class Erfurt_Sparql_Parser
     /**
      * Parses a triple pattern.
      *
-     * @param  Sparql_GraphPattern $pattern
+     * @param  Erfurt_Sparql_GraphPattern $pattern
      */
     protected function _parseTriplePattern(&$pattern)
     {
