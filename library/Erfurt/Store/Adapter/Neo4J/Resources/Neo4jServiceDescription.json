@@ -23,23 +23,31 @@
                 }
             }
         },
-        "createRdfNode": {
+        "createUniqueNode": {
             "summary": "Creates a unique node or returns it if it does not exist.",
             "extends": "baseOperation",
-            "uri": "index/node/rdf-node?uniqueness=get_or_create",
+            "uri": "index/node/{index}?uniqueness=get_or_create",
             "httpMethod": "POST",
             "parameters": {
-                "key": {
-                    "description": "Arbitrary key for the unique property.",
+                "index": {
+                    "description": "Name of the unique index that is used.",
                     "type": "string",
-                    "location": "json",
-                    "default": "term",
+                    "location": "uri",
+                    "default": "unique-node",
                     "required": false
                 },
-                "value": {
+                "key": {
+                    "description": "Arbitrary key for the unique value.",
+                    "type": "string",
+                    "location": "json",
+                    "default": "unique-value",
+                    "required": false
+                },
+                "identifier": {
                     "description": "The unique value.",
                     "type": "string",
                     "location": "json",
+                    "sentAs": "value",
                     "required": true
                 },
                 "properties": {
