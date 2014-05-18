@@ -60,7 +60,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
 
         $this->apiClient->createUniqueRelation(
             'rdf-predicate',
-            $subjectTerm . ' -> ' . $objectTerm,
+            $subjectTerm . ' -(' . $triple->getPredicate() . ')-> ' . $objectTerm,
             $subjectNode,
             $objectNode,
             $triple->getPredicate(),
