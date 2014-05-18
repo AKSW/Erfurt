@@ -89,7 +89,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
         $parameters = array(
             'index'      => $index,
             'identifier' => $identifier,
-            'properties' => $properties
+            'properties' => (object)$properties
         );
         return $this->getCommand('createUniqueNode', $parameters);
     }
