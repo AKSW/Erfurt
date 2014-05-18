@@ -36,7 +36,7 @@
                     "required": false
                 },
                 "key": {
-                    "description": "Arbitrary key for the unique value.",
+                    "description": "Arbitrary key for the unique identifier.",
                     "type": "string",
                     "location": "json",
                     "default": "unique-identifier",
@@ -52,6 +52,53 @@
                 "properties": {
                     "description": "The properties of the node.",
                     "type": "object",
+                    "location": "json",
+                    "required": true
+                }
+            }
+        },
+        "createUniqueRelation": {
+            "summary": "Creates a unique relation between two nodes or returns it if it does not exist.",
+            "extends": "baseOperation",
+            "uri": "index/relationship/{index}?uniqueness=get_or_create",
+            "httpMethod": "POST",
+            "parameters": {
+                "index": {
+                    "description": "Name of the unique index that is used.",
+                    "type": "string",
+                    "location": "uri",
+                    "default": "unique-node",
+                    "required": false
+                },
+                "key": {
+                    "description": "Arbitrary key for the unique value.",
+                    "type": "string",
+                    "location": "json",
+                    "default": "unique-identifier",
+                    "required": false
+                },
+                "identifier": {
+                    "description": "The unique identifier.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "value",
+                    "required": true
+                },
+                "start": {
+                    "description": "URI reference to the start node.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "end": {
+                    "description": "URI reference to the end node.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "type": {
+                    "description": "The type of the relation.",
+                    "type": "string",
                     "location": "json",
                     "required": true
                 }

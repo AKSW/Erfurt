@@ -61,6 +61,20 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
         $command = $this->getCommand('createUniqueNode', $parameters);
         $result  = $command->execute();
         return $result['self'];
+    }
+
+    /**
+     * Creates a unique relationship between two nodes.
+     *
+     * @param string $index Name of the index that is used to check uniqueness.
+     * @param string $identifier The unique identifier.
+     * @param string $start The identifier of the start node.
+     * @param string $end The identifier of the end node.
+     * @param string $type The type of the relation.
+     * @return string The identifier of the created or retrieved relation.
+     */
+    public function createUniqueRelation($index, $identifier, $start, $end, $type)
+    {
 
     }
 

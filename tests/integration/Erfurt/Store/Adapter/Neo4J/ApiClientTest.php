@@ -64,9 +64,9 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     }
 
     /**
-     * Ensures that createUniqueNode() creates a new node if it does not already exist.
+     * Ensures that createUniqueNode() returns an identifier.
      */
-    public function testCreateUniqueNodeCreatesNodeIfItDoesNotAlreadyExist()
+    public function testCreateUniqueNodeReturnsIdentifier()
     {
         $properties = array('term' => '<http://example.org/api-client-test>');
         $nodeIdentifier = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
@@ -101,6 +101,87 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
         $second = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
 
         $this->assertNotEquals($first, $second);
+    }
+
+    /**
+     * Checks if createUniqueRelation() returns an identifier.
+     */
+    public function testCreateUniqueRelationReturnsIdentifier()
+    {
+        $identifier = $this->client->createUniqueRelation(
+            'api-client-relation-test',
+            uniqid('', true),
+            $this->createNewNode(),
+            $this->createNewNode(),
+            'api-client-test'
+        );
+
+        $this->assertInternalType('string', $identifier);
+        $this->assertNotEmpty($identifier);
+    }
+
+    /**
+     * Ensures that createUniqueRelation() returns the same identifier if the requested
+     * relation already exists.
+     */
+    public function testCreateUniqueRelationReturnsExistingRelationIfItAlreadyExists()
+    {
+        $start = $this->createNewNode();
+        $end   = $this->createNewNode();
+        $id    = uniqid('', true);
+        $first = $this->client->createUniqueRelation(
+            'api-client-relation-test',
+            $id,
+            $start,
+            $end,
+            'api-client-test'
+        );
+        $second = $this->client->createUniqueRelation(
+            'api-client-relation-test',
+            $id,
+            $start,
+            $end,
+            'api-client-test'
+        );
+
+        $this->assertEquals($first, $second);
+    }
+
+    /**
+     * Ensures that createUniqueRelation() returns different identifiers if different relations
+     * are created.
+     */
+    public function testCreateUniqueRelationReturnsDifferentIdentifiersForDifferentRelations()
+    {
+        $start = $this->createNewNode();
+        $end   = $this->createNewNode();
+        $first = $this->client->createUniqueRelation(
+            'api-client-relation-test',
+            uniqid('', true),
+            $start,
+            $end,
+            'api-client-test'
+        );
+        $second = $this->client->createUniqueRelation(
+            'api-client-relation-test',
+            uniqid('', true),
+            $start,
+            $end,
+            'api-client-test2'
+        );
+
+        $this->assertNotEquals($first, $second);
+    }
+
+    /**
+     * Creates a new node and returns its identifier.
+     *
+     * @return string
+     */
+    protected function createNewNode()
+    {
+        $properties = array('term' => '<http://example.org/test-node>');
+        return $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
     }
 
 }
