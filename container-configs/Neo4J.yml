@@ -20,7 +20,7 @@ services:
 
     neo4j.client.store_management:
         class: Erfurt_Store_Adapter_Neo4J_StoreManagementClient
-        arguments: ["@neo4j.client.rest_api"]
+        arguments: ["@neo4j.client.api"]
 
     neo4j.client.sparql_api:
         class: Erfurt_Store_Adapter_Neo4J_SparqlApiClient
