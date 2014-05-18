@@ -126,7 +126,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function clear()
     {
-        $deleteNodesAndPredicates = 'START n=node(*) MATCH (n)-[r]->() WHERE HAS(n.term) DELETE r, n';
+        $deleteNodesAndPredicates = 'START n=node(*) MATCH (n)-[r?]-() WHERE HAS(n.term) DELETE r, n';
         $this->executeCypherQuery($deleteNodesAndPredicates);
     }
 
