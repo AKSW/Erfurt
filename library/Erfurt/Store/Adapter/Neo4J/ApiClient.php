@@ -27,6 +27,9 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public static function factory($config = array())
     {
+        if (isset($config['base_url'])) {
+            $config['base_url'] = rtrim($config['base_url'], '/') . '/db/data';
+        }
         $client = parent::factory($config);
         $client->setDescription(ServiceDescription::factory(__DIR__ . '/Resources/Neo4jServiceDescription.json'));
         if (isset($config['log']) && $config['log'] !== null) {
@@ -50,11 +53,14 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public function createUniqueNode($index, $identifier, array $properties = array())
     {
-        array(
-            'index',
-            'identifier',
-            'properties'
+        $parameters = array(
+            'index'      => $index,
+            'identifier' => $identifier,
+            'properties' => $properties
         );
+        $command = $this->getCommand('createUniqueNode', $parameters);
+        $result  = $command->execute();
+        return $result['self'];
 
     }
 

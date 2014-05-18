@@ -68,7 +68,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
      */
     public function testCreateUniqueNodeCreatesNodeIfItDoesNotAlreadyExist()
     {
-        $properties = array('term' => '<http://example.org/api-client-test');
+        $properties = array('term' => '<http://example.org/api-client-test>');
         $nodeIdentifier = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
 
         $this->assertInternalType('string', $nodeIdentifier);
@@ -82,9 +82,9 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     public function testCreateUniqueNodeReturnsExistingNodeIfItAlreadyExists()
     {
         $id = uniqid('', true);
-        $properties = array('term' => '<http://example.org/api-client-test');
+        $properties = array('term' => '<http://example.org/api-client-test>');
         $first = $this->client->createUniqueNode('api-client-test', $id, $properties);
-        $properties = array('term' => '<http://example.org/api-client-test2');
+        $properties = array('term' => '<http://example.org/api-client-test2>');
         $second = $this->client->createUniqueNode('api-client-test', $id, $properties);
 
         $this->assertEquals($first, $second);
@@ -95,9 +95,9 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
      */
     public function testCreateUniqueNodeReturnsDifferentIdentifiersForDifferentNodes()
     {
-        $properties = array('term' => '<http://example.org/api-client-test');
+        $properties = array('term' => '<http://example.org/api-client-test>');
         $first = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
-        $properties = array('term' => '<http://example.org/api-client-test2');
+        $properties = array('term' => '<http://example.org/api-client-test2>');
         $second = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
 
         $this->assertNotEquals($first, $second);
