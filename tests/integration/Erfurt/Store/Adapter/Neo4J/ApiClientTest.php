@@ -63,4 +63,44 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
         $this->assertNotNull($this->client->getDescription());
     }
 
+    /**
+     * Ensures that createUniqueNode() creates a new node if it does not already exist.
+     */
+    public function testCreateUniqueNodeCreatesNodeIfItDoesNotAlreadyExist()
+    {
+        $properties = array('term' => '<http://example.org/api-client-test');
+        $nodeIdentifier = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
+
+        $this->assertInternalType('string', $nodeIdentifier);
+        $this->assertNotEmpty($nodeIdentifier);
+    }
+
+    /**
+     * Ensures that createUniqueNode() returns the original identifier of a node if
+     * it already exists.
+     */
+    public function testCreateUniqueNodeReturnsExistingNodeIfItAlreadyExists()
+    {
+        $id = uniqid('', true);
+        $properties = array('term' => '<http://example.org/api-client-test');
+        $first = $this->client->createUniqueNode('api-client-test', $id, $properties);
+        $properties = array('term' => '<http://example.org/api-client-test2');
+        $second = $this->client->createUniqueNode('api-client-test', $id, $properties);
+
+        $this->assertEquals($first, $second);
+    }
+
+    /**
+     * Ensures that createUniqueNode() returns different identifiers for different nodes.
+     */
+    public function testCreateUniqueNodeReturnsDifferentIdentifiersForDifferentNodes()
+    {
+        $properties = array('term' => '<http://example.org/api-client-test');
+        $first = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
+        $properties = array('term' => '<http://example.org/api-client-test2');
+        $second = $this->client->createUniqueNode('api-client-test', uniqid('', true), $properties);
+
+        $this->assertNotEquals($first, $second);
+    }
+
 }

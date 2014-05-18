@@ -39,8 +39,22 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
         return $client;
     }
 
-    public function createRdfNode()
+    /**
+     * Creates a node if it does not already exist. Returns the node identifier if
+     * it is already available.
+     *
+     * @param string $index Name of the index that is used to check uniqueness.
+     * @param string $identifier The unique identifier.
+     * @param array(string=>string) $properties The unique properties of the node.
+     * @return string Identifier of the created or retrieved node.
+     */
+    public function createUniqueNode($index, $identifier, array $properties = array())
     {
+        array(
+            'index',
+            'identifier',
+            'properties'
+        );
 
     }
 

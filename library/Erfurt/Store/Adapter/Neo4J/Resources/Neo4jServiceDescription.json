@@ -40,7 +40,7 @@
                     "description": "Arbitrary key for the unique value.",
                     "type": "string",
                     "location": "json",
-                    "default": "unique-value",
+                    "default": "unique-identifier",
                     "required": false
                 },
                 "identifier": {
