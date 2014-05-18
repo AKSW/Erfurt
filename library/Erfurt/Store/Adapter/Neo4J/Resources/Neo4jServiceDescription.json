@@ -104,10 +104,19 @@
                 }
             }
         },
-        "batch": {
+        "executeBatch": {
+            "summary": "Executes multiple commands as batch.",
             "extends": "baseOperation",
             "uri": "batch",
-            "httpMethod": "POST"
+            "httpMethod": "POST",
+            "parameters": {
+                "batch": {
+                    "type": "object",
+                    "instanceOf": "",
+                    "location": "body",
+                    "required": true
+                }
+            }
         }
     }
 }

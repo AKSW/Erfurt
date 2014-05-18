@@ -53,12 +53,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public function createUniqueNode($index, $identifier, array $properties = array())
     {
-        $parameters = array(
-            'index'      => $index,
-            'identifier' => $identifier,
-            'properties' => $properties
-        );
-        $command = $this->getCommand('createUniqueNode', $parameters);
+        $command = $this->buildCreateUniqueNodeCommand($index, $identifier, $properties);
         $result  = $command->execute();
         return $result['self'];
     }
@@ -75,6 +70,42 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public function createUniqueRelation($index, $identifier, $start, $end, $type)
     {
+        $command = $this->buildCreateUniqueRelationCommand($index, $identifier, $start, $end, $type);
+        $result  = $command->execute();
+        return $result['self'];
+    }
+
+    /**
+     * Creates a node if it does not already exist. Returns the node identifier if
+     * it is already available.
+     *
+     * @param string $index Name of the index that is used to check uniqueness.
+     * @param string $identifier The unique identifier.
+     * @param array(string=>string) $properties The unique properties of the node.
+     * @return \Guzzle\Service\Command\CommandInterface
+     */
+    public function buildCreateUniqueNodeCommand($index, $identifier, array $properties = array())
+    {
+        $parameters = array(
+            'index'      => $index,
+            'identifier' => $identifier,
+            'properties' => $properties
+        );
+        return $this->getCommand('createUniqueNode', $parameters);
+    }
+
+    /**
+     * Builds a command that creates a unique relation.
+     *
+     * @param string $index Name of the index that is used to check uniqueness.
+     * @param string $identifier The unique identifier.
+     * @param string $start The identifier of the start node.
+     * @param string $end The identifier of the end node.
+     * @param string $type The type of the relation.
+     * @return \Guzzle\Service\Command\CommandInterface
+     */
+    public function buildCreateUniqueRelationCommand($index, $identifier, $start, $end, $type)
+    {
         $parameters = array(
             'index'      => $index,
             'identifier' => $identifier,
@@ -82,9 +113,18 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
             'end'        => $end,
             'type'       => $type
         );
-        $command = $this->getCommand('createUniqueRelation', $parameters);
-        $result  = $command->execute();
-        return $result['self'];
+        return $this->getCommand('createUniqueRelation', $parameters);
+    }
+
+    /**
+     * Executes multiple API calls as single batch.
+     *
+     * @param Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch
+     * @return mixed
+     */
+    public function batch(Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch)
+    {
+
     }
 
 }
