@@ -75,7 +75,16 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public function createUniqueRelation($index, $identifier, $start, $end, $type)
     {
-
+        $parameters = array(
+            'index'      => $index,
+            'identifier' => $identifier,
+            'start'      => $start,
+            'end'        => $end,
+            'type'       => $type
+        );
+        $command = $this->getCommand('createUniqueRelation', $parameters);
+        $result  = $command->execute();
+        return $result['self'];
     }
 
 }
