@@ -1,6 +1,7 @@
 <?php
 
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
+use Guzzle\Http\Url;
 use \Guzzle\Service\Command\CommandInterface;
 
 /**
@@ -28,10 +29,16 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
     public function addJob(CommandInterface $command)
     {
         $command->prepare();
-        $request = $command->getRequest();
+        $request  = $command->getRequest();
+        $url      = $request->getUrl(true);
+        $urlParts = array(
+            'path'     => substr($url->getPath(), strlen('/db/data')),
+            'query'    => $url->getQuery(),
+            'fragment' => $url->getFragment()
+        );
         $jobDefinition = array(
             'method' => $request->getMethod(),
-            'to'     => substr($request->getPath(), strlen('/db/data')),
+            'to'     => Url::buildUrl($urlParts),
             'id'     => count($this->jobDefinitions)
         );
         if ($request instanceof EntityEnclosingRequestInterface) {
