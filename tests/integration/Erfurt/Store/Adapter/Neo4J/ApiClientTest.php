@@ -174,6 +174,46 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     }
 
     /**
+     * Checks if independent batch jobs are executed correctly.
+     */
+    public function testBatchProcessingOfIndependentJobs()
+    {
+        $batch = new Erfurt_Store_Adapter_Neo4J_ApiCallBatch();
+        $command = $this->client->buildCreateUniqueNodeCommand('api-client-test', 'batch-node-1', array());
+        $batch->addJob($command);
+        $command = $this->client->buildCreateUniqueNodeCommand('api-client-test', 'batch-node-2', array());
+        $batch->addJob($command);
+        $command = $this->client->buildCreateUniqueNodeCommand('api-client-test', 'batch-node-3', array());
+        $batch->addJob($command);
+
+        $result = $this->client->executeBatch($batch);
+        $this->assertNotEmpty($result);
+    }
+
+    /**
+     * Checks the batch processing of jobs that depend on each other.
+     */
+    public function testBatchProcessingOfDependentJobs()
+    {
+        $batch = new Erfurt_Store_Adapter_Neo4J_ApiCallBatch();
+        $command = $this->client->buildCreateUniqueNodeCommand('api-client-test', 'batch-node-1', array());
+        $startNodeRef = $batch->addJob($command);
+        $command = $this->client->buildCreateUniqueNodeCommand('api-client-test', 'batch-node-2', array());
+        $endNodeRef = $batch->addJob($command);
+        $command = $this->client->buildCreateUniqueRelationCommand(
+            'api-client-relation-test',
+            'relation-1',
+            $startNodeRef,
+            $endNodeRef,
+            'batch-relation'
+        );
+        $batch->addJob($command);
+
+        $result = $this->client->executeBatch($batch);
+        $this->assertNotEmpty($result);
+    }
+
+    /**
      * Creates a new node and returns its identifier.
      *
      * @return string

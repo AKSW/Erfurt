@@ -122,7 +122,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      * @param Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch
      * @return mixed
      */
-    public function batch(Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch)
+    public function executeBatch(Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch)
     {
 
     }
