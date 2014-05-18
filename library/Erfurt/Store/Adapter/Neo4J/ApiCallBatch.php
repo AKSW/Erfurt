@@ -43,7 +43,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
         );
         if ($request instanceof EntityEnclosingRequestInterface) {
             $body = (string)$request->getBody();
-            $jobDefinition['body'] = Zend_Json::decode($body);
+            $jobDefinition['body'] = Zend_Json::decode($body, Zend_Json::TYPE_OBJECT);
         }
         $this->jobDefinitions[] = $jobDefinition;
         return sprintf('{%s}', $jobDefinition['id']);

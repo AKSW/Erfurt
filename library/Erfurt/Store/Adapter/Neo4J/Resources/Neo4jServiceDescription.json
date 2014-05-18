@@ -101,6 +101,12 @@
                     "type": "string",
                     "location": "json",
                     "required": true
+                },
+                "properties": {
+                    "description": "Properties of the relation.",
+                    "type": "object",
+                    "location": "json",
+                    "required": false
                 }
             }
         },
