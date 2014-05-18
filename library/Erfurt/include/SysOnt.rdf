@@ -18,9 +18,9 @@
   xmlns:sioc="&sioc;">
 
 <!-- Ontology Information -->
-  <owl:Ontology rdf:about="" rdfs:label="OntoWiki System Ontology">
-      <rdfs:comment>This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
-      <owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/erfurt/src/Erfurt/include/SysOnt.rdf" />
+  <owl:Ontology rdf:about="" rdfs:label="System Ontology">
+      <rdfs:comment>This schema model provides the vocabulary to configure the installation (e.g. terms for access control). Some terms are copied from FOAF.</rdfs:comment>
+      <owl:versionInfo rdf:resource="https://github.com/AKSW/Erfurt/commits/develop/library/Erfurt/include/SysOnt.rdf" />
   </owl:Ontology>
 
 
@@ -30,10 +30,10 @@
   </owl:Class>
 
   <owl:Class rdf:about="Model" rdfs:label="Model">
-      <rdfs:comment>A model is a knowledge base in OntoWiki.</rdfs:comment>
+      <rdfs:comment>A model is a knowledge base.</rdfs:comment>
   </owl:Class>
 
-  <owl:Class rdf:about="&sioc;User" rdfs:comment="Users are able to log into OntoWiki." rdfs:label="User"/>
+  <owl:Class rdf:about="&sioc;User" rdfs:comment="Users are able to log into the wiki." rdfs:label="User"/>
   <owl:Class rdf:about="&sioc;Usergroup" rdfs:comment="A Group of User Accounts ..." rdfs:label="Usergroup"/>
   <owl:Class rdf:nodeID="b1">
       <owl:unionOf rdf:parseType="Collection">
@@ -66,7 +66,7 @@
 
 
 <!-- Datatype Properties -->
-  <owl:DatatypeProperty rdf:about="userPassword" rdfs:comment="The password of an OntoWiki Account." rdfs:label="password">
+  <owl:DatatypeProperty rdf:about="userPassword" rdfs:comment="The password of an account." rdfs:label="password">
       <rdf:type rdf:resource="&owl;FunctionalProperty"/>
       <rdfs:domain rdf:resource="&sioc;User"/>
       <rdfs:range rdf:resource="&xsd;string"/>
@@ -74,7 +74,7 @@
 
   <owl:DatatypeProperty rdf:about="&foaf;accountName" rdfs:label="uid">
       <rdf:type rdf:resource="&owl;FunctionalProperty"/>
-      <rdfs:comment>This is the user identifier of an OntoWiki account which is used for login</rdfs:comment>
+      <rdfs:comment>This is the user identifier of an account which is used for login</rdfs:comment>
       <rdfs:domain rdf:resource="&sioc;User"/>
       <rdfs:range rdf:resource="&xsd;string"/>
   </owl:DatatypeProperty>
@@ -256,7 +256,7 @@
   </Action>
 
   <Action rdf:about="Login" rdfs:label="Login">
-      <rdfs:comment>Login to the OntoWiki application</rdfs:comment>
+      <rdfs:comment>Login to the application</rdfs:comment>
   </Action>
 
   <Action rdf:about="Rollback" rdfs:label="Rollback">

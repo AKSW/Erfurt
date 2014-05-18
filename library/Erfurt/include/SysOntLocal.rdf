@@ -19,13 +19,13 @@
          xmlns:rdfs="&rdfs;">
 
 <!-- Ontology Information -->
-  <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="OntoWiki System Configuration">
-    <rdfs:comment>This is your OntoWiki configuration model. You can configure model based access control and some actions here.</rdfs:comment>
+  <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="System Configuration">
+    <rdfs:comment>This is your configuration model. You can configure model based access control and some actions here.</rdfs:comment>
     <rdf:type rdf:resource="&SysOnt;Model" />
     <owl:imports>
       <owl:Ontology rdf:about="&SysOnt;"/>
     </owl:imports>
-    <owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/erfurt/src/Erfurt/include/SysOntLocal.rdf" />
+    <owl:versionInfo rdf:resource="https://github.com/AKSW/Erfurt/commits/develop/library/Erfurt/include/SysOntLocal.rdf" />
   </owl:Ontology>
 
 <!-- Instances -->
