@@ -124,7 +124,11 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      */
     public function executeBatch(Erfurt_Store_Adapter_Neo4J_ApiCallBatch $batch)
     {
-
+        $parameters = array(
+            'batch' => $batch
+        );
+        $command = $this->getCommand('executeBatch', $parameters);
+        return $command->execute();
     }
 
 }

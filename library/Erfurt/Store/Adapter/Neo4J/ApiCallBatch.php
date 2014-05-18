@@ -1,5 +1,6 @@
 <?php
 
+use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use \Guzzle\Service\Command\CommandInterface;
 
 /**
@@ -12,11 +13,11 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
 {
 
     /**
-     * Current job number.
+     * List of jobs that will be executed as batch.
      *
-     * @var integer
+     * @var array(array(string=>mixed))
      */
-    protected $jobNumber = 0;
+    protected $jobDefinitions = array();
 
     /**
      * Adds a command to the batch.
@@ -26,7 +27,19 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
      */
     public function addJob(CommandInterface $command)
     {
-
+        $command->prepare();
+        $request = $command->getRequest();
+        $jobDefinition = array(
+            'method' => $request->getMethod(),
+            'to'     => substr($request->getPath(), strlen('/db/data')),
+            'id'     => count($this->jobDefinitions)
+        );
+        if ($request instanceof EntityEnclosingRequestInterface) {
+            $body = (string)$request->getBody();
+            $jobDefinition['body'] = Zend_Json::decode($body);
+        }
+        $this->jobDefinitions[] = $jobDefinition;
+        return sprintf('{%s}', $jobDefinition['id']);
     }
 
     /**
@@ -38,7 +51,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
      */
     public function __toString()
     {
-        return '';
+        return Zend_Json::encode($this->jobDefinitions);
     }
 
 }
