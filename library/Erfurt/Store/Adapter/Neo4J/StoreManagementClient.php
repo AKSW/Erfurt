@@ -37,67 +37,39 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function addTriple($graphUri, Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $object = $triple->getObject();
-        $params = array(
-            'subjectTerm'   => $triple->format('?subject'),
-            'subjectValue'  => $triple->getSubject(),
-            'subjectKind'   => ((strpos($triple->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
-            'predicateType' => $triple->getPredicate(),
-            'predicateC'    => 'U ' . $graphUri,
-            'predicateP'    => 'U ' . $triple->getPredicate(),
-            'predicateCP'   => 'U ' . $graphUri . ' U ' . $triple->getPredicate(),
-            'objectTerm'    => $triple->format('?object'),
-            'objectValue'   => (string)$object['value'],
-            'objectKind'    => $object['type']
+        $subjectTerm = $triple->format('?subject');
+        $subjectNode = $this->apiClient->createUniqueNode('rdf-node', $subjectTerm, array(
+            'term'  => $subjectTerm,
+            'kind'  => ((strpos($triple->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
+            'value' => $triple->getSubject()
+        ));
+
+        $object     = $triple->getObject();
+        $objectTerm = $triple->format('?object');
+        $objectProperties = array(
+            'term'  => $objectTerm,
+            'kind'  => $object['type'],
+            'value' => (string)$object['value']
         );
-
-        $query = 'START subject=node(*) WHERE subject.term! = {subjectTerm} RETURN ID(subject) AS subjectId';
-        $result = $this->executeCypherQuery($query, $params);
-        $subjectId = null;
-        if (count($result) > 0) {
-            $subjectId = $result[0]['subjectId'];
-        }
-        $query = 'START object=node(*) WHERE object.term! = {objectTerm} RETURN ID(object) AS objectId';
-        $result = $this->executeCypherQuery($query, $params);
-        $objectId = null;
-        if (count($result) > 0) {
-            $objectId = $result[0]['objectId'];
-        }
-
-        $subjectDefinition   = '(subject {value: {subjectValue}, kind: {subjectKind}, term: {subjectTerm}})';
-        $predicateDefinition = '[r:`' . $triple->getPredicate() . '` {c: {predicateC}, cp: {predicateCP}, p: {predicateP}}]';
-        $objectProperties = 'value: {objectValue}, kind: {objectKind}, term: {objectTerm}';
         if (isset($object['lang']) && !empty($object['lang'])) {
-            $params['objectLang'] = $object['lang'];
-            $objectProperties .= ', lang: {objectLang}';
+            $objectProperties['lang'] = $object['lang'];
         } else if (isset($object['datatype']) && !empty($object['datatype'])) {
-            $params['objectType'] = $object['datatype'];
-            $objectProperties .= ', type: {objectType}';
+            $objectProperties['type'] = $object['datatype'];
         }
-        $objectDefinition    = '(object {' . $objectProperties . '})';
-        if ($subjectId === null && $objectId === null) {
-            // Create completely new nodes and the required relation.
-            $query = 'CREATE %s-%s->%s';
-            $query = sprintf($query, $subjectDefinition, $predicateDefinition, $objectDefinition);
-            $this->executeCypherQuery($query, $params);
-            return;
-        }
-        // Reuse subject and/or object if possible.
-        $startingPoints = array();
-        if ($subjectId !== null) {
-            $params['subjectId'] = $subjectId;
-            $startingPoints[]    = 'subject=node({subjectId})';
-            $subjectDefinition   = 'subject';
-        }
-        if ($objectId !== null) {
-            $params['objectId'] = $objectId;
-            $startingPoints[]   = 'object=node({objectId})';
-            $objectDefinition   = 'object';
-        }
-        $query = 'START ' . implode(', ', $startingPoints)
-               . 'CREATE UNIQUE %s-%s->%s';
-        $query = sprintf($query, $subjectDefinition, $predicateDefinition, $objectDefinition);
-        $this->executeCypherQuery($query, $params);
+        $objectNode = $this->apiClient->createUniqueNode('rdf-node', $objectTerm, $objectProperties);
+
+        $this->apiClient->createUniqueRelation(
+            'rdf-predicate',
+            $subjectTerm . ' -> ' . $objectTerm,
+            $subjectNode,
+            $objectNode,
+            $triple->getPredicate(),
+            array(
+                'c'  => 'U ' . $graphUri,
+                'p'  => 'U ' . $triple->getPredicate(),
+                'cp' => 'U ' . $graphUri . ' U ' . $triple->getPredicate()
+            )
+        );
     }
 
     /**
