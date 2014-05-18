@@ -225,6 +225,21 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     }
 
     /**
+     * Checks if the result of a Cypher query is formatted as expected.
+     */
+    public function testCypherQueryResultIsFormattedCorrectly()
+    {
+        $query  = 'START n=node(*) RETURN COUNT(n) AS numberOfNodes';
+        $result = $this->client->query($query);
+
+        $this->assertInternalType('array', $result);
+        $this->assertCount(1, $result);
+        $this->assertContainsOnly('array', $result);
+        $firstRow = $result[0];
+        $this->assertArrayHasKey('numberOfNodes', $firstRow);
+    }
+
+    /**
      * Creates a new node and returns its identifier.
      *
      * @return string

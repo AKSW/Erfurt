@@ -1,8 +1,5 @@
 <?php
 
-use Everyman\Neo4j\Client;
-use Everyman\Neo4j\Cypher\Query;
-
 /**
  * Used to manage a Neo4J triple store.
  *
@@ -17,7 +14,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
     /**
      * The REST client that is used to communicate with Neo4J.
      *
-     * @var \Everyman\Neo4j\Client
+     * @var \Erfurt_Store_Adapter_Neo4J_ApiClient
      */
     protected $apiClient = null;
 
@@ -25,11 +22,11 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      * Creates a management client that uses the provided REST API
      * client to communicate with the store.
      *
-     * @param Client $restApiClient
+     * @param \Erfurt_Store_Adapter_Neo4J_ApiClient $apiClient
      */
-    public function __construct(Client $restApiClient)
+    public function __construct(Erfurt_Store_Adapter_Neo4J_ApiClient $apiClient)
     {
-        $this->apiClient = $restApiClient;
+        $this->apiClient = $apiClient;
     }
 
     /**
@@ -181,12 +178,11 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      *
      * @param string $query
      * @param array(string=>mixed) $params
-     * @return \Everyman\Neo4j\Query\ResultSet
+     * @return array(string=>mixed)
      */
     protected function executeCypherQuery($query, array $params = array())
     {
-        $operation = new Query($this->apiClient, $query, $params);
-        return $operation->getResultSet();
+        return $this->apiClient->query($query, $params);
     }
 
 }
