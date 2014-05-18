@@ -33,10 +33,6 @@ services:
                 "curl.options":
                     body_as_string: true
 
-    neo4j.client.rest_api:
-        class: Everyman\Neo4j\Client
-        arguments: ["%neo4j.client.host%", "%neo4j.client.port%"]
-
     neo4j.client.api:
             class: Erfurt_Store_Adapter_Neo4J_ApiClient
             factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
