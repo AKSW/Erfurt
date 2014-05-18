@@ -2,7 +2,7 @@
 
 use Guzzle\Http\Message\EntityEnclosingRequestInterface;
 use Guzzle\Http\Url;
-use \Guzzle\Service\Command\CommandInterface;
+use Guzzle\Service\Command\CommandInterface;
 
 /**
  * Holds a collection of commands that are executed as batch.
