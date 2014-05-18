@@ -134,4 +134,21 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
         return $command->execute();
     }
 
+    /**
+     * Executes a Cypher query and returns the results.
+     *
+     * @param string $cypherQuery
+     * @param array(string=>mixed) $params
+     * @return mixed
+     */
+    public function query($cypherQuery, array $params = array())
+    {
+        $parameters = array(
+            'query'  => $cypherQuery,
+            'params' => (object)$params
+        );
+        $command = $this->getCommand('query', $parameters);
+        return $command->execute();
+    }
+
 }

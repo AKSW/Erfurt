@@ -214,6 +214,17 @@ class Erfurt_Store_Adapter_Neo4J_ApiClientTest extends \PHPUnit_Framework_TestCa
     }
 
     /**
+     * Checks if the client can be used to execute Cypher queries.
+     */
+    public function testCypherQuery()
+    {
+        $query  = 'START n=node(*) WHERE n.missing! = {value} RETURN COUNT(n)';
+        $result = $this->client->query($query, array('missing' => 'Hello world!'));
+
+        $this->assertNotEmpty($result);
+    }
+
+    /**
      * Creates a new node and returns its identifier.
      *
      * @return string

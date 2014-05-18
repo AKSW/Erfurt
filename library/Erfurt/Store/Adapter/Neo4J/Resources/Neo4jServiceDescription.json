@@ -118,9 +118,27 @@
             "parameters": {
                 "batch": {
                     "type": "object",
-                    "instanceOf": "",
+                    "instanceOf": "Erfurt_Store_Adapter_Neo4J_ApiCallBatch",
                     "location": "body",
                     "required": true
+                }
+            }
+        },
+        "query": {
+            "summary": "Executes a cypher query.",
+            "extends": "baseOperation",
+            "uri": "cypher",
+            "httpMethod": "POST",
+            "parameters": {
+                "query": {
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "params": {
+                    "type": "object",
+                    "location": "json",
+                    "required": false
                 }
             }
         }
