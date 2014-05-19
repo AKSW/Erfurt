@@ -37,12 +37,15 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function addTriple($graphUri, Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
+        $batch = new Erfurt_Store_Adapter_Neo4J_ApiCallBatch();
+
         $subjectTerm = $triple->format('?subject');
-        $subjectNode = $this->apiClient->createUniqueNode('rdf-node', $subjectTerm, array(
+        $subjectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $subjectTerm, array(
             'term'  => $subjectTerm,
             'kind'  => ((strpos($triple->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
             'value' => $triple->getSubject()
         ));
+        $subjectNode = $batch->addJob($subjectCommand);
 
         $object     = $triple->getObject();
         $objectTerm = $triple->format('?object');
@@ -56,9 +59,10 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
         } else if (isset($object['datatype']) && !empty($object['datatype'])) {
             $objectProperties['type'] = $object['datatype'];
         }
-        $objectNode = $this->apiClient->createUniqueNode('rdf-node', $objectTerm, $objectProperties);
+        $objectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $objectTerm, $objectProperties);
+        $objectNode    = $batch->addJob($objectCommand);
 
-        $this->apiClient->createUniqueRelation(
+        $relationCommand = $this->apiClient->buildCreateUniqueRelationCommand(
             'rdf-predicate',
             $subjectTerm . ' -(' . $triple->getPredicate() . ')-> ' . $objectTerm,
             $subjectNode,
@@ -70,6 +74,9 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
                 'cp' => 'U ' . $graphUri . ' U ' . $triple->getPredicate()
             )
         );
+        $batch->addJob($relationCommand);
+
+        $this->apiClient->executeBatch($batch);
     }
 
     /**
