@@ -27,7 +27,7 @@ class Erfurt_Store_Adapter_Neo4J_ExceptionListener implements EventSubscriberInt
      * Throws a more meaningful request exception if available
      *
      * @param Event $event Event emitted
-     * @throws BadResponseException
+     * @throws \Guzzle\Common\Exception\RuntimeException
      */
     public function onRequestError(Event $event)
     {
@@ -37,11 +37,17 @@ class Erfurt_Store_Adapter_Neo4J_ExceptionListener implements EventSubscriberInt
         $response = $event['response'];
         $response->isContentType('application/json');
         $details = Zend_Json::decode($response->getBody(true));
+        $message = '';
         if (isset($details['exception']) && isset($details['fullname']) && isset($details['stacktrace'])) {
             $message   = $details['exception'] . ' (' . $details['fullname'] . ')' . PHP_EOL . PHP_EOL
-                       . implode(PHP_EOL, $details['stacktrace']);
-            $exception = new RuntimeException($message, $response->getStatusCode(), $exception);
+                       . implode(PHP_EOL, $details['stacktrace']) . PHP_EOL . PHP_EOL;
         }
-        throw $exception;
+        $message = $message
+                 . 'Request: ' . PHP_EOL
+                 . $exception->getRequest() . PHP_EOL . PHP_EOL
+                 . 'Response: ' . PHP_EOL
+                 . $response;
+        throw new RuntimeException($message, $response->getStatusCode(), $exception);
     }
+
 }
