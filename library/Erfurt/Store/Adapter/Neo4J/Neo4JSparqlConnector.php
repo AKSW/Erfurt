@@ -24,6 +24,20 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
     protected $managementClient = null;
 
     /**
+     * Buffer for triples that will be inserted.
+     *
+     * @var Erfurt_Store_Adapter_Sparql_QuadBuffer
+     */
+    protected $buffer = null;
+
+    /**
+     * The number of combined insert operations in batch mode.
+     *
+     * @var integer
+     */
+    protected $batchSize = null;
+
+    /**
      * Converts received SPARQL results.
      *
      * @var Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
@@ -35,13 +49,19 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      *
      * @param Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient
      * @param Erfurt_Store_Adapter_Neo4J_StoreManagementClient $managementClient
+     * @param Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $batchProcessor
+     * @param integer $batchSize
      */
     public function __construct(
         Erfurt_Store_Adapter_Neo4J_SparqlApiClient $sparqlApiClient,
-        Erfurt_Store_Adapter_Neo4J_StoreManagementClient $managementClient
+        Erfurt_Store_Adapter_Neo4J_StoreManagementClient $managementClient,
+        Erfurt_Store_Adapter_Sparql_BatchProcessorInterface $batchProcessor,
+        $batchSize
     ) {
         $this->sparqlApiClient  = $sparqlApiClient;
         $this->managementClient = $managementClient;
+        $this->buffer    = new Erfurt_Store_Adapter_Sparql_QuadBuffer(array($batchProcessor, 'persist'));
+        $this->batchSize = $batchSize;
         $this->resultConverter  = new Erfurt_Store_Adapter_ResultConverter_CompositeConverter(array(
             new Erfurt_Store_Adapter_Neo4J_ResultConverter_RawToExtended(),
             new Erfurt_Store_Adapter_ResultConverter_ExtendedResultValueConverter(
@@ -58,7 +78,7 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function addTriple($graphIri, \Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
-        $this->managementClient->addTriple($graphIri, $triple);
+        $this->buffer->add(Erfurt_Store_Adapter_Sparql_Quad::create($graphIri, $triple));
     }
 
     /**
@@ -169,7 +189,11 @@ class Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector implements Erfurt_Store_Ad
      */
     public function batch($callback)
     {
-        return call_user_func($callback, $this);
+        $this->buffer->setSize($this->batchSize);
+        $result = call_user_func($callback, $this);
+        $this->buffer->flush();
+        $this->buffer->setSize(1);
+        return $result;
     }
 
     /**

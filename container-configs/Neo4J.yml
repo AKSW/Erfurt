@@ -1,6 +1,7 @@
 parameters:
     neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
     neo4j.client.log: ~
+    neo4j.batch_size: 5000
 
 services:
     neo4j_adapter_with_mysql_cache:
@@ -16,10 +17,18 @@ services:
 
     neo4j.sparql_connector.default:
         class: Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector
-        arguments: ["@neo4j.client.sparql_api", "@neo4j.client.store_management"]
+        arguments:
+            - "@neo4j.client.sparql_api"
+            - "@neo4j.client.store_management"
+            - "@neo4j.batch_processor.rest_batch"
+            - "%neo4j.batch_size%"
 
     neo4j.client.store_management:
         class: Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+        arguments: ["@neo4j.client.api"]
+
+    neo4j.batch_processor.rest_batch:
+        class: Erfurt_Store_Adapter_Neo4J_RestBatchProcessor
         arguments: ["@neo4j.client.api"]
 
     neo4j.client.sparql_api:
