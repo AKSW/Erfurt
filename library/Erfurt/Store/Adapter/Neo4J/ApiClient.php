@@ -90,7 +90,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     {
         $parameters = array(
             'index'      => $index,
-            'identifier' => $identifier,
+            'identifier' => $this->prepareIdentifier($identifier),
             'properties' => (object)$properties
         );
         return $this->getCommand('createUniqueNode', $parameters);
@@ -111,7 +111,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     {
         $parameters = array(
             'index'      => $index,
-            'identifier' => $identifier,
+            'identifier' => $this->prepareIdentifier($identifier),
             'start'      => $start,
             'end'        => $end,
             'type'       => $type,
@@ -150,6 +150,17 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
         );
         $command = $this->getCommand('query', $parameters);
         return $this->formatCypherFormat($command->execute());
+    }
+
+    /**
+     * @param string $identifier
+     */
+    protected function prepareIdentifier($identifier)
+    {
+        if (strlen($identifier) < 150) {
+            return 'content-' . $identifier;
+        }
+        return 'md5-' . md5($identifier);
     }
 
     /**
