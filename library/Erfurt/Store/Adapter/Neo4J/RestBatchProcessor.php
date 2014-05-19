@@ -35,30 +35,37 @@ class Erfurt_Store_Adapter_Neo4J_RestBatchProcessor implements Erfurt_Store_Adap
     {
         $batch = new Erfurt_Store_Adapter_Neo4J_ApiCallBatch();
 
+        $nodeReferences = array();
         foreach ($quads as $quad) {
             /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
             $subjectTerm = $quad->format('?subject');
-            $subjectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $subjectTerm, array(
-                'term'  => $subjectTerm,
-                'kind'  => ((strpos($quad->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
-                'value' => $quad->getSubject()
-            ));
-            $subjectNode = $batch->addJob($subjectCommand);
-
-            $object     = $quad->getObject();
-            $objectTerm = $quad->format('?object');
-            $objectProperties = array(
-                'term'  => $objectTerm,
-                'kind'  => $object['type'],
-                'value' => (string)$object['value']
-            );
-            if (isset($object['lang']) && !empty($object['lang'])) {
-                $objectProperties['lang'] = $object['lang'];
-            } else if (isset($object['datatype']) && !empty($object['datatype'])) {
-                $objectProperties['type'] = $object['datatype'];
+            if (!isset($nodeReferences[$subjectTerm])) {
+                $subjectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $subjectTerm, array(
+                    'term'  => $subjectTerm,
+                    'kind'  => ((strpos($quad->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
+                    'value' => $quad->getSubject()
+                ));
+                $nodeReferences[$subjectTerm] = $batch->addJob($subjectCommand);
             }
-            $objectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $objectTerm, $objectProperties);
-            $objectNode    = $batch->addJob($objectCommand);
+            $subjectNode = $nodeReferences[$subjectTerm];
+
+            $objectTerm = $quad->format('?object');
+            if (!isset($nodeReferences[$objectTerm])) {
+                $object = $quad->getObject();
+                $objectProperties = array(
+                    'term'  => $objectTerm,
+                    'kind'  => $object['type'],
+                    'value' => (string)$object['value']
+                );
+                if (isset($object['lang']) && !empty($object['lang'])) {
+                    $objectProperties['lang'] = $object['lang'];
+                } else if (isset($object['datatype']) && !empty($object['datatype'])) {
+                    $objectProperties['type'] = $object['datatype'];
+                }
+                $objectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $objectTerm, $objectProperties);
+                $nodeReferences[$objectTerm] = $batch->addJob($objectCommand);
+            }
+            $objectNode = $nodeReferences[$objectTerm];
 
             $relationCommand = $this->apiClient->buildCreateUniqueRelationCommand(
                 'rdf-predicate',
