@@ -12,7 +12,7 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient implements Erfurt_Store_A
 {
 
     /**
-     * The REST client that is used to communicate with Neo4J.
+     * The REST client that is used to communicate with Neo4j.
      *
      * @var \Erfurt_Store_Adapter_Neo4J_ApiClient
      */
