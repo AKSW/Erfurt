@@ -43,6 +43,13 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
         );
         if ($request instanceof EntityEnclosingRequestInterface) {
             $body = (string)$request->getBody();
+            if (preg_match('/\\\\u[a-zA-Z0-9]{4,4}/u', $body) > 0 && preg_match('/\\{[0-9]+\\}/u', $body) === 0) {
+                // Workaround for problem that is documented here: https://github.com/neo4j/neo4j/issues/852
+                // Batch processing may lead to error if the body contains some special characters.
+                // Therefore, execute the command immediately if it does not depend on previous results.
+                $result = $command->execute();
+                return $result['self'];
+            }
             $jobDefinition['body'] = Zend_Json::decode($body, Zend_Json::TYPE_OBJECT);
         }
         $this->jobDefinitions[] = $jobDefinition;
