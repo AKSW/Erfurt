@@ -8,7 +8,7 @@
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 15.03.14
  */
-class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+class Erfurt_Store_Adapter_Neo4J_StoreManagementClient implements Erfurt_Store_Adapter_Sparql_BatchProcessorInterface
 {
 
     /**
@@ -37,44 +37,57 @@ class Erfurt_Store_Adapter_Neo4J_StoreManagementClient
      */
     public function addTriple($graphUri, Erfurt_Store_Adapter_Sparql_Triple $triple)
     {
+        $this->persist(array(Erfurt_Store_Adapter_Sparql_Quad::create($graphUri, $triple)));
+    }
+
+    /**
+     * Stores the provided quads.
+     *
+     * @param array(\Erfurt_Store_Adapter_Sparql_Quad) $quads
+     */
+    public function persist(array $quads)
+    {
         $batch = new Erfurt_Store_Adapter_Neo4J_ApiCallBatch();
 
-        $subjectTerm = $triple->format('?subject');
-        $subjectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $subjectTerm, array(
-            'term'  => $subjectTerm,
-            'kind'  => ((strpos($triple->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
-            'value' => $triple->getSubject()
-        ));
-        $subjectNode = $batch->addJob($subjectCommand);
+        foreach ($quads as $quad) {
+            /* @var $quad \Erfurt_Store_Adapter_Sparql_Quad */
+            $subjectTerm = $quad->format('?subject');
+            $subjectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $subjectTerm, array(
+                'term'  => $subjectTerm,
+                'kind'  => ((strpos($quad->getSubject(), '_:') === 0) ? 'bnode' : 'uri'),
+                'value' => $quad->getSubject()
+            ));
+            $subjectNode = $batch->addJob($subjectCommand);
 
-        $object     = $triple->getObject();
-        $objectTerm = $triple->format('?object');
-        $objectProperties = array(
-            'term'  => $objectTerm,
-            'kind'  => $object['type'],
-            'value' => (string)$object['value']
-        );
-        if (isset($object['lang']) && !empty($object['lang'])) {
-            $objectProperties['lang'] = $object['lang'];
-        } else if (isset($object['datatype']) && !empty($object['datatype'])) {
-            $objectProperties['type'] = $object['datatype'];
+            $object     = $quad->getObject();
+            $objectTerm = $quad->format('?object');
+            $objectProperties = array(
+                'term'  => $objectTerm,
+                'kind'  => $object['type'],
+                'value' => (string)$object['value']
+            );
+            if (isset($object['lang']) && !empty($object['lang'])) {
+                $objectProperties['lang'] = $object['lang'];
+            } else if (isset($object['datatype']) && !empty($object['datatype'])) {
+                $objectProperties['type'] = $object['datatype'];
+            }
+            $objectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $objectTerm, $objectProperties);
+            $objectNode    = $batch->addJob($objectCommand);
+
+            $relationCommand = $this->apiClient->buildCreateUniqueRelationCommand(
+                'rdf-predicate',
+                $subjectTerm . ' -(' . $quad->getPredicate() . ')-> ' . $objectTerm,
+                $subjectNode,
+                $objectNode,
+                $quad->getPredicate(),
+                array(
+                    'c'  => 'U ' . $quad->getGraph(),
+                    'p'  => 'U ' . $quad->getPredicate(),
+                    'cp' => 'U ' . $quad->getGraph() . ' U ' . $quad->getPredicate()
+                )
+            );
+            $batch->addJob($relationCommand);
         }
-        $objectCommand = $this->apiClient->buildCreateUniqueNodeCommand('rdf-node', $objectTerm, $objectProperties);
-        $objectNode    = $batch->addJob($objectCommand);
-
-        $relationCommand = $this->apiClient->buildCreateUniqueRelationCommand(
-            'rdf-predicate',
-            $subjectTerm . ' -(' . $triple->getPredicate() . ')-> ' . $objectTerm,
-            $subjectNode,
-            $objectNode,
-            $triple->getPredicate(),
-            array(
-                'c'  => 'U ' . $graphUri,
-                'p'  => 'U ' . $triple->getPredicate(),
-                'cp' => 'U ' . $graphUri . ' U ' . $triple->getPredicate()
-            )
-        );
-        $batch->addJob($relationCommand);
 
         $this->apiClient->executeBatch($batch);
     }
