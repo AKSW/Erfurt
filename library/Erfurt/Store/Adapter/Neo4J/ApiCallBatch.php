@@ -47,8 +47,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiCallBatch
                 // Workaround for problem that is documented here: https://github.com/neo4j/neo4j/issues/852
                 // Batch processing may lead to error if the body contains some special characters.
                 // Therefore, execute the command immediately if it does not depend on previous results.
-                $result = $command->execute();
-                return $result['self'];
+                return $command->execute();
             }
             $jobDefinition['body'] = Zend_Json::decode($body, Zend_Json::TYPE_OBJECT);
         }

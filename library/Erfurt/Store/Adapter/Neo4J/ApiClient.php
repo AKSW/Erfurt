@@ -55,8 +55,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     public function createUniqueNode($index, $identifier, array $properties = array())
     {
         $command = $this->buildCreateUniqueNodeCommand($index, $identifier, $properties);
-        $result  = $command->execute();
-        return $result['self'];
+        return $command->execute();
     }
 
     /**
@@ -73,8 +72,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     public function createUniqueRelation($index, $identifier, $start, $end, $type, $properties = array())
     {
         $command = $this->buildCreateUniqueRelationCommand($index, $identifier, $start, $end, $type, $properties);
-        $result  = $command->execute();
-        return $result['self'];
+        return $command->execute();
     }
 
     /**
