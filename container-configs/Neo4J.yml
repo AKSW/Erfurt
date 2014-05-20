@@ -1,7 +1,7 @@
 parameters:
     neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
     neo4j.client.log: ~
-    neo4j.batch_size: 5000
+    neo4j.batch_size: 2000
 
 services:
     neo4j_adapter_with_mysql_cache:
