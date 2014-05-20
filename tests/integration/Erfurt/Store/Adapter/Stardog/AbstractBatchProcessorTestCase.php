@@ -37,6 +37,28 @@ abstract class Erfurt_Store_Adapter_Stardog_AbstractBatchProcessorTestCase
     }
 
     /**
+     * Checks if the processor stores a quad whose object literal is equal to the
+     * subject URI correctly (with object as literal).
+     */
+    public function testPersistStoresQuadWithLiteralsThatEqualsSubjectUriCorrectly()
+    {
+        $quad = new Erfurt_Store_Adapter_Sparql_Quad(
+            'http://example.org/subject',
+            'http://example.org/predicate',
+            array(
+                'type'  => 'literal',
+                'value' => 'http://example.org/subject'
+            ),
+            'http://example.org/graph'
+        );
+
+        $this->processor->persist(array($quad));
+
+        $query = 'SELECT * FROM <http://example.org/graph> WHERE { ?s ?p "http://example.org/subject" }';
+        $this->assertNumberOfRowsSelected(1, $query);
+    }
+
+    /**
      * Asserts that the whole database contains the expected number of triples.
      *
      * @param integer $expected
