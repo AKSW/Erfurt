@@ -24,6 +24,10 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
     
     public function testSparqlWithDbPediaEndpointIssue589()
     {
+        $message = 'This test makes the build unstable as it relies on the availability and data of DBpedia. '
+                 . 'Therefore, it is deactivated until a better solution is implemented.';
+        $this->markTestSkipped($message);
+
 // TODO Use HTTP Client test adapter?
         $options = array(
             'serviceUrl' => 'http://dbpedia.org/sparql',
