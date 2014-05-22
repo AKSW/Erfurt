@@ -59,6 +59,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     protected $_graphs = null;
 
     /**
+     * The already checked graphs in this store.
+     * @var array
+     */
+    protected $_checkedGraphs = null;
+
+
+    /**
      * Model imports cache.
      * @var array
      */
@@ -639,7 +646,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function isModelAvailable($graphUri)
     {
-        return array_key_exists((string)$graphUri, (array)$this->getAvailableModels());
+        if (array_key_exists((string)$graphUri, (array) $this->_checkedGraphs)) {
+            return true;
+        }
+
+        if (array_key_exists((string)$graphUri, (array) $this->_graphs)) {
+            $this->_checkedGraphs[$graphUri] = array('modelIri' => $graphUri);
+            return true;
+        }
+
+        $query = "ASK { GRAPH <" . (string) $graphUri . "> {?s ?p ?o .}}";
+        $resultId = $this->_execSparql($query);
+        if (odbc_result($resultId, 1) == '1') {
+            $this->_checkedGraphs[$graphUri] = array('modelIri' => $graphUri);
+            return true;
+        }
+        return false;
     }
 
     public function isInSyntaxSupported()
