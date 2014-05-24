@@ -19,6 +19,13 @@
                     "type": "string",
                     "sentAs": "Accept",
                     "default": "application/json; charset=UTF-8"
+                },
+                "timeoutInMilliseconds": {
+                    "description": "A query timeout in milliseconds.",
+                    "location": "header",
+                    "type": "integer",
+                    "sentAs": "max-execution-time",
+                    "default": "900000"
                 }
             }
         },
