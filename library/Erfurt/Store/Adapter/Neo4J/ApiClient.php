@@ -147,7 +147,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
             'params' => (object)$params
         );
         $command = $this->getCommand('query', $parameters);
-        return $this->formatCypherFormat($command->execute());
+        return $this->transformCypherResultToTable($command->execute());
     }
 
     /**
@@ -171,7 +171,7 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
      * @param array(string=>array(mixed)) $rawResult
      * @return array(array(string=>mixed))
      */
-    protected function formatCypherFormat(array $rawResult)
+    protected function transformCypherResultToTable(array $rawResult)
     {
         $formatted = array();
         foreach ($rawResult['data'] as $index => $row) {
