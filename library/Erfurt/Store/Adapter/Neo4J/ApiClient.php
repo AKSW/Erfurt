@@ -151,7 +151,10 @@ class Erfurt_Store_Adapter_Neo4J_ApiClient extends Client
     }
 
     /**
+     * Prepares an identifier for usage in a unique index.
+     *
      * @param string $identifier
+     * @return string
      */
     protected function prepareIdentifier($identifier)
     {
