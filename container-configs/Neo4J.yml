@@ -1,6 +1,7 @@
 parameters:
     neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
     neo4j.client.log: ~
+    neo4j.client.timeoutInMilliseconds: 900000
     neo4j.batch_size: 2000
 
 services:
@@ -52,6 +53,8 @@ services:
                     log:      "%neo4j.client.log%"
                     "curl.options":
                         body_as_string: true
+                    "command.params":
+                        timeoutInMilliseconds: %neo4j.client.timeoutInMilliseconds%
 
     mysql.sql_adapter:
         class: Erfurt_Store_Adapter_Sql_ZendDb
