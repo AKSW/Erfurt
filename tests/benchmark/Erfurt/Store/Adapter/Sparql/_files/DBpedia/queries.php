@@ -356,7 +356,7 @@ return array(
         'query'              => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  SELECT DISTINCT ?var7 ?var4 ?var6 ?var5 FROM <http://dbpedia.org> WHERE { %%var%% ?var4 ?var5 . OPTIONAL {?var5 rdfs:label ?var6} . FILTER(langMatches(lang(?var6),'EN')||(! langMatches(lang(?var6),'*'))) . FILTER(langMatches(lang(?var5),'EN')||(! langMatches(lang(?var5),'*'))) . OPTIONAL {?var4 rdfs:label ?var7}}",
         'auxiliary_query'    => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var ?var4 ?var5 . OPTIONAL {?var5 rdfs:label ?var6} . FILTER(langMatches(lang(?var6),'EN')||(! langMatches(lang(?var6),'*'))) . FILTER(langMatches(lang(?var5),'EN')||(! langMatches(lang(?var5),'*'))) . OPTIONAL {?var4 rdfs:label ?var7}} LIMIT 1000",
+                                 SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var ?var4 ?var5 . OPTIONAL {?var5 rdfs:label ?var6} . FILTER(langMatches(lang(?var6),'EN')||(! langMatches(lang(?var6),'*'))) . FILTER(langMatches(lang(?var5),'EN')||(! langMatches(lang(?var5),'*'))) } LIMIT 1000",
         'default_assignment' => array(
             'var' => '<http://example.org>'
         )
