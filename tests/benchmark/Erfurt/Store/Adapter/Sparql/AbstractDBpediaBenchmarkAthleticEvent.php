@@ -77,6 +77,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
     protected function classSetUp()
     {
         parent::classSetUp();
+        register_shutdown_function(array($this, 'displayErrorsInCaseOfUncleanShutdown'));
         $this->connector->deleteMatchingTriples('http://dbpedia.org', new Erfurt_Store_Adapter_Sparql_TriplePattern());
     }
 
@@ -88,6 +89,7 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         if ($this->errorReporting > self::ERROR_REPORTING_NONE) {
             echo $this->createErrorReport();
         }
+        $this->errors = array();
         parent::classTearDown();
     }
 
@@ -516,6 +518,20 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
             /* @var $type string */
             $this->executeOneQuery($type);
         }
+    }
+
+    /**
+     * Displays a detailed error report if the benchmark exits because of an unexpected error.
+     *
+     * This method must be public as it is registered as shutdown function.
+     */
+    public function displayErrorsInCaseOfUncleanShutdown()
+    {
+        if (count($this->errors) === 0) {
+            return;
+        }
+        $this->errorReporting = self::ERROR_REPORTING_DETAILS;
+        echo $this->createErrorReport();
     }
 
     /**
