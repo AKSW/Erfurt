@@ -7,9 +7,9 @@
 
 <http://ns.ontowiki.net/SysOnt/>
     a owl:Ontology ;
-    rdfs:comment "This schema model provides the vocabulary to configure an OntoWiki installation (e.g. terms for access control). Some terms are copied from FOAF." ;
-    rdfs:label "OntoWiki System Ontology" ;
-    owl:versionInfo <https://raw.githubusercontent.com/AKSW/Erfurt/develop/library/Erfurt/include/SysOntLocal.rdf> .
+    rdfs:comment "This schema model provides the vocabulary to configure the installation (e.g. terms for access control). Some terms are copied from FOAF." ;
+    rdfs:label "System Ontology" ;
+    owl:versionInfo <https://github.com/AKSW/Erfurt/commits/develop/library/Erfurt/include/SysOnt.ttl> .
 
 sysont:Action
     a owl:Class ;
@@ -41,7 +41,7 @@ sysont:ExtensionConfiguration
 
 sysont:Login
     a sysont:Action ;
-    rdfs:comment "Login to the OntoWiki application" ;
+    rdfs:comment "Login to the application" ;
     rdfs:label "Login" .
 
 sysont:Markdown
@@ -52,7 +52,7 @@ sysont:Markdown
 
 sysont:Model
     a owl:Class ;
-    rdfs:comment "A model is a knowledge base in OntoWiki." ;
+    rdfs:comment "A model is a knowledge base." ;
     rdfs:label "Model" .
 
 sysont:ModelExport
@@ -175,14 +175,14 @@ sysont:rawConfig
 
 sysont:userPassword
     a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:comment "The password of an OntoWiki Account." ;
+    rdfs:comment "The password of an account." ;
     rdfs:domain sioc:User ;
     rdfs:label "password" ;
     rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
 
 sioc:User
     a owl:Class ;
-    rdfs:comment "Users are able to log into OntoWiki." ;
+    rdfs:comment "Users are able to log into the wiki." ;
     rdfs:label "User" .
 
 sioc:Usergroup
@@ -228,7 +228,7 @@ rdfs:label
 
 foaf:accountName
     a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:comment "This is the user identifier of an OntoWiki account which is used for login" ;
+    rdfs:comment "This is the user identifier of an account which is used for login" ;
     rdfs:domain sioc:User ;
     rdfs:label "uid" ;
     rdfs:range <http://www.w3.org/2001/XMLSchema#string> .

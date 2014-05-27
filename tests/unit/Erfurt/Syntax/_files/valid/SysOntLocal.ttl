@@ -7,10 +7,10 @@
 
 <http://localhost/OntoWiki/Config/>
     a sysont:Model, owl:Ontology ;
-    rdfs:comment "This is your OntoWiki configuration model. You can configure model based access control and some actions here." ;
-    rdfs:label "OntoWiki System Configuration" ;
+    rdfs:comment "This is your configuration model. You can configure model based access control and some actions here." ;
+    rdfs:label "System Configuration" ;
     owl:imports <http://ns.ontowiki.net/SysOnt/> ;
-    owl:versionInfo <https://raw.githubusercontent.com/AKSW/Erfurt/develop/library/Erfurt/include/SysOntLocal.ttl> .
+    owl:versionInfo <https://github.com/AKSW/Erfurt/commits/develop/library/Erfurt/include/SysOntLocal.ttl> .
 
 <http://localhost/OntoWiki/Config/Admin>
     a sioc:User ;
