@@ -1,0 +1,241 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sysont: <http://ns.ontowiki.net/SysOnt/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+
+<http://ns.ontowiki.net/SysOnt/>
+    a owl:Ontology ;
+    rdfs:comment "This schema model provides the vocabulary to configure the installation (e.g. terms for access control). Some terms are copied from FOAF." ;
+    rdfs:label "System Ontology" ;
+    owl:versionInfo <https://github.com/AKSW/Erfurt/commits/develop/library/Erfurt/include/SysOnt.ttl> .
+
+sysont:Action
+    a owl:Class ;
+    rdfs:comment "Actions represent specific GUI or API actions which can be activated or used by an Agent." ;
+    rdfs:label "Action" .
+
+sysont:Anonymous
+    a sioc:User ;
+    rdfs:comment "This special account identifies the anonymous user." ;
+    rdfs:label "Anonymous" .
+
+sysont:AnyAction
+    a sysont:Action ;
+    rdfs:comment "This special action identifies any action." ;
+    rdfs:label "AnyAction" .
+
+sysont:AnyModel
+    a sysont:Model ;
+    rdfs:comment "This special model identifies any model." ;
+    rdfs:label "AnyModel" .
+
+sysont:Debug
+    rdfs:comment "Allow access to debug information via the user interface" ;
+    rdfs:label "Debug" .
+
+sysont:ExtensionConfiguration
+    rdfs:comment "Enable, disable as well as configure extensions" ;
+    rdfs:label "Extension Configuration" .
+
+sysont:Login
+    a sysont:Action ;
+    rdfs:comment "Login to the application" ;
+    rdfs:label "Login" .
+
+sysont:Markdown
+    a rdfs:Datatype ;
+    rdfs:comment "A string literal formated using markdown syntax." ;
+    rdfs:label "Markdown formated string" ;
+    rdfs:seeAlso "http://daringfireball.net/projects/markdown/syntax" .
+
+sysont:Model
+    a owl:Class ;
+    rdfs:comment "A model is a knowledge base." ;
+    rdfs:label "Model" .
+
+sysont:ModelExport
+    a sysont:Action ;
+    rdfs:comment "Allow to export complete knowledge bases", "Export complete models (disallow this on models bigger than 40k distinct resources to avoid virtuoso errors)" ;
+    rdfs:label "Model Export" .
+
+sysont:ModelManagement
+    a sysont:Action ;
+    rdfs:comment "Create and remove models from the store" ;
+    rdfs:label "Model Management" .
+
+sysont:RegisterNewUser
+    a sysont:Action ;
+    rdfs:comment "Register new users with application/register" ;
+    rdfs:label "Register new User" .
+
+sysont:Rollback
+    a sysont:Action ;
+    rdfs:comment "Rollback changes on statements to a past version (needs Versioning)" ;
+    rdfs:label "Rollback" .
+
+sysont:SuperAdmin
+    a sioc:User ;
+    rdfs:comment "This special account is the SuperAdministrator. He has hard coded access to all models and actions and uses the user nick and pass from the database configuration. All access control statements of this user are ignored by the system." ;
+    rdfs:label "SuperAdmin" .
+
+sysont:denyAccess
+    a owl:ObjectProperty ;
+    rdfs:comment "Action Based Access Control: Which Actions are NOT to be accessed?" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "deny access" ;
+    rdfs:range sysont:Action .
+
+sysont:denyModelEdit
+    a owl:ObjectProperty ;
+    rdfs:comment "Model Based Access Control: Which Models are NOT allowed to edit (and read)" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "not editable model" ;
+    rdfs:range sysont:Model .
+
+sysont:denyModelView
+    a owl:ObjectProperty ;
+    rdfs:comment "Model Based Access Control: Which Models are NOT allowed to read" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "not readable model" ;
+    rdfs:range sysont:Model ;
+    rdfs:subPropertyOf sysont:denyModelEdit .
+
+sysont:grantAccess
+    a owl:ObjectProperty ;
+    rdfs:comment "Access Control: Which Actions are allowed to accessed?" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "grant access" ;
+    rdfs:range sysont:Action .
+
+sysont:grantModelEdit
+    a owl:ObjectProperty ;
+    rdfs:comment "Model Based Access Control: Which Models are allowed to edit (and read)" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "editable model" ;
+    rdfs:range sysont:Model ;
+    rdfs:subPropertyOf sysont:grantModelView .
+
+sysont:grantModelView
+    a owl:ObjectProperty ;
+    rdfs:comment "Model Based Access Control: Which Models are allowed to read" ;
+    rdfs:domain _:b1 ;
+    rdfs:label "readable model" ;
+    rdfs:range sysont:Model .
+
+sysont:hidden
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "All resources (especially Models, Classes and Properties) can be hidden." ;
+    rdfs:domain owl:Thing ;
+    rdfs:label "hidden" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> .
+
+sysont:hiddenImports
+    a owl:ObjectProperty ;
+    rdfs:comment "Acts like owl:imports but is not part of the model itself." ;
+    rdfs:domain sysont:Model ;
+    rdfs:label "hidden imports" ;
+    rdfs:range sysont:Model .
+
+sysont:isFacet
+    a owl:DatatypeProperty ;
+    rdfs:comment "This property is a good candidate for beeing a facet in a instance list." ;
+    rdfs:domain rdf:Property ;
+    rdfs:label "is facet" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> .
+
+sysont:isLarge
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "When models are too big counting can be disabled and limits are added" ;
+    rdfs:domain owl:Ontology ;
+    rdfs:label "is large" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#boolean> .
+
+sysont:possibleDatatype
+    a owl:ObjectProperty ;
+    rdfs:comment "Since it is not allowed to state more than one possible datatypes of a datatype property in OWL, you can use this relation. (not implemented yet)" ;
+    rdfs:domain owl:DatatypeProperty ;
+    rdfs:label "possible datatype" ;
+    rdfs:range rdfs:Datatype .
+
+sysont:prefix
+    a owl:DatatypeProperty ;
+    rdfs:comment "This property describes namespace prefix configurations." ;
+    rdfs:domain sysont:Model ;
+    rdfs:label "used prefix" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+sysont:rawConfig
+    a owl:DatatypeProperty ;
+    rdfs:comment "This property holds action configuration values beyond the rdf schema." ;
+    rdfs:domain sysont:Action ;
+    rdfs:label "config" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+sysont:userPassword
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "The password of an account." ;
+    rdfs:domain sioc:User ;
+    rdfs:label "password" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+sioc:User
+    a owl:Class ;
+    rdfs:comment "Users are able to log into the wiki." ;
+    rdfs:label "User" .
+
+sioc:Usergroup
+    a owl:Class ;
+    rdfs:comment "A Group of User Accounts ..." ;
+    rdfs:label "Usergroup" .
+
+sioc:email
+    a owl:ObjectProperty ;
+    rdfs:comment "A personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox." ;
+    rdfs:domain sioc:User ;
+    rdfs:label "mbox" ;
+    rdfs:range owl:Thing .
+
+sioc:has_member
+    a owl:ObjectProperty ;
+    rdfs:comment "The sioc:member property relates a sioc:Usergroup to a sioc:User that is a member of that group." ;
+    rdfs:domain sioc:Usergroup ;
+    rdfs:label "member" ;
+    rdfs:range sioc:User .
+
+rdfs:comment
+    a owl:AnnotationProperty ;
+    rdfs:label "comment" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+rdfs:label
+    a owl:AnnotationProperty ;
+    rdfs:label "label" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+<http://www.w3.org/2001/XMLSchema#anyURI>
+    a rdfs:Datatype ;
+    rdfs:label "Any URI" .
+
+<http://www.w3.org/2001/XMLSchema#boolean>
+    a rdfs:Datatype ;
+    rdfs:label "Boolean" .
+
+<http://www.w3.org/2001/XMLSchema#string>
+    a rdfs:Datatype ;
+    rdfs:label "String" .
+
+foaf:accountName
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "This is the user identifier of an account which is used for login" ;
+    rdfs:domain sioc:User ;
+    rdfs:label "uid" ;
+    rdfs:range <http://www.w3.org/2001/XMLSchema#string> .
+
+_:b1
+    a owl:Class ;
+    owl:unionOf (sioc:User
+        sioc:Usergroup
+    ) .
+
