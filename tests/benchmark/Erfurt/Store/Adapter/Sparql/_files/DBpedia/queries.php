@@ -8,6 +8,7 @@
  */
 
 return array(
+    // 1
     'distinct' => array(
         'query'              => 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                  SELECT DISTINCT ?var1 FROM <http://dbpedia.org> WHERE { %%var%% rdf:type ?var1 . }',
@@ -17,6 +18,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 2
     'filter' => array(
         'query'              => 'PREFIX dbpprop: <http://dbpedia.org/property/>
                                  PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -46,6 +48,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 3
     'optional' => array(
         'query'              => 'PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> PREFIX space: <http://purl.org/net/schemas/space/>
@@ -65,6 +68,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 4
     'union' => array(
         'query'              => 'PREFIX dc: <http://purl.org/dc/elements/1.1/>
                                  PREFIX : <http://dbpedia.org/resource/>
@@ -94,6 +98,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 5
     'union,distinct' => array(
         'query'              => 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  PREFIX dbpp: <http://dbpedia.org/property/>
@@ -110,6 +115,7 @@ return array(
             'var1' => '<http://example.org/v1>'
         )
     ),
+    // 6
     'filter,distinct' => array(
         'query'              => 'PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -137,6 +143,7 @@ return array(
             'var' => '0'
         )
     ),
+    // 7
     'optional,distinct' => array(
         'query'              => 'PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -168,6 +175,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 8
     'union,filter' => array(
         'query'              => 'PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -196,6 +204,7 @@ return array(
             'var1' => '<http://example.org>'
         )
     ),
+    // 9
     'union,optional' => array(
         'query'              => 'PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                                  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -207,6 +216,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 10
     'optional,filter,distinct' => array(
         'query'              => "PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -235,6 +245,7 @@ return array(
             'var1' => '0'
         )
     ),
+    // 11
     'union,optional,distinct' => array(
         'query'              => 'PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -266,6 +277,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 12
     'filter,lang,distinct' => array(
         'query'              => "PREFIX dc: <http://purl.org/dc/elements/1.1/>
                                  PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -289,6 +301,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 13
     'union,filter,lang' => array(
         'query'              => "PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -312,6 +325,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 14
     'optional,filter,lang' => array(
         'query'              => "PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -339,6 +353,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 15
     'filter,regex,distinct,str' => array(
         'query'              => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -352,6 +367,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 16
     'optional,filter,lang,distinct' => array(
         'query'              => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  SELECT DISTINCT ?var7 ?var4 ?var6 ?var5 FROM <http://dbpedia.org> WHERE { %%var%% ?var4 ?var5 . OPTIONAL {?var5 rdfs:label ?var6} . FILTER(langMatches(lang(?var6),'EN')||(! langMatches(lang(?var6),'*'))) . FILTER(langMatches(lang(?var5),'EN')||(! langMatches(lang(?var5),'*'))) . OPTIONAL {?var4 rdfs:label ?var7}}",
@@ -361,6 +377,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 17
     'union,filter,lang,distinct' => array(
         'query'              => "PREFIX dc: <http://purl.org/dc/elements/1.1/>
                                  PREFIX dct: <http://purl.org/dc/terms/>
@@ -408,6 +425,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 18
     'union,filter,lang,str' => array(
         'query'              => "PREFIX owl: <http://www.w3.org/2002/07/owl#>
                                  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -435,6 +453,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 19
     'union,filter,regex,str' => array(
         'query'              => "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                  SELECT ?var1 FROM <http://dbpedia.org> WHERE { { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> %%var%% } UNION { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> %%var%% }. FILTER(regex(str(?var1),'http://dbpedia.org/resource/') || regex(str(?var1),'http://dbpedia.org/ontology/') || regex(str(?var1),'http://www.w3.org/2002/07/owl') || regex(str(?var1),'http://www.w3.org/2001/XMLSchema') || regex(str(?var1),'http://www.w3.org/2000/01/rdf-schema') || regex(str(?var1),'http://www.w3.org/1999/02/22-rdf-syntax-ns')) }",
@@ -444,6 +463,7 @@ return array(
             'var' => '"label"'
         )
     ),
+    // 20
     'union,optional,filter,lang' => array(
         'query'              => "PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                                  PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
@@ -457,6 +477,7 @@ return array(
             'var' => '"label"'
         )
     ),
+    // 21
     '1-TriplePatterns' => array(
         'query'              => 'PREFIX dbpprop: <http://dbpedia.org/property/>
                                  SELECT * FROM <http://dbpedia.org> WHERE { %%var%%  dbpprop:caption ?var0 . }',
@@ -466,6 +487,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 22
     '2-TriplePatterns' => array(
         'query'              => 'SELECT ?var2 FROM <http://dbpedia.org> WHERE { ?var3 <http://xmlns.com/foaf/0.1/homepage> ?var2 . ?var3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> %%var%% . }',
         'auxiliary_query'    => 'SELECT DISTINCT ?var FROM <http://dbpedia.org> WHERE { ?var3 <http://xmlns.com/foaf/0.1/homepage> ?var2 . ?var3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?var . } LIMIT 1000',
@@ -473,6 +495,7 @@ return array(
             'var' => '<http://example.org>'
         )
     ),
+    // 23
     '3-TriplePatterns' => array(
         'query'              => 'PREFIX dc: <http://purl.org/dc/elements/1.1/>
                                  PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -496,6 +519,7 @@ return array(
             'var' => '"label"'
         )
     ),
+    // 24
     '4-TriplePatterns' => array(
         'query'              => 'SELECT * FROM <http://dbpedia.org> WHERE { ?var1 a <http://dbpedia.org/ontology/Organisation> . ?var2 <http://dbpedia.org/ontology/foundationPlace> %%var0%% . ?var4 <http://dbpedia.org/ontology/developer> ?var2 . ?var4 a %%var1%% . } LIMIT 10000',
         'auxiliary_query'    => 'SELECT DISTINCT ?var0 ?var1 FROM <http://dbpedia.org>  where { ?var2 a <http://dbpedia.org/ontology/Organisation> . ?var2 <http://dbpedia.org/ontology/foundationPlace> ?var0 . ?var4 <http://dbpedia.org/ontology/developer> ?var2 . ?var4 a ?var1 . } LIMIT 1000',
@@ -504,6 +528,7 @@ return array(
             'var1' => '<http://example.org/v2>'
         )
     ),
+    // 25
     '5-TriplePatterns' => array(
         'query'              => 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                  PREFIX dbpprop:<http://dbpedia.org/property/>
