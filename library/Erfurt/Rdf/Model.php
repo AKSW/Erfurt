@@ -504,8 +504,8 @@ class Erfurt_Rdf_Model
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
 
-            $logger->debug('added: ', count($addedStatements));
-            $logger->debug('removed: ', count($removedStatements));
+            $logger->debug('added: ' . count($addedStatements));
+            $logger->debug('removed: ' . count($removedStatements));
         }
 
         $this->deleteMultipleStatements($removedStatements, $useAc);
