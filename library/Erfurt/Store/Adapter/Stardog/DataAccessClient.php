@@ -174,7 +174,12 @@ class Erfurt_Store_Adapter_Stardog_DataAccessClient
             call_user_func($callback, $this);
             $this->commit();
         } catch (Exception $e) {
-            $this->rollback();
+            try {
+                $this->rollback();
+            } catch (\Exception $rollbackException) {
+                $message = 'Transaction rollback failed: ' . PHP_EOL . $rollbackException;
+                throw new RuntimeException($message, 0, $e);
+            }
             throw $e;
         }
     }
