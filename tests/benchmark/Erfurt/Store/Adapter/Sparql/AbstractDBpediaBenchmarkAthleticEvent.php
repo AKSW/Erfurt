@@ -778,19 +778,22 @@ abstract class Erfurt_Store_Adapter_Sparql_AbstractDBpediaBenchmarkAthleticEvent
         $parser     = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $data       = implode(PHP_EOL, $lines);
         $statements = $parser->parseFromDataString($data);
-        $messages = $this->connector->batch(function ($connector) use($statements) {
-            /* @var $connector \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
-            $messages = array();
-            foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
-                /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
-                try {
-                    $connector->addTriple('http://dbpedia.org', $triple);
-                } catch(Exception $e) {
-                    $messages[] = (string)$e;
+        $messages   = array();
+        try {
+            $this->connector->batch(function ($connector) use($statements, &$messages) {
+                /* @var $connector \Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface */
+                foreach (new Erfurt_Store_Adapter_Sparql_TripleIterator($statements) as $triple) {
+                    /* @var $triple Erfurt_Store_Adapter_Sparql_Triple */
+                    try {
+                        $connector->addTriple('http://dbpedia.org', $triple);
+                    } catch(Exception $e) {
+                        $messages[] = (string)$e;
+                    }
                 }
-            }
-            return $messages;
-        });
+            });
+        } catch (\Exception $e) {
+            $messages[] = (string)$e;
+        }
         foreach ($messages as $message) {
             $this->addError($message);
         }
