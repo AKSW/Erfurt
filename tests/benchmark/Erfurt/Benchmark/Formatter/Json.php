@@ -49,7 +49,7 @@ class Erfurt_Benchmark_Formatter_Json implements FormatterInterface
         }
         $encoded = json_encode((object)$data, $options);
         if ($encoded === false) {
-            $message = 'Error during JSON encoding';
+            $message = 'Error during JSON encoding.';
             if (function_exists('json_last_error_msg')) {
                 $message .= PHP_EOL . json_last_error_msg();
             }
@@ -67,7 +67,14 @@ class Erfurt_Benchmark_Formatter_Json implements FormatterInterface
     protected function convertToArray(MethodResults $methodResults)
     {
         // The results object provides all data as public attributes.
-        return get_object_vars($methodResults);
+        $data = get_object_vars($methodResults);
+        return array_map(function ($value) {
+            // Handle special cases that cannot be encoded as JSON.
+            if (is_nan($value)) {
+                return null;
+            }
+            return $value;
+        }, $data);
     }
 
 }
