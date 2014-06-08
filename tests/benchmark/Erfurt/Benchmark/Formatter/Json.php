@@ -39,6 +39,7 @@ class Erfurt_Benchmark_Formatter_Json implements FormatterInterface
      *
      * @param array(string=>mixed) $data
      * @return string
+     * @throws \RuntimeException If the encoding fails.
      */
     protected function encode($data)
     {
@@ -46,7 +47,15 @@ class Erfurt_Benchmark_Formatter_Json implements FormatterInterface
         if (defined('JSON_PRETTY_PRINT')) {
             $options = $options | JSON_PRETTY_PRINT;
         }
-        return json_encode((object)$data, $options);
+        $encoded = json_encode((object)$data, $options);
+        if ($encoded === false) {
+            $message = 'Error during JSON encoding';
+            if (function_exists('json_last_error_msg')) {
+                $message .= PHP_EOL . json_last_error_msg();
+            }
+            throw new RuntimeException($message);
+        }
+        return $encoded;
     }
 
     /**
