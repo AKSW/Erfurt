@@ -70,7 +70,7 @@ class Erfurt_Benchmark_Formatter_Json implements FormatterInterface
         $data = get_object_vars($methodResults);
         return array_map(function ($value) {
             // Handle special cases that cannot be encoded as JSON.
-            if (is_nan($value)) {
+            if (is_double($value) && is_nan($value)) {
                 return null;
             }
             return $value;
