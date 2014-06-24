@@ -18,6 +18,7 @@ tests/benchmark/Erfurt/Store/Adapter/Sparql/_files/DBpedia/data/benchmark_data.n
 # Composer
 composer.phar
 composer.lock
+graph-composer.phar
 vendor/
 
 # build stuff
