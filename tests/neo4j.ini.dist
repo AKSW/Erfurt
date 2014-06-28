@@ -7,7 +7,6 @@ service      = "neo4j_adapter_with_mysql_cache"
 parameters.neo4j.client.host = "non_production_host"
 parameters.neo4j.client.port = 7474
 ; parameters.neo4j.client.log  = "%erfurt.root%/logs/neo4j-requests.log"
-parameters.neo4j.client.timeoutInMilliseconds = 18000000
 ; Settings for the MySQL cache and versioning system.
 parameters.mysql.host     = "localhost"
 parameters.mysql.username = "root"
