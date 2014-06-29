@@ -812,7 +812,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
         }
 
-        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
         $literal = Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
         return $this->encodeNonAsciiCharacters($literal);
     }
