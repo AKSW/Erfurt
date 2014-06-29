@@ -2512,7 +2512,7 @@ EOF;
                 $this->importRdf(
                     $modelIri,
                     $modelPath,
-                    'rdfxml',
+                    'ttl',
                     Erfurt_Syntax_RdfParser::LOCATOR_FILE,
                     false
                 );
@@ -2520,7 +2520,7 @@ EOF;
                 $this->importRdf(
                     $modelIri,
                     $modelLocation,
-                    'rdfxml',
+                    'ttl',
                     Erfurt_Syntax_RdfParser::LOCATOR_URL,
                     false
                 );
