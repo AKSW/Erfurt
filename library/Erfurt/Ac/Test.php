@@ -154,4 +154,29 @@ class Erfurt_Ac_Test
             }
         }
     }
+
+    public function areModelsAllowed($type, $modelUris)
+    {
+        $results = array();
+        foreach ($modelUris as $modelUri) {
+            $modelUri = (string)$modelUri;
+
+            $results[$modelUri] = false;
+
+            // type = view; check whether allowed
+            if ($type === 'view') {
+                if (isset($this->_allowedModelsView[$modelUri])) {
+                    $results[$modelUri] = true;
+                } else if (isset($this->_allowedModelsEdit[$modelUri])) {
+                    $results[$modelUri] = true;
+                }
+            } else if ($type === 'edit') { // type = edit; check whether allowed
+                if (isset($this->_allowedModelsEdit[$modelUri])) {
+                    $results[$modelUri] = true;
+                }
+            }
+        }
+
+        return $results;
+    }
 }

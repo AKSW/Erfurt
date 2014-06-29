@@ -9,6 +9,7 @@
 /**
  * This class models a SPARQL query that can be used within an application in order to make
  * it easier e.g. to set different parts of a query independently.
+ * Currently the SimpleQurey class only supports SELECT and ASK queries.
  *
  * @package    Erfurt_Sparql
  * @author     Norman Heino <norman.heino@gmail.com>
@@ -24,6 +25,12 @@ class Erfurt_Sparql_SimpleQuery
 
     /** @var string */
     protected $_prologuePart = null;
+
+    /** @var string */
+    protected $_selectClause = null;
+
+    /** @var boolean */
+    protected $_ask = false;
 
     /** @var array */
     protected $_from = array();
@@ -50,6 +57,12 @@ class Erfurt_Sparql_SimpleQuery
     public function __toString()
     {
         $queryString = $this->_prologuePart . PHP_EOL;
+
+        if ($this->_ask) {
+            $queryString .= 'ASK' . PHP_EOL;
+        } else {
+            $queryString .= $this->_selectClause . PHP_EOL;
+        }
 
         foreach (array_unique($this->_from) as $from) {
             $queryString .= 'FROM <' . $from . '>' . PHP_EOL;
@@ -88,34 +101,59 @@ class Erfurt_Sparql_SimpleQuery
     public static function initWithString($queryString)
     {
         $parts = array(
-            'prologue'   => array(),
-            'from'       => array(),
-            'from_named' => array(),
-            'where'      => array(),
-            'order'      => array(),
-            'limit'      => array(),
-            'offset'     => array()
+            'prefix'        => array(),
+            'base'          => array(),
+            'ask'           => array(),
+            'select_clause' => array(),
+            'from'          => array(),
+            'from_named'    => array(),
+            'where'         => array(),
+            'order'         => array(),
+            'limit'         => array(),
+            'offset'        => array()
         );
 
         $var = '[?$]{1}[\w\d]+';
+        $expr = '(\w*\(.*\))';
         // /(BASE.*?\s)?(PREFIX.*?\s)*(ASK|((COUNT(\s)*(\(.*?\))))|(SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)+(\(.*?\)(\s)))?(\?\w+\s+|\*)*)/si
         $tokens = array(
-            'prologue'   =>'/((BASE.*\s)?(PREFIX.*?\s)*(ASK|((SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)*(\(.*?\)(\s)))?)(\?\w+\s+|\*)*))/si',
-            'from'       => '/FROM\s+<(.+?)>/i',
-            'from_named' => '/FROM\s+NAMED\s+<(.+?)>/i',
-            'where'      => '/(WHERE\s+)?\{.*\}/si',
-            'order'      => '/ORDER\s+BY((\s+' . $var . '|\s+(ASC|DESC)\s*\(\s*' . $var . '\s*\))+)/i',
-            'limit'      => '/LIMIT\s+(\d+)/i',
-            'offset'     => '/OFFSET\s+(\d+)/i'
+            'prefix'        => '/((PREFIX\s+[^:\s]+:\s+<[^\s]*>\s*)+)/si',
+            'base'          => '/BASE\s+<(.+?)>/i',
+            'ask'           => '/(ASK)/si',
+            'select_clause' => '/((SELECT\s+)(DISTINCT\s+)?)(\*|((COUNT\s*\((\?\w*|\*)\)\s+(as\s+(\?\w+\s+))?)|(\?\w+\s+))*)/si',
+            'from'          => '/FROM\s+<(.+?)>/i',
+            'from_named'    => '/FROM\s+NAMED\s+<(.+?)>/i',
+            'where'         => '/(WHERE\s+)?\{.*\}/si',
+            'order'         => '/ORDER\s+BY((\s+' . $var . '|\s+' . $expr . '|\s+(ASC|DESC)\s*' . $expr . ')+)/i',
+            'limit'         => '/LIMIT\s+(\d+)/i',
+            'offset'        => '/OFFSET\s+(\d+)/i'
         );
 
         foreach ($tokens as $key => $pattern) {
             preg_match_all($pattern, $queryString, $parts[$key]);
         }
 
+        //echo $queryString;
+        //var_dump($parts);
+
         $queryObject = new self();
-        if (isset($parts['prologue'][0][0])) {
-            $queryObject->setProloguePart($parts['prologue'][0][0]);   // whole match
+        if (isset($parts['prefix'][0][0]) || isset($parts['base'][0][0])) {
+            $prologue = '';
+            if (isset($parts['base'][1][0])) {
+                $prologue .= 'BASE <' . $parts['base'][1][0] . '>' . PHP_EOL;
+            }
+            if (isset($parts['prefix'][0][0])) {
+                $prologue .= $parts['prefix'][0][0];
+            }
+            $queryObject->setProloguePart($prologue);   // whole match
+        }
+
+        if (isset($parts['ask'][0][0])) {
+            $queryObject->setAsk(true);
+        }
+
+        if (isset($parts['select_clause'][0][0])) {
+            $queryObject->setSelectClause($parts['select_clause'][0][0]);
         }
 
         if (isset($parts['from'][1][0])) {
@@ -183,14 +221,40 @@ class Erfurt_Sparql_SimpleQuery
         return $this->_offset;
     }
 
+    /**
+     * Returns the 'ORDER BY …' part of the query
+     */
+    public function getOrderClause()
+    {
+        return $this->_orderClause;
+    }
+
+
     public function getProloguePart()
     {
         return $this->_prologuePart;
     }
 
+    public function isAsk()
+    {
+        return $this->_ask;
+    }
+
+    public function getSelectClause()
+    {
+        return $this->_selectClause;
+    }
+
+    public function getWherePart()
+    {
+        return $this->_wherePart;
+    }
+
     public function resetInstance()
     {
         $this->_prologuePart = null;
+        $this->_ask          = false;
+        $this->_selectClause = null;
         $this->_from         = array();
         $this->_fromNamed    = array();
         $this->_wherePart    = null;
@@ -217,7 +281,7 @@ class Erfurt_Sparql_SimpleQuery
 
     public function setLimit($limit)
     {
-        $this->_limit = $limit;
+        $this->_limit = (int)$limit;
 
         return $this;
     }
@@ -228,6 +292,9 @@ class Erfurt_Sparql_SimpleQuery
        return $this;
     }
 
+    /**
+     * Set the 'ORDER BY …' part for the query
+     */
     public function setOrderClause($orderString)
     {
         $this->_orderClause = $orderString;
@@ -238,6 +305,24 @@ class Erfurt_Sparql_SimpleQuery
     public function setProloguePart($prologueString)
     {
         $this->_prologuePart = $prologueString;
+
+        return $this;
+    }
+
+    public function setAsk($ask = true)
+    {
+        if ($ask === true | strtolower($ask) == 'ask') {
+            $this->_ask = true;
+        } else {
+            $this->_ask = false;
+        }
+
+        return $this;
+    }
+
+    public function setSelectClause($selectClauseString)
+    {
+        $this->_selectClause = $selectClauseString;
 
         return $this;
     }

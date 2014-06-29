@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -134,6 +134,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
      */
     public function serialize($notation = 'xml')
     {
+        $modelIri = $this->_model ? $this->_model->getModelIri() : "" ;
         require_once('Erfurt/Syntax/RdfSerializer.php');
         $serializer = Erfurt_Syntax_RdfSerializer::rdfSerializerWithFormat($notation);
         return $serializer->serializeResourceToString(
@@ -143,11 +144,30 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         );
     }
 
-    public function getDescription($maxDepth = self::DESCRIPTION_MAX_DEPTH)
+    /*
+     * get the resource description of this resource
+     *
+     * @param array $options array of different options:
+     *     Erfurt_Store::USE_AC=true|false - use access control
+     *     maxDepth=int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return RDF/PHP array description
+     */
+    public function getDescription($options = array())
     {
-        if (null === $this->_description) {
-            $this->_description = $this->_fetchDescription($maxDepth);
-        }
+        // merge given options into default options
+        $options = array_merge(
+            array(
+                'maxDepth'           => self::DESCRIPTION_MAX_DEPTH
+            ), $options
+        );
+
+        $this->_description = Erfurt_App::getInstance()->getStore()->getResourceDescription(
+            $this->getIri(),
+            $this->_model ? $this->_model->getModelIri() : false,
+            $options
+        );
 
         return $this->_description;
     }
@@ -211,7 +231,6 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 
             return $qName;
         }
-        
         return null;
     }
 
@@ -231,8 +250,14 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
         $query->setProloguePart('SELECT ?p ?o')
               ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
         $description = array();
+        $result = null ;
+        if ($this->_model) {
+            $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'));
+        } else {
+            $result = Erfurt_App::getInstance()->getStore()->sparqlQuery($query, array('result_format' => 'extended'));
+        }
 
-        if (($maxDepth > 0) && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
+        if (($maxDepth > 0) && $result) {
             foreach ($result['results']['bindings'] as $row) {
                 $property = $row['p']['value'];
                 $this->_descriptionResource($property);

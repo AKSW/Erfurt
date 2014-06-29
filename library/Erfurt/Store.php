@@ -157,7 +157,18 @@ class Erfurt_Store
      */
     private static $_queryCount = 0;
 
+    /**
+     * importsClosure local cache
+     * @var array
+     */
     private $_importsClosure = array();
+
+    /**
+     * allowedModels local cache
+     * used by getModel()
+     * @var array
+     */
+    private $_allowedModels = array();
 
     /**
      * Flag that indicates if the system setup is currently running.
@@ -392,8 +403,6 @@ class Erfurt_Store
         return $result;
     }
 
-
-
     /**
      * Creates the table specified by $tableSpec according to backend-specific
      * create table statement.
@@ -474,7 +483,7 @@ WHERE {
 EOF;
                 $result = $this->sparqlQuery(
                     $sparql,
-                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED)
+                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
                 );
                 $ret = count($result);
                 $stmts = array();
@@ -674,6 +683,14 @@ EOF;
 
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
+        if ((strpbrk($stringSpec, 'AND') === false) &&
+            (strpbrk($stringSpec, 'OR') === false) &&
+            (strpbrk($stringSpec, 'NEAR') === false)) {
+            preg_match_all("/(?:[^\s']+|'[^']*')+/", $stringSpec, $matches);
+            $parts = array_map(function($match) { return trim($match, "'"); }, $matches[0]);
+            $stringSpec = '';
+            $stringSpec = '\'' . implode($parts, '\' AND \'') . '\'';
+        }
 
         $options = array_merge(
             array(
@@ -730,16 +747,28 @@ EOF;
         // backend adapter returns all models
         $models = $this->_backendAdapter->getAvailableModels();
 
-        // filter for access control and hidden models
+        // make models uris array
+        $modelsUris = array();
         foreach ($models as $graphUri => $true) {
+            $modelsUris[] = $graphUri;
+        }
 
-            if (!$this->_checkAc($graphUri)) {
+        // get permissions
+        $modelsAc = $this->_checkAcBatch($modelsUris);
+        // filter for access control
+        foreach ($modelsAc as $graphUri => $modelAllowed) {
+            if (!$modelAllowed) {
                 unset($models[$graphUri]);
             }
+        }
 
+        // get hidden property
+        $hiddenProperty = $this->getOption('propertiesHidden');
+
+        // filter hidden models
+        foreach ($models as $graphUri => $true) {
             if ($withHidden === false) {
                 $graphConfig    = $this->getGraphConfiguration($graphUri);
-                $hiddenProperty = $this->getOption('propertiesHidden');
 
                 if (isset($graphConfig[$hiddenProperty])) {
                     $hidden = current($graphConfig[$hiddenProperty]);
@@ -938,8 +967,46 @@ EOF;
             // instantiate OWL model
             $modelInstance = new Erfurt_Owl_Model($modelIri);
         } else {
-            // instantiate RDF-S model
-            $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+            //add here the userid to the identifier
+            $modelType = null;
+
+            $identity = null;
+            $identityObject = Erfurt_App::getInstance()->getAuth()->getIdentity();
+            if (null !== $identityObject) {
+                $identity = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+            }
+
+            if (isset($this->_allowedModels[$identity][$modelIri])) {
+                $modelType = $this->_allowedModels[$identity][$modelIri];
+            } else {
+                // use generic implementation
+                $owlQuery = new Erfurt_Sparql_SimpleQuery();
+                $owlQuery->setProloguePart('ASK')
+                         ->addFrom($modelIri)
+                         ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
+
+                if ($this->sparqlAsk($owlQuery, array(Erfurt_Store::USE_AC => $useAc))) {
+                    // instantiate OWL model
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_OWL;
+                    $modelType = self::MODEL_TYPE_OWL;
+                } else {
+                    // instantiate RDF-S model
+                    $this->_allowedModels[$identity][$modelIri] = self::MODEL_TYPE_RDFS;
+                    $modelType = self::MODEL_TYPE_RDFS;
+                }
+            }
+
+            switch ($modelType) {
+                case self::MODEL_TYPE_OWL :
+                    $modelInstance = new Erfurt_Owl_Model($modelIri);
+                    break;
+                case self::MODEL_TYPE_RDFS :
+                    $modelInstance = new Erfurt_Rdfs_Model($modelIri);
+                    break;
+                default :
+                    //should never happen
+                    throw new Erfurt_Store_Exception("Model '$modelIri' is not available.");
+            }
         }
 
         // check for edit possibility
@@ -948,7 +1015,6 @@ EOF;
         } else {
             $modelInstance->setEditable(false);
         }
-
         return $modelInstance;
     }
 
@@ -1015,15 +1081,14 @@ EOF;
      */
     public function getModelOrCreate ($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
-        try {
-            // Get it if it already exists
-            $model = $this->getModel($modelIri, $useAc);
-        } catch (Erfurt_Store_Exception $e) {
-            // Create it if it doesn't exist
-            $model = $this->getNewModel($modelIri, $baseIri, $type, $useAc);
+        // Check if Model is availabe without AC to see if it exists
+        if ($this->isModelAvailable($modelIri, false)) {
+            // Try to get it if it already exists
+            return $this->getModel($modelIri, $useAc);
+        } else {
+            // Try to create it if it doesn't exist
+            return $this->getNewModel($modelIri, $baseIri, $type, $useAc);
         }
-
-        return $model;
     }
 
     /**
@@ -1200,17 +1265,22 @@ EOF;
             }
         }
 
+        $result = false;
         if (array_key_exists($type, $this->_backendAdapter->getSupportedImportFormats())) {
             $result = $this->_backendAdapter->importRdf($modelIri, $data, $type, $locator);
             $this->_backendAdapter->init();
-            return $result;
         } else {
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $retVal = $parser->parseToStore($data, $locator, $modelIri, $useAc);
             // After import re-initialize the backend (e.g. zenddb: fetch model infos again)
             $this->_backendAdapter->init();
-            return $retVal;
+            $result = $retVal;
         }
+
+        // namespaces may have changed, thus reset allowed models cache for this model
+        unset($this->_allowedModels[$modelIri]);
+
+        return $result;
     }
 
     /**
@@ -1504,7 +1574,7 @@ EOF;
         //query from query cache
         $queryCache   = Erfurt_App::getInstance()->getQueryCache();
         $sparqlResult = $queryCache->load($queryString, 'plain');
-        if ($sparqlResult == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
+        if ($sparqlResult === Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
             // TODO: check if adapter supports requested result format
             $startTime = microtime(true);
             $sparqlResult = $this->_backendAdapter->sparqlAsk($queryString);
@@ -1777,9 +1847,10 @@ EOF;
      * one statement where the given resource URI is used as a subject.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getGraphsUsingResource($resourceUri, $useAc = true)
+    public function getGraphsUsingResource($resourceUri, $useAc = true, $order = false)
     {
         if (method_exists($this->_backendAdapter, 'getGraphsUsingResource')) {
             $backendResult = $this->_backendAdapter->getGraphsUsingResource($resourceUri);
@@ -1793,26 +1864,32 @@ EOF;
                     }
                 }
 
-                return $realResult;
+                $graphs = $realResult;
             } else {
-                return $backendResult;
+                $graphs = $backendResult;
             }
+        } else {
+            $query = new Erfurt_Sparql_SimpleQuery();
+            $query->setProloguePart('SELECT DISTINCT ?graph')
+                ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
+
+            $graphResult = array();
+            $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
+
+            if ($result) {
+                foreach ($result as $row) {
+                    $graphResult[] = $row['graph'];
+                }
+            }
+
+            $graphs = $graphResult;
         }
 
-        $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT DISTINCT ?graph')
-              ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
-
-        $graphResult = array();
-        $result = $this->sparqlQuery($query, array(Erfurt_Store::USE_AC => $useAc));
-
-        if ($result) {
-            foreach ($result as $row) {
-                $graphResult[] = $row['graph'];
-            }
+        if ($order) {
+            $graphs = $this->_compareResourceUriToModelUri($graphs, $resourceUri);
         }
 
-        return $graphResult;
+        return $graphs;
     }
 
     /**
@@ -1820,11 +1897,12 @@ EOF;
      * readable.
      *
      * @param string $resourceUri
+     * @param boolean $order true if the resulting models should be ordered
      * @return array
      */
-    public function getReadableGraphsUsingResource($resourceUri)
+    public function getReadableGraphsUsingResource($resourceUri, $order = false)
     {
-        $result = $this->getGraphsUsingResource($resourceUri, false);
+        $result = $this->getGraphsUsingResource($resourceUri, false, $order);
 
         if ($result) {
             // get source graph
@@ -1932,9 +2010,180 @@ EOF;
         }
     }
 
+    /**
+     * returns a PHP/RDF statments array
+     *
+     * @param string $resourceIri The Iri, which identifies the resource.
+     * @param string $modelIri    The Iri, which identifies the model
+     * @param array  $options     Array of different options:
+     *     Erfurt_Store::USE_AC = true|false - use access control
+     *     maxDepth = int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return PHP/RDF statements array of the resource
+     */
+    public function getResourceDescription(
+        $resourceIri, $modelIri, $options = array()
+    )
+    {
+        // merge given options into default options
+        $options = array_merge(
+            array(
+                Erfurt_Store::USE_AC => true,
+                'fetchInverse'       => false,
+                'maxDepth'           => 3
+            ), $options
+        );
+
+        // sort the keys in order to provide a better cacheId source
+        ksort($options);
+
+        // Here we start the object cache id
+        $identity   = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+        $cacheIdSrc = $resourceIri . $modelIri . $identity . serialize($options);
+        $cacheId    = 'ResourceDescription_' . md5($cacheIdSrc);
+
+        // try to load the cached value
+        $objectCache  = Erfurt_app::getInstance()->getCache();
+        $queryCache   = Erfurt_app::getInstance()->getQueryCache();
+        $cachedValue  = $objectCache->load($cacheId);
+
+        // bingo: cache hit, everything is fine
+        if ($cachedValue !== false) {
+            return $cachedValue;
+        }
+
+        // no cache hit, we need to query
+        $queryCache->startTransaction($cacheId);
+
+        // use backend specific method if exists
+        if (method_exists($this->_backendAdapter, 'getResourceDescription')) {
+            $fetchedDesc = $this->_backendAdapter->getResourceDescription(
+                $resourceIri, $modelIri, $options
+            );
+        } else {
+            // use generic method
+            $fetchedDesc = $this->_fetchResourceDescription(
+                $resourceIri, $modelIri, $options
+            );
+        }
+
+        // save the fetched array
+        $objectCache->save($fetchedDesc, $cacheId);
+        // close the object cache transaction
+        $queryCache->endTransaction($cacheId);
+
+        return $fetchedDesc;
+    }
+
+
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
+
+    /**
+     * fetches the PHP/RDF statments array description array
+     *
+     * @param string       $resourceIri The Iri, which identifies the resource.
+     * @param string|false $modelIri    The Iri, which identifies the model or 
+     *     false for store wide descriptions
+     * @param array        $options     Array of different options:
+     *     Erfurt_Store::USE_AC = true|false - use access control
+     *     maxDepth = int - how much blank node level
+     *     fetchInverse - also fetch incoming properties
+     *
+     * @return PHP/RDF statements array of the resource
+     */
+    private function _fetchResourceDescription(
+        $resourceIri, $modelIri, $options = array()
+    )
+    {
+        // overwrite result format
+        $options[Erfurt_Store::RESULTFORMAT] = Erfurt_Store::RESULTFORMAT_EXTENDED;
+
+        $memoryModel = new Erfurt_Rdf_MemoryModel();
+
+        $query = new Erfurt_Sparql_SimpleQuery();
+        $query->setProloguePart('SELECT ?p ?o')
+            ->setWherePart("{<$resourceIri> ?p ?o . }");
+
+        // prepare an additional query for inverse properties
+        if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
+            $inverseQuery = new Erfurt_Sparql_SimpleQuery();
+            $inverseQuery->setProloguePart('SELECT ?s ?p')
+                ->setWherePart("{?s ?p <$resourceIri> . }");
+        } else {
+            $inverseQuery = false;
+        }
+
+        if ($modelIri === false) {
+            // use complete store if modelIri not given
+            $result = $this->sparqlQuery($query, $options);
+            if ($inverseQuery) {
+                $inverseResult = $this->sparqlQuery($inverseQuery, $options);
+            }
+        } else {
+            // if model is given, try to get it
+            $ac = Erfurt_App::getInstance()->getAc();
+            if ($ac->isModelAllowed('view', $modelIri)) {
+                $model = $this->getModel($modelIri, $options[Erfurt_Store::USE_AC]);
+            } else {
+                $model = false;
+            }
+
+            if (!$model) {
+                // return an empty description if model not available or allowed
+                $result = false;
+            } else {
+                // use model query method if model valid and readable
+                $result = $model->sparqlQuery($query, $options);
+                if ($inverseQuery) {
+                    $inverseResult = $model->sparqlQuery($inverseQuery, $options);
+                }
+            }
+        }
+
+        if ($result) {
+            foreach ($result['results']['bindings'] as $row) {
+                // fake the subject array
+                $s = array (
+                    'type'  => 'uri',
+                    'value' => $resourceIri
+                );
+                $memoryModel->addStatementFromExtendedFormatArray(
+                    $s,
+                    $row['p'],
+                    $row['o']
+                );
+
+                // todo: implement blank node fetching here
+                //if ($row['o']['type'] === 'bnode') {
+                    //$nodeId  = $row['o']['value'];
+                    //$bNode   = self::initWithBlankNode($nodeId, $this->_model);
+                    //$nodeKey = sprintf('_:%s', $nodeId);
+
+                    //$description[$nodeKey] = $bNode->getDescription($maxDepth-1);
+                //}
+            }
+        }
+
+        if (isset($inverseResult) && $inverseResult !== false) {
+            foreach ($inverseResult['results']['bindings'] as $row) {
+                // fake the object array
+                $o = array (
+                    'type'  => 'uri',
+                    'value' => $resourceIri
+                );
+                $memoryModel->addStatementFromExtendedFormatArray(
+                    $row['s'],
+                    $row['p'],
+                    $o
+                );
+            }
+        }
+
+        return $memoryModel->getStatements();
+    }
 
     /**
      * Checks whether 'view' or 'edit' are allowed on a certain model. The additional $useAc param
@@ -1960,6 +2209,33 @@ EOF;
             }
 
             return $this->_ac->isModelAllowed($accessType, $modelIri);
+        }
+    }
+
+    /**
+     * Checks whether 'view' or 'edit' are allowed on a certain models array. The additional $useAc param
+     * makes it easy to disable access control for internal usage.
+     *
+     * @param array $modelIris The array of Iris, which identifies the models.
+     * @param string $accessType Supported access types are 'view' and 'edit'.
+     * @param boolean $useAc Whether to use access control or not.
+     *
+     * @return boolean Returns whether view as the case may be edit is allowed for the model or not.
+     */
+    private function _checkAcBatch($modelIris, $accessType = 'view', $useAc = true)
+    {
+        // check whether ac should be used (e.g. ac engine itself needs access to store without ac)
+        if ($useAc === false) {
+            $logger = $this->_getErfurtLogger();
+            $logger->debug("Store.php->_checkAc: Doing something without Access Controll!!!");
+            $logger->debug("Store.php->_checkAc: ModelIris: " . $modelIris . " accessType: " . $accessType);
+            return true;
+        } else {
+            if ($this->_ac === null) {
+                $this->_ac = Erfurt_App::getInstance()->getAc();
+            }
+
+            return $this->_ac->areModelsAllowed($accessType, $modelIris);
         }
     }
 
@@ -2065,7 +2341,7 @@ EOF;
                 WHERE {
                     ' . $where . ' OPTIONAL {?child <http://ns.ontowiki.net/SysOnt/order> ?order}
                     FILTER (
-                        sameTerm(?parent, <' . implode('>) || sameTerm(?parent, <', $classes) . '>)
+                        ?parent IN (<' . implode('>, <', $classes) . '>)
                     )
                 }
                 ORDER BY ASC(?order)';
@@ -2147,6 +2423,38 @@ EOF;
     protected function _getErfurtLogger()
     {
         return $this->_erfurtLogger =  Erfurt_App::getInstance()->getLog('erfurt');
+    }
+
+    /**
+     * This method compares a list of graphs to a resourceUri and orders the graphs according to
+     * their accordance of the namespace.
+     *
+     * @param array $graphs list of graph URIs
+     * @param string $resourceUri the URI of the resource
+     * @return array containing the ordered graph URIs
+     */
+    protected function _compareResourceUriToModelUri($graphs, $resourceUri)
+    {
+        $namespaceMatch = array();
+        $rest = array();
+        foreach ($graphs as $graphUri) {
+            if (strpos($resourceUri, $graphUri) === 0) {
+                $namespaceMatch[] = $graphUri;
+            } else {
+                $rest[] = $graphUri;
+            }
+        }
+
+        usort($namespaceMatch, function($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
+        return array_merge($namespaceMatch, $rest);
+    }
+
+    public function setAc($ac)
+    {
+        $this->_ac = $ac;
     }
 
     /**

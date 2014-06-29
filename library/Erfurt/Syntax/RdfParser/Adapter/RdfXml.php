@@ -202,7 +202,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         }
         
         $idx = xml_get_current_byte_index($parser) - $this->_offset*4096;
-        if (($idx >= 0) && ($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
+        if (($idx >= 0) && (strlen($this->_data) > ($idx+1)) && ($this->_data[$idx].$this->_data[$idx+1]) === '/>') {
             $this->_currentElementIsEmpty = true;
         } else {
             $this->_currentElementIsEmpty = false;

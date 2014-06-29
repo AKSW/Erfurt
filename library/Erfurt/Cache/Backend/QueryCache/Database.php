@@ -308,15 +308,23 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (sizeof($statements) == 0) {
             return false;
         }
+
         $qids = array();
         $clauses = array();
         foreach ($statements as $subject => $predicates) {
             foreach ($predicates as $predicate => $objects) {
+                if (empty($objects)) {
+                    $objects["dummy"] = "";
+                }
                 foreach ($objects as $object) {
-                    $objectValue = $object['value'] ;
-                    if ($object['type'] == 'literal') {
-                        $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
-                        $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
+                    $objectValue = null;
+                    $clause = null;
+                    if (isset($object['value'])) {
+                        $objectValue = $object['value'] ;
+                        if ($object['type'] == 'literal') {
+                            $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
+                            $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
+                        }
                     }
                     $clause = array();
                     if ($subject != '') {
@@ -333,6 +341,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
                 }
             }
+        }
+        if (empty($clauses)) {
+            return false;
         }
 
         if (count($clauses) > 20) {
@@ -357,6 +368,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             JOIN 
                 ef_cache_query_result result ON result.qid = qid2 
             WHERE result.result IS NOT NULL';
+
         $result = $this->_query($query);
         if (!$result) {
             return $qids;

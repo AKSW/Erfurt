@@ -425,8 +425,7 @@ class Erfurt_Rdf_Model
 
             $removed[$s['s']['value']][$s['p']['value']][] = $s['o'];
 
-            foreach ($vars as $var) {
-                $varName = $var->getName();
+            foreach (array('s', 'p', 'o') as $varName) {
                 if ( $s[$varName]['type'] === 'uri'
                     && $s[$varName]['value'] === $oldUri
                 ) {
@@ -508,8 +507,8 @@ class Erfurt_Rdf_Model
         if (defined('_EFDEBUG')) {
             $logger = Erfurt_App::getInstance()->getLog();
 
-            $logger->debug('added: ', count($addedStatements));
-            $logger->debug('removed: ', count($removedStatements));
+            $logger->debug('added: ' . count($addedStatements));
+            $logger->debug('removed: ' . count($removedStatements));
         }
 
         $this->deleteMultipleStatements($removedStatements, $useAc);
