@@ -2,7 +2,6 @@
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -96,12 +95,6 @@ class Erfurt_Store_Adapter_Oracle implements \Erfurt_Store_Adapter_FactoryInterf
      */
     protected static function createConnectionWithoutValidation(array $params)
     {
-        if (!Type::hasType(\Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE)) {
-            Type::addType(
-                \Erfurt_Store_Adapter_Oracle_Doctrine_TripleType::TRIPLE,
-                'Erfurt_Store_Adapter_Oracle_Doctrine_TripleType'
-            );
-        }
         $additionalParams = array('driverClass' => 'Erfurt_Store_Adapter_Oracle_Doctrine_Driver');
         $connectionParams = $params + $additionalParams;
 
