@@ -16,6 +16,10 @@ class Erfurt_Store_Adapter_Oracle_Doctrine_Driver extends OracleDriver
      */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
     {
+        if (isset($params['pool'])) {
+            // Set the name of the connection pool.
+            ini_set('oci8.connection_class', $params['pool']);
+        }
         return new Erfurt_Store_Adapter_Oracle_Doctrine_Connection(
             $username,
             $password,
