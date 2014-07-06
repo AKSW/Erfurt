@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\DBAL\Schema\Schema;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Helper class that is used to set up test environments that use an Oracle database.
@@ -34,6 +35,13 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
     protected $originalSchema = null;
 
     /**
+     * The service container or null if it was not initialized yet.
+     *
+     * @var ContainerInterface|null
+     */
+    protected $container = null;
+
+    /**
      * Setup instances that are used to install the triple store.
      *
      * @var \Erfurt_Store_Adapter_Container_SetupInterface[]
@@ -48,7 +56,7 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
     public function getConnection()
     {
         if ($this->connection === null) {
-            $this->connection = Erfurt_Store_Adapter_Oracle::createConnection($this->getConfig());
+            $this->connection = $this->getContainer()->get('doctrine.connection');
             $this->addCleanUpTask(array($this, 'closeConnection'));
             $this->backupSchema();
         }
@@ -64,7 +72,10 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
     {
         if ($this->sparqlConnector === null) {
             $this->installTripleStore();
-            $this->sparqlConnector = new Erfurt_Store_Adapter_Oracle_OracleSparqlConnector($this->getConnection());
+            $connector = $this->getContainer()->get('oracle.sparql_connector');
+            $expectedType = 'Erfurt_Store_Adapter_Sparql_SparqlConnectorInterface';
+            PHPUnit_Framework_Assert::assertInstanceOf($expectedType, $connector);
+            $this->sparqlConnector = $connector;
             $this->addCleanUpTask(array($this, 'unsetSparqlConnector'));
         }
         return $this->sparqlConnector;
@@ -113,6 +124,23 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
     }
 
     /**
+     * Returns the service container that wires the different
+     * components for the Oracle connector.
+     *
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        if ($this->container === null) {
+            $config = $this->getConfig();
+            $config['service'] = 'service_container';
+            $this->container = \Erfurt_Store_Adapter_Container::createFromOptions($config);
+            $this->addCleanUpTask(array($this, 'unsetContainer'));
+        }
+        return $this->container;
+    }
+
+    /**
      * Closes the connection that has been created.
      */
     protected function closeConnection()
@@ -153,6 +181,14 @@ class Erfurt_OracleTestHelper extends Erfurt_AbstractTestHelper
             /* @var $query string */
             $this->connection->exec($query);
         }
+    }
+
+    /**
+     * Destroys the created service container.
+     */
+    protected function unsetContainer()
+    {
+        $this->container = null;
     }
 
 }
