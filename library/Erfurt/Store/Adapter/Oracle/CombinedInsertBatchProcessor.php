@@ -19,15 +19,6 @@ class Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor implements Erfurt
     protected $connection = null;
 
     /**
-     * List of insert statements that have already been prepared.
-     *
-     * The key is the number of quads that the statement is meant for.
-     *
-     * @var (integer=>\Doctrine\DBAL\Driver\Statement)
-     */
-    protected $insertStatements = array();
-
-    /**
      * Creates a batch processor that uses the provided database connection.
      *
      * @param Connection $connection
@@ -95,26 +86,23 @@ class Erfurt_Store_Adapter_Oracle_CombinedInsertBatchProcessor implements Erfurt
      */
     protected function getInsertStatement($numberOfQuads)
     {
-        if (!isset($this->insertStatements[$numberOfQuads])) {
-            $insertParts = array();
-            for ($i = 0; $i < $numberOfQuads; $i++) {
-                $lines = array(
-                    "  SELECT ",
-                    "    SDO_RDF_TRIPLE_S(",
-                    "      :modelAndGraph_$i,",
-                    "      :subject_$i,",
-                    "      :predicate_$i,",
-                    "      :object_$i",
-                    "     )",
-                    "  FROM DUAL"
-                );
-                $insertParts[] = implode(PHP_EOL, $lines);
-            }
-            $query = 'INSERT INTO erfurt_semantic_data (triple) ' . PHP_EOL
-                   . implode(PHP_EOL . ' UNION ALL ', $insertParts);
-            $this->insertStatements[$numberOfQuads] = $this->connection->prepare($query);
+        $insertParts = array();
+        for ($i = 0; $i < $numberOfQuads; $i++) {
+            $lines = array(
+                "  SELECT ",
+                "    SDO_RDF_TRIPLE_S(",
+                "      :modelAndGraph_$i,",
+                "      :subject_$i,",
+                "      :predicate_$i,",
+                "      :object_$i",
+                "     )",
+                "  FROM DUAL"
+            );
+            $insertParts[] = implode(PHP_EOL, $lines);
         }
-        return $this->insertStatements[$numberOfQuads];
+        $query = 'INSERT INTO erfurt_semantic_data (triple) ' . PHP_EOL
+               . implode(PHP_EOL . ' UNION ALL ', $insertParts);
+        return $this->connection->prepare($query);
     }
 
     /**
