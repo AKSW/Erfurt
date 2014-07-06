@@ -6,7 +6,7 @@
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_TestCase
 {
     /**
-     * @var Erfurt_Syntax_RdfParser_Adapter_RdfXml
+     * @var Erfurt_Syntax_RdfSerializer_Adapter_RdfJson
      * @access protected
      */
     protected $_object;
