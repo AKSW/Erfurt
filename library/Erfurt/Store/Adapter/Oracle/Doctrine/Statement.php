@@ -49,4 +49,12 @@ class Erfurt_Store_Adapter_Oracle_Doctrine_Statement extends OCI8Statement
         return parent::bindParam($column, $variable, $type, $length);
     }
 
+    /**
+     * Clean up when the statement is not needed anymore.
+     */
+    public function __destruct()
+    {
+        $this->closeCursor();
+    }
+
 }
