@@ -807,7 +807,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $literal = Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
-        return $this->encodeNonAsciiCharacters($literal);
+        return Erfurt_Utils::encodeNonAsciiCharacters($literal);
     }
 
     /**
@@ -930,22 +930,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $message = sprintf('%s (%i)', odbc_errormsg($this->connection()), odbc_error($this->connection()));
             return $message;
         }
-    }
-
-    /**
-     * Encodes non-ASCII characters in a NQuad document that is UTF-8 encoded.
-     *
-     * @param string $data
-     * @return string
-     * @see http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings
-     */
-    protected function encodeNonAsciiCharacters($data)
-    {
-        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}\x{10000}-\x{10FFFF}]/u';
-        return preg_replace_callback ($pattern, function (array $matches) {
-            $character = $matches[0];
-            return trim(json_encode($character), '"');
-        }, $data);
     }
 
     // ------------------------------------------------------------------------

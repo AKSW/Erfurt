@@ -128,6 +128,24 @@ class Erfurt_Utils
     }
 
     /**
+     * Encodes non-ASCII characters as unicode sequences.
+     *
+     * For example useful if a N-Quad document without UTF-8 is needed.
+     *
+     * @param string $data
+     * @return string
+     * @see http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings
+     */
+    public static function encodeNonAsciiCharacters($data)
+    {
+        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}\x{10000}-\x{10FFFF}]/u';
+        return preg_replace_callback ($pattern, function (array $matches) {
+            $character = $matches[0];
+            return trim(json_encode($character), '"');
+        }, $data);
+    }
+
+    /**
      * Decodes a Turtle literal string containing Unicode code points as UTF-8.
      * @see {http://stackoverflow.com/questions/1805802/php-convert-unicode-codepoint-to-utf-8}
      *
