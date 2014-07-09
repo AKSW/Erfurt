@@ -71,6 +71,21 @@ class Erfurt_Rdf_Literal extends Erfurt_Rdf_Node {
         return $l;
     }
 
+    public static function initWithArray($array) {
+        if ($array['type'] != 'literal') {
+            throw new Erfurt_Exception('Array not a literal.');
+        }
+        $l = new Erfurt_Rdf_Literal($array['value']);
+        if (isset($array['lang'])) {
+            $l->setLanguage($array['lang']);
+        } else if (isset($array['xml:lang'])) {
+            $l->setLanguage($array['xml:lang']);
+        } else if (isset($array['datatype'])) {
+            $l->setDatatype($array['datatype']);
+        }
+        return $l;
+    }
+
     public function getLabel() {
         return $this->_label;
     }
