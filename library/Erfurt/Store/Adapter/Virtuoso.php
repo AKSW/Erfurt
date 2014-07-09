@@ -758,7 +758,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $this->connection(),
                 'db',
                 $this->_user,
-                (strlen($prefix) > 0) ? ($prefix . '%') : $prefix,
+                (strlen($prefix) > 0) ? ($prefix . '%') : '',
                 'TABLE, VIEW'
             ),
             true,
