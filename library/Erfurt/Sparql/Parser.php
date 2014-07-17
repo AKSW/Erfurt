@@ -256,6 +256,52 @@ class Erfurt_Sparql_Parser
         return preg_replace($regex, '\1', $queryString);
     }
 
+    /**
+     * Tokenizes a property path into $tokens.
+     * The query may not contain any comments.
+     *
+     * @param  string $ppstr  Propery path to split into tokens
+     * @return array Tokens
+     */
+    public static function tokenizePropertyPath($ppstr)
+    {
+        $len = strlen($ppstr);
+        $stack = '';
+        $uri_parse = false;
+        $tokens = [];
+        $special_chars = array('(', ')', '|', '/', '*', '+', '^', '?', '!');
+
+        for($i=0; $i<$len; ++$i) {
+            if ($ppstr[$i] === '<') {
+                $uri_parse = true;
+            }
+            else if ($ppstr[$i] === '>') {
+                $uri_parse = false;
+            }
+
+            if (in_array($ppstr[$i], $special_chars)) {
+                if ($uri_parse) {
+                    $stack .= $ppstr[$i];
+                }
+                else {
+                    if ($stack !== '') {
+                        array_push($tokens, $stack);
+                        $stack = '';
+                    }
+                    array_push($tokens, $ppstr[$i]);
+                }
+            }
+            else {
+                $stack .= $ppstr[$i];
+            }
+        }
+
+        if ($stack !== '') {
+            array_push($tokens, $stack);
+        }
+        return $tokens;
+    }
+
     // ------------------------------------------------------------------------
     // --- Protected static methods -------------------------------------------
     // ------------------------------------------------------------------------
@@ -491,8 +537,39 @@ class Erfurt_Sparql_Parser
         } else if (is_numeric($token)) {
             return true;
         }
-        
+
         return false;
+    }
+
+    /**
+     * Checks if a string $ppString is a property path.
+     * This is work in progress, right now there is only a very limited
+     * check.
+     *
+     * @param  string  $ppString The property path
+     * @return boolean true if the token is a propery path false if not
+     */
+    protected function _propertyPathCheck($ppString) {
+        $tokens = self::tokenizePropertyPath($ppString);
+        var_dump($tokens);
+        $valid = true;
+        $special_chars = array('(', ')', '|', '/', '*', '+', '^', '?', '!');
+
+        foreach($tokens as $tok) {
+            if (!in_array($tok, $special_chars)) {
+                echo "Token: $tok<br>";
+                if ($this->_iriCheck($tok)) {
+                    // TODO
+                }
+                else if ($this->_qnameCheck($tok)) {
+                    // TODO
+                }
+                else {
+                    $valid = false;
+                }
+            }
+        }
+        return $valid;
     }
 
     /**
@@ -501,9 +578,9 @@ class Erfurt_Sparql_Parser
      * @param string $form  if it's an ASK or COUNT query
      */
     protected function _parseAsk($form)
-    {    
-        $this->_query->setResultForm($form);       
-        
+    {
+        $this->_query->setResultForm($form);
+
         $this->_fastForward();
 
         if (current($this->_tokens) === '{' || strtolower(current($this->_tokens)) === 'from') {
@@ -1251,6 +1328,8 @@ class Erfurt_Sparql_Parser
                 throw new Erfurt_Sparql_ParserException('Unclosed IRI: ' . $node, -1, key($this->_tokens));
             }
             return $this->_parseNode($node);
+        } else if ($this->_propertyPathCheck($node)) {
+            // pass
         } else {
             require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException(
