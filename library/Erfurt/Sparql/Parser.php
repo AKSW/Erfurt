@@ -551,13 +551,11 @@ class Erfurt_Sparql_Parser
      */
     protected function _propertyPathCheck($ppString) {
         $tokens = self::tokenizePropertyPath($ppString);
-        var_dump($tokens);
         $valid = true;
         $special_chars = array('(', ')', '|', '/', '*', '+', '^', '?', '!');
 
         foreach($tokens as $tok) {
             if (!in_array($tok, $special_chars)) {
-                echo "Token: $tok<br>";
                 if ($this->_iriCheck($tok)) {
                     // TODO
                 }
