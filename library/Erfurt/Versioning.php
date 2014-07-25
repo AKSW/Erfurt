@@ -497,11 +497,10 @@ class Erfurt_Versioning
             $actionType = $actionSpec['type'];
             $graphUri = $actionSpec['modeluri'];
             $resource = $actionSpec['resourceuri'];
+            $changeReason = '';
             if (isset($actionSpec['changeReason'])) {
                 $changeReason = $actionSpec['changeReason'];
-            } else {
-                $changeReason = '';
-            }
+            } 
             $this->_currentAction = $actionSpec;
             $this->_currentActionParent = $this->_execAddAction($graphUri, $resource, $actionType, $changeReason);
 
@@ -685,7 +684,7 @@ class Erfurt_Versioning
         }
         $actionsSql .= ')';
 
-        $result = $this->_sqlQuery($actionsSql);
+        $this->_sqlQuery($actionsSql);
 
         if (null !== $this->_currentAction) {
             $parentActionId = $this->_getStore()->lastInsertId();
@@ -711,7 +710,7 @@ class Erfurt_Versioning
                 foreach ($oArray as $i => $oSpec) {
                     $statement = array($s => array($p => array($oSpec)));
                     $payloadId = $this->_execAddPayload($statement);
-                    $this->_execAddAction($graphUri, $s, $actionType, null, $payloadId);
+                     $this->_execAddAction($graphUri, $s, $actionType, null, $payloadId);
                 }
             }
         }

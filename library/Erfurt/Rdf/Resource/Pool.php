@@ -81,6 +81,8 @@ class Erfurt_Rdf_Resource_Pool
                 $resource = $this->_createResource($resourceIri, $graphIri);
                 $this->addResource($resource, $graphIri);
             }
+        } else {
+            throw new Erfurt_Exception('The given string is not a URI "' . $resourceIri . '"');
         }
         return $resource;
     }
