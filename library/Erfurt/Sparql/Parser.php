@@ -268,7 +268,7 @@ class Erfurt_Sparql_Parser
         $len = strlen($ppstr);
         $stack = '';
         $uri_parse = false;
-        $tokens = [];
+        $tokens = array();
         $special_chars = array('(', ')', '|', '/', '*', '+', '^', '?', '!');
 
         for($i=0; $i<$len; ++$i) {
