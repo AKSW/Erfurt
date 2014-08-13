@@ -69,7 +69,6 @@ class Erfurt_Syntax_RdfSerializer
             'nt' => 'turtle',
             'ntriple' => 'ntriples',
             'ntriples' => 'ntriples',
-            'rdfnt' => 'ntriples',
             'rdf/n3' => 'rdfn3',
             'rdfn3' => 'rdfn3',
             'n3' => 'rdfn3',
