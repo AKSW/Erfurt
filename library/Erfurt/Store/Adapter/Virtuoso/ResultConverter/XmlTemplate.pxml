@@ -1,9 +1,9 @@
-<?= '<?xml version="1.0"?>' . PHP_EOL ?>
+<?php echo '<?xml version="1.0"?>' . PHP_EOL ?>
 <sparql xmlns="http://www.w3.org/2005/sparql-results#">
 
 <head>
 <?php foreach ($this->head->vars as $var): ?>
-    <variable name="<?= $var ?>" />
+    <variable name="<?php echo $var ?>" />
 <?php endforeach; // $var ?>
 </head>
 
@@ -12,16 +12,16 @@
 <?php foreach ($bindings as $binding): ?>
     <result>
 <?php foreach ($binding as $key => $varSpec): ?>
-        <binding name="<?= $key ?>">
+        <binding name="<?php echo $key ?>">
 <?php if ($varSpec['type'] == 'uri'): ?>
-            <uri><?= htmlentities($varSpec['value']) ?></uri>
+            <uri><?php echo htmlentities($varSpec['value']) ?></uri>
 <?php elseif ($varSpec['type'] == 'literal' || $varSpec['type'] == 'typed-literal'): ?>
 <?php if (isset($varSpec['datatype'])): ?>
-            <literal datatype="<?= $varSpec['datatype'] ?>"><?= htmlentities($varSpec['value']) ?></literal>
+            <literal datatype="<?php echo $varSpec['datatype'] ?>"><?php echo htmlentities($varSpec['value']) ?></literal>
 <?php elseif (isset($varSpec['xml:lang'])): ?>
-            <literal xml:lang="<?= $varSpec['xml:lang'] ?>"><?= htmlentities($varSpec['value']) ?></literal>
+            <literal xml:lang="<?php echo $varSpec['xml:lang'] ?>"><?php echo htmlentities($varSpec['value']) ?></literal>
 <?php else: ?>
-            <literal><?= htmlentities($varSpec['value']) ?></literal>
+            <literal><?php echo htmlentities($varSpec['value']) ?></literal>
 <?php endif; ?>
 <?php endif; ?>
         </binding>
