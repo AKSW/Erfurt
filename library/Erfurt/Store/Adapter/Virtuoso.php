@@ -462,7 +462,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /**
      * @see Erfurt_Store
      */
-    public function getSearchPattern($stringSpec, $graphUris, $options)
+    public function getSearchPatternWithNode($stringSpec, $predicateVariable, $options)
     {
         if ($options['filter_properties']) {
             throw new Erfurt_Store_Adapter_Exception(
@@ -472,7 +472,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $searchPattern = array();
 
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
-        $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
         $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
 
         $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple(
