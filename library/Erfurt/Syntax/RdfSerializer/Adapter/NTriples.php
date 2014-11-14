@@ -153,15 +153,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_NTriples implements Erfurt_Syntax_RdfS
         } else if ($oType === 'bnode') {
             $this->_writeBNode($o);
         } else {
-            if (strpos($o, "\n") !== false || strpos($o, "\r") !== false || strpos($o, "\t") !== false) {
-                $this->_write('"""');
-                $this->_write(Erfurt_Syntax_Utils_Turtle::encodeLongString($o));
-                $this->_write('"""');
-            } else {
-                $this->_write('"');
-                $this->_write(Erfurt_Syntax_Utils_Turtle::encodeString($o));
-                $this->_write('"');
-            }
+            $this->_write('"');
+            $this->_write(Erfurt_Syntax_Utils_Turtle::encodeString($o));
+            $this->_write('"');
 
             if (null !== $lang) {
                 $this->_write('@'.$lang);
