@@ -32,9 +32,10 @@ class Erfurt_Wrapper_ManagerTest extends Erfurt_TestCase
         $registry = Erfurt_Wrapper_Registry::getInstance();
         $activeWrapper = $registry->listActiveWrapper();
         
-        $this->assertEquals(3, count($activeWrapper));
+        $this->assertEquals(4, count($activeWrapper));
         $this->assertTrue(in_array('linkeddata', $activeWrapper));
         $this->assertTrue(in_array('rdfa', $activeWrapper));
+        $this->assertTrue(in_array('sparql', $activeWrapper));
         $this->assertTrue(in_array('enabled', $activeWrapper));
     }
     

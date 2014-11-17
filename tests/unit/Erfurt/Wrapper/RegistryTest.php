@@ -52,9 +52,10 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
     {
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertEquals(2, count($result));
+        $this->assertEquals(3, count($result));
         $this->assertTrue(in_array('linkeddata', $result));
         $this->assertTrue(in_array('rdfa', $result));
+        $this->assertTrue(in_array('sparql', $result));
     }
     
     public function testListActiveWrapper()
@@ -64,9 +65,10 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
         
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(4, count($result));
         $this->assertTrue(in_array('linkeddata', $result));
         $this->assertTrue(in_array('rdfa', $result));
+        $this->assertTrue(in_array('sparql', $result));
         $this->assertTrue(in_array('enabled', $result));
     }
     
@@ -76,9 +78,10 @@ class Erfurt_Wrapper_RegistryTest extends Erfurt_TestCase
         
         $result = $this->_registry->listActiveWrapper();
         
-        $this->assertEquals(3, count($result));
+        $this->assertEquals(4, count($result));
         $this->assertTrue(in_array('linkeddata', $result));
         $this->assertTrue(in_array('rdfa', $result));
+        $this->assertTrue(in_array('sparql', $result));
         $this->assertTrue(in_array('dummy', $result));
     }
     
