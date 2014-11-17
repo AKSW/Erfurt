@@ -33,7 +33,7 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
 
         $adapter = new Erfurt_Store_Adapter_Sparql($options);
 
-        // TODO Use HTTP Client test adapter?
+        // Use HTTP Client test adapter
         $httpAdapter = new Erfurt_TestHelper_Http_ClientAdapter();
         $httpAdapter->setResponse(new Zend_Http_Response(
             200,
