@@ -179,7 +179,10 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
             $this->write('<!DOCTYPE ' . $this->getDoctype() . ' [' . PHP_EOL);
 
             foreach ($this->_entities as $name=>$value) {
-                $this->write($this->_indent.'<!ENTITY '.$name.' "'.$this->sanitize($value, true).'">'.PHP_EOL);
+                $value = $this->sanitize($value, true);
+                $value = str_replace('%', '&#37;', $value);
+
+                $this->write($this->_indent.'<!ENTITY '.$name.' "'.$value.'">'.PHP_EOL);
             }
 
             $this->write(']>' . PHP_EOL);
