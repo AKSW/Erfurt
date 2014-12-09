@@ -277,47 +277,8 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
-        $modelUri = (string) $modelUri;
-        
-        $this->_init();
-        
-        $user       = $this->_getUser();
-        $userRights = $this->_getUserModelRights($user->getUri());
-        $type       = strtolower($type);
-
-        // type = view; check whether allowed
-        if ($type === 'view') {
-            // explicit forbidden
-            if (in_array($modelUri, $userRights['denyModelView'])) {
-                return false;
-            } else if (in_array($modelUri, $userRights['grantModelView'])) {
-                // view explicit allowed and not denied
-                return true;
-            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
-                // view in edit allowed and not denied
-                return true;
-            } else if ($this->isAnyModelAllowed('view')) {
-                // any model
-                return true;
-            }
-        }
-                  
-        // type = edit; check whether allowed
-        if ($type === 'edit') {
-            // explicit forbidden
-            if (in_array($modelUri, $userRights['denyModelEdit'])) {
-                return false;
-            } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
-                // edit allowed and not denied
-                return true;
-            } else if ($this->isAnyModelAllowed('edit')) {
-                // any model
-                return true;
-            }
-        }
-        
-        // deny everything else => false
-        return false;
+        $result = $this->areModelsAllowed($type, array($modelUri));
+        return $result[(string)$modelUri];
     }
 
     /**
