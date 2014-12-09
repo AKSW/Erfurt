@@ -3,7 +3,7 @@
 <project name="Erfurt" default="build">
 
     <target name="build-unit" depends="prepare,lint,phpunit,phpdoc,phpcb" />
-    <target name="build-integration" depends="prepare,lint,phpunit-integration,phpdoc,phpcb" />
+    <target name="build-integration" depends="prepare,lint,phpunit-integration,phpdoc,phpcb,phpmd-ci,phpcpd" />
     <target name="build-full" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit-integration,phpcb" />
 
     <target name="build" depends="build-integration"/>
