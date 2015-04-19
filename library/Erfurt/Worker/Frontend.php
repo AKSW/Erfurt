@@ -104,11 +104,7 @@ class Erfurt_Worker_Frontend
         }
         $workload = $this->prepareWorkload($workload);
         $this->lastJobHandle = $this->client->$method($jobName, $workload);
-        if ($this->client->returnCode() !== GEARMAN_SUCCESS) {
-            throw new Erfurt_Worker_Exception(
-                "Asynchronous job call failed"
-            );
-        }
+        $this->testSuccessOfJobCall($this->client);
     }
 
     /**
@@ -130,6 +126,30 @@ class Erfurt_Worker_Frontend
         }
         $workload = $this->prepareWorkload($workload);
         $this->client->$method($jobName, $workload);
+        $this->testSuccessOfJobCall($this->client);
+    }
+    
+    /**
+     *  Test return code of Gearman Client after job call and trigger error it is not the success code.
+     *  @access public
+     *  @param  object  $client             Gearman Client    
+     *  @throws Erfurt_Worker_Exception     if return code is not GEARMAN_SUCCESS
+     *  @return void
+     */
+    public function testSuccessOfJobCall($client = null)
+    {
+        if (!$client) {
+            $client = $this->client;
+        }
+        
+        if ($client->returnCode() !== GEARMAN_SUCCESS) {
+            throw new Erfurt_Worker_Exception(
+                'Asynchronous job call failed. ' .
+                $client->error() .
+                ' [Code: ' . $client->returnCode() . ']'
+            );
+        }
+        
     }
 
     /**
