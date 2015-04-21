@@ -64,6 +64,27 @@ class Erfurt_Worker_Frontend
     protected function __clone()
     {
     }
+    
+    
+    /**
+     *  Calls synchronous execution of an registrered worker job and send workload "ping" to it.
+     *  Returns the answer of the worker job.
+     *  Implemented to have a way to test via client if the necessary job server is still running.
+     *  @access public
+     *  @param  string  $jobName
+     *  @param  integer $timeout time to wait for an answer (in micro seconds)
+     *  @return mixed   returned data from the worker job
+     */
+    public function ping($jobName, $timeout = 5000)
+    {
+        $currentTimeout = $this->client->timeout(); // save currently used timeout value
+        $this->client->setTimeout($timeout); // set new timeout
+        $pingreturn = $this->client->doHigh($jobName, '"ping"');
+        $this->client->setTimeout($currentTimeout); // set timeout back to old value
+        $this->testSuccessOfJobCall($this->client);
+        
+        return $pingreturn;
+    }
 
     /**
      *  Calls for asynchronous or synchronous execution of an registrered worker job.
@@ -142,11 +163,16 @@ class Erfurt_Worker_Frontend
             $client = $this->client;
         }
         
-        if ($client->returnCode() !== GEARMAN_SUCCESS) {
+        $allowedReturnCodes = array(
+            GEARMAN_SUCCESS
+        );
+        
+        if (!in_array($client->returnCode(), $allowedReturnCodes)) {
             throw new Erfurt_Worker_Exception(
-                'Asynchronous job call failed. ' .
+                'Job call failed. ' .
                 $client->error() .
-                ' [Code: ' . $client->returnCode() . ']'
+                ' [Code: ' . $client->returnCode() . ']',
+                $client->returnCode()
             );
         }
         
