@@ -64,6 +64,27 @@ class Erfurt_Worker_Frontend
     protected function __clone()
     {
     }
+    
+    
+    /**
+     *  Calls synchronous execution of an registrered worker job and send workload "ping" to it.
+     *  Returns the answer of the worker job.
+     *  Implemented to have a way to test via client if the necessary job server is still running.
+     *  @access public
+     *  @param  string  $jobName
+     *  @param  integer $timeout time to wait for an answer (in micro seconds)
+     *  @return mixed   returned data from the worker job
+     */
+    public function ping($jobName, $timeout = 5000)
+    {
+        $currentTimeout = $this->client->timeout(); // save currently used timeout value
+        $this->client->setTimeout($timeout); // set new timeout
+        $pingreturn = $this->client->doHigh($jobName, '"ping"');
+        $this->client->setTimeout($currentTimeout); // set timeout back to old value
+        $this->testSuccessOfJobCall($this->client);
+        
+        return $pingreturn;
+    }
 
     /**
      *  Calls for asynchronous or synchronous execution of an registrered worker job.
@@ -104,11 +125,7 @@ class Erfurt_Worker_Frontend
         }
         $workload = $this->prepareWorkload($workload);
         $this->lastJobHandle = $this->client->$method($jobName, $workload);
-        if ($this->client->returnCode() !== GEARMAN_SUCCESS) {
-            throw new Erfurt_Worker_Exception(
-                "Asynchronous job call failed"
-            );
-        }
+        $this->testSuccessOfJobCall($this->client);
     }
 
     /**
@@ -130,6 +147,35 @@ class Erfurt_Worker_Frontend
         }
         $workload = $this->prepareWorkload($workload);
         $this->client->$method($jobName, $workload);
+        $this->testSuccessOfJobCall($this->client);
+    }
+    
+    /**
+     *  Test return code of Gearman Client after job call and trigger error it is not the success code.
+     *  @access public
+     *  @param  object  $client             Gearman Client    
+     *  @throws Erfurt_Worker_Exception     if return code is not GEARMAN_SUCCESS
+     *  @return void
+     */
+    public function testSuccessOfJobCall($client = null)
+    {
+        if (!$client) {
+            $client = $this->client;
+        }
+        
+        $allowedReturnCodes = array(
+            GEARMAN_SUCCESS
+        );
+        
+        if (!in_array($client->returnCode(), $allowedReturnCodes)) {
+            throw new Erfurt_Worker_Exception(
+                'Job call failed. ' .
+                $client->error() .
+                ' [Code: ' . $client->returnCode() . ']',
+                $client->returnCode()
+            );
+        }
+        
     }
 
     /**
