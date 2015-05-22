@@ -916,6 +916,7 @@ EOF;
 
                 if (isset($graphConfig[$hiddenProperty])) {
                     $hidden = current($graphConfig[$hiddenProperty]);
+                    // TODO add sysont:hideModel from usergroup
                     if ((boolean)$hidden['value']) {
                         unset($models[$graphUri]);
                     }
