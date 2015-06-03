@@ -277,8 +277,12 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
+        $modelUri = (string)$modelUri;
         $result = $this->areModelsAllowed($type, array($modelUri));
-        return $result[(string)$modelUri];
+        if (isset($result[$modelUri])) {
+            return $result[$modelUri];
+        }
+        return false;
     }
 
     /**
