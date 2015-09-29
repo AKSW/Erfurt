@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store.php';
+
 
 /**
  * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
