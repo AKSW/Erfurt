@@ -40,5 +40,5 @@ wide `.git/config` file.
 ### Code Conventions
 
 Currently, this library is developed using [OntoWiki's coding
-standard](http://code.google.com/p/ontowiki/wiki/CodingStandard).
+standard](https://github.com/AKSW/OntoWiki/wiki/Coding-Standards).
 
