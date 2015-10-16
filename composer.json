@@ -20,7 +20,6 @@
     "autoload": {
         "classmap": [
             "library/antlr/",
-            "library/Erfurt/Sparql/Query2/TriplesNode.php",
             "library/Erfurt/",
             "tests/"
         ]

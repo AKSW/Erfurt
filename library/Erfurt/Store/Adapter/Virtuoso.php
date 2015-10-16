@@ -691,7 +691,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 foreach ((array) $converter as $currentConverter) {
                     $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;
 
-                    require_once str_replace('_', '/', $converterClass) . '.php';
                     $converter = new $converterClass();
                     $result = $converter->convert($result);
                 }
