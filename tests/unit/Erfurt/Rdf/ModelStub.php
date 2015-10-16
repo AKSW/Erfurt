@@ -42,7 +42,7 @@ class Erfurt_Rdf_ModelStub
     public function getStore()
     {
         if (null === $this->store) {
-            require_once 'Erfurt/StoreStub.php';
+            
             $this->store = new Erfurt_StoreStub();
         }
         
