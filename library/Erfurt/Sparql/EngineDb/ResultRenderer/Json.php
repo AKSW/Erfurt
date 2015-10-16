@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Extended.php';
+
 
 /**
  * Result renderer that creates a JSON object string containing the result of a SPARQL query as defined in

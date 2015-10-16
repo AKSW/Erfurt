@@ -6,9 +6,9 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store.php';
-require_once 'Erfurt/Store/Adapter/Interface.php';
-require_once 'Erfurt/Store/Sql/Interface.php';
+
+
+
 
 /**
  * This class acts as a meta-backend class, which can handle multiple 
@@ -42,15 +42,15 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         
         switch ($defaultBackend) {
             case 'zenddb':
-                require_once 'Erfurt/Store/Adapter/EfZendDb.php';
+                
                 $this->_backends[self::DEFAULT_BACKEND] = new Erfurt_Store_Adapter_EfZendDb($defaultAdapterOptions);
                 break;
             case 'virtuoso':
-                require_once 'Erfurt/Store/Adapter/Virtuoso.php';
+                
                 $this->_backends[self::DEFAULT_BACKEND] = new Erfurt_Store_Adapter_Virtuoso($defaultAdapterOptions);
                 break;
             default:
-                require_once 'Erfurt/Store/Adapter/Exception.php';
+                
                 throw new Erfurt_Store_Adapter_Exception('Wrong default backend type specified.');
         }
         
@@ -69,23 +69,23 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
 
                 switch ($backendName) {
                     case 'zenddb':
-                        require_once 'Erfurt/Store/Adapter/EfZendDb.php';
+                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_EfZendDb($backendOptions);
                         break;
                     case 'virtuoso':
-                        require_once 'Erfurt/Store/Adapter/Virtuoso.php';
+                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_Virtuoso($backendOptions);
                         break;
                     case 'sparql':
-                        require_once 'Erfurt/Store/Adapter/Sparql.php';
+                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_Sparql($backendOptions);
                         break;
                     case 'ontowiki':
-                        require_once 'Erfurt/Store/Adapter/OntoWiki.php';
+                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_OntoWiki($backendOptions);
                         break;
                     default:
-                        require_once 'Erfurt/Store/Adapter/Exception.php';
+                        
                         throw new Erfurt_Store_Adapter_Exception('Backend type currently not supported.');
                 }
 
@@ -478,7 +478,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
            return $this->_backends[$this->_configuredGraphs[$graphUri]];
         } else {
             var_dump($this->_configuredGraphs, $graphUri);exit;
-            require_once 'Erfurt/Store/Adapter/Exception.php';
+            
             throw new Erfurt_Store_Adapter_Exception('Graph with URI <' . $graphUri . '> is not configured.');
         }
     }
