@@ -1,5 +1,6 @@
 {
     "name": "aksw/erfurt",
+    "description": "PHP/Zend based Semantic Web API for Social Semantic Software",
     "type": "library",
     "keywords": ["Erfurt", "Linked Data", "Semantic Web", "RDF", "Triple Store", "Parser", "Serializer", "QueryCache"],
     "license": "GPL-2.0",
@@ -8,5 +9,21 @@
             "name": "AKSW",
             "homepage": "http://aksw.org"
         }
-    ]
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "semsol/arc2": "*",
+        "zendframework/zendframework1": "1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.5.*",
+        "squizlabs/php_codesniffer": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "library/antlr/",
+            "library/Erfurt/",
+            "tests/"
+        ]
+    }
 }

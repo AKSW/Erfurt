@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Mail.php';
+
 
 /**
  * Class to recover/reset lost user credentials like password, username
@@ -58,9 +58,9 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT *');
+        $query->setSelectClause('SELECT *');
         $query->setWherePart(
-            '{ ?user <' . $config->ac->user->name . '> "' . $identity . '" . 
+            '{ ?user <' . $config->ac->user->name . '> "' . $identity . '" .
              OPTIONAL { ?user <' . $config->ac->user->mail . '> ?mail . } }'
         );
 
@@ -68,7 +68,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT *');
+        $query->setSelectClause('SELECT *');
         $query->setWherePart(
             '{ ?user <' . $config->ac->user->mail . '> <mailto:' . $identity . '> .
              OPTIONAL { ?user <' . $config->ac->user->name . '> ?name . } }'
@@ -85,7 +85,7 @@ class Erfurt_Auth_Identity_Recovery
             $username = $resultMail[0]['name'];
             $mailAddr = $identity;
         } else {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
+            
             throw new Erfurt_Auth_Identity_Exception('Unknown user identifier.');
         }
 
@@ -176,7 +176,7 @@ class Erfurt_Auth_Identity_Recovery
             $config->ac->modelUri ,
             $userUri ,
             $config->ac->user->recoveryHash ,
-            array('value' => $hash, 'type' => 'literal') , 
+            array('value' => $hash, 'type' => 'literal') ,
             false
         );
         //var_dump($hash);
@@ -193,7 +193,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT ?user');
+        $query->setSelectClause('SELECT ?user');
         $query->setWherePart('{ ?user <' . $config->ac->user->recoveryHash . '> "' . $hash . '" . }');
 
         $resultUser  = $store->sparqlQuery($query, array('use_ac' => false));
@@ -201,7 +201,7 @@ class Erfurt_Auth_Identity_Recovery
         if ( !empty($resultUser) ) {
             return $resultUser[0]['user'];
         } else {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
+            
             throw new Erfurt_Auth_Identity_Exception('Invalid recovery session identifier.');
         }
 
@@ -222,33 +222,33 @@ class Erfurt_Auth_Identity_Recovery
         $ret = false;
 
         if ($password1 !== $password2) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
+            
             throw new Erfurt_Auth_Identity_Exception('Passwords do not match.');
         } else if (strlen($password1) < 5) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
+            
             throw new Erfurt_Auth_Identity_Exception('Password needs at least 5 characters.');
         } else if (
             isset($actionConfig['passregexp']) &&
             $actionConfig['passregexp'] != '' &&
             !@preg_match($actionConfig['passregexp'], $password1)
         ) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
+            
             throw new Erfurt_Auth_Identity_Exception('Password does not match regular expression set in system configuration');
         } else {
             // Set new password.
-            
+
             $store->deleteMatchingStatements(
-                $config->ac->modelUri, 
+                $config->ac->modelUri,
                 $userUri,
-                $config->ac->user->pass, 
-                null, 
+                $config->ac->user->pass,
+                null,
                 array('use_ac' => false)
             );
 
             $store->addStatement(
                 $config->ac->modelUri,
-                $userUri, 
-                $config->ac->user->pass, 
+                $userUri,
+                $config->ac->user->pass,
                 array(
                     'value' => sha1($password1),
                     'type'  => 'literal'
@@ -270,7 +270,7 @@ class Erfurt_Auth_Identity_Recovery
 
         return $ret;
     }
-    
+
     /**
      *
      */
@@ -279,4 +279,3 @@ class Erfurt_Auth_Identity_Recovery
         $this->template = $template;
     }
 }
-

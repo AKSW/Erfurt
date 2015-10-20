@@ -7,10 +7,10 @@
  */
 
 /** Erfurt_Store_Adapter_Interface */
-require_once 'Erfurt/Store/Adapter/Interface.php';
+
 
 /** Erfurt_Store_Sql_Interface */
-require_once 'Erfurt/Store/Sql/Interface.php';
+
 
 /**
  * @package Erfurt_Store_Adapter

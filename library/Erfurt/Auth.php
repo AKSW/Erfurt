@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Auth.php';
+
 
 /**
  * Extends the Zend_Auth class in order to provide some additional functionality.
@@ -27,35 +27,35 @@ class Erfurt_Auth extends Zend_Auth
 
         return self::$_instance;
     }
-    
+
     public function setIdentity(Zend_Auth_Result $authResult)
     {
         if ($authResult->isValid()) {
             $this->getStorage()->write($authResult->getIdentity());
         }
     }
-    
+
     public function setUsername($newUsername)
     {
         $storage = $this->getStorage();
-        
+
         if ($storage->isEmpty()) {
             return;
         }
-        
+
         $identity = $storage->read();
         $identity->setUsername($newUsername);
         $storage->write($identity);
     }
-    
+
     public function setEmail($newEmail)
     {
         $storage = $this->getStorage();
-        
+
         if ($storage->isEmpty()) {
             return;
         }
-        
+
         $identity = $storage->read();
         $identity->setEmail($newEmail);
         $storage->write($identity);
