@@ -1,0 +1,12 @@
+{
+    "name": "aksw/erfurt",
+    "type": "library",
+    "keywords": ["Erfurt", "Linked Data", "Semantic Web", "RDF", "Triple Store", "Parser", "Serializer", "QueryCache"],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "AKSW",
+            "homepage": "http://aksw.org"
+        }
+    ]
+}
