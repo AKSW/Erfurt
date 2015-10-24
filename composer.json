@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
+        "semsol/arc2": "*",
         "zendframework/zendframework1": "1.*"
     },
     "require-dev": {

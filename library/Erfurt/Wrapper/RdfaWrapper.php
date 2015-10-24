@@ -48,8 +48,6 @@ class Erfurt_Wrapper_RdfaWrapper extends Erfurt_Wrapper
     
     public function run($r, $graphUri)
     {
-        include_once('ARC2/ARC2.php');
-        
         $uri = $r->getUri();
         $url = $r->getLocator();
 
