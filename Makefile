@@ -1,4 +1,4 @@
-ZENDVERSION=1.11.5
+ZENDVERSION=1.12.9
 
 default:
 	@echo "please use:"
@@ -39,7 +39,9 @@ default:
 	@echo "   CHECKPATH=<path> (run code checking on specific relative path)"
 	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
 	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
-		
+
+install: directories zend
+
 clean:
 	rm -rf cache/* logs/*
 
@@ -48,7 +50,7 @@ directories: clean
 	chmod 777 logs cache
 
 zend:
-	rm -rf libraries/Zend
+	rm -rf library/Zend
 	curl -L -# -O https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
 	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
 	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
