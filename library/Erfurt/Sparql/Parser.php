@@ -224,8 +224,8 @@ class Erfurt_Sparql_Parser
                     $inUri = false;
                     continue;
                 } else if ($queryString[$i] === '<') {
-                    // this is a less operator, if we are in a filter clause
-                    if (!(isset($tokens[$n-3]) && $tokens[$n-3] === 'FILTER')) {
+                    // this is a less operator, if the next char is a space or =
+                    if (!(isset($queryString[$i+1]) && ($queryString[$i+1] === '=' || $queryString[$i+1] === ' '))) {
                         // this is an uri
                         $inUri = true;
 
