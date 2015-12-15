@@ -280,7 +280,7 @@ class Erfurt_Ac_Default
         $modelUri = (string)$modelUri;
         $result = $this->areModelsAllowed($type, array($modelUri));
         if (isset($result[$modelUri])) {
-            return $result[$modelUri];
+            return true;
         }
         return false;
     }
