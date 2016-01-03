@@ -21,6 +21,33 @@ class Erfurt_Syntax_RdfSerializer
      * @var Erfurt_Syntax_RdfSerializer_Adapter_Interface
      */
     protected $_serializerAdapter = null;
+    protected static $_formats = array(
+        'rdfxml'    => array(
+            'name' => 'RDF/XML',
+            'contentType' => 'application/rdf+xml',
+            'fileExtension' => '.rdf'
+        ),
+        'turtle'    => array(
+            'name' => 'Turtle',
+            'contentType' => 'text/turtle',
+            'fileExtension' => '.ttl'
+        ),
+        'rdfjson'   => array(
+            'name' => 'RDF/JSON (Talis)',
+            'contentType' => 'application/rdf+json',
+            'fileExtension' => '.rj'
+        ),
+        'rdfn3'     => array(
+            'name' => 'Notation 3',
+            'contentType' => 'text/n3',
+            'fileExtension' => '.n3'
+        ),
+        'ntriples'  => array(
+            'name' => 'N-Triples',
+            'contentType' => 'text/plain',
+            'fileExtension' => '.nt'
+        ),
+    );
     
     public static function rdfSerializerWithFormat($format)
     {
@@ -46,7 +73,8 @@ class Erfurt_Syntax_RdfSerializer
             'turtle' => 'turtle',
             'ttl' => 'turtle',
             'nt' => 'turtle',
-            'ntriple' => 'turtle',
+            'ntriple' => 'ntriples',
+            'ntriples' => 'ntriples',
             'rdf/n3' => 'rdfn3',
             'rdfn3' => 'rdfn3',
             'n3' => 'rdfn3',
@@ -66,11 +94,18 @@ class Erfurt_Syntax_RdfSerializer
     public static function getSupportedFormats()
     {
         return array(
-            'rdfxml'  => 'RDF/XML',
-            'turtle'  => 'Turtle',
-            'rdfjson' => 'RDF/JSON (Talis)',
-            'rdfn3'   => 'Notation 3'
+            'rdfxml'    => 'RDF/XML',
+            'turtle'    => 'Turtle',
+            'rdfjson'   => 'RDF/JSON (Talis)',
+            'rdfn3'     => 'Notation 3',
+            'ntriples'  => 'N-Triples'
         );
+    }
+
+    public static function getFormatDescription($format)
+    {
+        $format = self::normalizeFormat($format);
+        return self::$_formats[$format];
     }
     
     public function initializeWithFormat($format)
@@ -85,6 +120,10 @@ class Erfurt_Syntax_RdfSerializer
             case 'rdfn3':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
+                break;
+            case 'ntriples':
+                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/NTriples.php';
+                $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_NTriples();
                 break;
             case 'rdfjson':
                 require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';

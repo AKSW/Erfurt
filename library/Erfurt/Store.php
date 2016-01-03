@@ -450,25 +450,25 @@ class Erfurt_Store
             try {
                 $filter = '';
                 if (null !== $subject) {
-                    $filter = "FILTER (?s = <$subject>) .\n";
+                    $filter .= "FILTER (?s = <$subject>) .\n";
                 }
                 if (null !== $predicate) {
-                    $filter = "FILTER (?p = <$predicate>) .\n";
+                    $filter .= "FILTER (?p = <$predicate>) .\n";
                 }
                 if (null !== $object) {
                     if ($object['type'] == 'uri') {
                         $o = $object['value'];
-                        $filter = "FILTER (?o = <$o>) .\n";
+                        $filter .= "FILTER (?o = <$o>) .\n";
                     } else {
                         $o = $object['value'];
                         if (isset($object['datatype'])) {
                             $dt = $object['datatype'];
-                            $filter = "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
                         } else if (isset($object['lang'])) {
                             $lang = $object['lang'];
-                            $filter = "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
                         } else {
-                            $filter = "FILTER (?o = \"$o\") .\n";
+                            $filter .= "FILTER (?o = \"$o\") .\n";
                         }
                     }
                 }
@@ -485,7 +485,7 @@ EOF;
                     $sparql,
                     array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
                 );
-                $ret = count($result);
+                $ret = count($result['results']['bindings']);
                 $stmts = array();
                 foreach ($result['results']['bindings'] as $row) {
                     $s = $row['s']['value'];
@@ -680,15 +680,38 @@ EOF;
      */
     public function getSearchPattern($stringSpec, $graphUris, $options = array())
     {
-
         // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
         $stringSpec = (string) $stringSpec;
-        if ((strpbrk($stringSpec, 'AND') === false) &&
-            (strpbrk($stringSpec, 'OR') === false) &&
-            (strpbrk($stringSpec, 'NEAR') === false)) {
+        if ((strpos($stringSpec, 'AND') === false) &&
+            (strpos($stringSpec, 'OR') === false) &&
+            (strpos($stringSpec, 'NEAR') === false)) {
             preg_match_all("/(?:[^\s']+|'[^']*')+/", $stringSpec, $matches);
             $parts = array_map(function($match) { return trim($match, "'"); }, $matches[0]);
-            $stringSpec = '';
+            $stringSpec = '\'' . implode($parts, '\' AND \'') . '\'';
+        }
+
+        $options = array_merge(
+            array(
+                'case_sensitive'    => false,
+                'filter_classes'    => false,
+                'filter_properties' => false,
+                'with_imports'      => true
+            ), $options
+        );
+
+        $pVar  = new Erfurt_Sparql_Query2_Var('p');
+        return $this->getSearchPatternWithNode($stringSpec, $pVar, $options);
+    }
+
+    public function getSearchPatternWithNode ($stringSpec, $predicateVariable, $options = array())
+    {
+        // TODO stringSpec should be more than simple string (parse for and/or/xor etc...)
+        $stringSpec = (string) $stringSpec;
+        if ((strpos($stringSpec, 'AND') === false) &&
+            (strpos($stringSpec, 'OR') === false) &&
+            (strpos($stringSpec, 'NEAR') === false)) {
+            preg_match_all("/(?:[^\s']+|'[^']*')+/", $stringSpec, $matches);
+            $parts = array_map(function($match) { return trim($match, "'"); }, $matches[0]);
             $stringSpec = '\'' . implode($parts, '\' AND \'') . '\'';
         }
 
@@ -702,14 +725,14 @@ EOF;
         );
 
         // execute backend-specific search if available
-        if (method_exists($this->_backendAdapter, 'getSearchPattern')) {
-            return $this->_backendAdapter->getSearchPattern($stringSpec, $graphUris, $options);
+        if (method_exists($this->_backendAdapter, 'getSearchPatternWithNode')) {
+            return $this->_backendAdapter->getSearchPatternWithNode($stringSpec, $predicateVariable, $options);
         } else {
             // else execute Sparql Regex Fallback
             $ret = array();
 
             $sVar  = new Erfurt_Sparql_Query2_Var('resourceUri');
-            $pVar  = new Erfurt_Sparql_Query2_Var('p');
+            $pVar  = $predicateVariable;
             $oVar  = new Erfurt_Sparql_Query2_Var('o');
             $ret[] = new Erfurt_Sparql_Query2_Triple($sVar, $pVar, $oVar);
 
@@ -772,6 +795,7 @@ EOF;
 
                 if (isset($graphConfig[$hiddenProperty])) {
                     $hidden = current($graphConfig[$hiddenProperty]);
+                    // TODO add sysont:hideModel from usergroup
                     if ((boolean)$hidden['value']) {
                         unset($models[$graphUri]);
                     }

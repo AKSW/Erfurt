@@ -112,7 +112,7 @@ class Erfurt_Sparql_Parser
         
         $inLiteral   = false;
         $longLiteral = false;
-        
+
         for ($i=0; $i<$len; ++$i) {
             if (in_array($queryString[$i], $removeableSpecialChars) && !$inLiteral && !$inTelUri) {        
                 if (isset($tokens[$n]) && $tokens[$n] !== '') {
@@ -224,15 +224,19 @@ class Erfurt_Sparql_Parser
                     $inUri = false;
                     continue;
                 } else if ($queryString[$i] === '<') {
-                    $inUri = true;
-                    if ($tokens[$n] === '') {
-                        $tokens[$n] = '<';
-                        continue;
-                    } else {
-                        $tokens[++$n] = '<';
-                        continue;
-                    }
+                    // this is a less operator, if the next char is a space or =
+                    if (!(isset($queryString[$i+1]) && ($queryString[$i+1] === '=' || $queryString[$i+1] === ' '))) {
+                        // this is an uri
+                        $inUri = true;
 
+                        if ($tokens[$n] === '') {
+                            $tokens[$n] = '<';
+                            continue;
+                        } else {
+                            $tokens[++$n] = '<';
+                            continue;
+                        }
+                    }
                 }
                  
                 $tokens[$n] .= $queryString{$i};

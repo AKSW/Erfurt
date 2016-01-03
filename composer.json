@@ -1,8 +1,15 @@
 {
     "name": "aksw/erfurt",
-    "description": "PHP5 / Zend based Semantic Web API for Social Semantic Software",
-    "keywords": ["semantic", "sparql", "rdf"],
-    "homepage": "http://erfurt-framework.org/",
+    "description": "PHP/Zend based Semantic Web API for Social Semantic Software",
+    "type": "library",
+    "keywords": ["Erfurt", "Linked Data", "Semantic Web", "RDF", "Triple Store", "Parser", "Serializer", "Query Cache"],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "AKSW",
+            "homepage": "http://aksw.org"
+        }
+    ],
     "minimum-stability": "stable",
     "include-path": [
         "library"
@@ -29,11 +36,5 @@
     },
     "config": {
         "use-include-path": true
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Matthimatiker/athletic"
-        }
-    ]
+    }
 }

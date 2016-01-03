@@ -34,8 +34,6 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 
     public function testTokenizeFilter()
     {
-        $this->markTestIncomplete('Issue #35 not yet fixed https://github.com/AKSW/Erfurt/issues/35');
-
         $tokensA = array(
             'WHERE', '{', '?a', 'p1:p', '?b', ',', '?c', '.', 'FILTER', "(", "xsd:dateTime", '(',
             '?a', ')', '=', 'xsd:dateTime', '(', '"', '1978-01-08T00:00:00Z', '"', ')', ')', '.',

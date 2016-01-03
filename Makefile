@@ -1,3 +1,5 @@
+ZENDVERSION=1.12.9
+
 default:
 	@echo "please use:"
 	@echo ""
@@ -40,7 +42,9 @@ default:
 	@echo "   CHECKPATH=<path> (run code checking on specific relative path)"
 	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
 	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
-		
+
+install: directories zend
+
 clean:
 	rm -rf cache/* logs/*
 
@@ -58,7 +62,7 @@ install:
 	php composer.phar install --no-interaction
 
 zend: install
-	rm -rf libraries/Zend
+	rm -rf library/Zend
 
 # coding standard
 
