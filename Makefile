@@ -1,4 +1,4 @@
-ZENDVERSION=1.12.9
+ZENDVERSION=1.12.17
 
 default:
 	@echo "please use:"
