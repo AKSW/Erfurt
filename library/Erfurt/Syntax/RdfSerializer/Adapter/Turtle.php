@@ -59,7 +59,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $query->addProjectionVar($p);
             $query->addProjectionVar($o);
         } else if ($query instanceof Erfurt_Sparql_SimpleQuery) {
-            $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+            $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
