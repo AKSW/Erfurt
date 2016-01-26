@@ -99,17 +99,21 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                 OntoWiki::getInstance()->appendMessage( new OntoWiki_Message("cached"));
                 $this->_users[$this->_username] = $cachedVal;
             } else {
-                */$this->_users[$this->_username] = $this->_fetchDataForUser($this->_username);
+                */
+            $this->_users[$this->_username] = $this->_fetchDataForUser($this->_username);
                 /*$cache->save($this->_users[$this->_username], $id, array('_fetchDataForUser'));
                 OntoWiki::getInstance()->appendMessage( new OntoWiki_Message("uncached"));
             }*/
-            
             // if login is denied return failure auth result
             if ($this->_users[$this->_username]['denyLogin'] === true) {
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Login not allowed!'));
             } else if ($this->_users[$this->_username]['userUri'] === false) {
                 // does user not exist?
                 $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array('Unknown user identifier.'));
+            } else if ($this->_users[$this->_username]['authenticateViaLdap'] === true) {
+
+                //this user is added to the model via ldap export and has to verify via ldapconn
+                $authResult = $this->authenticateViaLdap($this->_users[$this->_username]['ldifdn'],$this->_password);
             } else {
                 // verify the password
                 if (!$this->_verifyPassword($this->_password, $this->_users[$this->_username]['userPassword'], 'sha1') 
@@ -127,7 +131,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                     
                     $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);
                 }
-            } 
+            }
         }
         
         //Erfurt_App::getInstance()->getAc()->init();
@@ -150,11 +154,13 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
             'userUri'       => false,
             'denyLogin'     => false,
             'userPassword'  => '',
-            'userEmail'     => ''
+            'userEmail'     => '',
+            'authenticateViaLdap' => false,
+            'ldifdn'        => ''
         );
         
         $uris = $this->_getUris();
-        
+
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
         $sparqlQuery->setProloguePart('SELECT ?subject ?predicate ?object');
@@ -165,7 +171,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
         $sparqlQuery->setWherePart($wherePart);
         
         if ($result = $this->_sparql($sparqlQuery)) {
-            
             foreach ($result as $userStatement) {
                 // set user URI
                 if (($returnVal['userUri']) === false) {
@@ -185,12 +190,22 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                     case $uris['user_mail']:
                         $returnVal['userEmail'] = $userStatement['object'];
                         break;
+                    case $uris['authenticateViaLdap']:
+                    //enable ldap authentication
+                    if($userStatement['object'] == "1" || $userStatement['object'] == "true"){
+                        $returnVal['authenticateViaLdap'] = true;
+                    }
+                    break;
+                    case $uris['ldifdn']:
+                    //save ldif dn
+                        $returnVal['ldifdn'] = $userStatement['object'];
+                        break;
                     default:
                         // ignore other statements
                 }
             }
         }
-        
+
         return $returnVal;
     }
     
@@ -204,7 +219,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
     public function fetchDataForAllUsers()
     {   
         $uris = $this->_getUris();
-         
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $userSparql = new Erfurt_Sparql_SimpleQuery();
         $userSparql->setProloguePart('SELECT ?subject ?predicate ?object');
@@ -232,6 +246,16 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                 case $uris['user_mail']:
                     // save e-mail
                     $this->_users[$statement['subject']]['userEmail'] = $statement['object'];
+                    break;
+                case $uris['authenticateViaLdap']:
+                    //enable ldap authentication
+                    if($statement['object'] == "1" || $statement['object'] == "true"){
+                        $this->_users[$statement['subject']]['authenticateViaLdap'] = true;
+                    }
+                    break;
+                case $uris['ldifdn']:
+                    //save ldif dn
+                    $this->_users[$statement['subject']]['ldifdn'] = $statement['object'];
                     break;
                 default:
                     // ignore other statements
@@ -292,7 +316,36 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
             }
         }
     }
-    
+    /**
+     * connect to ldap service to verify an ldap login
+     * @param string entered ldaprdn
+     * @param string entered password
+     */
+    private function authenticateViaLdap($ldifdn, $password)
+    {   
+        $config = $this->_getConfig();
+        $ldapServer = $config->ldap->host;
+        $protocolVersion = $config->ldap->protocolVersion;
+        $ldapconn = ldap_connect($ldapServer);
+        ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, $protocolVersion);
+        if ($ldapconn) {
+            // binding to ldap server
+            $ldapbind = ldap_bind($ldapconn, $ldifdn, $password);
+            // verify binding
+            if ($ldapbind) {
+                    $identity['uri'] = $this->_users[$this->_username]['userUri'];
+                    $identity['email'] = $this->_users[$this->_username]['userEmail'];
+                    
+                    require_once 'Erfurt/Auth/Identity.php';
+                    $identityObject = new Erfurt_Auth_Identity($identity);
+                    
+                    $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);
+            } else {
+                $authResult = new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array("Wrong LDAP password entered!"));
+            }
+        }
+        return $authResult;
+    }
     /**
      * Queries the ac model.
      *
@@ -415,7 +468,9 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                 'user_superadmin' => $config->ac->user->superAdmin, 
                 'user_anonymous'  => $config->ac->user->anonymousUser, 
                 'action_deny'     => $config->ac->action->deny, 
-                'action_login'    => $config->ac->action->login
+                'action_login'    => $config->ac->action->login,
+                'ldifdn'          => $config->ac->user->ldifdn,
+                'authenticateViaLdap' => $config->ac->user->authenticateViaLdap
             );
         }
         
