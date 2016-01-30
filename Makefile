@@ -61,7 +61,7 @@ install:
 # Install dependencies.
 	php composer.phar install --no-interaction
 
-zend: install
+zend:
 	rm -rf library/Zend
 
 # coding standard
