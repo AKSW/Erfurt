@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "zendframework/zendframework1": ">=1.11.5",
+        "zendframework/zendframework1": "^1.12.9",
         "doctrine/dbal": "~2.4.1",
         "symfony/config": "~2.3.0",
         "symfony/dependency-injection": "~2.3.0",

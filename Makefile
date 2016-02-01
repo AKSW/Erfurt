@@ -1,5 +1,3 @@
-ZENDVERSION=1.12.9
-
 default:
 	@echo "please use:"
 	@echo ""
