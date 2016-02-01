@@ -18,7 +18,6 @@ tests/cache/*
 
 # Composer
 composer.phar
-composer.lock
 graph-composer.phar
 vendor/
 
