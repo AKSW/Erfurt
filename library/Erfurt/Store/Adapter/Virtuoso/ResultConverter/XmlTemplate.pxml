@@ -11,7 +11,8 @@ if (!function_exists('compat_htmlentities')) {
             }
         }
         if ($encoding === null) {
-            $encoding = ini_get("default_charset");
+            $defaultCharset = ini_get("default_charset");
+            $encoding = $defaultCharset ? $defaultCharset : 'UTF-8';
         }
         return htmlentities ($string, $flags, $encoding, $double_encode);
     }
