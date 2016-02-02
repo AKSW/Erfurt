@@ -1,0 +1,82 @@
+parameters:
+    oracle.batch_size:            100
+    oracle.connection.pooled:     true
+    oracle.connection.persistent: true
+    oracle.connection.pool:       "erfurt"
+    oracle.connection.charset:    "UTF8"
+    oracle.connection.session.optimizer_dynamic_sampling: 3
+    # Provide some MySQL defaults to ensure that the container can be compiled
+    # without these parameters. These is useful if the raw Oracle adapter
+    # (without MySQL cache/versioning) is used.
+    mysql.host:     "localhost"
+    mysql.username: "root"
+    mysql.password: ""
+    mysql.dbname:   "no_database_configured"
+
+services:
+    oracle_adapter:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@oracle.sparql_adapter", "@oracle.sql_adapter"]
+
+    oracle_adapter_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@oracle.sparql_adapter", "@mysql.sql_adapter"]
+
+    oracle.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@oracle.sparql_connector"]
+
+    oracle.sparql_connector:
+        class: Erfurt_Store_Adapter_Oracle_OracleSparqlConnector
+        arguments: ["@doctrine.connection", "%oracle.batch_size%"]
+
+    oracle.sql_adapter:
+        class: Erfurt_Store_Adapter_Oracle_OracleSqlAdapter
+        arguments: ["@doctrine.connection"]
+
+    oracle.setup.table:
+        class: Erfurt_Store_Adapter_Oracle_Setup_TableSetup
+        arguments: ["@doctrine.connection"]
+        tags:
+            -  { name: erfurt.container.setup }
+
+    oracle.setup.model:
+        class: Erfurt_Store_Adapter_Oracle_Setup_ModelSetup
+        arguments: ["@doctrine.connection"]
+        tags:
+            -  { name: erfurt.container.setup }
+
+    oracle.setup.package:
+        class: Erfurt_Store_Adapter_Oracle_Setup_PackageSetup
+        arguments: ["@doctrine.connection"]
+        tags:
+            -  { name: erfurt.container.setup }
+
+
+    doctrine.connection:
+        class: Doctrine\DBAL\Connection
+        factory_class: Erfurt_Store_Adapter_Oracle_Doctrine_ConnectionFactory
+        factory_method: createConnection
+        arguments:
+            -
+                dbname:     "%oracle.connection.dbname%"
+                user:       "%oracle.connection.user%"
+                password:   "%oracle.connection.password%"
+                host:       "%oracle.connection.host%"
+                port:       "%oracle.connection.port%"
+                charset:    "%oracle.connection.charset%"
+                persistent: "%oracle.connection.persistent%"
+                pooled:     "%oracle.connection.pooled%"
+                pool:       "%oracle.connection.pool%"
+                session:
+                    optimizer_dynamic_sampling: "%oracle.connection.session.optimizer_dynamic_sampling%"
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"

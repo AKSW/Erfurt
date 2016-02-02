@@ -38,7 +38,11 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         
         return $result;
     }
-    
+
+    /**
+     * @param Erfurt_Sparql_Query $query
+     * @return mixed
+     */
     protected function _optimizeDistinct($query)
     {
 // TODO Not supported yet.
@@ -55,6 +59,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $usedVars = array();
         $optionalOnlyVars = array();
         foreach ($query->getResultPart() as $graphPattern) {
+            /* @var $graphPattern Erfurt_Sparql_GraphPattern */
             if (null === $graphPattern->getOptional()) {
                 $tempPattern = clone $graphPattern;
                 $newConstraints = array();

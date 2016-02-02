@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Store_Adapter_EfZendDbIntegrationTest extends Erfurt_TestCase
 {
     public $fixture = null;

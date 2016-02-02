@@ -654,9 +654,12 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _checkSchemas($about)
     {
-        $config = Erfurt_App::getInstance()->getConfig();
+        try {
+            $config = Erfurt_App::getInstance()->getConfig();
+        } catch (Erfurt_Exception $e) {
+            return false;
+        }
         $schemataArray = $config->uri->schemata->toArray();
-
         $regExp = '/^(' . implode(':|', $schemataArray) . ').*$/';
         if (preg_match($regExp, $about)) {
             return true;

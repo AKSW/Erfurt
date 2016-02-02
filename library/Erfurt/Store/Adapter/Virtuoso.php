@@ -59,12 +59,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     protected $_graphs = null;
 
     /**
-     * Model imports cache.
-     * @var array
-     */
-    protected $_importedModels = array();
-
-    /**
      * Whether there are ongoing transactions.
      * @var boolean
      */
@@ -811,7 +805,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
         }
 
-        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
+        $literal = Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
+        return Erfurt_Utils::encodeNonAsciiCharacters($literal);
     }
 
     /**
@@ -924,60 +919,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     }
 
     /**
-     * Recursively gets owl:imported model IRIs starting with $modelUri as root.
-     *
-     * @param string $modelUri
-     */
-    public function getImportsClosure($modelUri)
-    {
-        $queryCache = Erfurt_App::getInstance()->getQueryCache();
-
-        if (!array_key_exists($modelUri, $this->_importedModels)) {
-            $models = array();
-            $result = array(
-                // mock first result
-                array('o' => $modelUri)
-            );
-
-            do {
-                $from    = '';
-                $filter   = array();
-                foreach ($result as $row) {
-                    $from    .= ' FROM <' . $row['o'] . '>' . "\n";
-                    $filter[] = 'sameTerm(?model, <' . $row['o'] . '>)';
-
-                    // ensure no model is added twice
-                    if (!array_key_exists($row['o'], $models)) {
-                        $models[$row['o']] = $row['o'];
-                    }
-                }
-                $query = '
-                    SELECT ?o' .
-                    $from . '
-                    WHERE {
-                        ?model <' . EF_OWL_NS . 'imports> ?o.
-                        FILTER (' . implode(' || ', $filter) . ')
-                    }';
-
-                $result = $queryCache->load($query, Erfurt_Store::RESULTFORMAT_PLAIN);
-                if ($result == Erfurt_Cache_Frontend_QueryCache::ERFURT_CACHE_NO_HIT) {
-                    $startTime = microtime(true);
-                    $result = $this->sparqlQuery($query);
-                    $duration = microtime(true) - $startTime;
-                    $queryCache->save($query, Erfurt_Store::RESULTFORMAT_PLAIN, $result, $duration);
-                }
-            } while ($result);
-
-            // unset root node
-            unset($models[$modelUri]);
-
-            // cache result
-            $this->_importedModels[$modelUri] = array_keys($models);
-        }
-        return $this->_importedModels[$modelUri];
-    }
-
-    /**
      * Returns the last ODBC error message and number.
      *
      * @return string
@@ -1063,28 +1004,14 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         return $resultId;
     }
 
-    private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
+    private function _execSparqlUpdate($sparqlQuery)
     {
-        $graphUri = (string)$graphUri;
-
-        if (!empty($graphUri)) {
-            // enquote
-            $graphUri = '\'' . $graphUri . '\'';
-            $graphSpec = 'define input:default-graph-uri <' . $graphUri . '> ';
-        } else {
-            // set Virtuoso NULL
-            $graphUri = 'NULL';
-            $graphSpec = '';
-        }
-
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-#        $resultId   = odbc_exec($resultId, $virtuosoPl);
-        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
+        $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
-            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
+            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), $sparqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 

@@ -4,8 +4,8 @@
  *
  * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @group Integration
  */
-
 class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
 {
     /** @var Erfurt_Store_Adapter_Virtuoso */

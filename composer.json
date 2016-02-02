@@ -9,5 +9,36 @@
             "name": "AKSW",
             "homepage": "http://aksw.org"
         }
-    ]
+    ],
+    "minimum-stability": "stable",
+    "include-path": [
+        "library"
+    ],
+    "autoload": {
+        "psr-0": {
+            "Erfurt_": "library"
+        }
+    },
+    "require": {
+        "zendframework/zendframework1": "^1.12.17",
+        "doctrine/dbal": "~2.4.1",
+        "symfony/config": "~2.3.0",
+        "symfony/dependency-injection": "~2.3.0",
+        "soundintheory/php-sql-parser": "~1.0.0",
+        "guzzle/guzzle": "~3.7.0"
+    },
+    "require-dev": {
+        "athletic/athletic": "dev-master",
+        "fzaninotto/faker": "~1.3.0",
+        "phpunit/phpunit": "^4.0.0"
+    },
+    "suggest": {
+        "ext-oci8": "To use the Oracle Triple Store."
+    },
+    "config": {
+        "platform": {
+            "php": "5.3.9"
+        },
+        "use-include-path": true
+    }
 }

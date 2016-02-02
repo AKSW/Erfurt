@@ -20,8 +20,8 @@ class Erfurt_Utils
     public static function isXmlPrefix ($string)
     {
         /*
-         * The folowing regularexpression would match all allowed prefixes,
-         * but couses trouble with PCRE.
+         * The following regular expression would match all allowed prefixes,
+         * but causes trouble with PCRE.
          * /[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF\x370-\x37D\x37F-\x1FFF
          * \x200C-\x200D\x2070-\x218F\x2C00-\x2FEF\x3001-\xD7FF\xF900-\xFDCF
          * \xFDF0-\xFFFD\x10000-\xEFFFF]{1}[-A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\x2FF
@@ -49,8 +49,8 @@ class Erfurt_Utils
      * This string is used as the canonical representation for object values in Erfurt.
      * @see {http://www.w3.org/TR/turtle/ RDF 1.1 Turtle}
      * @param mixed $value the literal values
-     * @param string|null $datatype optionally the datatype of the literal
-     * @param string|null $lang optionally the language tag of the literal
+     * @param string|null $datatype The datatype, for example "http://www.w3.org/2001/XMLSchema#boolean".
+     * @param string|null $lang A language code like "en" or "de".
      * @param boolean $longStringEnabled decides if the output can be a long string (""" """) or not
      * @return string the turtle literal representation
      */
@@ -125,6 +125,24 @@ class Erfurt_Utils
         }
 
         return $value;
+    }
+
+    /**
+     * Encodes non-ASCII characters as unicode sequences.
+     *
+     * For example useful if a N-Quad document without UTF-8 is needed.
+     *
+     * @param string $data
+     * @return string
+     * @see http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings
+     */
+    public static function encodeNonAsciiCharacters($data)
+    {
+        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}\x{10000}-\x{10FFFF}]/u';
+        return preg_replace_callback ($pattern, function (array $matches) {
+            $character = $matches[0];
+            return trim(json_encode($character), '"');
+        }, $data);
     }
 
     /**

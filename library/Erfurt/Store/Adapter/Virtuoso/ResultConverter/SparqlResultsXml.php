@@ -17,6 +17,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml
+    implements Erfurt_Store_Adapter_ResultConverter_ResultConverterInterface
 {
     /**
      * @var the xml render template
@@ -46,7 +47,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml
      * @param $extendedArray An array in Erfurt extended format.
      * @return string
      */
-    public function convert(Array $extendedArray)
+    public function convert($extendedArray)
     {
         if (!isset($extendedArray['head']) or !isset($extendedArray['results'])) {
             require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';

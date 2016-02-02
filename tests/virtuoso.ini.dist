@@ -1,0 +1,3 @@
+dsn      = Virtuoso_TEST ; needs to end with _TEST
+username = dba
+password = dba

@@ -67,7 +67,8 @@ class Erfurt_Rdf_Model
 
     /**
      * Erfurt Store Object
-     * @var Erfurt_Store
+     *
+     * @var Erfurt_Store|null
      */
     protected $_store = null;
 
@@ -379,7 +380,7 @@ class Erfurt_Rdf_Model
 
     /**
      * Moves resource to new URI
-     * renaming all occurences of the resource.
+     * renaming all occurrences of the resource.
      *
      * @param string $oldUri The URI that identifies the resource.
      * @param string $newUri The URI to move resource to.
@@ -388,6 +389,7 @@ class Erfurt_Rdf_Model
      */
     public function renameResource($oldUri, $newUri)
     {
+        // Select all triples that contain the $oldUri as subject, predicate or object.
         $query = new Erfurt_Sparql_Query2();
         $query->setDistinct(true);
 
@@ -409,9 +411,10 @@ class Erfurt_Rdf_Model
         $query->addElement($union);
         $result = $this->sparqlQuery($query, array('result_format' => 'extended'));
 
+        // Remove the matching triples and replace them by new ones that contain
+        // the new uri.
         $removed = array();
         $added   = array();
-
         foreach ($result['results']['bindings'] as $s) {
             // result format from sparqlQuery
             // isn't the same as format for delete/addMultipleStatements
@@ -800,6 +803,20 @@ class Erfurt_Rdf_Model
         return $this->_namespaces->hasNamespaceByPrefix(
             $this->getModelUri(), $prefix
         );
+    }
+
+    /**
+     * Hooks into the serialization process and avoids the serialization
+     * of the store object.
+     *
+     * @return array(string) Names of attributes that may be serialized.
+     */
+    public function __sleep()
+    {
+        $serializableAttributes = get_object_vars($this);
+        // Serialization of the store is not allowed.
+        unset($serializableAttributes['_store']);
+        return array_keys($serializableAttributes);
     }
 
 }

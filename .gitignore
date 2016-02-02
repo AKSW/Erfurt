@@ -12,6 +12,14 @@ Erfurt/libraries/Zend/
 cache.properties
 library/Zend
 cache.sqlite
+tests/*.ini
+tests/benchmark/Erfurt/Store/Adapter/Sparql/_files/DBpedia/data/benchmark_data.nt
+tests/cache/*
+
+# Composer
+composer.phar
+graph-composer.phar
+vendor/
 
 # build stuff
 build/

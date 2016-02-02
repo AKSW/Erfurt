@@ -1,0 +1,13 @@
+; Make sure to use a separate user for testing, as the
+; Triple Store is removed and re-installed during tests.
+configs[]    = "%erfurt.root%/container-configs/Oracle.yml"
+service      = "oracle_adapter"
+parameters.oracle.connection.dbname     = "SID"
+parameters.oracle.connection.user       = "USERNAME"
+parameters.oracle.connection.password   = "PASSWORD"
+parameters.oracle.connection.host       = "IP_OR_HOSTNAME"
+parameters.oracle.connection.port       = 1521
+parameters.oracle.connection.charset    = "UTF8"
+parameters.oracle.connection.persistent = 1
+parameters.oracle.connection.pooled     = 1
+parameters.oracle.session.optimizer_dynamic_sampling = 3

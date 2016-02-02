@@ -6,6 +6,7 @@ This version is not ready for use with composer, currently it is only the `featu
 Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
 
 [![Build Status](http://owdev.ontowiki.net/job/Erfurt/badge/icon)](http://owdev.ontowiki.net/job/Erfurt/)
+[![Build Status](https://travis-ci.org/AKSW/Erfurt.png?branch=develop)](https://travis-ci.org/AKSW/Erfurt)
 [API Documentation](http://api.ontowiki.net/)
 
 ## Features

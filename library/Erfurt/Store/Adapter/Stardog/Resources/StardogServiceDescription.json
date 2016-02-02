@@ -1,0 +1,188 @@
+{
+    "name": "Stardog",
+    "apiVersion": "3.0",
+    "description": "Stardog HTTP protocol client.",
+    "operations": {
+        "databaseOperation": {
+            "summary": "Abstract definition for operations against a database.",
+            "parameters": {
+                "database": {
+                    "description": "The short name of the database.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": true
+                }
+            }
+        },
+        "transactionalOperation": {
+            "extends": "databaseOperation",
+            "summary": "Abstract definition for operations that require a transaction.",
+            "parameters": {
+                "transaction-id": {
+                    "description": "The transaction ID.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": true
+                }
+            }
+        },
+        "mutativeOperation": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "summary": "Abstract definition for operations that use a set of triples to change database contents.",
+            "parameters": {
+                "graph-uri": {
+                    "description": "IRI of the affected graph.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": false
+                },
+                "inputFormat": {
+                    "description": "The input format of the triples.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/x-turtle",
+                    "sentAs": "Content-Type",
+                    "required": false
+                },
+                "triples": {
+                    "description": "The triples in the given format.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
+                }
+            }
+        },
+        "size": {
+            "extends": "databaseOperation",
+            "httpMethod": "GET",
+            "uri": "{database}/size",
+            "summary": "Returns the number of triples in the whole database."
+        },
+        "query": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "{database}{/transaction-id}/query",
+            "summary": "Runs a reading SPARQL query against the database.",
+            "parameters": {
+                "transaction-id": {
+                    "required": false
+                },
+                "query": {
+                    "description": "The SPARQL query.",
+                    "type": "string",
+                    "location": "postField",
+                    "required": true
+                },
+                "format": {
+                    "description": "The desired result format.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/sparql-results+json",
+                    "sentAs": "accept"
+                }
+            }
+        },
+        "explain": {
+            "extends": "databaseOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/explain",
+            "summary": "Explains the execution of the provided SPARQL query.",
+            "parameters": {
+                "query": {
+                    "description": "The SPARQL query.",
+                    "type": "string",
+                    "location": "postField",
+                    "required": true
+                }
+            }
+        },
+        "beginTransaction": {
+            "extends": "databaseOperation",
+            "httpMethod": "POST",
+            "uri": "/{database}/transaction/begin",
+            "summary": "Starts a transaction."
+        },
+        "commitTransaction": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "/{database}/transaction/commit/{transaction-id}",
+            "summary": "Commits the specified transaction."
+        },
+        "rollbackTransaction": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "/{database}/transaction/rollback/{transaction-id}",
+            "summary": "Reverts the changes performed by the specified transaction."
+        },
+        "clear": {
+            "extends": "transactionalOperation",
+            "httpMethod": "POST",
+            "uri": "{database}/{transaction-id}/clear{?graph-uri}",
+            "summary": "Clears the database or graph.",
+            "parameters": {
+                "graph-uri": {
+                    "description": "IRI of the graph that is cleared.",
+                    "type": "string",
+                    "location": "uri",
+                    "required": false
+                }
+            }
+        },
+        "add": {
+            "extends": "mutativeOperation",
+            "uri": "{database}/{transaction-id}/add{?graph-uri}",
+            "summary": "Adds triples to the provided graph."
+        },
+        "remove": {
+            "extends": "mutativeOperation",
+            "uri": "{database}/{transaction-id}/remove{?graph-uri}",
+            "summary": "Removes triples from the provided graph."
+        },
+        "listDatabases": {
+            "httpMethod": "GET",
+            "uri": "admin/databases",
+            "parameters": {
+                "accept": {
+                    "description": "Accepted return type.",
+                    "type": "string",
+                    "default": "application/json",
+                    "location": "header",
+                    "required": false
+                }
+            }
+        },
+        "createDatabase": {
+            "httpMethod": "POST",
+            "uri": "admin/databases",
+            "parameters": {
+                "body": {
+                    "description": "The request body. Multipart request that contains database definition in JSON and (optional) additional data files.",
+                    "type": "string",
+                    "location": "body",
+                    "required": true
+                },
+                "inputType": {
+                    "description": "The input format.",
+                    "type": "string",
+                    "location": "header",
+                    "sentAs": "Content-Type",
+                    "required": true
+                }
+            }
+        },
+        "dropDatabase": {
+            "extends": "databaseOperation",
+            "httpMethod": "DELETE",
+            "uri": "admin/databases/{database}",
+            "parameters": {
+                "accept": {
+                    "description": "The expected response format.",
+                    "type": "string",
+                    "location": "header",
+                    "default": "application/json"
+                }
+            }
+        }
+    }
+}

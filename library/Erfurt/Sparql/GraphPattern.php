@@ -107,7 +107,7 @@ class Erfurt_Sparql_GraphPattern
     /**
      * Returns a constraint if there is one false if not.
      *
-     * @return Erfurt_Sparql_Constraint
+     * @return array(Erfurt_Sparql_Constraint)
      */
     public function getConstraints() 
     {

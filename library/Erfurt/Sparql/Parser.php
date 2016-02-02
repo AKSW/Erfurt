@@ -614,7 +614,7 @@ class Erfurt_Sparql_Parser
     /**
      * Parses a value constraint.
      *
-     * @param GraphPattern $pattern
+     * @param Erfurt_Sparql_GraphPattern $pattern
      * @param boolean $outer If the constraint is an outer one.
      */
     protected function _parseConstraint(&$pattern, $outer)
@@ -665,7 +665,7 @@ class Erfurt_Sparql_Parser
         $strQuoted  = '';
         $parens     = false;
 
-        while ($tok = next($this->_tokens)) {
+        while (($tok = next($this->_tokens)) !== false) {
             if ($chQuotes !== null && $tok != $chQuotes) {
                 $strQuoted .= $tok;
                 continue;
@@ -1173,7 +1173,8 @@ class Erfurt_Sparql_Parser
         } else {
             $node = current($this->_tokens);
         }
- 
+
+        $node = trim($node);
         if ($node{strlen($node)-1} === '.') {
             $node = substr($node, 0, -1);
         }
@@ -1526,7 +1527,7 @@ class Erfurt_Sparql_Parser
     /**
      * Parses a triple pattern.
      *
-     * @param  Sparql_GraphPattern $pattern
+     * @param  Erfurt_Sparql_GraphPattern $pattern
      */
     protected function _parseTriplePattern(&$pattern)
     {
@@ -1543,7 +1544,8 @@ class Erfurt_Sparql_Parser
         $obj        = '';
         
         do {
-            switch (strtolower(current($this->_tokens))) {
+            $token = strtolower(trim(current($this->_tokens)));
+            switch ($token) {
                 case false:
                     $cont          = false;
                     $pattern->open = false;

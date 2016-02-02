@@ -45,11 +45,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
      */
     public function testParseFromFileName($fileName)
     {
-        // This test method requires rapper!
-        $rapperExistsResult = shell_exec('which rapper');
-        if (null === $rapperExistsResult) {
-            $this->markTestSkipped();
-        }
+        $this->markTestNeedsProgram('rapper');
 
         $fileHandle = fopen($fileName, 'r');
         $data = fread($fileHandle, filesize($fileName));
