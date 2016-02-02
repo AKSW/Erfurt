@@ -29,7 +29,8 @@
     },
     "require-dev": {
         "athletic/athletic": "dev-master",
-        "fzaninotto/faker": "~1.3.0"
+        "fzaninotto/faker": "~1.3.0",
+        "phpunit/phpunit": "^4.0.0"
     },
     "suggest": {
         "ext-oci8": "To use the Oracle Triple Store."
