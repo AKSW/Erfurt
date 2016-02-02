@@ -101,6 +101,8 @@ class Erfurt_Store_Adapter_Container_ContainerFactoryTest extends \PHPUnit_Frame
         $factory = $this->createFactory();
 
         $factory->create();
+        // Wait a second, otherwise the file change might not be recognized as the timestamp does not change.
+        sleep(1);
         $this->createTemporaryConfig('another_value');
 
         $container = $factory->create();
