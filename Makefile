@@ -1,3 +1,5 @@
+export PATH := $(CURDIR)/vendor/bin:$(PATH)
+
 default:
 	@echo "please use:"
 	@echo ""
