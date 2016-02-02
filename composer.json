@@ -36,6 +36,9 @@
         "ext-oci8": "To use the Oracle Triple Store."
     },
     "config": {
+        "platform": {
+            "php": "5.3.9"
+        },
         "use-include-path": true
     }
 }
