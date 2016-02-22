@@ -65,7 +65,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXmlTest extends
     <result>
       <binding name="1"><uri>http://example.com/1</uri></binding>
       <binding name="2"><literal>ttt</literal></binding>
-      <binding name="3"><literal xml:lang="de">&auml;&auml;&auml;</literal></binding>
+      <binding name="3"><literal xml:lang="de">äää</literal></binding>
     </result>
   </results>
 </sparql>
