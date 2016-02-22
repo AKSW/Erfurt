@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 {
     protected $_storeStub = null;
@@ -29,7 +33,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $modelUri = 'http://example.org/updateTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri);
-        
+
+        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
+        $result = $model->sparqlQuery($sparql);
+        $initialTriples = count($result);
+
+        // Turtle string with 11 statements:
         $turtle1 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -51,7 +60,8 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
                          foaf:icqChatID "123-456-789" ;
                          foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
                          foaf:surname "PanPühn" .';
-        
+
+        // Turtle string with 9 triples:
         $turtle2 = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -82,15 +92,15 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $turtleParser->reset();
         $statements2 = $turtleParser->parse($turtle2, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
 
-        $sparql = 'SELECT * FROM <http://example.org/updateTest/> WHERE {?s ?p ?o}';
+
         $result = $model->sparqlQuery($sparql);
 
-        $this->assertEquals(12, count($result));
+        $this->assertEquals($initialTriples + 11, count($result));
         
         $model->updateWithMutualDifference($statements1, $statements2);
         
         $result = $model->sparqlQuery($sparql);
-        $this->assertEquals(10, count($result));
+        $this->assertEquals($initialTriples + 9, count($result));
     }
     
     public function testAddAndGetAndDeleteNamespacePrefix()
@@ -154,13 +164,9 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $this->assertFalse($model->isEditable());
         
         $ac->setUserModelRight('http://example.org/', 'view', 'deny');
-        try {
-            $model = $store->getModel('http://example.org/');
-            
-            $this->fail('Model should not be readable here.');
-        } catch (Exception $e) {
-            
-        }
+
+        $this->setExpectedException('Exception');
+        $store->getModel('http://example.org/');
     }
 
     public function testRenameResource()
@@ -191,12 +197,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
                         array('value' => $modelUri.'old', 'type' => 'literal'),
                         array('value' => $modelUri.'o2', 'type' => 'uri'),
                     ),
-                    'lang' => array(
+                    'http://example.org/lang' => array(
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'en'),
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'de'),
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'mn'),
                     ),
-                    'type' => array(
+                    'http://example.org/type' => array(
                         array('value' => 'TYPE', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#string'),
                     ),
                 ),
@@ -241,4 +247,5 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
 
         $this->assertStatementsEqual($expected, $got, 'Graph after resource renaming');
     }
+
 }
