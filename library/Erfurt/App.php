@@ -147,8 +147,6 @@ class Erfurt_App
      */
     private $_wrapperManager = null;
 
-    private $_resourcePool = null;
-
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -255,18 +253,13 @@ class Erfurt_App
         }
 
         // Starting Versioning
-        try {
-            $versioning = $this->getVersioning();
-            if ($versioning instanceof Erfurt_Versioning) {
-                if ((bool)$config->versioning === true) {
-                    $versioning->enableVersioning(true);
-                } else {
-                    $versioning->enableVersioning(false);
-                }
+        $versioning = $this->getVersioning();
+        if ($versioning instanceof Erfurt_Versioning) {
+            if ((bool)$config->versioning === true) {
+                $versioning->enableVersioning(true);
+            } else {
+                $versioning->enableVersioning(false);
             }
-        } catch (Erfurt_Exception $e) {
-            require_once 'Erfurt/Exception.php';
-            throw new Erfurt_Exception($e->getMessage());
         }
 
         // Write time to the log, if enabled.
@@ -862,19 +855,6 @@ class Erfurt_App
     }
 
     /**
-     * Returns the ResourceList instance
-     *
-     * @return Erfurt_RDF_ResourceList
-     */
-    public function getResourcePool()
-    {
-        if ($this->_resourcePool === null) {
-            $this->_resourcePool = new Erfurt_Rdf_Resource_Pool($this);
-        }
-        return $this->_resourcePool;
-    }
-
-    /**
      * Returns a instance of the store.
      *
      * @return Erfurt_Store
@@ -1115,7 +1095,7 @@ class Erfurt_App
                 case 'memcached':
                     $options = $config->cache->backend->memcached->toArray();
                     $cache   = new Zend_Cache_Backend_Memcached($options);
-                    if (!$cache->save(time(), 'EF_lastConnect')) {
+                    if( !$cache->save(time(), 'EF_lastConnect')) {
                         throw new Erfurt_Exception(
                             'Memcache server is not available.'
                         );
@@ -1134,8 +1114,8 @@ class Erfurt_App
                     $cache   = new Zend_Cache_Backend_Sqlite($options);
                     break;
                 case 'file':
-                    $path = $config->cache->backend->file->cache_dir;
-                    if (!$path) {
+                    $path		= $config->cache->backend->file->cache_dir;
+                    if (!$path){
                         throw new Erfurt_App_Exception(
                             'No cache directory configured.'
                         );

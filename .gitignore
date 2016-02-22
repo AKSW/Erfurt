@@ -1,3 +1,4 @@
+/composer.lock
 *.log
 local.ini
 config.ini
@@ -12,8 +13,7 @@ Erfurt/libraries/Zend/
 cache.properties
 library/Zend
 cache.sqlite
-
-# build stuff
 build/
 !build/phpcs.xml
 !build/phpcmd.xml
+vendor
