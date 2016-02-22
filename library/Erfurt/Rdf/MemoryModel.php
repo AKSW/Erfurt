@@ -118,7 +118,7 @@ class Erfurt_Rdf_MemoryModel
      * @param string $p - the predicate IRI of searched statement
      * @param string $value - the value of the object of the the searched statement
      * @param string $matchType - strict for strict match, preg for preg_match
-     * 
+     *
      * @return boolean
      */
     public function hasSPvalue($s, $p, $value, $matchType = 'strict')
@@ -556,4 +556,21 @@ class Erfurt_Rdf_MemoryModel
         return false;
     }
 
+    /**
+     * returns all predicates used in the MemoryModel
+     *
+     * @return array
+     */
+    public function getPredicates()
+    {
+        $results = array();
+        foreach ($this->_statements as $subject => $predicates ) {
+            foreach ($predicates as $predicateUri => $predicate) {
+                if (!isset($results[$predicateUri])) {
+                    $results[$predicateUri] = $predicateUri;
+                }
+            }
+        }
+        return array_values($results);
+    }
 }

@@ -147,6 +147,8 @@ class Erfurt_App
      */
     private $_wrapperManager = null;
 
+    private $_resourcePool = null;
+
     // ------------------------------------------------------------------------
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1200,5 +1202,18 @@ class Erfurt_App
     {
 
         return Zend_Version::VERSION;
+    }
+
+    /**
+     * Returns the ResourceList instance
+     *
+     * @return Erfurt_RDF_ResourceList
+     */
+    public function getResourcePool()
+    {
+        if ($this->_resourcePool === null) {
+            $this->_resourcePool = new Erfurt_Rdf_Resource_Pool($this);
+        }
+        return $this->_resourcePool;
     }
 }

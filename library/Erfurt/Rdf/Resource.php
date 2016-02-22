@@ -211,7 +211,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
 
             return $qName;
         }
-        
+
         return null;
     }
 
@@ -232,7 +232,9 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
               ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
         $description = array();
 
-        if (($maxDepth > 0) && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
+        if ($maxDepth > 0
+            && null != $this->_model
+            && $result = $this->_model->sparqlQuery($query, array('result_format' => 'extended'))) {
             foreach ($result['results']['bindings'] as $row) {
                 $property = $row['p']['value'];
                 $this->_descriptionResource($property);

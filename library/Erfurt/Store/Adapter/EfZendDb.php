@@ -1110,7 +1110,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
                 // for db connection is already established (in constructor)... so let's check for tables
                 if (!$this->_isSetup()) {
                     $this->_createTables();
-
                     try {
                         Erfurt_App::getInstance()->getStore()->checkSetup();
                     } catch (Erfurt_Store_Exception $setupException) {
@@ -1124,23 +1123,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
                             );
                         }
                     }
-
-            if ( $result !== true ) {
-
-                throw new Erfurt_Store_Adapter_Exception(
-                    'SQL query failed: ' .
-                    $this->_dbConn->getConnection()->error
-                );
-            }
-        } else {
-            try {
-                $result = @$this->_dbConn->fetchAll($sqlQuery);
-            } catch (Zend_Db_Exception $e) { #return false;
-
-                throw new Erfurt_Store_Adapter_Exception(
-                    $e->getMessage()
-                );
-
                 } else {
                     require_once 'Erfurt/Store/Adapter/Exception.php';
                     throw new Erfurt_Store_Adapter_Exception(
@@ -1150,7 +1132,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
                 }
             }
         }
-
         return $this->_modelInfoCache;
     }
 
@@ -1331,35 +1312,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
                     }
                 }
             } while ($hasChanged === true);
-        }
-    }
-
-    /**
-     * Checks whether all needed database table for the adapter are present.
-     *
-     * Currently we need three tables: 'models', 'statements' and 'namespaces'
-     *
-     * @throws Erfurt_Exception
-     * @return boolean Returns true if all tables are present.
-     */
-    private function _isSetup()
-    {
-        $existingTables = $this->listTables();
-
-        if (is_array($existingTables)) {
-            if (!in_array('ef_info', $existingTables) ||
-                !in_array('ef_graph', $existingTables) ||
-                !in_array('ef_stmt', $existingTables) ||
-                !in_array('ef_uri', $existingTables) ||
-                !in_array('ef_lit', $existingTables)) {
-
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            require_once 'Erfurt/Store/Adapter/Exception.php';
-            throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
         }
     }
 
@@ -1689,54 +1641,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
         }
     }
 
-    protected function _getModelInfos()
-    {
-        if (null === $this->_modelInfoCache) {
-            try {
-                // try to fetch model and namespace infos... if all tables are present
-                // this should not lead to an error.
-                $this->_fetchModelInfos();
-            } catch (Erfurt_Exception $exception) {
-                // error while fetching model and namespace infos... should only be the
-                // case if the tables aren't present,
-                // for db connection is already established (in constructor)... so let's check for tables
-                if (!$this->_isSetup()) {
-                    $this->_createTables();
-
-                    try {
-                        Erfurt_App::getInstance()->getStore()->checkSetup();
-                    } catch (Erfurt_Store_Exception $setupException) {
-                        if ($setupException->getCode() == 20) {
-                            $this->_fetchModelInfos();
-                        } else {
-
-                            throw new Erfurt_Store_Adapter_Exception(
-                                'Store: Error while initializing the environment: ' . $setupException->getMessage(),
-                                -1
-                            );
-                        }
-                    }
-
-                } else {
-
-                    throw new Erfurt_Store_Adapter_Exception(
-                        'Store: Error while fetching model and namespace infos.',
-                        -1
-                    );
-                }
-            }
-        }
-
-        return $this->_modelInfoCache;
-    }
-
-    protected function _getSchemaRefThreshold()
-    {
-        // We use 160, for the max index length is 1000 byte and the unique_stmt index needs
-        // to fit in.
-        return 160;
-    }
-
     protected function _optimizeTables()
     {
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
@@ -1745,141 +1649,6 @@ class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb impl
             $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_lit');
         } else {
             // not supported yet.
-        }
-    }
-
-    protected function _insertValueInto($tableName, $graphId, $value, $valueHash)
-    {
-        $data = array(
-            'g'     => &$graphId,
-            'v'     => &$value,
-            'vh'    => &$valueHash
-        );
-
-        try {
-            $this->_dbConn->insert($tableName, $data);
-        } catch (Exception $e) {
-            if ($this->_getNormalizedErrorCode() !== 1000) {
-
-                throw new Erfurt_Store_Adapter_Exception(
-                    "Insertion of value into $tableName failed: " .
-                    $e->getMessage()
-                );
-            }
-        }
-
-        $sql = "SELECT id FROM $tableName WHERE vh = '$valueHash'";
-        $result = $this->_dbConn->fetchRow($sql);
-
-        if (!$result) {
-
-            throw new Erfurt_Store_Adapter_Exception(
-                'Fetching of uri id failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-        $id = $result['id'];
-
-        return $id;
-    }
-
-    /**
-     *
-     * @throws Erfurt_Exception
-     */
-    private function _fetchModelInfos()
-    {
-        //It is not possible to use a cache because SQL instead of SPARQL is used.
-        //Using a cache causing updating problems.
-        $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
-                    (SELECT count(*)
-                    FROM ef_stmt s2
-                    WHERE s2.g = g.id
-                    AND s2.s = g.uri
-                    AND s2.st = 0
-                    AND s2.p = \'' . EF_RDF_TYPE . '\'
-                    AND s2.o = \'' . EF_OWL_ONTOLOGY . '\'
-                    AND s2.ot = 0) as is_owl_ontology
-                FROM ef_graph g
-                LEFT JOIN ef_stmt s ON (g.id = s.g
-                    AND g.uri = s.s
-                    AND s.p = \'' . EF_OWL_IMPORTS. '\'
-                    AND s.ot = 0)
-                LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
-
-        try {
-            $result = $this->sqlQuery($sql);
-        } catch (Exception $e) {
-
-            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
-        }
-
-
-        if ($result === false) {
-
-            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
-        } else {
-            $this->_modelInfoCache = array();
-
-            #$rowSet = $result->fetchAll();
-            #var_dump($result);exit;
-            foreach ($result as $row) {
-                if (!isset($this->_modelInfoCache[$row['uri']])) {
-                    $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
-                    $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
-                    $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
-                    $this->_modelInfoCache[$row['uri']]['imports']      = array();
-
-                    // set the type of the model
-                    if ($row['is_owl_ontology'] > 0) {
-                        $this->_modelInfoCache[$row['uri']]['type'] = 'owl';
-                    } else {
-                        $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
-                    }
-
-                    if ($row['o'] !== null &&
-                     !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
-                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
-                    }
-                } else {
-                    if ($row['o'] !== null &&
-                            !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
-
-                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
-                    }
-                }
-            }
-
-            //var_dump($this->_modelInfoCache);exit;
-
-            // build the transitive closure for owl:imports
-            // check for recursive owl:imports; also check for cylces!
-            do {
-                // indicated whether anything was changed in the array or not and whether loop needs to run again
-                $hasChanged = false;
-
-                // test every model exists in the model table
-                foreach ($this->_modelInfoCache as $modelIri) {
-                    // only owl models can import other models
-                    if ($modelIri['type'] !== 'owl') {
-                        continue;
-                    }
-                    foreach ($modelIri['imports'] as $importsIri) {
-                        if (isset($this->_modelInfoCache[$importsIri])) {
-                            foreach ($this->_modelInfoCache[$importsIri]['imports'] as $importsImportIri) {
-                                if (!isset($modelIri['imports'][$importsImportIri]) &&
-                                        !($importsImportIri === $modelIri['modelIri'])) {
-
-                                    $this->_modelInfoCache[$modelIri['modelIri']]
-                                                ['imports'][$importsImportIri] = $importsImportIri;
-                                    $hasChanged = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            } while ($hasChanged === true);
         }
     }
 
