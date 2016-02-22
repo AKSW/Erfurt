@@ -2299,4 +2299,8 @@ EOF;
         return true;
     }
 
+    public function setAc($ac)
+    {
+        $this->_ac = $ac;
+    }
 }
