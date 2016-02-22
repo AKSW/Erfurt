@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -54,7 +54,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
 
         //because this method is reused internally we got to have this $isURL switch
-        if (!$isURL) {
+        if(!$isURL){
             $this->_setLocalFileBaseUri($filename);
         } else {
             $this->_setURLBaseUri($filename);
@@ -152,7 +152,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     /**
      * Call this method after parsing only. The function parseToStore will add namespaces automatically.
      * This method is just for situations, where the namespaces are needed to after a in-memory parsing.
-     * 
+     *
      * @return array
      */
     public function getNamespaces()
@@ -193,7 +193,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     protected function _parseNamespacesOnly($data)
     {
         $this->_data = $data;
-        $this->_dataLength = strlen($data);
         $this->_pos  = 0;
 
         $c = $this->_skipWS();
@@ -300,10 +299,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $c = $this->_read();
         }
 
-        #$c = $this->_skipWS();
-
         $uri = $this->_resolveUri($this->_decodeString($token, true));
-        
+
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
 
@@ -322,10 +319,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     protected function _verifyChar($char, $expected)
     {
         if ($char === -1 || strpos((string)$expected, $char) === false) {
-            $this->_throwException(
-                "'$expected' expected. '$char' found instead ("
-                . substr((string)$this->_data, $this->_pos-20, 40) . ")."
-            );
+            $this->_throwException("'$expected' expected. '$char' found instead (".substr((string)$this->_data, $this->_pos-20, 40).").");
         }
     }
 
@@ -353,14 +347,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $c = $this->_peek();
 
         switch ($c) {
-        case '(':
-            $this->_subject = $this->_parseCollection();
-            break;
-        case '[':
-            $this->_subject = $this->_parseImplicitBlank();
-            break;
-        default:
-            $this->_subject = $this->_parseValue();
+            case '(':
+                $this->_subject = $this->_parseCollection();
+                break;
+            case '[':
+                $this->_subject = $this->_parseImplicitBlank();
+                break;
+            default:
+                $this->_subject = $this->_parseValue();
         }
     }
 
@@ -449,8 +443,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
 
         $this->_unread();
-
-        
         return Erfurt_Rdf_Literal::initWithLabelAndDatatype($token, $datatype);
     }
 
@@ -467,9 +459,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $c = $this->_read();
 
             if (!$this->_isLanguageStartChar($c)) {
-                throw new Erfurt_Syntax_RdfParserException(
-                    'Character "' . $c . '" not allowed as starting char in language tags.'
-                );
+                throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed as starting char in language tags.');
             }
 
             $lang .= $c;
@@ -485,7 +475,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             }
 
             $this->_unread();
-            
+
             return Erfurt_Rdf_Literal::initWithLabelAndLanguage($label, $lang);
         } else if ($c === '^') {
             $this->_read();
@@ -494,14 +484,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
             $datatype = $this->_parseValue();
             if ($datatype instanceof Erfurt_Rdf_Resource) {
-                
+
                 return Erfurt_Rdf_Literal::initWithLabelAndDatatype($label, (string) $datatype);
             } else {
                 $this->_throwException('Illegal datatype value.');
                 return null;
             }
         } else {
-            
+
             return Erfurt_Rdf_Literal::initWithLabel($label);
         }
     }
@@ -658,7 +648,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
                 $value = $prefix;
 
                 if ($prefix === 'true' || $prefix === 'false') {
-                    
+
                     return Erfurt_Rdf_Literal::initWithLabelAndDatatype($value, EF_XSD_BOOLEAN);
                 }
             }
@@ -672,7 +662,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             }
         }
 
-        $localName = '';
+        $c = $this->_read();
+        $localName = $c;
 
         $c = $this->_read();
         while ($c !== -1 && !$this->_isWS($c) && $c !== ',' && $c !== ';' && $c !== ')') {
@@ -682,7 +673,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_unread();
 
-        
         return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
 
@@ -753,7 +743,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
 
         $this->_usedBnodeIds[$id] = true;
-        
+
         return Erfurt_Rdf_Resource::initWithBlankNode($id);
     }
 
@@ -970,7 +960,8 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     {
         $c = $this->_read();
 
-        while ($this->_isWS($c)) {
+        while ($this->_isWS($c))
+        {
             if ($c === '#') {
                 $this->_skipLine();
             }
@@ -1031,6 +1022,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             } else {
                 return $this->_data[$this->_pos++];
             }
+
         } else {
             return -1;
         }
@@ -1085,47 +1077,47 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             // get the character behind the backslash
             $c = $value[$backSlashIdx + 1];
             switch ($c) {
-            case 't':
-                $result .= "\t";
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case 'r':
-                $result .= "\r";
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case 'n':
-                $result .= "\n";
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case '"':
-                $result .= $isUrl ? urlencode('"') : '"';
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case '>':
-                $result .= $isUrl ? urlencode('>') : '>';
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case "\\":
-                $result .= $isUrl ? urlencode("\\") : "\\";
-                $startIdx = $backSlashIdx + 2;
-                break;
-            case 'u':
-                $xx = substr($value, $backSlashIdx + 2, 4);
-                $c = $this->_uchr(hexdec($xx));
-                $startIdx = $backSlashIdx + 6;
-                $result .= $isUrl ? urlencode($c) : $c;
-                break;
-            case 'U':
-                $xx = substr($value, $backSlashIdx + 2, 8);
-                $c = $this->_uchr(hexdec($xx));
-                $startIdx = $backSlashIdx + 10;
-                $result .= $isUrl ? urlencode($c) : $c;
-                break;
-            default:
-                throw new Erfurt_Syntax_RdfParserException(
-                    'An unrecognized escape sequence was found at position #' . $backSlashIdx .
-                    ' in string: "' . $value . '"'
-                );
+                case 't':
+                    $result .= "\t";
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case 'r':
+                    $result .= "\r";
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case 'n':
+                    $result .= "\n";
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case '"':
+                    $result .= $isUrl ? urlencode('"') : '"';
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case '>':
+                    $result .= $isUrl ? urlencode('>') : '>';
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case "\\":
+                    $result .= $isUrl ? urlencode("\\") : "\\";
+                    $startIdx = $backSlashIdx + 2;
+                    break;
+                case 'u':
+                    $xx = substr($value, $backSlashIdx + 2, 4);
+                    $c = $this->_uchr(hexdec($xx));
+                    $startIdx = $backSlashIdx + 6;
+                    $result .= $isUrl ? urlencode($c) : $c;
+                    break;
+                case 'U':
+                    $xx = substr($value, $backSlashIdx + 2, 8);
+                    $c = $this->_uchr(hexdec($xx));
+                    $startIdx = $backSlashIdx + 10;
+                    $result .= $isUrl ? urlencode($c) : $c;
+                    break;
+                default:
+                    throw new Erfurt_Syntax_RdfParserException(
+                        'An unrecognized escape sequence was found at position #' . $backSlashIdx .
+                        ' in string: "' . $value . '"'
+                    );
             }
 
             // check for further backslashes
@@ -1141,14 +1133,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     {
         if ($dec < 128) {
             $utf = chr($dec);
-        } else if ($dec < 2048) {
+          } else if ($dec < 2048) {
             $utf = chr(192 + (($dec - ($dec % 64)) / 64));
             $utf .= chr(128 + ($dec % 64));
-        } else {
+          } else {
             $utf = chr(224 + (($dec - ($dec % 4096)) / 4096));
             $utf .= chr(128 + ((($dec % 4096) - ($dec % 64)) / 64));
             $utf .= chr(128 + ($dec % 64));
-        }
-        return $utf;
+          }
+          return $utf;
     }
 }

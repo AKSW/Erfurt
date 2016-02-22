@@ -12,7 +12,7 @@
 class Erfurt_Cache_Frontend_ObjectCache extends Zend_Cache_Core
 {
     /**
-     * This method is the only addtition made to Zend_Cache_Core. It takes a class-instance, a function name,
+     * This method is the only addition made to Zend_Cache_Core. It takes a class-instance, a function name,
      * an optional arguments array and an optional prefix for the id and generated a unique id by concatenating
      * $addtionalIdPrefix + Classname of $object + $functionName + Serialization of $args and building the md5 hash.
      *

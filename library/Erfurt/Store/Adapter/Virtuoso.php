@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -109,7 +109,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (isset($adapterOptions['is_open_source_version'])) {
             $this->_isOpenSourceVersion = (bool)$adapterOptions['is_open_source_version'];
         }
-
+        
         // Access the connection in order to check whether it works.
         $this->connection();
     }
@@ -138,36 +138,48 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
-        $triples = $this->buildTripleArray($statementsArray);
-        $count = count($triples);
-
-        $chunk = '';
-        $newlines = 0;
-
-        $odbcRes = true;
-        for ($i = 0; $i < $count; $i++) {
-            $chunk .= $triples[$i];
-            $newlines += substr_count($triples[$i], "\n");
-
-            //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
-            if ($i+1 === $count or $newlines + substr_count($triples[$i+1], "\n") > 1000) {
-                $query = sprintf(
+        $numBlocks = 1;
+        $blockQueries = array();
+        while (true) {
+            $statementBlocks = $this->array_split($statementsArray, $numBlocks);
+            $blockQueries = array();
+            foreach ($statementBlocks as $statementBlock) {
+                $blockQuery = sprintf(
                     'INSERT INTO GRAPH <%s> {%s}',
                     $graphUri,
-                    $chunk
-                );;
+                    $this->buildTripleString($statementBlock)
+                );
 
-                if (defined('_EFDEBUG')) {
-                    $logger = Erfurt_App::getInstance()->getLog();
-                    $logger->debug('Add multiple statements query: ' . PHP_EOL . $query);
-                }
-
-                $odbcRes = $this->_execSparqlUpdate($query);
-
-                $chunk = '';
-                $newlines = 0;
+               //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
+               if (substr_count($blockQuery, "\n") > 1000) {
+                    $numBlocks *= 2;
+                    continue 2;
+               }
+               $blockQueries[] = $blockQuery;
             }
+            break;  //this only reached if the continue call is not reached
         }
+
+        $odbcRes = true;
+        foreach ($blockQueries as $query) {
+            if (defined('_EFDEBUG')) {
+                $logger = Erfurt_App::getInstance()->getLog();
+                $logger->debug('Add multiple statements query: ' . PHP_EOL . $query);
+            }
+
+            $odbcRes = $this->_execSparqlUpdate($query);
+        }
+    }
+
+    // split the given array into n number of pieces
+    private function array_split($array, $pieces=2)
+    {
+        if ($pieces < 2)
+            return array($array);
+        $newCount = ceil(count($array)/$pieces);
+        $a = array_slice($array, 0, $newCount);
+        $b = $this->array_split(array_slice($array, $newCount), $pieces-1);
+        return array_merge(array($a), $b);
     }
 
     /**
@@ -183,8 +195,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             $object = $this->buildLiteralString(
                 $value,
                 isset($datatype) ? $datatype : null,
-                isset($lang) ? $lang : null,
-                false
+                isset($lang) ? $lang : null
             );
         }
 
@@ -315,8 +326,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $objectSpec = $this->buildLiteralString(
                     $object['value'],
                     true == isset ($object['datatype']) ? $object['datatype'] : null,
-                    true == isset ($object['lang']) ? $object['lang'] : null,
-                    false
+                    true == isset ($object['lang']) ? $object['lang'] : null
                 );
             }
         } else {
@@ -368,36 +378,18 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
-        $triples = $this->buildTripleArray($statementsArray);
-        $count = count($triples);
+        $deleteSparql = sprintf(
+            'DELETE FROM GRAPH <%s> {%s}',
+            $graphUri,
+            $this->buildTripleString($statementsArray)
+        );
 
-        $chunk = '';
-        $newlines = 0;
-
-        $odbcRes = true;
-        for ($i = 0; $i < $count; $i++) {
-            $chunk .= $triples[$i];
-            $newlines += substr_count($triples[$i], "\n");
-
-            //split when too many linebreaks (virtuoso has a limit of 10'000 - but in sql...?!)
-            if ($i+1 === $count or $newlines + substr_count($triples[$i+1], "\n") > 1000) {
-                $query = sprintf(
-                    'DELETE FROM GRAPH <%s> {%s}',
-                    $graphUri,
-                    $chunk
-                );;
-
-                if (defined('_EFDEBUG')) {
-                    $logger = Erfurt_App::getInstance()->getLog();
-                    $logger->debug('Delete multiple statements query: ' . PHP_EOL . $query);
-                }
-
-                $odbcRes = $this->_execSparqlUpdate($query);
-
-                $chunk = '';
-                $newlines = 0;
-            }
+        if (defined('_EFDEBUG')) {
+            $logger = Erfurt_App::getInstance()->getLog();
+            $logger->debug('Delete multiple statements query:' . PHP_EOL . $deleteSparql);
         }
+
+        return $this->_execSparqlUpdate($deleteSparql);
     }
 
     /**
@@ -462,7 +454,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
     /**
      * @see Erfurt_Store
      */
-    public function getSearchPatternWithNode($stringSpec, $predicateVariable, $options)
+    public function getSearchPattern($stringSpec, $graphUris, $options)
     {
         if ($options['filter_properties']) {
             throw new Erfurt_Store_Adapter_Exception(
@@ -472,6 +464,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $searchPattern = array();
 
         $subjectVariable   = new Erfurt_Sparql_Query2_Var('resourceUri');
+        $predicateVariable = new Erfurt_Sparql_Query2_Var('p');
         $objectVariable    = new Erfurt_Sparql_Query2_Var('o');
 
         $defaultTriplePattern = new Erfurt_Sparql_Query2_Triple(
@@ -520,7 +513,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                      */
                         new Erfurt_Sparql_Query2_Function(
                             $bifContains,
-                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec))
+                            array($objectVariable, new Erfurt_Sparql_Query2_RDFLiteral($stringSpec, null, '"\''))
                         )
                     )
                 )
@@ -756,7 +749,7 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 $this->connection(),
                 'db',
                 $this->_user,
-                (strlen($prefix) > 0) ? ($prefix . '%') : '',
+                (strlen($prefix) > 0) ? ($prefix . '%') : $prefix,
                 'TABLE, VIEW'
             ),
             true,
@@ -797,10 +790,9 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      * @param string $value
      * @param string|null $datatype
      * @param string|null $lang
-     * @param boolean $longStringEnabled decides if the output can be a long string (""" """) or not
      * @return string
      */
-    public function buildLiteralString($value, $datatype = null, $lang = null, $longStringEnabled = true)
+    public function buildLiteralString($value, $datatype = null, $lang = null)
     {
         // This is a Virtuoso commercial edition feature... If we are running on open-source version, we remove the
         // datatype, since otherwise loading will fail.
@@ -810,17 +802,20 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             }
         }
 
-        return Erfurt_Utils::buildLiteralString($value, $datatype, $lang, $longStringEnabled);
+        $literal = Erfurt_Utils::buildLiteralString($value, $datatype, $lang);
+        return $this->encodeNonAsciiCharacters($literal);
     }
 
     /**
-     * Calls specified function for every triple in N-Triples syntax out of an RDF/PHP array.
+     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
      *
      * @param $rdfPhpStatements A nested statement array
-     * @param $callback A function which will be called for each triple
+     * @return string
      */
-    public function buildTriple(array $rdfPhpStatements, $callback)
+    public function buildTripleString(array $rdfPhpStatements)
     {
+        $triples = '';
+
         foreach ($rdfPhpStatements as $currentSubject => $predicates) {
             foreach ($predicates as $currentPredicate => $objects) {
                 foreach ($objects as $currentObject) {
@@ -839,48 +834,10 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                     }
 
                     // add triple
-                    $callback(sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL));
+                    $triples .= sprintf('%s %s %s .%s', $resource, $property, $value, PHP_EOL);
                 }
             }
         }
-    }
-
-    /**
-     * Builds an array of triples in N-Triples syntax out of an RDF/PHP array.
-     *
-     * @param $rdfPhpStatements A nested statement array
-     * @return array
-     */
-    public function buildTripleArray(array $rdfPhpStatements)
-    {
-        $triples = array();
-
-        $this->buildTriple(
-            $rdfPhpStatements,
-            function($triple) use(&$triples) {
-                $triples[] = $triple;
-            }
-        );
-
-        return $triples;
-    }
-
-    /**
-     * Builds a string of triples in N-Triples syntax out of an RDF/PHP array.
-     *
-     * @param $rdfPhpStatements A nested statement array
-     * @return string
-     */
-    public function buildTripleString(array $rdfPhpStatements)
-    {
-        $triples = '';
-
-        $this->buildTriple(
-            $rdfPhpStatements,
-            function($triple) use(&$triples) {
-                $triples .= $triple;
-            }
-        );
 
         return $triples;
     }
@@ -989,6 +946,22 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
     }
 
+    /**
+     * Encodes non-ASCII characters in a NQuad document that is UTF-8 encoded.
+     *
+     * @param string $data
+     * @return string
+     * @see http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings
+     */
+    protected function encodeNonAsciiCharacters($data)
+    {
+        $pattern = '/[\x{0}-\x{8}\x{B}-\x{C}\x{E}-\x{1F}\x{7F}-\x{FFFF}\x{10000}-\x{10FFFF}]/u';
+        return preg_replace_callback ($pattern, function (array $matches) {
+            $character = $matches[0];
+            return trim(json_encode($character), '"');
+        }, $data);
+    }
+
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
@@ -1049,41 +1022,27 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //build Virtuoso/PL query
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
-        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
 #        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
 #        $resultId   = odbc_exec($resultId, $virtuosoPl);
-        $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
+        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
-            $message = sprintf('SPARQL Error: %s on querying graph <%s> with query: %s', $this->getLastError(), $graphUri, $sparqlQuery);
+            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 
         return $resultId;
     }
 
-    private function _execSparqlUpdate($sparqlQuery, $graphUri = null)
+    private function _execSparqlUpdate($sparqlQuery)
     {
-        $graphUri = (string)$graphUri;
-
-        if (!empty($graphUri)) {
-            // enquote
-            $graphUri = '\'' . $graphUri . '\'';
-            $graphSpec = 'define input:default-graph-uri <' . $graphUri . '> ';
-        } else {
-            // set Virtuoso NULL
-            $graphUri = 'NULL';
-            $graphSpec = '';
-        }
-
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-#        $resultId   = odbc_exec($resultId, $virtuosoPl);
-        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
+        $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
-            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), htmlentities($sparqlQuery));
+            $message = sprintf("SPARQL Error: %s\n\n In query: %s", $this->getLastError(), $sparqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 

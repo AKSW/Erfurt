@@ -6,10 +6,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
-
-
-
 /**
  * Erfurt RDF Store - Adapter for the {@link http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/ RAP} schema (modified) with
  * Zend_Db database abstraction layer.
@@ -17,7 +13,7 @@
  * @package    Erfurt_Store_Adapter
  * @author     Philipp Frischmuth <pfrischmuth@googlemail.com>
  */
-class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
+class Erfurt_Store_Adapter_EfZendDb extends Erfurt_Store_Adapter_Sql_ZendDb implements Erfurt_Store_Adapter_Interface
 {
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
@@ -25,8 +21,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
     private $_modelCache = array();
     private $_modelInfoCache = null;
-
-    private $_dbConn = false;
 
     /** @var array */
     private $_titleProperties = array(
@@ -38,7 +32,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     // --- Magic methods ------------------------------------------------------
     // ------------------------------------------------------------------------
 
-    private $_adapterOptions = array();
     /**
      * Constructor
      *
@@ -50,11 +43,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     public function __construct($adapterOptions = array())
     {
-        $adapterOptions = array_merge(array('host' =>  'localhost', 'profiler'  => false), $adapterOptions);
-        
-        $this->_adapterOptions = $adapterOptions;
-        
-        $this->_connect();
+        parent::__construct($adapterOptions);
 
         // we want indexed results
         //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
@@ -65,32 +54,32 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $this->_titleProperties = $config->properties->title->toArray();
         }
     }
-    
+
     protected function _connect(){
         switch (strtolower($this->_adapterOptions['dbtype'])) {
             case 'mysql':
                 if (extension_loaded('mysqli')) {
-                    
+
                     $this->_dbConn = new Zend_Db_Adapter_Mysqli($this->_adapterOptions);
                 } else if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
-                    
+
                     $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($this->_adapterOptions);
                 } else {
-                    
+
                     throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
                 }
                 break;
             case 'sqlsrv':
                 if (extension_loaded('sqlsrv')) {
-                    
+
                     $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($this->_adapterOptions);
                 } else {
-                    
+
                     throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
                 }
                 break;
             default:
-                
+
                 throw new Erfurt_Exception('Given database adapter is not supported.', -1);
         }
 
@@ -99,22 +88,22 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $this->_dbConn->getConnection();
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
-            
+
             throw new Erfurt_Exception(
-                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] . 
+                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] .
                 '". Please check your credentials and whether the database exists and the server is running.', -1
             );
 
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
-            
+
             throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
         }
 
         // we want indexed results
         //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
     }
-    
+
     /**
      * save all but except the db connection
      * @return array keys to save
@@ -202,7 +191,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $sRef = $this->_insertValueInto('ef_uri', $graphId, $s, $subjectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->_dbConn->rollback();
-                            
+
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
 
@@ -217,7 +206,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $pRef = $this->_insertValueInto('ef_uri', $graphId, $p, $predicateHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->_dbConn->rollback();
-                            
+
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
 
@@ -238,7 +227,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $oRef = $this->_insertValueInto($tableName, $graphId, $o['value'], $objectHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->_dbConn->rollback();
-                            
+
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
 
@@ -248,7 +237,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     $sValue = $this->_dbConn->quote($s);
                     $pValue = $this->_dbConn->quote($p);
                     $oValue = $this->_dbConn->quote($o['value']);
-                    
+
                     $sqlString .= "($graphId, $sValue, $pValue, $oValue,";
 
                     #$data = array(
@@ -288,7 +277,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                             $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
                         } catch (Erfurt_Store_Adapter_Exception $e) {
                             $this->_dbConn->rollback();
-                            
+
                             throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                         }
 
@@ -312,7 +301,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     #        continue;
                     #    } else {
                     #        $this->_dbConn->rollback();
-                    #        
+                    #
                     #        throw new Erfurt_Store_Adapter_Exception('Bulk insertion of statements failed: ' .
                     #                        $this->_dbConn->getConnection()->error);
                     #    }
@@ -361,7 +350,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         try {
             $this->addMultipleStatements($graphUri, $statementArray);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            
+
             throw new Erfurt_Store_Adapter_Exception(
                 'Insertion of statement failed:' . $e->getMessage()
             );
@@ -374,14 +363,14 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $query = new Erfurt_Sparql_SimpleQuery();
         if (!$distinct) {
             // old way: distinct has no effect !!!
-            $query->setProloguePart("COUNT DISTINCT $countSpec"); 
+            $query->setProloguePart("COUNT DISTINCT $countSpec");
         } else {
             // i made a (uncool) hack to fix this, the "-" is there because i didnt want to change tokenization
-            $query->setProloguePart("COUNT-DISTINCT $countSpec"); 
+            $query->setProloguePart("COUNT-DISTINCT $countSpec");
         }
         $query->setFrom($graphIris)
               ->setWherePart($whereSpec);
-        
+
         $result = $this->sparqlQuery($query);
 
         if ($result) {
@@ -389,14 +378,6 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         return 0;
-    }
-
-    /** @see Erfurt_Store_Sql_Interface */
-    public function createTable($tableName, array $columns)
-    {
-        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
-            return $this->_createTableMysql($tableName, $columns);
-        }
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
@@ -452,7 +433,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         // invalidate the cache and fetch model infos again
-        
+
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelInfoCache = null;
@@ -504,7 +485,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (null !== $object) {
             if (isset($object['value'])) {
                 $escapedObject = $this->_dbConn->quote($object['value']);
-                
+
                 $whereString .= ' AND o = ' . $escapedObject . ' ';
             }
 
@@ -535,7 +516,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 }
             }
         }
-        
+
         // remove the specified statements from the database
         $ret = $this->_dbConn->delete('ef_stmt', $whereString);
 
@@ -599,12 +580,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $whereString .= 'AND s = \'' . $subject . '\' ';
                         $whereString .= 'AND p = \'' . $predicate . '\' ';
-                        
+
                         //escaping
                         $escapedObject = $this->_dbConn->quote($object); //also wraps the quotes around
-                        
+
                         $whereString .= 'AND o = ' . $escapedObject . ' ';
-                        
+
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
                 }
@@ -617,7 +598,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } catch (Exception $e) {
             // something went wrong... rollback
             $this->_dbConn->rollback();
-            
+
             throw new Erfurt_Store_Adapter_Exception('Bulk deletion of statements failed.'.$e->getMessage());
         }
     }
@@ -630,7 +611,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (isset($modelInfoCache[$graphUri]['modelId'])) {
             $graphId = $modelInfoCache[$graphUri]['modelId'];
         } else {
-            
+
             throw new Erfurt_Store_Adapter_Exception('Model deletion failed: No db id found for model URL.');
         }
 
@@ -653,7 +634,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = false)
     {
-        
+
         throw new Erfurt_Store_Adapter_Exception('Not implemented yet.');
     }
 
@@ -735,13 +716,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         // choose the right type for the model instance and instanciate it
         if ($modelInfoCache[$modelIri]['type'] === 'owl') {
-            
+
             $m = new Erfurt_Owl_Model($modelIri, $baseUri);
         } else if ($this->_modelInfoCache[$modelIri]['type'] === 'rdfs') {
-            
+
             $m = new Erfurt_Rdfs_Model($modelIri, $baseUri);
         } else {
-            
+
             $m = new Erfurt_Rdf_Model($modelIri, $baseUri);
         }
 
@@ -801,7 +782,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
 
         // invalidate the cache and fetch model infos again
-        
+
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelInfoCache = null;
@@ -834,7 +815,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
 // TODO fix or remove
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
-            
+
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $parsedArray = $parser->parse($data, $locator, $modelUri, false);
 
@@ -1032,7 +1013,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
             $this->_optimizeTables();
         } else {
-            
+
             throw new Erfurt_Store_Adapter_Exception('CSV import not supported for this database server.');
         }
     }
@@ -1054,29 +1035,18 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
     }
 
-    /** @see Erfurt_Store_Sql_Interface */
-    public function lastInsertId()
-    {
-        return $this->_dbConn->lastInsertId();
-    }
-
-    /** @see Erfurt_Store_Sql_Interface */
-    public function listTables($prefix = '')
-    {
-        return $this->_dbConn->listTables();
-    }
 
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlAsk($query)
     {
-	//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... 
+	//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery...
         //looks like the engine supports it. but there is probably a reason for this not to be supported
 		$start = microtime(true);
 
-        
+
         $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
-        
+
         $parser = new Erfurt_Sparql_Parser();
 
         if(!($query instanceof Erfurt_Sparql_Query))
@@ -1100,10 +1070,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
         $start = microtime(true);
 
-        
+
         $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
-        
+
         $parser = new Erfurt_Sparql_Parser();
 
         if ( !( $query instanceof Erfurt_Sparql_Query ) ) {
@@ -1121,427 +1091,21 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         return $result;
     }
 
-    /** @see Erfurt_Store_Sql_Interface */
-    public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
-    {
-        $start = microtime(true);
-
-        // add limit/offset
-        if ($limit < PHP_INT_MAX) {
-            $sqlQuery = sprintf('%s LIMIT %d OFFSET %d', (string)$sqlQuery, (int)$limit, (int)$offset);
-        }
-
-        $queryType = strtolower(substr($sqlQuery, 0, 6));
-        if ( $queryType  === 'insert' ||
-             $queryType  === 'update' ||
-             $queryType  === 'create' ||
-             $queryType  === 'delete') {
-            // Handle without ZendDb
-
-            $this->_config = Erfurt_App::getInstance()->getConfig();
-
-            if ( $this->_config->store->zenddb->dbtype=='sqlsrv' ) {
-                $result = $this->_dbConn->query($sqlQuery);
-            } else {
-                $result = $this->_dbConn->getConnection()->query($sqlQuery);
-            }
-
-
-
-            if ( $result !== true ) {
-                
-                throw new Erfurt_Store_Adapter_Exception(
-                    'SQL query failed: ' .
-                    $this->_dbConn->getConnection()->error
-                );
-            }
-        } else {
-            try {
-                $result = @$this->_dbConn->fetchAll($sqlQuery);
-            } catch (Zend_Db_Exception $e) { #return false;
-                
-                throw new Erfurt_Store_Adapter_Exception(
-                    $e->getMessage()
-                );
-            }
-        }
-
-        // Debug executed SQL queries in debug mode (7)
-        $logger = Erfurt_App::getInstance()->getLog();
-        $time = (microtime(true) - $start)*1000;
-        $debugText = 'SQL Query (' . $time . ' ms)';
-        $logger->debug($debugText);
-
-        return $result;
-    }
 
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
 
-    /**
-     * For Zend_Db does not abstract SQL statements that can't be prepared, we need to do this by hand
-     * for each supported db server, which can be used with the ZendDb adapter.
-     */
-    private function _createTableMysql($tableName, array $columns)
-    {
-        $createTable = 'CREATE TABLE `' . (string) $tableName . '` (';
-
-        $i = 0;
-	    foreach ( $columns as $columnName => $columnSpec ) {
-	        $createTable .= PHP_EOL
-	                     .  '`' . $columnName . '` '
-	                     .  $columnSpec . (($i < count($columns)-1) ? ',' : '');
-	        ++$i;
-	    }
-	    $createTable .= PHP_EOL
-	                 .  ')';
-	    $success = $this->_dbConn->getConnection()->query($createTable);
-
-	    if ( !$success ) {
-// TODO dedicated exception
-	        throw new Exception('Could not create database table with name ' . $tableName . '.');
-	    } else {
-	        return $success;
-	    }
-    }
-
-    /**
-     * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.
-     */
-    private function _createTables()
-    {
-        if ( $this->_dbConn instanceof Zend_Db_Adapter_Mysqli ) {
-            return $this->_createTablesMysql();
-        } else if ( $this->_dbConn instanceof Zend_Db_Adapter_Sqlsrv ) {
-            return $this->_createTablesSqlsrv();
-        }
-    }
-
-    /**
-     * This internal function creates the table structure for MySQL databases.
-     */
-    private function _createTablesMysql()
-    {
-        // Create ef_info table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
-                    id        TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                    schema_id VARCHAR(10) COLLATE ascii_bin NOT NULL
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if ( !$success ) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_info" failed:' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-
-        // Insert id of the current schema into the ef_info table.
-        $sql = 'INSERT INTO ef_info (schema_id) VALUES ("1.0")';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if ( !$success ) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Insertion of "schema_id" into "ef_info" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-
-        // Create ef_graph table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
-        	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        uri			VARCHAR(160) COLLATE ascii_bin NOT NULL,
-        	        uri_r	    INT UNSIGNED DEFAULT NULL,
-        	        base		VARCHAR(160) COLLATE ascii_bin DEFAULT NULL,
-        	        base_r	    INT UNSIGNED DEFAULT NULL,
-        	        UNIQUE unique_graph (uri)
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if ( !$success ) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_graph" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-        // INT means, we could store up to 4.294.967.295 statements
-
-        // Create ef_stmt table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
-            	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            	    g	    INT UNSIGNED NOT NULL,                      # foreign key to ef_graph
-            	    s		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # subject or subject hash
-            	    p		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
-            	    o		VARCHAR(160) COLLATE utf8_bin NOT NULL,     # object or object hash
-            	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
-            	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
-            	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
-            	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
-            	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
-            	    ol 		VARCHAR(10) COLLATE ascii_bin NOT NULL,
-            	    od 	    VARCHAR(160) COLLATE ascii_bin NOT NULL,
-            	    od_r 	INT UNSIGNED DEFAULT NULL,
-            	    UNIQUE  unique_stmt (g, s, p, o, st, ot, ol, od),
-            	    INDEX   idx_g_p_o_ot (g, p, o, ot),
-            	    INDEX   idx_g_o_ot (g, o, ot)
-            	    #INDEX   idx_o_g_p_ot (o, g, p, ot)
-            	    #INDEX   idx_s_g_p_st (s, g, p, st)
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_stmt" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-        /*
-        // Create ef_ns table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
-        	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	    INT UNSIGNED NOT NULL,
-        	        ns		VARCHAR(160) COLLATE ascii_bin NOT NULL,
-        	        ns_r	INT UNSIGNED DEFAULT NULL,
-        	        prefix	VARCHAR(160) COLLATE ascii_bin NOT NULL,
-        	        UNIQUE unique_ns (g, ns, prefix)
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if (!$success) {
-             
-             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_ns" failed: ' .
-                            $this->_dbConn->getConnection()->error);
-        }
-        */
-
-        // Create ef_uri table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
-        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	INT UNSIGNED NOT NULL,
-        	        v	LONGTEXT COLLATE ascii_bin NOT NULL,
-        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
-        	        UNIQUE unique_uri (g, vh)
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_uri" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-
-        // Create ef_lit table.
-        $sql = 'CREATE TABLE IF NOT EXISTS ef_lit (
-        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        	        g	INT UNSIGNED NOT NULL,
-        	        v	LONGTEXT COLLATE utf8_bin NOT NULL,
-        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
-        	        UNIQUE unique_lit (g, vh)
-                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
-
-        $success = false;
-        $success = $this->_dbConn->getConnection()->query($sql);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_lit" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-    }
-
-    /**
-     * This internal function creates the table structure for MS SQL Server databases.
-     */
-    private function _createTablesSqlsrv()
-    {
-                //#####################################################################
-        // Create table ef_info if not existing
-
-        $sqlsrv ='IF NOT EXISTS
-                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_info\')
-                  CREATE TABLE ef_info (
-                  id        TINYINT NOT NULL IDENTITY(1,1),
-                  schema_id VARCHAR(10) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
-                  ) ON [PRIMARY]';
-
-       $success = $this->_dbConn->query($sqlsrv);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_info" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-
-        // Insert id of the current schema into the ef_info table.
-        $sql = 'INSERT INTO ef_info (schema_id) VALUES (1.0)';
-
-        $success = false;
-        $success = $this->_dbConn->query($sql);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Insertion of "schema_id" into "ef_info" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-
-
-        //#####################################################################
-        // Create table ef_graph if not existing
-
-        $sqlsrv ='IF NOT EXISTS
-                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_graph\')
-                  BEGIN
-                  CREATE TABLE ef_graph (
-                  id        TINYINT NOT NULL IDENTITY(1,1),
-                  uri       VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  uri_r     INT NULL,
-                  base      VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  base_r    INT NULL
-                  ) ON [PRIMARY]
-                  CREATE UNIQUE INDEX unique_uri ON ef_graph (uri)
-                   END';
-
-       $success = $this->_dbConn->query($sqlsrv);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_info" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-        //#####################################################################
-        // Create table ef_stmt if not existing
-
-        $sqlsrv ='IF NOT EXISTS
-                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_stmt\')
-                  BEGIN
-                  CREATE TABLE ef_stmt (
-                  id        TINYINT NOT NULL IDENTITY(1,1),
-                  g         INT NOT NULL,
-                  s         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  p         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  o         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  s_r       INT NOT NULL,
-                  p_r       INT NOT NULL,
-                  o_r       INT NOT NULL,
-                  st        TINYINT NOT NULL,
-                  ot        TINYINT NOT NULL,
-                  ol        VARCHAR(50)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  od        VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  od_r      INT NOT NULL,
-                  ) ON [PRIMARY]
-                  CREATE UNIQUE NONCLUSTERED INDEX unique_stmt ON ef_stmt (g,s,p,o,st,ot,ol,od)
-                  CREATE NONCLUSTERED INDEX idx_g_p_o_ot ON ef_stmt (g, p, o, ot)
-                  CREATE NONCLUSTERED INDEX idx_g_o_ot ON ef_stmt (g, o, ot)
-                  END';
-
-       $success = $this->_dbConn->query($sqlsrv);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_info" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-//#####################################################################
-        // Create table ef_uri if not existing
-
-        $sqlsrv ='IF NOT EXISTS
-                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_uri\')
-                  BEGIN
-                  CREATE TABLE ef_uri (
-                  id        TINYINT NOT NULL IDENTITY(1,1),
-                  g         INT NOT NULL,
-                  v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
-                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-                 CREATE UNIQUE NONCLUSTERED INDEX unique_uri ON ef_uri (g,vh)
-                 END';
-
-       $success = $this->_dbConn->query($sqlsrv);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_uri" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-
-        //#####################################################################
-        // Create table ef_lit if not existing
-
-        //v would b UTF8 - not shure if SQL_Latin1_general_CP850_bin is the right type
-
-        $sqlsrv ='IF NOT EXISTS
-                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_lit\')
-                  BEGIN
-                  CREATE TABLE ef_lit (
-                  id        TINYINT NOT NULL IDENTITY(1,1),
-                  g         INT NOT NULL,
-                  v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
-                  vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
-
-                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-                 CREATE UNIQUE NONCLUSTERED INDEX unique_lit ON ef_lit (g,vh)
-                 END';
-
-       $success = $this->_dbConn->query($sqlsrv);
-
-        if (!$success) {
-            
-            throw new Erfurt_Store_Adapter_Exception(
-                'Creation of table "ef_uri" failed: ' .
-                $this->_dbConn->getConnection()->error
-            );
-        }
-    }
 
     protected function _getModelInfos()
     {
         if (null === $this->_modelInfoCache) {
             try {
-                // try to fetch model and namespace infos... if all tables are present 
+                // try to fetch model and namespace infos... if all tables are present
                 // this should not lead to an error.
                 $this->_fetchModelInfos();
             } catch (Erfurt_Exception $exception) {
-                // error while fetching model and namespace infos... should only be the 
+                // error while fetching model and namespace infos... should only be the
                 // case if the tables aren't present,
                 // for db connection is already established (in constructor)... so let's check for tables
                 if (!$this->_isSetup()) {
@@ -1553,7 +1117,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         if ($setupException->getCode() == 20) {
                             $this->_fetchModelInfos();
                         } else {
-                            
+                            require_once 'Erfurt/Store/Adapter/Exception.php';
                             throw new Erfurt_Store_Adapter_Exception(
                                 'Store: Error while initializing the environment: ' . $setupException->getMessage(),
                                 -1
@@ -1561,10 +1125,26 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                         }
                     }
 
+            if ( $result !== true ) {
+
+                throw new Erfurt_Store_Adapter_Exception(
+                    'SQL query failed: ' .
+                    $this->_dbConn->getConnection()->error
+                );
+            }
+        } else {
+            try {
+                $result = @$this->_dbConn->fetchAll($sqlQuery);
+            } catch (Zend_Db_Exception $e) { #return false;
+
+                throw new Erfurt_Store_Adapter_Exception(
+                    $e->getMessage()
+                );
+
                 } else {
-                    
+                    require_once 'Erfurt/Store/Adapter/Exception.php';
                     throw new Erfurt_Store_Adapter_Exception(
-                        'Store: Error while fetching model and namespace infos.', 
+                        'Store: Error while fetching model and namespace infos.',
                         -1
                     );
                 }
@@ -1581,58 +1161,40 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         return 160;
     }
 
-    protected function _optimizeTables()
-    {
-        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
-            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_stmt');
-            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_uri');
-            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_lit');
-        } else {
-            // not supported yet.
-        }
-    }
-
     protected function _cleanUpValueTables($graphUri)
     {
         if (isset($this->_modelInfoCache[$graphUri]['modelId'])) {
             $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
         } else {
-            
+            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception(
                 'Failed to clean up value tables: No db id for <' . $graphUri . '> was found.'
             );
         }
-
         $sql = "SELECT l.id as id, count(l.id)
                 FROM ef_lit l
                 JOIN ef_stmt s ON s.g = $graphId AND s.ot = 2 AND s.o_r = l.id
                 WHERE l.g = $graphId
                 GROUP BY l.id";
-
         $idArray = array();
-
         foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
             $idArray[] = $row['id'];
         }
-
         if (count($idArray) > 0) {
             $ids = implode(',', $idArray);
             $whereString = "g = $graphId AND id NOT IN ($ids)";
             $this->_dbConn->delete('ef_lit', $whereString);
         }
-
         $sql = "SELECT u.id as id, count(u.id)
                 FROM ef_uri u
                 JOIN ef_stmt s ON s.g = $graphId AND (s.s_r = u.id OR s.p_r = u.id OR s.od_r = u.id OR
                 (s.ot IN (0, 1) AND s.o_r = u.id))
                 WHERE u.g = $graphId
                 GROUP BY u.id";
-
         $idArray = array();
         foreach ($this->_dbConn->fetchAssoc($sql) as $row) {
             $idArray[] = $row['id'];
         }
-
         if (count($idArray) > 0) {
             $ids = implode(',', $idArray);
             $whereString = "g = $graphId AND id NOT IN ($ids)";
@@ -1649,32 +1211,27 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             'v'     => &$value,
             'vh'    => &$valueHash
         );
-
         try {
             $this->_dbConn->insert($tableName, $data);
         } catch (Exception $e) {
             if ($this->_getNormalizedErrorCode() !== 1000) {
-                
+                require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception(
                     "Insertion of value into $tableName failed: " .
                     $e->getMessage()
                 );
             }
         }
-
         $sql = "SELECT id FROM $tableName WHERE vh = '$valueHash'";
         $result = $this->_dbConn->fetchRow($sql);
-
         if (!$result) {
-            
+            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception(
                 'Fetching of uri id failed: ' .
                 $this->_dbConn->getConnection()->error
             );
         }
-
         $id = $result['id'];
-
         return $id;
     }
 
@@ -1684,7 +1241,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     private function _fetchModelInfos()
     {
-        //It is not possible to use a cache because SQL instead of SPARQL is used. 
+        //It is not possible to use a cache because SQL instead of SPARQL is used.
         //Using a cache causing updating problems.
         $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
                     (SELECT count(*)
@@ -1705,13 +1262,13 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         try {
             $result = $this->sqlQuery($sql);
         } catch (Exception $e) {
-            
+            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Error while fetching model and namespace informations.');
         }
 
 
         if ($result === false) {
-            
+            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Error while fetching model and namespace informations.');
         } else {
             $this->_modelInfoCache = array();
@@ -1801,7 +1358,556 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 return true;
             }
         } else {
-            
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
+        }
+    }
+
+    /**
+     * @throws Erfurt_Exception Throws exception if something goes wrong while initialization of database.
+     */
+    protected function _createTables()
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            return $this->_createTablesMysql();
+        } else if ($this->_dbConn instanceof Zend_Db_Adapter_Sqlsrv) {
+            return $this->_createTablesSqlsrv();
+        }
+    }
+
+    /**
+     * This internal function creates the table structure for MySQL databases.
+     */
+    protected function _createTablesMysql()
+    {
+        // Create ef_info table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_info (
+                    id        TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                    schema_id VARCHAR(10) COLLATE ascii_bin NOT NULL
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_info" failed:' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+
+        // Insert id of the current schema into the ef_info table.
+        $sql = 'INSERT INTO ef_info (schema_id) VALUES ("1.0")';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception(
+                'Insertion of "schema_id" into "ef_info" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+
+        // Create ef_graph table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_graph (
+        	        id			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        uri			VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        uri_r	    INT UNSIGNED DEFAULT NULL,
+        	        base		VARCHAR(160) COLLATE ascii_bin DEFAULT NULL,
+        	        base_r	    INT UNSIGNED DEFAULT NULL,
+        	        UNIQUE unique_graph (uri)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_graph" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+        // INT means, we could store up to 4.294.967.295 statements
+
+        // Create ef_stmt table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_stmt (
+            	    id 		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            	    g	    INT UNSIGNED NOT NULL,                      # foreign key to ef_graph
+            	    s		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # subject or subject hash
+            	    p		VARCHAR(160) COLLATE ascii_bin NOT NULL,    # predicate or predicate hash
+            	    o		VARCHAR(160) COLLATE utf8_bin NOT NULL,     # object or object hash
+            	    s_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    p_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri
+            	    o_r     INT UNSIGNED DEFAULT NULL,                  # foreign key to ef_uri or ef_lit
+            	    st 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode
+            	    ot 		TINYINT(1) UNSIGNED NOT NULL,				# 0 - uri, 1 - bnode, 2 - literal
+            	    ol 		VARCHAR(10) COLLATE ascii_bin NOT NULL,
+            	    od 	    VARCHAR(160) COLLATE ascii_bin NOT NULL,
+            	    od_r 	INT UNSIGNED DEFAULT NULL,
+            	    UNIQUE  unique_stmt (g, s, p, o, st, ot, ol, od),
+            	    INDEX   idx_g_p_o_ot (g, p, o, ot),
+            	    INDEX   idx_g_o_ot (g, o, ot)
+            	    #INDEX   idx_o_g_p_ot (o, g, p, ot)
+            	    #INDEX   idx_s_g_p_st (s, g, p, st)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+            require_once 'Erfurt/Store/Adapter/Exception.php';
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_stmt" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+        /*
+        // Create ef_ns table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_ns (
+        	        id		INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	    INT UNSIGNED NOT NULL,
+        	        ns		VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        ns_r	INT UNSIGNED DEFAULT NULL,
+        	        prefix	VARCHAR(160) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_ns (g, ns, prefix)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+
+             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_ns" failed: ' .
+                            $this->_dbConn->getConnection()->error);
+        }
+        */
+
+        // Create ef_uri table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_uri (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	INT UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE ascii_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_uri (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_uri" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+
+        // Create ef_lit table.
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_lit (
+        	        id	INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+        	        g	INT UNSIGNED NOT NULL,
+        	        v	LONGTEXT COLLATE utf8_bin NOT NULL,
+        	        vh  CHAR(32) COLLATE ascii_bin NOT NULL,
+        	        UNIQUE unique_lit (g, vh)
+                ) ENGINE = MyISAM DEFAULT CHARSET = ascii;';
+
+        $success = false;
+        $success = $this->_dbConn->getConnection()->query($sql);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_lit" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+    }
+
+    /**
+     * This internal function creates the table structure for MS SQL Server databases.
+     */
+    protected function _createTablesSqlsrv()
+    {
+        //#####################################################################
+        // Create table ef_info if not existing
+
+        $sqlsrv = 'IF NOT EXISTS
+                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_info\')
+                  CREATE TABLE ef_info (
+                  id        TINYINT NOT NULL IDENTITY(1,1),
+                  schema_id VARCHAR(10) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
+                  ) ON [PRIMARY]';
+
+        $success = $this->_dbConn->query($sqlsrv);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_info" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+
+        // Insert id of the current schema into the ef_info table.
+        $sql = 'INSERT INTO ef_info (schema_id) VALUES (1.0)';
+
+        $success = false;
+        $success = $this->_dbConn->query($sql);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Insertion of "schema_id" into "ef_info" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+
+        //#####################################################################
+        // Create table ef_graph if not existing
+
+        $sqlsrv = 'IF NOT EXISTS
+                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_graph\')
+                  BEGIN
+                  CREATE TABLE ef_graph (
+                  id        TINYINT NOT NULL IDENTITY(1,1),
+                  uri       VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  uri_r     INT NULL,
+                  base      VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  base_r    INT NULL
+                  ) ON [PRIMARY]
+                  CREATE UNIQUE INDEX unique_uri ON ef_graph (uri)
+                   END';
+
+        $success = $this->_dbConn->query($sqlsrv);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_info" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+        //#####################################################################
+        // Create table ef_stmt if not existing
+
+        $sqlsrv = 'IF NOT EXISTS
+                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_stmt\')
+                  BEGIN
+                  CREATE TABLE ef_stmt (
+                  id        TINYINT NOT NULL IDENTITY(1,1),
+                  g         INT NOT NULL,
+                  s         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  p         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  o         VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  s_r       INT NOT NULL,
+                  p_r       INT NOT NULL,
+                  o_r       INT NOT NULL,
+                  st        TINYINT NOT NULL,
+                  ot        TINYINT NOT NULL,
+                  ol        VARCHAR(50)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  od        VARCHAR(160)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  od_r      INT NOT NULL,
+                  ) ON [PRIMARY]
+                  CREATE UNIQUE NONCLUSTERED INDEX unique_stmt ON ef_stmt (g,s,p,o,st,ot,ol,od)
+                  CREATE NONCLUSTERED INDEX idx_g_p_o_ot ON ef_stmt (g, p, o, ot)
+                  CREATE NONCLUSTERED INDEX idx_g_o_ot ON ef_stmt (g, o, ot)
+                  END';
+
+        $success = $this->_dbConn->query($sqlsrv);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_info" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+//#####################################################################
+        // Create table ef_uri if not existing
+
+        $sqlsrv = 'IF NOT EXISTS
+                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_uri\')
+                  BEGIN
+                  CREATE TABLE ef_uri (
+                  id        TINYINT NOT NULL IDENTITY(1,1),
+                  g         INT NOT NULL,
+                  v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                 CREATE UNIQUE NONCLUSTERED INDEX unique_uri ON ef_uri (g,vh)
+                 END';
+
+        $success = $this->_dbConn->query($sqlsrv);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_uri" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+        //#####################################################################
+        // Create table ef_lit if not existing
+
+        //v would b UTF8 - not shure if SQL_Latin1_general_CP850_bin is the right type
+
+        $sqlsrv = 'IF NOT EXISTS
+                  ( SELECT * FROM SysObjects WHERE [Name] = \'ef_lit\')
+                  BEGIN
+                  CREATE TABLE ef_lit (
+                  id        TINYINT NOT NULL IDENTITY(1,1),
+                  g         INT NOT NULL,
+                  v         TEXT COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL,
+                  vh        VARCHAR(32)COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
+
+                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+                 CREATE UNIQUE NONCLUSTERED INDEX unique_lit ON ef_lit (g,vh)
+                 END';
+
+        $success = $this->_dbConn->query($sqlsrv);
+
+        if (!$success) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Creation of table "ef_uri" failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+    }
+
+    protected function _getModelInfos()
+    {
+        if (null === $this->_modelInfoCache) {
+            try {
+                // try to fetch model and namespace infos... if all tables are present
+                // this should not lead to an error.
+                $this->_fetchModelInfos();
+            } catch (Erfurt_Exception $exception) {
+                // error while fetching model and namespace infos... should only be the
+                // case if the tables aren't present,
+                // for db connection is already established (in constructor)... so let's check for tables
+                if (!$this->_isSetup()) {
+                    $this->_createTables();
+
+                    try {
+                        Erfurt_App::getInstance()->getStore()->checkSetup();
+                    } catch (Erfurt_Store_Exception $setupException) {
+                        if ($setupException->getCode() == 20) {
+                            $this->_fetchModelInfos();
+                        } else {
+
+                            throw new Erfurt_Store_Adapter_Exception(
+                                'Store: Error while initializing the environment: ' . $setupException->getMessage(),
+                                -1
+                            );
+                        }
+                    }
+
+                } else {
+
+                    throw new Erfurt_Store_Adapter_Exception(
+                        'Store: Error while fetching model and namespace infos.',
+                        -1
+                    );
+                }
+            }
+        }
+
+        return $this->_modelInfoCache;
+    }
+
+    protected function _getSchemaRefThreshold()
+    {
+        // We use 160, for the max index length is 1000 byte and the unique_stmt index needs
+        // to fit in.
+        return 160;
+    }
+
+    protected function _optimizeTables()
+    {
+        if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_stmt');
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_uri');
+            $this->_dbConn->getConnection()->query('OPTIMIZE TABLE ef_lit');
+        } else {
+            // not supported yet.
+        }
+    }
+
+    protected function _insertValueInto($tableName, $graphId, $value, $valueHash)
+    {
+        $data = array(
+            'g'     => &$graphId,
+            'v'     => &$value,
+            'vh'    => &$valueHash
+        );
+
+        try {
+            $this->_dbConn->insert($tableName, $data);
+        } catch (Exception $e) {
+            if ($this->_getNormalizedErrorCode() !== 1000) {
+
+                throw new Erfurt_Store_Adapter_Exception(
+                    "Insertion of value into $tableName failed: " .
+                    $e->getMessage()
+                );
+            }
+        }
+
+        $sql = "SELECT id FROM $tableName WHERE vh = '$valueHash'";
+        $result = $this->_dbConn->fetchRow($sql);
+
+        if (!$result) {
+
+            throw new Erfurt_Store_Adapter_Exception(
+                'Fetching of uri id failed: ' .
+                $this->_dbConn->getConnection()->error
+            );
+        }
+
+        $id = $result['id'];
+
+        return $id;
+    }
+
+    /**
+     *
+     * @throws Erfurt_Exception
+     */
+    private function _fetchModelInfos()
+    {
+        //It is not possible to use a cache because SQL instead of SPARQL is used.
+        //Using a cache causing updating problems.
+        $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
+                    (SELECT count(*)
+                    FROM ef_stmt s2
+                    WHERE s2.g = g.id
+                    AND s2.s = g.uri
+                    AND s2.st = 0
+                    AND s2.p = \'' . EF_RDF_TYPE . '\'
+                    AND s2.o = \'' . EF_OWL_ONTOLOGY . '\'
+                    AND s2.ot = 0) as is_owl_ontology
+                FROM ef_graph g
+                LEFT JOIN ef_stmt s ON (g.id = s.g
+                    AND g.uri = s.s
+                    AND s.p = \'' . EF_OWL_IMPORTS. '\'
+                    AND s.ot = 0)
+                LEFT JOIN ef_uri u ON (u.id = g.uri_r OR u.id = g.base_r OR u.id = s.o_r)';
+
+        try {
+            $result = $this->sqlQuery($sql);
+        } catch (Exception $e) {
+
+            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+        }
+
+
+        if ($result === false) {
+
+            throw new Erfurt_Exception('Error while fetching model and namespace informations.');
+        } else {
+            $this->_modelInfoCache = array();
+
+            #$rowSet = $result->fetchAll();
+            #var_dump($result);exit;
+            foreach ($result as $row) {
+                if (!isset($this->_modelInfoCache[$row['uri']])) {
+                    $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
+                    $this->_modelInfoCache[$row['uri']]['modelIri']     = $row['uri'];
+                    $this->_modelInfoCache[$row['uri']]['baseIri']      = $row['base'];
+                    $this->_modelInfoCache[$row['uri']]['imports']      = array();
+
+                    // set the type of the model
+                    if ($row['is_owl_ontology'] > 0) {
+                        $this->_modelInfoCache[$row['uri']]['type'] = 'owl';
+                    } else {
+                        $this->_modelInfoCache[$row['uri']]['type'] = 'rdfs';
+                    }
+
+                    if ($row['o'] !== null &&
+                     !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
+                    }
+                } else {
+                    if ($row['o'] !== null &&
+                            !isset($this->_modelInfoCache[$row['uri']]['imports'][$row['o']])) {
+
+                        $this->_modelInfoCache[$row['uri']]['imports'][$row['o']] = $row['o'];
+                    }
+                }
+            }
+
+            //var_dump($this->_modelInfoCache);exit;
+
+            // build the transitive closure for owl:imports
+            // check for recursive owl:imports; also check for cylces!
+            do {
+                // indicated whether anything was changed in the array or not and whether loop needs to run again
+                $hasChanged = false;
+
+                // test every model exists in the model table
+                foreach ($this->_modelInfoCache as $modelIri) {
+                    // only owl models can import other models
+                    if ($modelIri['type'] !== 'owl') {
+                        continue;
+                    }
+                    foreach ($modelIri['imports'] as $importsIri) {
+                        if (isset($this->_modelInfoCache[$importsIri])) {
+                            foreach ($this->_modelInfoCache[$importsIri]['imports'] as $importsImportIri) {
+                                if (!isset($modelIri['imports'][$importsImportIri]) &&
+                                        !($importsImportIri === $modelIri['modelIri'])) {
+
+                                    $this->_modelInfoCache[$modelIri['modelIri']]
+                                                ['imports'][$importsImportIri] = $importsImportIri;
+                                    $hasChanged = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            } while ($hasChanged === true);
+        }
+    }
+
+    /**
+     * Checks whether all needed database table for the adapter are present.
+     *
+     * Currently we need three tables: 'models', 'statements' and 'namespaces'
+     *
+     * @throws Erfurt_Exception
+     * @return boolean Returns true if all tables are present.
+     */
+    private function _isSetup()
+    {
+        $existingTables = $this->listTables();
+
+        if (is_array($existingTables)) {
+            if (!in_array('ef_info', $existingTables) ||
+                !in_array('ef_graph', $existingTables) ||
+                !in_array('ef_stmt', $existingTables) ||
+                !in_array('ef_uri', $existingTables) ||
+                !in_array('ef_lit', $existingTables)) {
+
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+
             throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
         }
     }

@@ -184,24 +184,6 @@ class Erfurt_Rdf_MemoryModel
     }
 
     /**
-     * returns all predicates used in the MemoryModel
-     *
-     * @return array
-     */
-    public function getPredicates()
-    {
-        $results = array();
-        foreach ($this->_statements as $subject => $predicates ) {
-            foreach ($predicates as $predicateUri => $predicate) {
-                if (!isset($results[$predicateUri])) {
-                    $results[$predicateUri] = $predicateUri;
-                }
-            }
-        }
-        return array_values($results);
-    }
-
-    /**
      * returns all subject/predicate/object tupel of a given subject IRI
      *
      * @param string $s - the subject IRI

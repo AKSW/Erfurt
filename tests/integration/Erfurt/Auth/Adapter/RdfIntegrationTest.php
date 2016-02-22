@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
 {
     public function testAuthenticateSuperAdmin()

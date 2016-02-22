@@ -136,7 +136,7 @@ class Erfurt_Sparql_Query
      * Array of result variables that shall be returned.
      * E.g. "?name", "?mbox"
      *
-     * @var array
+     * @var array(\Erfurt_Sparql_QueryResultVariable)
      */
     protected $resultVars = array();
 
@@ -312,7 +312,7 @@ class Erfurt_Sparql_Query
     /**
      * Returns a list with all used variables.
      *
-     * @return array
+     * @return array(string)
      */
     public function getAllVars()
     {
@@ -511,7 +511,7 @@ class Erfurt_Sparql_Query
      * Returns a specific result var or false, if the query does not contain that
      * variable in the result variables.
      *
-     * @return array
+     * @return \Erfurt_Sparql_QueryResultVariable
      */
     public function getResultVar($strName) 
     {
@@ -527,7 +527,7 @@ class Erfurt_Sparql_Query
     /**
      * Returns a list containing the result vars.
      *
-     * @return array
+     * @return array(\Erfurt_Sparql_QueryResultVariable)
      */
     public function getResultVars()
     {
@@ -583,7 +583,7 @@ class Erfurt_Sparql_Query
     }
 
     /**
-     * Sets the orignal query string
+     * Sets the original query string
      *
      * @param string $queryString SPARQL query string
      */

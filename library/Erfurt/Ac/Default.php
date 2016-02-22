@@ -277,72 +277,49 @@ class Erfurt_Ac_Default
      */
     public function isModelAllowed($type, $modelUri) 
     {
-        $modelUri = (string)$modelUri;
-        $result = $this->areModelsAllowed($type, array($modelUri));
-        if (isset($result[$modelUri])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether the given action is allowed for the current user on the
-     * given model uri.
-     *
-     * @param string $type Name of the access-type (view, edit).
-     * @param array $modelUris The array of uris of the graphs to check.
-     * @return array Returns array with boolean values of whether allowed or denied.
-     */
-    public function areModelsAllowed($type, $modelUris)
-    {
-      $this->_init();
-
-      $user       = $this->_getUser();
-      $userRights = $this->_getUserModelRights($user->getUri());
-      $type       = strtolower($type);
-
-      // init results array
-      $results = array();
-
-      // process
-      foreach($modelUris as $modelUri) {
         $modelUri = (string) $modelUri;
+        
+        $this->_init();
+        
+        $user       = $this->_getUser();
+        $userRights = $this->_getUserModelRights($user->getUri());
+        $type       = strtolower($type);
 
         // type = view; check whether allowed
         if ($type === 'view') {
             // explicit forbidden
             if (in_array($modelUri, $userRights['denyModelView'])) {
-                $results[$modelUri] = false;
+                return false;
             } else if (in_array($modelUri, $userRights['grantModelView'])) {
                 // view explicit allowed and not denied
-                $results[$modelUri] = true;
+                return true;
             } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
                 // view in edit allowed and not denied
-                $results[$modelUri] = true;
+                return true;
             } else if ($this->isAnyModelAllowed('view')) {
                 // any model
-                $results[$modelUri] = true;
+                return true;
             }
-        } else if ($type === 'edit') { // type = edit; check whether allowed
+        }
+                  
+        // type = edit; check whether allowed
+        if ($type === 'edit') {
             // explicit forbidden
             if (in_array($modelUri, $userRights['denyModelEdit'])) {
-                $results[$modelUri] = false;
+                return false;
             } else if (in_array($modelUri, $userRights['grantModelEdit'])) {
                 // edit allowed and not denied
-                $results[$modelUri] = true;
+                return true;
             } else if ($this->isAnyModelAllowed('edit')) {
                 // any model
-                $results[$modelUri] = true;
+                return true;
             }
-        } else {
-          // deny everything else => false
-          $results[$modelUri] = false;
         }
-      }
-
-      return $results;
+        
+        // deny everything else => false
+        return false;
     }
-
+    
     /**
      * Checks whether the given action is allowed for the current user.
      *

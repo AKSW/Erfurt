@@ -37,8 +37,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     protected $_password = null;
 
-    protected $_httpAdapter = null;
-
     public function __construct($adapterOptions = array())
     {
         $this->_serviceUrl = $adapterOptions['serviceUrl'];
@@ -55,11 +53,6 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if (isset($adapterOptions['password'])) {
             $this->_password = $adapterOptions['password'];
         }
-    }
-
-    public function setHttpAdapter($adapter)
-    {
-        $this->_httpAdapter = $adapter;
     }
 
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
@@ -186,14 +179,13 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
 
-        $client = $this->_getHttpClient(
+        $client = Erfurt_App::getInstance()->getHttpClient(
             $url,
             array(
                 'maxredirects'  => 10,
                 'timeout'       => 2000
             )
         );
-
 
         if (null !== $this->_username) {
             if (substr($url, 0, 7) === 'http://') {
@@ -352,15 +344,5 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         }
 
         return $result;
-    }
-
-
-    private function _getHttpClient ($uri, $options = array())
-    {
-        if (null !== $this->_httpAdapter) {
-            $options['adapter'] = $this->_httpAdapter;
-        }
-        // TODO Create HTTP client here and remove method from Erfurt_App.
-        return Erfurt_App::getInstance()->getHttpClient($uri, $options);
     }
 }

@@ -16,16 +16,6 @@
  */
 class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_QueryCache_Backend
 {
-    private static $_requiredTables = array(
-        'ef_cache_query_result',
-        'ef_cache_query_triple',
-        'ef_cache_query_model',
-        'ef_cache_query_objectkey',
-        'ef_cache_query_rt',
-        'ef_cache_query_rm',
-        'ef_cache_query_version'
-    );
-
     /**
      *  check the existing cacheVersion and can used for looking up if the cache structure is beeing created
      *  @access     public
@@ -33,7 +23,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     final public function checkCacheVersion()
     {
-        $result = false;
         try {
             $query = 'SELECT num FROM ef_cache_query_version';
             $result = $this->store->sqlQuery($query);
@@ -46,43 +35,20 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         } else if (is_array($result) && count($result) > 0) {
             return true;
         } else {
-        return false;
+            return false;
         }
     }
 
     /**
-     *  check the existing cache structure
-     *  @access     public
-     *  @return     boolean         $state          true / false
-     */
-    final public function checkCacheStructure()
-    {
-        $existingTableNames = $this->store->listTables();
-        $logger = Erfurt_App::getInstance()->getLog('cache');
-        $logger->debug('Check cache structure.');
-
-        foreach (self::$_requiredTables as $table) {
-            if (!in_array($table, $existingTableNames)) {
-                $logger->debug('The table "' . $table . '" is missing.');
-                return false;
-            }
-        }
-
-        $logger->debug('All tables are existing.');
-        return true;
-    }
-
-    /**
-     *  creating the initially needed cacheStructure. 
+     *  creating the initially needed cacheStructure.
      *  In the database case there will be 6 tables created named as followed:
-     *    ef_cache_query_result, 
-     *    ef_cache_query_triple, 
-     *    ef_cache_query_model, 
-     *    ef_cache_query_objectkey, 
-     *    ef_cache_query_rt, 
-     *    ef_cache_query_rm, 
-     *    ef_cache_query_version. 
-     *  Furthermore there are some indexes which are created. 
+     *    ef_cache_query_result,
+     *    ef_cache_query_triple,
+     *    ef_cache_query_model,
+     *    ef_cache_query_rt,
+     *    ef_cache_query_rm,
+     *    ef_cache_query_version.
+     *  Furthermore there are some indexes which are created.
      *  NOTE: if this function will be called and database exists, all cached data will be deleted first.
      *  @access     public
      *  @return     boolean         $state          true / false
@@ -124,9 +90,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_result', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
+                'CREATE INDEX ef_cqr_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
             );
         }
 
@@ -139,7 +104,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
         }
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
@@ -150,7 +114,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
+                'CREATE INDEX ef_cqm_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
             );
         }
 
@@ -161,8 +125,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-
         }
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
@@ -172,7 +134,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
 
         if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
@@ -184,9 +145,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
-            $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)'
-            );
         }
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
@@ -202,8 +160,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
     /**
      *  Saving a QueryString and its Result according to its QueryHash
-     *  Furthermore triplePatterns from given QueryString and ModelIris (from clause) 
-     *  will also be saved . If array of modelIris is empty the QueryId will be assigned to 
+     *  Furthermore triplePatterns from given QueryString and ModelIris (from clause)
+     *  will also be saved . If array of modelIris is empty the QueryId will be assigned to
      *  a NULL-Entry . Last But not Least the duration of the originally processed query will be saved.
      *  @access     public
      *  @param      string    $queryId        Its a hash of the QueryString
@@ -222,18 +180,18 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $queryResult = $this->_encodeResult($queryResult);
             //saving the result and its according queryId
             $query = 'INSERT INTO ef_cache_query_result (
-                qid, 
+                qid,
                 query,
                 result,
                 hit_count,
                 inv_count,
-                time_stamp, 
+                time_stamp,
                 duration) VALUES (
                 \''.$queryId.'\',
-                \''.(str_replace('\'', '\\\'', $queryString)).'\', 
+                \''.(str_replace('\'', '\\\'', $queryString)).'\',
                 \''.$queryResult.'\',
                 0,
-                0, 
+                0,
                 '.(microtime(true)).',
                 '.$duration.')' ;
             $ret = $this->_query($query);
@@ -245,8 +203,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         } else {
             $queryResult = $this->_encodeResult($queryResult);
             $this->_query(
-                'UPDATE ef_cache_query_result SET   result = \''.$queryResult.'\', 
-                                                    duration = '.$duration.' 
+                'UPDATE ef_cache_query_result SET   result = \''.$queryResult.'\',
+                                                    duration = '.$duration.'
                  WHERE qid = \''.$queryId.'\''
             );
         }
@@ -282,22 +240,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             case 'ZendDb' :
             case 'MySql' :
                 $count = $this->_query(
-                    'SELECT hit_count 
-                     FROM ef_cache_query_result 
+                    'SELECT hit_count
+                     FROM ef_cache_query_result
                      WHERE qid=\''.$queryId.'\' '
                 );
                 $this->_query(
-                    'UPDATE ef_cache_query_result SET hit_count = '.($count[0]['hit_count']+1).' 
+                    'UPDATE ef_cache_query_result SET hit_count = '.($count[0]['hit_count']+1).'
                      WHERE qid=\''.$queryId.'\' AND result IS NOT NULL'
                 );
                 break;
             case 'Virtuoso':
             default:
                 $query =
-                    'UPDATE ef_cache_query_result 
+                    'UPDATE ef_cache_query_result
                             SET hit_count = (
-                                SELECT hit_count 
-                                FROM ef_cache_query_result 
+                                SELECT hit_count
+                                FROM ef_cache_query_result
                                 WHERE qid=\''.$queryId.'\') + 1
                             WHERE qid=\''.$queryId.'\' AND result IS NOT NULL'  ;
                 $this->_query($query);
@@ -316,8 +274,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             case 'ZendDb':
             case 'MySql':
                 $count = $this->_query(
-                    'SELECT inv_count 
-                     FROM ef_cache_query_result 
+                    'SELECT inv_count
+                     FROM ef_cache_query_result
                      WHERE qid=\''.$queryId.'\' '
                 );
                 $this->_query(
@@ -327,11 +285,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 break;
             case 'Virtuoso':
             default:
-                $query = '  
-                    UPDATE ef_cache_query_result 
+                $query = '
+                    UPDATE ef_cache_query_result
                     SET inv_count = (
-                        SELECT inv_count 
-                        FROM ef_cache_query_result 
+                        SELECT inv_count
+                        FROM ef_cache_query_result
                         WHERE qid=\''.$queryId.'\') + 1
                     WHERE qid=\''.$queryId.'\' AND result IS NOT NULL';
                 $this->_query($query);
@@ -340,33 +298,25 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     }
 
     /**
-     *  invalidating a cached Query Result 
+     *  invalidating a cached Query Result
      *  @access     public
      *  @param      array   $statements     $statements[$subject][$predicate] = $object
-     *  @return     array   $qids           array of identifiers of the affected cached queries         
+     *  @return     array   $qids           array of identifiers of the affected cached queries
      */
     public function invalidate ($modelIri, $statements = array())
     {
         if (sizeof($statements) == 0) {
             return false;
         }
-
         $qids = array();
         $clauses = array();
         foreach ($statements as $subject => $predicates) {
             foreach ($predicates as $predicate => $objects) {
-                if (empty($objects)) {
-                    $objects["dummy"] = "";
-                }
                 foreach ($objects as $object) {
-                    $objectValue = null;
-                    $clause = null;
-                    if (isset($object['value'])) {
-                        $objectValue = $object['value'] ;
-                        if ($object['type'] == 'literal') {
-                            $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
-                            $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
-                        }
+                    $objectValue = $object['value'] ;
+                    if ($object['type'] == 'literal') {
+                        $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
+                        $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
                     }
                     $clause = array();
                     if ($subject != '') {
@@ -384,9 +334,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 }
             }
         }
-        if (empty($clauses)) {
-            return false;
-        }
 
         if (count($clauses) > 20) {
             return $this->invalidateWithModelIri($modelIri);
@@ -395,22 +342,21 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         $clauseString = implode(' OR ', $clauses);
         // retrieve list of qids which have to be invalidated
         $query = '
-            SELECT DISTINCT (qid) 
+            SELECT DISTINCT (qid)
             FROM (
                 SELECT qid qid1
                 FROM ef_cache_query_rt JOIN ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                 WHERE ('.$clauseString.')
-            ) first 
-            JOIN 
+            ) first
+            JOIN
             (
                 SELECT qid qid2
                 FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                 WHERE (ef_cache_query_model.modelIri = \''.$modelIri.'\' OR ef_cache_query_model.modelIri IS NULL)
-            ) second ON first.qid1 = second.qid2 
-            JOIN 
-                ef_cache_query_result result ON result.qid = qid2 
+            ) second ON first.qid1 = second.qid2
+            JOIN
+                ef_cache_query_result result ON result.qid = qid2
             WHERE result.result IS NOT NULL';
-
         $result = $this->_query($query);
         if (!$result) {
             return $qids;
@@ -421,22 +367,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         }
 
         $query = '
-            UPDATE ef_cache_query_result SET result = NULL 
-            WHERE 
+            UPDATE ef_cache_query_result SET result = NULL
+            WHERE
             (
-                qid IN 
-                ( 
-                    SELECT DISTINCT (qid) 
-                    FROM    ef_cache_query_rt JOIN 
+                qid IN
+                (
+                    SELECT DISTINCT (qid)
+                    FROM    ef_cache_query_rt JOIN
                             ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                     WHERE ('.$clauseString.')
-                ) 
+                )
                 AND qid IN
                 (
-                    SELECT DISTINCT (qid) 
-                    FROM    ef_cache_query_rm JOIN 
+                    SELECT DISTINCT (qid)
+                    FROM    ef_cache_query_rm JOIN
                             ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
-                    WHERE ( ef_cache_query_model.modelIri = \''.$modelIri.'\' OR 
+                    WHERE ( ef_cache_query_model.modelIri = \''.$modelIri.'\' OR
                             ef_cache_query_model.modelIri IS NULL)
                )
            )';
@@ -446,16 +392,16 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
 
     /**
-     *  invalidating all cached Query Results according to a given ModelIri 
+     *  invalidating all cached Query Results according to a given ModelIri
      *  @access     public
      *  @param      string  $modelIri       A ModelIri
-     *  @return     array   $qids           array of identifiers of affected cached queries         
+     *  @return     array   $qids           array of identifiers of affected cached queries
      */
     public function invalidateWithModelIri($modelIri)
     {
         $qids = array();
 
-        $query = 'SELECT DISTINCT (qid) 
+        $query = 'SELECT DISTINCT (qid)
                   FROM ef_cache_query_rm JOIN ef_cache_query_model ON ef_cache_query_rm.mid = ef_cache_query_model.mid
                   WHERE (ef_cache_query_model.modelIri = \''.$modelIri.'\' OR ef_cache_query_model.modelIri IS NULL)';
         $qids = $this->_query($query);
@@ -465,9 +411,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             $qid = $qidEntry['qid'];
             $ret[] = $qid;
             //delete entries in query_triple
-            $query = ' 
+            $query = '
                 SELECT ef_cache_query_rt.tid tid
-                FROM    ef_cache_query_rt JOIN 
+                FROM    ef_cache_query_rt JOIN
                         ef_cache_query_triple ON ef_cache_query_rt.tid = ef_cache_query_triple.tid
                 WHERE (qid = \''.$qid.'\')' ;
             $tids = $this->_query($query);
@@ -553,14 +499,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
         // TODO platform indepent index handling
 
-        $existingTableNames = $this->store->listTables();
-
-        foreach (self::$_requiredTables as $table) {
-            if (in_array($table, $existingTableNames)) {
-                $this->store->sqlQuery('DROP TABLE ' . $table);
-            }
-        }
-
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_model');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
         return true;
     }
 
@@ -579,7 +524,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             if (!(isset($ret[0]['qid']))) {
                 $query = '
-                    INSERT INTO ef_cache_query_objectkey (qid, objectkey) 
+                    INSERT INTO ef_cache_query_objectkey (qid, objectkey)
                     VALUES (\''.$queryId.'\', \''.$key.'\')' ;
                 $this->_query($query);
             }
@@ -617,10 +562,10 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
         $query = '
             SELECT  s1.tid, s2.subject, s2.predicate, s2.object, s1.tripleHitCount as tripleCount
-            FROM 
+            FROM
             (
               SELECT rt.tid, SUM(r.hit_count +1) as tripleHitCount
-              FROM 
+              FROM
                  ef_cache_query_rt as rt JOIN
                  ef_cache_query_result as r  ON (r.qid=rt.qid)
               GROUP BY (rt.tid)
@@ -628,11 +573,11 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             (
               SELECT t.tid, t.subject, t.predicate, t.object
-              FROM 
+              FROM
                 ef_cache_query_triple as t
            ) as s2 ON (s1.tid = s2.tid)
             '.$filter.'
-            ORDER BY tripleCount DESC 
+            ORDER BY tripleCount DESC
             '.$limiter.'
         ';
         $result = $this->_query($query, (int)$limit);
@@ -789,9 +734,9 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $tripleId = null;
 
-            $query = 'SELECT tid FROM ef_cache_query_triple WHERE 
-                        subject '.(($triplePattern['subject'] == 'NULL') ? 'IS ' : '= ') . $triplePattern['subject'] . ' AND 
-                        predicate '.(($triplePattern['predicate'] == 'NULL') ? 'IS ' : '= ') . $triplePattern['predicate'] . ' AND 
+            $query = 'SELECT tid FROM ef_cache_query_triple WHERE
+                        subject '.(($triplePattern['subject'] == 'NULL') ? 'IS ' : '= ') . $triplePattern['subject'] . ' AND
+                        predicate '.(($triplePattern['predicate'] == 'NULL') ? 'IS ' : '= ') . $triplePattern['predicate'] . ' AND
                         object '.(($triplePattern['object'] == 'NULL') ? 'IS ' : '= ') . $triplePattern['object'] . ' ';
             $result = $this->_query($query);
 
@@ -812,7 +757,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             // build association of triple and result
 
             $res = $this->_query(
-                'SELECT * FROM ef_cache_query_rt 
+                'SELECT * FROM ef_cache_query_rt
                  WHERE qid = \''.$queryId.'\' AND tid = \''.$tripleId.'\''
             );
             if (sizeof($res) == 0) {
@@ -896,30 +841,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 // If this fails, something else is wrong, so we re-throw the error!
                 try {
                     $this->createCacheStructure();
+                    $result = $this->store->sqlQuery($sql, $limit, $offset);
                 } catch (Erfurt_Store_Adapter_Exception $se) {
                     $logger->debug($se->getMessage());
-                    
+
                     throw new Erfurt_Exception(
-                        'Something went wrong while building query cache structure: ' . $se->getMessage()
+                        'Something went wrong while building query cache structure: ' . $se->getMessage(),
+                        0,
+                        $e
                     );
                 }
-            } else if (!$this->checkCacheStructure()) {
-                $logger->debug('Resetting query cache table structure now.');
-                $this->uninstall();
-                $this->createCacheStructure();
             } else {
-                
+
                 throw new Erfurt_Exception(
-                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql
-                );
-            }
-            try {
-                $result = $this->store->sqlQuery($sql, $limit, $offset);
-            } catch (Erfurt_Store_Adapter_Exception $se) {
-                $logger->debug($se->getMessage());
-                
-                throw new Erfurt_Exception(
-                    'Something went wrong while finally executing cache query: ' . $se->getMessage()
+                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql,
+                    0,
+                    $e
                 );
             }
         }
@@ -939,7 +876,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     }
 
     /**
-     *  this private methode encapsulates the functionality decoding the base 64 encoded resultSet 
+     *  this private methode encapsulates the functionality decoding the base 64 encoded resultSet
      *  @access     private
      *  @param      string          $result      base 64 encoded Result
      *  @return     string          $result      decoded result

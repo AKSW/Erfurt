@@ -6,6 +6,11 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
     const EF_TEST_DIR = 'erfurt/';
     const DAWG_DATA_DIR = 'w3c-dawg2/data-r2/';
 
+    /**
+     * System under test.
+     *
+     * @var Erfurt_Sparql_Parser
+     */
     protected $_parser = null;
 
     public function setUp()
@@ -29,6 +34,8 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 
     public function testTokenizeFilter()
     {
+        $this->markTestIncomplete('Issue #35 not yet fixed https://github.com/AKSW/Erfurt/issues/35');
+
         $tokensA = array(
             'WHERE', '{', '?a', 'p1:p', '?b', ',', '?c', '.', 'FILTER', "(", "xsd:dateTime", '(',
             '?a', ')', '=', 'xsd:dateTime', '(', '"', '1978-01-08T00:00:00Z', '"', ')', ')', '.',
@@ -64,6 +71,36 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                         ### bla bla bla';
 
         $this->assertEquals('', trim(Erfurt_Sparql_Parser::uncomment($queryString)));
+    }
+
+    /**
+     * Checks if the parser is able to handle a literal that contains quotes.
+     */
+    public function testParserCanHandleLiteralsWithQuotes()
+    {
+        $query = 'SELECT * FROM <http://example.org> WHERE { ?subject ?predicate "He\'s working" . }';
+
+        $result = $this->_parser->parse($query);
+
+        $this->assertInstanceOf('Erfurt_Sparql_Query', $result);
+    }
+
+    /**
+     * Checks if UNION queries are parsed correctly.
+     */
+    public function testParserHandlesUnionCorrectly()
+    {
+        $query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                  SELECT ?var1 FROM <http://dbpedia.org>
+                  WHERE {
+                      { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> \"2922 Dikan'ka\" }
+                      UNION
+                      { ?var1 <http://www.w3.org/2000/01/rdf-schema#label> \"2922 Dikan'ka\" }
+                  }";
+
+        $result = $this->_parser->parse($query);
+
+        $this->assertInstanceOf('Erfurt_Sparql_Query', $result);
     }
 
     /**

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY SysOnt "http://ns.ontowiki.net/SysOnt/">
+  <!ENTITY SysBase "http://ns.ontowiki.net/SysBase/">
+  <!ENTITY LocalConfig "http://localhost/OntoWiki/Config/">
+  <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
+  <!ENTITY sioc "http://rdfs.org/sioc/ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&LocalConfig;"
+         xmlns:sysont="&SysOnt;"
+         xmlns:foaf="&foaf;"
+         xmlns:sioc="&sioc;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about="&LocalConfig;" rdfs:label="OntoWiki System Configuration">
+    <rdfs:comment>This is your OntoWiki configuration model. You can configure model based access control and some actions here.</rdfs:comment>
+    <rdf:type rdf:resource="&SysOnt;Model" />
+    <owl:imports>
+      <owl:Ontology rdf:about="&SysOnt;"/>
+    </owl:imports>
+	<owl:versionInfo>$Id: SysOntLocal.rdf 3811 2009-07-27 13:27:22Z sebastian.dietzold $</owl:versionInfo>
+	<owl:versionInfo rdf:resource="http://code.google.com/p/ontowiki/source/list?path=/trunk/erfurt/src/Erfurt/include/SysOntLocal.rdf" />
+  </owl:Ontology>
+
+<!-- Instances -->
+  <sioc:User rdf:about="Admin"
+             rdfs:label="Admin">
+    <rdfs:comment>This is the pre-configured Admin User.</rdfs:comment>
+    <foaf:accountName rdf:datatype="&xsd;string">Admin</foaf:accountName>
+  </sioc:User>
+
+  <sioc:Usergroup rdf:about="AdminGroup"
+              rdfs:label="AdminGroup">
+    <sysont:denyModelEdit rdf:resource="&SysOnt;"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;AnyAction"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <rdfs:comment>The group of all admins. If not changed, they can trigger all actions and can edit all models but the system ontology.</rdfs:comment>
+    <sioc:has_member rdf:resource="Admin"/>
+  </sioc:Usergroup>
+
+  <sioc:Usergroup rdf:about="DefaultUserGroup"
+              rdfs:label="DefaultUserGroup">
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Rollback"/>
+    <sysont:denyModelView rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelEdit rdf:resource="&SysBase;"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models.</rdfs:comment>
+  </sioc:Usergroup>
+
+  <rdf:Description rdf:about="&SysOnt;Anonymous">
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:denyAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:denyAccess rdf:resource="&SysOnt;Rollback"/>
+    <sysont:denyModelView rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelView rdf:resource="&SysOnt;"/>
+    <sysont:denyModelView rdf:resource="&SysBase;"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;RegisterNewUser">
+    <sysont:rawConfig>defaultGroup=http://localhost/OntoWiki/Config/DefaultUserGroup</sysont:rawConfig>
+    <sysont:rawConfig>mailvalidation=yes</sysont:rawConfig>
+    <sysont:rawConfig>uidregexp="/^[[:alnum:]]+$/"</sysont:rawConfig>
+    <sysont:rawConfig>passregexp=""</sysont:rawConfig>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;Login">
+    <sysont:rawConfig>type=RDF</sysont:rawConfig>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="&SysOnt;Rollback">
+    <sysont:rawConfig>global=on</sysont:rawConfig>
+  </rdf:Description>
+
+  <sysont:Model rdf:about="&SysOnt;">
+		    <sysont:hidden rdf:datatype="&xsd;boolean">true</sysont:hidden>
+  </sysont:Model>
+
+	<!-- Statement Selector TestCase -->
+	<!--sysont:StatementSelector rdf:about="SelectAllUserInfo" rdfs:label="all user information">
+		<sysont:sparqlWhereClause>{?s ?p ?o. ?s rdf:type sioc:User.}</sysont:sparqlWhereClause>
+		<sysont:model rdf:resource="&LocalConfig;" />
+	</sysont:StatementSelector>
+
+	<sysont:StatementSelector rdf:about="SelectAllPasswords" rdfs:label="all password statements">
+		<sysont:sparqlWhereClause>{?s ?p ?o. ?s sysont:userPassword ?o.}</sysont:sparqlWhereClause>
+		<sysont:model rdf:resource="&LocalConfig;" />
+	</sysont:StatementSelector>
+
+  <sioc:Usergroup rdf:about="AdvancedACLGroup"
+              rdfs:label="AdvancedACLGroup">
+    <sysont:grantStatementsView rdf:resource="SelectAllUserInfo"/>
+    <sysont:denyStatementsView rdf:resource="SelectAllPasswords"/>
+    <rdfs:comment>This pre-configured user group can login, register new user and edit all models except the system models. In the local config, they can read all user info but not the passwords.</rdfs:comment>
+    <sysont:grantAccess rdf:resource="&SysOnt;RegisterNewUser"/>
+    <sysont:grantAccess rdf:resource="&SysOnt;Login"/>
+    <sysont:denyModelEdit rdf:resource="&LocalConfig;"/>
+    <sysont:denyModelEdit rdf:resource="&SysOnt;"/>
+    <sysont:grantModelEdit rdf:resource="&SysOnt;AnyModel"/>
+    <sysont:grantModelView rdf:resource="&SysOnt;AnyModel"/>
+  </sioc:Usergroup-->
+
+
+</rdf:RDF>
+

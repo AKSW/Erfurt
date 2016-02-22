@@ -21,7 +21,7 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
     public function testRdfSerializerWithValidFormats()
     {
         $positiveFormats = array('rdfxml', 'xml', 'rdf', 'turtle', 'ttl', 'nt', 'ntriple',
-            'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle', 'ntriples');
+            'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle');
 
         foreach ($positiveFormats as $format) {
             try {
@@ -56,7 +56,7 @@ class Erfurt_Syntax_RdfSerializerTest extends Erfurt_TestCase
     public function testInitializeWithValidFormats()
     {
         $positiveFormats = array('rdfxml', 'xml', 'rdf', 'turtle', 'ttl', 'nt', 'ntriple',
-            'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle', 'ntriples');
+            'json', 'rdfjson', 'RDFXML', 'rdfXML', 'RdF', 'TuRTle');
 
         foreach ($positiveFormats as $format) {
             try {

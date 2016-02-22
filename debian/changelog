@@ -1,38 +1,3 @@
-liberfurt-php (1.7) lod2; urgency=low
-
-  * Support OR and AND search, make AND default
-  * Fix a warning in RDF/XML parser
-  * Fix Windows test compatibility
-  * Fix getModelOrCreate to better handle not readable existing models
-  * Add Markdown to SysOnt.rdf
-  * Unify indention of SysOnt.rdf
-  * Enhance Pingback
-  * Add order option to Store.getGraphsUsingResource()
-  * changed URI generation: forward slashes are used now
-  * Fix "Too many opened parentheses" in _getTransitiveClosure
-  * escaped file paths before passing them to Virtuoso
-  * Reduce ord() calls in total by ~74% on plain start
-  * Add Worker, Jobs and Gearman Backend
-  * Add new log level SUCC
-  * Don't use AC, when writing type of model
-  * Add more verbose output for store exceptions
-  * Fix reading of namespace config to support equals sign in namespaces
-  * Fix ORDER BY queries in SimpleQuery
-  * Fix versioning unit tests
-  * Add support for action metadata
-  * Fix history for graph
-  * Add versioning support for deleteMatchingStatements
-  * Fix coding standard for Turtle Adapter
-  * fixing Virtuoso _execSQL function.
-  * Fix query2 parser star select issue
-  * Add getBaseIri to ModelStub
-  * avoid prefixes for http://, https://, ...
-  * Add support for full action URIs
-  * Fix syntax error when short_open_tag is enabled
-  * Fix _getTransitiveClosure: there was maximum one parent class in the list
-
- -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Fri, 31 Jan 2014 15:07:07 +0100
-
 liberfurt-php (1.6) lod2; urgency=low
 
   * rework caching framework / allow for memcached backend
@@ -129,4 +94,3 @@ liberfurt-php (1.0-1) lod2; urgency=low
   * initial debian package
 
  -- Sebastian Tramp <tramp@informatik.uni-leipzig.de>  Thu, 09 Jun 2011 12:35:20 +0200
-

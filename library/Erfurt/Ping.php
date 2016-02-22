@@ -2,7 +2,7 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -13,7 +13,6 @@
  * @author   Sebastian Tramp <mail@sebastian.tramp.name>
  * @author   Jonas Brekle <jonas.brekle@gmail.com>
  * @author   Natanael Arndt <arndtn@gmail.com>
- * @author   Norman Radtke <norman.radtke@gmail.com>
  */
 
 class Erfurt_Ping
@@ -22,14 +21,10 @@ class Erfurt_Ping
     protected $_sourceRdf = null;
     private $_dbChecked = false;
     private $_options = array();
-    private $_config = null;
-    private $_wrapperRegistry = null;
-    private $_httpAdapter = null;
 
     public function __construct ($options = array())
     {
-        $this->_config = Erfurt_App::getInstance()->getConfig();
-
+        $this->_options = $options;
         if (!isset($options['rdfa'])) {
             $options['rdfa'] = true;
         }
@@ -39,7 +34,6 @@ class Erfurt_Ping
         if (!isset($options['generic_relation'])) {
             $options['generic_relation'] = 'http://rdfs.org/sioc/ns#links_to';
         }
-        $this->_options = $options;
     }
 
     /**
@@ -152,8 +146,8 @@ class Erfurt_Ping
         $added = false;
         foreach ($foundPingbackTriples as $triple) {
             if (!$this->_pingbackExists($triple['s'], $triple['p'], $triple['o'])) {
-                $res = $this->_addPingback($triple['s'], $triple['p'], $triple['o']);
-                if ($res) $added = true;
+                $this->_addPingback($triple['s'], $triple['p'], $triple['o']);
+                $added = true;
             }
         }
 
@@ -172,55 +166,17 @@ class Erfurt_Ping
         return 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
     }
 
-    public function setWrapperRegistry ($wrapperRegistry)
-    {
-        $this->_wrapperRegistry = $wrapperRegistry;
-    }
-
-    public function setHttpAdapter($adapter)
-    {
-        $this->_httpAdapter = $adapter;
-    }
-
-    private function _getWrapper ($wrapperName)
-    {
-        if ($this->_wrapperRegistry === null) {
-            Erfurt_Wrapper_Registry::reset();
-            $this->_wrapperRegistry = Erfurt_Wrapper_Registry::getInstance();
-        }
-
-        $wrapper = $this->_wrapperRegistry->getWrapperInstance($wrapperName);
-
-        if ($this->_httpAdapter !== null) {
-            $wrapper->setHttpAdapter($this->_httpAdapter);
-        }
-
-        return $wrapper;
-    }
-
     protected function _addPingback ($s, $p, $o)
     {
         if ($this->_targetGraph === null) {
             return false;
         }
 
-        $modelUri = $this->_config->ping->modelUri;
-        $nsPing = $this->_config->ping->baseUri;
-
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModelOrCreate($modelUri);
 
-        $pingUri = $model->createResourceUri('Ping');
-        $model->addMultipleStatements(
-            array(
-                $pingUri => array (
-                    EF_RDF_NS . 'type' => array(array('type' => 'uri', 'value' => $nsPing . 'Item')),
-                    $nsPing . 'source' => array(array('type' => 'uri', 'value' => $s)),
-                    $nsPing . 'target' => array(array('type' => 'uri', 'value' => $o)),
-                    $nsPing . 'relation' => array(array('type' => 'uri', 'value' => $p))
-                )
-            ), false
-        );
+        $sql = 'INSERT INTO ef_pingback_pingbacks (source, target, relation) '
+            . 'VALUES ("' . $s . '", "' . $o . '", "' . $p . '")';
+        $this->_query($sql);
 
         $store->addStatement(
             $this->_targetGraph, $s, $p, array('value' => $o, 'type' => 'uri'), false
@@ -257,49 +213,24 @@ class Erfurt_Ping
             $graph = $event->trigger();
             if ($graph) {
                 $this->_targetGraph = $graph;
-                /*
-                 * If we get a target graph from linked data plugin, we know that the target uri
-                 * exists, since getGraphsUsingResource ist used by store.
-                 */
+                // If we get a target graph from linked data plugin, we no that the target uri exists, since
+                // getGraphsUsingResource ist used by store.
                 return true;
             } else {
-                /*
-                 * If there is no answer to 'onNeedsGraphForLinkedDataUri' we have to ask the store
-                 */
-                $store = Erfurt_App::getInstance()->getStore();
-                $graphs = $store->getReadableGraphsUsingResource($targetUri);
-
-                if ($graphs === null) {
-                    return false;
-                } else {
-                    $this->_targetGraph = $graphs[0];
-                    return true;
-                }
+                return false;
             }
         }
     }
 
     protected function _deleteInvalidPingbacks ($sourceUri, $targetUri, $foundPingbackTriples = array())
     {
-        $modelUri = $this->_config->ping->modelUri;
-        $nsPing = $this->_config->ping->baseUri;
-
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModelOrCreate($modelUri);
 
-        $query  = 'PREFIX pingback: <' . $nsPing . '>' . PHP_EOL;
-        $query .= 'SELECT ?ping ?relation' . PHP_EOL;
-        $query .= 'WHERE {' . PHP_EOL;
-        $query .= '    ?ping a pingback:Item;' . PHP_EOL;
-        $query .= '          pingback:relation ?relation;' . PHP_EOL;
-        $query .= '          pingback:source <' . $sourceUri . '>;' . PHP_EOL;
-        $query .= '          pingback:target <' . $targetUri . '>.' . PHP_EOL;
-        $query .= '}';
-
-        $result = $model->sparqlQuery($query);
+        $sql = 'SELECT * FROM ef_pingback_pingbacks WHERE source="' . $sourceUri . '" AND target="' . $targetUri . '"';
+        $result = $this->_query($sql);
 
         $removed = false;
-        if (count($result) > 0) {
+        if ($result !== false) {
             foreach ($result as $row) {
                 $found = false;
                 foreach ($foundPingbackTriples as $triple) {
@@ -310,7 +241,8 @@ class Erfurt_Ping
                 }
 
                 if (!$found) {
-                    $model->deleteMatchingStatements($row['ping'], null, null, array('use_ac' => false));
+                    $sql = 'DELETE FROM ef_pingback_pingbacks WHERE id=' . $row['id'];
+                    $this->_query($sql);
 
                     $oSpec = array(
                         'value' => $targetUri,
@@ -374,7 +306,8 @@ class Erfurt_Ping
         $r = new Erfurt_Rdf_Resource($sourceUri);
 
         // Try to instanciate the requested wrapper
-        $wrapper = $this->_getWrapper($wrapperName);
+        new Erfurt_Wrapper_Manager();
+        $wrapper = Erfurt_Wrapper_Registry::getInstance()->getWrapperInstance($wrapperName);
 
         $wrapperResult = null;
         $wrapperResult = $wrapper->run($r, null, true);
@@ -420,29 +353,63 @@ class Erfurt_Ping
 
     protected function _pingbackExists ($s, $p, $o)
     {
-        $modelUri = $this->_config->ping->modelUri;
-        $nsPing = $this->_config->ping->baseUri;
+        $sql = 'SELECT * FROM ef_pingback_pingbacks '
+            . 'WHERE source="' . $s . '" AND target="' . $o . '" AND relation="' . $p . '" '
+            . 'LIMIT 1';
+        $result = $this->_query($sql);
+        if (is_array($result) && (count($result) === 1)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function _checkDb ()
+    {
+        if ($this->_dbChecked) {
+            return;
+        }
 
         $store = Erfurt_App::getInstance()->getStore();
-        $model = $store->getModelOrCreate($modelUri);
+        $sql = 'SELECT * FROM ef_pingback_pingbacks LIMIT 1';
 
-        $query  = 'PREFIX pingback: <' . $nsPing . '>' . PHP_EOL;
-        $query .= 'ASK' . PHP_EOL;
-        $query .= 'WHERE {' . PHP_EOL;
-        $query .= '    ?ping a pingback:Item;' . PHP_EOL;
-        $query .= '          pingback:source <' . $s . '>;' . PHP_EOL;
-        $query .= '          pingback:target <' . $o . '>.' . PHP_EOL;
-        if ($p !== null) {
-            $query .= '    ?ping pingback:relation <' . $p . '>.' . PHP_EOL;
+        try {
+            $result = $store->sqlQuery($sql);
+        } catch (Exception $e) {
+            $this->_createTable();
         }
-        $query .= '}';
 
-        $exist = $model->sparqlQuery($query);
+        $this->_dbChecked = true;
+    }
 
-        if (count($exist) > 0) {
-            return true;
-        } else {
+    private function _createTable ()
+    {
+        $store = Erfurt_App::getInstance()->getStore();
+
+        $sql = 'CREATE TABLE IF NOT EXISTS ef_pingback_pingbacks (
+            id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+            source    VARCHAR(255) COLLATE ascii_bin NOT NULL,
+            target    VARCHAR(255) COLLATE ascii_bin NOT NULL,
+            relation  VARCHAR(255) COLLATE ascii_bin NOT NULL
+        );';
+
+        return $this->_query($sql, false);
+    }
+
+    protected function _query ($sql, $withCheck = true)
+    {
+        if ($withCheck) {
+            $this->_checkDb();
+        }
+
+        $store = Erfurt_App::getInstance()->getStore();
+
+        try {
+            $result = $store->sqlQuery($sql);
+        } catch (Exception $e) {
             return false;
         }
+
+        return $result;
     }
 }

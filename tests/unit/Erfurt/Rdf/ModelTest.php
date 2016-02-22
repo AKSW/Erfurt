@@ -375,4 +375,24 @@ class Erfurt_Rdf_ModelTest extends Erfurt_TestCase
         $this->assertEquals($s2only, $this->_storeStub->addMultipleStatements);
         $this->assertEquals($s1only, $this->_storeStub->deleteMultipleStatements);
     }
+
+    /**
+     * Ensures that the model does not serialize the store if it serialized.
+     *
+     * The store references the adapter and the adapter might hold references to
+     * non-serializable resources like database connections.
+     * OntoWiki uses serialization to store the model in the session.
+     */
+    public function testModelDoesNotSerializeStore()
+    {
+        $storeDummy = $this->getMock('stdClass', array('__sleep'));
+        $storeDummy->expects($this->never())
+                   ->method('__sleep');
+
+        $model = new Erfurt_Rdf_Model('http://example.org/graph', 'http://example.org', $storeDummy);
+
+        $this->setExpectedException(null);
+        serialize($model);
+    }
+
 }

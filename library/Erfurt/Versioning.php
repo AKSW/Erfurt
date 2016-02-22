@@ -643,12 +643,7 @@ class Erfurt_Versioning
     private function _execAddAction($graphUri, $resource, $actionType, $payloadId = null)
     {
         if ($this->_user === null) {
-            $identity = $this->_getAuth()->getIdentity();
-            if (null !== $identity) {
-                $this->_user = $identity->getUri();
-            } else {
-                return null;
-            }
+            $this->_user = $this->_getAuth()->getIdentity()->getUri();
         }
         $userUri = $this->_user;
 
@@ -788,7 +783,7 @@ class Erfurt_Versioning
             try {
                 $result = $this->_getStore()->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Exception $f) {
-                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $f->getMessage() . $sql);
+                throw new Erfurt_Exception('Erfurt_Versioning _sqlQuery failed: ' . $f->getMessage() . $sql, 0, $f);
             }
         }
 

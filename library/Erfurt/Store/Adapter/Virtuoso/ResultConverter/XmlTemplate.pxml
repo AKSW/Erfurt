@@ -1,47 +1,32 @@
-<?php echo '<?xml version="1.0"?>' . PHP_EOL ?>
+<?php echo '<?xml version="1.0"?>' ?>
 <sparql xmlns="http://www.w3.org/2005/sparql-results#">
-
-<?php
-function compat_htmlentities ($string, $flags = null, $encoding = null, $double_encode = true) {
-    if ($flags === null) {
-        $flags = ENT_COMPAT;
-        if (defined("ENT_HTML401")) {
-            $flags = $flags | ENT_HTML401;
-        }
-    }
-    if ($encoding === null) {
-        $encoding = ini_get("default_charset");
-    }
-    return htmlentities ($string, $flags, $encoding, $double_encode);
-}
-?>
-
-<head>
-<?php foreach ($this->head->vars as $var): ?>
+  
+  <head>
+  <?php foreach ($this->head->vars as $var): ?>
     <variable name="<?php echo $var ?>" />
-<?php endforeach; // $var ?>
-</head>
+  <?php endforeach; // $var ?>
+  </head>
 
-<results>
-<?php $bindings = $this->results->bindings; ?>
-<?php foreach ($bindings as $binding): ?>
-    <result>
-<?php foreach ($binding as $key => $varSpec): ?>
-        <binding name="<?php echo $key ?>">
-<?php if ($varSpec['type'] == 'uri'): ?>
-            <uri><?php echo compat_htmlentities($varSpec['value']) ?></uri>
-<?php elseif ($varSpec['type'] == 'literal' || $varSpec['type'] == 'typed-literal'): ?>
-<?php if (isset($varSpec['datatype'])): ?>
-            <literal datatype="<?php echo $varSpec['datatype'] ?>"><?php echo compat_htmlentities($varSpec['value']) ?></literal>
-<?php elseif (isset($varSpec['xml:lang'])): ?>
-            <literal xml:lang="<?php echo $varSpec['xml:lang'] ?>"><?php echo compat_htmlentities($varSpec['value']) ?></literal>
-<?php else: ?>
-            <literal><?php echo compat_htmlentities($varSpec['value']) ?></literal>
-<?php endif; ?>
-<?php endif; ?>
+  <results>
+  <?php $bindings = $this->results->bindings; ?>
+    <?php foreach ($bindings as $binding): ?>
+      <result>
+      <?php foreach ($binding as $key => $varSpec): ?>
+        <binding name="<?php echo $key ?>">            
+        <?php if ($varSpec['type'] == 'uri'): ?>
+          <uri><?php echo $varSpec['value'] ?></uri>
+        <?php elseif ($varSpec['type'] == 'literal' || $varSpec['type'] == 'typed-literal'):   ?>
+          <literal
+          <?php if (isset($varSpec['datatype'])): ?>
+            datatype="<?php echo $varSpec['datatype'] ?>"
+          <?php elseif (isset($varSpec['xml:lang'])): ?>
+            xml:lang="<?php echo $varSpec['xml:lang'] ?>"
+          <?php endif; ?>><?php echo $varSpec['value'] ?></literal>
+        <?php endif; ?>
         </binding>
-<?php endforeach; // $varSpec ?>
-    </result>
-<?php endforeach; // $binding ?>
-</results>
+      <?php endforeach; // $varSpec ?>
+      </result>
+    <?php endforeach; // $binding ?>
+  </results>
+  
 </sparql>

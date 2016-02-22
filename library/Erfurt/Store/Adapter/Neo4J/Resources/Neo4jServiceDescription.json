@@ -1,0 +1,155 @@
+{
+    "name": "Neo4j API",
+    "apiVersion": "2014-03-13",
+    "description": "REST API of the Neo4j.",
+    "documentation": "http://docs.neo4j.org/chunked/1.9.7/index.html",
+    "operations": {
+        "baseOperation": {
+            "parameters": {
+                "inputFormat": {
+                    "description": "The provided input format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Content-Type",
+                    "default": "application/json"
+                },
+                "outputFormat": {
+                    "description": "The expected output format.",
+                    "location": "header",
+                    "type": "string",
+                    "sentAs": "Accept",
+                    "default": "application/json; charset=UTF-8"
+                },
+                "timeoutInMilliseconds": {
+                    "description": "A query timeout in milliseconds.",
+                    "location": "header",
+                    "type": "integer",
+                    "sentAs": "max-execution-time",
+                    "default": "900000"
+                }
+            }
+        },
+        "createUniqueNode": {
+            "summary": "Creates a unique node or returns it if it does not exist.",
+            "extends": "baseOperation",
+            "uri": "index/node/{index}?uniqueness=get_or_create",
+            "httpMethod": "POST",
+            "parameters": {
+                "index": {
+                    "description": "Name of the unique index that is used.",
+                    "type": "string",
+                    "location": "uri",
+                    "default": "unique-node",
+                    "required": false
+                },
+                "key": {
+                    "description": "Arbitrary key for the unique identifier.",
+                    "type": "string",
+                    "location": "json",
+                    "default": "unique-identifier",
+                    "required": false
+                },
+                "identifier": {
+                    "description": "The unique value.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "value",
+                    "required": true
+                },
+                "properties": {
+                    "description": "The properties of the node.",
+                    "type": "object",
+                    "location": "json",
+                    "required": true
+                }
+            },
+            "responseClass": "Erfurt_Store_Adapter_Neo4J_ResourceIdentityResponse"
+        },
+        "createUniqueRelation": {
+            "summary": "Creates a unique relation between two nodes or returns it if it does not exist.",
+            "extends": "baseOperation",
+            "uri": "index/relationship/{index}?uniqueness=get_or_create",
+            "httpMethod": "POST",
+            "parameters": {
+                "index": {
+                    "description": "Name of the unique index that is used.",
+                    "type": "string",
+                    "location": "uri",
+                    "default": "unique-node",
+                    "required": false
+                },
+                "key": {
+                    "description": "Arbitrary key for the unique value.",
+                    "type": "string",
+                    "location": "json",
+                    "default": "unique-identifier",
+                    "required": false
+                },
+                "identifier": {
+                    "description": "The unique identifier.",
+                    "type": "string",
+                    "location": "json",
+                    "sentAs": "value",
+                    "required": true
+                },
+                "start": {
+                    "description": "URI reference to the start node.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "end": {
+                    "description": "URI reference to the end node.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "type": {
+                    "description": "The type of the relation.",
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "properties": {
+                    "description": "Properties of the relation.",
+                    "type": "object",
+                    "location": "json",
+                    "required": false
+                }
+            },
+            "responseClass": "Erfurt_Store_Adapter_Neo4J_ResourceIdentityResponse"
+        },
+        "executeBatch": {
+            "summary": "Executes multiple commands as batch.",
+            "extends": "baseOperation",
+            "uri": "batch",
+            "httpMethod": "POST",
+            "parameters": {
+                "batch": {
+                    "type": "object",
+                    "instanceOf": "Erfurt_Store_Adapter_Neo4J_ApiCallBatch",
+                    "location": "body",
+                    "required": true
+                }
+            }
+        },
+        "query": {
+            "summary": "Executes a cypher query.",
+            "extends": "baseOperation",
+            "uri": "cypher",
+            "httpMethod": "POST",
+            "parameters": {
+                "query": {
+                    "type": "string",
+                    "location": "json",
+                    "required": true
+                },
+                "params": {
+                    "type": "object",
+                    "location": "json",
+                    "required": false
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -11,7 +11,7 @@
  *
  * @package Erfurt_Syntax_RdfSerializer_Adapter_RdfXml
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
@@ -27,14 +27,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
     private $_stringWriter;
 
     /**
-     * An associative array where the key is the label of the blank node. 
+     * An associative array where the key is the label of the blank node.
      *
      * @var string[]
      */
     private $_bNodes;
 
     /**
-     * An associative array where the key is the label of the blank node. 
+     * An associative array where the key is the label of the blank node.
      *
      * @var int[]
      */
@@ -464,7 +464,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
 
     protected function _sparqlForListResources()
     {
-        
+
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setProloguePart('SELECT ?s ?first ?rest');
         $query->addFrom($this->_graphUri);

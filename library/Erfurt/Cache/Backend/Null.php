@@ -13,6 +13,7 @@
  * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  * @package Erfurt_Cache_Backend
+ * @todo Can this class be replaced by Zend_Cache_Backend_BlackHole?
  */
 class Erfurt_Cache_Backend_Null extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface
 {

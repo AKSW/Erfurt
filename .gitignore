@@ -11,9 +11,7 @@ config.ini
 nbproject
 cache.properties
 cache.sqlite
-vendor
-
-# build stuff
 build/
 !build/phpcs.xml
 !build/phpcmd.xml
+vendor

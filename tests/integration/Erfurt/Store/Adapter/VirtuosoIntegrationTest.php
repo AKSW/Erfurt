@@ -1,11 +1,8 @@
 <?php
-/**
- * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
- *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- */
 
+/**
+ * @group Integration
+ */
 class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
 {
     /** @var Erfurt_Store_Adapter_Virtuoso */
@@ -52,7 +49,6 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
         $s = 'http://example.com/';
         $p = 'http://example.com/property1';
 
-        
         $options = array();
         $o = array('type' => 'literal');
 
@@ -101,33 +97,21 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
         $o['value'] = '"C:\\\\Program Files\\\\Conficker\\\\FormatHardDrive.exe"';
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
 
+
         // boolean literal with numerical representation
         $o['value']  = '1';
         $p2 = 'http://example.com/booleanProperty1';
-        $this->assertNotEquals(
-            false,
-            $this->fixture->addStatement(
-                $g, $s, $p2, $o,
-                array_merge(
-                    $options,
-                    array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean')
-                )
-            )
-        );
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p2, $o, array_merge(
+            $options,
+            array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean'))));
 
         // boolean literal with string representation
         $o['value']  = 'true';
         $p2 = 'http://example.com/booleanProperty2';
-        $this->assertNotEquals(
-            false,
-            $this->fixture->addStatement(
-                $g, $s, $p2, $o,
-                array_merge(
-                    $options,
-                    array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean')
-                )
-            )
-        );
+        $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p2, $o, array_merge(
+            $options,
+            array('literal_datatype' => 'http://www.w3.org/2001/XMLSchema#boolean'))));
+
 
         // Vakantieland tests
 
@@ -200,7 +184,7 @@ EOT;
 
     public function testBuildTripleString()
     {
-        $statementsA = array(
+        $statements = array(
             'http://example.com/1' => array(
                 'http://example.com/2' => array(
                     array('type' => 'uri', 'value' => 'http://example.com/3'),
@@ -211,7 +195,7 @@ EOT;
                 )
             )
         );
-        $expectedA = <<<EOT
+        $expected = <<<EOT
 <http://example.com/1> <http://example.com/2> <http://example.com/3> .
 <http://example.com/1> <http://example.com/2> "literal 1" .
 <http://example.com/1> <http://example.com/2> "literal 2"@en .
@@ -220,11 +204,11 @@ EOT;
 
 EOT;
 
-        $resultA = $this->fixture->buildTripleString($statementsA);
+        $result = $this->fixture->buildTripleString($statements);
         // The Triple string uses platform dependent line endings. Therefore, the line endings must be normalized
         // before they are compared (the line endings in this file are always in Unix format).
-        $resultA = str_replace(PHP_EOL, "\n", $resultA);
-        $this->assertEquals($expectedA, $resultA);
+        $result = str_replace(PHP_EOL, "\n", $result);
+        $this->assertEquals($expected, $result);
 
         $value    = <<<EOT
 Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
@@ -237,14 +221,14 @@ Over the past 3 years, the semantic web activity has gained momentum with the wi
 </ol>
 We will integrate and syndicate linked data with large-scale, existing applications and showcase the benefits in the three application scenarios of media & publishing, corporate data intranets and eGovernment. The resulting tools, methods and data sets have the potential to change the Web as we know it today.
 EOT;
-        $statementsB = array(
+        $statements2 = array(
             'http://example.com/1' => array(
                 'http://example.com/2' => array(
                     array('type' => 'literal', 'value' => $value)
                 )
             )
         );
-        $expectedB = <<<EOT
+        $expected2 = <<<EOT
 <http://example.com/1> <http://example.com/2> """Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
 <ol>
 <li>enterprise-ready tools and methodologies for exposing and managing very large amounts of structured information on the Data Web,</li>
@@ -257,9 +241,9 @@ We will integrate and syndicate linked data with large-scale, existing applicati
 
 EOT;
 
-        $resultB = $this->fixture->buildTripleString($statementsB);
-        $resultB = str_replace(PHP_EOL, "\n", $resultB);
-        $this->assertEquals($expectedB, $resultB);
+        $result2 = $this->fixture->buildTripleString($statements2);
+        $result2 = str_replace(PHP_EOL, "\n", $result2);
+        $this->assertEquals($expected2, $result2);
     }
 
     public function testImportRdfWithUrlAndRdfXml302After303GithubOntoWikiIssue101()
@@ -273,33 +257,27 @@ EOT;
         $adapter = new Zend_Http_Client_Adapter_Test();
         $this->fixture->setHttpClientAdapter($adapter);
 
-        $adapter->setResponse(
-            new Zend_Http_Response(
-                302,
-                array(
-                    'Content-Type' => 'text/html; charset=iso-8859-1',
-                    'Location'     => 'http://motools.sourceforge.net/mo/'
-                )
+        $adapter->setResponse(new Zend_Http_Response(
+            302,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'http://motools.sourceforge.net/mo/'
             )
-        );
-        $adapter->addResponse(
-            new Zend_Http_Response(
-                303,
-                array(
-                    'Content-Type' => 'text/html; charset=iso-8859-1',
-                    'Location'     => 'http://motools.sourceforge.net/doc/musicontology.rdfs'
-                )
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            303,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'http://motools.sourceforge.net/doc/musicontology.rdfs'
             )
-        );
-        $adapter->addResponse(
-            new Zend_Http_Response(
-                200,
-                array(
-                    'Content-Type' => 'application/rdf+xml'
-                ),
-                file_get_contents($this->_resourcesDirectory . 'musicontology.rdfs')
-            )
-        );
+        ));
+        $adapter->addResponse(new Zend_Http_Response(
+            200,
+            array(
+                'Content-Type' => 'application/rdf+xml'
+            ),
+            file_get_contents($this->_resourcesDirectory . 'musicontology.rdfs')
+        ));
 
         try {
             $result = $this->fixture->importRdf($graphUri, $url, 'rdfxml', Erfurt_Syntax_RdfParser::LOCATOR_URL);
@@ -309,4 +287,3 @@ EOT;
 
     }
 }
-

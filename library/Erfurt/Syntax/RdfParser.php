@@ -51,7 +51,6 @@ class Erfurt_Syntax_RdfParser
             case 'ttl':
             case 'nt':
             case 'ntriple':
-            case 'ntriples':
             case 'n3':
             case 'rdfn3':
                 
