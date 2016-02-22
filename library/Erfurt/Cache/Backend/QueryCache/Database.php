@@ -16,16 +16,6 @@ require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
  */
 class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_QueryCache_Backend
 {
-    private static $_requiredTables = array(
-        'ef_cache_query_result',
-        'ef_cache_query_triple',
-        'ef_cache_query_model',
-        'ef_cache_query_objectkey',
-        'ef_cache_query_rt',
-        'ef_cache_query_rm',
-        'ef_cache_query_version'
-    );
-
     /**
      *  check the existing cacheVersion and can used for looking up if the cache structure is beeing created
      *  @access     public
@@ -33,7 +23,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      */
     final public function checkCacheVersion()
     {
-        $result = false;
         try {
             $query = 'SELECT num FROM ef_cache_query_version';
             $result = $this->store->sqlQuery($query);
@@ -46,30 +35,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         } else if (is_array($result) && count($result) > 0) {
             return true;
         } else {
-        return false;
+            return false;
         }
-    }
-
-    /**
-     *  check the existing cache structure
-     *  @access     public
-     *  @return     boolean         $state          true / false
-     */
-    final public function checkCacheStructure()
-    {
-        $existingTableNames = $this->store->listTables();
-        $logger = Erfurt_App::getInstance()->getLog('cache');
-        $logger->debug('Check cache structure.');
-
-        foreach (self::$_requiredTables as $table) {
-            if (!in_array($table, $existingTableNames)) {
-                $logger->debug('The table "' . $table . '" is missing.');
-                return false;
-            }
-        }
-
-        $logger->debug('All tables are existing.');
-        return true;
     }
 
     /**
@@ -78,7 +45,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
      *    ef_cache_query_result, 
      *    ef_cache_query_triple, 
      *    ef_cache_query_model, 
-     *    ef_cache_query_objectkey, 
      *    ef_cache_query_rt, 
      *    ef_cache_query_rm, 
      *    ef_cache_query_version. 
@@ -124,9 +90,8 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_result', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_result_qid ON ef_cache_query_result(qid)');
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_result_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
+                'CREATE INDEX ef_cqr_qid_count ON ef_cache_query_result(qid,hit_count,inv_count)'
             );
         }
 
@@ -139,7 +104,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_triple', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_triple_tid ON ef_cache_query_triple(tid)');
         }
 
         if (!in_array('ef_cache_query_model', $existingTableNames)) {
@@ -150,7 +114,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
             $this->store->createTable('ef_cache_query_model', $columnSpec);
             $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_model_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
+                'CREATE INDEX ef_cqm_mid_modelIri ON ef_cache_query_model(mid, modelIri)'
             );
         }
 
@@ -161,8 +125,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rt', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rt_qid_tid ON ef_cache_query_rt(qid, tid)');
-
         }
 
         if (!in_array('ef_cache_query_rm', $existingTableNames)) {
@@ -172,7 +134,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_rm', $columnSpec);
-            $this->store->sqlQuery('CREATE INDEX ef_cache_query_rm_qid_mid ON ef_cache_query_rm(qid, mid)');
         }
 
         if (!in_array('ef_cache_query_objectkey', $existingTableNames)) {
@@ -184,9 +145,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
            );
 
             $this->store->createTable('ef_cache_query_objectkey', $columnSpec);
-            $this->store->sqlQuery(
-                'CREATE INDEX ef_cache_query_objectkey_qid_objectkey ON ef_cache_query_objectkey (qid, objectkey)'
-            );
         }
 
         if (!in_array('ef_cache_query_version', $existingTableNames)) {
@@ -350,23 +308,15 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         if (sizeof($statements) == 0) {
             return false;
         }
-
         $qids = array();
         $clauses = array();
         foreach ($statements as $subject => $predicates) {
             foreach ($predicates as $predicate => $objects) {
-                if (empty($objects)) {
-                    $objects["dummy"] = "";
-                }
                 foreach ($objects as $object) {
-                    $objectValue = null;
-                    $clause = null;
-                    if (isset($object['value'])) {
-                        $objectValue = $object['value'] ;
-                        if ($object['type'] == 'literal') {
-                            $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
-                            $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
-                        }
+                    $objectValue = $object['value'] ;
+                    if ($object['type'] == 'literal') {
+                        $objectValue = (isset($object['lang'])) ?  $objectValue . '@' . $object['lang'] : $objectValue ;
+                        $objectValue = (isset($object['datatype'])) ?  $objectValue . '^^' . $object['datatype'] : $objectValue ;
                     }
                     $clause = array();
                     if ($subject != '') {
@@ -383,9 +333,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
 
                 }
             }
-        }
-        if (empty($clauses)) {
-            return false;
         }
 
         if (count($clauses) > 20) {
@@ -410,7 +357,6 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
             JOIN 
                 ef_cache_query_result result ON result.qid = qid2 
             WHERE result.result IS NOT NULL';
-
         $result = $this->_query($query);
         if (!$result) {
             return $qids;
@@ -553,14 +499,13 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
         // TODO platform indepent index handling
 
-        $existingTableNames = $this->store->listTables();
-
-        foreach (self::$_requiredTables as $table) {
-            if (in_array($table, $existingTableNames)) {
-                $this->store->sqlQuery('DROP TABLE ' . $table);
-            }
-        }
-
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_model');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
+        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
         return true;
     }
 
@@ -896,30 +841,22 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 // If this fails, something else is wrong, so we re-throw the error!
                 try {
                     $this->createCacheStructure();
+                    $result = $this->store->sqlQuery($sql, $limit, $offset);
                 } catch (Erfurt_Store_Adapter_Exception $se) {
                     $logger->debug($se->getMessage());
                     require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception(
-                        'Something went wrong while building query cache structure: ' . $se->getMessage()
+                        'Something went wrong while building query cache structure: ' . $se->getMessage(),
+                        0,
+                        $e
                     );
                 }
-            } else if (!$this->checkCacheStructure()) {
-                $logger->debug('Resetting query cache table structure now.');
-                $this->uninstall();
-                $this->createCacheStructure();
             } else {
                 require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception(
-                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql
-                );
-            }
-            try {
-                $result = $this->store->sqlQuery($sql, $limit, $offset);
-            } catch (Erfurt_Store_Adapter_Exception $se) {
-                $logger->debug($se->getMessage());
-                require_once 'Erfurt/Exception.php';
-                throw new Erfurt_Exception(
-                    'Something went wrong while finally executing cache query: ' . $se->getMessage()
+                    'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql,
+                    0,
+                    $e
                 );
             }
         }
