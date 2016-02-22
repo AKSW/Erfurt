@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
+
 
 /**
  * @package Erfurt_Cache_Backend_QueryCache
@@ -898,7 +898,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                     $this->createCacheStructure();
                 } catch (Erfurt_Store_Adapter_Exception $se) {
                     $logger->debug($se->getMessage());
-                    require_once 'Erfurt/Exception.php';
+                    
                     throw new Erfurt_Exception(
                         'Something went wrong while building query cache structure: ' . $se->getMessage()
                     );
@@ -908,7 +908,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $this->uninstall();
                 $this->createCacheStructure();
             } else {
-                require_once 'Erfurt/Exception.php';
+                
                 throw new Erfurt_Exception(
                     'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql
                 );
@@ -917,7 +917,7 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 $result = $this->store->sqlQuery($sql, $limit, $offset);
             } catch (Erfurt_Store_Adapter_Exception $se) {
                 $logger->debug($se->getMessage());
-                require_once 'Erfurt/Exception.php';
+                
                 throw new Erfurt_Exception(
                     'Something went wrong while finally executing cache query: ' . $se->getMessage()
                 );

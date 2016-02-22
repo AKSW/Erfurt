@@ -1,5 +1,3 @@
-ZENDVERSION=1.12.17
-
 default:
 	@echo "please use:"
 	@echo ""
@@ -40,21 +38,12 @@ default:
 	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
 	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
 
-install: directories zend
-
 clean:
 	rm -rf cache/* logs/*
 
 directories: clean
 	mkdir -p logs cache
 	chmod 777 logs cache
-
-zend:
-	rm -rf library/Zend
-	curl -L -# -O https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz || wget https://packages.zendframework.com/releases/ZendFramework-${ZENDVERSION}/ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	tar xzf ZendFramework-${ZENDVERSION}-minimal.tar.gz
-	mv ZendFramework-${ZENDVERSION}-minimal/library/Zend library
-	rm -rf ZendFramework-${ZENDVERSION}-minimal.tar.gz ZendFramework-${ZENDVERSION}-minimal
 
 # coding standard
 
@@ -78,7 +67,7 @@ REQUESTSTR = --ignore=$(IGNOREPATTERN) $(OPTIONS) $(SNIFFSTR)  $(CHECKPATH)
 
 cs-default:
 	chmod ugo+x "$(CSSPATH)cs-scripts.sh"
-	
+
 cs-install: cs-default
 	$(CSSPATH)cs-scripts.sh -i
 

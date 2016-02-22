@@ -114,8 +114,8 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             $resultVars[$varObject->getVariable()] = true;
         }
         
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
-        require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
+        
+        
         
         
         $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
@@ -210,7 +210,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
 #var_dump($replaceArray);exit;     
         // Remove all old mandatory constraints from the query (already done with the first query).
         // Replace them with a new sameTerm constraint
-        #require_once 'Erfurt/Sparql/Constraint.php';
+        #
         #$cArray = array();
         
         #$distinctKeys = array();
@@ -277,9 +277,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         
         
         
-        #require_once 'Erfurt/Sparql/GraphPattern.php';
-        #require_once 'Erfurt/Sparql/QueryTriple.php';
-        #require_once 'Erfurt/Rdf/Resource.php';
+        #
+        #
+        #
         #$pattern = new Erfurt_Sparql_GraphPattern();
         #$pattern->setId(1000);
         #$pattern->setOptional(0);
@@ -312,10 +312,10 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $query->setResultPart($newPatterns);
         $query->setResultForm('select');
 #var_dump($query);exit;
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
+        
         $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
             
-        require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
+        
         $ts = new Erfurt_Sparql_EngineDb_TypeSorter($query, $this->_engine);
 
         $arSqls = $sg->createSql();
@@ -565,7 +565,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
     
     protected function _queryDb($query, $arSql, $nOffset, $nLimit)
     {
-        require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
+        
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($query, $arSql);
 #echo $strSql;
         if ($strSql === '()') {
@@ -598,7 +598,7 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             $nLimit  = null;
             $nSql    = 0;
         } else {
-            require_once 'Erfurt/Sparql/EngineDb/Offsetter.php';
+            
             $offsetter = new Erfurt_Sparql_EngineDb_Offsetter($this->_engine, $query);
             list($nSql, $nOffset) = $offsetter->determineOffset($arSqls);
             $nLimit    = $arSM['limit'];

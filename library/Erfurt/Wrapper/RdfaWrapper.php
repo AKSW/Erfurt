@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Wrapper.php';
+
 
 /**
  * Initial version of a wrapper for RDFa.
@@ -48,8 +48,6 @@ class Erfurt_Wrapper_RdfaWrapper extends Erfurt_Wrapper
     
     public function run($r, $graphUri)
     {
-        include_once('ARC2/ARC2.php');
-        
         $uri = $r->getUri();
         $url = $r->getLocator();
 
