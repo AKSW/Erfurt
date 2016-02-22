@@ -319,7 +319,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
     /**
      * setConstructTemplate
      * set a ConstructTemplate in the query 
-     * (only usefull if the query is a construct query)
+     * (only useful if the query is a construct query)
      * @param Erfurt_Sparql_Query2_ConstructTemplate $npattern
      * @return Erfurt_Sparql_Query2 $this
      */    
@@ -416,7 +416,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function setStar($bool = true)
     {
-        // delete projection vars if set to star mode - usefull?
+        // delete projection vars if set to star mode - useful?
         if ($bool === true) {
             $this->projectionVars = array();
         } 
@@ -435,7 +435,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
     
     /**
      * setCountStar
-     * set a query to count-star-mode (qhen the query is of the form SELECT count(*) FROM...)
+     * set a query to count-star-mode (when the query is of the form SELECT count(*) FROM...)
      * @param bool $bool true to turn on, false to turn off count-star-mode
      * @return Erfurt_Sparql_Query2 $this
      */
@@ -956,9 +956,9 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
 
     /**
      * invoke parser
-     * @param type $queryString
+     * @param string $queryString
      * @param type $parsePartial
-     * @return \Exception
+     * @return \Erfurt_Sparql_Query2
      * @throws Exception
      */
     public static function initFromString($queryString, $parsePartial = null){
