@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @group Integration
+ */
 class Erfurt_Store_Adapter_CompareIntegrationTest extends Erfurt_TestCase {
 
     private $_virtuosoOptions = null;
