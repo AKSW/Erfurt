@@ -11,7 +11,7 @@
         "classmap": [
             "library/antlr/",
             "library/Erfurt/",
-            "tests/"
+            "tests/unit/"
         ]
     },
     "require": {
