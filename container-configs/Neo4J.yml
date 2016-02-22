@@ -1,0 +1,67 @@
+parameters:
+    neo4j.client.base_url: "http://%neo4j.client.host%:%neo4j.client.port%"
+    neo4j.client.log: ~
+    neo4j.client.timeoutInMilliseconds: 900000
+    neo4j.batch_size: 2000
+
+services:
+    neo4j_adapter_with_mysql_cache:
+        class: Erfurt_Store_Adapter_SparqlSqlCombination
+        arguments: ["@neo4j.sparql_adapter", "@mysql.sql_adapter"]
+
+    neo4j.sparql_adapter:
+        class: Erfurt_Store_Adapter_Sparql_GenericSparqlAdapter
+        arguments: ["@neo4j.sparql_connector"]
+
+    neo4j.sparql_connector:
+        alias: neo4j.sparql_connector.default
+
+    neo4j.sparql_connector.default:
+        class: Erfurt_Store_Adapter_Neo4J_Neo4JSparqlConnector
+        arguments:
+            - "@neo4j.client.sparql_api"
+            - "@neo4j.client.store_management"
+            - "@neo4j.batch_processor.rest_batch"
+            - "%neo4j.batch_size%"
+
+    neo4j.client.store_management:
+        class: Erfurt_Store_Adapter_Neo4J_StoreManagementClient
+        arguments: ["@neo4j.client.api"]
+
+    neo4j.batch_processor.rest_batch:
+        class: Erfurt_Store_Adapter_Neo4J_RestBatchProcessor
+        arguments: ["@neo4j.client.api"]
+
+    neo4j.client.sparql_api:
+        class: Erfurt_Store_Adapter_Neo4J_SparqlApiClient
+        factory_class: Erfurt_Store_Adapter_Neo4J_SparqlApiClient
+        factory_method: factory
+        arguments:
+            -
+                base_url: "%neo4j.client.base_url%"
+                log:      "%neo4j.client.log%"
+                "curl.options":
+                    body_as_string: true
+
+    neo4j.client.api:
+            class: Erfurt_Store_Adapter_Neo4J_ApiClient
+            factory_class: Erfurt_Store_Adapter_Neo4J_ApiClient
+            factory_method: factory
+            arguments:
+                -
+                    base_url: "%neo4j.client.base_url%"
+                    log:      "%neo4j.client.log%"
+                    "curl.options":
+                        body_as_string: true
+                    "command.params":
+                        timeoutInMilliseconds: %neo4j.client.timeoutInMilliseconds%
+
+    mysql.sql_adapter:
+        class: Erfurt_Store_Adapter_Sql_ZendDb
+        arguments:
+            -
+                host:     "%mysql.host%"
+                username: "%mysql.username%"
+                password: "%mysql.password%"
+                dbname:   "%mysql.dbname%"
+                dbtype:   "mysql"
