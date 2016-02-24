@@ -127,7 +127,7 @@ class Erfurt_Ac_Default
             // Now fetch the config from ac model and overwrite the values.
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setProloguePart('SELECT ?s ?o')
+            $query->setSelectClause('SELECT ?s ?o')
                   ->setWherePart(
                       'WHERE {
                           ?s <' . $this->_uris['actionConfigUri'] . '> ?o .
@@ -563,7 +563,7 @@ class Erfurt_Ac_Default
             require_once 'Erfurt/Sparql/SimpleQuery.php';
             
             $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
-            $sparqlQuery->setProloguePart('SELECT ?group ?p ?o')
+            $sparqlQuery->setSelectClause('SELECT ?group ?p ?o')
                         ->setWherePart(
                             'WHERE { 
                                 ?group ?p ?o . 
@@ -576,7 +576,7 @@ class Erfurt_Ac_Default
             }
             
             $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
-            $sparqlQuery->setProloguePart('SELECT ?s ?p ?o')
+            $sparqlQuery->setSelectClause('SELECT ?s ?p ?o')
                         ->setWherePart(
                             'WHERE { 
                                 ?s ?p ?o . 

@@ -374,10 +374,10 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         $query = new Erfurt_Sparql_SimpleQuery();
         if (!$distinct) {
             // old way: distinct has no effect !!!
-            $query->setProloguePart("COUNT DISTINCT $countSpec"); 
+            $query->setSelectClause("COUNT DISTINCT $countSpec");
         } else {
             // i made a (uncool) hack to fix this, the "-" is there because i didnt want to change tokenization
-            $query->setProloguePart("COUNT-DISTINCT $countSpec"); 
+            $query->setSelectClause("COUNT-DISTINCT $countSpec"); 
         }
         $query->setFrom($graphIris)
               ->setWherePart($whereSpec);

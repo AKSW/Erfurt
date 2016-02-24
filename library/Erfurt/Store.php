@@ -1065,7 +1065,7 @@ EOF;
             } else {
                 // use generic implementation
                 $owlQuery = new Erfurt_Sparql_SimpleQuery();
-                $owlQuery->setProloguePart('ASK')
+                $owlQuery->setAsk(true)
                          ->addFrom($modelIri)
                          ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
 
@@ -1793,7 +1793,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
             // Fetch the graph configurations
             $queryObject = new Erfurt_Sparql_SimpleQuery();
-            $queryObject->setProloguePart('SELECT ?s ?p ?o');
+            $queryObject->setSelectClause('SELECT ?s ?p ?o');
             $queryObject->setFrom(array($sysOntModelUri));
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
@@ -1927,7 +1927,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         } else {
             $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setProloguePart('SELECT DISTINCT ?graph')
+            $query->setSelectClause('SELECT DISTINCT ?graph')
                 ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
 
             $graphResult = array();
@@ -2161,13 +2161,13 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         $memoryModel = new Erfurt_Rdf_MemoryModel();
 
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?p ?o')
+        $query->setSelectClause('SELECT ?p ?o')
             ->setWherePart("{<$resourceIri> ?p ?o . }");
 
         // prepare an additional query for inverse properties
         if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
             $inverseQuery = new Erfurt_Sparql_SimpleQuery();
-            $inverseQuery->setProloguePart('SELECT ?s ?p')
+            $inverseQuery->setSelectClause('SELECT ?s ?p')
                 ->setWherePart("{?s ?p <$resourceIri> . }");
         } else {
             $inverseQuery = false;

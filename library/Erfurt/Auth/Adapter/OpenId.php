@@ -291,7 +291,7 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
         // Query the store.
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_acModelUri);
         
         $where = 'WHERE { 

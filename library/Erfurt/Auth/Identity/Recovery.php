@@ -58,7 +58,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT *');
+        $query->setSelectClause('SELECT *');
         $query->setWherePart(
             '{ ?user <' . $config->ac->user->name . '> "' . $identity . '" . 
              OPTIONAL { ?user <' . $config->ac->user->mail . '> ?mail . } }'
@@ -68,7 +68,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT *');
+        $query->setSelectClause('SELECT *');
         $query->setWherePart(
             '{ ?user <' . $config->ac->user->mail . '> <mailto:' . $identity . '> .
              OPTIONAL { ?user <' . $config->ac->user->name . '> ?name . } }'
@@ -193,7 +193,7 @@ class Erfurt_Auth_Identity_Recovery
 
         $query      = new Erfurt_Sparql_SimpleQuery();
         $query->addFrom($config->ac->modelUri);
-        $query->setProloguePart('SELECT ?user');
+        $query->setSelectClause('SELECT ?user');
         $query->setWherePart('{ ?user <' . $config->ac->user->recoveryHash . '> "' . $hash . '" . }');
 
         $resultUser  = $store->sparqlQuery($query, array('use_ac' => false));
