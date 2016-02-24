@@ -266,8 +266,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         $query->setSelectClause('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
 
-        $where = 'WHERE 
-                  { ?s ?p ?o . 
+        $where = 'WHERE
+                  { ?s ?p ?o .
                   OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2  } .
               FILTER (!bound(?o2) || (';
 

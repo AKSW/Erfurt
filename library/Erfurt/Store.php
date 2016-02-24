@@ -2142,7 +2142,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * fetches the PHP/RDF statments array description array
      *
      * @param string       $resourceIri The Iri, which identifies the resource.
-     * @param string|false $modelIri    The Iri, which identifies the model or 
+     * @param string|false $modelIri    The Iri, which identifies the model or
      *     false for store wide descriptions
      * @param array        $options     Array of different options:
      *     Erfurt_Store::USE_AC = true|false - use access control
