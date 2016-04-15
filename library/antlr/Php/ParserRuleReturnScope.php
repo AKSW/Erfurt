@@ -45,7 +45,7 @@
  *  group values such as this aggregate.  The getters/setters are there to
  *  satisfy the superclass interface.
  */
-require_once 'RuleReturnScope.php';
+
 
 class ParserRuleReturnScope extends RuleReturnScope {
 	public $start, $stop;

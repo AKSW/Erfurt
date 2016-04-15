@@ -125,7 +125,7 @@ class Erfurt_Ac_Default
             }
 
             // Now fetch the config from ac model and overwrite the values.
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
+
             $query = new Erfurt_Sparql_SimpleQuery();
             $query->setSelectClause('SELECT ?s ?o')
                   ->setWherePart(
@@ -468,13 +468,13 @@ class Erfurt_Ac_Default
 
         // is type supported?
         if (!in_array($type, array('view', 'edit'))) {
-            require_once 'Erfurt/Ac/Exception.php';
+
             throw new Erfurt_Ac_Exception('Wrong access type submitted');
         }
 
         // is permission supported?
         if (!in_array($perm, array('grant', 'deny'))) {
-            require_once 'Erfurt/Ac/Exception.php';
+
             throw new Erfurt_Ac_Exception('Wrong permission type submitted');
         }
 
@@ -531,7 +531,7 @@ class Erfurt_Ac_Default
             // Identity exists; get it
             return $this->_auth->getIdentity();
         } else {
-            require_once 'Erfurt/Ac/Exception.php';
+
             throw new Erfurt_Ac_Exception('No valid user was given.');
         }
     }
@@ -559,9 +559,6 @@ class Erfurt_Ac_Default
                 $this->_userRights[$userURI] = $userRights;
                 return $userRights;
             }
-
-            require_once 'Erfurt/Sparql/SimpleQuery.php';
-
             $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
             $sparqlQuery->setSelectClause('SELECT ?group ?p ?o')
                         ->setWherePart(

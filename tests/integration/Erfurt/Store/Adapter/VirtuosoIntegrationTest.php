@@ -52,7 +52,7 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
         $s = 'http://example.com/';
         $p = 'http://example.com/property1';
 
-        require_once 'Erfurt/Store.php';
+        
         $options = array();
         $o = array('type' => 'literal');
 

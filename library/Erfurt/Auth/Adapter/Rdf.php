@@ -6,8 +6,8 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Auth/Adapter/Interface.php';
-require_once 'Zend/Auth/Result.php';
+
+
 
 /**
  * Erfurt RDF authentication adapter.
@@ -121,8 +121,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                 } else {
                     $identity['uri'] = $this->_users[$this->_username]['userUri'];
                     $identity['email'] = $this->_users[$this->_username]['userEmail'];
-
-                    require_once 'Erfurt/Auth/Identity.php';
                     $identityObject = new Erfurt_Auth_Identity($identity);
 
                     $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);
@@ -154,8 +152,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
         );
 
         $uris = $this->_getUris();
-
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
         $sparqlQuery->setSelectClause('SELECT ?subject ?predicate ?object');
 
@@ -204,11 +200,9 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
     public function fetchDataForAllUsers()
     {
         $uris = $this->_getUris();
-
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $userSparql = new Erfurt_Sparql_SimpleQuery();
         $userSparql->setSelectClause('SELECT ?subject ?predicate ?object');
-        
+
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
             $uris['user_class'] . '> }';
         $userSparql->setWherePart($wherePart);
@@ -326,8 +320,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
             'email'     => '',
             'anonymous' => true
         );
-
-        require_once 'Erfurt/Auth/Identity.php';
         $identityObject = new Erfurt_Auth_Identity($user);
 
         return $identityObject;
@@ -349,8 +341,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
             'email'     => '',
             'anonymous' => false
         );
-
-        require_once 'Erfurt/Auth/Identity.php';
         $identityObject = new Erfurt_Auth_Identity($user);
 
         return $identityObject;

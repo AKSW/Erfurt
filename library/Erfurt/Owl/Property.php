@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Rdfs/Property.php';
+
 
 /**
  * Erfurt Owl Property class

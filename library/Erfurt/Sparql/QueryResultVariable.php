@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Sparql/Query.php';
+
 
 /**
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
