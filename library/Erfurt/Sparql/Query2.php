@@ -11,13 +11,13 @@
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
 
-// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
-// require_once 'antlr.php';
-// require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
-// require_once 'Erfurt/Sparql10/Parser/Sparql10.php';
+// 
+// 
+// 
+// 
 
-require_once 'Query2/structural-Interfaces.php';
-require_once 'Query2/Constraint.php';
+
+
 
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj)
@@ -99,7 +99,7 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
         } else {
             $this->setQueryType(self::typeSelect);
         }
-		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
+		// 
     }
     
     public function __clone()

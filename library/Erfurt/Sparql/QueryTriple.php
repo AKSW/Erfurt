@@ -119,7 +119,7 @@ class Erfurt_Sparql_QueryTriple
     {
         $arVars = array();
 		
-		require_once 'Erfurt/Sparql/Variable.php';
+		
 		if (Erfurt_Sparql_Variable::isVariable($this->_subject)) {
 		    $arVars[] = $this->_subject;
 		}

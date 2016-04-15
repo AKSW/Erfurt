@@ -1,3 +1,4 @@
+/composer.lock
 *.log
 local.ini
 config.ini
@@ -8,10 +9,9 @@ config.ini
 .DS_Store
 .htaccess
 nbproject
-Erfurt/libraries/Zend/
 cache.properties
-library/Zend
 cache.sqlite
+vendor
 
 # build stuff
 build/

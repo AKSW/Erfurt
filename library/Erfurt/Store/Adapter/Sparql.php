@@ -6,9 +6,9 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store.php';
-require_once 'Erfurt/Store/Adapter/Interface.php';
-require_once 'Erfurt/Store.php';
+
+
+
 
 /**
  * This class acts as a backend for SPARQL endpoints.
@@ -115,7 +115,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function getModel($graphUri)
     {
         if (isset($this->_configuredGraphs[$graphUri])) {
-            require_once 'Erfurt/Owl/Model.php';
+            
             $m = new Erfurt_Owl_Model($graphUri, null);
 
             return $m;

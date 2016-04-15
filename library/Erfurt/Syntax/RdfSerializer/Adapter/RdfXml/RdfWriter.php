@@ -464,7 +464,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
 
     protected function _sparqlForListResources()
     {
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?s ?first ?rest');
         $query->addFrom($this->_graphUri);
