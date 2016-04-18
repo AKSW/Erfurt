@@ -1,6 +1,6 @@
 <?php
 
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 /*
  * Set error reporting to the level to which Erfurt code must comply.

@@ -12,7 +12,7 @@ nbproject
 cache.properties
 cache.sqlite
 vendor
-
+composer.phar
 # build stuff
 build/
 !build/phpcs.xml

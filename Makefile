@@ -1,3 +1,20 @@
+PHPUNIT = ./vendor/bin/phpunit
+PHPCS = ./vendor/bin/phpcs
+PHPCBF = ./vendor/bin/phpcbf
+
+# Get calid composer executable
+COMPOSER = $(shell which composer)
+ifeq ($(findstring composer, $(COMPOSER)), )
+    COMPOSER = $(shell which composer.phar)
+    ifeq ($(findstring composer.phar, $(COMPOSER)), )
+        ifneq ($(wildcard composer.phar), )
+            COMPOSER = php composer.phar
+        else
+            COMPOSER =
+        endif
+    endif
+endif
+
 default:
 	@echo "please use:"
 	@echo ""
@@ -38,7 +55,16 @@ default:
 	@echo "   SNIFFS=<sniff 1>,<sniff 2> (run code checking on specific sniffs)"
 	@echo "   OPTIONS=<option> (run code checking with specific CodeSniffer options)"
 
-install: directories zend
+getcomposer:
+	curl -o composer.phar "https://getcomposer.org/composer.phar"
+	php composer.phar self-update
+
+ifdef COMPOSER
+install: directories composer-install
+else
+install: getcomposer
+	make install
+endif
 
 clean:
 	rm -rf cache/* logs/*
@@ -47,61 +73,22 @@ directories: clean
 	mkdir -p logs cache
 	chmod 777 logs cache
 
-# coding standard
-
-# #### config ####
-# cs-script path
-CSSPATH = tests/CodeSniffer/
-# ignore pattern
-IGNOREPATTERN = */libraries/*,*/Parser/Sparql10/*,*/Parser/Sparql11/*
-
-# Parameter check
-ifndef CHECKPATH
-	CHECKPATH = "./"
-endif
-ifdef SNIFFS
-	SNIFFSTR = "--sniffs="$(SNIFFS)
+ifdef COMPOSER
+composer-install: #add difference for user and dev (with phpunit etc and without)
+	$(COMPOSER) install
 else
-	SNIFFSTR =
+composer-install:
+	@echo
+	@echo
+	@echo "!!! make $@ failed !!!"
+	@echo
+	@echo "Sorry, there doesn't seem to be a PHP composer (dependency manager for PHP) on your system!"
+	@echo "Please have a look at http://getcomposer.org/ for further information,"
+	@echo "or just run 'make getcomposer' to download the composer locally"
+	@echo "and run 'make $@' again"
 endif
 
-REQUESTSTR = --ignore=$(IGNOREPATTERN) $(OPTIONS) $(SNIFFSTR)  $(CHECKPATH)
-
-cs-default:
-	chmod ugo+x "$(CSSPATH)cs-scripts.sh"
-
-cs-install: cs-default
-	$(CSSPATH)cs-scripts.sh -i
-
-cs-uninstall: cs-default
-	$(CSSPATH)cs-scripts.sh -u
-
-cs-enable: cs-default
-	$(CSSPATH)cs-scripts.sh -f $(CSSPATH) -e
-
-cs-disable: cs-default
-	$(CSSPATH)cs-scripts.sh -d
-
-cs-check-commit:
-	$(CSSPATH)cs-scripts.sh -p ""
-cs-check-commit-emacs:
-	$(CSSPATH)cs-scripts.sh -p "-remacs"
-cs-check-commit-intensive:
-	$(CSSPATH)cs-scripts.sh -p "-s"
-
-cs-check:
-	$(CSSPATH)cs-scripts.sh -c "-s --report=summary $(REQUESTSTR)"
-cs-check-intensive:
-	$(CSSPATH)cs-scripts.sh -s -c "-s --report=summary $(REQUESTSTR)"
-cs-check-intensive-full:
-	$(CSSPATH)cs-scripts.sh -s -c "-s --report=full $(REQUESTSTR)"
-cs-check-full:
-	$(CSSPATH)cs-scripts.sh -c "-s --report=full $(REQUESTSTR)"
-cs-check-emacs:
-	$(CSSPATH)cs-scripts.sh -c "--report=emacs $(REQUESTSTR)"
-cs-check-blame:
-	$(CSSPATH)cs-scripts.sh -s -c "--report=gitblame $(REQUESTSTR)"
-
+# coding standard
 # test stuff
 test-directories:
 	rm -rf tests/cache tests/unit/cache tests/integration/cache
@@ -110,22 +97,13 @@ test-directories:
 	mkdir tests/integration/cache
 
 test-unit: test-directories
-	@cd tests && phpunit --bootstrap Bootstrap.php unit/
-
-test-unit-cc: test-directories
-	@cd tests/unit && phpunit
+	$(PHPUNIT) --testsuite "Erfurt Unit Tests"
 
 test-integration-virtuoso: test-directories
-	@cd tests && EF_STORE_ADAPTER=virtuoso phpunit --bootstrap Bootstrap.php integration/
-
-test-integation-virtuoso-cc: test-directories
-	@cd tests/integration && EF_STORE_ADAPTER=virtuoso phpunit
+	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Virtuoso Integration Tests"
 
 test-integration-mysql: test-directories
-	@cd tests && EF_STORE_ADAPTER=zenddb phpunit --bootstrap Bootstrap.php integration/
-
-test-integation-mysql-cc: test-directories
-	@cd tests/integration && EF_STORE_ADAPTER=zenddb phpunit
+	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Virtuoso Integration Tests"
 
 test:
 	make test-unit
@@ -137,6 +115,12 @@ test:
 	@echo "-----------------------------------"
 	@echo ""
 	make test-integration-mysql
+
+codesniffer:
+	$(PHPCS)
+
+codebeautifier:
+	$(PHPCBF)
 
 test-clean:
 	rm -rf tests/unit/Erfurt/Sparql/_cache/*
