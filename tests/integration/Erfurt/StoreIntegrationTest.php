@@ -17,20 +17,20 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
-        
+
         $url = 'http://ns.softwiki.de/req/';
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $store->getNewModel($url, false);
-        
+
         try {
             $store->importRdf($url, $url, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
         } catch (Erfurt_Exception $e) {
             $this->fail($e->getMessage());
         }
     }*/
-    
+
     /**
      * This test is introduced in order to reproduce issue 404 (n changing multiple literals, new triples will created)
      */
@@ -38,39 +38,39 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     {
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
-        
+
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
-        $turtleString = '<http://model.org/model#localName> a 
+
+
+        $turtleString = '<http://model.org/model#localName> a
                             <http://model.org/model#className1>, <http://model.org/model#className2> ;
                             <http://www.w3.org/2000/01/rdf-schema#label> "label1", "label2"@nl .';
-        
+
         $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
-        
+
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
         $this->assertEquals(5, count($result));
-       
+
         $store->deleteMatchingStatements($modelUri, 'http://model.org/model#localName', null, null);
-        
+
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
-    
+
     public function testDeleteMatchingStatementsIssue436MultipleLanguageTags()
     {
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
-        
+
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
+
+
         $turtleString = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -92,115 +92,115 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
                          foaf:icqChatID "123-456-789" ;
                          foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
                          foaf:surname "PanPühn" .';
-        
+
         $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
-        
+
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
         $this->assertEquals(12, count($result));
-        
+
         $store->deleteMatchingStatements($modelUri, 'http://bis.ontowiki.net/PeterPan', null, null);
-        
+
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
-    
+
     public function testCheckSetupWithZendDb()
     {
         $this->markTestNeedsCleanZendDbDatabase();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
         $config = Erfurt_App::getInstance()->getConfig();
-        
+
         try {
             $store->checkSetup();
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
-        
+
         $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
         $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
     }
-    
+
     public function testGetGraphsUsingResource()
     {
         $this->markTestNeedsDatabase();
-        
+
         $resource = 'http://localhost/OntoWiki/Config/';
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $graphs = $store->getGraphsUsingResource($resource, false);
-        
+
         $this->assertTrue(in_array($resource, $graphs));
     }
-    
+
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $query = 'COUNT WHERE { ?s ?p "SomethingThatDoesNotExistsIGUUGIZFZTFVBhjscjkggniperegrthhrt" . }';
-        
+
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
-        
+
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertEquals(0, $result);
     }
-    
+
     public function testSparqlQueryWithCountAndFromIssue174()
     {
         $this->markTestNeedsZendDb();
         $this->authenticateDbUser();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
-        $query = 'COUNT 
-                  FROM <http://localhost/OntoWiki/Config/> 
-                  WHERE { 
-            ?s ?p ?o . 
+
+        $query = 'COUNT
+                  FROM <http://localhost/OntoWiki/Config/>
+                  WHERE {
+            ?s ?p ?o .
         }';
-        
+
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $result = $store->sparqlQuery($simpleQuery);
 
         $this->assertEquals(208, $result);
     }
-    
+
     public function testCountWhereMatchesWithNonExistingModel()
     {
         $this->markTestNeedsDatabase();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         try {
             $result = $store->countWhereMatches(
-                'http://localhost/SomeModelThatDoesNotExist123456789', 
+                'http://localhost/SomeModelThatDoesNotExist123456789',
                 '{ ?s ?p ?o }',
                 '*'
             );
-            
+
             // Should fail...
             $this->fail();
         } catch (Erfurt_Store_Exception $e) {
             // Nothing to do here...
         }
     }
-    
+
     public function testSparqlQueryWithSpecialCharUriIssue579()
     {
         $this->markTestNeedsDatabase();
         $this->authenticateDbUser();
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $sparql = "SELECT ?p ?o WHERE { <http://umg.kurtisrandom.com/resource/genre-Children's> ?p ?o . }";
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($sparql);
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertTrue(is_array($result));
     }
-    
+
     public function testGetImportsClosureMultipleCallsWithDifferentParameters()
     {
         $this->markTestNeedsDatabase();
@@ -360,7 +360,63 @@ EOF;
         $this->assertInternalType('array', $sparqlResult);
         $this->assertNotEmpty($sparqlResult);
     }
+
+    public function testDeleteWithLongLiteralsIssue303OntoWiki()
+    {
+        $this->markTestNeedsDatabase();
+        $this->authenticateDbUser();
+
+        $modelUri = 'http://example.org/updateTest/';
+        $store = Erfurt_App::getInstance()->getStore();
+        try {
+            $store->deleteModel($modelUri);
+        } catch (Exception $e) {/*ignore deletion failure*/}
+        $model = $store->getNewModel($modelUri);
+        $literal= <<<'EOT'
+"""Gerade eben habe ich einen kleinen PHP Skript geschrieben, der sich selbst als Bild einbindet. Das klingt etwas seltsam aber veranschaulicht das Prinzip der <a href=\"http://de.wikipedia.org/wiki/Content_Negotiation\"><em>Content Negotiation</em></a> sehr gut.
+
+Content Negotiation ist kurz gesagt ein Verfahren, bei dem ein Client und Server das Format der Antwort auf eine Anfrage aushandeln. Der Client gibt seine Vorlieben nach Priorität geordnet an und der Server tut sein Bestes um das bevorzugte Dateiformat zu liefern.
+
+Hier der PHP-Code (image.php):
+
+<?php
+
+$accept = $_SERVER['HTTP_ACCEPT'];
+
+if (stristr($accept, 'html')) {
+    echo '<html><body><h1>Bild</h1>';
+    echo '<img src=\"image.php\" /><br/>';
+    echo 'Accept: ' . $accept . '</body></html>';
+} else {
+    header(\"Content-type: image/png\");
+    $string = $accept;
+    $im     = imagecreatetruecolor(512,64);
+    $orange = imagecolorallocate($im, 220, 210, 60);
+    $px     = (imagesx($im) - 7.5 * strlen($string)) / 2;
+    imagestring($im, 3, $px, 9, $string, $orange);
+    imagepng($im);
+    imagedestroy($im);
 }
+?>
 
+Der Script ließt die Servervariable \"HTTP_ACCEPT\", in der der Inhalt des empfangenen \"Accept\"-Headers enthalten ist z.B \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\". Wenn dieser \"html\" enthält wird eine HTML-Seite ausgegeben, in der mit dem \"<img>\"- Tag die Seite selbst (\"image.png\") eingebunden wird. Beim Einbinden als Bild sendet der Browser dann aber einen anderen Accept-Header z.B. \"image/png,image/*;q=0.8,*/*;q=0.5 \", was bedeutet, dass der Browser ein Bild erwartet. In dem Fall ist dann \"html\" nicht in dem String enthalten und der PHP-Script bastelt ein kleines Bild zusammen, was er anschließend zusammen mit dem entsprechenden Content-type (\"image/png\") ausgibt.
 
+Auf diese Weise kann man zwischen vielen verschiedenen Dateiformaten unterscheiden und zum Beispiel auch RDF-Daten ausgeben, wenn diese angefordert werden."""
+EOT;
+        $turtle = '@prefix test: <http://example.org/LongLiteralTest/>.
+                   <test:shortentry> <test:genericpredicate> <test:normalobject>.
+                   <test:anotershortentry> <test:genericpredicate> <test:genericobject>.
+                   <test:extralongtestentrywhichexceeds200xlettersabsoluuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuutely> <test:genericpredicate> <test:genericobject> .
+                   <test:genericsubject> <test:genericpredicate> ' . $literal . '.';
 
+        $turtleParser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('turtle');
+        $statement = $turtleParser->parse($turtle, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
+        $store->addMultipleStatements('http://example.org/updateTest/',$statement);
+        $sparql = '@prefix test: <http://example.org/LongLiteralTest/> SELECT * FROM <http://example.org/updateTest/> WHERE {?s <test:genericpredicate> ?o}';
+        $result = $model->sparqlQuery($sparql);
+        $this->assertEquals(4, count($result));
+        $store->deleteMatchingStatements('http://example.org/updateTest/', 'test:genericsubject','test:genericpredicate', array('value' => $literal,'type'=>'literal'));
+        $result = $model->sparqlQuery($sparql);
+        $this->assertEquals(3, count($result));
+    }
+}
