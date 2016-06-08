@@ -6,9 +6,9 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store.php';
-require_once 'Erfurt/Store/Adapter/Interface.php';
-require_once 'Erfurt/Store.php';
+
+
+
 
 /**
  * This class acts as a backend for SPARQL endpoints.
@@ -37,6 +37,8 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
     protected $_password = null;
 
+    protected $_httpAdapter = null;
+
     public function __construct($adapterOptions = array())
     {
         $this->_serviceUrl = $adapterOptions['serviceUrl'];
@@ -53,6 +55,11 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         if (isset($adapterOptions['password'])) {
             $this->_password = $adapterOptions['password'];
         }
+    }
+
+    public function setHttpAdapter($adapter)
+    {
+        $this->_httpAdapter = $adapter;
     }
 
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
@@ -108,7 +115,7 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
     public function getModel($graphUri)
     {
         if (isset($this->_configuredGraphs[$graphUri])) {
-            require_once 'Erfurt/Owl/Model.php';
+            
             $m = new Erfurt_Owl_Model($graphUri, null);
 
             return $m;
@@ -179,13 +186,14 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
 
         $url = $this->_serviceUrl . '?query=' . urlencode((string)$q);
 
-        $client = Erfurt_App::getInstance()->getHttpClient(
+        $client = $this->_getHttpClient(
             $url,
             array(
                 'maxredirects'  => 10,
                 'timeout'       => 2000
             )
         );
+
 
         if (null !== $this->_username) {
             if (substr($url, 0, 7) === 'http://') {
@@ -344,5 +352,15 @@ class Erfurt_Store_Adapter_Sparql implements Erfurt_Store_Adapter_Interface
         }
 
         return $result;
+    }
+
+
+    private function _getHttpClient ($uri, $options = array())
+    {
+        if (null !== $this->_httpAdapter) {
+            $options['adapter'] = $this->_httpAdapter;
+        }
+        // TODO Create HTTP client here and remove method from Erfurt_App.
+        return Erfurt_App::getInstance()->getHttpClient($uri, $options);
     }
 }

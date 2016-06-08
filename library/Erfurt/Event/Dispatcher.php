@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Event.php';
+
 
 /**
  * Erfurt event dispatcher.
@@ -104,12 +104,12 @@ class Erfurt_Event_Dispatcher
         } else if (is_array($handler)) {
             // or check mandatory parameters
             if (!array_key_exists('class_name', $handler)) {
-                require_once 'Erfurt/Exception.php';
+                
                 throw new Erfurt_Exception("Missing key 'class_name' for handler registration.");
             }
             
             if (!array_key_exists('include_path', $handler)) {
-                require_once 'Erfurt/Exception.php';
+                
                 throw new Erfurt_Exception("Missing key 'include_path' for handler registration.");
             }
             

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ruleset name="ErfurtCS">
+    <description>The combination of codingstandards used for Ontowiki.</description>
+
+    <file>./library/Erfurt/</file>
+
+    <arg name="extensions" value="php" />
+    <!-- remove this entry if you want to see the full codesniffer report
+    <arg name="report" value="summary"/>-->
+    <arg value="p"/>
+
+    <exclude-pattern>*/libraries/*</exclude-pattern>
+    <exclude-pattern>*/Parser/Sparql10/*</exclude-pattern>
+    <exclude-pattern>*/Parser/Sparql11/*</exclude-pattern>
+
+    <!--<rule ref="Zend"/>-->
+
+    <!-- Sniffs from the integrated Zend Standard -->
+    <!-- #################### strict #################### -->
+
+    <!-- spaces in functions calls -->
+    <!-- now integrated in Erfurt standard to make specific adjustments -->
+    <!-- <rule ref="Generic.Functions.FunctionCallArgumentSpacing" /> -->
+
+    <!-- braces in functions -->
+     <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman" />
+
+    <!-- shortopentags in php files -->
+     <rule ref="Generic.PHP.DisallowShortOpenTag" />
+
+    <!-- class declaration -->
+     <rule ref="PEAR.Classes.ClassDeclaration" />
+
+    <!-- control structures -->
+     <rule ref="PEAR.ControlStructures.ControlSignature" />
+
+    <!-- normal and multi-line function calls signature -->
+     <rule ref="PEAR.Functions.FunctionCallSignature" />
+
+    <!-- function default value -->
+     <rule ref="PEAR.Functions.ValidDefaultValue" />
+
+    <!-- scope closing -->
+     <rule ref="PEAR.WhiteSpace.ScopeClosingBrace" />
+
+    <!-- function in global scope (warning) -->
+     <rule ref="Squiz.Functions.GlobalFunction" />
+
+    <!-- closing tag in php files -->
+     <rule ref="Zend.Files.ClosingTag.NotAllowed">
+      <exclude-pattern>*/Sniffs/*</exclude-pattern>
+     </rule>
+
+    <!-- camel caps and underscore in variables -->
+     <rule ref="Zend.NamingConventions.ValidVariableName" />
+
+    <!-- tab used for indentation -->
+     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+
+    <!-- line-length -->
+     <rule ref="Generic.Files.LineLength">
+      <properties>
+       <property name="lineLimit" value="100"/>
+       <property name="absoluteLineLimit" value="120"/>
+      </properties>
+     </rule>
+
+    <!-- #################### loose #################### -->
+
+     <!-- line-length (warning) -->
+     <rule ref="Generic.Files.LineLength.TooLong">
+      <severity>3</severity>
+     </rule>
+
+      <!-- Use Unix newlines -->
+     <rule ref="Generic.Files.LineEndings">
+      <properties>
+       <property name="eolChar" value="\n"/>
+      </properties>
+     </rule>
+     <rule ref="Generic.Files.LineEndings.InvalidEOLChar">
+      <severity>3</severity>
+     </rule>
+
+    <!-- #################### Erfurt #################### -->
+    <!-- whtespace -->
+     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace" />
+    <!-- deprecated functions -->
+     <rule ref="Generic.PHP.DeprecatedFunctions" />
+    <!-- non executable functions -->
+     <rule ref="Squiz.PHP.NonExecutableCode" />
+    <!-- Erfurt Custom Sniffs -->
+     <rule ref="./tests/CodeSniffer/Standards/Erfurt/"/>
+</ruleset>

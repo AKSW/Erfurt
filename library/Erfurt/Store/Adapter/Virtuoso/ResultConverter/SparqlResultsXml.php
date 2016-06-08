@@ -49,7 +49,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml
     public function convert(Array $extendedArray)
     {
         if (!isset($extendedArray['head']) or !isset($extendedArray['results'])) {
-            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
+            
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception(
                 'Supplied array is not a valid Erfurt extended format array.');
         }

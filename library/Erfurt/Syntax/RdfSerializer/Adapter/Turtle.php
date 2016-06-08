@@ -6,8 +6,8 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
-require_once 'Erfurt/Syntax/Utils/Turtle.php';
+
+
 
 /**
  * @package   Erfurt_Syntax_RdfSerializer_Adapter
@@ -59,7 +59,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $query->addProjectionVar($p);
             $query->addProjectionVar($o);
         } else if ($query instanceof Erfurt_Sparql_SimpleQuery) {
-            $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+            $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
@@ -104,9 +104,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         //construct query
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
         $query->setWherePart('WHERE { ?resourceUri ?p ?o . }');
         $query->setOrderClause('?resourceUri');
@@ -118,9 +118,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
     )
     {
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
+        
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
         /*
          * Why not as subject?
@@ -364,7 +364,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
 
     protected function _throwException($msg)
     {
-        require_once 'Erfurt/Syntax/RdfSerializerException.php';
+        
         throw new Erfurt_Syntax_RdfSerializerException($msg);
     }
 

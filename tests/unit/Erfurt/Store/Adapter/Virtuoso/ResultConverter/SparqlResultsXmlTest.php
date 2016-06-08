@@ -5,7 +5,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXmlTest extends
     
     public function setUp()
     {
-        require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/SparqlResultsXml.php';
+        
         $this->_fixture = new Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml();
         if(ini_get('short_open_tag') == "On"){
             $this->fail('OntoWiki needs short_open_tag disabled in php.ini (remember to change it both in CLI and webserver ini)');
@@ -65,7 +65,7 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXmlTest extends
     <result>
       <binding name="1"><uri>http://example.com/1</uri></binding>
       <binding name="2"><literal>ttt</literal></binding>
-      <binding name="3"><literal xml:lang="de">äää</literal></binding>
+      <binding name="3"><literal xml:lang="de">&auml;&auml;&auml;</literal></binding>
     </result>
   </results>
 </sparql>

@@ -327,6 +327,29 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         );
     }
 
+    /**
+     * {@link https://github.com/AKSW/Erfurt/issues/83}
+     */
+    public function testParseWithoutLocalpartIssue83()
+    {
+        $turtle = '
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix void: <http://rdfs.org/ns/void#> .
+            @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+            rdf: rdfs:label "" ; void:exampleResource rdf: .
+        ';
+        $result = $this->_object->parseFromDataString($turtle);
+
+        $this->assertEquals(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://rdfs.org/ns/void#exampleResource'][0]['value']
+        );
+        $this->assertEquals(
+            '',
+            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
+        );
+    }
+
     public function testParseFromFileNameNoBaseUri()
     {
         $fileName = realpath(dirname(dirname(dirname(__FILE__))))
@@ -365,6 +388,52 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
             @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
             @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix lod2: <http://lod2.eu/schema/> .
+            @prefix v: <http://www.w3.org/2006/vcard/ns#> .
+            @prefix lswt2013: <http://aksw.org/Events/2013/LeipzigerSemanticWebTag/> .
+            @prefix ns9: <http://www.nittka.de/index_e.html#> .
+            @prefix ns10: <http://de.linkedin.com/pub/andreas-both/22/672/942#> .
+            @prefix ns11: <http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#> .
+            @prefix ns12: <http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#> .
+            ';
+
+        $expectedNamespaces = array(
+            'sysont'    => 'http://ns.ontowiki.net/SysOnt/',
+            'foaf'      => 'http://xmlns.com/foaf/0.1/',
+            'sioc'      => 'http://rdfs.org/sioc/ns#',
+            'owl'       => 'http://www.w3.org/2002/07/owl#',
+            'rdf'       => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'rdfs'      => 'http://www.w3.org/2000/01/rdf-schema#',
+            'skos'      => 'http://www.w3.org/2004/02/skos/core#',
+            'xsd'       => 'http://www.w3.org/2001/XMLSchema#',
+            'lod2'      => 'http://lod2.eu/schema/',
+            'v'         => 'http://www.w3.org/2006/vcard/ns#',
+            'lswt2013'  => 'http://aksw.org/Events/2013/LeipzigerSemanticWebTag/',
+            'ns9'       => 'http://www.nittka.de/index_e.html#',
+            'ns10'      => 'http://de.linkedin.com/pub/andreas-both/22/672/942#',
+            'ns11'      => 'http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#',
+            'ns12'      => 'http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#',
+        );
+
+        $namespaces = $this->_object->parseNamespacesFromDataString($ttlNamespaces);
+
+        $this->assertEquals($expectedNamespaces, $namespaces);
+    }
+
+    public function testParseNamespacesFromCoursRoadDataString()
+    {
+        $this->markTestIncomplete('The parser currently hangs for strings like this.');
+        $ttlNamespaces = '
+            @base <http://aksw.org/> .
+            @prefix sysont: <http://ns.ontowiki.net/SysOnt/> .
+            @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+            @prefix sioc: <http://rdfs.org/sioc/ns#> .
+            @prefix owl: <http://www.w3.org/2002/07/owl#> .
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+            @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            <http://example.org/some> rdf:triple "in between".
             @prefix lod2: <http://lod2.eu/schema/> .
             @prefix v: <http://www.w3.org/2006/vcard/ns#> .
             @prefix lswt2013: <http://aksw.org/Events/2013/LeipzigerSemanticWebTag/> .

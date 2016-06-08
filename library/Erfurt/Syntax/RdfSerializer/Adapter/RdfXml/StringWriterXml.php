@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
@@ -34,568 +34,570 @@
  *
  * @package Erfurt_Syntax_RdfSerializer_Adapter_RdfXml
  * @author Philipp Frischmuth <philipp@frischmuth24.de>
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
+ * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml 
+class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
 {
 
-	/**
-	 * @var string
-	 */
-	private $INDENT = '  ';
-	
-	/**
-	 * @var string
-	 */
-	private $NS_PREFIX = 'ns';
-	
-	/**
-	 * @var string
-	 */
-	private $c_encoding;
-		
-	/**
-	 * @var string
-	 */
-	private $base;
-	
-	/**
-	 * @var array (used as stack)
-	 */
-	private $bases;
-	
-	/**
-	 * @var boolean
-	 */
-	private $dataWritten;
-	
-	/**
-	 * @var string
-	 */
-	private $doctype_ns;
-	
-	/**
-	 * @var string
-	 */
-	private $doctype_local;
-	
-	/**
-	 * @var array (associative)
-	 */
-	private $entities;
-	
-	/**
-	 * @var boolean
-	 */
-	private $firstAttribute;
-	
-	/**
-	 * @var boolean
-	 */
-	private $inTag;
-	
-	/**
-	 * @var int
-	 */
-	private $level;
-	
-	/**
-	 * @var array[][] (first dimension as stack, second as an associative array)
-	 */
-	private $namespaces;
-	
-	/**
-	 * @var array (indexed)
-	 */
-	private $nextNamespaces;
-	
-	/**
-	 * @var int
-	 */
-	private $tagLength;
-	
-	/**
-	 * @var array (used as stack)
-	 */
-	private $tags;
-	
-	/**
-	 * @var boolean
-	 */
-	private $wasEmpty;
-	
-	/**
-	 * @var boolean
-	 */
-	private $wasComment;
-	
-	/**
-	 * @var string
-	 */
-	private $xmlString;
-	
-	protected $_ad = null;
-	
-	/**
-	 * @param string/null $encoding
-	 */
-	public function __construct($encoding = null) {
-		
-		if ($encoding !== null) $this->c_encoding = $encoding;
-		else $this->c_encoding = 'UTF-8';
-		
-		$this->resetState();
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function __toString() {
-		
-		return $this->getContentString();
-	}
-	
-	public function setAd($ad) 
-	{
-	    $this->_ad = $ad;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function startDocument() {
-		
-		$this->write('<?xml version="1.0" encoding="' . $this->c_encoding . '" ?>');
-		
-		if (null !== $this->_ad) {
-		    $this->writeComment($this->_ad);
-		}
-		
-		$this->linefeed(2);
-			
-		// write entity definitions iff at least one is set
-		if (count($this->entities) > 0) {
-			$this->write('<!DOCTYPE ' . $this->getDoctype() . ' [' . PHP_EOL);
-			
-			foreach ($this->entities as $name=>$value) {
-				$this->write($this->INDENT.'<!ENTITY '.$name.' "'.$this->sanitize($value, true).'">'.PHP_EOL);
-			}
-			
-			$this->write(']>' . PHP_EOL);
-		}
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function endDocument() {
-		
-		// close all open tags except from the root element
-		while (!(count($this->tags) === 1)) {
-			$this->endElement();
-		}
-		
-		// add a newline and close the root element
-		$this->linefeed();
-		$this->endElement();
-		
-		$this->linefeed();
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function addEntity($name, $value) {
+    /**
+     * @var string
+     */
+    private $_indent = '  ';
 
-		if (($name !== null) && ($value !== null) && ($value !== '')) {
-			$this->entities[$name] = $value;
-		}
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function addNamespace($prefix, $ns) {
-		
-		$topNamespaces = array_pop($this->namespaces);
-		$topNamespaces[$ns] = $prefix;
-		array_push($this->namespaces, $topNamespaces);
-		
-		$this->nextNamespaces[] = $ns;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function startElement($ns, $local = null) {
-		
-		if ($this->inTag === true) {
-			$this->finishTag(false);
-		} else if (($this->wasComment === false) && ($this->level < 2)) {
-			$this->linefeed();
-		}
-		if ($this->wasComment === true) {
-		    $this->wasComment = false;
-		}
+    /**
+     * @var string
+     */
+    private $_nsPrefix = 'ns';
 
-		
-		if (count($this->tags) > 0) array_push($this->namespaces, array());
-		
-		$this->indent();
-		
-		$this->write('<');
-		$tag = $this->writeQName($ns, $local);
-		$tagLength = strlen($tag);
-		array_push($this->tags, array($ns, $local));
-		$this->inTag = true;
-		$this->firstAttribute = true;
-		
-		if ((($this->base !== null) && (count($this->bases) === 0)) || ($this->base !== end($this->bases))) {
-			$this->writeAttribute('xml:base', $this->base);
-		}
-		array_push($this->bases, $this->base);
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function endElement() {
-		
-		if ($this->inTag === true) {
-			$this->finishTag(true);
-			array_pop($this->tags);
-			$this->level--;
-			$this->wasEmpty = true;
-		} else {
-			$this->level--;
-			
-			if ($this->dataWritten === true) {
-				$this->dataWritten = false;
-			} else {
-				$this->indent();
-			}
-			
-			$tag = array_pop($this->tags);
+    /**
+     * @var string
+     */
+    private $_cEncoding;
 
-			$this->write('</');
-			$this->writeQName($tag[0], $tag[1]);
-			$this->write('>');
-			$this->wasEmpty = false;
-		}
-		
-		array_pop($this->namespaces);
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function addAttribute($ns, $local, $value) {
-		
-		$this->indentAttribute();
-		$this->write(' ');
-		$this->writeQName($ns, $local);
-		$this->write('="' . $this->replaceEntities($this->sanitize($value, true)) . '"');
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function writeComment($comment = null) {
-		
-		if (null === $comment) {
-		    $this->write(PHP_EOL.PHP_EOL);
-		    return;
-		}
-		
-		if ($this->inTag === true) {
-			$this->finishTag(false);
-		}
-		
-		$this->write(PHP_EOL.PHP_EOL.'<!-- '.$this->sanitize($comment).' -->');
-		$this->wasComment = true;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function writeData($data, $raw = false) {
-		
-		if ($this->inTag === true) {
-			$this->finishTag(false);
-		}
-		
-		if ($raw) {
-			$this->write($data);
-		} else {
-			$this->write($this->sanitize($data));
-		}
-		
-		$this->dataWritten = true;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function setBase($base) {
-		
-		$this->base = $base;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function setDoctype($ns, $local) {
-		
-		$this->doctype_ns = $ns;
-		$this->doctype_local = $local;
-	}
-	
-	/**
-	 * @see Erfurt_Syntax_StringWriterInterface
-	 */
-	public function getContentString() {
-		
-		return $this->xmlString;
-	}
-	
-	private function resetState() {
-		
-		$this->base 			= null;
-		$this->bases 			= array();
-		$this->dataWritten 		= false;
-		$this->entities 		= array();
-		$this->firstAttribute	= false;
-		$this->inTag 			= false;
-		$this->level			= 0;			
-		$this->namespaces 		= array();
-		$this->nextNamespaces 	= array();
-		$this->tagLength		= 0;
-		$this->tags 			= array();
-		$this->wasEmpty 		= true;
-		$this->wasComment		= false;
-		$this->xmlString		= '';
-	}
-	
-	/**
-	 * @param boolean $isEmpty
-	 */
-	private function finishTag($isEmpty) {
-		
-		$this->writeNamespaces();
-		
-		if ($isEmpty === true) $this->write(' />');
-		else $this->write('>');
-		
-		if ($this->level === 0) {
-		    $this->linefeed();
-		}
-		
-		$this->inTag = false;
-		$this->level++; 
-	}
-	
-	/**
-	 * @return string
-	 */
-	private function getDoctype() {
-		
-		if (($this->doctype_ns !== null) && ($this->doctype_local !== null)) {
-			return $this->getName($this->doctype_ns) . ':' . $this->doctype_local;
-		} else return '';
-	}
-	
-	/**
-	 * @param string $namespace
-	 * @return string
-	 */
-	private function getName($namespace) {
+    /**
+     * @var string
+     */
+    private $_base;
 
-		$name = null;
-		foreach ($this->namespaces as $nsArray) {
-			if (isset($nsArray[$namespace])) {
-				$name = $nsArray[$namespace];
-				break;
-			}
-		}
-		
-		if ($name === null) {
-			$i = 0;
-			
-			while (true) {
-				$contains = false;
-				foreach ($this->namespaces as $nsArray) {
-					foreach ($nsArray as $ns=>$prefix) {
-						if ($prefix === ($this->NS_PREFIX.$i)) {
-							$i++;
-							$contains = true;
-							break;
-						}
-					}
-					if ($contains === true) break;
-				}
-				if ($contains === false) break;
-			}
-			
-			$name = $this->NS_PREFIX . $i;
-			$topNamespaces = array_pop($this->namespaces);
-			$topNamespaces[$namespace] = $name;
-			array_push($this->namespaces, $topNamespaces);
-			$this->nextNamespaces[] = $namespace;
-		}
-			
-		return $name;
-	}
-	
-	/**
-	 * @param int/null $extra
-	 */
-	private function indent($extra = 0) {
-		
-		$this->linefeed();
-		
-		for ($i=0; $i<$this->level; ++$i) $this->write($this->INDENT);
-		
-		for ($i=0; $i<$extra; ++$i) $this->write(' ');
-	}
-	
-	/**
-	 * @param int/null $count
-	 */
-	public function linefeed($count = 1) {
-		
-		for ($i=0; $i<$count; ++$i) {
-			$this->write(PHP_EOL);
-		}
-	}
-	
-	private function indentAttribute() {
-		
-		if ($this->firstAttribute === true) {
-			$this->firstAttribute = false;
-		} else {
-			$this->indent($this->tagLength+1);
-		}
-	}
-	
-	/**
-	 * @param string $value
-	 */
-	private function replaceEntities($value) {
-		
-		if ((strpos($value, $this->base) !== false) && ($value !== $this->base)) {
-		    $newValue = str_replace($this->base, '', $value);
-		    if (strpos($newValue, '/') === false) {
-		        return $newValue;
-		    }
-		}
+    /**
+     * @var array (used as stack)
+     */
+    private $_bases;
 
-		foreach ($this->entities as $entityName=>$entityValue) {
-			if ((strpos($value, $entityValue) !== false)) {
-				$value = str_replace($entityValue, '&'.$entityName.';', $value);
-			}
-		}
-		return $value;
-	}
-	
-	/**
-	 * @param string $str
-	 * @param boolean/null $quote
-	 */
-	private function sanitize($str, $quote = false) {
+    /**
+     * @var boolean
+     */
+    private $_dataWritten;
 
-		$result = '';
-		$str_chars = str_split($str);
-		
-		foreach ($str_chars as $c) {
-			if ($c === '&') $result .= '&amp;';
-			else if ($c === '<') $result .= "&lt;";
-			else if ($c === '>') $result .= "&gt;";
-			else if ($c === '\'') $result .= "&apos;";
-			else if ($quote && $c === '"') $result .= '&quot;';
-			else $result .= $c;
-		}
-		return $result;
-	}
-	
-	/**
-	 * @param string $data
-	 */
-	private function write($data) {
-		
-		$this->xmlString .= $data;
-	}
-	
-	/**
-	 * @param string $name
-	 * @param string $value
-	 */
-	private function writeAttribute($name, $value) {
-		
-		$this->indentAttribute();
-		$value = $this->sanitize($value, true);
-		$value = $this->replaceEntities($value);
-		$this->write(' '.$name.'="'.$value.'"');
-	}
-	
-	private function writeNamespaces() {
-		
-		$additions = array();
-		
-		foreach ($this->nextNamespaces as $next) {
-			foreach ($this->namespaces as $nsArray) {
-				if (isset($nsArray[$next])) {
-					$prefix = $nsArray[$next];
-					break;
-				}
-			}
-			$additions[$prefix] = $next;
-		}
-		
-		$this->nextNamespaces = array();
-		
-		foreach ($additions as $prefix=>$ns) {
-		    $this->_writtenPrefixes[] = $prefix;
-			$this->writeAttribute('xmlns:'.$prefix, $ns);
-		}
-	}
-	
-	/**
-	 * @param string $ns
-	 * @param string $local
-	 */
-	private function writeQName($ns, $local = null) 
-	{
-	    if ($ns === 'xml:lang') {
-	        $this->write($ns);
-	        return;
-	    } 
-	    	
-		if (null === $local) {
-		    require_once 'Erfurt/Rdf/Resource.php';
-		    $r = Erfurt_Rdf_Resource::initWithUri($ns);
-		    $ns = $r->getNamespace();
-		    $local = $r->getLocalName();
-		}
-	
-		$tag = $local;
-		
-		if ($ns !== null) {
-			$name = $this->getName($ns);
+    /**
+     * @var string
+     */
+    private $_doctypeNs;
 
-			if ($name !== '') $tag = $name . ':' . $local;
-		} else {
-		    if (substr($tag, 0, 7) !== 'http://' && strpos($tag, ':') !== false) {
-		       $idx = strpos($tag, ':');
-		       
-		       $name = $this->getName(substr($tag, 0, $idx+1));
-		       $local = substr($tag, $idx+1);
-		       
-		       if ($name !== '') $tag = $name . ':' . $local;
-		    }
-		}
-		
-		$this->write($tag);
-		return $tag;
-	}	
+    /**
+     * @var string
+     */
+    private $_doctypeLocal;
+
+    /**
+     * @var array (associative)
+     */
+    private $_entities;
+
+    /**
+     * @var boolean
+     */
+    private $_firstAttribute;
+
+    /**
+     * @var boolean
+     */
+    private $_inTag;
+
+    /**
+     * @var int
+     */
+    private $_level;
+
+    /**
+     * @var array[][] (first dimension as stack, second as an associative array)
+     */
+    private $_namespaces;
+
+    /**
+     * @var array (indexed)
+     */
+    private $_nextNamespaces;
+
+    /**
+     * @var int
+     */
+    private $_tagLength;
+
+    /**
+     * @var array (used as stack)
+     */
+    private $_tags;
+
+    /**
+     * @var boolean
+     */
+    private $_wasEmpty;
+
+    /**
+     * @var boolean
+     */
+    private $_wasComment;
+
+    /**
+     * @var string
+     */
+    private $_xmlString;
+
+    protected $_ad = null;
+
+    /**
+     * @param string/null $encoding
+     */
+    public function __construct($encoding = null)
+    {
+        if ($encoding !== null) $this->_cEncoding = $encoding;
+        else $this->_cEncoding = 'UTF-8';
+
+        $this->resetState();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getContentString();
+    }
+
+    public function setAd($ad)
+    {
+        $this->_ad = $ad;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function startDocument()
+    {
+        $this->write('<?xml version="1.0" encoding="' . $this->_cEncoding . '" ?>');
+
+        if (null !== $this->_ad) {
+            $this->writeComment($this->_ad);
+        }
+
+        $this->linefeed(2);
+
+        // write entity definitions iff at least one is set
+        if (count($this->_entities) > 0) {
+            $this->write('<!DOCTYPE ' . $this->getDoctype() . ' [' . PHP_EOL);
+
+            foreach ($this->_entities as $name=>$value) {
+                $value = $this->sanitize($value, true);
+                $value = str_replace('%', '&#37;', $value);
+
+                $this->write($this->_indent.'<!ENTITY '.$name.' "'.$value.'">'.PHP_EOL);
+            }
+
+            $this->write(']>' . PHP_EOL);
+        }
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function endDocument()
+    {
+        // close all open tags except from the root element
+        while (!(count($this->_tags) === 1)) {
+            $this->endElement();
+        }
+
+        // add a newline and close the root element
+        $this->linefeed();
+        $this->endElement();
+
+        $this->linefeed();
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function addEntity($name, $value)
+    {
+        if (($name !== null) && ($value !== null) && ($value !== '')) {
+            $this->_entities[$name] = $value;
+        }
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function addNamespace($prefix, $ns)
+    {
+        $topNamespaces = array_pop($this->_namespaces);
+        $topNamespaces[$ns] = $prefix;
+        array_push($this->_namespaces, $topNamespaces);
+
+        $this->_nextNamespaces[] = $ns;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function startElement($ns, $local = null)
+    {
+        if ($this->_inTag === true) {
+            $this->finishTag(false);
+        } else if (($this->_wasComment === false) && ($this->_level < 2)) {
+            $this->linefeed();
+        }
+        if ($this->_wasComment === true) {
+            $this->_wasComment = false;
+        }
+
+        if (count($this->_tags) > 0) array_push($this->_namespaces, array());
+
+        $this->indent();
+
+        $this->write('<');
+        $tag = $this->writeQName($ns, $local);
+        $tagLength = strlen($tag);
+        array_push($this->_tags, array($ns, $local));
+        $this->_inTag = true;
+        $this->_firstAttribute = true;
+
+        if ((($this->_base !== null) && (count($this->_bases) === 0)) || ($this->_base !== end($this->_bases))) {
+            $this->writeAttribute('xml:base', $this->_base);
+        }
+        array_push($this->_bases, $this->_base);
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function endElement()
+    {
+        if ($this->_inTag === true) {
+            $this->finishTag(true);
+            array_pop($this->_tags);
+            $this->_level--;
+            $this->_wasEmpty = true;
+        } else {
+            $this->_level--;
+
+            if ($this->_dataWritten === true) {
+                $this->_dataWritten = false;
+            } else {
+                $this->indent();
+            }
+
+            $tag = array_pop($this->_tags);
+
+            $this->write('</');
+            $this->writeQName($tag[0], $tag[1]);
+            $this->write('>');
+            $this->_wasEmpty = false;
+        }
+
+        array_pop($this->_namespaces);
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function addAttribute($ns, $local, $value)
+    {
+        $this->indentAttribute();
+        $this->write(' ');
+        $this->writeQName($ns, $local);
+        $this->write('="' . $this->replaceEntities($this->sanitize($value, true)) . '"');
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function writeComment($comment = null)
+    {
+        if (null === $comment) {
+            $this->write(PHP_EOL.PHP_EOL);
+            return;
+        }
+
+        if ($this->_inTag === true) {
+            $this->finishTag(false);
+        }
+
+        $this->write(PHP_EOL.PHP_EOL.'<!-- '.$this->sanitize($comment).' -->');
+        $this->_wasComment = true;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function writeData($data, $raw = false)
+    {
+        if ($this->_inTag === true) {
+            $this->finishTag(false);
+        }
+
+        if ($raw) {
+            $this->write($data);
+        } else {
+            $this->write($this->sanitize($data));
+        }
+
+        $this->_dataWritten = true;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function setBase($base)
+    {
+        $this->_base = $base;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function setDoctype($ns, $local)
+    {
+        $this->_doctypeNs = $ns;
+        $this->_doctypeLocal = $local;
+    }
+
+    /**
+     * @see Erfurt_Syntax_StringWriterInterface
+     */
+    public function getContentString()
+    {
+        return $this->_xmlString;
+    }
+
+    private function resetState()
+    {
+        $this->_base                     = null;
+        $this->_bases                    = array();
+        $this->_dataWritten              = false;
+        $this->_entities                 = array();
+        $this->_firstAttribute           = false;
+        $this->_inTag                    = false;
+        $this->_level                    = 0;
+        $this->_namespaces               = array();
+        $this->_nextNamespaces           = array();
+        $this->_tagLength                = 0;
+        $this->_tags                     = array();
+        $this->_wasEmpty                 = true;
+        $this->_wasComment               = false;
+        $this->_xmlString                = '';
+    }
+
+    /**
+     * @param boolean $isEmpty
+     */
+    private function finishTag($isEmpty)
+    {
+        $this->writeNamespaces();
+
+        if ($isEmpty === true) $this->write(' />');
+        else $this->write('>');
+
+        if ($this->_level === 0) {
+            $this->linefeed();
+        }
+
+        $this->_inTag = false;
+        $this->_level++;
+    }
+
+    /**
+     * @return string
+     */
+    private function getDoctype()
+    {
+        if (($this->_doctypeNs !== null) && ($this->_doctypeLocal !== null)) {
+            return $this->getName($this->_doctypeNs) . ':' . $this->_doctypeLocal;
+        } else return '';
+    }
+
+    /**
+     * @param string $namespace
+     * @return string
+     */
+    private function getName($namespace)
+    {
+        $name = null;
+        foreach ($this->_namespaces as $nsArray) {
+            if (isset($nsArray[$namespace])) {
+                $name = $nsArray[$namespace];
+                break;
+            }
+        }
+
+        if ($name === null) {
+            $i = 0;
+
+            while (true) {
+                $contains = false;
+                foreach ($this->_namespaces as $nsArray) {
+                    foreach ($nsArray as $ns=>$prefix) {
+                        if ($prefix === ($this->_nsPrefix.$i)) {
+                            $i++;
+                            $contains = true;
+                            break;
+                        }
+                    }
+                    if ($contains === true) break;
+                }
+                if ($contains === false) break;
+            }
+
+            $name = $this->_nsPrefix . $i;
+            $topNamespaces = array_pop($this->_namespaces);
+            $topNamespaces[$namespace] = $name;
+            array_push($this->_namespaces, $topNamespaces);
+            $this->_nextNamespaces[] = $namespace;
+        }
+
+        return $name;
+    }
+
+    /**
+     * @param int/null $extra
+     */
+    private function indent($extra = 0)
+    {
+        $this->linefeed();
+
+        for ($i=0; $i<$this->_level; ++$i) $this->write($this->_indent);
+
+        for ($i=0; $i<$extra; ++$i) $this->write(' ');
+    }
+
+    /**
+     * @param int/null $count
+     */
+    public function linefeed($count = 1)
+    {
+        for ($i=0; $i<$count; ++$i) {
+            $this->write(PHP_EOL);
+        }
+    }
+
+    private function indentAttribute()
+    {
+        if ($this->_firstAttribute === true) {
+            $this->_firstAttribute = false;
+        } else {
+            $this->indent($this->_tagLength+1);
+        }
+    }
+
+    /**
+     * @param string $value
+     */
+    private function replaceEntities($value)
+    {
+        if ((strpos($value, $this->_base) !== false) && ($value !== $this->_base)) {
+            $newValue = str_replace($this->_base, '', $value);
+            if (strpos($newValue, '/') === false) {
+                return $newValue;
+            }
+        }
+
+        foreach ($this->_entities as $entityName=>$entityValue) {
+            if ((strpos($value, $entityValue) !== false)) {
+                $value = str_replace($entityValue, '&'.$entityName.';', $value);
+            }
+        }
+        return $value;
+    }
+
+    /**
+     * @param string $str
+     * @param boolean/null $quote
+     */
+    private function sanitize($str, $quote = false)
+    {
+        $result = '';
+        $strChars = str_split($str);
+
+        foreach ($strChars as $c) {
+            if ($c === '&') $result .= '&amp;';
+            else if ($c === '<') $result .= "&lt;";
+            else if ($c === '>') $result .= "&gt;";
+            else if ($c === '\'') $result .= "&apos;";
+            else if ($quote && $c === '"') $result .= '&quot;';
+            else $result .= $c;
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $data
+     */
+    private function write($data)
+    {
+        $this->_xmlString .= $data;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    private function writeAttribute($name, $value)
+    {
+        $this->indentAttribute();
+        $value = $this->sanitize($value, true);
+        $value = $this->replaceEntities($value);
+        $this->write(' '.$name.'="'.$value.'"');
+    }
+
+    private function writeNamespaces()
+    {
+        $additions = array();
+
+        foreach ($this->_nextNamespaces as $next) {
+            foreach ($this->_namespaces as $nsArray) {
+                if (isset($nsArray[$next])) {
+                    $prefix = $nsArray[$next];
+                    break;
+                }
+            }
+            $additions[$prefix] = $next;
+        }
+
+        $this->_nextNamespaces = array();
+
+        foreach ($additions as $prefix=>$ns) {
+            $this->_writtenPrefixes[] = $prefix;
+            $this->writeAttribute('xmlns:'.$prefix, $ns);
+        }
+    }
+
+    /**
+     * @param string $ns
+     * @param string $local
+     */
+    private function writeQName($ns, $local = null)
+    {
+        if ($ns === 'xml:lang') {
+            $this->write($ns);
+            return;
+        }
+
+        if (null === $local) {
+            
+            $r = Erfurt_Rdf_Resource::initWithUri($ns);
+            $ns = $r->getNamespace();
+            $local = $r->getLocalName();
+        }
+
+        $tag = $local;
+
+        if ($ns !== null) {
+            $name = $this->getName($ns);
+
+            if ($name !== '') $tag = $name . ':' . $local;
+        } else {
+            if (substr($tag, 0, 7) !== 'http://' && strpos($tag, ':') !== false) {
+                $idx = strpos($tag, ':');
+
+                $name = $this->getName(substr($tag, 0, $idx+1));
+                $local = substr($tag, $idx+1);
+
+                if ($name !== '') $tag = $name . ':' . $local;
+            }
+        }
+
+        $this->write($tag);
+        return $tag;
+    }
 }

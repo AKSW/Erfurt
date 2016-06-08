@@ -452,7 +452,7 @@ class Erfurt_Sparql_Query
      */
     public function getNewPattern($constr = false)
     {
-        require_once 'Erfurt/Sparql/GraphPattern.php';
+        
         $pattern = new Erfurt_Sparql_GraphPattern();
         
         if ($constr === true) {

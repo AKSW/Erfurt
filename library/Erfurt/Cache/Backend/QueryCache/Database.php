@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
+
 
 /**
  * @package Erfurt_Cache_Backend_QueryCache
@@ -16,6 +16,16 @@ require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
  */
 class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_QueryCache_Backend
 {
+    private static $_requiredTables = array(
+        'ef_cache_query_result',
+        'ef_cache_query_triple',
+        'ef_cache_query_model',
+        'ef_cache_query_objectkey',
+        'ef_cache_query_rt',
+        'ef_cache_query_rm',
+        'ef_cache_query_version'
+    );
+
     /**
      *  check the existing cacheVersion and can used for looking up if the cache structure is beeing created
      *  @access     public
@@ -41,11 +51,34 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
     }
 
     /**
+     *  check the existing cache structure
+     *  @access     public
+     *  @return     boolean         $state          true / false
+     */
+    final public function checkCacheStructure()
+    {
+        $existingTableNames = $this->store->listTables();
+        $logger = Erfurt_App::getInstance()->getLog('cache');
+        $logger->debug('Check cache structure.');
+
+        foreach (self::$_requiredTables as $table) {
+            if (!in_array($table, $existingTableNames)) {
+                $logger->debug('The table "' . $table . '" is missing.');
+                return false;
+            }
+        }
+
+        $logger->debug('All tables are existing.');
+        return true;
+    }
+
+    /**
      *  creating the initially needed cacheStructure. 
      *  In the database case there will be 6 tables created named as followed:
      *    ef_cache_query_result, 
      *    ef_cache_query_triple, 
      *    ef_cache_query_model, 
+     *    ef_cache_query_objectkey, 
      *    ef_cache_query_rt, 
      *    ef_cache_query_rm, 
      *    ef_cache_query_version. 
@@ -520,13 +553,14 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
         // in ZendDB (Mysql) it only works with it. e.g. 'DROP INDEX tbl_name_idx ON tbl_name'
         // TODO platform indepent index handling
 
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_triple');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_model');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_result');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_rt');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_rm');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_version');
-        $this->store->sqlQuery('DROP TABLE ef_cache_query_objectkey');
+        $existingTableNames = $this->store->listTables();
+
+        foreach (self::$_requiredTables as $table) {
+            if (in_array($table, $existingTableNames)) {
+                $this->store->sqlQuery('DROP TABLE ' . $table);
+            }
+        }
+
         return true;
     }
 
@@ -862,18 +896,30 @@ class Erfurt_Cache_Backend_QueryCache_Database extends Erfurt_Cache_Backend_Quer
                 // If this fails, something else is wrong, so we re-throw the error!
                 try {
                     $this->createCacheStructure();
-                    $result = $this->store->sqlQuery($sql, $limit, $offset);
                 } catch (Erfurt_Store_Adapter_Exception $se) {
                     $logger->debug($se->getMessage());
-                    require_once 'Erfurt/Exception.php';
+                    
                     throw new Erfurt_Exception(
                         'Something went wrong while building query cache structure: ' . $se->getMessage()
                     );
                 }
+            } else if (!$this->checkCacheStructure()) {
+                $logger->debug('Resetting query cache table structure now.');
+                $this->uninstall();
+                $this->createCacheStructure();
             } else {
-                require_once 'Erfurt/Exception.php';
+                
                 throw new Erfurt_Exception(
                     'Something went wrong with the query cache: ' . $e->getMessage().' SQL:'.$sql
+                );
+            }
+            try {
+                $result = $this->store->sqlQuery($sql, $limit, $offset);
+            } catch (Erfurt_Store_Adapter_Exception $se) {
+                $logger->debug($se->getMessage());
+                
+                throw new Erfurt_Exception(
+                    'Something went wrong while finally executing cache query: ' . $se->getMessage()
                 );
             }
         }

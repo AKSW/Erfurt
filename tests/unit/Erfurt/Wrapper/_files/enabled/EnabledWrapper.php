@@ -1,5 +1,5 @@
 <?php
-require_once 'Erfurt/Wrapper.php';
+
 
 class EnabledWrapper extends Erfurt_Wrapper
 {

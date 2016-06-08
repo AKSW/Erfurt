@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Cache/Backend/QueryCache/Backend.php';
+
 
 /**
  * @package        Erfurt_Cache_Backend_QueryCache

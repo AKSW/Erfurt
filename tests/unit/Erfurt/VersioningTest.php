@@ -225,7 +225,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         // We need a mocked versioning object here.
         $this->_object = $this->_getMockedVersioning();
         
-        require_once 'Erfurt/Event.php';
+        
         $event = new Erfurt_Event('onAddStatement');
         $event->graphUri = 'http://example.org/';
         $statement = array();
@@ -247,7 +247,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         // We need a mocked versioning object here.
         $this->_object = $this->_getMockedVersioning();
         
-        require_once 'Erfurt/Event.php';
+        
         $event = new Erfurt_Event('onAddMultipleStatements');
         $event->graphUri = 'http://example.org/';
         $event->statements = array('http://example.org/resource1/' => array(
@@ -280,7 +280,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         // We need a mocked versioning object here.
         $this->_object = $this->_getMockedVersioning();
         
-        require_once 'Erfurt/Event.php';
+        
         $event = new Erfurt_Event('onDeleteMatchingStatements');
         $event->graphUri = 'http://example.org/';
         $event->resource = 'http://example.org/resource1/';
@@ -324,7 +324,7 @@ class Erfurt_VersioningTest extends Erfurt_TestCase
         // We need a mocked versioning object here.
         $this->_object = $this->_getMockedVersioning();
         
-        require_once 'Erfurt/Event.php';
+        
         $event = new Erfurt_Event('onDeleteMultipleStatements');
         $event->graphUri = 'http://example.org/';
         

@@ -29,8 +29,6 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 
     public function testTokenizeFilter()
     {
-        $this->markTestIncomplete('Issue #35 not yet fixed https://github.com/AKSW/Erfurt/issues/35');
-
         $tokensA = array(
             'WHERE', '{', '?a', 'p1:p', '?b', ',', '?c', '.', 'FILTER', "(", "xsd:dateTime", '(',
             '?a', ')', '=', 'xsd:dateTime', '(', '"', '1978-01-08T00:00:00Z', '"', ')', ')', '.',
@@ -114,7 +112,7 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
         $this->_importFromManifest($resourceFileBase . self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
 
         // 4. dawg2
-        require_once 'Erfurt/Syntax/RdfParser.php';
+        
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
 
@@ -150,7 +148,7 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 
     protected function _importFromManifest($filename, &$queryResultArray)
     {
-        require_once 'Erfurt/Syntax/RdfParser.php';
+        
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
 
