@@ -1,6 +1,3 @@
-**Attention for composer users!**
-This version is not ready for use with composer, currently it is only the `feature/php-composer` branch. If you like to check it out, please require `dev-feature/php-composer`.
-
 # Erfurt
 
 Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
