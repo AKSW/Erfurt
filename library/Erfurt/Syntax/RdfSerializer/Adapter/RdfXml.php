@@ -213,7 +213,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     protected function _serializeType($description, $class)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
+        $query->setSelectClause('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . ?s <' . EF_RDF_TYPE . '> <' . $class . '> }');
         $query->setOrderClause('?s ?p ?o');
@@ -263,11 +263,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     protected function _serializeRest($description)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
+        $query->setSelectClause('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
 
-        $where = 'WHERE 
-                  { ?s ?p ?o . 
+        $where = 'WHERE
+                  { ?s ?p ?o .
                   OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2  } .
               FILTER (!bound(?o2) || (';
 
@@ -329,7 +329,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     {
         
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resource.'>))}');
         $query->setOrderClause('?s ?p ?o');
@@ -390,7 +390,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         // SCBD: Do the same for all Resources, that have the resource as object
 
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?p ?o');
+        $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . ?s ?p2 ?o2 . FILTER (sameTerm(?o2, <'.$resource.'>)) }');
         $query->setOrderClause('?s ?p ?o');

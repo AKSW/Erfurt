@@ -27,14 +27,14 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
     private $_stringWriter;
 
     /**
-     * An associative array where the key is the label of the blank node. 
+     * An associative array where the key is the label of the blank node.
      *
      * @var string[]
      */
     private $_bNodes;
 
     /**
-     * An associative array where the key is the label of the blank node. 
+     * An associative array where the key is the label of the blank node.
      *
      * @var int[]
      */
@@ -466,7 +466,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
     {
         
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?s ?first ?rest');
+        $query->setSelectClause('SELECT ?s ?first ?rest');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s <' . EF_RDF_FIRST . '> ?first . ?s <' . EF_RDF_REST . '> ?rest }');
 

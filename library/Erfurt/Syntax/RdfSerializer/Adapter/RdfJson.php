@@ -26,7 +26,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
 
         
         $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setProloguePart('SELECT ?s ?p ?o');
+        $sparql->setSelectClause('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
         $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resourceUri.'>)) }');
         $sparql->setOrderClause('?s ?p ?o');
@@ -103,7 +103,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
 
         
         $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setProloguePart('SELECT ?s ?p ?o');
+        $sparql->setSelectClause('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
         $sparql->setWherePart('WHERE { ?s ?p ?o }');
         $sparql->setOrderClause('?s ?p ?o');
