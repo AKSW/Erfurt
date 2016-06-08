@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -20,22 +20,19 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_CSV
     // ------------------------------------------------------------------------
     // --- Public Methods -----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     /**
-     * Converts a JSON result string to an RDF/PHP array.
+     * Converts a result array to a CSV result string.
      *
-     * @param string $jsonSparqlResults The JSON SPARQL result string
-     * @return array
+     * @param string $jsonSparqlResults The JSON SPARQL result array
+     * @return string
      */
     public function convert($resultsArray)
     {
-        $csv = array();
-        if (count($resultsArray) > 0)
-        {
+        if (isset($resultsArray[0])) {
             $csv[] = $this->_convertArrayRowToCSV(array_keys($resultsArray[0]));
         }
-        foreach($resultsArray as $row)
-        {
+        foreach ($resultsArray as $row) {
             $csv[] = $this->_convertArrayRowToCSV($row);
         }
         /**
@@ -64,4 +61,3 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_CSV
         return rtrim(ob_get_clean());
     }
 }
-
