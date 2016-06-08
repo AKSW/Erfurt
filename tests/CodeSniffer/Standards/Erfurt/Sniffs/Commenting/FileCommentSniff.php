@@ -1,19 +1,14 @@
 <?php
 /**
- * Parses and verifies the TYPO3 copyright notice.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * PHP version 5
- *
- * @category  PHP
- * @package   TYPO3SniffPool
- * @author    Stefano Kowalke <blueduck@mailbox.org>
- * @copyright 2015 Stefano Kowalke
- * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @link      https://github.com/typo3-ci/TYPO3SniffPool
+ * @copyright Copyright (c) 2006-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
  * Parses and verifies the TYPO3 copyright notice.
+ * PHP version 5
  *
  * @category  PHP
  * @package   TYPO3SniffPool
@@ -30,12 +25,13 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
      *
      * @var array
      */
-    protected $copyright = array(
+    protected $_copyright = array(
                             1  => "/**\n",
                             2  => " * This file is part of the {@link http://erfurt-framework.org Erfurt} project.\n",
                             3  => " *\n",
                             4  => "",
-                            5  => " * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)\n",
+                            5  => " * @license   http://opensource.org/licenses/gpl-license.php "
+                                . "GNU General Public License (GPL)\n",
                             6  => " */",
                            );
 
@@ -63,35 +59,61 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        exec('([ -d .git ] && echo .git) || git rev-parse --git-dir 2> /dev/null', $git_test);
-        if(!empty($git_test))
-        {
-          exec('git log --reverse ' . $phpcsFile->getFilename() . ' | head -3' , $output1);
-          preg_match("/( )[0-9]{4}( )/", $output1[2],$git_year_array1);
-          $git_year1=str_replace(' ','',$git_year_array1[0]);
-          exec('git log -1 ' . $phpcsFile->getFilename(), $output2);
-          preg_match("/( )[0-9]{4}( )/", $output2[2],$git_year_array2);
-          $git_year2=str_replace(' ','',$git_year_array2[0]);
-          if(strcmp($git_year1,$git_year2)!=0)
-          {
-            $git_year1 .='-';
-            $git_year1 .=$git_year2;
-          }
-          //$year = " * @copyright Copyright (c) " . date('Y') . ", {@link http://aksw.org AKSW}\n";
-          $year = " * @copyright Copyright (c) " . $git_year1 . ", {@link http://aksw.org AKSW}\n";
-          $this->copyright[4]= $year;
-        }
-        else {
-          preg_match("/( )[0-9]{4}(-[0-9]{4})?/",$tokens[16]['content'],$non_git_year);
-          $year = " * @copyright Copyright (c) " . str_replace(' ','',$non_git_year[0]) . ", {@link http://aksw.org AKSW}\n";
-          $this->copyright[4]= $year;
-        }
-        $tokenizer = new PHP_CodeSniffer_Tokenizers_Comment();
-        $expectedString = implode($this->copyright);
-        $expectedTokens = $tokenizer->tokenizeString($expectedString, PHP_EOL, 0);
         // Find the next non whitespace token.
         $commentStart = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+        if ($commentStart === false) {
+            $phpcsFile->addError('Not file level comment given', $commentStart, 'NoFileLevelCommentFound');
+            return;
+        }
 
+        $noGit = true;
+        if (count($tokens) > 15) {
+            preg_match("/ ([0-9]{4})(-[0-9]{4})?/", $tokens[$commentStart + 15]['content'], $nonGitYear);
+        }
+
+        //test if a git exists to get the years from 'git log'
+        exec('([ -d .git ] && echo .git) || git rev-parse --git-dir 2> /dev/null', $gitTest);
+        if (!empty($gitTest)) {
+            $output = array();
+            exec('git ls-files --error-unmatch ' . $phpcsFile->getFilename() . ' 2> /dev/null', $output, $returnValue);
+            if ($returnValue == 0) {
+                $noGit = false;
+            }
+        }
+
+        if (!$noGit) {
+            //test if a git entry exists to get the years from 'git log'
+            exec('git log --reverse ' . $phpcsFile->getFilename() . ' | head -3', $outputCreationYear);
+            //if(!empty($outputCreationYear)) {
+                preg_match("/( )[0-9]{4}( )/", $outputCreationYear[2], $gitOldYearArray);
+                $gitYearOld = str_replace(' ', '', $gitOldYearArray[0]);
+                if (isset($nonGitYear) && isset($nonGitYear[1]) && $gitYearOld > $nonGitYear[1]) {
+                    $gitYearOld = $nonGitYear[1];
+                }
+                exec('git log -1 ' . $phpcsFile->getFilename(), $outputLastEditYear);
+                preg_match("/( )[0-9]{4}( )/", $outputLastEditYear[2], $gitNewYearArray);
+                var_dump($outputLastEditYear);
+                var_dump($gitNewYearArray);
+                $gitYearNew = str_replace(' ', '', $gitNewYearArray[0]);
+                if (strcmp($gitYearOld, $gitYearNew) != 0) {
+                    $gitYearOld .= '-';
+                    $gitYearOld .= $gitYearNew;
+                }
+                $year = " * @copyright Copyright (c) " . $gitYearOld . ", {@link http://aksw.org AKSW}\n";
+                $this->_copyright[4] = $year;
+            //}
+        } else {
+            //tests if the file has no year/wrong editing and the year can't be found
+            if (!empty($nonGitYear)) {
+                $year = str_replace(' ', '', $nonGitYear[0]);
+                $copyright = " * @copyright Copyright (c) " . $year . ", {@link http://aksw.org AKSW}\n";
+                $this->_copyright[4] = $copyright;
+            }
+        }
+
+        $tokenizer = new PHP_CodeSniffer_Tokenizers_Comment();
+        $expectedString = implode($this->_copyright);
+        $expectedTokens = $tokenizer->tokenizeString($expectedString, PHP_EOL, 0);
         // Allow namespace statements at the top of the file.
         if ($tokens[$commentStart]['code'] === T_NAMESPACE) {
             $semicolon    = $phpcsFile->findNext(T_SEMICOLON, ($commentStart + 1));
@@ -108,7 +130,6 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
             if ($fix === true) {
                 $phpcsFile->fixer->replaceToken($commentStart, "/**");
             }
-
             return;
         }
 
@@ -120,14 +141,14 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
         }
         $commentEndLine = $tokens[$commentEnd]['line'];
         $commentStartLine = $tokens[$commentStart]['line'];
-        if ((($commentEndLine - $commentStartLine) + 1) < count($this->copyright)) {
+        if ((($commentEndLine - $commentStartLine) + 1) < count($this->_copyright)) {
             $phpcsFile->addError(
                 'Copyright notice too short',
                 $commentStart,
                 'CommentTooShort'
             );
             return;
-        } else if ((($commentEndLine - $commentStartLine) + 1) > count($this->copyright)) {
+        } else if ((($commentEndLine - $commentStartLine) + 1) > count($this->_copyright)) {
             $phpcsFile->addError(
                 'Copyright notice too long',
                 $commentStart,
@@ -135,14 +156,13 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
             );
             return;
         }
-
         $j = 0;
         for ($i = $commentStart; $i <= $commentEnd; $i++) {
             if ($tokens[$i]['content'] !== $expectedTokens[$j]["content"]) {
                 $error = 'Found wrong part of copyright notice. Expected "%s", but found "%s"';
                 $data  = array(
-                          trim($expectedTokens[$j]["content"]),
-                          trim($tokens[$i]['content']),
+                          $expectedTokens[$j]["content"],
+                          $tokens[$i]['content'],
                          );
                 $fix   = $phpcsFile->addFixableError($error, $i, 'WrongText', $data);
 
@@ -150,12 +170,8 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
                     $phpcsFile->fixer->replaceToken($i, $expectedTokens[$j]["content"]);
                 }
             }
-
             $j++;
         }
-
-        return;
-
     }//end process()
 
 

@@ -117,7 +117,7 @@ test:
 	make test-integration-mysql
 
 codesniffer:
-	$(PHPCS)
+	$(PHPCS) -p
 
 codebeautifier:
 	$(PHPCBF)
