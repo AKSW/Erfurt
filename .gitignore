@@ -15,5 +15,6 @@ vendor
 composer.phar
 # build stuff
 build/
+cache/
 !build/phpcs.xml
 !build/phpcmd.xml
