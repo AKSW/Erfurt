@@ -368,12 +368,10 @@ EOF;
 
         $modelUri = 'http://example.org/updateTest/';
         $store = Erfurt_App::getInstance()->getStore();
-        try {
-            $store->deleteModel($modelUri);
-        } catch (Exception $e) {/*ignore deletion failure*/}
+
         $model = $store->getNewModel($modelUri);
         $literal= <<<'EOT'
-"""Gerade eben habe ich einen kleinen PHP Skript geschrieben, der sich selbst als Bild einbindet. Das klingt etwas seltsam aber veranschaulicht das Prinzip der <a href=\"http://de.wikipedia.org/wiki/Content_Negotiation\"><em>Content Negotiation</em></a> sehr gut.
+Gerade eben habe ich einen kleinen PHP Skript geschrieben, der sich selbst als Bild einbindet. Das klingt etwas seltsam aber veranschaulicht das Prinzip der <a href=\"http://de.wikipedia.org/wiki/Content_Negotiation\"><em>Content Negotiation</em></a> sehr gut.
 
 Content Negotiation ist kurz gesagt ein Verfahren, bei dem ein Client und Server das Format der Antwort auf eine Anfrage aushandeln. Der Client gibt seine Vorlieben nach Priorität geordnet an und der Server tut sein Bestes um das bevorzugte Dateiformat zu liefern.
 
@@ -401,21 +399,23 @@ if (stristr($accept, 'html')) {
 
 Der Script ließt die Servervariable \"HTTP_ACCEPT\", in der der Inhalt des empfangenen \"Accept\"-Headers enthalten ist z.B \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\". Wenn dieser \"html\" enthält wird eine HTML-Seite ausgegeben, in der mit dem \"<img>\"- Tag die Seite selbst (\"image.png\") eingebunden wird. Beim Einbinden als Bild sendet der Browser dann aber einen anderen Accept-Header z.B. \"image/png,image/*;q=0.8,*/*;q=0.5 \", was bedeutet, dass der Browser ein Bild erwartet. In dem Fall ist dann \"html\" nicht in dem String enthalten und der PHP-Script bastelt ein kleines Bild zusammen, was er anschließend zusammen mit dem entsprechenden Content-type (\"image/png\") ausgibt.
 
-Auf diese Weise kann man zwischen vielen verschiedenen Dateiformaten unterscheiden und zum Beispiel auch RDF-Daten ausgeben, wenn diese angefordert werden."""
+Auf diese Weise kann man zwischen vielen verschiedenen Dateiformaten unterscheiden und zum Beispiel auch RDF-Daten ausgeben, wenn diese angefordert werden.
 EOT;
         $turtle = '@prefix test: <http://example.org/LongLiteralTest/>.
                    <test:shortentry> <test:genericpredicate> <test:normalobject>.
                    <test:anotershortentry> <test:genericpredicate> <test:genericobject>.
                    <test:extralongtestentrywhichexceeds200xlettersabsoluuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuutely> <test:genericpredicate> <test:genericobject> .
-                   <test:genericsubject> <test:genericpredicate> ' . $literal . '.';
+                   <test:genericsubject> <test:genericpredicate> """' . $literal . '""" .';
 
         $turtleParser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('turtle');
         $statement = $turtleParser->parse($turtle, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING);
-        $store->addMultipleStatements('http://example.org/updateTest/',$statement);
-        $sparql = '@prefix test: <http://example.org/LongLiteralTest/> SELECT * FROM <http://example.org/updateTest/> WHERE {?s <test:genericpredicate> ?o}';
+        $store->addMultipleStatements($modelUri, $statement);
+        $sparql = "@prefix test: <http://example.org/LongLiteralTest/> SELECT * FROM $modelUri WHERE {?s <test:genericpredicate> ?o}";
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(4, count($result));
-        $store->deleteMatchingStatements('http://example.org/updateTest/', 'test:genericsubject','test:genericpredicate', array('value' => $literal,'type'=>'literal'));
+
+        $store->deleteMatchingStatements($modelUri, 'test:genericsubject','test:genericpredicate', array('value' => $literal, 'type'=>'literal'));
+
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(3, count($result));
     }

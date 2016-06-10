@@ -584,12 +584,12 @@ class Erfurt_Store
                         $o = $object['value'];
                         if (isset($object['datatype'])) {
                             $dt = $object['datatype'];
-                            $filter .= "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                            $filter .= "FILTER ((?o = \"\"\"$o\"\"\") && (datatype(?o) = <$dt>) .\n";
                         } else if (isset($object['lang'])) {
                             $lang = $object['lang'];
-                            $filter .= "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                            $filter .= "FILTER ((?o = \"\"\"$o\"\"\") && (lang(?o) = \"$lang\") .\n";
                         } else {
-                            $filter .= "FILTER (?o = \"$o\") .\n";
+                            $filter .= "FILTER (?o = \"\"\"$o\"\"\") .\n";
                         }
                     }
                 }
