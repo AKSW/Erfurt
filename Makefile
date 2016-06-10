@@ -90,7 +90,7 @@ endif
 
 # coding standard
 # test stuff
-test-directories:
+test-directories: directories
 	rm -rf tests/cache tests/unit/cache tests/integration/cache
 	mkdir tests/cache
 	mkdir tests/unit/cache

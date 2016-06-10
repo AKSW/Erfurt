@@ -108,8 +108,8 @@ class Erfurt_Utils
                      * corresponding escape sequences
                      */
                     $replaceCharlist .= "\n\t\r\f";
+                    $value = addcslashes($value, $replaceCharlist);
                 }
-                $value = addcslashes($value, $replaceCharlist);
         }
 
         // add short, long literal quotes respectively

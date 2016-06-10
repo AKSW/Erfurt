@@ -13,6 +13,7 @@ cache.properties
 cache.sqlite
 vendor
 composer.phar
+*/cache/*
 # build stuff
 build/
 cache/
