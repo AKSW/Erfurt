@@ -715,7 +715,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $this->_verifyChar($this->_read(), '[');
 
         $bNode = $this->_createBNode();
-
+        $this->_skipWS();
         $c = $this->_read();
         if ($c !== ']') {
             $this->_unread();
