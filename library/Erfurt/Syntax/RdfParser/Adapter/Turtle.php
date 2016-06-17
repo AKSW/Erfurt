@@ -725,8 +725,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
             $this->_subject = $bNode;
 
-            $this->_skipWS();
-
             $this->_parsePredicateObjectList();
 
             $this->_skipWS();
