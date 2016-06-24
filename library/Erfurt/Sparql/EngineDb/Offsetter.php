@@ -61,7 +61,7 @@ class Erfurt_Sparql_EngineDb_Offsetter
      */
     protected function _getCount($arSql)
     {   
-        
+        require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $sql = Erfurt_Sparql_EngineDb_SqlMerger::getCount($this->_query, $arSql);
         
         $dbResult = $this->_engine->sqlQuery($sql);

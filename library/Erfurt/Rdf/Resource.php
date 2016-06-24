@@ -6,7 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
+require_once 'Erfurt/Rdf/Node.php';
 
 /**
  * Represents a basic RDF resource.
@@ -247,7 +247,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     protected function _fetchDescription($maxDepth)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT ?p ?o')
+        $query->setProloguePart('SELECT ?p ?o')
               ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
         $description = array();
         $result = null ;

@@ -6,8 +6,8 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
-
+require_once 'Erfurt/Store.php';
+require_once 'Erfurt/Store/Adapter/Sparql.php';
 
 /**
  * This class acts as a backend for OntoWiki endpoints.
@@ -50,7 +50,7 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
         try {
             $this->addMultipleStatements($graphUri, $statementArray);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            
+            require_once 'Erfurt/Store/Adapter/Exception.php';
             throw new Erfurt_Store_Adapter_Exception('Insertion of statement failed:' . $e->getMessage());
         }
     }

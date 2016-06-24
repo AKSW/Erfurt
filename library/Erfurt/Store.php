@@ -1065,7 +1065,7 @@ EOF;
             } else {
                 // use generic implementation
                 $owlQuery = new Erfurt_Sparql_SimpleQuery();
-                $owlQuery->setAsk(true)
+                $owlQuery->setProloguePart('ASK')
                          ->addFrom($modelIri)
                          ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
 
@@ -1793,7 +1793,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
             // Fetch the graph configurations
             $queryObject = new Erfurt_Sparql_SimpleQuery();
-            $queryObject->setSelectClause('SELECT ?s ?p ?o');
+            $queryObject->setProloguePart('SELECT ?s ?p ?o');
             $queryObject->setFrom(array($sysOntModelUri));
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
@@ -1927,7 +1927,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         } else {
             $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setSelectClause('SELECT DISTINCT ?graph')
+            $query->setProloguePart('SELECT DISTINCT ?graph')
                 ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
 
             $graphResult = array();
@@ -2142,7 +2142,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * fetches the PHP/RDF statments array description array
      *
      * @param string       $resourceIri The Iri, which identifies the resource.
-     * @param string|false $modelIri    The Iri, which identifies the model or
+     * @param string|false $modelIri    The Iri, which identifies the model or 
      *     false for store wide descriptions
      * @param array        $options     Array of different options:
      *     Erfurt_Store::USE_AC = true|false - use access control
@@ -2161,13 +2161,13 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         $memoryModel = new Erfurt_Rdf_MemoryModel();
 
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT ?p ?o')
+        $query->setProloguePart('SELECT ?p ?o')
             ->setWherePart("{<$resourceIri> ?p ?o . }");
 
         // prepare an additional query for inverse properties
         if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
             $inverseQuery = new Erfurt_Sparql_SimpleQuery();
-            $inverseQuery->setSelectClause('SELECT ?s ?p')
+            $inverseQuery->setProloguePart('SELECT ?s ?p')
                 ->setWherePart("{?s ?p <$resourceIri> . }");
         } else {
             $inverseQuery = false;

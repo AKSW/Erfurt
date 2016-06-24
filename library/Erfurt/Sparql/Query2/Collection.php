@@ -6,7 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
+require_once 'ObjectList.php';
 
 /**
  * Erfurt Sparql Query2 - Collection

@@ -15,7 +15,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
+require_once 'antlr/Php/antlr.php';
 
 class Erfurt_Sparql_Parser_Sparql10 implements Erfurt_Sparql_Parser_Interface
 {

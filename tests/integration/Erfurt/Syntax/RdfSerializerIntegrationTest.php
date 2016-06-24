@@ -27,7 +27,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('rdfxml');
         $result1 = $this->_object->serializeGraphToString($g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
         $result2 = $adapter->serializeGraphToString($g);
         
@@ -43,7 +43,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('rdfxml');
         $result1 = $this->_object->serializeResourceToString($g, $g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
         $result2 = $adapter->serializeResourceToString($g, $g);
         
@@ -59,7 +59,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('rdfjson');
         $result1 = $this->_object->serializeGraphToString($g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
         $result2 = $adapter->serializeGraphToString($g);
         
@@ -75,7 +75,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('rdfjson');
         $result1 = $this->_object->serializeResourceToString($g, $g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
         $result2 = $adapter->serializeResourceToString($g, $g);
         
@@ -91,7 +91,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('ttl');
         $result1 = $this->_object->serializeGraphToString($g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
         $result2 = $adapter->serializeGraphToString($g);
         
@@ -107,7 +107,7 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object->initializeWithFormat('ttl');
         $result1 = $this->_object->serializeResourceToString($g, $g);
         
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
         $adapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
         $result2 = $adapter->serializeResourceToString($g, $g);
         

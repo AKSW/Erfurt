@@ -6,7 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
+require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 /**
  * This class acts as an intermediate implementation for some important formats.
@@ -24,9 +24,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
 
-        
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setSelectClause('SELECT ?s ?p ?o');
+        $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
         $sparql->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resourceUri.'>)) }');
         $sparql->setOrderClause('?s ?p ?o');
@@ -101,9 +101,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
 
-        
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparql = new Erfurt_Sparql_SimpleQuery();
-        $sparql->setSelectClause('SELECT ?s ?p ?o');
+        $sparql->setProloguePart('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
         $sparql->setWherePart('WHERE { ?s ?p ?o }');
         $sparql->setOrderClause('?s ?p ?o');

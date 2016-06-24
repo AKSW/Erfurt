@@ -140,13 +140,13 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
     {
         // parse the data
         if (xml_parse($this->_parser, (string)$xmlSparqlResults) !== 1) {
-            
+            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception('XML parsing error.');
         }
         
         // this should never happen
         if (!$this->_saneResults) {
-            
+            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception(
                 'Could not parse result set. The XML result format might have changed. Please check the parser.');
         }

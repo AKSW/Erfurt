@@ -303,7 +303,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         #$c = $this->_skipWS();
 
         $uri = $this->_resolveUri($this->_decodeString($token, true));
-        
+        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
 
@@ -450,7 +450,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_unread();
 
-        
+        require_once 'Erfurt/Rdf/Literal.php';
         return Erfurt_Rdf_Literal::initWithLabelAndDatatype($token, $datatype);
     }
 
@@ -485,7 +485,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             }
 
             $this->_unread();
-            
+            require_once 'Erfurt/Rdf/Literal.php';
             return Erfurt_Rdf_Literal::initWithLabelAndLanguage($label, $lang);
         } else if ($c === '^') {
             $this->_read();
@@ -494,14 +494,14 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
             $datatype = $this->_parseValue();
             if ($datatype instanceof Erfurt_Rdf_Resource) {
-                
+                require_once 'Erfurt/Rdf/Literal.php';
                 return Erfurt_Rdf_Literal::initWithLabelAndDatatype($label, (string) $datatype);
             } else {
                 $this->_throwException('Illegal datatype value.');
                 return null;
             }
         } else {
-            
+            require_once 'Erfurt/Rdf/Literal.php';
             return Erfurt_Rdf_Literal::initWithLabel($label);
         }
     }
@@ -658,7 +658,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
                 $value = $prefix;
 
                 if ($prefix === 'true' || $prefix === 'false') {
-                    
+                    require_once 'Erfurt/Rdf/Literal.php';
                     return Erfurt_Rdf_Literal::initWithLabelAndDatatype($value, EF_XSD_BOOLEAN);
                 }
             }
@@ -682,7 +682,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_unread();
 
-        
+        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
 
@@ -753,7 +753,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
 
         $this->_usedBnodeIds[$id] = true;
-        
+        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithBlankNode($id);
     }
 

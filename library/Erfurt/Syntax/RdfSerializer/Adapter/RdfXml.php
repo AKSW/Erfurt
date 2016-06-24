@@ -6,7 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-
+require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 /**
  * @copyright  Copyright (c) 2013 {@link http://aksw.org aksw}
@@ -28,8 +28,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
-        
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
 
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
@@ -78,8 +78,8 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
     )
     {
-        
-        
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
+        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
 
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
@@ -213,7 +213,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     protected function _serializeType($description, $class)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT DISTINCT ?s ?p ?o');
+        $query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . ?s <' . EF_RDF_TYPE . '> <' . $class . '> }');
         $query->setOrderClause('?s ?p ?o');
@@ -263,11 +263,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
     protected function _serializeRest($description)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT DISTINCT ?s ?p ?o');
+        $query->setProloguePart('SELECT DISTINCT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
 
-        $where = 'WHERE
-                  { ?s ?p ?o .
+        $where = 'WHERE 
+                  { ?s ?p ?o . 
                   OPTIONAL { ?s <' . EF_RDF_TYPE . '> ?o2  } .
               FILTER (!bound(?o2) || (';
 
@@ -327,9 +327,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
     protected function _serializeResource($resource, $useAc = true, $level = 0)
     {
-        
+        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT ?s ?p ?o');
+        $query->setProloguePart('SELECT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . FILTER (sameTerm(?s, <'.$resource.'>))}');
         $query->setOrderClause('?s ?p ?o');
@@ -390,7 +390,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         // SCBD: Do the same for all Resources, that have the resource as object
 
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setSelectClause('SELECT ?s ?p ?o');
+        $query->setProloguePart('SELECT ?s ?p ?o');
         $query->addFrom($this->_graphUri);
         $query->setWherePart('WHERE { ?s ?p ?o . ?s ?p2 ?o2 . FILTER (sameTerm(?o2, <'.$resource.'>)) }');
         $query->setOrderClause('?s ?p ?o');
