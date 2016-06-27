@@ -11,7 +11,7 @@ require_once 'Erfurt/Store/Adapter/Interface.php';
 require_once 'Erfurt/Store/Sql/Interface.php';
 
 /**
- * This class acts as a meta-backend class, which can handle multiple 
+ * This class acts as a meta-backend class, which can handle multiple
  * heterogenous backends.
  *
  * @copyright  Copyright (c) 2012, {@link http://aksw.org AKSW}
@@ -21,25 +21,25 @@ require_once 'Erfurt/Store/Sql/Interface.php';
  */
 class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface, Erfurt_Store_Sql_Interface
 {
-    const DEFAULT_BACKEND = '__default_backend__'; 
+    const DEFAULT_BACKEND = '__default_backend__';
     const BACKEND_PREFIX  = '__additional_backend__';
-    
+
     // ------------------------------------------------------------------------
     // --- Private properties -------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     private $_backends = array();
-    
+
     private $_configuredGraphs = array();
-    
+
     private $_availableGraphs = null;
-    
+
     public function __construct($adapterOptions = array())
     {
         // Instanciate the default backend
         $defaultBackend        = $adapterOptions['default']['backend'];
-        $defaultAdapterOptions = $adapterOptions['default'][$defaultBackend]; 
-        
+        $defaultAdapterOptions = $adapterOptions['default'][$defaultBackend];
+
         switch ($defaultBackend) {
             case 'zenddb':
                 require_once 'Erfurt/Store/Adapter/EfZendDb.php';
@@ -53,7 +53,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                 require_once 'Erfurt/Store/Adapter/Exception.php';
                 throw new Erfurt_Store_Adapter_Exception('Wrong default backend type specified.');
         }
-        
+
         // For the default backend we configure all available graphs.
         // default, for they are needed!
         $backend = $this->_backends[self::DEFAULT_BACKEND];
@@ -97,27 +97,27 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             }
         }
     }
-    
+
     public function addMultipleStatements($graphUri, array $statementsArray, array $options = array())
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->addMultipleStatements($graphUri, $statementsArray, $options);
     }
-    
+
     public function addStatement($graphUri, $subject, $predicate, array $object, array $options = array())
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->addStatement($graphUri, $subject, $predicate, $object, $options);
     }
-    
+
     public function countWhereMatches($graphIris, $whereSpec, $countSpec)
     {
         $fullCount = 0;
         foreach ($graphIris as $graphUri) {
             $backend = $this->_getBackend($graphUri);
-            
+
             if (method_exists($backend, 'countWhereMatches')) {
                 $fullCount += $backend->countWhereMatches(array($graphUri), $whereSpec, $countSpec);
             } else {
@@ -125,70 +125,70 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                 throw new Erfurt_Store_Adapter_Exception('Count not supported by backend.');
             }
         }
-        
+
         return $fullCount;
     }
-    
+
     public function createModel($graphUri, $type = Erfurt_Store::MODEL_TYPE_OWL)
     {
         $this->_availableGraphs = null;
         $this->_configuredGraphs[$graphUri] = self::DEFAULT_BACKEND;
-        
+
         return $this->_backends[self::DEFAULT_BACKEND]->createModel($graphUri, $type);
     }
-    
+
     public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->deleteMatchingStatements($graphUri, $subject, $predicate, $object, $options);
     }
-    
+
     public function deleteMultipleStatements($graphUri, array $statementsArray)
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->deleteMultipleStatements($graphUri, $statementsArray);
     }
-    
+
     public function deleteModel($graphUri)
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->deleteModel($graphUri);
     }
-    
+
     public function exportRdf($graphUri, $serializationType = 'xml', $filename = false)
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->exportRdf($graphUri, $serializationType, $filename);
     }
-    
+
     public function getImportsClosure($graphUri)
     {
         $backend = $this->_getBackend($graphUri);
-        
+
         return $backend->getImportsClosure($graphUri);
     }
-    
+
     public function getAvailableModels()
     {
         if (null === $this->_availableGraphs) {
             $result = array();
-            
+
             foreach ($this->_configuredGraphs as $graphUri=>$backend) {
                 if (isset($this->_backends[$backend]) && $this->_backends[$backend]->isModelAvailable($graphUri)) {
                     $result[$graphUri] = true;
                 }
             }
-            
+
             $this->_availableGraphs = $result;
         }
-        
+
         return $this->_availableGraphs;
     }
-    
+
     public function getBackendName()
     {
         if (method_exists($this->_backends[self::DEFAULT_BACKEND], 'getBackendName')) {
@@ -197,12 +197,12 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             return 'Multistore';
         }
     }
-    
+
     public function getBlankNodePrefix()
     {
         return 'bNode';
     }
-    
+
     public function getModel($graphUri)
     {
         if (isset($this->_configuredGraphs[$graphUri])) {
@@ -212,64 +212,64 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             return false;
         }
     }
-    
+
     public function getSupportedExportFormats()
     {
         return array();
     }
-    
+
     public function getSupportedImportFormats()
     {
         return array();
     }
-    
+
     public function importRdf($modelUri, $data, $type, $locator)
     {
         return false;
     }
-    
+
     public function init()
     {
         $this->_availableGraphs = null;
-        
+
         foreach ($this->_backends as $backend) {
             $backend->init();
         }
     }
-    
+
     public function isModelAvailable($graphUri)
     {
         $graphs = $this->getAvailableModels();
-        
+
         if (isset($graphs[$graphUri])) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     public function sparqlAsk($query)
     {
 // TODO
     }
-    
+
     public function sparqlQuery($query, $options=array())
-    {   
+    {
         $resultform =(isset($options[Erfurt_Store::RESULTFORMAT]))?$options[Erfurt_Store::RESULTFORMAT]:Erfurt_Store::RESULTFORMAT_PLAIN;
-        
+
         if(!($query instanceof Erfurt_Sparql_SimpleQuery)) {
             $query = Erfurt_Sparql_SimpleQuery::initWithString((string)$query);
         }
-        
+
         $limit  = $query->getLimit();
         $offset = $query->getOffset();
-        
+
         if (strpos(strtolower($query->getProloguePart()), 'distinct') !== false) {
             $isDistinct = true;
         } else {
             $isDistinct = false;
         }
-        
+
         $queryBackends = array();
         foreach ($query->getFrom() as $from) {
             if (isset($this->_configuredGraphs[$from])) {
@@ -289,7 +289,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                 }
             }
         }
-        
+
         // Special care if offset is given and grater zero
         if (null !== $offset && $offset > 0) {
             $currentCount = 0;
@@ -304,13 +304,13 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                 $tempQuery->setFrom($graphUris);
                 $tempQuery->setOffset(null);
                 $tempQuery->setLimit(null);
-                
+
                 $count = $this->_backends[$backendId]->sparqlQuery($tempQuery);
                 $currentCount += $count;
-                
+
                 if ($offset < $currentCount) {
                     $newBackends[$backendId] = $graphUris;
-                    
+
                     if (null !== $limit && $currentCount >= ($offset+$limit)) {
                         break;
                     }
@@ -321,10 +321,10 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                     }
                 }
             }
-            
+
             $queryBackends = $newBackends;
         }
-        
+
         $result = array();
         $currentCount = 0;
         foreach ($queryBackends as $backendId=>$graphUris) {
@@ -333,9 +333,9 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             $tempQuery->setOffset($offset);
             $tempQuery->setLimit($limit);
             $offset = null;
-            
+
             $tempResult = $this->_backends[$backendId]->sparqlQuery($tempQuery, $resultform);
-            
+
             if (null !== $limit) {
                 if ($resultform === 'plain') {
                     $limit = $limit - count($tempResult);
@@ -349,7 +349,7 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                     }
                 }
             }
-            
+
             if ($resultform === 'plain') {
                 $result = array_merge($result, $tempResult);
             } else {
@@ -359,21 +359,21 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
                 } else {
                     $result['result']['bindings'] = array_merge($result['bindings'], $tempResult['bindings']);
                 }
-                
-                
+
+
             }
         }
-        
+
 // TODO Handle DISTINCT
-        
+
         return $result;
     }
-    
+
     public function getLogoUri()
     {
         return $this->_xyz();
     }
-        
+
     private function _xyz()
     {
         $logo = 'data:image/png;base64,
@@ -434,46 +434,46 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
         rsP/8ygsJvZ92PwL7YepPQ91z4eKryhchLh7a1WcYMv7yEUsKquwsDC1q6vrUjp5yGtPtt4TV5LY
         Hmb0UZIQ8bBys0nS4ngIjmPyBFk5R6LZiBqwwdD7iHeM4jne3Nz8nsGKobEMxDIwpAz8D5kXe3GG
         lOkbAAAAAElFTkSuQmCC';
-        
+
         return $logo;
     }
-    
-    
+
+
     // ------------------------------------------------------------------------
     // --- Sql interface methods ----------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     public function createTable($tableName, array $columns)
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
         return $defaultBackend->createTable($tableName, $columns);
     }
-    
+
     public function lastInsertId()
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
         return $defaultBackend->lastInsertId();
     }
-    
+
     public function listTables($prefix = '')
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
         return $defaultBackend->listTables($prefix);
     }
-    
+
     public function sqlQuery($sqlQuery, $limit = PHP_INT_MAX, $offset = 0)
     {
         $defaultBackend = $this->_backends[self::DEFAULT_BACKEND];
         return $defaultBackend->sqlQuery($sqlQuery, $limit, $offset);
     }
-    
-    
+
+
     // ------------------------------------------------------------------------
     // --- Private methods ----------------------------------------------------
     // ------------------------------------------------------------------------
-    
+
     private function _getBackend($graphUri) {
-        
+
         if (isset($this->_configuredGraphs[$graphUri])) {
            return $this->_backends[$this->_configuredGraphs[$graphUri]];
         } else {

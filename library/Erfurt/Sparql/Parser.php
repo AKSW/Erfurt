@@ -112,7 +112,7 @@ class Erfurt_Sparql_Parser
         
         $inLiteral   = false;
         $longLiteral = false;
-        
+
         for ($i=0; $i<$len; ++$i) {
             if (in_array($queryString[$i], $removeableSpecialChars) && !$inLiteral && !$inTelUri) {        
                 if (isset($tokens[$n]) && $tokens[$n] !== '') {

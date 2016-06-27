@@ -51,9 +51,9 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     public function __construct($adapterOptions = array())
     {
         $adapterOptions = array_merge(array('host' =>  'localhost', 'profiler'  => false), $adapterOptions);
-        
+
         $this->_adapterOptions = $adapterOptions;
-        
+
         $this->_connect();
 
         // we want indexed results
@@ -65,7 +65,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $this->_titleProperties = $config->properties->title->toArray();
         }
     }
-    
+
     protected function _connect(){
         switch (strtolower($this->_adapterOptions['dbtype'])) {
             case 'mysql':
@@ -101,7 +101,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             // maybe wrong login credentials or db-server not running?!
             require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception(
-                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] . 
+                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] .
                 '". Please check your credentials and whether the database exists and the server is running.', -1
             );
 
@@ -114,7 +114,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         // we want indexed results
         //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
     }
-    
+
     /**
      * save all but except the db connection
      * @return array keys to save
@@ -248,7 +248,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     $sValue = $this->_dbConn->quote($s);
                     $pValue = $this->_dbConn->quote($p);
                     $oValue = $this->_dbConn->quote($o['value']);
-                    
+
                     $sqlString .= "($graphId, $sValue, $pValue, $oValue,";
 
                     #$data = array(
@@ -381,7 +381,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
         $query->setFrom($graphIris)
               ->setWherePart($whereSpec);
-        
+
         $result = $this->sparqlQuery($query);
 
         if ($result) {
@@ -504,7 +504,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         if (null !== $object) {
             if (isset($object['value'])) {
                 $escapedObject = $this->_dbConn->quote($object['value']);
-                
+
                 $whereString .= ' AND o = ' . $escapedObject . ' ';
             }
 
@@ -535,7 +535,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 }
             }
         }
-        
+
         // remove the specified statements from the database
         $ret = $this->_dbConn->delete('ef_stmt', $whereString);
 
@@ -599,12 +599,12 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                         $whereString .= 'AND s = \'' . $subject . '\' ';
                         $whereString .= 'AND p = \'' . $predicate . '\' ';
-                        
+
                         //escaping
                         $escapedObject = $this->_dbConn->quote($object); //also wraps the quotes around
-                        
+
                         $whereString .= 'AND o = ' . $escapedObject . ' ';
-                        
+
                         $this->_dbConn->delete('ef_stmt', $whereString);
                     }
                 }
@@ -1069,7 +1069,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     /** @see Erfurt_Store_Adapter_Interface */
     public function sparqlAsk($query)
     {
-	//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... 
+	//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery...
         //looks like the engine supports it. but there is probably a reason for this not to be supported
 		$start = microtime(true);
 
@@ -1537,11 +1537,11 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
     {
         if (null === $this->_modelInfoCache) {
             try {
-                // try to fetch model and namespace infos... if all tables are present 
+                // try to fetch model and namespace infos... if all tables are present
                 // this should not lead to an error.
                 $this->_fetchModelInfos();
             } catch (Erfurt_Exception $exception) {
-                // error while fetching model and namespace infos... should only be the 
+                // error while fetching model and namespace infos... should only be the
                 // case if the tables aren't present,
                 // for db connection is already established (in constructor)... so let's check for tables
                 if (!$this->_isSetup()) {
@@ -1564,7 +1564,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 } else {
                     require_once 'Erfurt/Store/Adapter/Exception.php';
                     throw new Erfurt_Store_Adapter_Exception(
-                        'Store: Error while fetching model and namespace infos.', 
+                        'Store: Error while fetching model and namespace infos.',
                         -1
                     );
                 }
@@ -1684,7 +1684,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
      */
     private function _fetchModelInfos()
     {
-        //It is not possible to use a cache because SQL instead of SPARQL is used. 
+        //It is not possible to use a cache because SQL instead of SPARQL is used.
         //Using a cache causing updating problems.
         $sql = 'SELECT g.id, g.uri, g.uri_r, g.base, g.base_r, s.o, u.v,
                     (SELECT count(*)

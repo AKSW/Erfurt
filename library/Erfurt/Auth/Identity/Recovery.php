@@ -178,7 +178,7 @@ class Erfurt_Auth_Identity_Recovery
             $config->ac->modelUri ,
             $userUri ,
             $config->ac->user->recoveryHash ,
-            array('value' => $hash, 'type' => 'literal') , 
+            array('value' => $hash, 'type' => 'literal') ,
             false
         );
         //var_dump($hash);
@@ -238,19 +238,19 @@ class Erfurt_Auth_Identity_Recovery
             throw new Erfurt_Auth_Identity_Exception('Password does not match regular expression set in system configuration');
         } else {
             // Set new password.
-            
+
             $store->deleteMatchingStatements(
-                $config->ac->modelUri, 
+                $config->ac->modelUri,
                 $userUri,
-                $config->ac->user->pass, 
-                null, 
+                $config->ac->user->pass,
+                null,
                 array('use_ac' => false)
             );
 
             $store->addStatement(
                 $config->ac->modelUri,
-                $userUri, 
-                $config->ac->user->pass, 
+                $userUri,
+                $config->ac->user->pass,
                 array(
                     'value' => sha1($password1),
                     'type'  => 'literal'
@@ -272,7 +272,7 @@ class Erfurt_Auth_Identity_Recovery
 
         return $ret;
     }
-    
+
     /**
      *
      */
@@ -281,4 +281,3 @@ class Erfurt_Auth_Identity_Recovery
         $this->template = $template;
     }
 }
-

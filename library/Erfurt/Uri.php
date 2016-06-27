@@ -129,7 +129,7 @@ class Erfurt_Uri
     }
 
     /**
-     * Transform a given string to full URI using the models namespaces if it 
+     * Transform a given string to full URI using the models namespaces if it
      * is a qname or check the uri if it is not a qname
      *
      * @param $qname the input qname or uri candidate

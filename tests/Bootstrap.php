@@ -9,7 +9,7 @@ error_reporting(E_ALL | E_STRICT);
 
 /*
  * Default timezone in order to prevent warnings
- */ 
+ */
 date_default_timezone_set('Europe/Berlin');
 
 /*

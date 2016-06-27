@@ -104,9 +104,9 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         } catch (Exception $e) {
             return '';
         }
-        
 
-        
+
+
     }//public function createFilterSql($tree)
 
     protected function createTreeSql($tree, $parent)
@@ -151,7 +151,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function createValue($tree, $bDumbParent)
     {
         require_once 'Erfurt/Sparql/Variable.php';
-        
+
         $strValue = stripslashes($tree['value']);
         if (Erfurt_Sparql_Variable::isVariable($strValue)) {
             if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$strValue])) {
@@ -323,7 +323,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 $strColDatatype = $this->getDatatypeCol($tree['operand1']);
                 $strExtra .= ' AND (' . $strColDatatype . '="' . self::$typeXsdDouble . '"'
                     . ' OR ' . $strColDatatype . '="' . self::$typeXsdInteger . '"'
-                    . ' OR ' . $strColDatatype . '="' . self::$typeXsdFloat . '"' 
+                    . ' OR ' . $strColDatatype . '="' . self::$typeXsdFloat . '"'
                     . ')';
                 return $strIsNull . '('
                     . 'CAST(' . $val1 . ' AS DECIMAL(15,10))'
@@ -338,11 +338,11 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         if ($tree['type'] == 'equation' && $tree['operator'] == '=' && $tree['operand1']['type'] == 'function' &&
                 $tree['operand1']['name'] == 'datatype' && $tree['operand2']['type'] == 'value' &&
                 $tree['operand2']['value'] == '<http://www.w3.org/2001/XMLSchema#string>') {
-             
-            return  $strIsNull 
+
+            return  $strIsNull
                         . '(('
                             . $val1
-                            . '=' 
+                            . '='
                             . $val2
                             . ' OR '
                             . $val1
@@ -501,11 +501,11 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         if ($this->isObjectOrSubject($tree['parameter'][0])) {
             return $this->getIsCol($tree['parameter'][0]) . '=' . $this->sg->arTypeValues['l'];
         }
-        
+
         if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['parameter'][0]['value']])) {
             return self::mkVal('TRUE', self::$typeXsdBoolean);
         }
-        
+
         //This does not take combined functions into account (subfunctions)
         return self::mkVal(
             $this->isPlainString($tree) ? 'TRUE' : 'FALSE',
@@ -718,7 +718,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
             return false;
         }
         $strSqlCol = $this->sg->arTableColumnNames[$chType][$type];
-        
+
         return $strTable . '.' . $strSqlCol;
     }
 
@@ -821,7 +821,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function isValueButNotVariableNorString($tree)
     {
         require_once 'Erfurt/Sparql/Variable.php';
-        
+
         return $tree['type'] == 'value'
          && $tree['type']['quoted'] === false
          && !Erfurt_Sparql_Variable::isVariable($tree['value']);
@@ -838,7 +838,7 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function isVariable($tree)
     {
         require_once 'Erfurt/Sparql/Variable.php';
-        
+
         return $tree['type'] == 'value'
          && $tree['quoted'] === false
          && Erfurt_Sparql_Variable::isVariable($tree['value'])

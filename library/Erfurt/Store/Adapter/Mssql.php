@@ -285,7 +285,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                                 )'.$sqlQuery. $sqlString;
 
                        $this->sqlQuery((string)$finalquery);
-                      
+
                     }
                 }
             }
@@ -1112,7 +1112,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
                 $result = $this->_dbConn->query($sqlQuery);
                 //SQLSRVCHANGE - Hack - result kommt immer falsch zurück - Queries werden aber ausgeführt....?
-                
+
                 if($result != NULL)
                 {
                     $result = true;
