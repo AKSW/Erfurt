@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 /**
  * @copyright  Copyright (c) 2013 {@link http://aksw.org aksw}
@@ -28,8 +27,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
-        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
-        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
 
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
@@ -78,8 +75,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
         $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
     )
     {
-        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/StringWriterXml.php';
-        require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml/RdfWriter.php';
 
         $xmlStringWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml();
         $this->_rdfWriter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter($xmlStringWriter, $useAc);
@@ -327,7 +322,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml implements Erfurt_Syntax_RdfSer
 
     protected function _serializeResource($resource, $useAc = true, $level = 0)
     {
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_graphUri);

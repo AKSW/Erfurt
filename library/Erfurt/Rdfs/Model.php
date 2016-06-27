@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Rdf/Model.php';
 
 /**
  * Represents a RDFS Model.
@@ -25,7 +24,6 @@ class Erfurt_Rdfs_Model extends Erfurt_Rdf_Model
      */
     public function getResource($resourceIri)
     {
-        require_once 'Erfurt/Rdfs/Resource.php';
         return new Erfurt_Rdfs_Resource($resourceIri, $this);
     }
 }

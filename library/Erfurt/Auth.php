@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Auth.php';
 
 /**
  * Extends the Zend_Auth class in order to provide some additional functionality.

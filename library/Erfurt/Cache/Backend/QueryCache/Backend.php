@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Cache/Backend/QueryCache/Interface.php';
 
 /**
  * AbstractClass of QueryCache-Backend-Implementations

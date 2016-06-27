@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Interface.php';
 
 /**
  * @package   Erfurt_Syntax_RdfSerializer_Adapter
@@ -88,7 +87,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_NTriples implements Erfurt_Syntax_RdfS
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         //construct query
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
@@ -102,7 +100,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_NTriples implements Erfurt_Syntax_RdfS
         $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
     )
     {
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);

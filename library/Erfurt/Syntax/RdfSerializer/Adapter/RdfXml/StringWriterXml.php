@@ -574,7 +574,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
         }
 
         if (null === $local) {
-            require_once 'Erfurt/Rdf/Resource.php';
             $r = Erfurt_Rdf_Resource::initWithUri($ns);
             $ns = $r->getNamespace();
             $local = $r->getLocalName();

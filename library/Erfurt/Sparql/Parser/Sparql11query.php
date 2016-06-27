@@ -15,12 +15,6 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'antlr/Php/antlr.php';
-require_once 'Erfurt/Sparql/Parser/Sparql11/QueryLexer.php';
-require_once 'Erfurt/Sparql/Parser/Sparql11/QueryParser.php';
-require_once 'Erfurt/Sparql/Parser/Sparql11/Query/Tokenizer11.php';
-require_once 'Erfurt/Sparql/Parser/Sparql11/Query/Sparql11query.php';
-// require_once 'Erfurt/Sparql/Parser/Root/Sparql10.php';
 
 class Erfurt_Sparql_Parser_Sparql11query implements Erfurt_Sparql_Parser_Interface
 {

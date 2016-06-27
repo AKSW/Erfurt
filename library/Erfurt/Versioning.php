@@ -210,7 +210,6 @@ class Erfurt_Versioning
     public function getModifiedResources($graphUri, $timestamp = 0)
     {
         $this->_checkSetup();
-        require_once 'Zend/Uri.php';
 
         $sql = 'SELECT DISTINCT resource ' .
                'FROM ef_versioning_actions WHERE

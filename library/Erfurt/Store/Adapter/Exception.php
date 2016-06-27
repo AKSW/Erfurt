@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store/Exception.php';
 
 /**
  * @package    Erfurt_Store_Adapter

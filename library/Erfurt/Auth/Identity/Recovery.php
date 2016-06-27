@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Mail.php';
 
 /**
  * Class to recover/reset lost user credentials like password, username
@@ -87,7 +86,6 @@ class Erfurt_Auth_Identity_Recovery
             $username = $resultMail[0]['name'];
             $mailAddr = $identity;
         } else {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Unknown user identifier.');
         }
 
@@ -203,7 +201,6 @@ class Erfurt_Auth_Identity_Recovery
         if ( !empty($resultUser) ) {
             return $resultUser[0]['user'];
         } else {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Invalid recovery session identifier.');
         }
 
@@ -224,17 +221,14 @@ class Erfurt_Auth_Identity_Recovery
         $ret = false;
 
         if ($password1 !== $password2) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Passwords do not match.');
         } else if (strlen($password1) < 5) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Password needs at least 5 characters.');
         } else if (
             isset($actionConfig['passregexp']) &&
             $actionConfig['passregexp'] != '' &&
             !@preg_match($actionConfig['passregexp'], $password1)
         ) {
-            require_once 'Erfurt/Auth/Identity/Exception.php';
             throw new Erfurt_Auth_Identity_Exception('Password does not match regular expression set in system configuration');
         } else {
             // Set new password.

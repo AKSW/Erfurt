@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Rdfs/Model.php';
 
 /**
  * Erfurt Owl Model class

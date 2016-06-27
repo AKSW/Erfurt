@@ -6,10 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Syntax/RdfParser/Adapter/Interface.php';
 
-require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml/NodeElement.php';
-require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml/PropertyElement.php';
 
 /**
  * @package   Erfurt_Syntax_RdfParser_Adapter
@@ -86,7 +83,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         )));
         
         if ($fileHandle === false) {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         
@@ -144,7 +140,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         
@@ -685,7 +680,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _throwException($msg)
     {
-        require_once 'Erfurt/Syntax/RdfParserException.php';
         throw new Erfurt_Syntax_RdfParserException($msg);
     }
     

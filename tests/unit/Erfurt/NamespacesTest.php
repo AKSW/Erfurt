@@ -27,10 +27,8 @@ class Erfurt_NamespacesTest extends Erfurt_TestCase
             'standard_prefixes' => $this->_standard
         );
 
-        require_once 'Erfurt/Namespaces.php';
         $this->_fixture = new Erfurt_Namespaces($namespaceOptions);
 
-        require_once 'Erfurt/Rdf/ModelStub.php';
         $this->_modelStub = new Erfurt_Rdf_ModelStub(self::TEST_GRAPH);
     }
 

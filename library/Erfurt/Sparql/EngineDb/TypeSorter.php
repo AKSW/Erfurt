@@ -234,7 +234,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $arSel = array();
         foreach ($arSpecialVars as $strSparqlVar) {
             if (!isset($this->arVarAssignments[$strSparqlVar])) {
-                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Variable "' . $strSparqlVar . '" not selected.');
             }
    
@@ -256,7 +255,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $arResult = $this->_engine->sqlQuery($sql);
 
         if ($arResult === false) {
-            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Error reading typesets: ' . $sql);
         }
 
@@ -452,7 +450,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         }
 
         if (count($sqlOrder) === 0) {
-            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
 //var_dump($sqlOrder);exit;

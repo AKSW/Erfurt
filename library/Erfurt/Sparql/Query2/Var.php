@@ -10,8 +10,6 @@
 //(-> no compliance with zend classfile naming for autoloading)
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
-require_once 'structural-Interfaces.php';
-require_once 'Constraint.php';
 
 /**
  * Erfurt Sparql Query2 - Var.

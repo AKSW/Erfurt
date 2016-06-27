@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Wrapper.php';
 
 /**
  * This wrapper extension provides functionality for gathering linked data.
@@ -363,14 +362,12 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                         break;
                     }
                 default:
-                    require_once 'Erfurt/Wrapper/Exception.php';
                     throw new Erfurt_Wrapper_Exception('Server returned not supported content type: ' . $contentType);
             }
         }
 
         $data = $response->getBody();
 
-        require_once 'Erfurt/Syntax/RdfParser.php';
         $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
         $result = $parser->parse($data, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, $baseUri);
         $ns     = $parser->getNamespaces();

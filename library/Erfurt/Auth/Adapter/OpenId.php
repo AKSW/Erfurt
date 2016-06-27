@@ -6,7 +6,6 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Auth/Adapter/Interface.php';
 
 /**
  * This class provides functionality to authenticate and register users based
@@ -165,7 +164,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             $result = false;
             $msg = 'OpenID is currently not supported!';
 
-            require_once 'Zend/Auth/Result.php';
             return new Zend_Auth_Result($result, null, array($msg));
         }
 
@@ -180,14 +178,12 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                     $result = false;
                     $msg = 'User (' . $this->_id . ') does not exist!';
 
-                    require_once 'Zend/Auth/Result.php';
                     return new Zend_Auth_Result($result, null, array($msg));
                 }
                 if ($userResult['denyLogin'] === true) {
                     $result = false;
                     $msg = 'Login not allowed!';
 
-                    require_once 'Zend/Auth/Result.php';
                     return new Zend_Auth_Result($result, null, array($msg));
                 }
             }
@@ -196,15 +192,11 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 // This is a hack, for the setHttpClient method in Zend_OpenId_Consumer seems not to work.
                 $this->_verifyUrl = $this->_verifyUrl . '/?ow_redirect_url=' . urlencode($this->_redirectUrl);
             }
-            
-            require_once 'Zend/OpenId/Consumer.php';
             $consumer = new Zend_OpenId_Consumer();
 
             if (!$consumer->login($this->_id, $this->_verifyUrl, null, $this->_sReg)) {
                 $result = false;
                 $msg = 'OpenID authentication failed.';
-                
-                require_once 'Zend/Auth/Result.php';
                 return new Zend_Auth_Result($result, null, array($msg));
             }
 
@@ -222,8 +214,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                     'anonymous' => false
                 );
                 */
-                
-                require_once 'Zend/Auth/Result.php';
                 return new Zend_Auth_Result($result, null, array($msg));
             }
 
@@ -248,24 +238,16 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             if (isset($userResult['email'])) {
                 $identity['email'] = $userResult['email'];
             }
-            
-            require_once 'Zend/OpenId/Consumer.php';
             $consumer = new Zend_OpenId_Consumer();
 
             if (!$consumer->verify($this->_get, $this->_get['openid_identity'], $this->_sReg)) {
                 $result = false;
                 $msg = 'OpenID authentication failed.';
-                
-                require_once 'Zend/Auth/Result.php';
                 return new Zend_Auth_Result($result, null, array($msg));
             } else {
                 $result = true;
                 $msg = 'OpenID authentication successful.';
-                
-                require_once 'Erfurt/Auth/Identity.php';
                 $identityObject = new Erfurt_Auth_Identity($identity);
-                
-                require_once 'Zend/Auth/Result.php';
                 return new Zend_Auth_Result($result, $identityObject, array($msg));
             }
         }
@@ -289,7 +271,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
         );
 
         // Query the store.
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_acModelUri);
