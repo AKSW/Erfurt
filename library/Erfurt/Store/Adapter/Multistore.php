@@ -297,9 +297,9 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
             foreach ($queryBackends as $backendId=>$graphUris) {
                 $tempQuery = clone $query;
                 if ($isDistinct) {
-                    $tempQuery->setProloguePart('COUNT DISTINCT');
+                    $tempQuery->setSelectClause('COUNT DISTINCT');
                 } else {
-                    $tempQuery->setProloguePart('COUNT');
+                    $tempQuery->setSelectClause('COUNT');
                 }
                 $tempQuery->setFrom($graphUris);
                 $tempQuery->setOffset(null);

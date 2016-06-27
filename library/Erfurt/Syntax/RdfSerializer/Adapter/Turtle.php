@@ -59,7 +59,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
             $query->addProjectionVar($p);
             $query->addProjectionVar($o);
         } else if ($query instanceof Erfurt_Sparql_SimpleQuery) {
-            $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+            $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         }
 
         $config = Erfurt_App::getInstance()->getConfig();
@@ -106,7 +106,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
         //construct query
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
         $query->setWherePart('WHERE { ?resourceUri ?p ?o . }');
         $query->setOrderClause('?resourceUri');
@@ -120,7 +120,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
     {
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?resourceUri ?p ?o');
+        $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
         /*
          * Why not as subject?

@@ -336,9 +336,9 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     {
         $query = new Erfurt_Sparql_SimpleQuery();
         if(!$distinct){
-            $query->setProloguePart("COUNT DISTINCT $countSpec"); // old way: distinct has no effect !!!
+            $query->setSelectClause("COUNT DISTINCT $countSpec"); // old way: distinct has no effect !!!
         } else {
-            $query->setProloguePart("COUNT-DISTINCT $countSpec"); // i made a (unccol) hack to fix this, the "-" ist there because i didnt want to change tokenization
+            $query->setSelectClause("COUNT-DISTINCT $countSpec"); // i made a (unccol) hack to fix this, the "-" ist there because i didnt want to change tokenization
         }
         $query->setFrom($graphIris)
               ->setWherePart($whereSpec);

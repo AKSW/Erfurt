@@ -247,7 +247,7 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
     protected function _fetchDescription($maxDepth)
     {
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?p ?o')
+        $query->setSelectClause('SELECT ?p ?o')
               ->setWherePart(sprintf('{<%s> ?p ?o . }', $this->getIri()));
         $description = array();
         $result = null ;

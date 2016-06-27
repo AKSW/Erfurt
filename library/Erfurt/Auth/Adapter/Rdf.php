@@ -156,8 +156,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
         $uris = $this->_getUris();
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $sparqlQuery = new Erfurt_Sparql_SimpleQuery();
-        $sparqlQuery->setProloguePart('SELECT ?subject ?predicate ?object');
-        
+        $sparqlQuery->setSelectClause('SELECT ?subject ?predicate ?object');
 
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
             $uris['user_class'] . '> . ?subject <' . $uris['user_username'] . '> "' . $username . '"^^<' .
@@ -207,8 +206,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
          
         require_once 'Erfurt/Sparql/SimpleQuery.php';
         $userSparql = new Erfurt_Sparql_SimpleQuery();
-        $userSparql->setProloguePart('SELECT ?subject ?predicate ?object');
-        
+        $userSparql->setSelectClause('SELECT ?subject ?predicate ?object');
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
             $uris['user_class'] . '> }';
         $userSparql->setWherePart($wherePart);
