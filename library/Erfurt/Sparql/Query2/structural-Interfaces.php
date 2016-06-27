@@ -43,7 +43,8 @@ interface Erfurt_Sparql_Query2_GraphNode extends Erfurt_Sparql_Query2_IF_ObjectL
 
 /**
  * Erfurt Sparql Query2 - TriplesNode
- * 
+ * Represents the TriplesNode Rule
+ *
  * @see {@link http://www.w3.org/TR/rdf-sparql-query/ SPARQL-Grammar}
  * @package    Erfurt_Sparql_Query2
  * @author     Jonas Brekle <jonas.brekle@gmail.com>
