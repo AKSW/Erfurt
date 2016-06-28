@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt Owl Property class
  *

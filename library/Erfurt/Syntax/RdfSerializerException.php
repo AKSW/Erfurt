@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package   Erfurt_Syntax
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>

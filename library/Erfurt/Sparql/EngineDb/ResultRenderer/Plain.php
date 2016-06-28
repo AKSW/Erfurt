@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Result renderer that creates a text array
  *
@@ -126,7 +125,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
             case 'count-distinct':
             case 'ask':
                 if (count($arRecordSets) > 1) {
-                    
                     throw new Erfurt_Exception('More than one result set for a ' . $strResultForm . ' query!');
                 }
 
@@ -430,7 +428,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
                                 $row, $arVarSettings[0], $strVar, $asArray);
                             break;
                         default:
-                            
                             throw new Erfurt_Exception('Variable has to be s, p or o.');
                     }
                 }

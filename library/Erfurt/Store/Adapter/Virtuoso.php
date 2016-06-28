@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
  *

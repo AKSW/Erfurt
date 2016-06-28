@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package    Erfurt_Store_Adapter
  */

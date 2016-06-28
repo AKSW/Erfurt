@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt Sparql Query2 - Collection
  * 

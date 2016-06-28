@@ -42,7 +42,6 @@ class Erfurt_Rdf_ModelStub
     public function getStore()
     {
         if (null === $this->store) {
-            
             $this->store = new Erfurt_StoreStub();
         }
         

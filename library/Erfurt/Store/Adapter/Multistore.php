@@ -7,9 +7,6 @@
  */
 
 
-
-
-
 /**
  * This class acts as a meta-backend class, which can handle multiple
  * heterogenous backends.
@@ -42,15 +39,12 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
 
         switch ($defaultBackend) {
             case 'zenddb':
-                
                 $this->_backends[self::DEFAULT_BACKEND] = new Erfurt_Store_Adapter_EfZendDb($defaultAdapterOptions);
                 break;
             case 'virtuoso':
-                
                 $this->_backends[self::DEFAULT_BACKEND] = new Erfurt_Store_Adapter_Virtuoso($defaultAdapterOptions);
                 break;
             default:
-                
                 throw new Erfurt_Store_Adapter_Exception('Wrong default backend type specified.');
         }
 
@@ -69,23 +63,18 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
 
                 switch ($backendName) {
                     case 'zenddb':
-                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_EfZendDb($backendOptions);
                         break;
                     case 'virtuoso':
-                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_Virtuoso($backendOptions);
                         break;
                     case 'sparql':
-                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_Sparql($backendOptions);
                         break;
                     case 'ontowiki':
-                        
                         $this->_backends[self::BACKEND_PREFIX.$i] = new Erfurt_Store_Adapter_OntoWiki($backendOptions);
                         break;
                     default:
-                        
                         throw new Erfurt_Store_Adapter_Exception('Backend type currently not supported.');
                 }
 
@@ -478,7 +467,6 @@ class Erfurt_Store_Adapter_Multistore implements Erfurt_Store_Adapter_Interface,
            return $this->_backends[$this->_configuredGraphs[$graphUri]];
         } else {
             var_dump($this->_configuredGraphs, $graphUri);exit;
-            
             throw new Erfurt_Store_Adapter_Exception('Graph with URI <' . $graphUri . '> is not configured.');
         }
     }

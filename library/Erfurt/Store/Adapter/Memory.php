@@ -7,8 +7,6 @@
  */
 
 
-
-
 /**
  * Erfurt RDF Store - Adapter for the Erfurt_Rdf_MemoryModel
  *

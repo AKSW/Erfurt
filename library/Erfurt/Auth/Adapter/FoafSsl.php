@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This class provides functionality to authenticate and register users based
  * on FOAF+SSL. If SSL/TLS is supported, this class checks whether a valid user exsists
@@ -344,7 +343,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         $client->setHeaders('Accept', 'application/rdf+xml');
         $response = $client->request();
         if ($response->getStatus() === 200) {
-
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat('rdfxml');
 
             if ($idx = strrpos($foafUri, '#')) {
@@ -496,7 +494,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
                     $msg = 'No valid WebId found.';
                     $result = false;
 
-
                     return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, null, array($msg));
                 }
             } else {
@@ -504,7 +501,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
                     // Currently we need an external service for that...
                     $result = false;
                     $msg = 'No IdP configured.';
-
 
                     return new Zend_Auth_Result($result, null, array($msg));
                 }
@@ -554,7 +550,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             $msg = 'Not possible.';
             $result = false;
 
-
             return new Zend_Auth_Result($result, null, array($msg));
         }
 
@@ -564,7 +559,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             // Corrupt result
             $msg = 'Not possible.';
             $result = false;
-
 
             return new Zend_Auth_Result($result, null, array($msg));
         }
@@ -586,7 +580,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             $msg = 'Not possible.';
             $result = false;
 
-
             return new Zend_Auth_Result($result, null, array($msg));
         }
 
@@ -598,7 +591,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             // Corrupt result
             $msg = 'Not possible.';
             $result = false;
-
 
             return new Zend_Auth_Result($result, null, array($msg));
         }
@@ -677,7 +669,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
         );
 
         // Query the store.
-
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_acModelUri);
@@ -780,13 +771,11 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             $result = false;
             $msg = 'User does not exist!';
 
-
             return new Zend_Auth_Result($result, null, array($msg));
         }
         if ($userResult['denyLogin'] === true) {
             $result = false;
             $msg = 'Login not allowed!';
-
 
             return new Zend_Auth_Result($result, null, array($msg));
         }
@@ -811,7 +800,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
             $identity['email'] = $userResult['email'];
         }
         $identityObject = new Erfurt_Auth_Identity($identity);
-
 
         return new Zend_Auth_Result(true, $identityObject, array());
     }

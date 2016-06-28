@@ -16,7 +16,6 @@
  */
 
 
-
 class Erfurt_Sparql_Parser_ErfurtParser implements Erfurt_Sparql_Parser_Interface
 {
 		
@@ -26,7 +25,6 @@ class Erfurt_Sparql_Parser_ErfurtParser implements Erfurt_Sparql_Parser_Interfac
 	}
 
 	public static function initFromString($queryString, $parserOptions = array()){
-		
 		$retval=null;
 		$errors=null;
 		$parser = new Erfurt_Sparql_Parser($queryString);

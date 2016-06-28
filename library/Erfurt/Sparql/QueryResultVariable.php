@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This class was originally adopted from rdfapi-php (@link http://sourceforge.net/projects/rdfapi-php/).
  * It was modified and extended in order to fit into Erfurt.

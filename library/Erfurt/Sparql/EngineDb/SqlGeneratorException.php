@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Exception when generating the SQL statement
  *

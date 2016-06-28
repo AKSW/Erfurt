@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Result renderer that creates a JSON object string containing the result of a SPARQL query as defined in
  * @link http://www.w3.org/TR/rdf-sparql-json-res/.

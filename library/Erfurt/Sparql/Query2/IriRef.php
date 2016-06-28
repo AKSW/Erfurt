@@ -7,8 +7,6 @@
  */
 
 
-
-
 /**
  * Erfurt_Sparql Query - IriRef.
  * 

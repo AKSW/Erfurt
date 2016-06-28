@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * One-sentence description of Auth.
  *

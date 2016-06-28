@@ -7,7 +7,6 @@
  */
 
 
-
 //under construction
 /**
  * @package    Erfurt_Sparql_Query2_Abstraction

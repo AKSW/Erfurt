@@ -227,11 +227,9 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {   
         $this->query = $query;
 
-        
         $qsimp = new Erfurt_Sparql_EngineDb_QuerySimplifier();
         $qsimp->simplify($this->query);
 
-        
         $queryOptimizer = new Erfurt_Sparql_EngineDb_QueryOptimizer($this);
         $result = $queryOptimizer->optimize($this->query);
  		
@@ -243,25 +241,19 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $resultform = strtolower($resultform);
         switch ($resultform) {
             case 'xml':
-                
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Xml();
                 break;
-                //
                 //throw new Erfurt_Exception('XML result format not supported yet.');
-                //
                 //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
                 //break;
             case 'extended':
-                
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Extended();
                 break;
             case 'json':
-                
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Json();
                 break;
             case 'plain':
             default:
-                
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Plain();
         }
         
@@ -272,9 +264,7 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         }
         
                
-        
         $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($this->query, $this->arModelIdMapping);
-        
         
         $this->ts = new Erfurt_Sparql_EngineDb_TypeSorter($this->query, $this);
 
@@ -307,7 +297,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      */
     protected function _queryDb($arSql, $nOffset, $nLimit)
     {
-        
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 #var_dump($nLimit, $nOffset);
 #echo $strSql;
@@ -341,7 +330,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
             $nLimit  = null;
             $nSql    = 0;
         } else {
-            
             $offsetter = new Erfurt_Sparql_EngineDb_Offsetter($this, $this->query);
             list($nSql, $nOffset) = $offsetter->determineOffset($arSqls);
             $nLimit    = $arSM['limit'];

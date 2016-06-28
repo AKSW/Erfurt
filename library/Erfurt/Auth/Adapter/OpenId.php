@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This class provides functionality to authenticate and register users based
  * on OpenID. In addition to the OpenID functionality provided by Zend, this
@@ -165,7 +164,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             $result = false;
             $msg = 'OpenID is currently not supported!';
 
-
             return new Zend_Auth_Result($result, null, array($msg));
         }
 
@@ -180,13 +178,11 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                     $result = false;
                     $msg = 'User (' . $this->_id . ') does not exist!';
 
-
                     return new Zend_Auth_Result($result, null, array($msg));
                 }
                 if ($userResult['denyLogin'] === true) {
                     $result = false;
                     $msg = 'Login not allowed!';
-
 
                     return new Zend_Auth_Result($result, null, array($msg));
                 }
@@ -196,7 +192,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
                 // This is a hack, for the setHttpClient method in Zend_OpenId_Consumer seems not to work.
                 $this->_verifyUrl = $this->_verifyUrl . '/?ow_redirect_url=' . urlencode($this->_redirectUrl);
             }
-
             $consumer = new Zend_OpenId_Consumer();
 
             if (!$consumer->login($this->_id, $this->_verifyUrl, null, $this->_sReg)) {
@@ -276,7 +271,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
         );
 
         // Query the store.
-
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?s ?p ?o');
         $query->addFrom($this->_acModelUri);

@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package Erfurt_App
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>

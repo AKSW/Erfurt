@@ -8,9 +8,6 @@
 
 
 
-
-
-
 /**
  * @package   Erfurt_Syntax_RdfParser_Adapter
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
@@ -86,7 +83,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         )));
         
         if ($fileHandle === false) {
-            
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         
@@ -144,7 +140,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
         $fileHandle = fopen($filename, 'r');
         
         if ($fileHandle === false) {
-            
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         
@@ -685,7 +680,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _throwException($msg)
     {
-        
         throw new Erfurt_Syntax_RdfParserException($msg);
     }
     

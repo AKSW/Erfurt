@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This class acts as an intermediate implementation for some important formats.
  * It uses the ARC library unitl we have own implementations.
@@ -24,7 +23,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
 
-        
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setSelectClause('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);
@@ -101,7 +99,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJson implements Erfurt_Syntax_RdfSe
         $triples = array();
         $store = Erfurt_App::getInstance()->getStore();
 
-        
         $sparql = new Erfurt_Sparql_SimpleQuery();
         $sparql->setSelectClause('SELECT ?s ?p ?o');
         $sparql->addFrom($graphUri);

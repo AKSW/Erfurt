@@ -7,8 +7,6 @@
  */
 
 
-
-
 /**
  * Erfurt RDF authentication adapter.
  *
@@ -47,7 +45,6 @@ class Erfurt_Auth_Adapter_None implements Zend_Auth_Adapter_Interface
             'dbuser'    => (($this->_username === 'SuperAdmin') ? true : false), 
             'anonymous' => (($this->_username === 'Anonymous') ? true : false)
         );
-        
         
         $identityObject = new Erfurt_Auth_Identity($identity);
         $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);

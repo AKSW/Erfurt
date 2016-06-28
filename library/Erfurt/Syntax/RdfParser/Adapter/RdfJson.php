@@ -32,7 +32,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Ad
         $result = json_decode($dataString, true);
         
         if ($result === null) {
-            
             throw new Erfurt_Syntax_RdfParserException('Decoding of JSON failed.');
         }
         
@@ -44,7 +43,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfJson extends Erfurt_Syntax_RdfParser_Ad
         $handle = fopen($filename, 'r');
         
         if ($handle === false) {
-            
             throw new Erfurt_Syntax_RdfParserException("Failed to open file with filename '$filename'");
         }
         

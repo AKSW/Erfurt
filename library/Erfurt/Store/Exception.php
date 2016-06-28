@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package Erfurt_Store
  * @author Philipp Frischmuth <pfrischmuth@googlemail.com>

@@ -128,7 +128,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 $sql = $this->createFunction($tree);
                 break;
             default:
-                
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Unsupported tree type: ' . $tree['type']);
                 break;
         }
@@ -151,11 +150,9 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function createValue($tree, $bDumbParent)
     {
 
-
         $strValue = stripslashes($tree['value']);
         if (Erfurt_Sparql_Variable::isVariable($strValue)) {
             if (!isset($this->sg->arUnionVarAssignments[$this->nUnionCount][$strValue])) {
-
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unknown variable in filter: ' . $strValue
                 );
@@ -191,7 +188,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                 if ($strValue[0] == '<' && substr($strValue, -1) == '>') {
                     $strValue = substr($strValue, 1, -1);
                 } else {
-
                     throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unexpected value "' . $strValue . '" (expected datatype)'
                     );
@@ -212,7 +208,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                     );
 
                 default:
-
                     throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported datatype "' . $tree['datatype']
                     );
@@ -263,7 +258,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     {
         $strFuncName = strtolower($tree['name']);
         if (!isset(self::$arFuncParamNumbers[$strFuncName])) {
-
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Unsupported FILTER function: ' . $strFuncName
             );
@@ -273,7 +267,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         if ($nParams < self::$arFuncParamNumbers[$strFuncName][0]
          || $nParams > self::$arFuncParamNumbers[$strFuncName][1]
         ) {
-
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Wrong parameter count for FILTER function: ' . $strFuncName
                 . ' (got ' . $nParams . ', expected '
@@ -453,7 +446,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     protected function createFunction_datatype($tree)
     {
         if (!$this->isObject($tree['parameter'][0])) {
-
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'datatype\'s first parameter needs to be an object'
             );
@@ -704,7 +696,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
 
 
     protected static function mkVal($value, $type = null) {
-
         return new Erfurt_Sparql_EngineDb_FilterGeneratorValue($value, $type);
     }
 
@@ -712,7 +703,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
 
     protected function getCol($tree, $type)
     {
-
         list($strTable, $chType) = $this->sg->arUnionVarAssignments[$this->nUnionCount][$tree['value']];
         if (!isset($this->sg->arTableColumnNames[$chType][$type])) {
             return false;
@@ -820,8 +810,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
 
     protected function isValueButNotVariableNorString($tree)
     {
-
-
         return $tree['type'] == 'value'
          && $tree['type']['quoted'] === false
          && !Erfurt_Sparql_Variable::isVariable($tree['value']);
@@ -837,8 +825,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
     */
     protected function isVariable($tree)
     {
-
-
         return $tree['type'] == 'value'
          && $tree['quoted'] === false
          && Erfurt_Sparql_Variable::isVariable($tree['value'])

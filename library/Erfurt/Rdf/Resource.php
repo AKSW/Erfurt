@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Represents a basic RDF resource.
  *

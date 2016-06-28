@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Represents a RDFS Model.
  *
@@ -25,7 +24,6 @@ class Erfurt_Rdfs_Model extends Erfurt_Rdf_Model
      */
     public function getResource($resourceIri)
     {
-        
         return new Erfurt_Rdfs_Resource($resourceIri, $this);
     }
 }

@@ -7,9 +7,6 @@
  */
 
 
-
-
-
 /**
  * Erfurt RDF Store - Adapter for the {@link http://www4.wiwiss.fu-berlin.de/bizer/rdfapi/ RAP} schema (modified) with
  * Zend_Db database abstraction layer.
@@ -67,10 +64,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
 
                 if (extension_loaded('sqlsrv')) {
-                    
                     $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($adapterOptions);
                 } else {
-                    
                     throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
                 }
 
@@ -79,11 +74,9 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             $this->_dbConn->getConnection();
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
-            
             throw new Erfurt_Exception('Could not connect to database with name: "' . $dbname . '". Please check your credentials and whether the database exists and the server is running.', -1);
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
-            
             throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
         }
 
@@ -172,7 +165,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                                 $sRef = $this->_insertValueInto('ef_uri', $graphId, $s, $subjectHash);
                             } catch (Erfurt_Store_Adapter_Exception $e) {
                                 $this->_dbConn->rollback();
-                                
                                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                             }
 
@@ -187,7 +179,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                                 $pRef = $this->_insertValueInto('ef_uri', $graphId, $p, $predicateHash);
                             } catch (Erfurt_Store_Adapter_Exception $e) {
                                 $this->_dbConn->rollback();
-                                
                                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                             }
 
@@ -208,7 +199,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                                 $oRef = $this->_insertValueInto($tableName, $graphId, $o['value'], $objectHash);
                             } catch (Erfurt_Store_Adapter_Exception $e) {
                                 $this->_dbConn->rollback();
-                                
                                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                             }
 
@@ -256,7 +246,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                                 $dtRef = $this->_insertValueInto('ef_uri', $graphId, $dType, $dTypeHash);
                             } catch (Erfurt_Store_Adapter_Exception $e) {
                                 $this->_dbConn->rollback();
-                                
                                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
                             }
 
@@ -325,7 +314,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         try {
             $this->addMultipleStatements($graphUri, $statementArray);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            
             throw new Erfurt_Store_Adapter_Exception('Insertion of statement failed:' .
                             $e->getMessage());
         }
@@ -413,7 +401,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         }
 
         // invalidate the cache and fetch model infos again
-        
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelInfoCache = null;
@@ -587,7 +574,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         } catch (Exception $e) {
             // something went wrong... rollback
             $this->_dbConn->rollback();
-            
             throw new Erfurt_Store_Adapter_Exception('Bulk deletion of statements failed.'.$e->getMessage());
         }
     }
@@ -600,7 +586,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         if (isset($modelInfoCache[$graphUri]['modelId'])) {
             $graphId = $modelInfoCache[$graphUri]['modelId'];
         } else {
-            
             throw new Erfurt_Store_Adapter_Exception('Model deletion failed: No db id found for model URL.');
         }
 
@@ -611,7 +596,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         $this->_dbConn->delete('ef_lit', "g = $graphId");
 
         // invalidate the cache and fetch model infos again
-        
         $cache = Erfurt_App::getInstance()->getCache();
         $tags =  array('model_info', $modelInfoCache[$graphUri]['modelId']);
         #$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $tags);
@@ -622,7 +606,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
     /** @see Erfurt_Store_Adapter_Interface */
     public function exportRdf($modelIri, $serializationType = 'xml', $filename = false)
     {
-        
         throw new Erfurt_Store_Adapter_Exception('Not implemented yet.');
     }
 
@@ -705,13 +688,10 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
         // choose the right type for the model instance and instanciate it
         if ($modelInfoCache[$modelIri]['type'] === 'owl') {
-            
             $m = new Erfurt_Owl_Model($modelIri, $baseUri);
         } else if ($this->_modelInfoCache[$modelIri]['type'] === 'rdfs') {
-            
             $m = new Erfurt_Rdfs_Model($modelIri, $baseUri);
         } else {
-            
             $m = new Erfurt_Rdf_Model($modelIri, $baseUri);
         }
 
@@ -771,7 +751,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         }
 
         // invalidate the cache and fetch model infos again
-        
         $cache = Erfurt_App::getInstance()->getCache();
         $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('model_info'));
         $this->_modelInfoCache = null;
@@ -805,7 +784,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 // TODO fix or remove
 
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
-            
             $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
             $parsedArray = $parser->parse($data, $locator, $modelUri, false);
 
@@ -1003,7 +981,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
             $this->_optimizeTables();
         } else {
-            
             throw new Erfurt_Store_Adapter_Exception('CSV import not supported for this database server.');
         }
     }
@@ -1043,10 +1020,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 		//TODO works for me...., why hasnt this be enabled earlier? is the same as sparqlQuery... looks like the engine supports it. but there is probably a reason for this not to be supported
 		$start = microtime(true);
 
-        
         $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
-        
         $parser = new Erfurt_Sparql_Parser();
 
         if(!($query instanceof Erfurt_Sparql_Query))
@@ -1070,10 +1045,8 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
         $start = microtime(true);
 
-        
         $engine = new Erfurt_Sparql_EngineDb_Adapter_EfZendDb($this->_dbConn, $this->_getModelInfos());
 
-        
         $parser = new Erfurt_Sparql_Parser();
 
         if(!($query instanceof Erfurt_Sparql_Query)) {
@@ -1119,7 +1092,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                 }
 
             if ($result !== true) {
-                
                 throw new Erfurt_Store_Adapter_Exception(/*var_dump($result).'<br>'.$sqlQuery.'<br>*/'SQL query failed: ' .
                             $this->_dbConn->getConnection()->error);
             }
@@ -1129,7 +1101,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
                  //SQLSRV - Result ist immer true und es kommt keine Exception...
             } catch (Zend_Db_Exception $e) { #return false;
-                
                 throw new Erfurt_Store_Adapter_Exception($e->getMessage());
             }
         }
@@ -1173,7 +1144,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
        $success = $this->_dbConn->query($sqlsrv);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_info" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1186,7 +1156,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         $success = $this->_dbConn->query($sql);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Insertion of "schema_id" into "ef_info" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1212,7 +1181,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
        $success = $this->_dbConn->query($sqlsrv);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_info" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1246,7 +1214,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
        $success = $this->_dbConn->query($sqlsrv);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_info" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1269,7 +1236,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
        $success = $this->_dbConn->query($sqlsrv);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_uri" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1295,7 +1261,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
        $success = $this->_dbConn->query($sqlsrv);
 
         if (!$success) {
-            
             throw new Erfurt_Store_Adapter_Exception('Creation of table "ef_uri" failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1320,14 +1285,12 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         if ($e2->getCode() == 20) {
                             $this->_fetchModelInfos();
                         } else {
-                            
                             throw new Erfurt_Store_Adapter_Exception(
                                 'Store: Error while initializing the environment: '. $e2->getMessage(), -1);
                         }
                     }
 
                 } else {
-                    
                     throw new Erfurt_Store_Adapter_Exception(
                         'Store: Error while fetching model and namespace infos.', -1);
                 }
@@ -1360,7 +1323,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         if (isset($this->_modelInfoCache[$graphUri]['modelId'])) {
             $graphId = $this->_modelInfoCache[$graphUri]['modelId'];
         } else {
-            
             throw new Erfurt_Store_Adapter_Exception('Failed to clean up value tables: No db id for <' . $graphUri .
                                                      '> was found.');
         }
@@ -1416,7 +1378,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             $this->_dbConn->insert($tableName, $data);
         } catch (Exception $e) {
             if ($this->_getNormalizedErrorCode() !== 1000) {
-                
                 throw new Erfurt_Store_Adapter_Exception("Insertion of value into $tableName failed: " .
                                 $e->getMessage());
             }
@@ -1426,7 +1387,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
         $result = $this->_dbConn->fetchRow($sql);
 
         if (!$result) {
-            
             throw new Erfurt_Store_Adapter_Exception('Fetching of uri id failed: ' .
                             $this->_dbConn->getConnection()->error);
         }
@@ -1442,7 +1402,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
      */
     private function _fetchModelInfos()
     {
-        
         $cache = Erfurt_App::getInstance()->getCache();
 
         $id = $cache->makeId($this, '_fetchModelInfos', array());
@@ -1469,13 +1428,11 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             try {
                 $result = $this->sqlQuery($sql);
             } catch (Exception $e) {
-                
                 throw new Erfurt_Exception('Error while fetching model and namespace informations.');
             }
 
 
             if ($result === false) {
-                
                 throw new Erfurt_Exception('Error while fetching model and namespace informations.');
             } else {
                 $this->_modelInfoCache = array();
@@ -1568,7 +1525,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                 return true;
             }
         } else {
-            
             throw new Erfurt_Store_Adapter_Exception('Determining of database tables failed.');
         }
     }

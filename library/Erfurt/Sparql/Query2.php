@@ -11,12 +11,6 @@
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
 
-// 
-// 
-// 
-// 
-
-
 
 
 //TODO: is there a better way for getting the type/class?
@@ -99,7 +93,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
         } else {
             $this->setQueryType(self::typeSelect);
         }
-		// 
     }
     
     public function __clone()

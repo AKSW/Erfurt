@@ -7,8 +7,6 @@
  */
 
 
-
-
 /**
  * This class acts as a backend for OntoWiki endpoints.
  *
@@ -50,7 +48,6 @@ class Erfurt_Store_Adapter_OntoWiki extends Erfurt_Store_Adapter_Sparql
         try {
             $this->addMultipleStatements($graphUri, $statementArray);
         } catch (Erfurt_Store_Adapter_Exception $e) {
-            
             throw new Erfurt_Store_Adapter_Exception('Insertion of statement failed:' . $e->getMessage());
         }
     }

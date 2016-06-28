@@ -265,7 +265,6 @@ class Erfurt_App
                 }
             }
         } catch (Erfurt_Exception $e) {
-
             throw new Erfurt_Exception($e->getMessage());
         }
 
@@ -452,13 +451,10 @@ class Erfurt_App
 
         $adapter = null;
         if ($type === 'rdf') {
-
             $adapter = new Erfurt_Auth_Adapter_Rdf($username, $password);
         } else if ($type === 'none') {
-
             $adapter = new Erfurt_Auth_Adapter_None($username, $password);
         } else {
-
             throw new Erfurt_Exception("Auth type '$type' not supported");
         }
 
@@ -476,7 +472,6 @@ class Erfurt_App
     public function authenticateWithFoafSsl($get = null, $redirectUrl = null)
     {
         // Set up the authentication adapter.
-
         $adapter = new Erfurt_Auth_Adapter_FoafSsl($get, $redirectUrl);
 
         // Attempt authentication, saving the result.
@@ -502,7 +497,6 @@ class Erfurt_App
      */
     public function authenticateWithOpenId($openId, $verifyUrl, $redirectUrl)
     {
-
         $adapter = new Erfurt_Auth_Adapter_OpenId($openId, $verifyUrl, $redirectUrl);
 
         $result = $this->getAuth()->authenticate($adapter);
@@ -525,13 +519,10 @@ class Erfurt_App
             $config = $this->getConfig();
             $type = strtolower($config->ac->type);
             if ($type === 'rdf') {
-
                 $this->_ac = new Erfurt_Ac_Default();
             } else if ($type === 'none') {
-
                 $this->_ac = new Erfurt_Ac_None();
             } else {
-
                 throw new Erfurt_Exception("AC type '$type' not supported.");
             }
         }
@@ -588,13 +579,11 @@ class Erfurt_App
     public function getAuth()
     {
         if (null === $this->_auth) {
-
             $auth = Erfurt_Auth::getInstance();
 
             $config = $this->getConfig();
             if (isset($config->session->identifier)) {
                 $sessionNamespace = 'Erfurt_Auth' . $config->session->identifier;
-
                 $auth->setStorage(new Zend_Auth_Storage_Session($sessionNamespace));
             }
 
@@ -637,7 +626,6 @@ class Erfurt_App
     public function getConfig()
     {
         if (null === $this->_config) {
-
             throw new Erfurt_Exception('Configuration was not loaded.');
         } else {
             return $this->_config;
@@ -651,7 +639,6 @@ class Erfurt_App
      */
     public function getEventDispatcher()
     {
-
         $ed = Erfurt_Event_Dispatcher::getInstance();
 
         return $ed;
@@ -715,10 +702,8 @@ class Erfurt_App
 
                 $logWriter = null;
                 if ($logDir === false) {
-
                     $logWriter = new Zend_Log_Writer_Null();
                 } else {
-
                     $logName = $logDir . $logIdentifier;
 
                     // Check whether log can be created with $logName... otherwise append a number.
@@ -741,21 +726,17 @@ class Erfurt_App
                     }
 
                     if (null === $logWriter) {
-
                         $logWriter = new Zend_Log_Writer_Null();
                     }
                 }
             } else {
-
                 $logWriter = new Zend_Log_Writer_Null();
             }
-
 
             $logger = new Zend_Log($logWriter);
 
             // filter according to the given log level
             if ((boolean) $config->log->level !== false) {
-
                 $levelFilter = new Zend_Log_Filter_Priority((int) $config->log->level, '<=');
                 $logger->addFilter($levelFilter);
             }
@@ -812,7 +793,6 @@ class Erfurt_App
                 'reserved_names'    => isset($config->uri->schemata) ? $config->uri->schemata->toArray() : array()
             );
 
-
             $this->_namespaces = new Erfurt_Namespaces($namespacesOptions);
         }
 
@@ -830,7 +810,6 @@ class Erfurt_App
     {
         if (null === $this->_pluginManager) {
             $config = $this->getConfig();
-
 
             $this->_pluginManager = new Erfurt_Plugin_Manager();
 
@@ -851,7 +830,6 @@ class Erfurt_App
     {
         if (null === $this->_queryCache) {
             $config = $this->getConfig();
-
             $this->_queryCache = new Erfurt_Cache_Frontend_QueryCache();
 
             $backend = $this->_getQueryCacheBackend();
@@ -889,7 +867,6 @@ class Erfurt_App
             if (isset($config->store->backend)) {
                 $backend = strtolower($config->store->backend);
             } else {
-
                 throw new Erfurt_Exception('Backend must be set in configuration.');
             }
 
@@ -912,7 +889,6 @@ class Erfurt_App
             } else {
                 $storeOptions = array();
             }
-
 
             $this->_store = new Erfurt_Store($storeOptions, $backend, $backendOptions, $schema);
 
@@ -957,7 +933,6 @@ class Erfurt_App
     public function getTmpDir()
     {
         // We use a Zend method here, for it already checks the OS.
-
         $temp = new Zend_Cache_Backend();
         return $temp->getTmpDir();
     }
@@ -969,7 +944,6 @@ class Erfurt_App
      */
     public function getUsers()
     {
-
         $tempAdapter = new Erfurt_Auth_Adapter_Rdf();
 
         return $tempAdapter->getUsers();
@@ -990,7 +964,6 @@ class Erfurt_App
                 return false;
             }
 
-
             $this->_versioning = new Erfurt_Versioning();
         }
 
@@ -1004,7 +977,6 @@ class Erfurt_App
      */
     public function getWrapperRegistry()
     {
-
         return Erfurt_Wrapper_Registry::getInstance();
     }
 
@@ -1036,16 +1008,13 @@ class Erfurt_App
     public function loadConfig(Zend_Config $config = null)
     {
         // Load the default erfurt config.
-
         if (is_readable((EF_BASE . 'config/default.ini'))) {
             try {
                 $this->_config = new Zend_Config_Ini((EF_BASE . 'config/default.ini'), 'default', true);
             } catch (Zend_Config_Exception $e) {
-
                 throw new Erfurt_App_Exception('Error while parsing config file default.ini.');
             }
         } else {
-
             throw new Erfurt_App_Exception('Config file default.ini not readable.');
         }
 
@@ -1054,7 +1023,6 @@ class Erfurt_App
             try {
                 $this->_config->merge(new Zend_Config_Ini((EF_BASE . 'config.ini'), 'private', true));
             } catch (Zend_Config_Exception $e) {
-
                 throw new Erfurt_App_Exception('Error while parsing config file config.ini.');
             }
         }
@@ -1064,7 +1032,6 @@ class Erfurt_App
             try {
                 $this->_config->merge($config);
             } catch (Zend_Config_Exception $e) {
-
                 throw new Erfurt_App_Exception('Error while merging with injected config.');
             }
         }
@@ -1080,7 +1047,6 @@ class Erfurt_App
      */
     public function verifyOpenIdResult($get)
     {
-
         $adapter = new Erfurt_Auth_Adapter_OpenId(null, null, null, $get);
 
         $result = $this->getAuth()->authenticate($adapter);
@@ -1181,33 +1147,27 @@ class Erfurt_App
             $config = $this->getConfig();
             $backendOptions = array();
             if (!isset($config->cache->query->enable) || ((boolean)$config->cache->query->enable === false)) {
-
                 $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Null();
             } else {
                 // cache is enabled
                 // check for the cache type and throw an exception if cache type is not set
                 if (!isset($config->cache->query->type)) {
-
                     throw new Erfurt_Exception('Cache type is not set in config.');
                 } else {
                     // check the type an whether type is supported
 
                     switch (strtolower($config->cache->query->type)) {
                         case 'database':
-
                             $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Database();
                             break;
 #                       case 'file':
-#
 #                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_File();
 #                            break;
 #
 #                       case 'memory':
-#
 #                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Memory();
 #                            break;
                         default:
-
                             throw new Erfurt_Exception('Cache type is not supported.');
                     }
                 }
@@ -1224,7 +1184,6 @@ class Erfurt_App
 
     protected function _getZendVersion()
     {
-
         return Zend_Version::VERSION;
     }
 }

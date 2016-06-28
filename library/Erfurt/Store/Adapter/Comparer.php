@@ -8,9 +8,7 @@
 
 /** Erfurt_Store_Adapter_Interface */
 
-
 /** Erfurt_Store_Sql_Interface */
-
 
 /**
  * @package Erfurt_Store_Adapter

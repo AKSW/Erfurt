@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt event class
  *

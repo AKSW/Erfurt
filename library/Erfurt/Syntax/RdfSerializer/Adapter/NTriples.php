@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package   Erfurt_Syntax_RdfSerializer_Adapter
  * @author    Philipp Frischmuth <pfrischmuth@googlemail.com>
@@ -88,7 +87,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_NTriples implements Erfurt_Syntax_RdfS
     public function serializeGraphToString($graphUri, $pretty = false, $useAc = true)
     {
         //construct query
-        
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);
@@ -102,7 +100,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_NTriples implements Erfurt_Syntax_RdfS
         $resource, $graphUri, $pretty = false, $useAc = true, array $additional = array()
     )
     {
-        
         $query = new Erfurt_Sparql_SimpleQuery();
         $query->setSelectClause('SELECT ?resourceUri ?p ?o');
         $query->addFrom($graphUri);

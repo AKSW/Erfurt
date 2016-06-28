@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Result renderer that creates a PHP array containing the result of a SPARQL query as defined in
  * @link http://www.w3.org/TR/rdf-sparql-json-res/.
@@ -65,7 +64,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 break;
             case 'ask':
                 if (count($arRecordSets) > 1) {
-                    
                     throw new Erfurt_Exception('More than one result set for a ' . $strResultForm . ' query!');
                 }
 
@@ -87,7 +85,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
             case 'count':
             case 'describe':
             default:
-                
                 throw new Erfurt_Exception('Extended format not supported for:' . $strResultForm);
         }
     }
@@ -352,7 +349,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                                 $row, $arVarSettings[0], $strVar, $asArray);
                             break;
                         default:
-                            
                             throw new Erfurt_Exception('Variable has to be s, p or o.');
                     }
                 }

@@ -16,11 +16,6 @@
  */
 
 
-
-
-
-
-
 class Erfurt_Sparql_Parser_Sparql11update implements Erfurt_Sparql_Parser_Interface
 {
 		

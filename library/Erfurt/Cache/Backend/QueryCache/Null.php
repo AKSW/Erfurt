@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @package        Erfurt_Cache_Backend_QueryCache
  * @copyright      Copyright (c) 2012 {@link http://aksw.org aksw}

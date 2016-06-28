@@ -46,7 +46,6 @@
  *  satisfy the superclass interface.
  */
 
-
 class ParserRuleReturnScope extends RuleReturnScope {
 	public $start, $stop;
 	public function getStart() { return start; }

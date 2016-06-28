@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Creates sql statements from a Query object
  *
@@ -190,7 +189,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         $arWhere    = array();
 
         $strResultForm = $this->query->getResultForm();
-        
         $filterGen = new Erfurt_Sparql_EngineDb_FilterGenerator($this);
         switch ($strResultForm) {
             case 'construct':
@@ -337,7 +335,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $arStrSelect = array('SELECT COUNT(DISTINCT(t0.s)) as count');
                 break;
             default:
-                
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unsupported query type "' . $strResultForm . '"');
                 break;
@@ -391,7 +388,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
         *   We do select only the columns we need for variables
         */
      
-        
 
         if (Erfurt_Sparql_Variable::isVariable($subject)) {
             if (isset($this->arUnionVarAssignments[$this->nUnionCount][$subject])) {
@@ -619,7 +615,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             if ($func != null) {
                 if ($func == 'datatype') {
                     if ($chType != 'o') {
-                        
                         throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                             'datatype() works on objects only'
                         );
@@ -633,7 +628,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     );
                 } else if ($func == 'lang') {
                     if ($chType != 'o') {
-                        
                         throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                             'lang() works on objects only'
                         );
@@ -645,7 +639,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                         '"" as ' . $this->getSqlVariableNameDatatype($var),
                     );
                 } else {
-                    
                     throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported function for select "' . $func . '"'
                     );
@@ -676,7 +669,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     $strTablePrefix . '.od_r as ' . $this->getSqlVariableNameDatatypeRef($varname)
                 );
             default:
-                
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                     'Unknown sentence type "' . $chType . "', one of (s,p,o) expected"
                 );
@@ -828,7 +820,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
     */
     function getSqlCondition($bject, $strTablePrefix, $strType)
     {
-        
         if (is_string($bject)) {
             if (Erfurt_Sparql_Variable::isVariable($bject)) {
                 //variable?
@@ -848,7 +839,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
 
         if ($bject instanceof Erfurt_Rdf_Resource && $bject->isBlankNode()) {
             //Blank node
-            
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'FIXME: Querying for blank nodes not supported'
             );
@@ -906,7 +896,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
             return $r;
 
         } else {
-            
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                 'Unsupported sentence part: ' . get_class($bject)
             );

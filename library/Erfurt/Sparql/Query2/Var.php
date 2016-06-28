@@ -11,8 +11,6 @@
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
 
-
-
 /**
  * Erfurt Sparql Query2 - Var.
  * 

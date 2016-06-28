@@ -112,7 +112,6 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
         $this->_importFromManifest($resourceFileBase . self::RAP_TEST_DIR . 'manifest.ttl', $queryArray);
 
         // 4. dawg2
-        
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
 
@@ -148,7 +147,6 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
 
     protected function _importFromManifest($filename, &$queryResultArray)
     {
-        
         $parser = new Erfurt_Syntax_RdfParser();
         $parser->initializeWithFormat('turtle');
 

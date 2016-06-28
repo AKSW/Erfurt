@@ -477,7 +477,6 @@ class Erfurt_AppTest extends Erfurt_TestCase
             )
         );
 
-        
         $tmpConfig = new Zend_Config($configOptions);
 
         $app = Erfurt_App::getInstance(false)->start($tmpConfig);

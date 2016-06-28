@@ -31,7 +31,6 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
 
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
 
-        
         $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
         $result2 = $adapter->parseFromUrl($url);
 
@@ -46,7 +45,6 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
 
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
 
-        
         $adapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
         $result2 = $adapter->parseFromUrl($url);
 
@@ -61,7 +59,6 @@ class Erfurt_Syntax_RdfParserTest extends Erfurt_TestCase
 
         $result1 = $this->_object->parse($url, Erfurt_Syntax_RdfParser::LOCATOR_URL);
 
-        
         $adapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
         $result2 = $adapter->parseFromUrl($url);
 

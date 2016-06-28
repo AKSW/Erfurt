@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Initial version of a wrapper for RDFa.
  * 

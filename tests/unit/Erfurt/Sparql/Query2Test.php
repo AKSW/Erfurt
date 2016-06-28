@@ -183,7 +183,6 @@ class Erfurt_Sparql_Query2Test extends Erfurt_TestCase
             list($usec, $sec) = explode(" ", microtime());
             return ((float)$usec + (float)$sec);
         }
-    //
         try {
             $timesum = (float) 0;
             $memorysum = (float) 0;

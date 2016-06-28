@@ -109,34 +109,27 @@ class Erfurt_Namespaces
         $graphPrefixes = $this->getNamespacesForGraph($graph);
 
         // check if namespace is a valid URI
-        
         if (!Erfurt_Uri::check($namespace)) {
-            
             throw new Erfurt_Namespaces_Exception("Given namespace '$namespace' is not a valid URI.");
         }
 
         // check if prefix is a valid XML name
-        
         if (!Erfurt_Utils::isXmlPrefix($prefix)) {
-            
             throw new Erfurt_Namespaces_Exception("Given prefix '$prefix' is not a valid XML name.");
         }
 
         // check if prefix matches a URI scheme (http://www.iana.org/assignments/uri-schemes.html)
         if (array_key_exists($prefix, $this->_reservedNames)) {
-            
             throw new Erfurt_Namespaces_Exception("Reserved name '$prefix' cannot be used as a namespace prefix.");
         }
 
         // check for existence of prefixes
         if (array_key_exists($prefix, $graphPrefixes)) {
-            
             throw new Erfurt_Namespaces_Exception("Prefix '$prefix' already exists.");
         }
 
         // check for multiple prefixes
         if (!$this->_allowMultiplePrefixes and array_key_exists($namespace, array_flip($graphPrefixes))) {
-            
             throw new Erfurt_Namespaces_Exception("Multiple prefixes for namespace '$namespace' not allowed.");
         }
 
@@ -303,7 +296,6 @@ class Erfurt_Namespaces
             // update locally
             $this->_namespaces[$graph] = $namespaces;
         } catch (Erfurt_Exception $e) {
-            
             throw new Erfurt_Namespaces_Exception(
                 'Insufficient privileges to edit namespace prefixes for graph "' . $graph . '".'
             );

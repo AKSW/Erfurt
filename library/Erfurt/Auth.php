@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Extends the Zend_Auth class in order to provide some additional functionality.
  *

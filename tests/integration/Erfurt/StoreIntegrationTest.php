@@ -143,7 +143,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $store = Erfurt_App::getInstance()->getStore();
         
         $query = 'COUNT WHERE { ?s ?p "SomethingThatDoesNotExistsIGUUGIZFZTFVBhjscjkggniperegrthhrt" . }';
-        
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         
         $result = $store->sparqlQuery($simpleQuery);
@@ -162,7 +161,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
                   WHERE { 
             ?s ?p ?o . 
         }';
-        
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $result = $store->sparqlQuery($simpleQuery);
 

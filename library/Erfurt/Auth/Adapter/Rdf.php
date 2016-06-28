@@ -7,8 +7,6 @@
  */
 
 
-
-
 /**
  * Erfurt RDF authentication adapter.
  *
@@ -202,7 +200,6 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
         $uris = $this->_getUris();
         $userSparql = new Erfurt_Sparql_SimpleQuery();
         $userSparql->setSelectClause('SELECT ?subject ?predicate ?object');
-
         $wherePart = 'WHERE { ?subject ?predicate ?object . ?subject <' . EF_RDF_TYPE . '> <' .
             $uris['user_class'] . '> }';
         $userSparql->setWherePart($wherePart);

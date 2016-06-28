@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * A SPARQL Parser Execption for better errorhandling.
  *

@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * @category   Erfurt
  * @package    Erfurt_Rdfs

@@ -496,7 +496,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10 extends AntlrParser {
 
 
     public static function query10_return() {
-    	
         $retval = new ParserRuleReturnScope();
     	$retval->value=null;
     	$retval->errors=null;
@@ -5150,7 +5149,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10 extends AntlrParser {
     // $ANTLR end "booleanLiteral"
 
     public static function string_return() {
-    	
         $retval = new ParserRuleReturnScope();
     	return $retval;
     }

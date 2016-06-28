@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This exceptions class should be used in context of wrappers only.
  * 

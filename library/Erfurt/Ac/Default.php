@@ -125,7 +125,6 @@ class Erfurt_Ac_Default
             }
 
             // Now fetch the config from ac model and overwrite the values.
-
             $query = new Erfurt_Sparql_SimpleQuery();
             $query->setSelectClause('SELECT ?s ?o')
                   ->setWherePart(
@@ -280,7 +279,7 @@ class Erfurt_Ac_Default
         $modelUri = (string)$modelUri;
         $result = $this->areModelsAllowed($type, array($modelUri));
         if (isset($result[$modelUri])) {
-            return true;
+            return $result[$modelUri];
         }
         return false;
     }
@@ -468,13 +467,11 @@ class Erfurt_Ac_Default
 
         // is type supported?
         if (!in_array($type, array('view', 'edit'))) {
-
             throw new Erfurt_Ac_Exception('Wrong access type submitted');
         }
 
         // is permission supported?
         if (!in_array($perm, array('grant', 'deny'))) {
-
             throw new Erfurt_Ac_Exception('Wrong permission type submitted');
         }
 
@@ -531,7 +528,6 @@ class Erfurt_Ac_Default
             // Identity exists; get it
             return $this->_auth->getIdentity();
         } else {
-
             throw new Erfurt_Ac_Exception('No valid user was given.');
         }
     }

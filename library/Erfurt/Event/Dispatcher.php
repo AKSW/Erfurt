@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt event dispatcher.
  *
@@ -104,12 +103,10 @@ class Erfurt_Event_Dispatcher
         } else if (is_array($handler)) {
             // or check mandatory parameters
             if (!array_key_exists('class_name', $handler)) {
-                
                 throw new Erfurt_Exception("Missing key 'class_name' for handler registration.");
             }
             
             if (!array_key_exists('include_path', $handler)) {
-                
                 throw new Erfurt_Exception("Missing key 'include_path' for handler registration.");
             }
             

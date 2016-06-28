@@ -1,6 +1,5 @@
 <?php
 
-	
 
 	class TokenConst{
 		public static $EOR_TOKEN_TYPE = 1;

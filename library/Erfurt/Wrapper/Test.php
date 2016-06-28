@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This wrapper extension provides functionality for gathering linked data.
  *

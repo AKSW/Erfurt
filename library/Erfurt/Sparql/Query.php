@@ -452,7 +452,6 @@ class Erfurt_Sparql_Query
      */
     public function getNewPattern($constr = false)
     {
-        
         $pattern = new Erfurt_Sparql_GraphPattern();
         
         if ($constr === true) {

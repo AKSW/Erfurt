@@ -1,6 +1,5 @@
 <?php
 
-
 class EnabledWrapper extends Erfurt_Wrapper
 {
     public function getDescription()

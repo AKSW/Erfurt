@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt namespace and prefix management.
  *

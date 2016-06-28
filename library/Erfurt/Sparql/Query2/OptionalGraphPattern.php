@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Erfurt_Sparql Query - OptionalGraphPattern.
  * 

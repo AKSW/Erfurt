@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * This wrapper extension provides functionality for gathering linked data.
  *
@@ -363,14 +362,12 @@ class Erfurt_Wrapper_LinkeddataWrapper extends Erfurt_Wrapper
                         break;
                     }
                 default:
-                    
                     throw new Erfurt_Wrapper_Exception('Server returned not supported content type: ' . $contentType);
             }
         }
 
         $data = $response->getBody();
 
-        
         $parser = Erfurt_Syntax_RdfParser::rdfParserWithFormat($type);
         $result = $parser->parse($data, Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, $baseUri);
         $ns     = $parser->getNamespaces();

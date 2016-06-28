@@ -4,21 +4,13 @@ define('QUERY_REPEAT_COUNT', 100);
 define('_TESTROOT', rtrim(dirname(dirname(__FILE__)), '\\/') . '/');
 define('_BASE', rtrim(realpath(_TESTROOT . '../'), '\\/') . '/');
 
-// add Erfurt lib to include path
-$includePath  = get_include_path()          . PATH_SEPARATOR;
-$includePath .= _BASE                       . PATH_SEPARATOR;
-$includePath .= _BASE . 'Erfurt/libraries/' . PATH_SEPARATOR;
-$includePath .= _BASE . 'Erfurt/libraries/antlr/Php' . PATH_SEPARATOR;
-$includePath .= _BASE . '../' . PATH_SEPARATOR;
-set_include_path($includePath);
+require '../../vendor/autoload.php';
 
 // We need a session for authentication
-
 $session = new Zend_Session_Namespace('Erfurt_Test');
 
 
 // Zend_Loader for class autoloading
-
 $loader = Zend_Loader_Autoloader::getInstance();
 $loader->registerNamespace('Erfurt_');
 
@@ -33,7 +25,6 @@ foreach ($files as $file) {
 }
 
 if (is_readable(_TESTROOT . 'config.ini')) {
-    
     $testConfig = new Zend_Config_Ini((_TESTROOT . 'config.ini'), 'private', true);
     
     Erfurt_App::getInstance()->loadConfig($testConfig);

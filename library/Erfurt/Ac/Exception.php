@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Exception class for the access control package.
  * 

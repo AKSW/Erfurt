@@ -107,24 +107,19 @@ class Erfurt_Syntax_RdfSerializer
         $format = self::normalizeFormat($format);
         switch ($format) {
             case 'rdfxml':
-                
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
                 break;
             case 'turtle':
             case 'rdfn3':
-                
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
                 break;
             case 'ntriples':
-                
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_NTriples();
                 break;
             case 'rdfjson':
-                
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
                 break;
             default:
-                
                 throw new Erfurt_Syntax_RdfSerializerException("Format '$format' not supported");
         }        
     }

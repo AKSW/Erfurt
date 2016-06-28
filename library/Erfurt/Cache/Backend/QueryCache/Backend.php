@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * AbstractClass of QueryCache-Backend-Implementations
  * AbstractClass Erfurt_Cache_Backend_QueryCache_Backend which implements Erfurt_Cache_Backend_QueryCache_Interface
