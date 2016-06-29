@@ -10,18 +10,9 @@
         <testsuite name="Erfurt Unit Tests">
             <directory suffix="Test.php">tests/unit</directory>
         </testsuite>
-        <testsuite name="Erfurt Virtuoso Integration Tests">
+        <testsuite name="Erfurt Integration Tests">
             <directory suffix="Test.php">tests/integration</directory>
         </testsuite>
-        <testsuite name="Erfurt ZendDB Integration Tests">
-            <directory suffix="Test.php">tests/integration</directory>
-        </testsuite>
-        <logging>
-            <log type="coverage-clover" target="./build/logs/clover.xml"/>
-            <log type="coverage-html" target="./build/coverage" title="OntoWiki"/>
-            <log type="junit" target="./build/logs/junit.xml"/>
-        </logging>
-
         <filter>
             <whitelist processUncoveredFilesFromWhitelist="true">
                 <directory suffix=".php">./library/Erfurt</directory>
