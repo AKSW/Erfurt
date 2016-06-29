@@ -2,16 +2,17 @@
 <sparql xmlns="http://www.w3.org/2005/sparql-results#">
 
 <?php
-function compat_htmlentities ($string, $flags = null, $encoding = null, $double_encode = true) {
+function compat_htmlentities ($string, $flags = null, $encoding = null, $double_encode = false) {
     if ($flags === null) {
-        $flags = ENT_COMPAT;
-        if (defined("ENT_HTML401")) {
-            $flags = $flags | ENT_HTML401;
-        }
+        $flags = ENT_COMPAT | ENT_HTML401;
     }
     if ($encoding === null) {
         $encoding = ini_get("default_charset");
+        if ($encoding === '') {
+            $encoding = 'UTF-8';
+        }
     }
+
     return htmlentities ($string, $flags, $encoding, $double_encode);
 }
 ?>

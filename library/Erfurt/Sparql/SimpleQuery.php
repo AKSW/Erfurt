@@ -32,6 +32,9 @@ class Erfurt_Sparql_SimpleQuery
     /** @var boolean */
     protected $_ask = false;
 
+    /** @var boolean */
+    protected $_oldCount = false;
+
     /** @var array */
     protected $_from = array();
 
@@ -60,6 +63,8 @@ class Erfurt_Sparql_SimpleQuery
 
         if ($this->_ask) {
             $queryString .= 'ASK' . PHP_EOL;
+        } else if ($this->_oldCount) {
+            $queryString .= 'COUNT' . PHP_EOL;
         } else {
             $queryString .= $this->_selectClause . PHP_EOL;
         }
@@ -120,6 +125,7 @@ class Erfurt_Sparql_SimpleQuery
             'prefix'        => '/((PREFIX\s+[^:\s]+:\s+<[^\s]*>\s*)+)/si',
             'base'          => '/BASE\s+<(.+?)>/i',
             'ask'           => '/(ASK)/si',
+            'old_count'     => '/(COUNT\s+(FROM|WHERE))/si',
             'select_clause' => '/((SELECT\s+)(DISTINCT\s+)?)(\*|((COUNT\s*\((\?\w*|\*)\)\s+(as\s+(\?\w+\s+))?)|(\?\w+\s+))*)/si',
             'from'          => '/FROM\s+<(.+?)>/i',
             'from_named'    => '/FROM\s+NAMED\s+<(.+?)>/i',
@@ -150,6 +156,10 @@ class Erfurt_Sparql_SimpleQuery
 
         if (isset($parts['ask'][0][0])) {
             $queryObject->setAsk(true);
+        }
+
+        if (isset($parts['old_count'][0][0])) {
+            $queryObject->setOldCount(true);
         }
 
         if (isset($parts['select_clause'][0][0])) {
@@ -318,6 +328,15 @@ class Erfurt_Sparql_SimpleQuery
         }
 
         return $this;
+    }
+
+    public function setOldCount($oldCount = true) {
+
+        if ($oldCount === true | strtolower($oldCount) == 'count') {
+            $this->_oldCount = true;
+        } else {
+            $this->_oldCount = false;
+        }
     }
 
     public function setSelectClause($selectClauseString)

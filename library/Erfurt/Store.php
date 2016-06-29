@@ -979,7 +979,7 @@ EOF;
      *
      * @param string $modelIri
      */
-    private function _getImportsClosure($modelIri, $withHiddenImports = true)
+    private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if ($currentLevel == array($modelIri)) {
@@ -1002,7 +1002,7 @@ EOF;
                     foreach ($graphConfig[$importsUri] as $valueArray) {
                         $currentLevel = array_merge(
                             $currentLevel,
-                            $this->getImportsClosure($valueArray['value'], $withHiddenImports)
+                            $this->getImportsClosure($valueArray['value'], $withHiddenImports, $useAC)
                         );
                     }
                 }
@@ -2132,7 +2132,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
         return $fetchedDesc;
     }
-
 
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
