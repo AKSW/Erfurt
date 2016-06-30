@@ -2,7 +2,11 @@
 
 Erfurt is a PHP/Zend based Semantic Web Framework for Social Semantic Software.
 
-[![Build Status](http://owdev.ontowiki.net/job/Erfurt/badge/icon)](http://owdev.ontowiki.net/job/Erfurt/)
+| CI System      | Status                                                                                                           | 
+| -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Travis CI      | [![Travis CI Build Status](https://travis-ci.org/AKSW/Erfurt.svg)](https://travis-ci.org/AKSW/Erfurt/)           |
+| owdev Jenkins  | [![owdev Build Status](http://owdev.ontowiki.net/job/Erfurt/badge/icon)](http://owdev.ontowiki.net/job/Erfurt/)  |
+
 [API Documentation](http://api.ontowiki.net/)
 
 ## Features
