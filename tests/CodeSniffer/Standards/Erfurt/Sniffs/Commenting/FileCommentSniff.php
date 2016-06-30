@@ -30,8 +30,7 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
                             2  => " * This file is part of the {@link http://erfurt-framework.org Erfurt} project.\n",
                             3  => " *\n",
                             4  => "",
-                            5  => " * @license   http://opensource.org/licenses/gpl-license.php "
-                                . "GNU General Public License (GPL)\n",
+                            5  => " * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)\n",
                             6  => " */",
                            );
 

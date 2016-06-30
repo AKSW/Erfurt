@@ -2,9 +2,9 @@
 
 <project name="Erfurt" default="build">
 
-    <target name="build-unit" depends="prepare,lint,phpunit,phpdoc,phpcb" />
-    <target name="build-integration" depends="prepare,lint,phpunit-integration,phpdoc,phpcb,phpmd-ci,phpcpd,phpcs-ci,pdepend" />
-    <target name="build-full" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,phpunit-integration,phpcb" />
+    <target name="build-unit" depends="prepare,lint,phpunit,phpcb" />
+    <target name="build-integration" depends="prepare,lint,phpunit-integration,phpcb,phpmd-ci,phpcpd,phpcs-ci,pdepend" />
+    <target name="build-full" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit-integration,phpcb" />
 
     <target name="build" depends="build-integration"/>
 
@@ -12,7 +12,8 @@
         <delete dir="${basedir}/build/api"/>
         <delete dir="${basedir}/build/code-browser"/>
         <delete dir="${basedir}/build/coverage"/>
-        <delete dir="${basedir}/build/coverage-integration"/>
+        <delete dir="${basedir}/build/coverage-virtuoso"/>
+        <delete dir="${basedir}/build/coverage-mysql"/>
         <delete dir="${basedir}/build/logs"/>
         <delete dir="${basedir}/build/pdepend"/>
     </target>
@@ -21,7 +22,8 @@
         <mkdir dir="${basedir}/build/api"/>
         <mkdir dir="${basedir}/build/code-browser"/>
         <mkdir dir="${basedir}/build/coverage"/>
-        <mkdir dir="${basedir}/build/coverage-integration"/>
+        <mkdir dir="${basedir}/build/coverage-virtuoso"/>
+        <mkdir dir="${basedir}/build/coverage-mysql"/>
         <mkdir dir="${basedir}/build/logs"/>
         <mkdir dir="${basedir}/build/pdepend"/>
     </target>
@@ -38,7 +40,7 @@
     </target>
 
     <target name="phploc" description="Measure project size using PHPLOC">
-        <exec executable="phploc">
+        <exec executable="./vendor/bin/phploc">
             <arg value="--log-csv" />
             <arg value="${basedir}/build/logs/phploc.csv" />
             <arg path="${basedir}/library/Erfurt" />
@@ -46,7 +48,7 @@
     </target>
 
     <target name="pdepend" description="Calculate software metrics using PHP_Depend">
-        <exec executable="pdepend">
+        <exec executable="./vendor/bin/pdepend">
             <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
             <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
@@ -54,46 +56,26 @@
         </exec>
     </target>
 
-    <target name="phpmd"
-            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
-         <exec executable="phpmd">
-             <arg path="${basedir}/library/Erfurt" />
-             <arg value="text" />
-             <arg value="${basedir}/build/phpmd.xml" />
-         </exec>
-     </target>
-
-     <target name="phpmd-ci"
-             description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
-        <exec executable="phpmd">
-            <arg path="${basedir}/library/Erfurt" />
-            <arg value="xml" />
-            <arg value="${basedir}/build/phpmd.xml" />
-            <arg value="--reportfile" />
-            <arg value="${basedir}/build/logs/pmd.xml" />
-        </exec>
-    </target>
-
     <target name="phpcs"
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-        <exec executable="phpcs">
-            <arg value="--standard=${basedir}/build/phpcs.xml" />
+        <exec executable="./vendor/bin/phpcs">
+            <arg value="--standard=${basedir}/phpcs.xml" />
             <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
 
     <target name="phpcs-ci"
             description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
-        <exec executable="phpcs" output="/dev/null">
+        <exec executable="./vendor/bin/phpcs" output="/dev/null">
             <arg value="--report=checkstyle" />
             <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--standard=${basedir}/phpcs.xml" />
             <arg path="${basedir}/library/Erfurt" />
         </exec>
     </target>
 
     <target name="phpcpd" description="Find duplicate code using PHPCPD">
-        <exec executable="phpcpd">
+        <exec executable="./vendor/bin/phpcpd">
             <arg value="--log-pmd" />
             <arg value="${basedir}/build/logs/pmd-cpd.xml" />
             <arg path="${basedir}/library/Erfurt" />
@@ -101,8 +83,7 @@
     </target>
 
     <target name="phpdoc" description="Create API doc using DocCreator">
-        <exec dir="/opt/DocCreator/" executable="php">
-            <arg value="/opt/DocCreator/create.php5" />
+        <exec executable="php vendor/bin/doc-creator.php">
             <arg value="--config-file=${basedir}/build/doc.erfurt.xml" />
             <arg value="--source-folder=${basedir}/library/Erfurt/" />
             <arg value="--target-folder=${basedir}/build/api/" />
@@ -111,26 +92,53 @@
 
     <target name="directories">
         <exec executable="make">
-            <arg value="test-directories" />
+            <arg value="directories" />
         </exec>
     </target>
 
     <target name="phpunit" depends="directories" description="Run unit tests with PHPUnit">
-        <exec dir="${basedir}/tests/unit/" executable="phpunit" failonerror="true" />
+        <exec executable="make" failonerror="true">
+            <arg value="test-unit-cc" />
+        </exec>
     </target>
 
     <target name="phpunit-integration" depends="phpunit" description="Run unit tests with PHPUnit">
-        <exec dir="${basedir}/tests/integration/" executable="phpunit" failonerror="true" />
+        <exec executable="make" failonerror="true">
+            <arg value="test-integration-virtuoso-cc" />
+        </exec>
+        <exec executable="make" failonerror="true">
+            <arg value="test-integration-mysql-cc" />
+        </exec>
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
-        <exec executable="phpcb">
+        <exec executable="./vendor/bin/phpcb">
             <arg value="--log" />
             <arg path="${basedir}/build/logs" />
             <arg value="--source" />
             <arg path="${basedir}/library/Erfurt" />
             <arg value="--output" />
             <arg path="${basedir}/build/code-browser" />
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="./vendor/bin/phpmd">
+            <arg path="${basedir}/library/Erfurt" />
+            <arg value="text" />
+            <arg value="${basedir}/build/phpmd.xml" />
+        </exec>
+    </target>
+
+    <target name="phpmd-ci"
+            description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
+        <exec executable="./vendor/bin/phpmd">
+            <arg path="${basedir}/library/Erfurt" />
+            <arg value="xml" />
+            <arg value="${basedir}/build/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${basedir}/build/logs/pmd.xml" />
         </exec>
     </target>
 </project>

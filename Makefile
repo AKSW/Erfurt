@@ -90,20 +90,23 @@ endif
 
 # coding standard
 # test stuff
-test-directories:
-	rm -rf tests/cache tests/unit/cache tests/integration/cache
-	mkdir tests/cache
-	mkdir tests/unit/cache
-	mkdir tests/integration/cache
-
-test-unit: test-directories
+test-unit: directories
 	$(PHPUNIT) --testsuite "Erfurt Unit Tests"
 
-test-integration-virtuoso: test-directories
-	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Virtuoso Integration Tests"
+test-unit-cc: directories
+	$(PHPUNIT) --testsuite "Erfurt Unit Tests" --coverage-clover ./build/logs/clover.xml --coverage-html ./build/coverage --log-junit ./build/logs/junit.xml
 
-test-integration-mysql: test-directories
-	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Virtuoso Integration Tests"
+test-integration-virtuoso: directories
+	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Integration Tests"
+
+test-integration-virtuoso-cc: directories
+	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-virtuoso
+
+test-integration-mysql: directories
+	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Integration Tests"
+
+test-integration-mysql-cc: directories
+	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-mysql
 
 test:
 	make test-unit
