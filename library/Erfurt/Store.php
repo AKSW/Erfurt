@@ -421,7 +421,9 @@ class Erfurt_Store
         // definitions, which will be stored in the local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
-            $versioning->enableVersioning(false);
+            if ($versioning != false) {
+                $versioning->enableVersioning(false);
+            }
 
             $this->getNewModel($sysOntModel, '', 'owl', false);
             try {
@@ -461,7 +463,9 @@ class Erfurt_Store
                 );
             }
 
-            $versioning->enableVersioning($isVersioningEnabled);
+            if ($versioning != false ) {
+                $versioning->enableVersioning($isVersioningEnabled);
+            }
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -469,7 +473,9 @@ class Erfurt_Store
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
-            $versioning->enableVersioning(false);
+            if ($versioning != false ) {
+                $versioning->enableVersioning(false);
+            }
 
             $this->getNewModel($sysOntSchema, '', 'owl', false);
             try {
@@ -509,7 +515,9 @@ class Erfurt_Store
                 );
             }
 
-            $versioning->enableVersioning($isVersioningEnabled);
+            if ($versioning != false ) {
+                $versioning->enableVersioning($isVersioningEnabled);
+            }
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }
@@ -734,7 +742,11 @@ EOF;
         $this->_backendAdapter->deleteModel($modelIri);
 
         // and history
-        Erfurt_App::getInstance()->getVersioning()->deleteHistoryForModel($modelIri);
+        $isVersioningEnabled = false ;
+        $versioning = Erfurt_App::getInstance()->getVersioning();
+        if ($versioning != false) {
+            $isVersioningEnabled = $versioning->deleteHistoryForModel($modelIri);
+        }
 
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithModelIri($modelIri);
