@@ -207,7 +207,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_testConfig = $app->getConfig();
 
         // Disable versioning
-        $app->getVersioning()->enableVersioning(false);
+        $versioning = $app->getVersioning();
+        if ($versioning != false) {
+            $versioning->enableVersioning(false);
+        }
 
         // For tests we have no session!
         $auth = Erfurt_Auth::getInstance();
