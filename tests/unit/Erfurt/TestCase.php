@@ -77,6 +77,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             if (isset($this->_testConfig->store->zenddb->dbname)) {
                 $dbName = $this->_testConfig->store->zenddb->dbname;
             }
+        } else if ($this->_testConfig->store->backend === 'stardog') {
+            if (isset($this->_testConfig->store->stardog->database)) {
+                $dbName = $this->_testConfig->store->stardog->database;
+            }
         }
 
         // make sure a test db was selected!
@@ -163,6 +167,16 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsDatabase();
     }
 
+    public function markTestNeedsStardog()
+    {
+        $this->markTestNeedsTestConfig();
+        if ($this->_testConfig->store->backend !== 'stardog') {
+            $this->markTestSkipped('Skipped since other backend is under test.');
+        }
+
+        $this->markTestNeedsDatabase();
+    }
+
     private function _loadTestConfig(Zend_Config $config = null)
     {
         if (null === $this->_customTestConfig) {
@@ -196,7 +210,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 // this is useful, when we want to test with different stores without manually
                 // editing the config
                 $storeAdapter = getenv('EF_STORE_ADAPTER');
-                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
+                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb') || ($storeAdapter === 'stardog')) {
                     $this->_customTestConfig->store->backend = $storeAdapter;
                 } else if ($storeAdapter !== false) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
