@@ -4,7 +4,7 @@
 ;; Database Connection Settings                                               ;;
 ;;----------------------------------------------------------------------------;;
 
-store.backend = virtuoso ; zenddb, virtuoso, multi
+store.backend = test ; zenddb, virtuoso, multi
 
 store.zenddb.dbname   = erfurt_TEST ; needs to end with _TEST
 store.zenddb.username = php
