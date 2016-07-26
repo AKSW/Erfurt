@@ -129,9 +129,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_dbWasUsed = true;
     }
 
-    public function markTestNeedsTestConfig()
+    public function markTestNeedsTestConfig(Zend_Config $config = null)
     {
-        $this->_loadTestConfig();
+        $this->_loadTestConfig($config);
 
         if ($this->_testConfig === false) {
             $this->markTestSkipped();
@@ -163,7 +163,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsDatabase();
     }
 
-    private function _loadTestConfig()
+    private function _loadTestConfig(Zend_Config $config = null)
     {
         if (null === $this->_customTestConfig) {
             if (is_readable(_TESTROOT . 'config.ini')) {
@@ -182,10 +182,19 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 $this->_customTestConfig = false;
             }
 
-            // overwrite store adapter to use with environment variable if set
-            // this is useful, when we want to test with different stores without manually
-            // editing the config
             if ($this->_customTestConfig !== false) {
+                // merge with injected config if given
+                if (null !== $config) {
+                    try {
+                        $this->_customTestConfig->merge($config);
+                    } catch (Zend_Config_Exception $e) {
+                        $this->markTestSkipped('Error while merging with injected config.');
+                    }
+                }
+
+                // overwrite store adapter to use with environment variable if set
+                // this is useful, when we want to test with different stores without manually
+                // editing the config
                 $storeAdapter = getenv('EF_STORE_ADAPTER');
                 if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
                     $this->_customTestConfig->store->backend = $storeAdapter;
