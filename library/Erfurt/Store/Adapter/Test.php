@@ -56,6 +56,17 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
         return false;
     }
 
+    public function getResourceDescription($resourceIri, $modelIri, $options = array())
+    {
+        $result = array();
+        if (isset($this->_data[$modelIri][$resourceIri])) {
+            $result[$resourceIri] = $this->_data[$modelIri][$resourceIri];
+        } else {
+            $result[$resourceIri] = array();
+        }
+        return $result;
+    }
+
     /** @see Erfurt_Store_Adapter_Interface */
     public function countWhereMatches($graphUri, $whereSpec, $countSpec, $distinct = false)
     {
@@ -75,9 +86,37 @@ class Erfurt_Store_Adapter_Test implements Erfurt_Store_Adapter_Interface, Erfur
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
-    public function deleteMatchingStatements($graphUri, $subject, $predicate, $object, array $options = array())
+    public function deleteMatchingStatements(
+        $graphUri, $subjectToDelete, $predicateToDelete, $objectToDelete, array $options = array()
+    )
     {
-
+        foreach (array_keys($this->_data[$graphUri]) as $subject) {
+            if ($subjectToDelete == null || $subject == $subjectToDelete) {
+                foreach (array_keys($this->_data[$graphUri][$subject]) as $predicate) {
+                    if ($predicateToDelete == null || $predicate == $predicateToDelete) {
+                        foreach (array_keys($this->_data[$graphUri][$subject][$predicate]) as $object) {
+                            if ($objectToDelete == null) {
+                                unset($this->_data[$graphUri][$subject][$predicate][$object]);
+                            } else {
+                                $diff = array_diff(
+                                    $this->_data[$graphUri][$subject][$predicate][$object],
+                                    $objectToDelete
+                                );
+                                if (empty($diff)) {
+                                    unset($this->_data[$graphUri][$subject][$predicate][$object]);
+                                }
+                            }
+                        }
+                        if (empty($this->_data[$graphUri][$subject][$predicate])){
+                            unset($this->_data[$graphUri][$subject][$predicate]);
+                        }
+                    }
+                }
+                if (empty($this->_data[$graphUri][$subject])){
+                    unset($this->_data[$graphUri][$subject]);
+                }
+            }
+        }
     }
 
     /** @see Erfurt_Store_Adapter_Interface */
