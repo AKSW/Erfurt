@@ -1,11 +1,11 @@
 {
   "built_on": "master",
-  "duration": 55.059,
-  "full_display_name": "Erfurt #266",
-  "id": "2016-07-29_15-17-18",
-  "number": 266,
-  "result": "FAILURE",
+  "duration": 1976.888,
+  "full_display_name": "Erfurt #267",
+  "id": "2016-07-29_15-23-51",
+  "number": 267,
+  "result": "SUCCESS",
   "status_message": "?",
-  "time": "2016-07-29 15:17:18 +0200",
-  "url": "job/Erfurt/266/"
+  "time": "2016-07-29 15:23:51 +0200",
+  "url": "job/Erfurt/267/"
 }
