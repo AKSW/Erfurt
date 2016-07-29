@@ -26,13 +26,13 @@ class Erfurt_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
      * @var array
      */
     protected $_copyright = array(
-                            1  => "/**\n",
-                            2  => " * This file is part of the {@link http://erfurt-framework.org Erfurt} project.\n",
-                            3  => " *\n",
-                            4  => "",
-                            5  => " * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)\n",
-                            6  => " */",
-                           );
+        1  => "/**\n",
+        2  => " * This file is part of the {@link http://erfurt-framework.org Erfurt} project.\n",
+        3  => " *\n",
+        4  => "",
+        5  => " * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)\n",
+        6  => " */",
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
