@@ -73,4 +73,16 @@ class Erfurt_Ac_None
     {    
         // Nothing to do here...
     }
+
+    public function areModelsAllowed($type, $modelUris)
+    {
+        $results = array();
+        foreach ($modelUris as $modelUri) {
+            $modelUri = (string)$modelUri;
+
+            $results[$modelUri] = true;
+        }
+
+        return $results;
+    }
 }
