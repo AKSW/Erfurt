@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.4.0",
         "semsol/arc2": "*",
-        "zendframework/zendframework1": "1.*"
+        "zendframework/zendframework1": "1.*",
+        "easyrdf/easyrdf": "0.9.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.5.*",
