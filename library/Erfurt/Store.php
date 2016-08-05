@@ -571,11 +571,11 @@ class Erfurt_Store
         $graphUri, $subject, $predicate, $object, $options = array()
     )
     {
-        if (!isset($options['use_ac'])) {
-            $options['use_ac'] = true;
+        if (!isset($options[Erfurt_Store::USE_AC])) {
+            $options[Erfurt_Store::USE_AC] = true;
         }
 
-        if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
+        if ($this->_checkAc($graphUri, 'edit', $options[Erfurt_Store::USE_AC])) {
             try {
                 $filter = '';
                 if (null !== $subject) {
@@ -612,7 +612,10 @@ WHERE {
 EOF;
                 $result = $this->sparqlQuery(
                     $sparql,
-                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
+                    array(
+                        Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                        Erfurt_Store::USE_AC => $options[Erfurt_Store::USE_AC]
+                    )
                 );
                 $ret = count($result['results']['bindings']);
                 $stmts = array();
@@ -1810,9 +1813,9 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
             $queryoptions = array(
-                'use_ac'                 => false,
-                'result_format'          => Erfurt_Store::RESULTFORMAT_EXTENDED,
-                'use_additional_imports' => false
+                Erfurt_Store::USE_AC                    => false,
+                Erfurt_Store::RESULTFORMAT              => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                Erfurt_Store::USE_ADDITIONAL_IMPORTS    => false
             );
 
             $stmtArray = array();
