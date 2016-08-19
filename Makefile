@@ -22,9 +22,11 @@ default:
 	@echo "  test-unit .................... Run Erfurt unit tests"
 	@echo "  test-unit-cc ................. Same as above plus code coverage report"
 	@echo "  test-integration-virtuoso .... Run Erfurt integration tests with virtuoso"
-	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"
+	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"	
 	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
 	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
+	@echo "  test-integration-stardog ..... Run Erfurt integration tests with stardog"
+	@echo "  test-integration-stardog-cc .. Same as above plus code coverage report"
 	@echo "  test-clean ................... Clean test cache files, etc."
 	@echo "  ----------------------------------------------------------------------"
 	@echo "  codesniffer .................. Run CodeSniffer checks"
@@ -88,6 +90,12 @@ test-integration-mysql: directories
 test-integration-mysql-cc: directories
 	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-mysql
 
+test-integration-stardog: directories
+	EF_STORE_ADAPTER=stardog $(PHPUNIT) --testsuite "Erfurt Integration Tests"
+
+test-integration-stardog-cc: directories
+	EF_STORE_ADAPTER=stardog $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-stardog
+
 test:
 	make test-unit
 	@echo ""
@@ -98,6 +106,10 @@ test:
 	@echo "-----------------------------------"
 	@echo ""
 	make test-integration-mysql
+	@echo ""
+	@echo "-----------------------------------"
+	@echo ""
+	make test-integration-stardog
 
 codesniffer:
 	$(PHPCS) -p

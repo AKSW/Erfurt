@@ -1,0 +1,26 @@
+[private]
+
+;;----------------------------------------------------------------------------;;
+;; Database Connection Settings                                               ;;
+;;----------------------------------------------------------------------------;;
+
+store.backend = stardog ;
+
+versioning = true ; if versioning is true you need to config ZendDB as additional versioning-store (see below)
+
+;
+; Stardog backend
+;
+store.stardog.base_url   = "http://localhost:5820"
+store.stardog.username   = "admin"
+store.stardog.password   = "admin"
+store.stardog.database   = "erfurt"
+
+;
+; ZendDB
+;
+store.zenddb.dbname   = erfurt
+store.zenddb.username = root
+store.zenddb.password = password
+store.zenddb.dbtype   = mysql     ; mysql
+store.zenddb.host     = localhost ; default is localhost
