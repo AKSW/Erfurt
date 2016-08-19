@@ -5,12 +5,6 @@
  * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\Guzzle\Description;
-use GuzzleHttp\Exception\RequestException;
-
 /**
  * Uses the low-level API client to provide a more advanced interface
  * that is used to read and manipulate data in a Stardog database.
@@ -19,7 +13,7 @@ use GuzzleHttp\Exception\RequestException;
  * @author Matthias Molitor <molitor@informatik.uni-bonn.de>
  * @since 08.03.14
  */
-class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
+class Erfurt_Store_Adapter_Stardog_ApiClient
 {
     /**
      * Identifiers for the different import formats.
@@ -31,13 +25,6 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     const FORMAT_TRIX     = 'application/trix';
     const FORMAT_NQUADS   = 'text/x-nquads';
     const FORMAT_JSON_LD  = 'application/ld+json';
-
-    /**
-     * The low-level client that is used to interact with the triple store.
-     *
-     * @var GuzzleHttp/Client
-     */
-    protected $_apiClient = null;
 
     /**
      * ID of the running transaction or null if no transaction is active.
@@ -62,6 +49,20 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
     protected $_database = null;
 
     /**
+     * The base url to stardog
+     *
+     * @var string
+     */
+    protected $_baseUrl = null;
+
+    /**
+     * The adapter options
+     *
+     * @var array
+     */
+    protected $_adapterOptions = array();
+
+    /**
      * Creates a data access client that uses the provided API client.
      *
      * @param Erfurt_Store_Adapter_Stardog_ApiClient $client
@@ -69,7 +70,7 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function __construct(array $adapterOptions = array())
     {
-        $this->_apiClient = $this->init($adapterOptions);
+        $this->init($adapterOptions);
 
         register_shutdown_function(array($this, 'rollbackPendingTransactions'));
     }
@@ -78,46 +79,36 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      * Initial connection to Stardog with params from config
      *
      * @param array $options
-     * @return GuzzleHttp/Client
      */
     public function init(array $options = array())
     {
-        $client = $this->_apiClient;
-        if ( ! $client ) {
-
-            if ( ! isset($options['base_url']) ) {
-                throw new Erfurt_Store_Adapter_Exception('Your config.ini lacks a store.stardog.base_url parameter.');
-            }
-
-            if ( ! isset($options['database']) ) {
-                throw new Erfurt_Store_Adapter_Exception('Your config.ini lacks a store.stardog.database parameter.');
-            } else {
-                $this->_database = $options['database'];
-            }
-
-            if (isset($options['username']) && isset($options['password'])) {
-                $options['defaults'] = [ 'auth' => [ (string)$options['username'], (string)$options['password'] ] ];
-            }
-
-            $client = new Client($options);
+        if ( ! isset($options['base_url']) ) {
+            throw new Erfurt_Store_Adapter_Exception('Your config.ini lacks a store.stardog.base_url parameter.');
         }
-        return $client;
+        $this->_baseUrl .= ( substr($options['base_url'], -1) == "/" ) ?
+            $options['base_url'] : $options['base_url'] . "/";
+
+        if ( ! isset($options['database']) ) {
+            throw new Erfurt_Store_Adapter_Exception('Your config.ini lacks a store.stardog.database parameter.');
+        }
+        $this->_database = $options['database'];
+        $this->_adapterOptions = $options;
     }
 
     /**
-     * Returns a list of exiisting databases
+     * Returns a list of existing databases
      *
      * @return array
      */
     public function getDatabases()
     {
-        $requestOptions = [
-            'headers' => [ 'accept' => 'application/json' ]
-        ];
+        $result = $this->httpRequest(
+            'admin/databases',
+            'GET',
+            'accept: application/json'
+        )->getBody();
 
-        $res = $this->_apiClient->get('/admin/databases', $requestOptions);
-        $res = json_decode($res->getBody(), true);
-        return $res['databases'];
+        return json_decode($result, true)['databases'];
     }
 
     /**
@@ -142,12 +133,14 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
               . "$definitionAsJson\r\n"
               . "--$boundary--\r\n";
 
-        $requestOptions = [
-            'body' => $body,
-            'headers' => [ 'Content-Type' => 'multipart/form-data; boundary=' . $boundary ]
-        ];
-
-        $this->_apiClient->post('/admin/databases', $requestOptions);
+        return $this->httpRequest(
+            'admin/databases',
+            'POST',
+            'Content-Type: multipart/form-data; boundary=' . $boundary,
+            null,
+            null,
+            $body
+        )->getBody();
     }
 
     /**
@@ -157,10 +150,11 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function dropMyDatabase($database)
     {
-        $requestOptions = [
-            'headers' => [ 'accept' => 'application/json' ]
-        ];
-        $this->_apiClient->delete('/admin/databases/' . $database, $requestOptions);
+        return $this->httpRequest(
+            'admin/databases/' . $database,
+            'DELETE',
+            'accept: application/json'
+        )->getBody();
     }
 
     /**
@@ -175,35 +169,24 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     public function query($sparqlQuery)
     {
-        $requestOptions = [
-            'body' => [ 'query' => $sparqlQuery ],
-            'headers' => [ 'accept' => 'application/sparql-results+json' ]
-        ];
+        $response = $this->httpRequest(
+            $this->_database . '/query',
+            'POST',
+            'accept: application/sparql-results+json',
+            null,
+            array('query' => $sparqlQuery)
+        );
 
-        try {
-            $res = $this->_apiClient->post($this->_database . '/query', $requestOptions);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $message = sprintf('SPARQL Error: %s with query: %s', $e->getResponse(), $sparqlQuery);
-            } else {
-                $message = sprintf('SPARQL Error with query: %s', $sparqlQuery);
-            }
-            throw new Erfurt_Store_Adapter_Exception($message);
-        } catch (Exception $e) {
-            throw new Erfurt_Store_Adapter_Exception('SQL Error with query:' . $sparqlQuery);
-        }
-
-        if ( empty($res->getBody()) ) {
-            return 'OK' === $res->getReasonPhrase() ? true : false;
+        if ( empty($response->getBody()) ) {
+            $result = 'OK' === $response->getMessage() ? true : false;
         } else {
-            $res = json_decode($res->getBody(), true);
+            $result = json_decode($response->getBody(), true);
 
-            if ( isset($res['boolean']) ) {
-                return (boolean)$res['boolean'];
+            if ( isset($result['boolean']) ) {
+                $result = (boolean)$result['boolean'];
             }
-
-            return $res;
         }
+        return $result;
     }
 
     /**
@@ -241,13 +224,12 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         transactional() is used to start a transaction if that did not already happen.
         The transaction ID is passed by reference as it will only be available when
         the execution of transactional() starts. */
-        $apiClient   = $this->_apiClient;
         $transaction = &$this->_runningTransaction;
 
         $this->transactional(
-            function () use ($apiClient, &$transaction, $arguments) {
-            $arguments['transaction-id'] = $transaction;
-            $this->mutativeOperation('/add', $arguments);
+            function () use (&$transaction, $arguments) {
+                $arguments['transaction-id'] = $transaction;
+                $this->mutativeOperation('/add', $arguments);
             }
         );
     }
@@ -281,13 +263,12 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         }
         // Passes the triples that must be deleted and manages the transaction that
         // is required for the remove() call (analog to import()).
-        $apiClient   = $this->_apiClient;
         $transaction = &$this->_runningTransaction;
 
         $this->transactional(
-            function () use ($apiClient, &$transaction, $arguments) {
-            $arguments['transaction-id'] = $transaction;
-            $this->mutativeOperation('/remove', $arguments);
+            function () use (&$transaction, $arguments) {
+                $arguments['transaction-id'] = $transaction;
+                $this->mutativeOperation('/remove', $arguments);
             }
         );
     }
@@ -428,9 +409,11 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     protected function databaseOperation($httpMethod, $uri)
     {
-        $request = $this->_apiClient->createRequest($httpMethod, $this->_database . $uri);
-        $response = $this->_apiClient->send($request);
-        return $response->getBody();
+        return $this->httpRequest(
+            $this->_database . $uri,
+            $httpMethod,
+            'accept: text/plain'
+        )->getBody();
     }
 
     /**
@@ -442,8 +425,10 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
      */
     protected function transactionalOperation($transactionId, $uri)
     {
-        $res = $this->_apiClient->post($this->_database . $uri . $transactionId);
-        return $res->getBody();
+        return $this->httpRequest(
+            $this->_database . $uri . $transactionId,
+            'POST'
+        )->getBody();
     }
 
     /**
@@ -458,27 +443,66 @@ class Erfurt_Store_Adapter_Stardog_ApiClient extends Client
         $uri, array $arguments = array('triples' => '', 'graph-uri' => NULL, 'inputFormat' => FORMAT_TURTLE)
     )
     {
-        $uri = $this->_database . '/' . $arguments['transaction-id'] . $uri;
+        return $this->httpRequest(
+            $this->_database . '/' . $arguments['transaction-id'] . $uri,
+            'POST',
+            'Content-Type: ' . $arguments['inputFormat'],
+            array('graph-uri' => $arguments['graph-uri']),
+            null,
+            $arguments['triples']
+        )->getBody();
+    }
 
-        $requestOptions = [
-            'body' => $arguments['triples'],
-            'query' => ['graph-uri' => $arguments['graph-uri']],
-            'headers' => [ 'Content-Type' => $arguments['inputFormat'] ]
-        ];
-
-        try {
-            $res = $this->_apiClient->post($uri, $requestOptions);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $message = sprintf("SPARQL Error: \n %s with triples: %s", $e->getResponse(), $arguments['triples']);
-            } else {
-                $message = sprintf('SPARQL Error with triples: %s', $arguments['triples']);
-            }
-            throw new Erfurt_Store_Adapter_Exception($message);
-        } catch (Exception $e) {
-            throw new Erfurt_Store_Adapter_Exception('SQL Error with triples:' . $arguments['triples']);
+    /**
+     * Get a new Zend http client with authentification
+     *
+     * @return Zend_Http_Client
+     */
+    protected function getClient()
+    {
+        $client = new Zend_Http_Client();
+        if (isset($this->_adapterOptions['username']) && isset($this->_adapterOptions['password'])) {
+            $client->setAuth($this->_adapterOptions['username'], $this->_adapterOptions['password']);
         }
+        return $client;
+    }
 
-        return $res->getBody();
+    /**
+     * Do a http request
+     *
+     * @param string $uri Uri ti request without base uri
+     * @param string $httpMethod Httpo Method (POST, GET, DELETE, ....)
+     * @param string $headers Http request headers
+     * @param array $paramGet Array with post parameters (name => value)
+     * @param array $paramPost Array with get parameters (name => value)
+     * @param string $rawData Request body data
+     * @return Zend_Http_Response
+     */
+    protected function httpRequest(
+        $uri = '', $httpMethod = 'POST', $headers = '', $paramGet = array(), $paramPost = array(), $rawData = ''
+    )
+    {
+        $client = $this->getClient();
+        $client->setUri($this->_baseUrl . $uri);
+        if ( ! empty($headers) ) {
+            $client->setHeaders($headers);
+        }
+        if ( ! empty($paramGet) ) {
+            $client->setParameterGet($paramGet);
+        }
+        if ( ! empty($paramPost) ) {
+            $client->setParameterPost($paramPost);
+        }
+        if ( ! empty($rawData) ) {
+            $client->setRawData($rawData);
+        }
+        $response = $client->request($httpMethod);
+
+        if ( $response->isError() ) {
+            throw new Erfurt_Store_Adapter_Exception(
+                sprintf("HTTP Request Error: %s", $response->getMessage())
+            );
+        }
+        return $response;
     }
 }
