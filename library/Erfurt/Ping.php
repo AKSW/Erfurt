@@ -84,13 +84,15 @@ class Erfurt_Ping
         }
 
         $versioning = Erfurt_App::getInstance()->getVersioning();
-        $versioning->startAction(
-            array(
-                'type' => '9000',
-                'modeluri' => $this->_targetGraph,
-                'resourceuri' => $sourceUri
-            )
-        );
+        if ($versioning) {
+            $versioning->startAction(
+                array(
+                    'type' => '9000',
+                    'modeluri' => $this->_targetGraph,
+                    'resourceuri' => $sourceUri
+                )
+            );
+        }
 
         // 3. If still nothing was found, try to find a link in the html
         if (count($foundPingbackTriples) === 0) {
@@ -106,7 +108,9 @@ class Erfurt_Ping
                 $response = $client->request();
             } catch (Exception $e) {
                 $this->_logError($e->getMessage());
-                $versioning->endAction();
+                if ($versioning) {
+                    $versioning->endAction();
+                }
                 return 0x0000;
             }
             if ($response->getStatus() === 200) {
@@ -127,7 +131,9 @@ class Erfurt_Ping
                 }
             } else {
                 $this->_logError('0x0010');
-                $versioning->endAction();
+                if ($versioning) {
+                    $versioning->endAction();
+                }
                 return 0x0010;
             }
         }
@@ -139,11 +145,15 @@ class Erfurt_Ping
 
             if (!$removed) {
                 $this->_logError('0x0011');
-                $versioning->endAction();
+                if ($versioning) {
+                    $versioning->endAction();
+                }
                 return 0x0011;
             } else {
                 $this->_logInfo('All existing Pingbacks removed.');
-                $versioning->endAction();
+                if ($versioning) {
+                    $versioning->endAction();
+                }
                 return 'Existing Pingbacks have been removed.';
             }
         }
@@ -167,7 +177,9 @@ class Erfurt_Ping
         }
 
         $this->_logInfo('Pingback registered.');
-        $versioning->endAction();
+        if ($versioning) {
+            $versioning->endAction();
+        }
 
         return 'Pingback has been registered or updated... Keep spinning the Data Web ;-)';
     }
