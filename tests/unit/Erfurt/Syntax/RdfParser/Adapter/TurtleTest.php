@@ -420,9 +420,9 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         $this->assertEquals($expectedNamespaces, $namespaces);
     }
 
-    public function testParseNamespacesFromCoursRoadDataString()
+    public function testParseNamespacesFromCourseRoadDataString()
     {
-        $this->markTestIncomplete('The parser currently hangs for strings like this.');
+        //$this->markTestIncomplete('The parser currently hangs for strings like this.');
         $ttlNamespaces = '
             @base <http://aksw.org/> .
             @prefix sysont: <http://ns.ontowiki.net/SysOnt/> .

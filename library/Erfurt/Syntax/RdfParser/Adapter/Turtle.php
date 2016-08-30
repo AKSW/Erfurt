@@ -208,7 +208,10 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
                 if ($this->_peek() === '.') {
                     $this->_read();
                 }
+            } else if (!$this->_isWS($c)) {
+                $c = $this->_read();
             }
+
             $c = $this->_skipWS();
         }
     }
