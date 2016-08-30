@@ -152,7 +152,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
     /**
      * Call this method after parsing only. The function parseToStore will add namespaces automatically.
      * This method is just for situations, where the namespaces are needed to after a in-memory parsing.
-     * 
+     *
      * @return array
      */
     public function getNamespaces()
@@ -522,16 +522,16 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_verifyChar($this->_read(), '"');
 
-        $c2 = $this->_read();
-        $c3 = $this->_read();
+        $cTwo   = $this->_read();
+        $cThree = $this->_read();
 
-        if ($c2 === '"' && $c3 === '"') {
+        if ($cTwo === '"' && $cThree === '"') {
             // long string
             $result = $this->_parseLongString();
         } else {
             // normal string
-            $this->_unread(); // c3
-            $this->_unread(); // c2
+            $this->_unread(); // cThree
+            $this->_unread(); // cTwo
 
             $result = $this->_parseString();
         }
@@ -824,12 +824,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
     protected function _parsePredicate()
     {
-        $c1 = $this->_read();
+        $c = $this->_read();
 
-        if ($c1 === 'a') {
-            $c2 = $this->_read();
+        if ($c === 'a') {
+            $cTwo = $this->_read();
 
-            if ($this->_isWS($c2)) {
+            if ($this->_isWS($cTwo)) {
                 $this->_unread();
                 return EF_RDF_TYPE;
             }

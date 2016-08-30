@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
@@ -250,16 +250,16 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
         $result = $this->_object->parseFromDataString($turtle);
 
-        $lang1 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['lang'];
-        $lang2 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][1]['lang'];
-        $lang3 = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][2]['lang'];
+        $langOne = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][0]['lang'];
+        $langTwo = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][1]['lang'];
+        $langThree = $result['http://example.org/ttt/']['http://www.w3.org/2000/01/rdf-schema#label'][2]['lang'];
 
-        $this->assertFalse(is_object($lang1));
-        $this->assertFalse(is_object($lang2));
-        $this->assertFalse(is_object($lang3));
-        $this->assertTrue(is_string($lang1));
-        $this->assertTrue(is_string($lang2));
-        $this->assertTrue(is_string($lang3));
+        $this->assertFalse(is_object($langOne));
+        $this->assertFalse(is_object($langTwo));
+        $this->assertFalse(is_object($langThree));
+        $this->assertTrue(is_string($langOne));
+        $this->assertTrue(is_string($langTwo));
+        $this->assertTrue(is_string($langThree));
     }
 
     public function testParseWithMailtoUriIssue477()
@@ -305,7 +305,9 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
     public function testParseWithUrlEncodedUriIssue16()
     {
-        $turtle = '<http://aksw.org/> <http://rdfs.org/ns/void#dataDump> <http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml> .';
+        $turtle = '<http://aksw.org/> '
+                . '<http://rdfs.org/ns/void#dataDump> '
+                . '<http://aksw.org/model/export/?m=http%3A%2F%2Faksw.org%2F&f=rdfxml> .';
 
         $result = $this->_object->parseFromDataString($turtle);
 
@@ -317,7 +319,10 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
     public function testParseWithNoTrailingSlashIssue17()
     {
-        $turtle = '@base <http://aksw.org> . <http://aksw.org/Projects/DL-Learner> <http://usefulinc.com/ns/doap#homepage> </tmp/dl-learner.org> .';
+        $turtle = '@base <http://aksw.org> . '
+                . '<http://aksw.org/Projects/DL-Learner> '
+                . '<http://usefulinc.com/ns/doap#homepage> '
+                . '</tmp/dl-learner.org> .';
 
         $result = $this->_object->parseFromDataString($turtle);
 
@@ -340,13 +345,15 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
         ';
         $result = $this->_object->parseFromDataString($turtle);
 
+        $rdfNS = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+
         $this->assertEquals(
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://rdfs.org/ns/void#exampleResource'][0]['value']
+            $rdfNS,
+            $result[$rdfNS]['http://rdfs.org/ns/void#exampleResource'][0]['value']
         );
         $this->assertEquals(
             '',
-            $result['http://www.w3.org/1999/02/22-rdf-syntax-ns#']['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
+            $result[$rdfNS]['http://www.w3.org/2000/01/rdf-schema#label'][0]['value']
         );
     }
 
@@ -378,6 +385,9 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
     public function testParseNamespacesFromDataString()
     {
+        $longNS = 'http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/'
+                . 'current_phd_students/christian_hentschel.html#';
+
         $ttlNamespaces = '
             @base <http://aksw.org/> .
             @prefix sysont: <http://ns.ontowiki.net/SysOnt/> .
@@ -394,8 +404,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             @prefix ns9: <http://www.nittka.de/index_e.html#> .
             @prefix ns10: <http://de.linkedin.com/pub/andreas-both/22/672/942#> .
             @prefix ns11: <http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#> .
-            @prefix ns12: <http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#> .
-            ';
+            @prefix ns12: <' . $longNS . '>';
 
         $expectedNamespaces = array(
             'sysont'    => 'http://ns.ontowiki.net/SysOnt/',
@@ -412,7 +421,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             'ns9'       => 'http://www.nittka.de/index_e.html#',
             'ns10'      => 'http://de.linkedin.com/pub/andreas-both/22/672/942#',
             'ns11'      => 'http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#',
-            'ns12'      => 'http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#',
+            'ns12'      => $longNS,
         );
 
         $namespaces = $this->_object->parseNamespacesFromDataString($ttlNamespaces);
@@ -422,7 +431,9 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
 
     public function testParseNamespacesFromCourseRoadDataString()
     {
-        //$this->markTestIncomplete('The parser currently hangs for strings like this.');
+        $longNS = 'http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/'
+                . 'current_phd_students/christian_hentschel.html#';
+
         $ttlNamespaces = '
             @base <http://aksw.org/> .
             @prefix sysont: <http://ns.ontowiki.net/SysOnt/> .
@@ -440,8 +451,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             @prefix ns9: <http://www.nittka.de/index_e.html#> .
             @prefix ns10: <http://de.linkedin.com/pub/andreas-both/22/672/942#> .
             @prefix ns11: <http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#> .
-            @prefix ns12: <http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#> .
-            ';
+            @prefix ns12: <' . $longNS . '>';
 
         $expectedNamespaces = array(
             'sysont'    => 'http://ns.ontowiki.net/SysOnt/',
@@ -458,7 +468,7 @@ class Erfurt_Syntax_RdfParser_Adapter_TurtleTest extends Erfurt_TestCase
             'ns9'       => 'http://www.nittka.de/index_e.html#',
             'ns10'      => 'http://de.linkedin.com/pub/andreas-both/22/672/942#',
             'ns11'      => 'http://www.mi.fu-berlin.de/inf/groups/ag-csw/Members/almashraee.html#',
-            'ns12'      => 'http://www.hpi.uni-potsdam.de/meinel/lehrstuhl/team_fotos/current_phd_students/christian_hentschel.html#',
+            'ns12'      => $longNS,
         );
 
         $namespaces = $this->_object->parseNamespacesFromDataString($ttlNamespaces);
