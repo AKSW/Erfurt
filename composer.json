@@ -34,5 +34,9 @@
             "library/Erfurt/",
             "tests/"
         ]
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "unittest": "vendor/bin/phpunit --testsuite unit"
     }
 }

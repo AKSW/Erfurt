@@ -18,17 +18,6 @@ endif
 default:
 	@echo "please use:"
 	@echo ""
-	@echo "  test ......................... Execute unit and integration tests"
-	@echo "  test-unit .................... Run Erfurt unit tests"
-	@echo "  test-unit-cc ................. Same as above plus code coverage report"
-	@echo "  test-integration-virtuoso .... Run Erfurt integration tests with virtuoso"
-	@echo "  test-integration-virtuoso-cc . Same as above plus code coverage report"	
-	@echo "  test-integration-mysql ....... Run Erfurt integration tests with mysql"
-	@echo "  test-integration-mysql-cc .... Same as above plus code coverage report"
-	@echo "  test-integration-stardog ..... Run Erfurt integration tests with stardog"
-	@echo "  test-integration-stardog-cc .. Same as above plus code coverage report"
-	@echo "  test-clean ................... Clean test cache files, etc."
-	@echo "  ----------------------------------------------------------------------"
 	@echo "  codesniffer .................. Run CodeSniffer checks"
 	@echo "  codebeautifier ............... Run CodeBeautifier"
 	@echo ""
@@ -71,51 +60,9 @@ composer-install:
 endif
 
 # coding standard
-# test stuff
-test-unit: directories
-	$(PHPUNIT) --testsuite "Erfurt Unit Tests"
-
-test-unit-cc: directories
-	$(PHPUNIT) --testsuite "Erfurt Unit Tests" --coverage-clover ./build/logs/clover.xml --coverage-html ./build/coverage --log-junit ./build/logs/junit.xml
-
-test-integration-virtuoso: directories
-	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Integration Tests"
-
-test-integration-virtuoso-cc: directories
-	EF_STORE_ADAPTER=virtuoso $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-virtuoso
-
-test-integration-mysql: directories
-	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Integration Tests"
-
-test-integration-mysql-cc: directories
-	EF_STORE_ADAPTER=zenddb $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-mysql
-
-test-integration-stardog: directories
-	EF_STORE_ADAPTER=stardog $(PHPUNIT) --testsuite "Erfurt Integration Tests"
-
-test-integration-stardog-cc: directories
-	EF_STORE_ADAPTER=stardog $(PHPUNIT) --testsuite "Erfurt Integration Tests" --coverage-html ./build/coverage-stardog
-
-test:
-	make test-unit
-	@echo ""
-	@echo "-----------------------------------"
-	@echo ""
-	make test-integration-virtuoso
-	@echo ""
-	@echo "-----------------------------------"
-	@echo ""
-	make test-integration-mysql
-	@echo ""
-	@echo "-----------------------------------"
-	@echo ""
-	make test-integration-stardog
 
 codesniffer:
 	$(PHPCS) -p
 
 codebeautifier:
 	$(PHPCBF)
-
-test-clean:
-	rm -rf tests/unit/Erfurt/Sparql/_cache/*
