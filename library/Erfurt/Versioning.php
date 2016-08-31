@@ -736,12 +736,6 @@ class Erfurt_Versioning
 
     private function _initialize()
     {
-
-        if ($this->_getStore() == null) {
-            //throw new Exception();
-            var_dump($this, xdebug_get_function_stack());exit;
-        }
-
         if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
         }
