@@ -6,7 +6,7 @@
  * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-class Erfurt_Cache_Backend_QueryCache_DatabaseTest extends Erfurt_TestCase
+class Erfurt_Cache_Backend_QueryCache_DatabaseIntegrationTest extends Erfurt_TestCase
 {
     /** @var Erfurt_Cache_Backend_QueryCache_Database */
     private $_cacheBackend = null;
