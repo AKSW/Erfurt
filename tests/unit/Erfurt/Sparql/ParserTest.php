@@ -159,7 +159,7 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                 $pArray[EF_RDF_TYPE][0]['value'] ===
                  'http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#PositiveSyntaxTest') {
 
-                $queryFileName = substr(urldecode($pArray[$mfAction][0]['value']), 7);
+                $queryFileName = substr($pArray[$mfAction][0]['value'], 7);
 
                 $queryArray = array();
                 $queryArray['name']     = $s;
@@ -182,7 +182,6 @@ class Erfurt_Sparql_ParserTest extends Erfurt_TestCase
                 $queryFileName = substr($filename, 0, strrpos($filename, '/')+1) .
                                 substr($pArray["$mfAction"][0]['value'],
                                 strrpos($pArray["$mfAction"][0]['value'], '/'));
-
 
                 $queryArray = array();
                 $queryArray['name']     = $s;
