@@ -5,17 +5,14 @@ php:
   - '5.5'
   - '5.6'
 
-sudo: false
-
-addons:
-  apt:
-    packages:
-    - raptor-utils
+sudo: required
 
 before_install:
+  - sudo apt-get update > /dev/null
   - phpenv config-rm xdebug.ini
 
 install:
+  - sudo apt-get install -y --force-yes raptor-utils
   - travis_retry composer install --no-interaction
 
 before_script:
