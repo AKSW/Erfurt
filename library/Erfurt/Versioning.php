@@ -419,7 +419,7 @@ class Erfurt_Versioning
 
     /**
      *  Restores a change made to the store directly identified by an actionid inside
-     *  'ef_versioning_actions'. Action-IDs could be aquired via methods 
+     *  'ef_versioning_actions'. Action-IDs could be aquired via methods
      *  @see getHistoryForGraph()
      *  @see getHistoryForResource()
      *  @see getHistoryForUser()
@@ -480,7 +480,7 @@ class Erfurt_Versioning
      * Starts a log action to which subsequent statement modifications are added.
      *
      * @param $actionSpec array with keys type, modeluri, resourceuri
-     * @return 
+     * @return
      */
     public function startAction($actionSpec)
     {

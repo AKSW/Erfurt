@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_TestCase
 {
     /**
@@ -15,9 +22,9 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_
      */
     protected function setUp()
     {
-        $this->_object = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();    
+        $this->_object = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
     }
-    
+
     /**
      * @dataProvider allSupportedStoresProvider
      */
@@ -25,11 +32,11 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_
     {
         $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
-        
+
         $result = $this->_object->serializeGraphToString('http://localhost/OntoWiki/Config/');
         $this->assertTrue(is_string($result));
     }
-    
+
     /**
      * @dataProvider allSupportedStoresProvider
      */
@@ -37,7 +44,7 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_
     {
         $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
-        
+
         $r = 'http://localhost/OntoWiki/Config/';
         $result = $this->_object->serializeResourceToString($r, $r);
         $this->assertTrue(is_string($result));

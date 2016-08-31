@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
 {
     private $_resourceDir = null;
@@ -17,7 +24,7 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
 
         $store->getNewModel('http://od.fmi.uni-leipzig.de/model/');
         $store->importRdf('http://od.fmi.uni-leipzig.de/model/', $this->_resourceDir . 'fmi.rdf', 'rdf');
-        
+
         $store->getNewModel('http://od.fmi.uni-leipzig.de/s10/');
         $store->importRdf('http://od.fmi.uni-leipzig.de/s10/', $this->_resourceDir . 'fmi-s10.rdf', 'rdf');
 
@@ -48,13 +55,13 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
             $this->assertTrue(array_key_exists('bis', $row));
             $this->assertTrue(array_key_exists('tag', $row));
             $this->assertTrue(array_key_exists('raum', $row));
-            
+
             if ($row['raum']['type'] !== null) {
                 $this->assertEquals('uri', $row['raum']['type']); // raum binding is optional
             }
         }
     }
-    
+
     public function testOdFmiLimitQueryWithZendDbIssue782WithoutLimit()
     {
         $this->markTestNeedsZendDbStore();
@@ -64,7 +71,7 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
 
         $store->getNewModel('http://od.fmi.uni-leipzig.de/model/');
         $store->importRdf('http://od.fmi.uni-leipzig.de/model/', $this->_resourceDir . 'fmi.rdf', 'rdf');
-        
+
         $store->getNewModel('http://od.fmi.uni-leipzig.de/s10/');
         $store->importRdf('http://od.fmi.uni-leipzig.de/s10/', $this->_resourceDir . 'fmi-s10.rdf', 'rdf');
 
@@ -95,7 +102,7 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
             $this->assertTrue(array_key_exists('von', $row));
             $this->assertTrue(array_key_exists('bis', $row));
             $this->assertTrue(array_key_exists('raum', $row));
-            
+
             if ($row['raum']['type'] !== null) {
                 $this->assertEquals('uri', $row['raum']['type']); // raum binding is optional
             }

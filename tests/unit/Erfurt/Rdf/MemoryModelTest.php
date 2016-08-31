@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
 {
     public function setUp()
@@ -161,14 +168,22 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
      */
     public function testHasO($fixture)
     {
-        $this->assertFalse($fixture->hasO(
-            array('type' => 'url', 'value' => 'http://e.org/not-available'))
+        $this->assertFalse(
+            $fixture->hasO(
+                array('type' => 'url', 'value' => 'http://e.org/not-available')
+            )
         );
-        $this->assertFalse($fixture->hasO(
-            array('type' => 'literal', 'value' => 'not-available-literal'))
+
+        $this->assertFalse(
+            $fixture->hasO(
+                array('type' => 'literal', 'value' => 'not-available-literal')
+            )
         );
-        $this->assertTrue($fixture->hasO(
-            array('type' => 'literal', 'value' => 'a-literal'))
+
+        $this->assertTrue(
+            $fixture->hasO(
+                array('type' => 'literal', 'value' => 'a-literal')
+            )
         );
     }
 

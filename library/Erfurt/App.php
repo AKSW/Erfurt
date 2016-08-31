@@ -606,10 +606,10 @@ class Erfurt_App
     public function getCache()
     {
         if (null === $this->_cache) {
-            $options	= $this->getConfig()->cache->frontend->toArray();
-            $options['automatic_serialization']	= TRUE;
+            $options = $this->getConfig()->cache->frontend->toArray();
+            $options['automatic_serialization'] = true;
             if (!isset($options['lifetime']) || ((int)$options['lifetime'] < 1 )) {
-                $options['lifetime']	= NULL;
+                $options['lifetime'] = null;
             }
             $this->_cache = new Erfurt_Cache_Frontend_ObjectCache($options);
             $this->_cache->setBackend($this->_getCacheBackend());
@@ -1070,7 +1070,7 @@ class Erfurt_App
         if (null === $this->_cacheBackend) {
             $config = $this->getConfig();
             // check the type an whether type is supported
-            $cacheType	= $config->cache->backend->type;
+            $cacheType = $config->cache->backend->type;
             // caching is not enabled, use fake cache backend
             if (!$config->cache->frontend->enable)
                 $cacheType = "null";

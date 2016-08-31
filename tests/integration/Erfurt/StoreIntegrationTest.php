@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 {
     private $_fileBase = null;
@@ -25,20 +32,24 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $httpAdapter = new Zend_Http_Client_Adapter_Test();
         Erfurt_App::$httpAdapter = $httpAdapter;
 
-        $httpAdapter->setResponse(new Zend_Http_Response(
-            303,
-            array(
+        $httpAdapter->setResponse(
+            new Zend_Http_Response(
+                303,
+                array(
                 'Content-Type' => 'text/html; charset=iso-8859-1',
                 'Location'     => 'https://raw.githubusercontent.com/AKSW/dssn.rdf/master/namespace.ttl'
+                )
             )
-        ));
-        $httpAdapter->addResponse(new Zend_Http_Response(
-            200,
-            array(
+        );
+        $httpAdapter->addResponse(
+            new Zend_Http_Response(
+                200,
+                array(
                 'Content-Type' => 'text/turtle'
-            ),
-            file_get_contents($this->_fileBase . 'dssn.ttl')
-        ));
+                ),
+                file_get_contents($this->_fileBase . 'dssn.ttl')
+            )
+        );
 
         $store->getNewModel($url, false);
 
@@ -60,25 +71,24 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     {
         $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
-        
+
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
+
         $turtleString = '<http://model.org/model#localName> a 
                             <http://model.org/model#className1>, <http://model.org/model#className2> ;
                             <http://www.w3.org/2000/01/rdf-schema#label> "label1", "label2"@nl .';
-        
+
         $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
-        
+
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
         $this->assertEquals(5, count($result));
-       
+
         $store->deleteMatchingStatements($modelUri, 'http://model.org/model#localName', null, null);
-        
+
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
@@ -90,12 +100,11 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     {
         $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
-        
+
         $modelUri = 'http://example.org/deleteTest/';
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel($modelUri, false);
-        
-        
+
         $turtleString = '@base <http://bis.ontowiki.net/> .
                     @prefix bis: <http://bis.ontowiki.net/> .
                     @prefix dc: <http://purl.org/dc/elements/1.1/> .
@@ -117,33 +126,33 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
                          foaf:icqChatID "123-456-789" ;
                          foaf:mbox <mailto:peter.pan@informatik.uni-leipzig.de> ;
                          foaf:surname "PanPühn" .';
-        
+
         $store->importRdf($modelUri, $turtleString, 'turtle', Erfurt_Syntax_RdfParser::LOCATOR_DATASTRING, false);
-        
+
         $sparql = 'SELECT * FROM <http://example.org/deleteTest/> WHERE {?s ?p ?o}';
         $result = $model->sparqlQuery($sparql);
 
         $this->assertEquals(12, count($result));
-        
+
         $store->deleteMatchingStatements($modelUri, 'http://bis.ontowiki.net/PeterPan', null, null);
-        
+
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
-    
+
     public function testCheckSetupWithZendDb()
     {
         $this->markTestNeedsCleanZendDbStore();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
         $config = Erfurt_App::getInstance()->getConfig();
-        
+
         try {
             $store->checkSetup();
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
-        
+
         $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
         $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
     }
@@ -154,12 +163,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     public function testGetGraphsUsingResource($storeAdapterName)
     {
         $this->markTestNeedsStore($storeAdapterName);
-        
+
         $resource = 'http://localhost/OntoWiki/Config/';
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $graphs = $store->getGraphsUsingResource($resource, false);
-        
+
         $this->assertTrue(in_array($resource, $graphs));
     }
 
@@ -167,12 +176,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     {
         $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $query = 'COUNT WHERE { ?s ?p "SomethingThatDoesNotExistsIGUUGIZFZTFVBhjscjkggniperegrthhrt" . }';
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
-        
+
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertEquals(0, $result);
     }
@@ -181,9 +190,9 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     {
         $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $query = 'COUNT 
                   FROM <http://localhost/OntoWiki/Config/> 
                   WHERE { 
@@ -201,16 +210,16 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     public function testCountWhereMatchesWithNonExistingModel($storeAdapterName)
     {
         $this->markTestNeedsStore($storeAdapterName);
-        
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         try {
             $result = $store->countWhereMatches(
-                'http://localhost/SomeModelThatDoesNotExist123456789', 
+                'http://localhost/SomeModelThatDoesNotExist123456789',
                 '{ ?s ?p ?o }',
                 '*'
             );
-            
+
             // Should fail...
             $this->fail();
         } catch (Erfurt_Store_Exception $e) {
@@ -226,7 +235,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $store = Erfurt_App::getInstance()->getStore();
-        
+
         $sparql = "SELECT ?p ?o WHERE { <http://umg.kurtisrandom.com/resource/genre-Children's> ?p ?o . }";
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($sparql);
         $result = $store->sparqlQuery($simpleQuery);
@@ -255,7 +264,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
      *
      * @dataProvider allSupportedStoresProvider
      */
-    public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersionGithubIssue85($storeAdapterName)
+    public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersion($storeAdapterName)
     {
         $this->markTestNeedsStore($storeAdapterName);
         $store = Erfurt_App::getInstance()->getStore();

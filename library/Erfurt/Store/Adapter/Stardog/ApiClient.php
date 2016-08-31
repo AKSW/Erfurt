@@ -462,9 +462,11 @@ class Erfurt_Store_Adapter_Stardog_ApiClient
     {
         $client = new Zend_Http_Client();
 
-        $client->setConfig([
-            'timeout' => 30
-        ]);
+        $client->setConfig(
+            [
+                'timeout' => 30
+            ]
+        );
 
         if (isset($this->_adapterOptions['username']) && isset($this->_adapterOptions['password'])) {
             $client->setAuth($this->_adapterOptions['username'], $this->_adapterOptions['password']);

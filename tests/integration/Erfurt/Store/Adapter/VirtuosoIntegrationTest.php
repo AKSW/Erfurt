@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
@@ -151,7 +151,9 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
 
         // vakantieland string 5
-        $o['value'] = '"In de Tinnen Wonderwereld" is niet langer wegens het overlijden van E. Spandauw (5-10-2000), de oprichter en uitbater van het museum. http://members.tripod.com/~tingieten/';
+        $o['value'] = '"In de Tinnen Wonderwereld" is niet langer wegens het overlijden van '
+                    . 'E. Spandauw (5-10-2000), de oprichter en uitbater van het museum. '
+                    . 'http://members.tripod.com/~tingieten/';
         $this->assertNotEquals(false, $this->fixture->addStatement($g, $s, $p, $o, $options));
     }
 
@@ -172,6 +174,7 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
         $expected = '"Literal"@de';
         $this->assertEquals($expected, $this->fixture->buildLiteralString($value, null, $lang));
 
+        // @codingStandardsIgnoreStart
         $value    = <<<EOT
 Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
 <ol>
@@ -183,6 +186,9 @@ Over the past 3 years, the semantic web activity has gained momentum with the wi
 </ol>
 We will integrate and syndicate linked data with large-scale, existing applications and showcase the benefits in the three application scenarios of media & publishing, corporate data intranets and eGovernment. The resulting tools, methods and data sets have the potential to change the Web as we know it today.
 EOT;
+        // @codingStandardsIgnoreEnd
+
+        // @codingStandardsIgnoreStart
         $expected = <<<EOT
 """Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
 <ol>
@@ -194,6 +200,8 @@ EOT;
 </ol>
 We will integrate and syndicate linked data with large-scale, existing applications and showcase the benefits in the three application scenarios of media & publishing, corporate data intranets and eGovernment. The resulting tools, methods and data sets have the potential to change the Web as we know it today."""
 EOT;
+        // @codingStandardsIgnoreEnd
+
         $this->assertEquals($expected, $this->fixture->buildLiteralString($value));
     }
 
@@ -225,7 +233,8 @@ EOT;
         $resultA = str_replace(PHP_EOL, "\n", $resultA);
         $this->assertEquals($expectedA, $resultA);
 
-        $value    = <<<EOT
+        // @codingStandardsIgnoreStart
+        $value = <<<EOT
 Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
 <ol>
 <li>enterprise-ready tools and methodologies for exposing and managing very large amounts of structured information on the Data Web,</li>
@@ -236,6 +245,8 @@ Over the past 3 years, the semantic web activity has gained momentum with the wi
 </ol>
 We will integrate and syndicate linked data with large-scale, existing applications and showcase the benefits in the three application scenarios of media & publishing, corporate data intranets and eGovernment. The resulting tools, methods and data sets have the potential to change the Web as we know it today.
 EOT;
+        // @codingStandardsIgnoreEnd
+
         $statementsB = array(
             'http://example.com/1' => array(
                 'http://example.com/2' => array(
@@ -243,6 +254,8 @@ EOT;
                 )
             )
         );
+
+        // @codingStandardsIgnoreStart
         $expectedB = <<<EOT
 <http://example.com/1> <http://example.com/2> """Over the past 3 years, the semantic web activity has gained momentum with the widespread publishing of structured data as RDF. The Linked Data paradigm has therefore evolved from a practical research idea into a very promising candidate for addressing one of the biggest challenges in the area of intelligent information management: the exploitation of the Web as a platform for data and information integration in addition to document search. To translate this initial success into a world-scale disruptive reality, encompassing the Web 2.0 world and enterprise data alike, the following research challenges need to be addressed: improve coherence and quality of data published on the Web, close the performance gap between relational and RDF data management, establish trust on the Linked Data Web and generally lower the entrance barrier for data publishers and users. With partners among those who initiated and strongly supported the Linked Open Data initiative, the LOD2 project aims at tackling these challenges by developing:
 <ol>
@@ -255,6 +268,7 @@ EOT;
 We will integrate and syndicate linked data with large-scale, existing applications and showcase the benefits in the three application scenarios of media & publishing, corporate data intranets and eGovernment. The resulting tools, methods and data sets have the potential to change the Web as we know it today.""" .
 
 EOT;
+        // @codingStandardsIgnoreEnd
 
         $resultB = $this->fixture->buildTripleString($statementsB);
         $resultB = str_replace(PHP_EOL, "\n", $resultB);

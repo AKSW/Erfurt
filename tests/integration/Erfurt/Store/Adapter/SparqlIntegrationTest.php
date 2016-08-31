@@ -1,4 +1,11 @@
 <?php
+/**
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
 class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
 {
     private $_dataDir = null;
@@ -32,11 +39,13 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
 
         // Use HTTP Client test adapter
         $httpAdapter = new Erfurt_TestHelper_Http_ClientAdapter();
-        $httpAdapter->setResponse(new Zend_Http_Response(
-            200,
-            array('Content-type' => 'application/sparql-results+xml'),
-            file_get_contents($this->_dataDir . 'sparqlDBpediaLeipzig.srx')
-        ));
+        $httpAdapter->setResponse(
+            new Zend_Http_Response(
+                200,
+                array('Content-type' => 'application/sparql-results+xml'),
+                file_get_contents($this->_dataDir . 'sparqlDBpediaLeipzig.srx')
+            )
+        );
         $adapter->setHttpAdapter($httpAdapter);
 
         $sparql = 'SELECT ?p ?o FROM <http://dbpedia.org> WHERE {<http://dbpedia.org/resource/Leipzig> ?p ?o} LIMIT 10';

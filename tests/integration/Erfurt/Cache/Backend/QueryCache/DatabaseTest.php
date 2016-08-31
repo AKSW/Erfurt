@@ -1,9 +1,11 @@
 <?php
 /**
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
- * @package Erfurt_Cache_Backend
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
+ *
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
+
 class Erfurt_Cache_Backend_QueryCache_DatabaseTest extends Erfurt_TestCase
 {
     /** @var Erfurt_Cache_Backend_QueryCache_Database */
