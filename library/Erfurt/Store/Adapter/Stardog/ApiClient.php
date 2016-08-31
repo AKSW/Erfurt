@@ -177,7 +177,8 @@ class Erfurt_Store_Adapter_Stardog_ApiClient
             array('query' => $sparqlQuery)
         );
 
-        if ( empty($response->getBody()) ) {
+        $responseBody = $response->getBody();
+        if (empty($responseBody)) {
             $result = 'OK' === $response->getMessage() ? true : false;
         } else {
             $result = json_decode($response->getBody(), true);
