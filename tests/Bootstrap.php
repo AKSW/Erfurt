@@ -12,10 +12,6 @@ error_reporting(E_ALL | E_STRICT);
  */
 date_default_timezone_set('Europe/Berlin');
 
-// TODO: can we remove this?
 if (!defined('_TESTROOT')) {
     define('_TESTROOT', rtrim(dirname(__FILE__), '\\/') . '/');
 }
-
-// Access Erfurt app for constant loading etc.
-Erfurt_App::getInstance(false);
