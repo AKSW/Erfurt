@@ -93,7 +93,6 @@ class Erfurt_PingTest extends Erfurt_TestCase
 
     private function _setupStore ()
     {
-        //$this->markTestNeedsDatabase();
         $this->markTestNeedsTestConfig();
 
         // prepare Erfurt_App
