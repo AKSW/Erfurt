@@ -40,22 +40,6 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $this->assertFalse($this->fixture->hasS('http://e.org/not-available'));
     }
 
-    /**
-     * @depends testAddAttributeCorrect
-     */
-    public function testHasO()
-    {
-        $this->assertFalse($this->fixture->hasO(
-            array('type' => 'url', 'value' => 'http://e.org/not-available'))
-        );
-        $this->assertFalse($this->fixture->hasO(
-            array('type' => 'literal', 'value' => 'not-available-literal'))
-        );
-        $this->assertTrue($this->fixture->hasO(
-            array('type' => 'literal', 'value' => 'a-literal'))
-        );
-    }
-
     public function testAddRelationCorrect()
     {
         $this->fixture->addRelation('http://e.org/r1', 'http://e.org/p1', 'http://e.org/r2');
@@ -170,6 +154,22 @@ class Erfurt_Rdf_MemoryModelTest extends Erfurt_TestCase
         $this->assertFalse($fixture->hasSP('http://e.org/r1', 'http://e.org/p2'));
         $this->assertFalse($fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', 'another-literal'));
         $this->assertTrue($fixture->hasSPvalue('http://e.org/r1', 'http://e.org/p1', '/.*literal/', 'preg'));
+    }
+
+    /**
+     * @depends testAddAttributeCorrect
+     */
+    public function testHasO($fixture)
+    {
+        $this->assertFalse($fixture->hasO(
+            array('type' => 'url', 'value' => 'http://e.org/not-available'))
+        );
+        $this->assertFalse($fixture->hasO(
+            array('type' => 'literal', 'value' => 'not-available-literal'))
+        );
+        $this->assertTrue($fixture->hasO(
+            array('type' => 'literal', 'value' => 'a-literal'))
+        );
     }
 
     /**
