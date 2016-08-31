@@ -48,9 +48,6 @@
       <exclude-pattern>*/Sniffs/*</exclude-pattern>
      </rule>
 
-    <!-- camel caps and underscore in variables -->
-     <rule ref="Zend.NamingConventions.ValidVariableName" />
-
     <!-- tab used for indentation -->
      <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
 
