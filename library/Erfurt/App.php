@@ -650,7 +650,9 @@ class Erfurt_App
     public function getHttpClient($uri, $options = array())
     {
         if (null !== self::$httpAdapter) {
-            return new Zend_Http_Client($uri, array('adapter' => self::$httpAdapter));
+            $options['adapter'] = self::$httpAdapter;
+
+            return new Zend_Http_Client($uri, $options);
         }
 
         $config = $this->getConfig();
