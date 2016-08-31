@@ -22,3 +22,6 @@ date_default_timezone_set('Europe/Berlin');
 if (!defined('_TESTROOT')) {
     define('_TESTROOT', rtrim(dirname(__FILE__), '\\/') . '/');
 }
+
+// force vocabulary loading
+Erfurt_App::getInstance(false);
