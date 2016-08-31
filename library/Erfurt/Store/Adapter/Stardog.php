@@ -248,7 +248,7 @@ class Erfurt_Store_Adapter_Stardog implements Erfurt_Store_Adapter_Interface, Er
     public function deleteModel($graphUri)
     {
         $this->_graphs = null;
-        return $this->_apiClient->query('DROP SILENT GRAPH <' . $graphUri . '>');;
+        return $this->_apiClient->query('DROP SILENT GRAPH <' . $graphUri . '>');
     }
 
     /**
