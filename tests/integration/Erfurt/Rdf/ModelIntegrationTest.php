@@ -21,9 +21,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         return $model;
     }
     
-    public function testUpdateWithMutualDifferenceIssue436DifferentLanguages()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testUpdateWithMutualDifferenceIssue436DifferentLanguages($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $modelUri = 'http://example.org/updateTest/';
@@ -93,9 +96,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $this->assertEquals(10, count($result));
     }
     
-    public function testAddAndGetAndDeleteNamespacePrefix()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAddAndGetAndDeleteNamespacePrefix($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -118,9 +124,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         $this->assertFalse(array_key_exists("test", $prefixes));
     }
     
-    public function testSetGetOption()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSetGetOption($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $store = Erfurt_App::getInstance()->getStore();
         $model = $store->getNewModel('http://example.org/', 'http://example.org/', 'owl', false);
@@ -140,7 +149,7 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
     
     public function testIsEditableWithZendDbAndAnonymousUserIssue774()
     {
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         
         //$this->authenticateDbUser();
         $store = Erfurt_App::getInstance()->getStore();
@@ -163,9 +172,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
         }
     }
 
-    public function testRenameResource()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testRenameResource($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
 
         $modelUri = 'http://example.org/renameTest/';

@@ -10,7 +10,7 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
 
     public function testOdFmiLimitQueryWithZendDbIssue782WithLimit()
     {
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
 
         $store = Erfurt_App::getInstance()->getStore();
@@ -57,7 +57,7 @@ class Erfurt_Sparql_EngineDbIntegrationTest extends Erfurt_TestCase
     
     public function testOdFmiLimitQueryWithZendDbIssue782WithoutLimit()
     {
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
 
         $store = Erfurt_App::getInstance()->getStore();

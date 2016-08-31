@@ -15,7 +15,7 @@ class Erfurt_Store_Adapter_StardogIntegrationTest extends Erfurt_TestCase
 
     public function setUp()
     {
-        $this->markTestNeedsStardog();
+        $this->markTestNeedsStardogStore();
         $config = $this->getTestConfig()->store->stardog->toArray();
         $this->fixture = new Erfurt_Store_Adapter_Stardog($config);
 

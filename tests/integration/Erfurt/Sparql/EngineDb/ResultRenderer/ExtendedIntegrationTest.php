@@ -1,9 +1,12 @@
 <?php
 class Erfurt_Sparql_EngineDb_ResultRenderer_ExtendedIntegrationTest extends Erfurt_TestCase
 {
-    public function testResultHeadVarsHaveCorrectName()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testResultHeadVarsHaveCorrectName($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();

@@ -13,6 +13,157 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
     private $_testConfig        = null;
     private $_customTestConfig  = null;
 
+    public function allSupportedStoresProvider()
+    {
+        return [
+            ['zenddb'],
+            ['virtuoso'],
+            ['stardog']
+        ];
+    }
+
+    public function allSupportedSqlDatabasesProvider()
+    {
+        return [
+            ['zenddb'],
+            ['virtuoso']
+        ];
+    }
+
+    protected function markTestNeedsStore($storeAdapterName)
+    {
+        $this->markTestNeedsTestConfig();
+
+        $config = $this->_testConfig;
+        $config->store->backend = $storeAdapterName;
+
+        $this->_customTestConfig->store->backend = $storeAdapterName;
+
+        $dbName = null;
+        if ($this->_testConfig->store->backend === 'virtuoso') {
+            if (isset($this->_testConfig->store->virtuoso->dsn)) {
+                $dbName = $this->_testConfig->store->virtuoso->dsn;
+            }
+        } else if ($this->_testConfig->store->backend === 'zenddb') {
+            if (isset($this->_testConfig->store->zenddb->dbname)) {
+                $dbName = $this->_testConfig->store->zenddb->dbname;
+            }
+        } else if ($this->_testConfig->store->backend === 'stardog') {
+            if (isset($this->_testConfig->store->stardog->database)) {
+                $dbName = $this->_testConfig->store->stardog->database;
+            }
+        }
+
+        // make sure a test db was selected!
+        if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
+            $this->markTestSkipped('The DB name is not a valid test database name: "' . $dbName . '"');
+        }
+
+        try {
+            $store = Erfurt_App::getInstance()->getStore();
+            $store->checkSetup();
+            $this->_dbWasUsed = true;
+        } catch (Erfurt_Store_Exception $e) {
+            if ($e->getCode() === 20) {
+                // Setup successful
+                $this->_dbWasUsed = true;
+            } else {
+                $this->markTestSkipped(
+                    'An Erfurt_Store_Exception occurred when establishing a connection: ' . $e->getMessage()
+                );
+            }
+        } catch (Erfurt_Exception $ee) {
+            $this->markTestSkipped('An Erfurt_Exception occurred when establishing a connection: ' . $ee->getMessage());
+        }
+
+        $config = Erfurt_App::getInstance()->getConfig();
+
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->modelUri, false));
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->schemaUri, false));
+
+        $this->authenticateAnonymous();
+    }
+
+    protected function markTestNeedsZendDbStore()
+    {
+        $this->markTestNeedsStore('zenddb');
+    }
+
+    protected function markTestNeedsVirtuosoStore()
+    {
+        $this->markTestNeedsStore('virtuoso');
+    }
+
+    protected function markTestNeedsStardogStore()
+    {
+        $this->markTestNeedsStore('stardog');
+    }
+
+    protected function markTestNeedsCleanZendDbStore()
+    {
+        $this->markTestNeedsZendDbStore();
+
+        $store = Erfurt_App::getInstance()->getStore();
+        $sql = 'DROP TABLE IF EXISTS ' . implode(',', $store->listTables()) . ';';
+        $store->sqlQuery($sql);
+
+        // We do not clean up the db on tear down, for it is empty now.
+        $this->_dbWasUsed = false;
+        Erfurt_App::reset();
+
+        $this->_loadTestConfig();
+    }
+
+    protected function markTestNeedsSqlDatabase($databaseAdapterName)
+    {
+        $this->markTestNeedsTestConfig();
+
+        $config = $this->_testConfig;
+        $config->store->backend = $databaseAdapterName;
+
+        $this->_customTestConfig->store->backend = $databaseAdapterName;
+
+        $dbName = null;
+        if ($this->_testConfig->store->backend === 'virtuoso') {
+            if (isset($this->_testConfig->store->virtuoso->dsn)) {
+                $dbName = $this->_testConfig->store->virtuoso->dsn;
+            }
+        } else if ($this->_testConfig->store->backend === 'zenddb') {
+            if (isset($this->_testConfig->store->zenddb->dbname)) {
+                $dbName = $this->_testConfig->store->zenddb->dbname;
+            }
+        }
+
+        // make sure a test db was selected!
+        if ((null === $dbName) || (substr($dbName, -5) !== '_TEST')) {
+            $this->markTestSkipped('The DB name is not a valid test database name: "' . $dbName . '"');
+        }
+
+        try {
+            $store = Erfurt_App::getInstance()->getStore();
+            $store->checkSetup();
+            $this->_dbWasUsed = true;
+        } catch (Erfurt_Store_Exception $e) {
+            if ($e->getCode() === 20) {
+                // Setup successful
+                $this->_dbWasUsed = true;
+            } else {
+                $this->markTestSkipped(
+                    'An Erfurt_Store_Exception occurred when establishing a connection: ' . $e->getMessage()
+                );
+            }
+        } catch (Erfurt_Exception $ee) {
+            $this->markTestSkipped('An Erfurt_Exception occurred when establishing a connection: ' . $ee->getMessage());
+        }
+
+        $config = Erfurt_App::getInstance()->getConfig();
+
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->modelUri, false));
+        $this->assertTrue(Erfurt_App::getInstance()->getStore()->isModelAvailable($config->sysont->schemaUri, false));
+
+        $this->authenticateAnonymous();
+    }
+
     protected function tearDown()
     {
         // If test case used the database, we delete all models in order to clean up th environment
@@ -27,16 +178,12 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 }
             }
 
-            // Delete system models after all other models are deleted.
-            // TODO add a way to specify that a test modified the sysonts
-            $store->deleteModel($config->sysont->modelUri);
-            $store->deleteModel($config->sysont->schemaUri);
-
             $this->_dbWasUsed = false;
         }
 
         $this->_testConfig = null; // force reload on each test e.g. because of db params
         Erfurt_App::reset();
+        Erfurt_Event_Dispatcher::reset();
     }
 
     public function authenticateAnonymous()
@@ -204,16 +351,6 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                     } catch (Zend_Config_Exception $e) {
                         $this->markTestSkipped('Error while merging with injected config.');
                     }
-                }
-
-                // overwrite store adapter to use with environment variable if set
-                // this is useful, when we want to test with different stores without manually
-                // editing the config
-                $storeAdapter = getenv('EF_STORE_ADAPTER');
-                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb') || ($storeAdapter === 'stardog')) {
-                    $this->_customTestConfig->store->backend = $storeAdapter;
-                } else if ($storeAdapter !== false) {
-                    throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
                 }
             }
         }

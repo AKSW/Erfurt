@@ -1,13 +1,7 @@
 <?php
 class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
 {
-
     private $_dataDir = null;
-    public function setUp()
-    {
-        $this->markTestNeedsDatabase();
-        $this->_dataDir = realpath(dirname(__FILE__)) . '/_files/data/';
-    }
 
     public function testInstantiation()
     {
@@ -26,6 +20,9 @@ class Erfurt_Store_Adapter_SparqlIntegrationTest extends Erfurt_TestCase
      */
     public function testSparqlWithDbPediaEndpoint()
     {
+        $this->markTestNeedsTestConfig();
+        $this->_dataDir = realpath(dirname(__FILE__)) . '/_files/data/';
+
         $options = array(
             'serviceUrl' => 'http://dbpedia.org/sparql',
             'graphs'     => array('http://dbpedia.org')

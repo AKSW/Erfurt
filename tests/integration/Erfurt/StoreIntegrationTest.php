@@ -10,33 +10,55 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         parent::setUp();
     }
 
-    /*public function testImportRdfFrom303Url()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testImportRdfFrom303Url($storeAdapterName)
     {
-// TODO fix this by using a http test client!
-        $this->markTestIncomplete();
-
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
-        
-        $url = 'http://ns.softwiki.de/req/';
-        
+
+        $url = 'http://purl.org/net/dssn/';
+
         $store = Erfurt_App::getInstance()->getStore();
-        
+
+        $httpAdapter = new Zend_Http_Client_Adapter_Test();
+        Erfurt_App::$httpAdapter = $httpAdapter;
+
+        $httpAdapter->setResponse(new Zend_Http_Response(
+            303,
+            array(
+                'Content-Type' => 'text/html; charset=iso-8859-1',
+                'Location'     => 'https://raw.githubusercontent.com/AKSW/dssn.rdf/master/namespace.ttl'
+            )
+        ));
+        $httpAdapter->addResponse(new Zend_Http_Response(
+            200,
+            array(
+                'Content-Type' => 'text/turtle'
+            ),
+            file_get_contents($this->_fileBase . 'dssn.ttl')
+        ));
+
         $store->getNewModel($url, false);
-        
+
         try {
-            $store->importRdf($url, $url, 'auto', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
+            $store->importRdf($url, $url, 'ttl', Erfurt_Syntax_RdfParser::LOCATOR_URL, false);
         } catch (Erfurt_Exception $e) {
             $this->fail($e->getMessage());
         }
-    }*/
-    
+
+        Erfurt_App::$httpAdapter = null;
+    }
+
     /**
      * This test is introduced in order to reproduce issue 404 (n changing multiple literals, new triples will created)
+     *
+     * @dataProvider allSupportedStoresProvider
      */
-    public function testDeleteMatchingStatementsMatchSubject()
+    public function testDeleteMatchingStatementsMatchSubject($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $modelUri = 'http://example.org/deleteTest/';
@@ -60,10 +82,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $result = $model->sparqlQuery($sparql);
         $this->assertEquals(1, count($result));
     }
-    
-    public function testDeleteMatchingStatementsIssue436MultipleLanguageTags()
+
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testDeleteMatchingStatementsIssue436MultipleLanguageTags($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $modelUri = 'http://example.org/deleteTest/';
@@ -108,7 +133,7 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     
     public function testCheckSetupWithZendDb()
     {
-        $this->markTestNeedsCleanZendDbDatabase();
+        $this->markTestNeedsCleanZendDbStore();
         
         $store = Erfurt_App::getInstance()->getStore();
         $config = Erfurt_App::getInstance()->getConfig();
@@ -122,10 +147,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $this->assertTrue($store->isModelAvailable($config->sysont->schemaUri, false));
         $this->assertTrue($store->isModelAvailable($config->sysont->modelUri, false));
     }
-    
-    public function testGetGraphsUsingResource()
+
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testGetGraphsUsingResource($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $resource = 'http://localhost/OntoWiki/Config/';
         $store = Erfurt_App::getInstance()->getStore();
@@ -134,10 +162,10 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         
         $this->assertTrue(in_array($resource, $graphs));
     }
-    
+
     public function testSparqlQueryWithCountQueryAndEmptyResultIssue174()
     {
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -148,10 +176,10 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertEquals(0, $result);
     }
-    
+
     public function testSparqlQueryWithCountAndFromIssue174()
     {
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         $this->authenticateDbUser();
         
         $store = Erfurt_App::getInstance()->getStore();
@@ -166,10 +194,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
 
         $this->assertEquals(4, $result);
     }
-    
-    public function testCountWhereMatchesWithNonExistingModel()
+
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testCountWhereMatchesWithNonExistingModel($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $store = Erfurt_App::getInstance()->getStore();
         
@@ -186,10 +217,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
             // Nothing to do here...
         }
     }
-    
-    public function testSparqlQueryWithSpecialCharUriIssue579()
+
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSparqlQueryWithSpecialCharUriIssue579($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $store = Erfurt_App::getInstance()->getStore();
         
@@ -198,10 +232,13 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $result = $store->sparqlQuery($simpleQuery);
         $this->assertTrue(is_array($result));
     }
-    
-    public function testGetImportsClosureMultipleCallsWithDifferentParameters()
+
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testGetImportsClosureMultipleCallsWithDifferentParameters($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $store = Erfurt_App::getInstance()->getStore();
 
         $importClosure1 = $store->getImportsClosure('http://localhost/OntoWiki/Config/', false, true); // no hidden imports, with ac
@@ -215,10 +252,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
     /**
      * We create this test for all backends (although it seems to be an Virtuoso issue), since testing of data import
      * should be useful for all backends.
+     *
+     * @dataProvider allSupportedStoresProvider
      */
-    public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersionGithubIssue85()
+    public function testImportRdfXmlWithVirtuosoGeoDatatypeOnlyAvailableInCommercialVersionGithubIssue85($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $store = Erfurt_App::getInstance()->getStore();
 
         $dataPath = $this->_fileBase . 'Grieg_Hall.xml';
@@ -239,9 +278,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $this->assertTrue($result);
     }
 
-    public function testImportDBPediaResourceAutomobileAndQueryWithTitleHelperQueryGithubIssue85()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testImportDBPediaResourceAutomobileAndQueryWithTitleHelperQueryGithubIssue85($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $store = Erfurt_App::getInstance()->getStore();
 
         $dataPath = $this->_fileBase . 'Automobile.xml';
@@ -299,9 +341,12 @@ EOF;
         $this->assertNotEmpty($sparqlResult);
     }
 
-    public function testImportDBPediaResourceMachineLearningAndQueryWithTitleHelperQueryGithubIssue85()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testImportDBPediaResourceMachineLearningAndQueryWithTitleHelperQueryGithubIssue85($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $store = Erfurt_App::getInstance()->getStore();
 
         $dataPath = $this->_fileBase . 'Machine_learning.xml';

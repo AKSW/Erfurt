@@ -7,18 +7,20 @@
     backupGlobals="false"
     backupStaticAttributes="false"
     verbose="true">
-        <testsuite name="Erfurt Unit Tests">
+    <testsuites>
+        <testsuite name="unit">
             <directory suffix="Test.php">tests/unit</directory>
         </testsuite>
-        <testsuite name="Erfurt Integration Tests">
+        <testsuite name="integration">
             <directory suffix="Test.php">tests/integration</directory>
         </testsuite>
-        <filter>
-            <whitelist processUncoveredFilesFromWhitelist="true">
-                <directory suffix=".php">./library/Erfurt</directory>
-                <exclude>
-                    <directory>./tests</directory>
-                </exclude>
-            </whitelist>
-        </filter>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./library/Erfurt</directory>
+            <exclude>
+                <directory>./tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -18,18 +18,24 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfJsonIntegrationTest extends Erfurt_
         $this->_object = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();    
     }
     
-    public function testSerializeGraphToString()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeGraphToString($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $result = $this->_object->serializeGraphToString('http://localhost/OntoWiki/Config/');
         $this->assertTrue(is_string($result));
     }
     
-    public function testSerializeResourceToString()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeResourceToString($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         
         $r = 'http://localhost/OntoWiki/Config/';

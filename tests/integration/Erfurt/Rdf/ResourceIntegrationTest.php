@@ -23,11 +23,11 @@ class Erfurt_Rdf_ResourceIntegrationTest extends Erfurt_TestCase
     }
 
     /**
-     * @todo Implement testGetQualifiedName().
+     * @dataProvider allSupportedStoresProvider
      */
-    public function testGetQualifiedName()
+    public function testGetQualifiedName($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
 
         // First we test with the standard object (no qname).
@@ -39,9 +39,12 @@ class Erfurt_Rdf_ResourceIntegrationTest extends Erfurt_TestCase
         $this->assertEquals('rdf:type', $r->getQualifiedName());
     }
     
-    public function testGetDescription()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testGetDescription($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $model = Erfurt_App::getInstance()->getSysOntModel();
         $resource = new Erfurt_Rdf_Resource('http://ns.ontowiki.net/SysOnt/Anonymous', $model);

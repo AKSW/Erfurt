@@ -5,7 +5,7 @@ class Erfurt_Store_Adapter_EfZendDbIntegrationTest extends Erfurt_TestCase
     
     public function setUp()
     {    
-        $this->markTestNeedsZendDb();
+        $this->markTestNeedsZendDbStore();
         
         $config = Erfurt_App::getInstance()->getConfig();
         $adapterOptions = $config->store->zenddb->toArray();

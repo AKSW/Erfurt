@@ -15,7 +15,7 @@ class Erfurt_Store_Adapter_VirtuosoIntegrationTest extends Erfurt_TestCase
 
     public function setUp()
     {
-        $this->markTestNeedsVirtuoso();
+        $this->markTestNeedsVirtuosoStore();
         $config = $this->getTestConfig()->store->virtuoso->toArray();
         $this->fixture = new Erfurt_Store_Adapter_Virtuoso($config);
 

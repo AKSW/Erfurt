@@ -1,10 +1,13 @@
 <?php
 class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
 {
-    public function testAuthenticateSuperAdmin()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAuthenticateSuperAdmin($storeAdapterName)
     {
         $this->markTestNeedsTestConfig();
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $dbUser = $this->getDbUser();
         $dbPassword = $this->getDbPassword();
         
@@ -17,10 +20,13 @@ class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
         $this->assertTrue($id->isDbUser());
     }
     
-    public function testAuthenticateSuperAdminWithWrongPassword()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAuthenticateSuperAdminWithWrongPassword($storeAdapterName)
     {
         $this->markTestNeedsTestConfig();
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $dbUser = $this->getDbUser();
         
         $instance = new Erfurt_Auth_Adapter_Rdf($dbUser, 'wrongPass');
@@ -29,9 +35,12 @@ class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
         $this->assertFalse($result->isValid());
     }
     
-    public function testAuthenticateAdmin()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAuthenticateAdmin($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $instance = new Erfurt_Auth_Adapter_Rdf('Admin');
         $result = $instance->authenticate();
@@ -41,9 +50,12 @@ class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
         $this->assertEquals('Admin', $id->getUsername());
     }
     
-    public function testAuthenticateUserWithWrongPassword()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAuthenticateUserWithWrongPassword($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $instance = new Erfurt_Auth_Adapter_Rdf('Admin', 'wrongPass');
         $result = $instance->authenticate();
@@ -51,9 +63,12 @@ class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
         $this->assertFalse($result->isValid());
     }
     
-    public function testAuthenticateWithNotExistingUser()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testAuthenticateWithNotExistingUser($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $instance = new Erfurt_Auth_Adapter_Rdf('UserDoesNotExist', 'wrongPass');
         $result = $instance->authenticate();
@@ -61,17 +76,23 @@ class Erfurt_Auth_Adapter_RdfIntegrationTest extends Erfurt_TestCase
         $this->assertFalse($result->isValid());
     }
     
-    public function testFetchDataForAllUsers()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testFetchDataForAllUsers($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $instance = new Erfurt_Auth_Adapter_Rdf();
         $instance->fetchDataForAllUsers();
     }
     
-    public function testGetUsers()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testGetUsers($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         
         $instance = new Erfurt_Auth_Adapter_Rdf();
         $users = $instance->getUsers();

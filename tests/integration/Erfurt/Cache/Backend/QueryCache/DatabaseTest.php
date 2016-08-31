@@ -9,20 +9,6 @@ class Erfurt_Cache_Backend_QueryCache_DatabaseTest extends Erfurt_TestCase
     /** @var Erfurt_Cache_Backend_QueryCache_Database */
     private $_cacheBackend = null;
 
-    public function setUp()
-    {
-        $this->markTestNeedsTestConfig();
-        $this->markTestNeedsDatabase();
-
-        $config = $this->getTestConfig();
-        $config->cache->frontend->enable = TRUE;
-        $config->cache->query->enable = TRUE;
-
-        $this->_cacheBackend = Erfurt_App::getInstance(false)->getQueryCache()->getBackend();
-
-        parent::setUp();
-    }
-
     public function tearDown()
     {
         if ($this->_dbWasUsed) {
@@ -33,8 +19,20 @@ class Erfurt_Cache_Backend_QueryCache_DatabaseTest extends Erfurt_TestCase
         parent::tearDown();
     }
 
-    public function testSaveWithSingleQuoteUriGithubOntoWikiIssue116()
+    /**
+     * @dataProvider allSupportedSqlDatabasesProvider
+     */
+    public function testSaveWithSingleQuoteUriGithubOntoWikiIssue116($databaseAdapterName)
     {
+        $this->markTestNeedsTestConfig();
+        $this->markTestNeedsSqlDatabase($databaseAdapterName);
+
+        $config = $this->getTestConfig();
+        $config->cache->frontend->enable = TRUE;
+        $config->cache->query->enable = TRUE;
+
+        $this->_cacheBackend = Erfurt_App::getInstance(false)->getQueryCache()->getBackend();
+
         $sparql = <<<EOF
 SELECT ?p ?o
 WHERE {

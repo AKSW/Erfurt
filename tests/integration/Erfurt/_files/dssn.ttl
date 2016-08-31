@@ -1,0 +1,164 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix sioc: <http://rdfs.org/sioc/ns#>.
+@prefix doap: <http://usefulinc.com/ns/doap#>.
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix dssn: <http://purl.org/net/dssn/> .
+
+
+###
+# DSSN classes
+###
+
+dssn:Application a owl:Class;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:subClassOf foaf:Agent;
+    owl:disjointWith foaf:Person;
+    rdfs:comment "An application on the web, which can act in the name of a WebID owner (access delegation)";
+    rdfs:label "application".
+
+dssn:Notification a owl:Class;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:subClassOf sioc:Item;
+    rdfs:comment "A notification notifying a user about actions concerning applications under his controll";
+    rdfs:label "notification".
+
+dssn:Subscription a owl:Class;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:comment "A subscription of an application for a topic/feed at a hub.";
+    rdfs:label "subscription".
+
+###
+# DSSN properties
+###
+
+dssn:activityFeed a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:domain foaf:Agent;
+    rdfs:subPropertyOf sioc:feed;
+    rdfs:comment "link a agent / person to an activity feed";
+    rdfs:label "activity feed".
+
+dssn:syncFeed a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:subPropertyOf sioc:feed;
+    rdfs:comment "link a resource to a changeset / history feed";
+    rdfs:label "sync feed".
+
+dssn:trustedService a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:domain foaf:Agent;
+    rdfs:comment "A service which should be used by applications, since the owner of the WebID trusts owner of the service.";
+    rdfs:label "trusted service".
+
+dssn:searchService a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:subPropertyOf dssn:trustedService;
+    rdfs:comment "A (trusted and WebID protocol enabled) private SPARQL search service, which should be used by applications which act in the name of the owner of the WebID.";
+    rdfs:label "search service".
+
+dssn:updateService a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "unstable";
+    rdfs:subPropertyOf dssn:trustedService;
+    rdfs:comment "A (trusted and WebID protocol enabled) private SPARQL update service, which should be used by applications which act in the name of the owner of the WebID.";
+    rdfs:label "update service".
+
+dssn:subscriptionHub a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:domain dssn:Subscription;
+    rdfs:range <http://vocab.deri.ie/push#SemanticHub>;
+    rdfs:comment "Tells that a subscription has happend at the specified hub. (range: semantichub?)";
+    rdfs:label "subscribed at".
+
+dssn:subscriptionCallback a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:domain dssn:Subscription;
+    rdfs:range <http://vocab.deri.ie/push#Callback>;
+    rdfs:comment "";
+    rdfs:label "subscribed to callback".
+
+dssn:subscriptionTopic a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:subPropertyOf sioc:feed;
+    rdfs:domain dssn:Subscription;
+    rdfs:range sioc:Container;
+    rdfs:comment "";
+    rdfs:label "subscribed for topic".
+
+dssn:subscribedTo a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:domain sioc:UserAccount;
+    rdfs:range dssn:Subscription;
+    rdfs:comment "This property can be used to refer a UserAccount to all Subscriptions which are relevant for it and about which it should be notified";
+    rdfs:label "subscribed to Subscription".
+
+dssn:notify a owl:ObjectProperty;
+    rdfs:isDefinedBy <http://purl.org/net/dssn/>;
+    vs:term_status "draft";
+    rdfs:subPropertyOf sioc:addressed_to;
+    rdfs:domain dssn:Notification;
+    rdfs:range sioc:UserAccount;
+    rdfs:comment "Connects a notfication with a user account on which the notification should be displayed.";
+    rdfs:label "notify".
+
+###
+# Example
+###
+
+<http://example.org/notification> a dssn:Notification ;
+    dssn:notify <http://example.org/person> ;
+    sioc:content "You have been tagged on a Picture" ;
+    dct:references <http://example.org/image> .
+
+<http://example.org/user> a sioc:UserAccount ;
+                          sioc:account_of <http://example.org/person> ;
+                          dssn:subscribedTo <http://example.org/subscription> .
+
+<http://example.org/subscription> a dssn:Subscription ;
+                                  dssn:subscriptionTopic <http://example.com/feed> ;
+                                  dssn:subscriptionCallback <http://example.org/callback> ;
+                                  dssn:subscriptionHub <http://pubsubhubbub.appspot.com> .
+
+###
+# Vocabulary description and documentation
+###
+
+<http://purl.org/net/dssn/> a owl:Ontology;
+    foaf:maker <http://sebastian.tramp.name>,
+        <http://philipp.frischmuth24.de/id/me>,
+        <http://www.informatik.uni-leipzig.de/~auer/foaf.rdf#me>,
+        <http://aksw.org/NatanaelArndt>,
+        <http://aksw.org/NormanRadtke>;
+    doap:maintainer <http://sebastian.tramp.name>;
+    <http://purl.org/vocab/vann/preferredNamespacePrefix> "dssn";
+    <http://purl.org/vocab/vann/preferredNamespaceUri> "http://purl.org/net/dssn/";
+    foaf:homepage <http://dssn.org/>;
+    #vann:example <http://aksw.org/Projects/SemanticPingback#usagefoaf>, <http://aksw.org/Projects/SemanticPingback#HowTo>, <http://aksw.org/Projects/SemanticPingback#Implementations>;
+    #vann:changes <http://code.google.com/p/ontowiki/source/list?path=/SemanticPingback/namespace.rdf&amp;repo=models>;
+    rdfs:label "DSSN Vocabulary";
+    skos:note "vocabulary to describe some Distributed Semantic Social Network relations ...".
+
+#<http://aksw.org/Projects/SemanticPingback> a foaf:Document;
+#    rdfs:label "Semantic Pingback Project Homepage".
+
+
+<http://www.informatik.uni-leipzig.de/~auer/foaf.rdf#me> a foaf:Person; foaf:name "Sören Auer".
+<http://philipp.frischmuth24.de/id/me> a foaf:Person; foaf:name "Philipp Frischmuth".
+<http://sebastian.tramp.name> a foaf:Person; foaf:name "Sebastian Tramp".
+<http://aksw.org/NatanaelArndt> a foaf:Person; foaf:name "Natanael Arndt".
+<http://aksw.org/NormanRadtke> a foaf:Person; foaf:name "Norman Radtke".

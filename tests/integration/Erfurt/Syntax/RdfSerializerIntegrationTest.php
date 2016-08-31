@@ -18,9 +18,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->_object = new Erfurt_Syntax_RdfSerializer();    
     }
 
-    public function testSerializeGraphToStringWithRdfXml()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeGraphToStringWithRdfXml($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
     
@@ -33,9 +36,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->assertEquals($result1, $result2);
     }
     
-    public function testSerializeResourceToStringWithRdfXml()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeResourceToStringWithRdfXml($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
         
@@ -48,9 +54,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->assertEquals($result1, $result2);
     }
     
-    public function testSerializeGraphToStringWithRdfJson()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeGraphToStringWithRdfJson($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
         
@@ -63,9 +72,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->assertEquals($result1, $result2);
     }
     
-    public function testSerializeResourceToStringWithRdfJson()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeResourceToStringWithRdfJson($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
         
@@ -78,9 +90,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->assertEquals($result1, $result2);
     }
     
-    public function testSerializeGraphToStringWithN3()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeGraphToStringWithN3($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
         
@@ -93,9 +108,12 @@ class Erfurt_Syntax_RdfSerializerIntegrationTest extends Erfurt_TestCase
         $this->assertEquals($result1, $result2);
     }
     
-    public function testSerializeResourceToStringWithN3()
+    /**
+     * @dataProvider allSupportedStoresProvider
+     */
+    public function testSerializeResourceToStringWithN3($storeAdapterName)
     {
-        $this->markTestNeedsDatabase();
+        $this->markTestNeedsStore($storeAdapterName);
         $this->authenticateDbUser();
         $g = 'http://localhost/OntoWiki/Config/';
         
