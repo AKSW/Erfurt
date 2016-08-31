@@ -9,6 +9,7 @@ node {
    stage 'Prepare Build'
    sh 'composer install --no-interaction'
    sh 'make directories'
+   sh 'make test-clean'
 
    stage 'Unit Tests'
    sh 'composer unittest'

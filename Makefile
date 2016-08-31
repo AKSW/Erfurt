@@ -66,3 +66,6 @@ codesniffer:
 
 codebeautifier:
 	$(PHPCBF)
+
+test-clean:
+	rm -rf tests/unit/Erfurt/Sparql/_cache/*
