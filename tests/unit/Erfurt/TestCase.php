@@ -211,6 +211,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         return $store->getDbPassword();
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestNeedsDatabase()
     {
         $this->markTestNeedsTestConfig();
@@ -260,6 +263,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->authenticateAnonymous();
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestNeedsCleanZendDbDatabase()
     {
         $this->markTestNeedsZendDb();
@@ -275,6 +281,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_loadTestConfig();
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestUsesDb()
     {
         $this->_dbWasUsed = true;
@@ -294,6 +303,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         return $this->_testConfig;
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestNeedsVirtuoso()
     {
         $this->markTestNeedsTestConfig();
@@ -304,6 +316,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsDatabase();
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestNeedsZendDb()
     {
         $this->markTestNeedsTestConfig();
@@ -314,6 +329,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsDatabase();
     }
 
+    /**
+     * @deprecated Use new markTestNeedsStore or markTestNeedsSqlDatabase instead.
+     */
     public function markTestNeedsStardog()
     {
         $this->markTestNeedsTestConfig();
