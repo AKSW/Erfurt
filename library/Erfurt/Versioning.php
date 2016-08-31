@@ -70,15 +70,17 @@ class Erfurt_Versioning
     {
         $this->_versioningEnabled = (bool)$versioningEnabled;
 
-        if (!$this->_eventsRegistered) {
-            $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
+        if ($versioningEnabled) {
+            if (!$this->_eventsRegistered) {
+                $eventDispatcher = Erfurt_Event_Dispatcher::getInstance();
 
-            $eventDispatcher->register('onAddStatement', $this);
-            $eventDispatcher->register('onAddMultipleStatements', $this);
-            $eventDispatcher->register('onDeleteMatchingStatements', $this);
-            $eventDispatcher->register('onDeleteMultipleStatements', $this);
+                $eventDispatcher->register('onAddStatement', $this);
+                $eventDispatcher->register('onAddMultipleStatements', $this);
+                $eventDispatcher->register('onDeleteMatchingStatements', $this);
+                $eventDispatcher->register('onDeleteMultipleStatements', $this);
 
-            $this->_eventsRegistered = true;
+                $this->_eventsRegistered = true;
+            }
         }
     }
 
@@ -734,6 +736,11 @@ class Erfurt_Versioning
 
     private function _initialize()
     {
+
+        if ($this->_getStore() == null) {
+            //throw new Exception();
+            var_dump($this, xdebug_get_function_stack());exit;
+        }
 
         if (!$this->_getStore()->isSqlSupported()) {
             throw new Exception('For versioning support store adapter needs to implement the SQL interface.');
