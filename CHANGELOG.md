@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/) as of vers
 - Add option to export SPARQL result to CSV
 - SPARQL: allow less operator in filter clauses and don't switch to uri mode there
 - SPARQL: remove whitespace constraint on filter clause
-- SPARQL: change strategy for less operator detection * enable tokenizer test case
+- SPARQL: change strategy for less operator detection, enable tokenizer test case
 - Add simple test for Erfurt_Store_Adapter_Virtuoso_ResultConverter_CSV
 - Allow test cases to inject config parameters into the config
 - Add Unit Tests for Store
