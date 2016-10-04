@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -107,24 +107,19 @@ class Erfurt_Syntax_RdfSerializer
         $format = self::normalizeFormat($format);
         switch ($format) {
             case 'rdfxml':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfXml.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfXml();
                 break;
             case 'turtle':
             case 'rdfn3':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/Turtle.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_Turtle();
                 break;
             case 'ntriples':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/NTriples.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_NTriples();
                 break;
             case 'rdfjson':
-                require_once 'Erfurt/Syntax/RdfSerializer/Adapter/RdfJson.php';
                 $this->_serializerAdapter = new Erfurt_Syntax_RdfSerializer_Adapter_RdfJson();
                 break;
             default:
-                require_once 'Erfurt/Syntax/RdfSerializerException.php';
                 throw new Erfurt_Syntax_RdfSerializerException("Format '$format' not supported");
         }        
     }

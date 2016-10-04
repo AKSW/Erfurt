@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 //some classes and interfaces are not in separate files
@@ -11,13 +11,7 @@
 //reason:  they are stubs and they are many
 //so we have to require them manually. irgh
 
-// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
-// require_once 'antlr.php';
-// require_once 'Erfurt/Sparql/Parser/Sparql10/Sparql10/Tokenizer.php';
-// require_once 'Erfurt/Sparql10/Parser/Sparql10.php';
 
-require_once 'Query2/structural-Interfaces.php';
-require_once 'Query2/Constraint.php';
 
 //TODO: is there a better way for getting the type/class?
 function typeHelper($obj)
@@ -99,7 +93,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
         } else {
             $this->setQueryType(self::typeSelect);
         }
-		// require_once 'Erfurt/Sparql/Parser/Sparql10.php';
     }
     
     public function __clone()

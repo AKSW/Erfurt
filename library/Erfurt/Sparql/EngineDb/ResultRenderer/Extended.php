@@ -1,12 +1,11 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Sparql/EngineDb/ResultRenderer.php';
 
 /**
  * Result renderer that creates a PHP array containing the result of a SPARQL query as defined in
@@ -65,7 +64,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 break;
             case 'ask':
                 if (count($arRecordSets) > 1) {
-                    require_once 'Erfurt/Exception.php';
                     throw new Erfurt_Exception('More than one result set for a ' . $strResultForm . ' query!');
                 }
 
@@ -87,7 +85,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
             case 'count':
             case 'describe':
             default:
-                require_once 'Erfurt/Exception.php';
                 throw new Erfurt_Exception('Extended format not supported for:' . $strResultForm);
         }
     }
@@ -352,7 +349,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                                 $row, $arVarSettings[0], $strVar, $asArray);
                             break;
                         default:
-                            require_once 'Erfurt/Exception.php';
                             throw new Erfurt_Exception('Variable has to be s, p or o.');
                     }
                 }

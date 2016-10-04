@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /*
@@ -574,7 +574,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_StringWriterXml
         }
 
         if (null === $local) {
-            require_once 'Erfurt/Rdf/Resource.php';
             $r = Erfurt_Rdf_Resource::initWithUri($ns);
             $ns = $r->getNamespace();
             $local = $r->getLocalName();

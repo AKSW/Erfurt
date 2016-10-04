@@ -2,11 +2,10 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Erfurt/Store.php';
 
 /**
  * OpenLink Virtuoso Adapter for the Erfurt Semantic Web Framework.
@@ -691,7 +690,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 foreach ((array) $converter as $currentConverter) {
                     $converterClass = 'Erfurt_Store_Adapter_Virtuoso_ResultConverter_' . $currentConverter;
 
-                    require_once str_replace('_', '/', $converterClass) . '.php';
                     $converter = new $converterClass();
                     $result = $converter->convert($result);
                 }
@@ -1050,13 +1048,13 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         //build Virtuoso/PL query
         //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
-        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', \'' . $graphUri . '\', 0)';
+        $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
 #        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
 #        $resultId   = odbc_exec($resultId, $virtuosoPl);
-        $resultId   = odbc_exec($this->connection(), $virtuosoPl);
+        $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
-            $message = sprintf('SPARQL Error: %s in query: %s', $this->getLastError(), htmlentities($sparqlQuery));
+            $message = sprintf('SPARQL Error: %s on querying graph <%s> with query: %s', $this->getLastError(), $graphUri, $sparqlQuery);
             throw new Erfurt_Store_Adapter_Exception($message);
         }
 
@@ -1148,6 +1146,12 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
             'plain' => array(
                 'singleField' => false,
                 'converter'   => null,
+                'jsonEncode'  => false,
+                'queryPrefix' => ''
+            ),
+            'csv' => array(
+                'singleField' => false,
+                'converter'   => 'CSV',
                 'jsonEncode'  => false,
                 'queryPrefix' => ''
             )

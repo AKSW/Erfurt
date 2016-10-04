@@ -77,6 +77,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             if (isset($this->_testConfig->store->zenddb->dbname)) {
                 $dbName = $this->_testConfig->store->zenddb->dbname;
             }
+        } else if ($this->_testConfig->store->backend === 'stardog') {
+            if (isset($this->_testConfig->store->stardog->database)) {
+                $dbName = $this->_testConfig->store->stardog->database;
+            }
         }
 
         // make sure a test db was selected!
@@ -129,9 +133,9 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_dbWasUsed = true;
     }
 
-    public function markTestNeedsTestConfig()
+    public function markTestNeedsTestConfig(Zend_Config $config = null)
     {
-        $this->_loadTestConfig();
+        $this->_loadTestConfig($config);
 
         if ($this->_testConfig === false) {
             $this->markTestSkipped();
@@ -163,7 +167,17 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->markTestNeedsDatabase();
     }
 
-    private function _loadTestConfig()
+    public function markTestNeedsStardog()
+    {
+        $this->markTestNeedsTestConfig();
+        if ($this->_testConfig->store->backend !== 'stardog') {
+            $this->markTestSkipped('Skipped since other backend is under test.');
+        }
+
+        $this->markTestNeedsDatabase();
+    }
+
+    private function _loadTestConfig(Zend_Config $config = null)
     {
         if (null === $this->_customTestConfig) {
             if (is_readable(_TESTROOT . 'config.ini')) {
@@ -182,12 +196,21 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
                 $this->_customTestConfig = false;
             }
 
-            // overwrite store adapter to use with environment variable if set
-            // this is useful, when we want to test with different stores without manually
-            // editing the config
             if ($this->_customTestConfig !== false) {
+                // merge with injected config if given
+                if (null !== $config) {
+                    try {
+                        $this->_customTestConfig->merge($config);
+                    } catch (Zend_Config_Exception $e) {
+                        $this->markTestSkipped('Error while merging with injected config.');
+                    }
+                }
+
+                // overwrite store adapter to use with environment variable if set
+                // this is useful, when we want to test with different stores without manually
+                // editing the config
                 $storeAdapter = getenv('EF_STORE_ADAPTER');
-                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb')) {
+                if (($storeAdapter === 'virtuoso') || ($storeAdapter === 'zenddb') || ($storeAdapter === 'stardog')) {
                     $this->_customTestConfig->store->backend = $storeAdapter;
                 } else if ($storeAdapter !== false) {
                     throw new Exception('Invalid value of $EF_STORE_ADAPTER: ' . $storeAdapter);
@@ -207,7 +230,10 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
         $this->_testConfig = $app->getConfig();
 
         // Disable versioning
-        $app->getVersioning()->enableVersioning(false);
+        $versioning = $app->getVersioning();
+        if ($versioning != false) {
+            $versioning->enableVersioning(false);
+        }
 
         // For tests we have no session!
         $auth = Erfurt_Auth::getInstance();

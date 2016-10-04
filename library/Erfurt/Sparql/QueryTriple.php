@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -119,7 +119,6 @@ class Erfurt_Sparql_QueryTriple
     {
         $arVars = array();
 		
-		require_once 'Erfurt/Sparql/Variable.php';
 		if (Erfurt_Sparql_Variable::isVariable($this->_subject)) {
 		    $arVars[] = $this->_subject;
 		}

@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -98,7 +98,6 @@ class Erfurt_Wrapper_Registry
 
         $wrapperName = strtolower($wrapperName);
         if (!isset($this->_wrapperRegistry[$wrapperName])) {
-            require_once 'Erfurt/Wrapper/Exception.php';
             throw new Erfurt_Wrapper_Exception("A wrapper with name '$wrapperName' has not been registered.");
         }
 
@@ -144,7 +143,6 @@ class Erfurt_Wrapper_Registry
         $wrapperName = strtolower($wrapperName);
 
         if (isset($this->_wrapperRegistry[$wrapperName])) {
-            require_once 'Erfurt/Wrapper/Exception.php';
             throw new Erfurt_Wrapper_Exception("A wrapper with name '$wrapperName' has already been registered.");
         }
 

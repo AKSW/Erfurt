@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -227,11 +227,9 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     {   
         $this->query = $query;
 
-        require_once 'Erfurt/Sparql/EngineDb/QuerySimplifier.php';
         $qsimp = new Erfurt_Sparql_EngineDb_QuerySimplifier();
         $qsimp->simplify($this->query);
 
-        require_once 'Erfurt/Sparql/EngineDb/QueryOptimizer.php';
         $queryOptimizer = new Erfurt_Sparql_EngineDb_QueryOptimizer($this);
         $result = $queryOptimizer->optimize($this->query);
  		
@@ -243,25 +241,19 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $resultform = strtolower($resultform);
         switch ($resultform) {
             case 'xml':
-                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Xml.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Xml();
                 break;
-                //require_once 'Erfurt/Exception.php';
                 //throw new Erfurt_Exception('XML result format not supported yet.');
-                //require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/EfZendDb/Xml.php';
                 //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
                 //break;
             case 'extended':
-                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Extended.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Extended();
                 break;
             case 'json':
-                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Json.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Json();
                 break;
             case 'plain':
             default:
-                require_once 'Erfurt/Sparql/EngineDb/ResultRenderer/Plain.php';
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Plain();
         }
         
@@ -272,10 +264,8 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         }
         
                
-        require_once 'Erfurt/Sparql/EngineDb/SqlGenerator/Adapter/Ef.php';
         $this->sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($this->query, $this->arModelIdMapping);
         
-        require_once 'Erfurt/Sparql/EngineDb/TypeSorter.php';
         $this->ts = new Erfurt_Sparql_EngineDb_TypeSorter($this->query, $this);
 
         $this->_setOptions();
@@ -307,7 +297,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
      */
     protected function _queryDb($arSql, $nOffset, $nLimit)
     {
-        require_once 'Erfurt/Sparql/EngineDb/SqlMerger.php';
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
 #var_dump($nLimit, $nOffset);
 #echo $strSql;
@@ -341,7 +330,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
             $nLimit  = null;
             $nSql    = 0;
         } else {
-            require_once 'Erfurt/Sparql/EngineDb/Offsetter.php';
             $offsetter = new Erfurt_Sparql_EngineDb_Offsetter($this, $this->query);
             list($nSql, $nOffset) = $offsetter->determineOffset($arSqls);
             $nLimit    = $arSM['limit'];

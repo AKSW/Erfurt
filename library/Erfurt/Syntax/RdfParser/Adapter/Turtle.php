@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -303,7 +303,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         #$c = $this->_skipWS();
 
         $uri = $this->_resolveUri($this->_decodeString($token, true));
-        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
 
@@ -450,7 +449,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_unread();
 
-        require_once 'Erfurt/Rdf/Literal.php';
         return Erfurt_Rdf_Literal::initWithLabelAndDatatype($token, $datatype);
     }
 
@@ -475,7 +473,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $lang .= $c;
             $c = $this->_read();
 
-            while ($c !== -1 && !$this->_isWS($c) && !($c === ',') && !($c === '.')) {
+            while ($c !== -1 && !$this->_isWS($c) && !($c === ',') && !($c === '.') && !($c === ';')) {
                 if (!$this->_isLanguageChar($c)) {
                     throw new Erfurt_Syntax_RdfParserException('Character "' . $c . '" not allowed in language tags.');
                 }
@@ -485,7 +483,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             }
 
             $this->_unread();
-            require_once 'Erfurt/Rdf/Literal.php';
             return Erfurt_Rdf_Literal::initWithLabelAndLanguage($label, $lang);
         } else if ($c === '^') {
             $this->_read();
@@ -494,14 +491,12 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
             $datatype = $this->_parseValue();
             if ($datatype instanceof Erfurt_Rdf_Resource) {
-                require_once 'Erfurt/Rdf/Literal.php';
                 return Erfurt_Rdf_Literal::initWithLabelAndDatatype($label, (string) $datatype);
             } else {
                 $this->_throwException('Illegal datatype value.');
                 return null;
             }
         } else {
-            require_once 'Erfurt/Rdf/Literal.php';
             return Erfurt_Rdf_Literal::initWithLabel($label);
         }
     }
@@ -658,7 +653,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
                 $value = $prefix;
 
                 if ($prefix === 'true' || $prefix === 'false') {
-                    require_once 'Erfurt/Rdf/Literal.php';
                     return Erfurt_Rdf_Literal::initWithLabelAndDatatype($value, EF_XSD_BOOLEAN);
                 }
             }
@@ -682,7 +676,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         $this->_unread();
 
-        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
 
@@ -715,7 +708,7 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $this->_verifyChar($this->_read(), '[');
 
         $bNode = $this->_createBNode();
-
+        $this->_skipWS();
         $c = $this->_read();
         if ($c !== ']') {
             $this->_unread();
@@ -724,8 +717,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $oldPredicate = $this->_predicate;
 
             $this->_subject = $bNode;
-
-            $this->_skipWS();
 
             $this->_parsePredicateObjectList();
 
@@ -753,7 +744,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
 
         $this->_usedBnodeIds[$id] = true;
-        require_once 'Erfurt/Rdf/Resource.php';
         return Erfurt_Rdf_Resource::initWithBlankNode($id);
     }
 

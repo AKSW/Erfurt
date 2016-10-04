@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -49,7 +49,6 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_SparqlResultsXml
     public function convert(Array $extendedArray)
     {
         if (!isset($extendedArray['head']) or !isset($extendedArray['results'])) {
-            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception(
                 'Supplied array is not a valid Erfurt extended format array.');
         }

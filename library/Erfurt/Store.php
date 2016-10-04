@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2013, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -421,7 +421,9 @@ class Erfurt_Store
         // definitions, which will be stored in the local config!
         if (!$this->isModelAvailable($sysOntModel, false)) {
             $logger->info('System configuration model not found. Loading model ...');
-            $versioning->enableVersioning(false);
+            if ($versioning != false) {
+                $versioning->enableVersioning(false);
+            }
 
             $this->getNewModel($sysOntModel, '', 'owl', false);
             try {
@@ -461,7 +463,9 @@ class Erfurt_Store
                 );
             }
 
-            $versioning->enableVersioning($isVersioningEnabled);
+            if ($versioning != false ) {
+                $versioning->enableVersioning($isVersioningEnabled);
+            }
             $logger->info('System model successfully loaded.');
             $returnValue = false;
         }
@@ -469,7 +473,9 @@ class Erfurt_Store
         // check for system ontology
         if (!$this->isModelAvailable($sysOntSchema, false)) {
             $logger->info('System schema model not found. Loading model ...');
-            $versioning->enableVersioning(false);
+            if ($versioning != false ) {
+                $versioning->enableVersioning(false);
+            }
 
             $this->getNewModel($sysOntSchema, '', 'owl', false);
             try {
@@ -509,7 +515,9 @@ class Erfurt_Store
                 );
             }
 
-            $versioning->enableVersioning($isVersioningEnabled);
+            if ($versioning != false ) {
+                $versioning->enableVersioning($isVersioningEnabled);
+            }
             $logger->info('System schema successfully loaded.');
             $returnValue = false;
         }
@@ -563,11 +571,11 @@ class Erfurt_Store
         $graphUri, $subject, $predicate, $object, $options = array()
     )
     {
-        if (!isset($options['use_ac'])) {
-            $options['use_ac'] = true;
+        if (!isset($options[Erfurt_Store::USE_AC])) {
+            $options[Erfurt_Store::USE_AC] = true;
         }
 
-        if ($this->_checkAc($graphUri, 'edit', $options['use_ac'])) {
+        if ($this->_checkAc($graphUri, 'edit', $options[Erfurt_Store::USE_AC])) {
             try {
                 $filter = '';
                 if (null !== $subject) {
@@ -584,10 +592,10 @@ class Erfurt_Store
                         $o = $object['value'];
                         if (isset($object['datatype'])) {
                             $dt = $object['datatype'];
-                            $filter .= "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>) .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (datatype(?o) = <$dt>)) .\n";
                         } else if (isset($object['lang'])) {
                             $lang = $object['lang'];
-                            $filter .= "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\") .\n";
+                            $filter .= "FILTER ((?o = \"$o\") && (lang(?o) = \"$lang\")) .\n";
                         } else {
                             $filter .= "FILTER (?o = \"$o\") .\n";
                         }
@@ -604,7 +612,10 @@ WHERE {
 EOF;
                 $result = $this->sparqlQuery(
                     $sparql,
-                    array(Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,  Erfurt_Store::USE_AC => $options['use_ac'])
+                    array(
+                        Erfurt_Store::RESULTFORMAT => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                        Erfurt_Store::USE_AC => $options[Erfurt_Store::USE_AC]
+                    )
                 );
                 $ret = count($result['results']['bindings']);
                 $stmts = array();
@@ -734,7 +745,11 @@ EOF;
         $this->_backendAdapter->deleteModel($modelIri);
 
         // and history
-        Erfurt_App::getInstance()->getVersioning()->deleteHistoryForModel($modelIri);
+        $isVersioningEnabled = false ;
+        $versioning = Erfurt_App::getInstance()->getVersioning();
+        if ($versioning != false) {
+            $isVersioningEnabled = $versioning->deleteHistoryForModel($modelIri);
+        }
 
         $queryCache = Erfurt_App::getInstance()->getQueryCache();
         $queryCache->invalidateWithModelIri($modelIri);
@@ -979,7 +994,7 @@ EOF;
      *
      * @param string $modelIri
      */
-    private function _getImportsClosure($modelIri, $withHiddenImports = true)
+    private function _getImportsClosure($modelIri, $withHiddenImports = true, $useAC = true)
     {
         $currentLevel = $this->_backendAdapter->getImportsClosure($modelIri);
         if ($currentLevel == array($modelIri)) {
@@ -1002,7 +1017,7 @@ EOF;
                     foreach ($graphConfig[$importsUri] as $valueArray) {
                         $currentLevel = array_merge(
                             $currentLevel,
-                            $this->getImportsClosure($valueArray['value'], $withHiddenImports)
+                            $this->getImportsClosure($valueArray['value'], $withHiddenImports, $useAC)
                         );
                     }
                 }
@@ -1065,7 +1080,7 @@ EOF;
             } else {
                 // use generic implementation
                 $owlQuery = new Erfurt_Sparql_SimpleQuery();
-                $owlQuery->setProloguePart('ASK')
+                $owlQuery->setAsk(true)
                          ->addFrom($modelIri)
                          ->setWherePart('{<' . $modelIri . '> <' . EF_RDF_NS . 'type> <' . EF_OWL_ONTOLOGY . '>.}');
 
@@ -1793,14 +1808,14 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
             // Fetch the graph configurations
             $queryObject = new Erfurt_Sparql_SimpleQuery();
-            $queryObject->setProloguePart('SELECT ?s ?p ?o');
+            $queryObject->setSelectClause('SELECT ?s ?p ?o');
             $queryObject->setFrom(array($sysOntModelUri));
             $queryObject->setWherePart('WHERE { ?s ?p ?o . ?s a <http://ns.ontowiki.net/SysOnt/Model> }');
 
             $queryoptions = array(
-                'use_ac'                 => false,
-                'result_format'          => Erfurt_Store::RESULTFORMAT_EXTENDED,
-                'use_additional_imports' => false
+                Erfurt_Store::USE_AC                    => false,
+                Erfurt_Store::RESULTFORMAT              => Erfurt_Store::RESULTFORMAT_EXTENDED,
+                Erfurt_Store::USE_ADDITIONAL_IMPORTS    => false
             );
 
             $stmtArray = array();
@@ -1927,7 +1942,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
         } else {
             $query = new Erfurt_Sparql_SimpleQuery();
-            $query->setProloguePart('SELECT DISTINCT ?graph')
+            $query->setSelectClause('SELECT DISTINCT ?graph')
                 ->setWherePart('WHERE {GRAPH ?graph {<' . $resourceUri . '> ?p ?o.}}');
 
             $graphResult = array();
@@ -2133,7 +2148,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         return $fetchedDesc;
     }
 
-
     // ------------------------------------------------------------------------
     // --- Protected Methods --------------------------------------------------
     // ------------------------------------------------------------------------
@@ -2142,7 +2156,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
      * fetches the PHP/RDF statments array description array
      *
      * @param string       $resourceIri The Iri, which identifies the resource.
-     * @param string|false $modelIri    The Iri, which identifies the model or 
+     * @param string|false $modelIri    The Iri, which identifies the model or
      *     false for store wide descriptions
      * @param array        $options     Array of different options:
      *     Erfurt_Store::USE_AC = true|false - use access control
@@ -2161,13 +2175,13 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         $memoryModel = new Erfurt_Rdf_MemoryModel();
 
         $query = new Erfurt_Sparql_SimpleQuery();
-        $query->setProloguePart('SELECT ?p ?o')
+        $query->setSelectClause('SELECT ?p ?o')
             ->setWherePart("{<$resourceIri> ?p ?o . }");
 
         // prepare an additional query for inverse properties
         if (isset($options['fetchInverse']) && $options['fetchInverse'] === true) {
             $inverseQuery = new Erfurt_Sparql_SimpleQuery();
-            $inverseQuery->setProloguePart('SELECT ?s ?p')
+            $inverseQuery->setSelectClause('SELECT ?s ?p')
                 ->setWherePart("{?s ?p <$resourceIri> . }");
         } else {
             $inverseQuery = false;

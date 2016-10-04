@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -234,7 +234,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $arSel = array();
         foreach ($arSpecialVars as $strSparqlVar) {
             if (!isset($this->arVarAssignments[$strSparqlVar])) {
-                require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
                 throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Variable "' . $strSparqlVar . '" not selected.');
             }
    
@@ -256,7 +255,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         $arResult = $this->_engine->sqlQuery($sql);
 
         if ($arResult === false) {
-            require_once 'Erfurt/Sparql/EngineDb/SqlGeneratorException.php';
             throw new Erfurt_Sparql_EngineDb_SqlGeneratorException('Error reading typesets: ' . $sql);
         }
 
@@ -452,7 +450,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         }
 
         if (count($sqlOrder) === 0) {
-            require_once 'Erfurt/Exception.php';
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
 //var_dump($sqlOrder);exit;

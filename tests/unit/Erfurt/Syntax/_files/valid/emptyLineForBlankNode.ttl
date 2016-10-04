@@ -1,0 +1,14 @@
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+
+<https://www.w3.org/TR/xhtml-rdfa-primer/>   bibo:editor [ ] .
+
+<https://www.w3.org/TR/xhtml-rdfa-primer/#1> bibo:editor [] .
+
+<https://www.w3.org/TR/xhtml-rdfa-primer/#2> bibo:editor [ 
+
+                  
+          ] .
+
+<https://www.w3.org/TR/xhtml-rdfa-primer/#3> bibo:editor [ a bibo:test ] .
+
+<https://www.w3.org/TR/xhtml-rdfa-primer/#4> bibo:editor [ bibo:a "editor" ] .

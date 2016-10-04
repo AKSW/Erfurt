@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -44,7 +44,6 @@ class Erfurt_Syntax_RdfParser
             case 'rdfxml':
             case 'xml':
             case 'rdf':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfXml.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfXml();
                 break;
             case 'turtle':
@@ -54,16 +53,13 @@ class Erfurt_Syntax_RdfParser
             case 'ntriples':
             case 'n3':
             case 'rdfn3':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/Turtle.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_Turtle();
                 break;
             case 'json':
             case 'rdfjson':
-                require_once 'Erfurt/Syntax/RdfParser/Adapter/RdfJson.php';
                 $this->_parserAdapter = new Erfurt_Syntax_RdfParser_Adapter_RdfJson();
                 break;
             default:
-                require_once 'Erfurt/Syntax/RdfParserException.php';
                 throw new Erfurt_Syntax_RdfParserException("Format '$format' not supported");
         }        
     }
@@ -154,7 +150,6 @@ class Erfurt_Syntax_RdfParser
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseNamespacesFromDataString($dataPointer);
         } else {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');
         }
         
@@ -180,7 +175,6 @@ class Erfurt_Syntax_RdfParser
         } else if ($pointerType === self::LOCATOR_DATASTRING) {
             $result = $this->_parserAdapter->parseFromDataStringToStore($dataPointer, $modelUri, $useAc, $baseUri);
         } else {
-            require_once 'Erfurt/Syntax/RdfParserException.php';
             throw new Erfurt_Syntax_RdfParserException('Type of data pointer not valid.');
         }
         

@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -140,13 +140,11 @@ class Erfurt_Store_Adapter_Virtuoso_ResultConverter_Extended
     {
         // parse the data
         if (xml_parse($this->_parser, (string)$xmlSparqlResults) !== 1) {
-            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception('XML parsing error.');
         }
         
         // this should never happen
         if (!$this->_saneResults) {
-            require_once 'Erfurt/Store/Adapter/Virtuoso/ResultConverter/Exception.php';
             throw new Erfurt_Store_Adapter_Virtuoso_ResultConverter_Exception(
                 'Could not parse result set. The XML result format might have changed. Please check the parser.');
         }

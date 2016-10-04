@@ -1,13 +1,11 @@
 <?php
 /**
- * This file is part of the {@link http://aksw.org/Projects/Erfurt Erfurt} project.
+ * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
-require_once 'Zend/Auth/Adapter/Interface.php';
-require_once 'Zend/Auth/Result.php';
 
 /**
  * Erfurt RDF authentication adapter.
@@ -48,7 +46,6 @@ class Erfurt_Auth_Adapter_None implements Zend_Auth_Adapter_Interface
             'anonymous' => (($this->_username === 'Anonymous') ? true : false)
         );
         
-        require_once 'Erfurt/Auth/Identity.php';
         $identityObject = new Erfurt_Auth_Identity($identity);
         $authResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $identityObject);
         

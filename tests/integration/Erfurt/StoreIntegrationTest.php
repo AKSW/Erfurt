@@ -143,7 +143,6 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $store = Erfurt_App::getInstance()->getStore();
         
         $query = 'COUNT WHERE { ?s ?p "SomethingThatDoesNotExistsIGUUGIZFZTFVBhjscjkggniperegrthhrt" . }';
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         
         $result = $store->sparqlQuery($simpleQuery);
@@ -160,13 +159,12 @@ class Erfurt_StoreIntegrationTest extends Erfurt_TestCase
         $query = 'COUNT 
                   FROM <http://localhost/OntoWiki/Config/> 
                   WHERE { 
-            ?s ?p ?o . 
+            <http://localhost/OntoWiki/Config/Admin> ?p ?o .
         }';
-        require_once 'Erfurt/Sparql/SimpleQuery.php';
         $simpleQuery = Erfurt_Sparql_SimpleQuery::initWithString($query);
         $result = $store->sparqlQuery($simpleQuery);
 
-        $this->assertEquals(208, $result);
+        $this->assertEquals(4, $result);
     }
     
     public function testCountWhereMatchesWithNonExistingModel()

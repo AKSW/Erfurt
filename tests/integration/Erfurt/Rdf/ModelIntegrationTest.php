@@ -191,12 +191,12 @@ class Erfurt_Rdf_ModelIntegrationTest extends Erfurt_TestCase
                         array('value' => $modelUri.'old', 'type' => 'literal'),
                         array('value' => $modelUri.'o2', 'type' => 'uri'),
                     ),
-                    'lang' => array(
+                    $modelUri.'lang' => array(
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'en'),
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'de'),
                         array('value' => 'LANG', 'type' => 'literal', 'lang' => 'mn'),
                     ),
-                    'type' => array(
+                    $modelUri.'type' => array(
                         array('value' => 'TYPE', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#string'),
                     ),
                 ),

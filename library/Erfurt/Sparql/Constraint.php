@@ -2,8 +2,8 @@
 /**
  * This file is part of the {@link http://erfurt-framework.org Erfurt} project.
  *
- * @copyright Copyright (c) 2012, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ * @copyright Copyright (c) 2012-2016, {@link http://aksw.org AKSW}
+ * @license   http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 
 /**
@@ -294,7 +294,6 @@ class Erfurt_Sparql_Constraint
                     break;
                 case '!':
                     if ($tree != array()) {
-                        require_once 'Erfurt/Sparql/ParserException.php';
                         throw new Erfurt_Sparql_ParserException(
                             'Unexpected "!" negation in constraint.', -1, current($this->_tokens)
                         );
@@ -321,7 +320,6 @@ class Erfurt_Sparql_Constraint
             if ($this->_varCheck($tok)) {
                 if (!$parens && $nLevel === 0) {
                     // Variables need parenthesizes first
-                    require_once 'Erfurt/Sparql/ParserException.php';
                     throw new Erfurt_Sparql_ParserException(
                         'FILTER expressions that start with a variable need parenthesizes.',
                         -1,
@@ -336,7 +334,6 @@ class Erfurt_Sparql_Constraint
                 );
             } else if (substr($tok, 0, 2) === '_:') {
                 // syntactic blank nodes not allowed in filter
-                require_once 'Erfurt/Sparql/ParserException.php';
                 throw new Erfurt_Sparql_ParserException(
                     'Syntactic Blanknodes not allowed in FILTER.', -1, current($this->_tokens)
                 );
@@ -389,7 +386,6 @@ class Erfurt_Sparql_Constraint
         }
 
         if ((count($tree) === 0) && (count($part) > 1)) {
-            require_once 'Erfurt/Sparql/ParserException.php';
             throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
         }
 
