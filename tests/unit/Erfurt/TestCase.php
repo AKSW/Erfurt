@@ -93,7 +93,7 @@ class Erfurt_TestCase extends PHPUnit_Framework_TestCase
             $store->checkSetup();
             $this->_dbWasUsed = true;
         } catch (Erfurt_Store_Exception $e) {
-            if ($e->getCode() === 20) {
+            if ($e->getCode() === Erfurt_Exception::SYSTEM_MODELS_IMPORTED) {
                 // Setup successful
                 $this->_dbWasUsed = true;
             } else {
