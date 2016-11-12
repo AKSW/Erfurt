@@ -1131,6 +1131,13 @@ EOF;
      */
     public function getNewModel($modelIri, $baseIri = '', $type = Erfurt_Store::MODEL_TYPE_OWL, $useAc = true)
     {
+        //check if the $modelIri is a valid IRI
+            if (!Erfurt_Uri::check($modelIri)) {
+                $message = defined('_EFDEBUG')
+                ? 'Failed creating the model. The chosen IRI is not valid.'
+                : 'Failed creating the model.';
+                throw new Erfurt_Store_Exception($message, Erfurt_Exception::INVALID_IRI_ERROR);
+            }
         // check model availablity
         if ($this->isModelAvailable($modelIri, false)) {
             // if debug mode is enabled create a more detailed exception description. If debug mode is disabled the
