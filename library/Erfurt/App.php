@@ -243,7 +243,9 @@ class Erfurt_App
                 define('_EFDEBUG', 1);
             }
 
-            // In debug mode log level is set to the highest value automatically.
+            //In debug mode logging is enabled and log level is set to the
+            //highest value automatically.
+            $config->log->enabled = true;
             $config->log->level = 7;
         }
 
@@ -697,7 +699,7 @@ class Erfurt_App
         if (!isset($this->_logObjects[$logIdentifier])) {
             $config = $this->getConfig();
 
-            if ((boolean)$config->log->level !== false) {
+            if ((boolean) $config->log->enabled == true) {
                 $logDir = $this->getLogDir();
 
                 $logWriter = null;
@@ -736,7 +738,7 @@ class Erfurt_App
             $logger = new Zend_Log($logWriter);
 
             // filter according to the given log level
-            if ((boolean) $config->log->level !== false) {
+            if ((boolean) $config->log->enabled == true) {
                 $levelFilter = new Zend_Log_Filter_Priority((int) $config->log->level, '<=');
                 $logger->addFilter($levelFilter);
             }

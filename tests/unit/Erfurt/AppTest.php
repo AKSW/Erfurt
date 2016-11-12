@@ -65,7 +65,8 @@ class Erfurt_AppTest extends Erfurt_TestCase
         $app = Erfurt_App::getInstance(false)->start($testConfig);
 
         $this->assertTrue(defined('_EFDEBUG'));
-        $this->assertEquals(7, $app->getConfig()->log->level);
+        $this->assertEquals(7, (int) $app->getConfig()->log->level);
+        $this->assertEquals(true, (boolean) $app->getConfig()->log->enabled);
         $this->assertEquals((E_ALL | E_STRICT), error_reporting());
     }
 
@@ -330,6 +331,7 @@ class Erfurt_AppTest extends Erfurt_TestCase
     {
         $app = Erfurt_App::getInstance();
         $config = $app->getConfig();
+        $config->log->enabled = true;
         $config->log->level = 7;
         $config->log->path  = $app->getTmpDir();
 
