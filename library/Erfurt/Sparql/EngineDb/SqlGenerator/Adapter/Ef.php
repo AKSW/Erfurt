@@ -207,10 +207,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
 
         foreach ($this->query->getResultPart() as $graphPattern) {
             
-            #if ($graphPattern->isEmpty()) {
-            #    continue;
-            #}
-            
             if ($graphPattern->getUnion() !== null) {
                 ++$this->nUnionCount;
                 $this->nTableId                 = 0;
@@ -395,14 +391,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $bWhereEqualitySubject = true;
                 $this->arUsedVarTypes[$subject]['s'] = true;
             } else {
-                #if (isset($this->arVarAssignments[$subject][0])) {
-                #    $strTablePrefix = $this->arVarAssignments[$subject][0];
-                #}
                 if (!isset($this->arVarAssignments[$subject])) {
                     $this->arVarAssignments[$subject] = array($strTablePrefix, 's');
                 }
                 
-                #$this->arVarAssignments[$subject] = array($strTablePrefix, 's');
                 $this->arVarAssignments[$subject][1] = 's';
                 $this->arUnionVarAssignments[$this->nUnionCount][$subject] = array($strTablePrefix, 's');
                 $this->arUsedVarTypes[$subject]['s'] = true;
@@ -433,14 +425,10 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $bWhereEqualityPredicate = true;
                 $this->arUsedVarTypes[$predicate]['p'] = true;
             } else {
-                #if (isset($this->arVarAssignments[$predicate][0])) {
-                #    $strTablePrefix = $this->arVarAssignments[$predicate][0];
-                #}
                 if (!isset($this->arVarAssignments[$predicate])) {
                     $this->arVarAssignments[$predicate] = array($strTablePrefix, 'p');
                 }
                 
-                #$this->arVarAssignments[$predicate] = array($strTablePrefix, 'p');
                 $this->arVarAssignments[$predicate][1] = 'p';
                 $this->arUnionVarAssignments[$this->nUnionCount][$predicate] = array($strTablePrefix, 'p');
                 $this->arUsedVarTypes[$predicate]['p'] = true;
@@ -467,9 +455,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                 $bWhereEqualityObject = true;
                 $this->arUsedVarTypes[$object]['o'] = true;
             } else {
-                #if (isset($this->arVarAssignments[$object][0])) {
-                #    $strTablePrefix = $this->arVarAssignments[$object][0];
-                #}
                 if (!isset($this->arVarAssignments[$object])) {
                     $this->arVarAssignments[$object] = array($strTablePrefix, 'o');
                 }
@@ -712,7 +697,6 @@ class Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef extends Erfurt_Sparql_Engin
                     $ar[] = implode(',', $arVarParts);
                     $arHasItems = true;
                 }
-                // if (count($ar) > 0) {
                 if ( true === $arHasItems ) {
                     $arNewSelect[0][] = implode(',', $ar);
                 }

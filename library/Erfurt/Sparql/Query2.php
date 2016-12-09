@@ -84,7 +84,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
     
     public function __construct($type = null)
     {
-        //parent::__construct();
         $this->order = new Erfurt_Sparql_Query2_OrderClause();
         $this->where = new Erfurt_Sparql_Query2_GroupGraphPattern;
 
@@ -100,7 +99,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
         foreach ($this as $key => $val) {
             if (is_object($val)||(is_array($val))) {
                 $this->{$key} = unserialize(serialize($val));
-                //$this->$key= clone($this->$key); 
             }
         }
     } 
@@ -229,11 +227,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
             break;
             case self::typeAsk:
                 //ask has no solution modifyer - delete?
-                //$this->setLimit(0);
-                //$this->setOffset(0);
-                //$this->order = new Erfurt_Sparql_Query2_OrderClause();
-                //$this->distinctReducedMode = 0;
-                //$this->projectionVars = array();
             break;
             case self::typeDescribe:
             break;
@@ -374,10 +367,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function setOffset($noffset)
     {
-        //if ($this->type == self::typeAsk)
-        //    throw new RuntimeException("Trying to set solution modifier \"Offset\"".
-        //      " in an ASK-Query - not possible");
-        
         $this->offset = $noffset;
         return $this; //for chaining
     }
@@ -734,12 +723,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
             }
         }
         
-        /*if (!in_array($var, $this->where->getVars())) {
-            trigger_error('Trying to add projection-var ('.$var->getSparql().') '.
-         * 'that is not used in pattern', E_USER_NOTICE);
-            return $this; //for chaining
-        }*/
-        
         if (count($this->projectionVars) == 0){
             //if the first var is added: deactivate the star.
             //maybe always?
@@ -868,11 +851,6 @@ class Erfurt_Sparql_Query2 //extends Erfurt_Sparql_Query2_ContainerHelper
      */
     public function getOrder()
     {
-        //if ($this->type == self::typeAsk) {
-        //  throw new RuntimeException(
-        //      "Trying to set solution modifier \"Order\" in an ASK-Query - not possible"
-        //  );
-        //}
         return $this->order;
     }
     

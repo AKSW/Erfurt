@@ -130,15 +130,6 @@ class Erfurt_Sparql_Query2_Abstraction_ClassNode
         $optionalpart->addElement($triple);
         $query->getWhere()->addElement($optionalpart);
 
-        /* filtered now in php
-          $filter = new Erfurt_Sparql_Query2_Filter(
-            new Erfurt_Sparql_Query2_UnaryExpressionNot(
-                new Erfurt_Sparql_Query2_isBlank($var)
-            )
-        );*/
-
-        //$optionalpart->addElement($filter);
-
         $query->addProjectionVar($var);
         
         return array('optional' => $optionalpart, 'var' => $var, 'filter' => null);

@@ -655,14 +655,6 @@ class Erfurt_Rdf_Model
         return $this->getStore()->sparqlQuery($query, $options);
     }
 
-    /*public function sparqlQueryWithPlainResult($query)
-    {
-        $queryObject = Erfurt_Sparql_SimpleQuery::initWithString($query);
-        $queryObject->addFrom($this->_graphUri);
-
-        return $this->getStore()->sparqlQuery($queryObject);
-    }*/
-
     /**
      * set the model store
      *

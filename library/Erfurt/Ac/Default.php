@@ -373,24 +373,6 @@ class Erfurt_Ac_Default
             // Every Action allowed
             return true;
         } else {
-            // create action instance
-            // array for new statements (an action instance pus label)
-            /*
-            $actionStmt = array(
-                $actionUri => array (
-                    EF_RDF_TYPE => array (
-                        array ( 'type' => 'uri' , 'value' => $this->_uris['actionClassUri'] )
-                    ) ,
-                    EF_RDFS_LABEL => array (
-                        array ( 'type' => 'literal' , 'value' => $action )
-                    )
-                )
-            );
-
-            $store = Erfurt_App::getInstance()->getStore();
-            $store->addMultipleStatements($this->_uris['acModelUri'], $actionStmt, false);
-            */
-
             return false;
         }
     }

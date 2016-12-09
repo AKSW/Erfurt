@@ -123,97 +123,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     }
 
     /**
-     *   Create a prepared statement that can be executed later.
-     *
-     *   @param  Dataset       $dataset    RDF Dataset
-     *   @param  Query         $query      Parsed SPARQL query
-     *
-     *   @return SparqlEngineDb_PreparedStatement Prepared statment that can
-     *           be execute()d later.
-     */
-    /*public function prepare(Dataset $dataset, Query $query)
-    {
-        //require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/PreparedStatement.php';
-        //require_once RDFAPI_INCLUDE_DIR . 'sparql/SparqlEngineDb/Preparator.php';
-
-        $this->query   = $query;
-        $this->dataset = $dataset;
-        $this->sg = new SparqlEngineDb_SqlGenerator   ($this->query, $this->dbConn, $this->arModelIds);
-        $this->rc = new SparqlEngineDb_ResultConverter($this->query, $this->sg, $this);
-        $this->ts = new SparqlEngineDb_TypeSorter     ($this->query, $this->dbConn);
-        $this->pr = new SparqlEngineDb_Preparator     ($this->query, $this->dbConn);
-
-        $this->arPrepared = $this->sg->createSql();
-        $this->ts->setData($this->sg);
-
-        if ($this->ts->willBeDataDependent()) {
-            $this->bRealPrepared = false;
-        } else {
-            $this->bRealPrepared     = true;
-            list($strSelect, $strFrom, $strWhere) = $this->arPrepared;
-            $this->arPreparedQueries = $this->ts->getOrderifiedSqls(
-                $strSelect,
-                $strFrom,
-                $strWhere
-            );
-            $this->arDbStatements    = $this->pr->prepareInDb(
-                $this->arPreparedQueries,
-                $this->sg->getPlaceholders()
-            );
-        }
-
-
-        return new SparqlEngineDb_PreparedStatement(
-            $this
-        );
-    }*/
-    
-    /**
-     *   Execute a prepared statement by filling it with variables
-     *
-     *   @param array $arVariables   Array with (variable name => value) pairs
-     *   @param string $resultform   Which form the result should have
-     *
-     *   @return mixed   Result according to $resultform
-     */
-    /*public function execute($arVariables, $resultform = false)
-    {
-        if ($this->arPrepared === null) {
-            throw new Exception('You need to prepare() the query first.');
-        }
-
-        if ($this->bRealPrepared) {
-            return
-                SparqlEngineDb_ResultConverter::convertFromDbResults(
-                    $this->pr->execute(
-                        $this->arDbStatements,
-                        $arVariables
-                    ),
-                    $this,
-                    $resultform
-                );
-        } else {
-            list($strSelect, $strFrom, $strWhere) = $this->arPrepared;
-
-            return SparqlEngineDb_ResultConverter::convertFromDbResults(
-                $this->_queryMultiple(
-                    $this->ts->getOrderifiedSqls(
-                        $strSelect,
-                        $strFrom,
-                        $this->pr->replacePlaceholdersWithVariables(
-                            $strWhere,
-                            $this->sg->getPlaceholders(),
-                            $arVariables
-                        )
-                    )
-                ),
-                $this,
-                $resultform
-            );
-        }
-    }*/
-
-    /**
      * Query the database with the given SPARQL query.
      *
      * @param Erfurt_SparqlQuery $query Parsed SPARQL query.
@@ -243,9 +152,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
             case 'xml':
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Xml();
                 break;
-                //throw new Erfurt_Exception('XML result format not supported yet.');
-                //$this->rc = new Erfurt_Sparql_EngineDb_ResultRenderer_RapZendDb_Xml();
-                //break;
             case 'extended':
                 $rc = new Erfurt_Sparql_EngineDb_ResultRenderer_Extended();
                 break;
@@ -271,7 +177,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         $this->_setOptions();
 
         $arSqls = $this->sg->createSql();
-        #var_dump($arSqls);exit;
         
         $this->ts->setData($this->sg);
         
@@ -298,8 +203,6 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
     protected function _queryDb($arSql, $nOffset, $nLimit)
     {
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($this->query, $arSql);
-#var_dump($nLimit, $nOffset);
-#echo $strSql;
         if ($strSql === '()') {
             return array();
         }
@@ -361,16 +264,4 @@ class Erfurt_Sparql_EngineDb_Adapter_EfZendDb
         return $arResults;
     }
 
-    /**
-     * Set options to subobjects like SqlGenerator
-     */
-    protected function _setOptions()
-    {
-        // allow changing the statements' table name
-        //if (isset($GLOBALS['RAP']['conf']['database']['tblStatements'])) {
-        //    $this->sg->setStatementsTable(
-        //        $GLOBALS['RAP']['conf']['database']['tblStatements']
-        //    );
-        //}
-    }
 }

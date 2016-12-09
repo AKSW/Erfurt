@@ -19,12 +19,8 @@ class Erfurt_Sparql_Parser_Util_CaseInsensitiveStream extends ANTLRStringStream
 		}
 
 		if ( ($this->p+$i-1) >= $this->n ) {
-	        //System.out.println("char LA("+i+")=EOF; p="+p);
 	        return CharStreamConst::$EOF;
 	        }
-	// echo ord(strtolower(chr($this->data[$this->p+$i-1]))) . "\n";
-	        //System.out.println("char LA("+i+")="+(char)data[p+i-1]+"; p="+p);
-		//System.out.println("LA("+i+"); p="+p+" n="+n+" data.length="+data.length);
 		return ord(strtolower(chr($this->data[$this->p+$i-1])));
 		
 	}

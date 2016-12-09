@@ -41,7 +41,6 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
 
         return $parents;
     }
-    //abstract public function addElement($member); //not used because some use typehinting some do it internally for multiple types
 
     /**
      * getElement
@@ -80,7 +79,6 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
         return $ret;
     }
 
-    //abstract public function setElement($i, $member); //not used because some use typehinting some do it internally
     abstract public function setElements($elements);
 
     /**
@@ -116,7 +114,6 @@ abstract class Erfurt_Sparql_Query2_ContainerHelper extends Erfurt_Sparql_Query2
                 }
             }
         }
-        //$toDelete->removeParent($this);
         $this->elements = $new;
 
         return $this; //for chaining
