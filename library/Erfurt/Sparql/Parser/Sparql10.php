@@ -22,7 +22,6 @@ class Erfurt_Sparql_Parser_Sparql10 implements Erfurt_Sparql_Parser_Interface
 		$retval=null;
 		$input = new Erfurt_Sparql_Parser_Util_CaseInsensitiveStream($queryString);
 		$lexer = new Erfurt_Sparql_Parser_Sparql10_Sparql10Lexer($input);
-//		if (!count($lexer->getErrors())) {
 			$tokens = new CommonTokenStream($lexer);
 			$parser = new Erfurt_Sparql_Parser_Sparql10_Sparql10Parser($tokens);
 			if($parsePartial != null && is_string($parsePartial) && method_exists($parser, $parsePartial)){
@@ -30,12 +29,8 @@ class Erfurt_Sparql_Parser_Sparql10 implements Erfurt_Sparql_Parser_Interface
                         } else {
                             $retval =  $parser->parse();
                         }
-//		}
 		return array('retval' =>$retval, 'errors'=>
-			//array_merge($lexer->getErrors(), 
-			//$parser?
 			$parser->getErrors()
-			//:array())
 			);
 	}
 	

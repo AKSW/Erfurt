@@ -1489,8 +1489,6 @@ EOF;
              //the query will be altered here to implement AC and owl:imports
              //dont make these changes global
             $queryObject = clone $queryObject;
-            //bring triples etc. to canonical order
-            // $queryObject->optimize();
         }
 
         $defaultOptions = array(
@@ -1515,13 +1513,6 @@ EOF;
                 'Erfurt_Sparql_Query2, Erfurt_Sparql_SimpleQuery or string', 1
             );
         }
-
-        /*
-if ($options[Erfurt_Store::USE_AC] == false) {
-            //we are done preparing early
-            return $queryObject;
-        }
-*/
 
         $logger = $this->_getQueryLogger();
 
@@ -1716,8 +1707,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                         $sparqlResult['results'] = array();
                         $sparqlResult['results']['bindings'] = array();
                     } else {
-                        //var_dump($queryString);exit;
-                        //exit;
                         throw new Erfurt_Store_Exception('invalid query result.');
                     }
                 }
@@ -1791,9 +1780,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             }
             return $result;
         }
-
-        // TODO: will throw an exception
-        // throw new Erfurt_Store_Exception('Current backend doesn not support SQL queries.');
     }
 
     /**
@@ -2226,15 +2212,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
                     $row['p'],
                     $row['o']
                 );
-
-                // todo: implement blank node fetching here
-                //if ($row['o']['type'] === 'bnode') {
-                    //$nodeId  = $row['o']['value'];
-                    //$bNode   = self::initWithBlankNode($nodeId, $this->_model);
-                    //$nodeKey = sprintf('_:%s', $nodeId);
-
-                    //$description[$nodeKey] = $bNode->getDescription($maxDepth-1);
-                //}
             }
         }
 
@@ -2410,7 +2387,6 @@ if ($options[Erfurt_Store::USE_AC] == false) {
 
             $classes = array();
             foreach ($result as $row) {
-                // $key = $inverse ? $row['child'] : $row['parent'];
                 $key = $inverse ? $row['child'] : $row['parent'];
                 $closure[$key] = array(
                     'node'   => $inverse ? $row['child'] : $row['parent'],

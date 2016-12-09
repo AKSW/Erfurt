@@ -236,8 +236,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         if (!$this->_connection) {
             $options = $this->_adapterOptions;
 
-            // ini_set('odbc.default_cursortype', SQL_CURSOR_FORWARD_ONLY);
-
             // determine connection function
             if ((isset($options['use_persistent_connection'])) &&
                 ((boolean) $options['use_persistent_connection'] === true)) {
@@ -494,11 +492,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
                 new Erfurt_Sparql_Query2_Equals($strExpression, $literalExpression)
             );
         } else {
-            // string >= bifLimit characters
-            // if (false === strpos($stringSpec, '*')) {
-            //                 $stringSpec .= '*';
-            //             }
-
             $bifPrefix = new Erfurt_Sparql_Query2_Prefix(
                 'bif',
                 new Erfurt_Sparql_Query2_IriRef('SparqlProcessorShouldKnow')
@@ -527,7 +520,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         }
 
         $searchPattern[] = $filter;
-#var_dump((string)$searchPattern[1]);exit;
         return $searchPattern;
     }
 
@@ -1046,11 +1038,8 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
         $sparqlQuery = addcslashes($sparqlQuery, '\'\\');
 
         //build Virtuoso/PL query
-        //$virtuosoPl = 'SPARQL ' . $sparqlQuery;
 
         $virtuosoPl = $graphSpec . 'CALL DB.DBA.SPARQL_EVAL(\'' . $sparqlQuery . '\', ' . $graphUri . ', 0)';
-#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-#        $resultId   = odbc_exec($resultId, $virtuosoPl);
         $resultId   = @odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
@@ -1077,8 +1066,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
 
         //build Virtuoso/PL query
         $virtuosoPl = 'SPARQL ' . $sparqlQuery;
-#        $resultId   = odbc_prepare($this->connection(), $virtuosoPl);
-#        $resultId   = odbc_exec($resultId, $virtuosoPl);
         $resultId   = odbc_exec($this->connection(), $virtuosoPl);
 
         if (false === $resultId) {
@@ -1098,8 +1085,6 @@ class Erfurt_Store_Adapter_Virtuoso implements Erfurt_Store_Adapter_Interface, E
      */
     protected function _execSql($sqlQuery)
     {
-#        $resultId   = odbc_prepare($this->connection(), $sqlQuery);
-#        $resultId   = odbc_exec($resultId, $sqlQuery);
         $resultId   = @odbc_exec($this->connection(), $sqlQuery);
         if (false === $resultId) {
             $message = sprintf('SQL Error: %s in query: %s', $this->getLastError(), $sqlQuery);

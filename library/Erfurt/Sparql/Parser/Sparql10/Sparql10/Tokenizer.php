@@ -57,9 +57,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA15_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 15;
         $this->eot = $DFA['eot'];
@@ -443,9 +441,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Tokenizer_DFA36_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 36;
         $this->eot = $DFA['eot'];

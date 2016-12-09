@@ -220,6 +220,15 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
 
                     $sqlString .= "($graphId, $sValue, $pValue, $oValue,";
 
+                        #$data = array(
+                        #    'g'     => $graphId,
+                        #    's'     => $subject,
+                        #    'p'     => $predicate,
+                        #    'o'     => $object['value'],
+                        #    'st'    => $subjectIs,
+                        #    'ot'    => $objectIs
+                        #);
+
                     if ($sRef !== false) {
                         $sqlString .= "$sRef,";
                     } else {
@@ -1081,7 +1090,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } else {
             try {
                 $result = @$this->_dbConn->fetchAll($sqlQuery);
-            } catch (Zend_Db_Exception $e) { #return false;
+            } catch (Zend_Db_Exception $e) {
                 throw new Erfurt_Store_Adapter_Exception(
                     $e->getMessage()
                 );

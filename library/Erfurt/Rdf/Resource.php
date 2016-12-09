@@ -262,8 +262,6 @@ class Erfurt_Rdf_Resource extends Erfurt_Rdf_Node
                 $this->_descriptionResource($property);
 
                 $currentValue = array(
-                    // typed-literal --> literal
-                    // 'type' => str_replace('typed-', '', $row['o']['type']),
                     'type' => $row['o']['type'],
                     'value' => $row['o']['value']
                 );

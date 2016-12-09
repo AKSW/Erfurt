@@ -380,19 +380,14 @@ class Erfurt_Ping
         $wrapperResult = $wrapper->run($r, null, true);
 
         $newStatements = null;
-        if ($wrapperResult === false) {
-            // IMPORT_WRAPPER_NOT_AVAILABLE;
-        } else if (is_array($wrapperResult)) {
+        if (is_array($wrapperResult)) {
             $newStatements = $wrapperResult['add'];
             // TODO make sure to only import the specified resource
             $newModel = new Erfurt_Rdf_MemoryModel($newStatements);
             $newStatements = array();
             $object = array('type' => 'uri', 'value' => $targetUri);
             $newStatements = $newModel->getP($sourceUri, $object);
-        } else {
-            // IMPORT_WRAPPER_ERR;
         }
-
         return $newStatements;
     }
 

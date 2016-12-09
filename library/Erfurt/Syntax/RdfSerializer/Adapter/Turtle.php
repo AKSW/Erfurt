@@ -311,10 +311,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_Turtle implements Erfurt_Syntax_RdfSer
                 $prefix = null;
                 $uri = substr($uri, $splitIdx);
             } else {
-                // We need to support large exports so we add namespaces once and write uris that do not match as
-                // full uris.
-                //$this->_addNamespace($ns);
-                //$prefix = $this->_namespaces[$ns];
             }
 
             if (null !== $prefix) {

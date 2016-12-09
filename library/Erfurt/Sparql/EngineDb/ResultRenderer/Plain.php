@@ -258,37 +258,11 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Plain implements Erfurt_Sparql_Engin
                  if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
                      $result = $this->_createLiteral(
                          $row[$this->_vars[$strVarName]['sql_value']], null, null);
-                    
-                    #if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
-                    #    $result = $this->_createLiteral(
-                    #        $row[$this->_vars[$strVarName]['sql_value']],
-                    #        $row[$this->_vars[$strVarName]['sql_lang']],
-                    #        $row[$this->_vars[$strVarName]['sql_type']]
-                    #    );
-                    #} else {
-                    #    $result = $this->_createLiteral(
-                    #        $row[$this->_vars[$strVarName]['sql_value']],
-                    #        $row[$this->_vars[$strVarName]['sql_lang']],
-                    #        $this->uriValues[$row[$this->_vars[$strVarName]['sql_dt_ref']]]
-                    #    );
-                    #}
+
                 } else {
                     $result = $this->_createLiteral(
                          $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]], null, null);
-                    
-                    #if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
-                    #    $result = $this->_createLiteral(
-                    #        $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]],
-                    #        $row[$this->_vars[$strVarName]['sql_lang']],
-                    #        $row[$this->_vars[$strVarName]['sql_type']]
-                    #    );
-                    #} else {
-                    #    $result = $this->_createLiteral(
-                    #        $this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]],
-                    #        $row[$this->_vars[$strVarName]['sql_lang']],
-                    #        $this->uriValues[$row[$this->_vars[$strVarName]['sql_dt_ref']]]
-                    #    );
-                    #}
+
                 }
         }
         

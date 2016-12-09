@@ -359,9 +359,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
         }
 
         return false;
-        // TODO
-        #$this->serializeSubject($value);
-        #return true;
     }
 
     /**
@@ -414,7 +411,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
             && !$this->propertyXMLLiteral($value)
             && !$this->propertyLiteral($value)) {
 
-            #var_dump($value);exit;
             throw new Exception('Could not serialize property '.$property.' with value '.$value);
         }
 
@@ -439,7 +435,6 @@ class Erfurt_Syntax_RdfSerializer_Adapter_RdfXml_RdfWriter
             return true;
         } else if ($node['type'] === 'bnode') {
             return false;
-            #return true;
         } else {
             return false;
         }

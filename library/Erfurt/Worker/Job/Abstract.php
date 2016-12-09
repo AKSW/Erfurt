@@ -250,7 +250,6 @@ abstract class Erfurt_Worker_Job_Abstract
         } else if ($scope == self::SCOPE_GLOBAL) {
             $cacheId = self::CACHEID_PREFIX . $key;
         }
-        //$this->logSuccess('uses cache id '$cacheId);
         return $cacheId;
     }
 

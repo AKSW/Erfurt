@@ -285,9 +285,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
                 $var['datatype'] = array_values(array_unique($var['datatype']));
             }
         }
-        
-
-        //$arTypes = array_unique($arTypes);
 
         return $arTypes;
     }
@@ -409,13 +406,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
             return '';
         }
 
-        #if (count($arTypeSet) === 0) {
-        #    return '';
-        #}
-
-//var_dump($arTypeSet);
-//var_dump($this->arUnionVarAssignments);
-
         $sqlOrder = array();
         foreach ($arSM['order by'] as $arVar) {
             $strSparqlVar = $arVar['val'];
@@ -452,7 +442,6 @@ class Erfurt_Sparql_EngineDb_TypeSorter
         if (count($sqlOrder) === 0) {
             throw new Erfurt_Exception('Something went wrong with ORDER BY.');
         }
-//var_dump($sqlOrder);exit;
         return ' ORDER BY ' . implode(', ', $sqlOrder);
     }//function getSqlOrderBy($arTypeSet = array())
 

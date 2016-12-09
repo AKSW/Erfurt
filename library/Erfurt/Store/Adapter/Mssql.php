@@ -80,9 +80,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
         }
 
-        // we want indexed results
-        //$this->_dbConn->setFetchMode(Zend_Db::FETCH_NUM);
-
         // load title properties for model titles
         $config = Erfurt_App::getInstance()->getConfig();
         if (isset($config->properties->title)) {
@@ -92,16 +89,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
     public function __destruct()
     {
-        #$log = Erfurt_App::getInstance()->getLog();
-
-        #$profiles = $this->_dbConn->getProfiler()->getQueryProfiles();
-
-        #foreach ($profiles as $profile) {
-        #    $debugStr = 'Query: ' . $profile->getQuery() . PHP_EOL;
-        #    $debugStr .= 'Time: ' . $profile->getElapsedSecs() . PHP_EOL;
-        #
-        #    $log->debug($debugStr);
-        #}
     }
 
     // ------------------------------------------------------------------------
@@ -208,7 +195,7 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         $oValue = addslashes($o['value']);
 
                         $sqlString .= "($graphId,'$s','$p','$oValue',";
-
+                        
                         #$data = array(
                         #    'g'     => $graphId,
                         #    's'     => $subject,
@@ -236,9 +223,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
                         $sqlString .= "$subjectIs,$objectIs,'$lang',";
 
-                        #$data['ol'] = $lang;
-
-
                         if (strlen((string)$dType) > $this->_getSchemaRefThreshold()) {
                             $dTypeHash = md5((string)$dType);
 
@@ -254,11 +238,9 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
 
                             $sqlString .= "'$dType',$dtRef)";
                         } else {
-                        #$data['od'] = $dType;
                             $sqlString .= "'$dType',NULL)";
                         }
 
-//                        $insertArray[] = $sqlString;
                         $counter++;
 
                         $finalquery = 'IF NOT EXISTS(Select g, s, p, o, st, ot, ol, od from ef_stmt
@@ -971,8 +953,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                 } else {
                     $sql .= "NULL,NULL)";
                 }
-
-                //$this->_dbConn->getConnection()->query($sql);
             }
 
             if ($count > 10000) {
@@ -1437,8 +1417,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
             } else {
                 $this->_modelInfoCache = array();
 
-                #$rowSet = $result->fetchAll();
-                #var_dump($result);exit;
                 foreach ($result as $row) {
                     if (!isset($this->_modelInfoCache[$row['uri']])) {
                         $this->_modelInfoCache[$row['uri']]['modelId']      = $row['id'];
@@ -1465,8 +1443,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         }
                     }
                 }
-
-                //var_dump($this->_modelInfoCache);exit;
 
                 // build the transitive closure for owl:imports
                 // check for recursive owl:imports; also check for cylces!

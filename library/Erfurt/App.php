@@ -1160,13 +1160,6 @@ class Erfurt_App
                         case 'database':
                             $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Database();
                             break;
-#                       case 'file':
-#                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_File();
-#                            break;
-#
-#                       case 'memory':
-#                            $this->_queryCacheBackend = new Erfurt_Cache_Backend_QueryCache_Memory();
-#                            break;
                         default:
                             throw new Erfurt_Exception('Cache type is not supported.');
                     }

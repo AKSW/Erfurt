@@ -280,7 +280,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     
     protected function _handleCharDataStatement()
     {
-#var_dump($this->_currentCharData);exit;
         if (null !== $this->_currentCharData) {
             if (trim($this->_currentCharData) === '') {
                 $this->_currentCharData = null;
@@ -288,9 +287,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
             }
             
             if (!$this->_topElemIsProperty()) {
-#var_dump($this->_currentCharData);exit;
-#var_dump($this->_statements);
-#var_dump($this->_elementStack);exit;
                 $this->_throwException('Unexpected literal.');
             }
 
@@ -313,7 +309,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     protected function _processNode($name, &$attrs)
     {
         $nodeResource = $this->_getNodeResource($attrs);
-#var_dump($nodeResource);
         if (null === $nodeResource) {
             return;
         }
@@ -475,17 +470,8 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
                     $predicate->setDatatype($datatype);
                 }
                 
-                // Check for about attribute
-                #$about = $this->_removeAttribute($attrs, EF_RDF_NS.'about');
-                #if (null !== $about) {
-                #    $aboutUri = $this->_resolveUri($about);
-                #    $this->_addStatement($aboutUri, EF_RDF_TYPE, $predicate, 'uri');
-// TODO phil    #        
-                #    $this->_processSubjectAttributes($aboutUri, $attrs);
-                #}
             }
         }
-#var_dump($this->_currentElementIsEmpty);
         if ($this->_currentElementIsEmpty) {
             array_pop($this->_elementStack);
         }   
@@ -721,17 +707,7 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
             // Set the handler method for namespace definitions
             xml_set_start_namespace_decl_handler($this->_xmlParser, array($this, '_handleNamespaceDeclaration'));
 
-            //$this->_setNamespaceDeclarationHandler('_handleNamespaceDeclaration');
-
-            //xml_set_end_namespace_decl_handler($xmlParser, array(&$this, '_handleNamespaceDeclaration'));
-
             xml_set_character_data_handler($this->_xmlParser, array($this, '_characterData'));
-
-            //xml_set_external_entity_ref_handler($this->_xmlParser, array($this, '_handleExternalEntityRef'));
-
-            //xml_set_processing_instruction_handler($this->_xmlParser, array($this, '_handleProcessingInstruction'));
-
-            //xml_set_unparsed_entity_decl_handler($this->_xmlParser, array($this, '_handleUnparsedEntityDecl'));
 
             xml_set_element_handler(
                 $this->_xmlParser, 
@@ -746,7 +722,6 @@ class Erfurt_Syntax_RdfParser_Adapter_RdfXml extends Erfurt_Syntax_RdfParser_Ada
     protected function _handleDefault($parser, $data)
     {
         // Handles comments
-        //var_dump($data);
     }
     
     protected function _handleNamespaceDeclaration($parser, $prefix, $uri)
