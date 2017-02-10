@@ -403,7 +403,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $uriHash = md5($uri);
 
             $uriData = array(
-                'g'     => $graphid,
+                'g'     => $graphId,
                 'v'     => $uri,
                 'vh'    => $uriHash);
 
@@ -421,7 +421,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
             $baseHash = md5($baseUri);
 
             $baseData = array(
-                'g'     => $graphid,
+                'g'     => $graphId,
                 'v'     => $baseUri,
                 'vh'    => $baseHash);
 
