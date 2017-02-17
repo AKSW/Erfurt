@@ -1,25 +1,55 @@
 language: php
 
 php:
-  - 5.4
-  - 5.6
-  - 7.0
-  - 7.1
+    - 5.4
+    - 5.6
+    - 7.0
+    - 7.1
+
+env:
+    - VIRTUOSO=6.1.7
+    - VIRTUOSO=7.1.0
+    - VIRTUOSO=7.2.4.2
 
 matrix:
+    fast_finish: true
+    include:
+        - php: 5.4
+          env: VIRTUOSO=6.1.4
+        - php: 5.4
+          env: VIRTUOSO=6.1.6
+        - php: 5.4
+          env: VIRTUOSO=7.2.0
     allow_failures:
         - php: 7.0
         - php: 7.1
 
-sudo: false
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - virtuoso-opensource
+
+sudo: true
+
+services:
+    - mysql
 
 before_install:
-  - phpenv config-rm xdebug.ini
+    - bash ./tests/scripts/travis/install-extensions.sh
+    - bash ./tests/scripts/travis/install-services.sh
+    - sudo apt-get -qq update
+    - sudo apt-get install -y raptor2-utils
+    - phpenv config-rm xdebug.ini
+    - mysql -e 'CREATE DATABASE erfurt_TEST;'
 
 install:
-  - travis_retry composer install --no-interaction
+    - travis_retry composer install --no-interaction
 
 before_script:
-  - make directories
+    - cp ./tests/config.ini.dist.travis ./tests/config.ini
+    - make directories
 
-script: vendor/bin/phpunit --testsuite "Erfurt Unit Tests"
+script: 
+    - vendor/bin/phpunit --testsuite "Erfurt Unit Tests"
+    - EF_STORE_ADAPTER=zenddb vendor/bin/phpunit --testsuite "Erfurt Integration Tests"
+    - EF_STORE_ADAPTER=virtuoso vendor/bin/phpunit --testsuite "Erfurt Integration Tests"
