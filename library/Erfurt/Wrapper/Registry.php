@@ -160,7 +160,7 @@ class Erfurt_Wrapper_Registry
 
         foreach ($iterator as $file) {
             $fileName  = $file->getFileName();
-            if (!$file->isDot() && !$file->isDir() && $this->_isWrapperFile($fileName)) {
+            if (!$file->isDot() && !$file->isDir() && $this->_isWrapperFile($fileName) && !$this->_isAbstract($fileName)) {
 
                 $wrapperName = $this->_getWrapperName($fileName);
                 $wrapperSpec = array(
@@ -188,6 +188,12 @@ class Erfurt_Wrapper_Registry
 
         $start  = $length * -1; //negative
         return (substr($fileName, $start) === 'Wrapper.php');
+    }
+
+    private function _isAbstract($filename)
+    {
+        $testClass = new ReflectionClass('Erfurt_Wrapper_' . substr($filename,0,-4));
+        return $testClass->isAbstract();
     }
 
     private function _getWrapperName($fileName)
