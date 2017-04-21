@@ -98,7 +98,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
         $this->bOptional = $bOptional;
         $this->nUnionCount = $nUnionCount;
 
-#return ' AND ' . $this->createTreeSql($tree, null);
         try {
             return ' AND ' . $this->createTreeSql($tree, null);
         } catch (Exception $e) {
@@ -610,7 +609,6 @@ class Erfurt_Sparql_EngineDb_FilterGenerator
                     break;
 
                 default:
-                    //var_dump($strMod);exit;
                     throw new Erfurt_Sparql_EngineDb_SqlGeneratorException(
                         'Unsupported regex modifier "'
                         . $strMod

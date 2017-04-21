@@ -156,8 +156,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                 break;
             default:
                  if ($row[$this->_vars[$strVarName]['sql_ref']] === null) {
-                     #$result = $this->_createLiteral(
-                     #    $row[$this->_vars[$strVarName]['sql_value']], null, null);
                     
                     if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
                         $result = $this->_createLiteral(
@@ -173,8 +171,6 @@ class Erfurt_Sparql_EngineDb_ResultRenderer_Extended implements Erfurt_Sparql_En
                         );
                     }
                 } else {
-                    #$result = $this->_createLiteral(
-                    #$this->literalValues[$row[$this->_vars[$strVarName]['sql_ref']]], null, null);
                     
                     if ($row[$this->_vars[$strVarName]['sql_dt_ref']] === null) {
                         $result = $this->_createLiteral(

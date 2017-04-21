@@ -445,10 +445,7 @@ class Erfurt_Sparql_Parser
     
     /** FastForward until next token which is not blank. */
     protected function _fastForward()
-    {
-        #next($this->_tokens);
-        #return;
-        
+    {        
         $tok = next($this->_tokens);
         while ($tok === ' ') {
             $tok = next($this->_tokens);
@@ -683,15 +680,6 @@ class Erfurt_Sparql_Parser
                     }
                     continue 2;
                     break;
-#                case '>':
-#                   $litQuotes = null;
-#                    $part[] = array(
-#                        'type'  => 'value',
-#                        'value' => $strQuoted,
-#                        'quoted'=> false
-#                    ); 
-#                    continue 2;
-#                    break;
                 case '(':
                     $parens = true;
                     $bFunc1 = isset($part[0]['type']) && $part[0]['type'] === 'value';

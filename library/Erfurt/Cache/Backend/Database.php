@@ -80,7 +80,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 		if ($result !== false) {
             if (isset($result[0])) {
                 $content = $result[0]['content'];
-                #$content = base64_decode($content);
 	            return $content;
 	        }
 		}
@@ -123,7 +122,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
         }
 
         $lifetime = $this->getLifetime($specificLifetime);
-        #$data = $this->_getConnection()->real_escape_string($data);
         $data = addslashes($data);
         $mktime = time();
         if (is_null($lifetime)) {
@@ -177,12 +175,6 @@ class Erfurt_Cache_Backend_Database extends Zend_Cache_Backend implements Zend_C
 	 * This method will build the database structure.
 	 */
 	private function _buildStructure() {
-#		$this->_query('DROP INDEX ef_cache_tag_id_index');
-#        $this->_query('DROP INDEX ef_cache_tag_name_index');
-#        $this->_query('DROP INDEX ef_cache_id_expire_index');
-#		$this->_query('DROP TABLE ef_cache_version');
-#        $this->_query('DROP TABLE ef_cache');
-#        $this->_query('DROP TABLE ef_cache_tag');
 		
 		$this->_query(' CREATE TABLE ef_cache_version (
 							num     INT,

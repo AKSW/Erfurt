@@ -37,7 +37,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
      *   Modifies the passed query object directly.
      */
     public function simplify(Erfurt_Sparql_Query $query) {
-#return;
+
         $arPatterns = $query->getResultPart();
         self::dropEmpty($arPatterns);
 
@@ -91,7 +91,6 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
         $id = count($arPatterns)+1;
         foreach ($arPlan as $nParent => $arChildren) {
             $base           = $arPatterns[$nParent];
-            #$grandParent    = $base->getSubpatternOf();
             $nNextId        = $nParent;
             $oldConstraints = $base->getConstraints();
             
@@ -99,10 +98,7 @@ class Erfurt_Sparql_EngineDb_QuerySimplifier
             $optionalIds = $this->_getOptionalIds($arPatterns, $nParent);
 
             foreach ($arChildren as $nChild => $null) {
-                #$new = clone $base;
-                #$new->addTriplePatterns($arPatterns[$nChild]->getTriplePatterns());
-                #$new->addConstraints($arPatterns[$nChild]->getConstraints());
-                
+
                 $arPatterns[$nChild]->addTriplePatterns($base->getTriplePatterns());
                     
                 // Catch all used vars from child pattern.

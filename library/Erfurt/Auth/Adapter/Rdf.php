@@ -88,19 +88,7 @@ class Erfurt_Auth_Adapter_Rdf implements Zend_Auth_Adapter_Interface
                 'anonymous' => false
             );
 
-            // have a look at the cache...
-            /*$cache = Erfurt_App::getInstance()->getCache();
-            $id = $cache->makeId($this, '_fetchDataForUser', array($this->_username));
-            OntoWiki::getInstance()->appendMessage( new OntoWiki_Message($id));
-            $cachedVal = $cache->load($id);
-            if ($cachedVal) {
-                OntoWiki::getInstance()->appendMessage( new OntoWiki_Message("cached"));
-                $this->_users[$this->_username] = $cachedVal;
-            } else {
-                */$this->_users[$this->_username] = $this->_fetchDataForUser($this->_username);
-                /*$cache->save($this->_users[$this->_username], $id, array('_fetchDataForUser'));
-                OntoWiki::getInstance()->appendMessage( new OntoWiki_Message("uncached"));
-            }*/
+            $this->_users[$this->_username] = $this->_fetchDataForUser($this->_username);
 
             // if login is denied return failure auth result
             if ($this->_users[$this->_username]['denyLogin'] === true) {

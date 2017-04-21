@@ -634,7 +634,6 @@ class Erfurt_Auth_Adapter_FoafSsl implements Zend_Auth_Adapter_Interface
                 if ((null === $this->_publicKey) || !extension_loaded('openssl')) {
                     return false;
                 }
-                //$this->_publicKey = str_replace(str_split(" \t\n\r\0\x0B"), '', $this->_publicKey);
                 $schema = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'])) ? 'https://' : 'http://';
                 $url = $schema . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 

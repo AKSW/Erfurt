@@ -5440,8 +5440,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA9_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA9 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA9;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA9;
 		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA9_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 9;
@@ -5493,8 +5491,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA21_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA21 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA21;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA21;
 		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA21_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 21;
@@ -5546,8 +5542,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA24_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA24 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA24;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA24;
 		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA24_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 24;
@@ -5598,8 +5592,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA23_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA23 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA23;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA23;
 		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA23_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 23;
@@ -5653,8 +5645,6 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA25_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA25 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA25;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA25;
 		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA25_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 25;
@@ -5708,9 +5698,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA27_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 27;
         $this->eot = $DFA['eot'];
@@ -5763,9 +5751,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA28_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 28;
         $this->eot = $DFA['eot'];
@@ -5818,9 +5804,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA30_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 30;
         $this->eot = $DFA['eot'];
@@ -5873,9 +5857,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA33_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 33;
         $this->eot = $DFA['eot'];
@@ -5925,9 +5907,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA34_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 34;
         $this->eot = $DFA['eot'];
@@ -5981,9 +5961,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA37_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 37;
         $this->eot = $DFA['eot'];
@@ -6035,9 +6013,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA38_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 38;
         $this->eot = $DFA['eot'];
@@ -6089,9 +6065,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA39_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 39;
         $this->eot = $DFA['eot'];
@@ -6152,9 +6126,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA41_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 41;
         $this->eot = $DFA['eot'];
@@ -6205,9 +6177,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA42_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 42;
         $this->eot = $DFA['eot'];
@@ -6257,9 +6227,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA44_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 44;
         $this->eot = $DFA['eot'];
@@ -6309,9 +6277,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA45_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 45;
         $this->eot = $DFA['eot'];
@@ -6363,9 +6329,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA48_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 48;
         $this->eot = $DFA['eot'];
@@ -6426,9 +6390,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA49_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 49;
         $this->eot = $DFA['eot'];
@@ -6480,9 +6442,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA50_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 50;
         $this->eot = $DFA['eot'];
@@ -6535,9 +6495,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA54_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 54;
         $this->eot = $DFA['eot'];
@@ -6588,9 +6546,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA57_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 57;
         $this->eot = $DFA['eot'];
@@ -6641,9 +6597,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA59_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 59;
         $this->eot = $DFA['eot'];
@@ -6694,9 +6648,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA61_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 61;
         $this->eot = $DFA['eot'];
@@ -6750,9 +6702,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA62_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 62;
         $this->eot = $DFA['eot'];
@@ -6806,9 +6756,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA63_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 63;
         $this->eot = $DFA['eot'];
@@ -6858,9 +6806,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA64_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 64;
         $this->eot = $DFA['eot'];
@@ -6911,9 +6857,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA66_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 66;
         $this->eot = $DFA['eot'];
@@ -6968,9 +6912,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA67_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 67;
         $this->eot = $DFA['eot'];
@@ -7019,9 +6961,7 @@ class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68_static {
 class Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68 extends DFA {
 
     public function __construct($recognizer) {
-//        global $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68;
-//        $DFA = $Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68;
-		$DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68_static::getValues();
+        $DFA = Erfurt_Sparql_Parser_Sparql10_Sparql10_Sparql10_DFA68_static::getValues();
         $this->recognizer = $recognizer;
         $this->decisionNumber = 68;
         $this->eot = $DFA['eot'];

@@ -206,14 +206,6 @@ class Erfurt_Auth_Adapter_OpenId implements Zend_Auth_Adapter_Interface
             if (!isset($this->_get['openid_identity'])) {
                 $result = false;
                 $msg = 'OpenID authentication failed.';
-
-                /*
-                $identity = array(
-                    'uri'       => null,
-                    'dbuser'    => false,
-                    'anonymous' => false
-                );
-                */
                 return new Zend_Auth_Result($result, null, array($msg));
             }
 
