@@ -195,15 +195,6 @@ class Erfurt_Store_Adapter_Mssql implements Erfurt_Store_Adapter_Interface, Erfu
                         $oValue = addslashes($o['value']);
 
                         $sqlString .= "($graphId,'$s','$p','$oValue',";
-                        
-                        #$data = array(
-                        #    'g'     => $graphId,
-                        #    's'     => $subject,
-                        #    'p'     => $predicate,
-                        #    'o'     => $object['value'],
-                        #    'st'    => $subjectIs,
-                        #    'ot'    => $objectIs
-                        #);
 
                         if ($sRef !== false) {
                             $sqlString .= "$sRef,";
