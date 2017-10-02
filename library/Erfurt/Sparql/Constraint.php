@@ -295,7 +295,9 @@ class Erfurt_Sparql_Constraint
                 case '!':
                     if ($tree != array()) {
                         throw new Erfurt_Sparql_ParserException(
-                            'Unexpected "!" negation in constraint.', -1, current($this->_tokens)
+                            'Unexpected "!" negation in constraint.',
+                            Erfurt_Exception::DEFAULT_ERROR,
+                            current($this->_tokens)
                         );
                     }
                     $tree['negated'] = true;
@@ -322,7 +324,7 @@ class Erfurt_Sparql_Constraint
                     // Variables need parenthesizes first
                     throw new Erfurt_Sparql_ParserException(
                         'FILTER expressions that start with a variable need parenthesizes.',
-                        -1,
+                        Erfurt_Exception::DEFAULT_ERROR,
                         current($this->_tokens)
                     );
                 }
@@ -335,7 +337,9 @@ class Erfurt_Sparql_Constraint
             } else if (substr($tok, 0, 2) === '_:') {
                 // syntactic blank nodes not allowed in filter
                 throw new Erfurt_Sparql_ParserException(
-                    'Syntactic Blanknodes not allowed in FILTER.', -1, current($this->_tokens)
+                    'Syntactic Blanknodes not allowed in FILTER.',
+                    Erfurt_Exception::DEFAULT_ERROR,
+                    current($this->_tokens)
                 );
             } else if (substr($tok, 0, 2) === '^^') {
                 $part[count($part) - 1]['datatype'] = $this->_query->getFullUri(substr($tok, 2));
@@ -386,7 +390,11 @@ class Erfurt_Sparql_Constraint
         }
 
         if ((count($tree) === 0) && (count($part) > 1)) {
-            throw new Erfurt_Sparql_ParserException('Failed to parse constraint.', -1, current($this->_tokens));
+            throw new Erfurt_Sparql_ParserException(
+                'Failed to parse constraint.',
+                Erfurt_Exception::DEFAULT_ERROR,
+                current($this->_tokens)
+            );
         }
 
         if (!isset($tree['type']) && isset($part[0])) {

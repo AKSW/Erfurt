@@ -898,7 +898,7 @@ class Erfurt_App
             try {
                 $this->_store->checkSetup();
             } catch (Erfurt_Store_Exception $e) {
-                if ($e->getCode() != 20) {
+                if ($e->getCode() != Erfurt_Exception::SYSTEM_MODELS_IMPORTED) {
                     throw $e;
                 }
             }

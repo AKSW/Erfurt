@@ -13,4 +13,5 @@
  */
 class Erfurt_Store_Exception extends Erfurt_Exception
 {
+    const NO_ERROR = 20;
 }
