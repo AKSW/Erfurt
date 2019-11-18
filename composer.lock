@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "d7b192fb0b3fda962ed7b8e8176e910b",
     "content-hash": "3ea901d599c59a4a53245a865aaa8bbf",
     "packages": [
         {
@@ -67,7 +66,7 @@
                 "rdfa",
                 "sparql"
             ],
-            "time": "2015-02-27 09:45:49"
+            "time": "2015-02-27T09:45:49+00:00"
         },
         {
             "name": "semsol/arc2",
@@ -111,7 +110,7 @@
                 "RDF",
                 "sparql"
             ],
-            "time": "2015-11-24 06:22:45"
+            "time": "2015-11-24T06:22:45+00:00"
         },
         {
             "name": "zendframework/zendframework1",
@@ -158,7 +157,8 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2016-09-08 14:50:34"
+            "abandoned": "zendframework/zendframework",
+            "time": "2016-09-08T14:50:34+00:00"
         }
     ],
     "packages-dev": [
@@ -168,23 +168,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CeusMedia/Common.git",
-                "reference": "8a8a0989bf937b4002cef46784249ed96be06424"
+                "reference": "144cee59d766e398f8c920dee5bad452ae588b29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CeusMedia/Common/zipball/8a8a0989bf937b4002cef46784249ed96be06424",
-                "reference": "8a8a0989bf937b4002cef46784249ed96be06424",
+                "url": "https://api.github.com/repos/CeusMedia/Common/zipball/144cee59d766e398f8c920dee5bad452ae588b29",
+                "reference": "144cee59d766e398f8c920dee5bad452ae588b29",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^5.3.0 || ^7"
             },
             "require-dev": {
-                "ceus-media/doc-creator": ">=0.9",
+                "ceus-media/doc-creator": "dev-master",
                 "erusev/parsedown": "~1.0",
-                "michelf/php-markdown": "1.5.0",
-                "phpunit/php-invoker": "~1.1",
-                "phpunit/phpunit": "4.8.*"
+                "michelf/php-markdown": "^1.7",
+                "phpunit/phpunit": "^7"
             },
             "type": "library",
             "autoload": {
@@ -194,7 +193,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-3.0+"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -204,7 +203,7 @@
                     "role": "Developer"
                 }
             ],
-            "time": "2016-08-17 13:54:30"
+            "time": "2019-11-08T17:19:02+00:00"
         },
         {
             "name": "ceus-media/doc-creator",
@@ -246,7 +245,7 @@
                     "role": "Developer"
                 }
             ],
-            "time": "2016-07-06 22:18:30"
+            "time": "2016-07-06T22:18:30+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -300,7 +299,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "michelf/php-markdown",
@@ -351,7 +350,7 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2015-03-01 12:03:08"
+            "time": "2015-03-01T12:03:08+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -391,7 +390,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Official version of pdepend to be handled with Composer",
-            "time": "2016-03-10 15:15:04"
+            "time": "2016-03-10T15:15:04+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -440,7 +439,7 @@
                     "email": "mike.vanriel@naenius.com"
                 }
             ],
-            "time": "2015-02-03 12:10:50"
+            "time": "2015-02-03T12:10:50+00:00"
         },
         {
             "name": "phploc/phploc",
@@ -493,7 +492,7 @@
             ],
             "description": "A tool for quickly measuring the size of a PHP project.",
             "homepage": "https://github.com/sebastianbergmann/phploc",
-            "time": "2015-10-22 13:44:19"
+            "time": "2015-10-22T13:44:19+00:00"
         },
         {
             "name": "phpmd/phpmd",
@@ -558,7 +557,7 @@
                 "phpmd",
                 "pmd"
             ],
-            "time": "2016-04-04 11:52:04"
+            "time": "2016-04-04T11:52:04+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -620,7 +619,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-06-07 08:13:47"
+            "time": "2016-06-07T08:13:47+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -682,7 +681,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06 15:47:00"
+            "time": "2015-10-06T15:47:00+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -727,7 +726,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2013-10-10 15:34:57"
+            "time": "2013-10-10T15:34:57+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -768,7 +767,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -812,7 +811,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12 18:03:57"
+            "time": "2016-05-12T18:03:57+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -861,7 +860,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-09-15 10:49:45"
+            "time": "2015-09-15T10:49:45+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -933,7 +932,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-03-29 09:24:05"
+            "time": "2015-03-29T09:24:05+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -989,7 +988,8 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02 06:51:40"
+            "abandoned": true,
+            "time": "2015-10-02T06:51:40+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -1053,7 +1053,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-07-26 15:48:44"
+            "time": "2015-07-26T15:48:44+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -1105,7 +1105,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -1155,7 +1155,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18 05:49:44"
+            "time": "2016-08-18T05:49:44+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -1222,7 +1222,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17 09:04:28"
+            "time": "2016-06-17T09:04:28+00:00"
         },
         {
             "name": "sebastian/finder-facade",
@@ -1261,7 +1261,7 @@
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
             "homepage": "https://github.com/sebastianbergmann/finder-facade",
-            "time": "2016-02-17 07:02:23"
+            "time": "2016-02-17T07:02:23+00:00"
         },
         {
             "name": "sebastian/git",
@@ -1306,7 +1306,8 @@
             "keywords": [
                 "git"
             ],
-            "time": "2016-06-15 09:30:19"
+            "abandoned": true,
+            "time": "2016-06-15T09:30:19+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -1357,7 +1358,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/phpcpd",
@@ -1408,7 +1409,7 @@
             ],
             "description": "Copy/Paste Detector (CPD) for PHP code.",
             "homepage": "https://github.com/sebastianbergmann/phpcpd",
-            "time": "2016-04-17 19:32:49"
+            "time": "2016-04-17T19:32:49+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -1461,7 +1462,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-11-11 19:50:13"
+            "time": "2015-11-11T19:50:13+00:00"
         },
         {
             "name": "sebastian/version",
@@ -1496,7 +1497,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21 13:59:46"
+            "time": "2015-06-21T13:59:46+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -1574,7 +1575,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-09-12 23:24:57"
+            "time": "2016-09-12T23:24:57+00:00"
         },
         {
             "name": "symfony/config",
@@ -1627,7 +1628,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-16 14:56:08"
+            "time": "2016-08-16T14:56:08+00:00"
         },
         {
             "name": "symfony/console",
@@ -1687,20 +1688,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 10:55:00"
+            "time": "2016-09-06T10:55:00+00:00"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.8.11",
+            "version": "v2.8.52",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "0a732a9cafc30e54077967da4d019e1d618a8cb9"
+                "reference": "c306198fee8f872a8f5f031e6e4f6f83086992d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/0a732a9cafc30e54077967da4d019e1d618a8cb9",
-                "reference": "0a732a9cafc30e54077967da4d019e1d618a8cb9",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/c306198fee8f872a8f5f031e6e4f6f83086992d8",
+                "reference": "c306198fee8f872a8f5f031e6e4f6f83086992d8",
                 "shasum": ""
             },
             "require": {
@@ -1750,7 +1751,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 23:19:39"
+            "time": "2019-04-16T11:33:46+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -1799,7 +1800,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 10:55:00"
+            "time": "2016-09-06T10:55:00+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1848,7 +1849,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-26 11:57:43"
+            "time": "2016-08-26T11:57:43+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1907,7 +1908,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-05-18 14:26:46"
+            "time": "2016-05-18T14:26:46+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -1956,7 +1957,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-02 01:57:56"
+            "time": "2016-09-02T01:57:56+00:00"
         },
         {
             "name": "theseer/fdomdocument",
@@ -1996,7 +1997,7 @@
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
             "homepage": "https://github.com/theseer/fDOMDocument",
-            "time": "2015-05-27 22:58:02"
+            "time": "2015-05-27T22:58:02+00:00"
         },
         {
             "name": "white-gecko/arrays",
@@ -2032,7 +2033,7 @@
                 }
             ],
             "description": "Some function for checking the equality of hybrid (associative and sequential) arrays",
-            "time": "2016-07-25 16:30:50"
+            "time": "2016-07-25T16:30:50+00:00"
         },
         {
             "name": "zerkalica/php-code-browser",
@@ -2057,7 +2058,7 @@
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Unofficial version of PHP_CodeBrowser to be handled with Composer",
-            "time": "2012-08-26 11:50:31"
+            "time": "2012-08-26T11:50:31+00:00"
         }
     ],
     "aliases": [],
