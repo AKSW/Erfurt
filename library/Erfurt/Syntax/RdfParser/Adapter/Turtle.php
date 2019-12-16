@@ -15,7 +15,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 {
     protected $_data = '';
     protected $_pos  = 0;
-    //protected $_lastCharLength = 1;
 
     protected $_subject = null;
     protected $_predicate = null;
@@ -300,8 +299,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
             $c = $this->_read();
         }
 
-        #$c = $this->_skipWS();
-
         $uri = $this->_resolveUri($this->_decodeString($token, true));
         return Erfurt_Rdf_Resource::initWithIri($uri);
     }
@@ -501,18 +498,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         }
     }
 
-    /*
-    protected function _isLanguageChar($c)
-    {
-        return ($this->_isLanguageStartChar($c) || is_numeric($c) || $c === '-');
-    }*/
-
-    /*
-    protected function _isLanguageStartChar($c)
-    {
-        return ($this->_ord($c) >= 0x41 && $this->_ord($c) <= 0x7A);
-    }*/
-
     protected function _parseQuotedString()
     {
         $result = null;
@@ -589,9 +574,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         $this->_verifyChar($this->_read(), ':');
 
         $c = $this->_read();
-        #if (!$this->_isNameStartChar($c)) {
-        #    $this->_throwException('Illegal char.');
-        #}
 
         $result = $c;
 
@@ -606,31 +588,9 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
         return $this->_createBNode($result);
     }
 
-    /*
-    protected function _isNameChar($c)
-    {
-        return (
-            $this->_isNameStartChar($c) ||
-            is_numeric($c) ||
-            $c === '-' ||
-            $this->_ord($c) === 0x00B7 ||
-            ($this->_ord($c) >= 0x0300 && $this->_ord($c) < 0x036F) ||
-            ($this->_ord($c) >= 0x203F && $this->_ord($c) < 0x2040)
-        );
-    }*/
-
-    /*protected function _isNameStartChar($c)
-    {
-        return ($c === '_' || $this->_isPrefixStartChar($c));
-    }*/
-
     protected function _parseQNameOrBoolean()
     {
         $c = $this->_read();
-
-        #if ($c !== ':' && !$this->_isPrefixStartChar($c)) {
-        #    $this->_throwException('Expected ":" or letter.');
-        #}
 
         $namespace = null;
         if ($c === ':') {
@@ -678,30 +638,6 @@ class Erfurt_Syntax_RdfParser_Adapter_Turtle extends Erfurt_Syntax_RdfParser_Ada
 
         return Erfurt_Rdf_Resource::initWithNamespaceAndLocalName($namespace, $localName);
     }
-
-    /*protected function _isPrefixChar($c)
-    {
-        return $this->_isNameChar($c);
-    }*/
-
-    /*protected function _isPrefixStartChar($c)
-    {
-        return (
-            ($this->_ord($c) >= 0x41    && $this->_ord($c) <= 0x7A)   ||
-            ($this->_ord($c) >= 0x00C0  && $this->_ord($c) <= 0x00D6) ||
-            ($this->_ord($c) >= 0x00D8  && $this->_ord($c) <= 0x00F6) ||
-            ($this->_ord($c) >= 0x00F8  && $this->_ord($c) <= 0x02FF) ||
-            ($this->_ord($c) >= 0x0370  && $this->_ord($c) <= 0x037D) ||
-            ($this->_ord($c) >= 0x037F  && $this->_ord($c) <= 0x1FFF) ||
-            ($this->_ord($c) >= 0x200C  && $this->_ord($c) <= 0x200D) ||
-            ($this->_ord($c) >= 0x2070  && $this->_ord($c) <= 0x218F) ||
-            ($this->_ord($c) >= 0x2C00  && $this->_ord($c) <= 0x2FEF) ||
-            ($this->_ord($c) >= 0x3001  && $this->_ord($c) <= 0xD7FF) ||
-            ($this->_ord($c) >= 0xF900  && $this->_ord($c) <= 0xFDCF) ||
-            ($this->_ord($c) >= 0xFDF0  && $this->_ord($c) <= 0xFFFD) ||
-            ($this->_ord($c) >= 0x10000 && $this->_ord($c) <= 0xEFFFF)
-        );
-    }*/
 
     protected function _parseImplicitBlank()
     {

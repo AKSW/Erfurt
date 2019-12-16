@@ -138,41 +138,6 @@ class Erfurt_Plugin_Manager
     }
 
     public function addPluginExternally($pluginName, $fileName, $pluginPath, $pluginConfig){
-// for use of array based config
-//         if($pluginConfig instanceof Zend_Config){
-//             $pluginConfig = $pluginConfig->toArray();
-//         }
-
-//         $pluginConfig['pluginPath'] = $pluginPath;
-//         if(!isset($pluginConfig['enabled'])){
-//             $pluginConfig['enabled'] = false;
-//         }
-//         $enabled = $pluginConfig['enabled'];
-//
-//        // keep track of loaded plug-ins
-//        if (!array_key_exists($pluginName, $this->_plugins)) {
-//            $this->_plugins[$pluginName] = $pluginConfig;
-//        }
-//
-//        if ($enabled && isset($pluginConfig['events']) && is_array($pluginConfig['events'])) {
-//            foreach ($pluginConfig['events'] as $event) {
-//                if (is_array($event)) {
-//                    // TODO: allow trigger method that differs from event name
-//                } else if (is_string($event)) {
-//                    $pluginSpec = array(
-//                        'class_name'   => ucfirst($pluginName) . self::PLUGIN_CLASS_POSTFIX,
-//                        'file_name'    => $fileName,
-//                        'include_path' => $pluginPath,
-//                        'config'       => isset($pluginPrivateConfig) ? $pluginPrivateConfig : null
-//                    );
-//
-//                    $priority = isset($event['priority']) ? (int) $event['priority'] : 10;
-//
-//                    // register plugin events with event dispatcher
-//                    $this->_eventDispatcher->register($event, $pluginSpec, $priority);
-//                }
-//            }
-//        }
         $pluginConfig->pluginPath = $pluginPath;
          if(!isset($pluginConfig->enabled)){
              $pluginConfig->enabled = false;

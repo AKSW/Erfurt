@@ -28,9 +28,6 @@ class Erfurt_Sparql_Parser_Sparql11update implements Erfurt_Sparql_Parser_Interf
 		$input = new Erfurt_Sparql_Parser_Util_CaseInsensitiveStream($queryString);
 		$lexer = new Erfurt_Sparql_Parser_Sparql11_UpdateLexer($input);
 		$tokens = new CommonTokenStream($lexer);
-		// foreach ($tokens->getTokens() as $t) {
-		// 	echo $t."\n";
-		// }
 		$parser = new Erfurt_Sparql_Parser_Sparql11_UpdateParser($tokens);
 		$q = $parser->parse();
 	}

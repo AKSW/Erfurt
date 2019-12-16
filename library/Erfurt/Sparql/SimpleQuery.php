@@ -120,7 +120,6 @@ class Erfurt_Sparql_SimpleQuery
 
         $var = '[?$]{1}[\w\d]+';
         $expr = '(\w*\(.*\))';
-        // /(BASE.*?\s)?(PREFIX.*?\s)*(ASK|((COUNT(\s)*(\(.*?\))))|(SELECT(\s)+)(DISTINCT(\s)+)?(COUNT(\s)+(\(.*?\)(\s)))?(\?\w+\s+|\*)*)/si
         $tokens = array(
             'prefix'        => '/((PREFIX\s+[^:\s]+:\s+<[^\s]*>\s*)+)/si',
             'base'          => '/BASE\s+<(.+?)>/i',
@@ -138,9 +137,6 @@ class Erfurt_Sparql_SimpleQuery
         foreach ($tokens as $key => $pattern) {
             preg_match_all($pattern, $queryString, $parts[$key]);
         }
-
-        //echo $queryString;
-        //var_dump($parts);
 
         $queryObject = new self();
         if (isset($parts['prefix'][0][0]) || isset($parts['base'][0][0])) {

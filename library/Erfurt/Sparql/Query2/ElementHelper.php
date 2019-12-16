@@ -23,8 +23,6 @@ abstract class Erfurt_Sparql_Query2_ElementHelper {
         $this->id = Erfurt_Sparql_Query2::getNextID();
     }
 
-    //abstract public function getSparql();
-
     /**
      * addParent
      * when a ElementHelper-object is added to a ContainerHelper-object this method is called. lets the child know of the new parent

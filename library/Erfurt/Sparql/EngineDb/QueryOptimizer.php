@@ -30,8 +30,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $result = $query;
         
 // TODO Not working on all queries yet.
-#return $result;
-
         if ($resultForm === 'select distinct') {
             $result = $this->_optimizeDistinct($query);
         }
@@ -123,26 +121,13 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $orderifiedSqls = $ts->getOrderifiedSqls($arSqls);
 
         $originalVars = $sg->arVarAssignments;
-#var_dump($originalVars);
-        
-        
-        
-           
-        
         $usedVars = array_unique($usedVars);
         $newResultVars = array();
         
         $tempQuery = clone $query;
             
         // We need to adjust the limit, offset values.
-// TODO limit offset support
-        #$sm = $tempQuery->getSolutionModifier();
-        #if (isset($sm['limit'])) {
-        #    $tempQuery->setSolutionModifier('limit', 1000);
-        #}
-        #if (isset($sm['offset'])) {
-        #    $tempQuery->setSolutionModifier('offset', 0);
-        #}
+        // TODO limit offset support
         
         foreach ($tempQuery->getResultVars() as $var) {
             if (in_array($var->getVariable(), $usedVars)) {
@@ -163,7 +148,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $orderifiedSqls = $ts->getOrderifiedSqls($arSqls);
         $mandatoryResult = $this->_queryMultiple($tempQuery, $orderifiedSqls);
         $mandatoryVars = $sg->arVarAssignments;
-#var_dump($mandatoryResult);exit;
         
         // If the mandatory result is empty... return it.
         $empty = true;
@@ -205,82 +189,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         }
         reset($mandatoryResult);
 
-#var_dump($replaceArray);exit;     
-        // Remove all old mandatory constraints from the query (already done with the first query).
-        // Replace them with a new sameTerm constraint
-        #$cArray = array();
-        
-        #$distinctKeys = array();
-// TODO Function nesting fatal error on big result :(
-        /*foreach ($replaceArray as $var => $values) {
-            $distinctKeys[] = $var;
-            $c = new Erfurt_Sparql_Constraint();
-            
-            $valueSameTermArray = array();
-            foreach ($values as $key => $true) {
-                $valueSameTermArray[] = 'sameTerm(' . $var . ', <' . $key . '>)';
-            }
-            
-            $expr = '(' . implode(' || ', $valueSameTermArray) . ')';
-            $c->addExpression($expr);
-            $c->parse();
-            $cArray[] = $c;          
-        }*/
-#var_dump($cArray);exit;      
-        
-        /*$ids = array();
-        foreach ($optionals as $graphPattern) {
-            $newCArray = array();
-            foreach ($cArray as $c) {
-                $add = false;
-                $usedVars = $c->getUsedVars();
-                foreach ($graphPattern->getVariables() as $v) {
-                    if (in_array($v, $usedVars)) {
-                        $add = true;
-                        break;
-                    }
-                }
-                
-                if ($add) {
-                    $newCArray[] = $c;
-                }
-            }
-          
-            #$graphPattern->setConstraints($newCArray);
-            foreach ($oldMandatory as $gp) {
-                if ($graphPattern->getOptional() === $gp->getId() && !empty($newCArray)) {
-                    $gp->setTriplePatterns(array());
-                    $gp->setConstraints($newCArray);
-                }
-                
-                
-            }
-            
-            $ids[$graphPattern->getOptional()] = true;
-        }
-     
-        foreach ($oldMandatory as $key => $pattern) {
-            if (!isset($ids[$pattern->getId()])) {
-                $unsetIds[$pattern->getId()] = true;
-                unset($oldMandatory[$key]);
-            }
-        }
-        foreach ($oldMandatory as $pattern) {
-            if (isset($unsetIds[$pattern->getUnion()])) {
-                $pattern->setUnion(null);
-            }
-        }
-        */
-        
-        
-        
-        #$pattern = new Erfurt_Sparql_GraphPattern();
-        #$pattern->setId(1000);
-        #$pattern->setOptional(0);
-        #$pattern->addTriplePattern(new Erfurt_Sparql_QueryTriple('?predicate', Erfurt_Rdf_Resource::initWithUri('dummy'), Erfurt_Rdf_Resource::initWithUri('dummy')));
-        
-    #    $optionals[] = $pattern;
-
         foreach ($oldMandatory as $gp) {
             $gp->setTriplePatterns(array());
             $gp->setConstraints(array());
@@ -288,7 +196,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
 
 
         // Set new result form to select (not distinct)
-        #$newPatterns = $optionals;
         $newPatterns = array_merge($oldMandatory, $optionals);
         $usedVars = array();
         foreach ($newPatterns as $pattern) {
@@ -305,7 +212,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $query->setResultVars($usedVarsObjects);
         $query->setResultPart($newPatterns);
         $query->setResultForm('select');
-#var_dump($query);exit;
         $sg = new Erfurt_Sparql_EngineDb_SqlGenerator_Adapter_Ef($query, $this->_engine->getModelIdMapping());
             
         $ts = new Erfurt_Sparql_EngineDb_TypeSorter($query, $this->_engine);
@@ -315,9 +221,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         $ts->setData($sg);
         $orderifiedSqls = $ts->getOrderifiedSqls($arSqls);
         $optionalVars = $sg->arVarAssignments;
-
-#var_dump($optionalVars);
-#var_dump($replaceArray);exit;
 
         $whereAddition = array();
         foreach ($optionalVars as $var => $varSpec) {
@@ -335,15 +238,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
                 if(!empty($whereAddition)) $sql['where'] .= ' AND ' . implode(' AND ', $whereAddition);
             }
         }
-#var_dump($orderifiedSqls);exit;
 
         $optionalResult = $this->_queryMultiple($query, $orderifiedSqls);
-        
-#var_dump($optionalResult);exit;
 
-
-#var_dump($originalVars, $optionalVars, $optionalResult);exit;
-        
         $newOptResult = array();
         // Remove double entries
         $alreadyIn = array();
@@ -358,12 +255,9 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             }
         }
         $optionalResult = array($newOptResult);
-#var_dump($optionalVars);exit;
-        
-        
+
         $newResult = array();
-    
-#var_dump($mandatoryResult);exit;
+
         $mResult = current($mandatoryResult);
         while (true) {
             $rowSpec = array();
@@ -549,8 +443,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             }
         }
 
-#var_dump($newResult);exit;
-
         $retVal = array($newResult);
         return array('data' => $retVal, 'vars' => $originalVars);
     }
@@ -558,7 +450,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
     protected function _queryDb($query, $arSql, $nOffset, $nLimit)
     {
         $strSql = Erfurt_Sparql_EngineDb_SqlMerger::getSelect($query, $arSql);
-#echo $strSql;
         if ($strSql === '()') {
             return array();
         }
@@ -570,7 +461,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
         } else {
             $ret = $this->_engine->sqlQuery($strSql . ' LIMIT ' . $nOffset . ', ' . $nLimit);
         }
-#var_dump($ret->fetchAll());exit;
         return $ret;
     }
 
@@ -593,7 +483,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             list($nSql, $nOffset) = $offsetter->determineOffset($arSqls);
             $nLimit    = $arSM['limit'];
         }
-#var_dump($arSqls, $offsetter->determineOffset($arSqls));
         $nCount    = 0;
         $arResults = array();
         foreach ($arSqls as $nId => $arSql) {
@@ -608,7 +497,6 @@ class Erfurt_Sparql_EngineDb_QueryOptimizer
             }
 
             $dbResult = $this->_queryDb($query, $arSql, $nOffset, $nCurrentLimit);
-#var_dump($dbResult);   
             $nCount     += count($dbResult);
             $arResults[] = $dbResult;
             $nOffset = 0;
