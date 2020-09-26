@@ -97,6 +97,37 @@ class Erfurt_Cache_Frontend_QueryCache
     }
 
     /**
+     * Save a Resource Description to the object cache
+     *
+     * @param array $fetchedDesc the resource description to be stored in the cache
+     * @param string $resourceIri The IRI of the Resource to store
+     * @param string $modelIri The IRI of the model from which the Resource description was fetched
+     * @param array $options the array of options passed to the getResources method
+     *
+     * @return array|false the resource description on a cache hit or false
+     */
+    public function saveResource($fetchedDesc, $resourceIri, $modelIri, $options)
+    {
+        $objectCache = Erfurt_App::getInstance()->getCache();
+        $cacheId = $this->_getCacheIdForResource($resourceIri, $modelIri, $options);
+
+        // the cache entry is tagged with the resource IRI and the model IRI,
+        // so we can invalidate it on respective oprations
+        $objectCache->save($fetchedDesc, $cacheId, array("r" . md5($resourceIri), "m" . md5($modelIri)));
+    }
+
+    private function _getCacheIdForResource($resourceIri, $modelIri, $options)
+    {
+            // sort the keys in order to provide a better cacheId source
+            ksort($options);
+
+            $identity   = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
+            $cacheIdSrc = $resourceIri . $modelIri . $identity . serialize($options);
+            $cacheId    = 'ResourceDescription_' . md5($cacheIdSrc);
+            return $cacheId;
+    }
+
+    /**
      * load a QueryResult according to its Sparql Query as String
      * if the QueryHash not exists or no result is found its return false
      * @access     public
@@ -133,6 +164,24 @@ class Erfurt_Cache_Frontend_QueryCache
     }
 
     /**
+     * Load a Resource Description from the object cache
+     *
+     * @param string $resourceIri The IRI of the Resource to load
+     * @param string $modelIri The IRI of the model from which the Resource should be loaded
+     * @param array $options the array of options passed to the getResources method
+     *
+     * @return array|false the resource description on a cache hit or false
+     */
+    public function loadResource($resourceIri, $modelIri, array $options)
+    {
+        $cacheId = $this->_getCacheIdForResource($resourceIri, $modelIri, $options);
+
+        // saving transactionKeys to transactions table according to a queryId
+        $objectCache = Erfurt_App::getInstance()->getCache();
+        return $objectCache->load($cacheId);
+    }
+
+    /**
      * invalidating a CacheResult according to given statements
      * @access public
      * @param  array   $statements statements array in the form: statements[$subject][$predicate] = $object;
@@ -140,6 +189,7 @@ class Erfurt_Cache_Frontend_QueryCache
     */
     public function invalidateWithStatements($modelIri, $statements = array())
     {
+        $objectCache = Erfurt_App::getInstance()->getCache();
         $qids = $this->getBackend()->invalidate($modelIri, $statements);
         if ($qids) {
             if (((boolean) Erfurt_App::getInstance()->getConfig()->cache->query->logging) == true) {
@@ -147,11 +197,26 @@ class Erfurt_Cache_Frontend_QueryCache
                     $this->getBackend()->incrementInvalidationCounter($qid);
                 }
             }
-            $objectCache = Erfurt_App::getInstance()->getCache();
             if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null)) {
                 $oids = $this->_invalidateCacheObjects($qids);
             }
         }
+
+        // invalidate the object cache
+        foreach (array_keys($statements) as $subject) {
+            if ($subject !== null && $subject !== "") {
+                // if the subject is given we can identify the resources in the object cache directly
+                $objectCache->clean(
+                    Zend_Cache::CLEANING_MODE_MATCHING_TAG,
+                    array("r" . md5($subject), "m" . md5($modelIri))
+                );
+            } else {
+                // if the subject is not given we have to invalidate the complete model in the object cache
+                $objectCache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array("m" . md5($modelIri)));
+            }
+        }
+
+
         return $qids;
     }
 
@@ -192,6 +257,10 @@ class Erfurt_Cache_Frontend_QueryCache
         if (!($objectCache->getBackend() instanceof Erfurt_Cache_Backend_Null)) {
             $this->_invalidateCacheObjects($qids);
         }
+
+        //  we have to invalidate the complete model in the object cache
+        $objectCache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array("m" . md5($modelIri)));
+
         return $qids;
     }
 

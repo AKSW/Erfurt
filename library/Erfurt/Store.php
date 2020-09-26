@@ -650,6 +650,7 @@ EOF;
                     $graphUri, $subject, $predicate, $object, $options
                 );
 
+                // invalidate the query cache
                 $queryCache = Erfurt_App::getInstance()->getQueryCache();
                 $queryCache->invalidate($graphUri, $subject, $predicate, $object);
 
@@ -2107,26 +2108,14 @@ if ($options[Erfurt_Store::USE_AC] == false) {
             ), $options
         );
 
-        // sort the keys in order to provide a better cacheId source
-        ksort($options);
-
-        // Here we start the object cache id
-        $identity   = Erfurt_App::getInstance()->getAuth()->getIdentity()->getUri();
-        $cacheIdSrc = $resourceIri . $modelIri . $identity . serialize($options);
-        $cacheId    = 'ResourceDescription_' . md5($cacheIdSrc);
-
         // try to load the cached value
-        $objectCache  = Erfurt_app::getInstance()->getCache();
         $queryCache   = Erfurt_app::getInstance()->getQueryCache();
-        $cachedValue  = $objectCache->load($cacheId);
+        $cachedValue  = $queryCache->loadResource($resourceIri, $modelIri, $options);
 
         // bingo: cache hit, everything is fine
         if ($cachedValue !== false) {
             return $cachedValue;
         }
-
-        // no cache hit, we need to query
-        $queryCache->startTransaction($cacheId);
 
         // use backend specific method if exists
         if (method_exists($this->_backendAdapter, 'getResourceDescription')) {
@@ -2141,9 +2130,7 @@ if ($options[Erfurt_Store::USE_AC] == false) {
         }
 
         // save the fetched array
-        $objectCache->save($fetchedDesc, $cacheId);
-        // close the object cache transaction
-        $queryCache->endTransaction($cacheId);
+        $queryCache->saveResource($fetchedDesc, $resourceIri, $modelIri, $options);
 
         return $fetchedDesc;
     }
