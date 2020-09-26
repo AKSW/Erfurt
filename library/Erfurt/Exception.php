@@ -13,6 +13,9 @@
  */
 class Erfurt_Exception extends Exception {
 
+	//Used for exceptions that found invalid URI/IRI's
+    const INVALID_IRI_ERROR = 7;
+    
     function display($pre = true) {
         if ($pre) print '<pre>';  
         echo "Erfurt_Exception: code $this->code ($this->message) " .
