@@ -525,7 +525,7 @@ class Erfurt_Store
         if ($returnValue === false) {
             throw new Erfurt_Store_Exception(
                 'One or more system models imported.',
-                20
+                Erfurt_Exception::SYSTEM_MODELS_IMPORTED
             );
         }
 
@@ -1045,7 +1045,7 @@ EOF;
                 try {
                     $this->checkSetup();
                 } catch (Erfurt_Store_Exception $e) {
-                    if ($e->getCode() === 20) {
+                    if ($e->getCode() === Erfurt_Exception::SYSTEM_MODELS_IMPORTED) {
                         // Everything is fine, system models now imported
                     } else {
                         throw $e;

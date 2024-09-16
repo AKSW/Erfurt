@@ -26,7 +26,11 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
      */
     public function __construct($element) {
         if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
-            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+            throw new Exception(
+                'Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be'
+                .'Instance of Erfurt_Sparql_Query2_Constraint',
+                Erfurt_Exception::NON_FATAL_ERROR
+            );
         }
         if(is_bool($element)){
             $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);
@@ -50,7 +54,11 @@ class Erfurt_Sparql_Query2_Filter extends Erfurt_Sparql_Query2_ElementHelper
      */
     public function setConstraint($element) {
        if(!($element instanceof Erfurt_Sparql_Query2_Constraint || is_bool($element))){
-            throw new Exception('Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be Instance of Erfurt_Sparql_Query2_Constraint', 1);
+            throw new Exception(
+                'Argument 1 passed to Erfurt_Sparql_Query2_Filter::__construct must be'
+                .' Instance of Erfurt_Sparql_Query2_Constraint',
+                Erfurt_Exception::NON_FATAL_ERROR
+            );
        }
        if(is_bool($element)){
             $element = new Erfurt_Sparql_Query2_BooleanLiteral($element);

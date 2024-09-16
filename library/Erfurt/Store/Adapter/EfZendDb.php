@@ -69,18 +69,24 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                 } else if (extension_loaded('pdo') && extension_loaded('pdo_mysql')) {
                     $this->_dbConn = new Zend_Db_Adapter_Pdo_Mysql($this->_adapterOptions);
                 } else {
-                    throw new Erfurt_Exception('Neither "mysqli" nor "pdo_mysql" extension found.', -1);
+                    throw new Erfurt_Exception(
+                        'Neither "mysqli" nor "pdo_mysql" extension found.',
+                    );
                 }
                 break;
             case 'sqlsrv':
                 if (extension_loaded('sqlsrv')) {
                     $this->_dbConn = new Zend_Db_Adapter_Sqlsrv($this->_adapterOptions);
                 } else {
-                    throw new Erfurt_Exception('Sqlsrv extension not found.', -1);
+                    throw new Erfurt_Exception(
+                        'Sqlsrv extension not found.',
+                    );
                 }
                 break;
             default:
-                throw new Erfurt_Exception('Given database adapter is not supported.', -1);
+                throw new Erfurt_Exception(
+                    'Given database adapter is not supported.',
+                );
         }
 
         try {
@@ -89,13 +95,17 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         } catch (Zend_Db_Adapter_Exception $e) {
             // maybe wrong login credentials or db-server not running?!
             throw new Erfurt_Exception(
-                'Could not connect to database with name: "' .  $this->_adapterOptions['dbname'] .
-                '". Please check your credentials and whether the database exists and the server is running.', -1
+                'Could not connect to database with name: "'
+                .  $this->_adapterOptions['dbname']
+                . '". Please check your credentials and whether the database exists'
+                . ' and the server is running.',
             );
 
         } catch (Zend_Exception $e) {
             // maybe a needed php extension is not loaded?!
-            throw new Erfurt_Exception('An error with the specified database adapter occured.', -1);
+            throw new Erfurt_Exception(
+                'An error with the specified database adapter occured.',
+            );
         }
     }
 
@@ -278,16 +288,16 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         }
     }
 
-    protected function _getNormalizedErrorCode()
+    protected function _isDuplicateEntryError()
     {
         if ($this->_dbConn instanceof Zend_Db_Adapter_Mysqli) {
             switch($this->_dbConn->getConnection()->errno) {
                 case 1062:
                     // duplicate entry
-                    return 1000;
+                    return true;
             }
         } else {
-            return -1;
+            return false;
         }
     }
 
@@ -1433,19 +1443,18 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
                     try {
                         Erfurt_App::getInstance()->getStore()->checkSetup();
                     } catch (Erfurt_Store_Exception $setupException) {
-                        if ($setupException->getCode() == 20) {
+                        if ($setupException->getCode() == Erfurt_Exception::SYSTEM_MODELS_IMPORTED) {
                             $this->_fetchModelInfos();
                         } else {
                             throw new Erfurt_Store_Adapter_Exception(
-                                'Store: Error while initializing the environment: ' . $setupException->getMessage(),
-                                -1
+                                'Store: Error while initializing the environment: '
+                                . $setupException->getMessage(),
                             );
                         }
                     }
                 } else {
                     throw new Erfurt_Store_Adapter_Exception(
                         'Store: Error while fetching model and namespace infos.',
-                        -1
                     );
                 }
             }
@@ -1530,7 +1539,7 @@ class Erfurt_Store_Adapter_EfZendDb implements Erfurt_Store_Adapter_Interface, E
         try {
             $this->_dbConn->insert($tableName, $data);
         } catch (Exception $e) {
-            if ($this->_getNormalizedErrorCode() !== 1000) {
+            if (!$this->_isDuplicateEntryError()) {
                 throw new Erfurt_Store_Adapter_Exception(
                     "Insertion of value into $tableName failed: " .
                     $e->getMessage()
